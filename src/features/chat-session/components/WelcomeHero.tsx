@@ -1,0 +1,81 @@
+"use client";
+
+import React from "react";
+import { Icon, SentinelMini } from "@krizaka/orazaka-design-system";
+import type { IconName } from "@krizaka/orazaka-design-system";
+import { useAuth } from "@/core/hooks/useAuth";
+import type { TranslationDictionary } from "@/core/context/LocaleContext";
+
+interface WelcomeHeroProps {
+  t: TranslationDictionary;
+  /** Submit a starter prompt (creates the thread + sends). */
+  onPrompt: (prompt: string) => void;
+}
+
+/**
+ * WelcomeHero — branded, calm entry point for a new conversation.
+ *
+ * Replaces the old typewriter/emoji treatment with the Sentinel brand mark, a
+ * static time-of-day greeting, and three actionable prompt cards that submit on
+ * click. No "AI" cliché, reduced-motion safe (entrance only).
+ */
+export function WelcomeHero({ t, onPrompt }: Readonly<WelcomeHeroProps>) {
+  const { user } = useAuth();
+
+  const period = (() => {
+    const hour = new Date().getHours();
+    if (hour < 12) return "morning";
+    if (hour < 18) return "afternoon";
+    return "evening";
+  })();
+  const userName = user?.name?.split(" ")[0] || "there";
+
+  const cards: { label: string; icon: IconName }[] = [
+    { label: t.chat.suggestionImage, icon: "image" },
+    { label: t.chat.suggestionCode, icon: "code" },
+    { label: t.chat.suggestionAsk, icon: "chat" },
+  ];
+
+  return (
+    <div className="flex w-full max-w-2xl flex-col items-center px-6 text-center motion-safe:animate-in motion-safe:fade-in motion-safe:slide-in-from-bottom-3 motion-safe:duration-500">
+      {/* Brand mark */}
+      <div className="relative mb-6 flex h-16 w-16 items-center justify-center rounded-2xl border border-[var(--border-subtle)] bg-[var(--surface-1)] shadow-sm">
+        <span className="absolute inset-0 rounded-2xl bg-[var(--accent)] opacity-[0.06] blur-xl" />
+        <SentinelMini size={34} />
+      </div>
+
+      <h2 className="text-[var(--text-xl)] font-bold tracking-tight text-[var(--text-primary)]">
+        Good {period},{" "}
+        <span className="text-[var(--accent)]">{userName}</span>.
+      </h2>
+      <p className="mt-2 text-[var(--text-sm)] text-[var(--text-muted)]">
+        {t.chat.startConversationDesc}
+      </p>
+
+      {/* Sovereignty chip — threads the shared "on-prem, zero egress" motif */}
+      <span className="mt-4 inline-flex items-center gap-2 rounded-full border border-[var(--border-subtle)] bg-[var(--surface-1)] px-3 py-1.5 text-xs font-medium text-[var(--text-secondary)]">
+        <Icon name="shield" className="h-3.5 w-3.5 text-[var(--accent)]" />
+        {t.chat.localBadge}
+      </span>
+
+      {/* Actionable prompt cards */}
+      <div className="mt-8 grid w-full grid-cols-1 gap-3 stagger-children sm:grid-cols-3">
+        {cards.map(({ label, icon }) => (
+          <button
+            key={label}
+            type="button"
+            onClick={() => onPrompt(label)}
+            className="group flex flex-col items-start gap-3 rounded-xl border border-[var(--border-subtle)] bg-[var(--surface-1)] p-4 text-left transition-all duration-200 cursor-pointer hover:-translate-y-0.5 hover:border-[var(--accent)] hover:shadow-[var(--shadow-md)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] motion-safe:animate-in motion-safe:fade-in"
+          >
+            <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-[var(--accent-soft)] text-[var(--accent)] transition-transform duration-200 group-hover:scale-105">
+              <Icon name={icon} className="h-4 w-4" />
+            </span>
+            <span className="text-sm font-medium text-[var(--text-primary)]">
+              {label}
+            </span>
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+}

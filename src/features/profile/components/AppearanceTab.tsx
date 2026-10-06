@@ -1,0 +1,91 @@
+"use client";
+
+import * as React from "react";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@krizaka/orazaka-design-system";
+import { useTranslation } from "@/core/context/LocaleContext";
+import {
+  THEME_LAYOUTS,
+  THEME_LAYOUT_LABELS,
+  type ThemeAccent,
+  type ThemeLayout,
+} from "@/constants/settings.constants";
+import type { Locale } from "@/core/context/translations.types";
+import { ThemeModeSelector } from "./ThemeModeSelector";
+import { SelectField } from "./ProfileFormParts";
+import type { UseProfileForm } from "@/features/profile/hooks/useProfileForm";
+
+/**
+ * Appearance tab — theme mode (instant), accent, density, and language.
+ * All controls are driven by the shared {@link UseProfileForm} state so edits
+ * surface in the Profile sticky Save bar.
+ */
+export function AppearanceTab({ pf }: Readonly<{ pf: UseProfileForm }>) {
+  const { t } = useTranslation();
+  const { form, setField, setTheme, setLanguage, availableThemes } = pf;
+
+  return (
+    <Card className="bg-[var(--surface-1)] shadow-sm">
+      <CardHeader>
+        <CardTitle className="text-base font-semibold text-[var(--text-primary)]">
+          {t.profile.appearanceTitle}
+        </CardTitle>
+        <CardDescription className="text-[var(--text-muted)]">
+          {t.profile.appearanceDesc}
+        </CardDescription>
+      </CardHeader>
+      <CardContent className="space-y-6">
+        <ThemeModeSelector theme={form.theme} onThemeChange={setTheme} />
+
+        <hr className="border-[var(--border-subtle)]" />
+
+        <div className="grid gap-5 sm:grid-cols-3">
+          <SelectField
+            id="appearance-accent"
+            label={t.settings.colorAccent}
+            value={form.themeAccent}
+            onChange={(e) => setField("themeAccent", e.target.value as ThemeAccent)}
+          >
+            {availableThemes.map((th) => (
+              <option key={th.value} value={th.value}>
+                {th.label}
+              </option>
+            ))}
+          </SelectField>
+
+          <SelectField
+            id="appearance-layout"
+            label={t.settings.layoutScale}
+            value={form.themeLayout}
+            onChange={(e) => setField("themeLayout", e.target.value as ThemeLayout)}
+          >
+            {THEME_LAYOUTS.map((l) => (
+              <option key={l} value={l}>
+                {
+                  t.settings[
+                    THEME_LAYOUT_LABELS[l].split(".")[1] as keyof typeof t.settings
+                  ] as string
+                }
+              </option>
+            ))}
+          </SelectField>
+
+          <SelectField
+            id="appearance-language"
+            label={t.settings.language}
+            value={form.language}
+            onChange={(e) => setLanguage(e.target.value as Locale)}
+          >
+            <option value="en">{t.settings.english}</option>
+            <option value="fr">{t.settings.french}</option>
+          </SelectField>
+        </div>
+      </CardContent>
+    </Card>
+  );
+}

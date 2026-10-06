@@ -1,0 +1,147 @@
+"use client";
+
+import * as React from "react";
+import {
+  Button,
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+  Dialog,
+  Icon,
+} from "@krizaka/orazaka-design-system";
+import { useTranslation } from "@/core/context/LocaleContext";
+import {
+  MAX_API_KEYS,
+  useApiKeys,
+} from "@/features/profile/hooks/useApiKeys";
+import {
+  ApiKeyRow,
+  ApiKeysEmptyState,
+  CreateApiKeyForm,
+  RevealKeyPanel,
+} from "./ApiKeysParts";
+
+interface ApiKeysSectionProps {
+  fetchHeaders: () => Promise<Record<string, string>>;
+}
+
+/**
+ * Inbound API keys manager — lists the user's Personal Access Tokens with create
+ * and revoke actions. Creating opens a modal ({@link Dialog}); the fresh secret is
+ * then surfaced once through a reveal dialog. All data + lifecycle live in
+ * {@link useApiKeys}.
+ */
+export function ApiKeysSection({
+  fetchHeaders,
+}: Readonly<ApiKeysSectionProps>) {
+  const { t } = useTranslation();
+  const {
+    isLoading,
+    keys,
+    canCreate,
+    isCreateOpen,
+    draftName,
+    isSaving,
+    error,
+    generated,
+    openCreate,
+    closeCreate,
+    setDraftName,
+    submit,
+    dismissGenerated,
+    remove,
+  } = useApiKeys(fetchHeaders);
+
+  return (
+    <Card className="bg-[var(--surface-1)] shadow-sm">
+      <CardHeader className="flex flex-row items-start justify-between gap-3">
+        <div className="space-y-1">
+          <CardTitle className="flex items-center gap-2 text-base font-semibold text-[var(--text-primary)]">
+            <span className="inline-flex h-7 w-7 items-center justify-center rounded-lg bg-[var(--accent-soft)] text-[var(--accent)]">
+              <Icon name="key" size={16} />
+            </span>
+            {t.apiKeys.title}
+          </CardTitle>
+          <CardDescription className="text-[var(--text-secondary)]">
+            {t.apiKeys.subtitle}
+          </CardDescription>
+        </div>
+        {keys.length > 0 && (
+          <Button
+            type="button"
+            size="sm"
+            onClick={openCreate}
+            disabled={!canCreate}
+            className="shrink-0 gap-1.5"
+          >
+            <Icon name="plus" size={15} />
+            {t.apiKeys.create}
+          </Button>
+        )}
+      </CardHeader>
+
+      <CardContent>
+        {(() => {
+          if (isLoading) {
+            return (
+              <p className="text-xs text-[var(--text-muted)]">
+                {t.apiKeys.loading}
+              </p>
+            );
+          }
+          if (keys.length === 0) {
+            return <ApiKeysEmptyState onCreate={openCreate} />;
+          }
+          return (
+            <>
+              <ul className="divide-y divide-[var(--border-subtle)] overflow-hidden rounded-[var(--radius-lg)] border border-[var(--border-subtle)]">
+                {keys.map((apiKey) => (
+                  <ApiKeyRow
+                    key={apiKey.id}
+                    apiKey={apiKey}
+                    onDelete={() => remove(apiKey.id)}
+                    disabled={isSaving}
+                  />
+                ))}
+              </ul>
+              <p className="mt-3 text-center text-xs text-[var(--text-muted)]">
+                {keys.length} / {MAX_API_KEYS} {t.apiKeys.limitCaption}
+              </p>
+            </>
+          );
+        })()}
+      </CardContent>
+
+      <Dialog
+        open={isCreateOpen}
+        onClose={closeCreate}
+        closeLabel={t.apiKeys.cancel}
+        title={t.apiKeys.create}
+        description={t.apiKeys.subtitle}
+      >
+        <CreateApiKeyForm
+          draftName={draftName}
+          onNameChange={setDraftName}
+          isSaving={isSaving}
+          error={error}
+          onCancel={closeCreate}
+          onSubmit={submit}
+        />
+      </Dialog>
+
+      <Dialog
+        open={generated !== null}
+        onClose={dismissGenerated}
+        closeLabel={t.apiKeys.done}
+        title={t.apiKeys.revealTitle}
+        description={generated?.name}
+      >
+        {generated && (
+          <RevealKeyPanel generated={generated} onDone={dismissGenerated} />
+        )}
+      </Dialog>
+    </Card>
+  );
+}

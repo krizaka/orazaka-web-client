@@ -1,0 +1,227 @@
+"use client";
+
+import * as React from "react";
+import { Icon } from "@krizaka/orazaka-design-system";
+
+import { TIER_META, COLOR_CLASSES } from "@/app/dashboard/admin/validationPipeline.meta";
+import type { ValidationTierConfig } from "@/app/dashboard/admin/validationPipeline.meta";
+
+interface ValidationPipelineCardProps {
+  fetchWithAuth: (url: string, options?: RequestInit) => Promise<Response>;
+}
+
+export function ValidationPipelineCard({
+  fetchWithAuth,
+}: Readonly<ValidationPipelineCardProps>) {
+  const [tiers, setTiers] = React.useState<ValidationTierConfig[]>([]);
+  const [loading, setLoading] = React.useState(true);
+  const [saving, setSaving] = React.useState(false);
+  const [dirty, setDirty] = React.useState(false);
+  const [toast, setToast] = React.useState<{
+    type: "success" | "error";
+    message: string;
+  } | null>(null);
+
+  const showToast = React.useCallback(
+    (type: "success" | "error", message: string) => {
+      setToast({ type, message });
+      setTimeout(() => setToast(null), 3500);
+    },
+    [],
+  );
+
+  const loadConfig = React.useCallback(async () => {
+    setLoading(true);
+    try {
+      const res = await fetchWithAuth("/api/v1/pipeline/validation");
+      if (!res.ok) throw new Error("Failed to load validation pipeline");
+      const data: ValidationTierConfig[] = await res.json();
+      setTiers(data);
+      setDirty(false);
+    } catch {
+      showToast("error", "Failed to load validation pipeline configuration.");
+    } finally {
+      setLoading(false);
+    }
+  }, [fetchWithAuth, showToast]);
+
+  React.useEffect(() => {
+    const init = async () => {
+      await loadConfig();
+    };
+    init();
+  }, [loadConfig]);
+
+  const handleToggle = (idx: number) => {
+    setTiers((prev) =>
+      prev.map((tier, i) =>
+        i === idx ? { ...tier, enabled: !tier.enabled } : tier,
+      ),
+    );
+    setDirty(true);
+  };
+
+  const handleSave = async () => {
+    setSaving(true);
+    try {
+      const res = await fetchWithAuth("/api/v1/pipeline/validation", {
+        method: "PUT",
+        body: JSON.stringify(tiers),
+      });
+      if (!res.ok) throw new Error("Failed to save");
+      const saved: ValidationTierConfig[] = await res.json();
+      setTiers(saved);
+      setDirty(false);
+      showToast("success", "Validation pipeline saved successfully.");
+    } catch {
+      showToast("error", "Failed to save validation pipeline configuration.");
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  if (loading) {
+    return (
+      <section
+        id="validation-pipeline-card"
+        className="bg-card-bg/70 border border-card-border rounded-2xl p-6 shadow-sm backdrop-blur-lg"
+      >
+        <article className="animate-pulse space-y-3">
+          <span className="h-5 w-64 bg-[var(--surface-2)] rounded block" />
+          <span className="h-3 w-96 bg-[var(--surface-2)] rounded block" />
+          {[1, 2, 3, 4].map((i) => (
+            <span
+              key={i}
+              className="h-20 bg-[var(--surface-1)] rounded-xl block"
+            />
+          ))}
+        </article>
+      </section>
+    );
+  }
+
+  return (
+    <section
+      id="validation-pipeline-card"
+      className="bg-card-bg/70 border border-card-border rounded-2xl p-6 shadow-sm backdrop-blur-lg relative"
+    >
+      {/* Toast */}
+      {toast && (
+        <aside
+          className={`absolute top-4 right-4 z-10 flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium shadow-lg animate-in fade-in slide-in-from-top-2 duration-300 ${
+            toast.type === "success"
+              ? "bg-status-success/40 text-status-success border border-status-success"
+              : "bg-status-error/40 text-status-error border border-status-error"
+          }`}
+        >
+          {toast.type === "success" ? (
+            <Icon name="checkCircle" className="w-4 h-4" />
+          ) : (
+            <Icon name="alertCircle" className="w-4 h-4" />
+          )}
+          {toast.message}
+        </aside>
+      )}
+
+      {/* Header */}
+      <header className="flex items-center justify-between mb-4">
+        <article>
+          <h3 className="text-lg font-bold text-[var(--text-primary)] flex items-center gap-2">
+            <span className="inline-flex items-center justify-center w-7 h-7 rounded-lg bg-accent/10 text-accent">
+              <Icon name="shield" className="w-4 h-4" />
+            </span>
+            Validation Matrix
+          </h3>
+          <p className="text-xs text-[var(--text-muted)] mt-0.5">
+            Configure the 4-tier autonomous self-correction chain.
+          </p>
+        </article>
+        <button
+          id="save-validation-pipeline"
+          onClick={handleSave}
+          disabled={saving || !dirty}
+          className="flex items-center gap-1.5 px-4 py-1.5 text-xs font-semibold rounded-lg bg-accent hover:bg-accent text-white shadow-md transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          {saving ? (
+            <Icon name="loader" className="w-3.5 h-3.5 animate-spin" />
+          ) : (
+            <Icon name="save" className="w-3.5 h-3.5" />
+          )}
+          {saving ? "Saving…" : "Save Changes"}
+        </button>
+      </header>
+
+      {/* Tier cards */}
+      <ul className="space-y-2">
+        {tiers.map((tier, idx) => {
+          const meta = TIER_META[tier.stepType] ?? {
+            label: tier.stepType,
+            badge: "?",
+            color: "zinc",
+            description: "",
+          };
+          const colors = COLOR_CLASSES[meta.color] ?? COLOR_CLASSES.amber;
+
+          return (
+            <li
+              key={tier.id}
+              id={`validation-tier-${tier.stepType}`}
+              className={`group flex items-center gap-4 p-4 rounded-xl border transition-all duration-200 ${
+                tier.enabled
+                  ? `border-card-border bg-[var(--surface-0)] hover:ring-1 ${colors.ring} hover:${colors.glow}`
+                  : "border-card-border bg-[var(--surface-1)]/50 opacity-60"
+              }`}
+            >
+              {/* Tier badge */}
+              <span
+                className={`flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-lg text-sm font-bold border ${colors.badge}`}
+              >
+                {meta.badge}
+              </span>
+
+              {/* Info */}
+              <article className="flex-1 min-w-0">
+                <header className="flex items-center gap-2">
+                  <span className="text-sm font-semibold text-[var(--text-primary)] truncate">
+                    {meta.label}
+                  </span>
+                  <span className="text-[10px] font-mono text-[var(--text-muted)] hidden sm:inline">
+                    order: {tier.executionOrder}
+                  </span>
+                </header>
+                <p className="text-[11px] text-[var(--text-muted)] truncate mt-0.5">
+                  {meta.description}
+                </p>
+              </article>
+
+              {/* Disabled badge */}
+              {!tier.enabled && (
+                <span className="flex-shrink-0 text-[10px] font-semibold uppercase tracking-wider text-[var(--text-muted)] bg-[var(--surface-2)] px-2 py-0.5 rounded-full">
+                  Disabled
+                </span>
+              )}
+
+              {/* Toggle */}
+              <button
+                id={`toggle-tier-${tier.stepType}`}
+                onClick={() => handleToggle(idx)}
+                className={`relative flex-shrink-0 w-10 h-5 rounded-full transition-colors duration-200 ${
+                  tier.enabled
+                    ? "bg-accent"
+                    : "bg-[var(--surface-3)]"
+                }`}
+                aria-label={`Toggle ${meta.label}`}
+              >
+                <span
+                  className={`absolute top-0.5 left-0.5 w-4 h-4 rounded-full bg-white shadow-sm transition-transform duration-200 ${
+                    tier.enabled ? "translate-x-5" : "translate-x-0"
+                  }`}
+                />
+              </button>
+            </li>
+          );
+        })}
+      </ul>
+    </section>
+  );
+}

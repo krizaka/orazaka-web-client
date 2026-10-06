@@ -1,0 +1,18 @@
+/* ═══════════════════════════════════════════════════
+   ORAZAKA WEB-CLIENT — Global stylesheet
+   ─────────────────────────────────────────────────
+   Design tokens, themes, base typography, keyframes and
+   shared utility/component classes live in the design
+   system (@krizaka/orazaka-design-system/theme.css), the single
+   source shared with orazaka-web-admin. This file only
+   wires Tailwind + the design-system theme; theme.css
+   itself tells Tailwind to scan the design-system
+   sources, so their utility classes are generated.
+
+   Fonts (--font-inter, --font-krizaka-display,
+   --font-krizaka-mono …) are provided at runtime by
+   next/font in layout.tsx; theme.css references them.
+   ═══════════════════════════════════════════════════ */
+
+@import "tailwindcss";
+@import "@krizaka/orazaka-design-system/theme.css";
