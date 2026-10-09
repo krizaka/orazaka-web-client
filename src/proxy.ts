@@ -32,7 +32,9 @@ const PUBLIC_PREFIXES = [
  * Checks whether a given pathname matches any public (unauthenticated) route prefix.
  */
 function isPublicPath(pathname: string): boolean {
-  return PUBLIC_PREFIXES.some((prefix) => pathname.startsWith(prefix));
+  // `/` itself is public: it renders the landing page for a visitor and the dashboard for a session
+  // (src/app/page.tsx). It cannot be a prefix — every path starts with "/".
+  return pathname === "/" || PUBLIC_PREFIXES.some((prefix) => pathname.startsWith(prefix));
 }
 
 export function proxy(request: NextRequest) {

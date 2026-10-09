@@ -13,7 +13,8 @@
     "test:coverage": "jest --coverage --runInBand",
     "test:e2e": "npx playwright test",
     "test:e2e:ci": "npx playwright test --reporter=github",
-    "test:codemods": "node --test scripts/codemods/*.test.mjs"
+    "test:codemods": "node --test scripts/codemods/*.test.mjs",
+    "record:tour": "node scripts/record-tour.mjs"
   },
   "dependencies": {
     "@dagrejs/dagre": "^3.0.0",

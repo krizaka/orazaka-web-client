@@ -90,12 +90,11 @@ interface MetricDef {
   descKey: "runningParallel" | "estimatedCumulative" | "contextSaved";
   value: number;
   format: (v: number) => string;
-  delta?: number; // percentage change
 }
 
 /**
  * MetricsGrid renders the top summary cards for active sessions, token counts, and memory nodes.
- * Features animated count-up values, mini trend arrows, and design-token-compliant styling.
+ * Features animated count-up values and design-token-compliant styling.
  *
  * @param props - Component React properties.
  * @returns The React component representing the metrics grid display.
@@ -108,7 +107,6 @@ export function MetricsGrid({ metrics, accentClasses, t }: Readonly<MetricsGridP
       descKey: "runningParallel",
       value: metrics.activeSessions,
       format: (v) => v.toString(),
-      delta: 12,
     },
     {
       icon: "spark",
@@ -116,7 +114,6 @@ export function MetricsGrid({ metrics, accentClasses, t }: Readonly<MetricsGridP
       descKey: "estimatedCumulative",
       value: metrics.tokensUsed,
       format: (v) => (v >= 1000 ? `${(v / 1000).toFixed(1)}k` : v.toLocaleString()),
-      delta: 8,
     },
     {
       icon: "memory",
@@ -124,7 +121,6 @@ export function MetricsGrid({ metrics, accentClasses, t }: Readonly<MetricsGridP
       descKey: "contextSaved",
       value: metrics.memoryNodes,
       format: (v) => v.toLocaleString(),
-      delta: -3,
     },
   ];
 
@@ -143,7 +139,7 @@ export function MetricsGrid({ metrics, accentClasses, t }: Readonly<MetricsGridP
   );
 }
 
-/** Individual metric card with count-up animation and trend indicator */
+/** Individual metric card with count-up animation */
 function MetricCard({
   metric,
   accentText,
@@ -156,18 +152,6 @@ function MetricCard({
   desc: string;
 }) {
   const animatedValue = useCountUp(metric.value);
-
-  const deltaColor =
-    metric.delta === undefined
-      ? ""
-      : metric.delta > 0
-        ? "text-success"
-        : metric.delta < 0
-          ? "text-danger"
-          : "text-fg-muted";
-
-  const deltaArrow =
-    metric.delta === undefined ? "" : metric.delta > 0 ? "↑" : metric.delta < 0 ? "↓" : "→";
 
   return (
     <article className="glass-card rounded-lg p-(--orazaka-space-card) hover:border-border-default hover-lift transition-all duration-200">
@@ -186,31 +170,11 @@ function MetricCard({
         <span className={cn("text-3xl font-extrabold tracking-tight font-mono", accentText)}>
           {metric.format(animatedValue)}
         </span>
-        {metric.delta !== undefined && (
-          <span className={cn("text-xs font-semibold", deltaColor)}>
-            {deltaArrow} {Math.abs(metric.delta)}%
-          </span>
-        )}
       </p>
 
       {/* Description */}
       <p className="text-[11px] text-fg-muted mt-1.5">{desc}</p>
 
-      {/* Mini sparkline */}
-      <svg
-        viewBox="0 0 80 16"
-        className="w-full h-3 mt-3 opacity-25"
-        preserveAspectRatio="none"
-      >
-        <polyline
-          points="0,12 10,10 20,8 30,11 40,6 50,9 60,4 70,7 80,5"
-          fill="none"
-          stroke="var(--kz-accent)"
-          strokeWidth="1.2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        />
-      </svg>
     </article>
   );
 }

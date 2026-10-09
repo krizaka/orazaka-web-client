@@ -7,12 +7,12 @@ import { translations, type Locale } from "@/core/context/translations";
 
 const LOCALES: Locale[] = ["en", "fr"];
 
-/** Recursively collects all leaf keys from a nested object as dot-paths. */
+/** Recursively collects all leaf keys from a nested object as dot-paths (array items by index). */
 function collectKeys(obj: Record<string, unknown>, prefix = ""): string[] {
   const keys: string[] = [];
   for (const [key, value] of Object.entries(obj)) {
     const path = prefix ? `${prefix}.${key}` : key;
-    if (typeof value === "object" && value !== null && !Array.isArray(value)) {
+    if (typeof value === "object" && value !== null) {
       keys.push(...collectKeys(value as Record<string, unknown>, path));
     } else {
       keys.push(path);
