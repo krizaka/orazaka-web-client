@@ -18,6 +18,8 @@ import { Suspense } from "react";
 import { getSession } from "next-auth/react";
 import { JOB_STATUS } from "@/core/constants/http.constants";
 
+import { cn } from "@krizaka/ui/cn";
+
 const FEATURE_DISPLAY_MAP: Record<string, string> = {
   video: "video",
   image: "image",
@@ -140,8 +142,8 @@ function JobsDashboardContent() {
 
   if (isLoading || !isAuthenticated) {
     return (
-      <section className="flex min-h-screen items-center justify-center bg-background">
-        <span className="text-text-secondary dark:text-text-muted text-sm animate-pulse">
+      <section className="flex min-h-screen items-center justify-center bg-surface-0">
+        <span className="text-fg-muted text-sm animate-pulse">
           {t.dashboard.loading}
         </span>
       </section>
@@ -149,7 +151,7 @@ function JobsDashboardContent() {
   }
 
   return (
-    <section className="flex h-screen overflow-hidden bg-background transition-colors duration-200">
+    <section className="flex h-screen overflow-hidden bg-surface-0 transition-colors duration-200">
       <Sidebar />
 
       <section className="flex flex-col flex-1 overflow-hidden">
@@ -160,10 +162,10 @@ function JobsDashboardContent() {
             {/* Header controls */}
             <header className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
               <div className="space-y-1">
-                <h2 className="text-3xl font-extrabold tracking-tight text-text-primary">
+                <h2 className="text-3xl font-extrabold tracking-tight text-fg">
                   {t.jobs?.title || "My Tasks"}
                 </h2>
-                <p className="text-text-muted dark:text-text-secondary text-sm">
+                <p className="text-fg-secondary text-sm">
                   {t.jobs?.subtitle ||
                     "Track your asynchronous AI runs and background jobs in real-time."}
                 </p>
@@ -172,10 +174,10 @@ function JobsDashboardContent() {
                 <Button
                   variant="outline"
                   onClick={handleRefresh}
-                  className="rounded-xl flex items-center space-x-2 text-sm font-semibold border-border-subtle dark:hover:bg-surface-1 transition-colors"
+                  className="rounded-xl flex items-center space-x-2 text-sm font-semibold border-border-subtle transition-colors hover:bg-surface-1"
                 >
                   <Icon name="refresh"
-                    className={`w-4 h-4 ${loading ? "animate-spin" : ""}`}
+                    className={cn("w-4 h-4", loading ? "animate-spin" : "")}
                   />
                   <span>{t.jobs.refresh}</span>
                 </Button>

@@ -48,7 +48,7 @@ export function AuthLayout({ children }: Readonly<AuthLayoutProps>) {
               height={32}
               className="w-8 h-8"
             />
-            <span className="text-xl font-bold tracking-tight text-[var(--text-primary)]">
+            <span className="text-xl font-bold tracking-tight text-fg">
               Orazaka
             </span>
           </div>
@@ -102,7 +102,7 @@ export function AuthLayout({ children }: Readonly<AuthLayoutProps>) {
             href="https://www.krizaka.com/"
             target="_blank"
             rel="noopener noreferrer"
-            className="hover:text-[var(--accent)] transition-colors duration-150 underline underline-offset-2"
+            className="hover:text-accent transition-colors duration-150 underline underline-offset-2"
           >
             krizaka
           </a>

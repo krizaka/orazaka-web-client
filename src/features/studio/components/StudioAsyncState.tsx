@@ -5,7 +5,7 @@ import { Icon } from "@krizaka/orazaka-design-system";
 import { useTranslation } from "@/core/context/LocaleContext";
 
 const ACTION_CLASS =
-  "px-3 h-8 inline-flex items-center text-[12px] font-medium border border-[var(--border-subtle)] text-[var(--text-primary)] hover:bg-[var(--surface-2)] transition-colors duration-150";
+  "px-3 h-8 inline-flex items-center text-[12px] font-medium border border-border-subtle text-fg hover:bg-surface-2 transition-colors duration-150";
 
 /**
  * The waiting state of a Studio screen.
@@ -16,7 +16,7 @@ const ACTION_CLASS =
  */
 export function StudioLoading() {
   return (
-    <div className="flex items-center justify-center py-16 text-[var(--text-muted)]">
+    <div className="flex items-center justify-center py-16 text-fg-muted">
       <Icon name="loader" size={16} className="animate-spin" />
     </div>
   );
@@ -38,8 +38,8 @@ export function StudioLoadError({ onRetry }: Readonly<StudioLoadErrorProps>) {
 
   return (
     <div className="flex flex-col items-center gap-3 py-16">
-      <Icon name="alertCircle" size={20} className="text-[var(--status-error)]" />
-      <p className="text-[12px] text-[var(--text-secondary)]">{t.studio.loadError}</p>
+      <Icon name="alertCircle" size={20} className="text-danger" />
+      <p className="text-[12px] text-fg-secondary">{t.studio.loadError}</p>
       {onRetry ? (
         <button type="button" onClick={onRetry} className={ACTION_CLASS}>
           {t.studio.retry}

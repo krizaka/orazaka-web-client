@@ -63,14 +63,14 @@ export function RunForm({
       </div>
 
       <div className="flex items-center justify-between gap-3">
-        <span className="text-[11px] text-[var(--text-muted)]">
+        <span className="text-[11px] text-fg-muted">
           {t.studio.estimatedCost}: {estimatedCredits} {t.studio.creditsPerRun}
         </span>
         <button
           type="button"
           onClick={submit}
           disabled={isSubmitting || missingRequired}
-          className="h-8 px-4 inline-flex items-center gap-1.5 text-[12px] font-medium border border-[var(--accent)] text-[var(--accent)] hover:bg-[var(--surface-2)] transition-colors duration-150 disabled:opacity-50"
+          className="h-8 px-4 inline-flex items-center gap-1.5 text-[12px] font-medium border border-accent text-accent hover:bg-surface-2 transition-colors duration-150 disabled:opacity-50"
         >
           {isSubmitting && <Icon name="loader" size={13} className="animate-spin" />}
           {t.studio.runNow}
@@ -93,7 +93,7 @@ function RunInput({ field, value, disabled, onChange }: Readonly<RunInputProps>)
 
   return (
     <label htmlFor={inputId} className="flex flex-col gap-1">
-      <span className="hud-label text-[10px] text-[var(--text-muted)]">
+      <span className="hud-label text-[10px] text-fg-muted">
         {field.title}
         {field.required ? " *" : ""}
       </span>
@@ -103,7 +103,7 @@ function RunInput({ field, value, disabled, onChange }: Readonly<RunInputProps>)
           value={value}
           disabled={disabled}
           onChange={(event) => onChange(event.target.value)}
-          className="h-8 px-2 text-[12px] border border-[var(--border-subtle)] bg-[var(--surface-2)] text-[var(--text-primary)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] disabled:opacity-50"
+          className="h-8 px-2 text-[12px] border border-border-subtle bg-surface-2 text-fg focus:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:opacity-50"
         >
           <option value="" />
           {field.options.map((option) => (
@@ -120,7 +120,7 @@ function RunInput({ field, value, disabled, onChange }: Readonly<RunInputProps>)
           disabled={disabled}
           placeholder={field.type === "array" ? "a, b, c" : undefined}
           onChange={(event) => onChange(event.target.value)}
-          className="h-8 px-2 text-[12px] border border-[var(--border-subtle)] bg-[var(--surface-2)] text-[var(--text-primary)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] disabled:opacity-50"
+          className="h-8 px-2 text-[12px] border border-border-subtle bg-surface-2 text-fg focus:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:opacity-50"
         />
       )}
     </label>

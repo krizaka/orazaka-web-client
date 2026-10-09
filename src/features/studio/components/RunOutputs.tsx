@@ -26,8 +26,8 @@ export function RunOutputs({ outputs }: Readonly<RunOutputsProps>) {
 
   return (
     <section className="flex flex-col gap-2">
-      <h2 className="hud-label text-[10px] text-[var(--text-muted)]">{t.studio.runOutputs}</h2>
-      <div className="flex flex-col divide-y divide-[var(--border-subtle)] border border-[var(--border-subtle)]">
+      <h2 className="hud-label text-[10px] text-fg-muted">{t.studio.runOutputs}</h2>
+      <div className="flex flex-col divide-y divide-border-subtle border border-border-subtle">
         {outputs.map((artefact) => (
           <RunOutputRow key={artefact.key} artefact={artefact} />
         ))}
@@ -55,19 +55,19 @@ function RunOutputRow({ artefact }: Readonly<RunOutputRowProps>) {
     <article className="flex flex-col gap-2 p-3">
       <header className="flex items-start gap-3">
         <div className="flex flex-col gap-0.5 min-w-0">
-          <span className="hud-label text-[10px] text-[var(--text-muted)]">{artefact.label}</span>
+          <span className="hud-label text-[10px] text-fg-muted">{artefact.label}</span>
           {artefact.type === "TEXT" ? (
-            <span className="text-[12px] text-[var(--text-primary)] break-words whitespace-pre-wrap">
+            <span className="text-[12px] text-fg break-words whitespace-pre-wrap">
               {artefact.value}
             </span>
           ) : (
-            <span className="text-[11px] text-[var(--text-muted)] break-all">{artefact.value}</span>
+            <span className="text-[11px] text-fg-muted break-all">{artefact.value}</span>
           )}
         </div>
         <button
           type="button"
           onClick={() => void copy()}
-          className="ml-auto flex-shrink-0 h-7 px-2 inline-flex items-center gap-1 text-[11px] font-medium border border-[var(--border-subtle)] text-[var(--text-secondary)] hover:bg-[var(--surface-2)] transition-colors duration-150"
+          className="ml-auto flex-shrink-0 h-7 px-2 inline-flex items-center gap-1 text-[11px] font-medium border border-border-subtle text-fg-secondary hover:bg-surface-2 transition-colors duration-150"
         >
           <Icon name={copied ? "check" : "copy"} size={12} />
           {copied ? t.studio.copied : t.studio.copy}
@@ -100,7 +100,7 @@ function ArtefactMedia({ artefact }: Readonly<RunOutputRowProps>) {
         src={source}
         controls
         playsInline
-        className="w-full max-w-sm border border-[var(--border-subtle)]"
+        className="w-full max-w-sm border border-border-subtle"
       >
         <track kind="captions" />
       </video>
@@ -121,7 +121,7 @@ function ArtefactMedia({ artefact }: Readonly<RunOutputRowProps>) {
     <img
       src={source}
       alt={artefact.label}
-      className="w-full max-w-sm border border-[var(--border-subtle)]"
+      className="w-full max-w-sm border border-border-subtle"
     />
   );
 }

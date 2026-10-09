@@ -54,6 +54,19 @@ cd orazaka-apps/ui && npm install
 
 Requirements: Node.js 22+.
 
+## UI: roles, one theme mechanism, platform primitives
+
+- **Roles only.** Components write the [`@krizaka/tailwind`](https://github.com/krizaka/krizaka-ui) role utilities —
+  `bg-surface-1`, `text-fg-secondary`, `border-border-subtle`, `bg-accent text-on-accent`, `text-danger` — never an
+  arbitrary `[var(--…)]`, a raw palette colour, `light:`/`dark:` or a className template string. ESLint enforces the
+  four `@krizaka/config` UI rules and `krizaka-ratchet` (`lint-ratchet.json`) holds them at zero (`npm run lint`).
+- **Theme.** The organisation's mechanism, from `@krizaka/ui/theme`: `<ThemeScript />` in the root layout, dark on
+  `:root`, light on `html.light`, a named theme (`custom`, `cyberpunk`, `solarized`, `krizaka`) on
+  `html.theme-<name>`. `useAppearance()` maps the profile's single preference onto it.
+- **Primitives.** `Card.*`, `Dialog`, `Toaster`/`toast`, `Popover`, `Alert`, `Button` come from `@krizaka/ui`;
+  the Orazaka identity (Electric Blue, the named themes) from `@krizaka/orazaka-design-system/theme.css`.
+- The one-shot migration that got here is `scripts/codemods/roles.mjs` (jscodeshift, tested by `npm run test:codemods`).
+
 ## Governance
 
 This repository follows the Orazaka governance contract — [AGENTS.md](https://github.com/krizaka/orazaka/blob/main/AGENTS.md)

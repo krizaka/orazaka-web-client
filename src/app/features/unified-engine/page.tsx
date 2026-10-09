@@ -32,19 +32,19 @@ export default function UnifiedEngineFeaturePage() {
   const c = CONTENT[locale] || CONTENT.en;
 
   return (
-    <main className="min-h-screen flex flex-col items-center p-6 bg-[var(--surface-0)] ambient-grid w-full overflow-y-auto">
+    <main className="min-h-screen flex flex-col items-center p-6 bg-surface-0 ambient-grid w-full overflow-y-auto">
       {/* Navbar header */}
-      <header className="w-full max-w-4xl flex items-center justify-between py-4 mb-10 border-b border-[var(--border-subtle)]">
+      <header className="w-full max-w-4xl flex items-center justify-between py-4 mb-10 border-b border-border-subtle">
         <Link href="/login" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
           <Image src="/logo.svg" alt="Orazaka Logo" width={24} height={24} className="w-6 h-6" />
-          <span className="text-lg font-bold tracking-tight text-[var(--text-primary)]">
+          <span className="text-lg font-bold tracking-tight text-fg">
             Orazaka
           </span>
         </Link>
 
         <Link
           href="/login"
-          className="text-xs font-semibold px-3 py-1.5 rounded-lg border border-[var(--border-default)] hover:border-[var(--accent)] transition-colors hover:text-[var(--accent)] text-[var(--text-secondary)]"
+          className="text-xs font-semibold px-3 py-1.5 rounded-lg border border-border-default hover:border-accent transition-colors hover:text-accent text-fg-secondary"
         >
           {c.backToLogin}
         </Link>
@@ -52,22 +52,22 @@ export default function UnifiedEngineFeaturePage() {
 
       {/* Hero Header Content */}
       <div className="w-full max-w-4xl text-center space-y-4 mb-12">
-        <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-status-warning/10 text-status-warning border border-status-warning/20">
-          <span className="w-1.5 h-1.5 rounded-full bg-status-warning animate-pulse" />
+        <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-warning/10 text-warning border border-warning/20">
+          <span className="w-1.5 h-1.5 rounded-full bg-warning animate-pulse" />
           Multi-Modal Pipeline Orchestration
         </span>
-        <h1 className="text-4xl font-extrabold tracking-tight text-[var(--text-primary)] md:text-5xl lg:text-6xl bg-gradient-to-r from-[var(--text-primary)] to-status-warning bg-clip-text text-transparent pb-1">
+        <h1 className="text-4xl font-extrabold tracking-tight text-fg md:text-5xl lg:text-6xl bg-gradient-to-r from-fg to-warning bg-clip-text text-transparent pb-1">
           {c.title}
         </h1>
-        <p className="text-lg text-[var(--text-secondary)] max-w-2xl mx-auto leading-relaxed">
+        <p className="text-lg text-fg-secondary max-w-2xl mx-auto leading-relaxed">
           {c.subtitle}
         </p>
       </div>
 
       {/* Live sovereign-chat demo (shared design-system component) */}
       <section className="w-full max-w-4xl flex flex-col items-center gap-4 mb-14">
-        <span className="inline-flex items-center gap-1.5 font-mono text-[11px] font-semibold uppercase tracking-[0.15em] text-[var(--text-muted)]">
-          <span className="w-1.5 h-1.5 rounded-full bg-status-success animate-pulse" />
+        <span className="inline-flex items-center gap-1.5 font-mono text-[11px] font-semibold uppercase tracking-[0.15em] text-fg-muted">
+          <span className="w-1.5 h-1.5 rounded-full bg-success animate-pulse" />
           {c.demoLabel}
         </span>
         <ChatShowcase
@@ -82,19 +82,19 @@ export default function UnifiedEngineFeaturePage() {
       {/* Main Glass Card container */}
       <article className="w-full max-w-4xl glass-card rounded-2xl p-6 md:p-10 space-y-12 animate-fade-up shadow-2xl mb-8">
         {/* Transparent SVG Schema */}
-        <section className="flex flex-col items-center justify-center p-6 rounded-xl border border-[var(--border-subtle)] bg-[var(--surface-1)]/45 backdrop-blur-sm relative overflow-hidden group">
-          <span className="absolute inset-0 bg-radial-gradient from-status-warning/5 to-transparent opacity-40 pointer-events-none" />
-          <h3 className="text-sm font-bold text-[var(--text-primary)] mb-1 flex items-center gap-2">
+        <section className="flex flex-col items-center justify-center p-6 rounded-xl border border-border-subtle bg-surface-1/45 backdrop-blur-sm relative overflow-hidden group">
+          <span className="absolute inset-0 bg-radial-gradient from-warning/5 to-transparent opacity-40 pointer-events-none" />
+          <h3 className="text-sm font-bold text-fg mb-1 flex items-center gap-2">
             {c.schemaTitle}
           </h3>
-          <p className="text-[11px] text-[var(--text-muted)] mb-6 text-center">
+          <p className="text-[11px] text-fg-muted mb-6 text-center">
             {c.schemaDesc}
           </p>
           <EnginePipelineSvg />
         </section>
 
         {/* Informative text columns */}
-        <p className="text-[var(--text-secondary)] text-base md:text-lg leading-relaxed text-center max-w-3xl mx-auto">
+        <p className="text-fg-secondary text-base md:text-lg leading-relaxed text-center max-w-3xl mx-auto">
           {c.intro}
         </p>
 
@@ -102,12 +102,12 @@ export default function UnifiedEngineFeaturePage() {
           {c.columns.map((column) => (
             <section
               key={column.title}
-              className="p-6 rounded-xl border border-[var(--border-subtle)] bg-[var(--surface-1)] hover:border-[var(--border-strong)] transition-all duration-200 hover:-translate-y-1 shadow-sm hover:shadow-md"
+              className="p-6 rounded-xl border border-border-subtle bg-surface-1 hover:border-border-strong transition-all duration-200 hover:-translate-y-1 shadow-sm hover:shadow-md"
             >
-              <h2 className="text-base font-bold text-[var(--text-primary)] mb-3">
+              <h2 className="text-base font-bold text-fg mb-3">
                 {column.title}
               </h2>
-              <p className="text-xs text-[var(--text-secondary)] leading-relaxed">
+              <p className="text-xs text-fg-secondary leading-relaxed">
                 {column.desc}
               </p>
             </section>
@@ -115,28 +115,28 @@ export default function UnifiedEngineFeaturePage() {
         </div>
 
         {/* Detailed Interceptor Pipeline Steps */}
-        <section className="border-t border-[var(--border-subtle)] pt-10 space-y-6">
+        <section className="border-t border-border-subtle pt-10 space-y-6">
           <div className="text-center max-w-2xl mx-auto space-y-3">
-            <h2 className="text-2xl font-bold tracking-tight text-[var(--text-primary)] md:text-3xl bg-gradient-to-r from-[var(--text-primary)] to-status-warning bg-clip-text text-transparent pb-1">
+            <h2 className="text-2xl font-bold tracking-tight text-fg md:text-3xl bg-gradient-to-r from-fg to-warning bg-clip-text text-transparent pb-1">
               Cognitive Interceptor execution sequence
             </h2>
-            <p className="text-xs text-[var(--text-secondary)] leading-relaxed">
+            <p className="text-xs text-fg-secondary leading-relaxed">
               Every request is dynamically processed through a 10-tier pipeline resolving security controls, memory injections, vector storage, and 3-tier self-correction validation.
             </p>
           </div>
 
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 pt-2 text-left">
             {PIPELINE_STEPS.map((step) => (
-              <article key={step.order} className="p-4 rounded-xl border border-[var(--border-subtle)] bg-[var(--surface-1)]/30 backdrop-blur-sm hover:border-[var(--border-strong)] transition-all duration-200">
+              <article key={step.order} className="p-4 rounded-xl border border-border-subtle bg-surface-1/30 backdrop-blur-sm hover:border-border-strong transition-all duration-200">
                 <div className="flex items-center gap-2.5 mb-2">
-                  <span className="font-mono text-[10px] font-bold text-status-warning bg-status-warning/10 px-1.5 py-0.5 rounded">
+                  <span className="font-mono text-[10px] font-bold text-warning bg-warning/10 px-1.5 py-0.5 rounded">
                     {step.order}
                   </span>
-                  <h4 className="text-xs font-bold text-[var(--text-primary)]">
+                  <h4 className="text-xs font-bold text-fg">
                     {step.name}
                   </h4>
                 </div>
-                <p className="text-[10px] text-[var(--text-secondary)] leading-relaxed">
+                <p className="text-[10px] text-fg-secondary leading-relaxed">
                   {step.desc}
                 </p>
               </article>
@@ -145,22 +145,22 @@ export default function UnifiedEngineFeaturePage() {
         </section>
 
         {/* Quantum Validation Advisor Section */}
-        <section className="border-t border-[var(--border-subtle)] pt-10 space-y-6">
+        <section className="border-t border-border-subtle pt-10 space-y-6">
           <div className="text-center max-w-2xl mx-auto space-y-3">
-            <h2 className="text-2xl font-bold tracking-tight text-[var(--text-primary)] md:text-3xl bg-gradient-to-r from-[var(--text-primary)] to-status-warning bg-clip-text text-transparent pb-1">
+            <h2 className="text-2xl font-bold tracking-tight text-fg md:text-3xl bg-gradient-to-r from-fg to-warning bg-clip-text text-transparent pb-1">
               Quantum Validation Advisor
             </h2>
-            <p className="text-xs text-[var(--text-secondary)] leading-relaxed">
+            <p className="text-xs text-fg-secondary leading-relaxed">
               Orazaka&apos;s unique, closed-loop self-correction architecture validates model outputs using three distinct, automated approaches before delivering payloads.
             </p>
           </div>
 
           <div className="grid gap-6 md:grid-cols-3 pt-2 text-left">
             {VALIDATION_TIERS.map((v) => (
-              <article key={v.tier} className="p-5 rounded-xl border border-[var(--border-subtle)] bg-[var(--surface-1)]/30 backdrop-blur-sm hover:border-[var(--border-strong)] transition-all duration-200">
-                <p className="font-mono text-[10px] font-bold text-status-warning mb-2">{v.tier}</p>
-                <h3 className="text-sm font-bold text-[var(--text-primary)] mb-2">{v.title}</h3>
-                <p className="text-[11px] text-[var(--text-secondary)] leading-relaxed">
+              <article key={v.tier} className="p-5 rounded-xl border border-border-subtle bg-surface-1/30 backdrop-blur-sm hover:border-border-strong transition-all duration-200">
+                <p className="font-mono text-[10px] font-bold text-warning mb-2">{v.tier}</p>
+                <h3 className="text-sm font-bold text-fg mb-2">{v.title}</h3>
+                <p className="text-[11px] text-fg-secondary leading-relaxed">
                   {v.desc}
                 </p>
               </article>
@@ -170,15 +170,15 @@ export default function UnifiedEngineFeaturePage() {
       </article>
 
       {/* Public Footer */}
-      <footer className="w-full max-w-4xl flex items-center justify-between py-6 mt-6 border-t border-[var(--border-subtle)] text-xs text-[var(--text-muted)]">
+      <footer className="w-full max-w-4xl flex items-center justify-between py-6 mt-6 border-t border-border-subtle text-xs text-fg-muted">
         <div className="flex gap-4">
-          <Link href="/privacy" className="hover:text-[var(--accent)] transition-colors underline">
+          <Link href="/privacy" className="hover:text-accent transition-colors underline">
             {t.auth.legalPrivacy}
           </Link>
-          <Link href="/terms" className="hover:text-[var(--accent)] transition-colors">
+          <Link href="/terms" className="hover:text-accent transition-colors">
             {t.auth.legalTerms}
           </Link>
-          <Link href="/contact" className="hover:text-[var(--accent)] transition-colors">
+          <Link href="/contact" className="hover:text-accent transition-colors">
             {t.auth.legalContact}
           </Link>
         </div>

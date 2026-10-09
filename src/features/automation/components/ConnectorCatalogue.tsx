@@ -3,6 +3,8 @@
 
 import { useState } from "react";
 
+import { cn } from "@krizaka/ui/cn";
+
 interface Connector {
   id: string;
   name: string;
@@ -67,7 +69,7 @@ function StatusBadge({ status }: Readonly<{ status: Connector["status"] }>) {
 
   return (
     <span className="connector-status-badge">
-      <span className={`connector-status-dot ${config.dotClass}`} />
+      <span className={cn("connector-status-dot", config.dotClass)} />
       <span className="connector-status-label">{config.label}</span>
     </span>
   );
@@ -105,9 +107,10 @@ export default function ConnectorCatalogue() {
         {connectors.map((connector) => (
           <article
             key={connector.id}
-            className={`glass-card connector-card ${
+            className={cn(
+              "glass-card connector-card",
               connector.status === "connected" ? "glass-card-active" : ""
-            }`}
+            )}
             style={
               {
                 "--connector-accent": connector.color,
@@ -134,11 +137,9 @@ export default function ConnectorCatalogue() {
 
             <div className="connector-card-actions">
               <button
-                className={`connector-toggle-btn ${
-                  connector.status === "connected"
-                    ? "connector-toggle-active"
-                    : ""
-                }`}
+                className={cn("connector-toggle-btn", connector.status === "connected"
+                  ? "connector-toggle-active"
+                  : "")}
                 onClick={() => handleToggle(connector.id)}
                 id={`toggle-${connector.id}`}
                 aria-label={`Toggle ${connector.name} connection`}

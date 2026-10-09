@@ -14,7 +14,7 @@ export interface ModelOption {
 }
 
 export const selectClass =
-  "h-8 w-full cursor-pointer appearance-none rounded-lg border border-[var(--border-default)] bg-[var(--surface-2)] pl-2.5 pr-7 text-xs text-[var(--text-primary)] transition-colors focus:outline-none focus:ring-2 focus:ring-[var(--accent)]";
+  "h-8 w-full cursor-pointer appearance-none rounded-lg border border-border-default bg-surface-2 pl-2.5 pr-7 text-xs text-fg transition-colors focus:outline-none focus:ring-2 focus:ring-ring";
 
 export function Field({
   label,
@@ -22,12 +22,12 @@ export function Field({
 }: Readonly<{ label: string; children: React.ReactNode }>) {
   return (
     <label className="flex min-w-[120px] flex-1 flex-col gap-1">
-      <span className="text-[10px] font-semibold uppercase tracking-wider text-[var(--text-muted)]">
+      <span className="text-[10px] font-semibold uppercase tracking-wider text-fg-muted">
         {label}
       </span>
       <span className="relative">
         {children}
-        <Icon name="chevronDown" className="pointer-events-none absolute right-2 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-[var(--text-muted)]" />
+        <Icon name="chevronDown" className="pointer-events-none absolute right-2 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-fg-muted" />
       </span>
     </label>
   );

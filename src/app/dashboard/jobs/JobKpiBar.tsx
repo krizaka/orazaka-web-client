@@ -13,6 +13,8 @@ import {
   extractExtraMetrics,
 } from "@/app/dashboard/jobs/jobKpiBar.utils";
 
+import { cn } from "@krizaka/ui/cn";
+
 interface JobKpiBarProps {
   job: Job;
   /** When true, shows userId column (admin view) */
@@ -70,10 +72,10 @@ export const JobKpiBar: React.FC<JobKpiBarProps> = ({ job, showUser }) => {
       icon: <Icon name="timer" className="w-3 h-3" />,
       label: "INFERENCE",
       value: inferenceDuration,
-      gradient: "from-status-warning/20 to-status-warning/5",
-      border: "border-status-warning/15",
-      text: "text-status-warning",
-      glow: "hover:shadow-status-warning/10",
+      gradient: "from-warning/20 to-warning/5",
+      border: "border-warning/15",
+      text: "text-warning",
+      glow: "hover:shadow-warning/10",
     });
   }
 
@@ -82,10 +84,10 @@ export const JobKpiBar: React.FC<JobKpiBarProps> = ({ job, showUser }) => {
       icon: <Icon name="fileOutput" className="w-3 h-3" />,
       label: "OUTPUT",
       value: outputFormat.toUpperCase(),
-      gradient: "from-status-success/20 to-status-success/5",
-      border: "border-status-success/15",
-      text: "text-status-success",
-      glow: "hover:shadow-status-success/10",
+      gradient: "from-success/20 to-success/5",
+      border: "border-success/15",
+      text: "text-success",
+      glow: "hover:shadow-success/10",
     });
   }
 
@@ -109,7 +111,7 @@ export const JobKpiBar: React.FC<JobKpiBarProps> = ({ job, showUser }) => {
         job.userId.length > 12 ? `${job.userId.substring(0, 12)}…` : job.userId,
       gradient: "from-surface-3/15 to-surface-3/5",
       border: "border-border-subtle/10",
-      text: "text-text-muted dark:text-text-secondary",
+      text: "text-fg-secondary",
       glow: "hover:shadow-surface-3/10",
     });
   }
@@ -120,10 +122,10 @@ export const JobKpiBar: React.FC<JobKpiBarProps> = ({ job, showUser }) => {
         icon: <Icon name="gauge" className="w-3 h-3" />,
         label: m.key.toUpperCase(),
         value: m.value,
-        gradient: "from-status-warning/15 to-status-warning/5",
-        border: "border-status-warning/12",
-        text: "text-status-warning",
-        glow: "hover:shadow-status-warning/10",
+        gradient: "from-warning/15 to-warning/5",
+        border: "border-warning/12",
+        text: "text-warning",
+        glow: "hover:shadow-warning/10",
       });
     });
   }
@@ -134,30 +136,27 @@ export const JobKpiBar: React.FC<JobKpiBarProps> = ({ job, showUser }) => {
     <tr className="bg-transparent">
       <td
         colSpan={7}
-        className="px-4 py-1.5 border-t border-white/[0.03] dark:border-white/[0.02]"
+        className="px-4 py-1.5 border-t border-fg/2"
       >
         <div className="flex flex-wrap items-center gap-1.5">
           {chips.map((chip, i) => (
             <span
               key={`${chip.label}-${i}`}
-              className={`
-                group/chip relative overflow-hidden
-                inline-flex items-center gap-1
-                px-2.5 py-1 rounded-lg
-                bg-gradient-to-r ${chip.gradient}
-                border ${chip.border}
-                backdrop-blur-sm
-                ${chip.text}
-                text-[10px] font-semibold tracking-wide
-                transition-all duration-200
-                hover:scale-[1.04]
-                ${chip.glow} hover:shadow-md
-                cursor-default
-              `}
+              className={cn(
+                "group/chip relative overflow-hidden inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-gradient-to-r",
+                chip.gradient,
+                "border",
+                chip.border,
+                "backdrop-blur-sm",
+                chip.text,
+                "text-[10px] font-semibold tracking-wide transition-all duration-200 hover:scale-[1.04]",
+                chip.glow,
+                "hover:shadow-md cursor-default"
+              )}
               title={`${chip.label}: ${chip.value}`}
             >
               {/* Shimmer effect on hover */}
-              <span className="absolute inset-0 -translate-x-full group-hover/chip:translate-x-full transition-transform duration-700 bg-gradient-to-r from-transparent via-white/[0.08] to-transparent pointer-events-none" />
+              <span className="absolute inset-0 -translate-x-full group-hover/chip:translate-x-full transition-transform duration-700 bg-gradient-to-r from-transparent via-fg/8 to-transparent pointer-events-none" />
 
               <span className="relative z-10 flex items-center gap-1">
                 {chip.icon}

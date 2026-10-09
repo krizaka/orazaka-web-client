@@ -27,7 +27,7 @@ jest.mock("@/core/context/SidebarContext", () => ({
 
 jest.mock("@/core/context/TenantContext", () => ({
   useTenant: () => ({
-    accentClasses: { text: "text-status-warning", bgSoft: "bg-status-warning/10", bg: "bg-status-warning" },
+    accentClasses: { text: "text-warning", bgSoft: "bg-warning/10", bg: "bg-warning" },
   }),
 }));
 
@@ -37,7 +37,7 @@ jest.mock("@/core/context/LocaleContext", () => ({
     setLocale: mockSetLocale,
     t: {
       settings: { english: "English", french: "French" },
-      header: { profile: "Profile", settings: "Settings", logout: "Logout" },
+      header: { profile: "Profile", settings: "Settings", logout: "Logout", themeDark: "Dark theme", themeLight: "Light theme", themeSystem: "System theme" },
       notifications: {
         title: "Notifications",
         active: "active",
@@ -52,8 +52,10 @@ jest.mock("@/core/context/LocaleContext", () => ({
   }),
 }));
 
-jest.mock("@/components/ui/ThemeToggle", () => ({
-  ThemeToggle: () => <button data-testid="theme-toggle">Theme</button>,
+jest.mock("@krizaka/ui/theme", () => ({
+  ThemeToggle: ({ label }: { label: (mode: string) => string }) => (
+    <button data-testid="theme-toggle">{label("dark")}</button>
+  ),
 }));
 
 jest.mock("@/components/layout/NotificationBell", () => ({
@@ -83,6 +85,7 @@ describe("Header", () => {
   it("renders theme toggle", () => {
     render(<Header />);
     expect(screen.getByTestId("theme-toggle")).toBeInTheDocument();
+    expect(screen.getByTestId("theme-toggle")).toHaveTextContent("Dark theme");
   });
 
   it("renders notification bell", () => {

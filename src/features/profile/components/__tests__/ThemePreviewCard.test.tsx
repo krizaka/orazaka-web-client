@@ -1,22 +1,14 @@
 import "@testing-library/jest-dom";
 import { render, screen, fireEvent } from "@testing-library/react";
-import { ThemePreviewCard } from "@/features/profile/components/ThemePreviewCard";
+import { previewIsland, ThemePreviewCard } from "@/features/profile/components/ThemePreviewCard";
 
 const defaultProps = {
   value: "dark" as const,
   label: "Dark Mode",
   desc: "Easy on the eyes",
   icon: <span data-testid="icon">🌙</span>,
-  preview: {
-    sidebar: "bg-surface-1",
-    header: "bg-surface-2",
-    body: "bg-surface-2",
-    accent: "bg-status-warning",
-    text: "bg-surface-3",
-  },
   isActive: false,
   onClick: jest.fn(),
-  index: 0,
   clickToApplyLabel: "Click to apply",
 };
 
@@ -84,9 +76,28 @@ describe("ThemePreviewCard", () => {
     expect(button.className).toContain("theme-card-active");
   });
 
-  it("applies animation delay based on index", () => {
-    render(<ThemePreviewCard {...defaultProps} index={3} />);
-    const button = screen.getByRole("button");
-    expect(button.style.animationDelay).toBe("150ms");
+  it("draws a theme inside its island, so the preview reads that theme's tokens", () => {
+    const { container, rerender } = render(<ThemePreviewCard {...defaultProps} value="cyberpunk" />);
+    expect(container.querySelector("[data-island]")).toHaveClass("theme-cyberpunk");
+    rerender(<ThemePreviewCard {...defaultProps} value="dark" />);
+    expect(container.querySelector("[data-island]")).toHaveClass("theme-dark");
+  });
+
+  it("draws light with the invariant tokens and system half light, half dark", () => {
+    const { container, rerender } = render(<ThemePreviewCard {...defaultProps} value="light" />);
+    expect(container.querySelector("[data-island]")).toBeNull();
+    rerender(<ThemePreviewCard {...defaultProps} value="system" />);
+    expect(container.querySelectorAll("[data-island='theme-dark']")).toHaveLength(1);
+  });
+
+  it("maps every appearance to the way its preview reads tokens", () => {
+    expect(previewIsland("light")).toEqual({ kind: "light" });
+    expect(previewIsland("system")).toEqual({ kind: "system" });
+    expect(previewIsland("solarized")).toEqual({ kind: "island", className: "theme-solarized" });
+  });
+
+  it("exposes the selection as aria-pressed", () => {
+    render(<ThemePreviewCard {...defaultProps} isActive={true} />);
+    expect(screen.getByRole("button")).toHaveAttribute("aria-pressed", "true");
   });
 });

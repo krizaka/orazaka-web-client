@@ -168,8 +168,8 @@ export default function AdminDashboardPage() {
 
   if (isLoading || !isAuthenticated || user?.role !== "admin") {
     return (
-      <section className="flex min-h-screen items-center justify-center bg-[var(--surface-0)]">
-        <span className="text-[var(--text-muted)] text-sm animate-pulse">
+      <section className="flex min-h-screen items-center justify-center bg-surface-0">
+        <span className="text-fg-muted text-sm animate-pulse">
           {t.admin.loadingCredentials}
         </span>
       </section>
@@ -177,13 +177,13 @@ export default function AdminDashboardPage() {
   }
 
   return (
-    <section className="flex h-screen overflow-hidden bg-[var(--surface-0)] transition-colors duration-200">
+    <section className="flex h-screen overflow-hidden bg-surface-0 transition-colors duration-200">
       <Sidebar />
 
       <section className="flex flex-col flex-1 overflow-hidden">
         <Header />
 
-        <main className="flex-1 overflow-auto p-6 scrollbar-thin ambient-grid bg-[var(--surface-0)]">
+        <main className="flex-1 overflow-auto p-6 scrollbar-thin ambient-grid bg-surface-0">
           <section className="mx-auto max-w-5xl space-y-6 animate-in fade-in slide-in-from-bottom-3 duration-300">
             <AdminToolbar
               loadingModels={loadingModels}
@@ -205,7 +205,7 @@ export default function AdminDashboardPage() {
             <ValidationPipelineCard fetchWithAuth={fetchWithAuth} />
 
             {loadingModels && models.length === 0 ? (
-              <div className="text-center py-20 text-[var(--text-muted)] animate-pulse text-sm">
+              <div className="text-center py-20 text-fg-muted animate-pulse text-sm">
                 {t.admin.loadingModels}
               </div>
             ) : (

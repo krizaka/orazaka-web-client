@@ -46,6 +46,10 @@ export interface TranslationDictionary {
   header: {
     profile: string;
     logout: string;
+    /** The theme button's name, one per current mode (it cycles dark → light → system). */
+    themeDark: string;
+    themeLight: string;
+    themeSystem: string;
   };
   dashboard: {
     welcome: string;
@@ -532,6 +536,9 @@ export interface TranslationDictionary {
     speechGen: string;
     textGen: string;
     viewAll: string;
+    /** The accessible name of the toast region, and of each toast's close button. */
+    region: string;
+    dismiss: string;
   };
   executionTimeline: {
     title: string;
@@ -612,6 +619,25 @@ export interface TranslationDictionary {
     idleDescription: string;
     tokenLabel: string;
     activateAccount: string;
+  };
+  /** Credits: the cost confirmation, the top-up dialog, the low-balance warning. `{credits}` is a formatted amount. */
+  billing: {
+    estimating: string;
+    estimate: string;
+    available: string;
+    insufficient: string;
+    noEstimate: string;
+    cancel: string;
+    confirm: string;
+    close: string;
+    topUpTitle: string;
+    loading: string;
+    noPlans: string;
+    perMonth: string;
+    lowBalanceTitle: string;
+    lowBalance: string;
+    topUp: string;
+    dismiss: string;
   };
   studio: {
     title: string;

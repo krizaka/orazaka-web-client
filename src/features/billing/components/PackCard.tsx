@@ -52,33 +52,33 @@ export function PackCard({
   const isBuyable = pack.access === "BUYABLE";
 
   return (
-    <article className="flex flex-col gap-3 border border-[var(--border-subtle)] bg-[var(--surface-1)] p-4">
+    <article className="flex flex-col gap-3 border border-border-subtle bg-surface-1 p-4">
       <header className="flex items-start justify-between gap-3">
         <hgroup className="flex items-start gap-2">
           <Icon name={pack.iconKey as IconName} size={16} className="mt-0.5 flex-shrink-0" />
           <div>
-            <h3 className="text-[14px] font-medium text-[var(--text-primary)]">{pack.label}</h3>
+            <h3 className="text-[14px] font-medium text-fg">{pack.label}</h3>
             {pack.tagline && (
-              <p className="text-[11px] text-[var(--text-muted)]">{pack.tagline}</p>
+              <p className="text-[11px] text-fg-muted">{pack.tagline}</p>
             )}
           </div>
         </hgroup>
         {(isOwned || isIncluded) && (
-          <span className="inline-flex flex-shrink-0 items-center gap-1 text-[11px] text-[var(--status-success)]">
+          <span className="inline-flex flex-shrink-0 items-center gap-1 text-[11px] text-success">
             <Icon name="check" size={12} />
             {isIncluded ? t.packs.included : t.packs.owned}
           </span>
         )}
       </header>
 
-      <p className="text-[13px] text-[var(--text-primary)]">
+      <p className="text-[13px] text-fg">
         {pack.priceCents === null
           ? t.packs.priceUnavailable
           : pack.priceCents === 0
             ? t.packs.free
             : formatPrice(pack.priceCents, "EUR")}
         {pack.includedCredits !== null && pack.includedCredits > 0 && (
-          <span className="text-[var(--text-muted)]">
+          <span className="text-fg-muted">
             {" · "}
             {formatCredits(pack.includedCredits)} {t.packs.includedCredits}
           </span>
@@ -90,7 +90,7 @@ export function PackCard({
           {pack.studioKeys.map((studioKey) => (
             <li
               key={studioKey}
-              className="border border-[var(--border-subtle)] px-1.5 py-0.5 text-[11px] text-[var(--text-muted)]"
+              className="border border-border-subtle px-1.5 py-0.5 text-[11px] text-fg-muted"
             >
               {studioKey}
             </li>
@@ -105,8 +105,8 @@ export function PackCard({
           disabled={isPending}
           className={
             isOwned
-              ? "h-8 self-start px-3 text-[12px] font-medium text-[var(--text-muted)] transition-colors duration-150 hover:text-[var(--status-error)] disabled:opacity-50"
-              : "inline-flex h-8 items-center gap-1.5 self-start border border-[var(--accent)] px-3 text-[12px] font-medium text-[var(--accent)] transition-colors duration-150 hover:bg-[var(--surface-2)] disabled:opacity-50"
+              ? "h-8 self-start px-3 text-[12px] font-medium text-fg-muted transition-colors duration-150 hover:text-danger disabled:opacity-50"
+              : "inline-flex h-8 items-center gap-1.5 self-start border border-accent px-3 text-[12px] font-medium text-accent transition-colors duration-150 hover:bg-surface-2 disabled:opacity-50"
           }
         >
           {isPending && <Icon name="loader" size={13} className="animate-spin" />}

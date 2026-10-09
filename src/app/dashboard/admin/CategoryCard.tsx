@@ -1,9 +1,11 @@
 "use client";
 
 import * as React from "react";
-import { Card, Icon } from "@krizaka/orazaka-design-system";
+import { Icon } from "@krizaka/orazaka-design-system";
 import { useTranslation } from "@/core/context/LocaleContext";
 import { MODEL_CATEGORY } from "@/core/constants/capability.constants";
+
+import { Card } from "@krizaka/ui/card";
 
 export interface CatalogModel {
   id?: number;
@@ -55,17 +57,17 @@ export function CategoryCard({
   );
 
   return (
-    <Card className="p-6 bg-card-bg/70 border-card-border backdrop-blur-lg flex flex-col gap-4 shadow-sm hover:shadow-md transition-shadow duration-200">
-      <h3 className="text-lg font-bold text-text-primary border-b pb-2 border-border-subtle capitalize flex items-center justify-between">
+    <Card.Root className="p-6 bg-surface-1/70 border-border-subtle backdrop-blur-lg flex flex-col gap-4 shadow-sm hover:shadow-md transition-shadow duration-200">
+      <h3 className="text-lg font-bold text-fg border-b pb-2 border-border-subtle capitalize flex items-center justify-between">
         <span>
           {getCategoryLabel(category)} {t.admin.modelsSuffix}
         </span>
-        <span className="text-xs bg-surface-2 text-text-muted dark:text-text-secondary px-2.5 py-0.5 rounded-full font-bold">
+        <span className="text-xs bg-surface-2 text-fg-secondary px-2.5 py-0.5 rounded-full font-bold">
           {models.length}
         </span>
       </h3>
       {models.length === 0 ? (
-        <p className="text-sm text-text-secondary py-8 text-center italic">
+        <p className="text-sm text-fg-secondary py-8 text-center italic">
           {t.admin.noModels}
         </p>
       ) : (
@@ -77,21 +79,21 @@ export function CategoryCard({
             >
               <article className="space-y-1 pr-4 flex-1 min-w-0">
                 <header className="flex items-center gap-2">
-                  <h4 className="text-sm font-bold text-text-primary truncate">
+                  <h4 className="text-sm font-bold text-fg truncate">
                     {model.modelLabel}
                   </h4>
                   {model.isDefault && (
-                    <span className="text-[10px] bg-status-warning/10 dark:bg-status-warning/20 text-status-warning font-bold px-2 py-0.5 rounded-full flex items-center gap-1 shrink-0">
+                    <span className="text-[10px] bg-warning/20 text-warning font-bold px-2 py-0.5 rounded-full flex items-center gap-1 shrink-0">
                       <Icon name="checkCircle" className="h-2.5 w-2.5" />
                       {t.admin.activeDefault}
                     </span>
                   )}
                 </header>
-                <p className="text-xs text-text-muted font-mono truncate">
+                <p className="text-xs text-fg-muted font-mono truncate">
                   {model.modelName}
                 </p>
                 {model.options && (
-                  <footer className="text-[10px] text-status-warning font-semibold bg-status-warning/5 px-1.5 py-0.5 rounded inline-block">
+                  <footer className="text-[10px] text-warning font-semibold bg-warning/5 px-1.5 py-0.5 rounded inline-block">
                     {t.admin.optionsPrefix}
                     {model.options}
                   </footer>
@@ -100,14 +102,14 @@ export function CategoryCard({
               <section className="flex items-center gap-1.5 shrink-0 opacity-80 group-hover:opacity-100 transition-opacity">
                 <button
                   onClick={() => onEdit(model)}
-                  className="p-2 rounded-xl text-text-secondary hover:text-text-secondary dark:hover:text-text-primary hover:bg-surface-1/50 dark:hover:bg-surface-2 transition-colors"
+                  className="p-2 rounded-xl text-fg-secondary hover:text-fg hover:bg-surface-2 transition-colors"
                   title={t.admin.editModelTitle}
                 >
                   <Icon name="edit" className="h-4 w-4" />
                 </button>
                 <button
                   onClick={() => model.id && onDelete(model.id)}
-                  className="p-2 rounded-xl text-text-secondary hover:text-status-error hover:bg-status-error dark:hover:bg-status-error/20 transition-colors"
+                  className="p-2 rounded-xl text-fg-secondary hover:text-danger hover:bg-danger/20 transition-colors"
                   title={t.admin.deleteModelTitle}
                 >
                   <Icon name="trash" className="h-4 w-4" />
@@ -117,6 +119,6 @@ export function CategoryCard({
           ))}
         </ul>
       )}
-    </Card>
+    </Card.Root>
   );
 }

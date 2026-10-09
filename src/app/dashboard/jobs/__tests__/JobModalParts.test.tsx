@@ -33,7 +33,7 @@ jest.mock("@/core/constants/http.constants", () => ({
 
 jest.mock("@/core/context/TenantContext", () => ({
   useTenant: () => ({
-    accentClasses: { text: "text-text-muted", accentGradient: "from-surface-3 to-surface-3" },
+    accentClasses: { text: "text-fg-muted", accentGradient: "from-surface-3 to-surface-3" },
   }),
 }));
 

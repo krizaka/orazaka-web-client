@@ -12,7 +12,7 @@
 import * as React from "react";
 import { useSettings } from "@/core/hooks/useSettings";
 import { TenantConfig } from "@/core/types/tenant.types";
-import { useTheme } from "@/core/providers/ThemeProvider";
+import { toAppearance, useAppearance } from "@/core/hooks/useAppearance";
 
 /**
  * Interface mapping available visual utility classes for Tailwind css components.
@@ -26,6 +26,8 @@ export interface AccentClasses {
   bgSoft: string;
   textBright: string;
   accentGradient: string;
+  /** Text and icons laid on `bg` / `accentGradient`. */
+  textOn: string;
 }
 
 /**
@@ -34,45 +36,49 @@ export interface AccentClasses {
  */
 export const accentMap: Record<string, AccentClasses> = {
   rose: {
-    text: "text-status-error",
-    bg: "bg-status-error",
-    hoverBg: "hover:bg-status-error dark:hover:bg-status-error",
-    border: "border-status-error",
-    ring: "focus:ring-status-error focus-visible:ring-status-error",
-    bgSoft: "bg-status-error/20",
-    textBright: "text-status-error",
-    accentGradient: "from-status-error to-accent",
+    text: "text-danger",
+    bg: "bg-danger",
+    hoverBg: "hover:bg-danger",
+    border: "border-danger",
+    ring: "focus:ring-danger focus-visible:ring-danger",
+    bgSoft: "bg-danger/20",
+    textBright: "text-danger",
+    accentGradient: "from-danger to-accent",
+    textOn: "text-on-accent",
   },
   emerald: {
-    text: "text-status-success",
-    bg: "bg-status-success",
-    hoverBg: "hover:bg-status-success dark:hover:bg-status-success",
-    border: "border-status-success",
-    ring: "focus:ring-status-success focus-visible:ring-status-success",
-    bgSoft: "bg-status-success/20",
-    textBright: "text-status-success",
-    accentGradient: "from-status-success to-status-success",
+    text: "text-success",
+    bg: "bg-success",
+    hoverBg: "hover:bg-success",
+    border: "border-success",
+    ring: "focus:ring-success focus-visible:ring-success",
+    bgSoft: "bg-success/20",
+    textBright: "text-success",
+    accentGradient: "from-success to-success",
+    textOn: "text-on-accent",
   },
   amber: {
-    text: "text-status-warning",
-    bg: "bg-status-warning",
-    hoverBg: "hover:bg-status-warning dark:hover:bg-status-warning",
-    border: "border-status-warning",
-    ring: "focus:ring-status-warning focus-visible:ring-status-warning",
-    bgSoft: "bg-status-warning/20",
-    textBright: "text-status-warning",
-    accentGradient: "from-status-warning to-status-warning",
+    text: "text-warning",
+    bg: "bg-warning",
+    hoverBg: "hover:bg-warning",
+    border: "border-warning",
+    ring: "focus:ring-warning focus-visible:ring-warning",
+    bgSoft: "bg-warning/20",
+    textBright: "text-warning",
+    accentGradient: "from-warning to-warning",
+    textOn: "text-on-accent",
   },
   zinc: {
-    text: "text-text-muted dark:text-text-secondary",
+    text: "text-fg-secondary",
     bg: "bg-surface-3",
-    hoverBg: "hover:bg-surface-3 dark:hover:bg-surface-3",
+    hoverBg: "hover:bg-surface-3",
     border: "border-border-subtle",
     ring: "focus:ring-border-subtle focus-visible:ring-border-subtle",
-    bgSoft: "bg-surface-1 dark:bg-surface-0/20",
-    textBright: "text-text-secondary",
+    bgSoft: "bg-surface-0/20",
+    textBright: "text-fg-secondary",
     accentGradient:
-      "from-surface-3 to-surface-3 dark:from-surface-3 dark:to-surface-3",
+      "from-surface-3 to-surface-3",
+    textOn: "text-fg",
   },
 };
 
@@ -111,13 +117,13 @@ export function TenantProvider({
   // Check user settings preferences or fallback to a default ID
   const tenantId = settings?.tenantId || "orazaka-default";
 
-  const { setTheme } = useTheme();
+  const { setAppearance } = useAppearance();
 
   React.useEffect(() => {
     if (settings?.theme) {
-      setTheme(settings.theme);
+      setAppearance(toAppearance(settings.theme));
     }
-  }, [settings?.theme, setTheme]);
+  }, [settings?.theme, setAppearance]);
 
   const contextValue = React.useMemo<TenantContextType>(() => {
     const normalizedAccent = (() => {

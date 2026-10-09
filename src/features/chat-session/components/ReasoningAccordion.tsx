@@ -4,6 +4,8 @@
 import React, { useState } from "react";
 import { Icon } from "@krizaka/orazaka-design-system";
 
+import { cn } from "@krizaka/ui/cn";
+
 interface ReasoningAccordionProps {
   /** Raw thought content extracted from <thought> tags */
   content: string;
@@ -31,54 +33,57 @@ export function ReasoningAccordion({
 
   return (
     <section
-      className="my-2 border border-[var(--border-subtle)] bg-[var(--surface-1)]/80 backdrop-blur-md overflow-hidden transition-all duration-300"
-      style={{ borderRadius: "var(--radius-md)" }}
+      className="my-2 border border-border-subtle bg-surface-1/80 backdrop-blur-md overflow-hidden transition-all duration-300"
+      style={{ borderRadius: "var(--kz-radius-md)" }}
     >
       {/* Toggle header */}
       <button
         type="button"
         onClick={() => setIsExpanded(!isExpanded)}
-        className="w-full flex items-center gap-2 px-4 py-2.5 text-left transition-colors duration-150 hover:bg-[var(--surface-2)]/50"
+        className="w-full flex items-center gap-2 px-4 py-2.5 text-left transition-colors duration-150 hover:bg-surface-2/50"
         aria-expanded={isExpanded}
         aria-label="Toggle reasoning view"
       >
         <Icon
           name="spark"
           size={14}
-          className={`text-[var(--accent)] transition-transform duration-200 ${
+          className={cn(
+            "text-accent transition-transform duration-200",
             isStreaming ? "animate-spin-slow" : ""
-          }`}
+          )}
         />
-        <span className="text-[11px] font-semibold uppercase tracking-wider text-[var(--text-muted)]">
+        <span className="text-[11px] font-semibold uppercase tracking-wider text-fg-muted">
           {isStreaming ? "Thinking…" : "Reasoning"}
         </span>
 
         {/* Streaming pulse indicator */}
         {isStreaming && (
           <span className="flex items-center gap-1 ml-auto">
-            <span className="w-1.5 h-1.5 rounded-full bg-[var(--accent)] animate-bounce" style={{ animationDelay: "0ms" }} />
-            <span className="w-1.5 h-1.5 rounded-full bg-[var(--accent)] animate-bounce" style={{ animationDelay: "150ms" }} />
-            <span className="w-1.5 h-1.5 rounded-full bg-[var(--accent)] animate-bounce" style={{ animationDelay: "300ms" }} />
+            <span className="w-1.5 h-1.5 rounded-full bg-accent animate-bounce" style={{ animationDelay: "0ms" }} />
+            <span className="w-1.5 h-1.5 rounded-full bg-accent animate-bounce" style={{ animationDelay: "150ms" }} />
+            <span className="w-1.5 h-1.5 rounded-full bg-accent animate-bounce" style={{ animationDelay: "300ms" }} />
           </span>
         )}
 
         <Icon
           name="chevronDown"
           size={12}
-          className={`ml-auto text-[var(--text-muted)] transition-transform duration-200 ${
+          className={cn(
+            "ml-auto text-fg-muted transition-transform duration-200",
             isExpanded ? "rotate-180" : ""
-          }`}
+          )}
         />
       </button>
 
       {/* Collapsible body */}
       <div
-        className={`transition-all duration-300 ease-in-out overflow-hidden ${
+        className={cn(
+          "transition-all duration-300 ease-in-out overflow-hidden",
           isExpanded ? "max-h-[600px] opacity-100" : "max-h-0 opacity-0"
-        }`}
+        )}
       >
-        <div className="px-4 pb-3 border-t border-[var(--border-subtle)]">
-          <pre className="mt-2 text-[11px] leading-relaxed text-[var(--text-secondary)] font-mono whitespace-pre-wrap break-words max-h-[500px] overflow-y-auto">
+        <div className="px-4 pb-3 border-t border-border-subtle">
+          <pre className="mt-2 text-[11px] leading-relaxed text-fg-secondary font-mono whitespace-pre-wrap break-words max-h-[500px] overflow-y-auto">
             {content}
           </pre>
         </div>

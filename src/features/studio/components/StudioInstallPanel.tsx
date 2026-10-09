@@ -76,7 +76,7 @@ export function StudioInstallPanel({
 
   if (studio.kind === "TOOLKIT") {
     return (
-      <span className="inline-flex items-center gap-1.5 h-8 self-start px-3 text-[12px] font-medium border border-[var(--status-success)]/40 text-[var(--status-success)]">
+      <span className="inline-flex items-center gap-1.5 h-8 self-start px-3 text-[12px] font-medium border border-success/40 text-success">
         <Icon name="check" size={13} />
         {t.studio.included}
       </span>
@@ -85,19 +85,18 @@ export function StudioInstallPanel({
 
   return (
     <div className="flex flex-col gap-3">
-      {isDialogOpen ? (
-        <InstallDialog
-          configSchema={studio.configSchema}
-          initialConfig={installation?.config}
-          isSubmitting={isSubmitting}
-          onSubmit={(config) => void submit(config)}
-          onCancel={() => setDialogOpen(false)}
-        />
-      ) : (
-        <div className="flex flex-wrap items-center gap-2">
+      <InstallDialog
+        open={isDialogOpen}
+        configSchema={studio.configSchema}
+        initialConfig={installation?.config}
+        isSubmitting={isSubmitting}
+        onSubmit={(config) => void submit(config)}
+        onCancel={() => setDialogOpen(false)}
+      />
+      <div className="flex flex-wrap items-center gap-2">
           {installation ? (
             <>
-              <span className="inline-flex items-center gap-1.5 h-8 px-3 text-[12px] font-medium border border-[var(--status-success)]/40 text-[var(--status-success)]">
+              <span className="inline-flex items-center gap-1.5 h-8 px-3 text-[12px] font-medium border border-success/40 text-success">
                 <Icon name="check" size={13} />
                 {t.studio.installed}
               </span>
@@ -105,7 +104,7 @@ export function StudioInstallPanel({
                 type="button"
                 onClick={() => setDialogOpen(true)}
                 disabled={isSubmitting}
-                className="h-8 px-3 text-[12px] font-medium border border-[var(--border-subtle)] text-[var(--text-primary)] hover:bg-[var(--surface-2)] transition-colors duration-150 disabled:opacity-50"
+                className="h-8 px-3 text-[12px] font-medium border border-border-subtle text-fg hover:bg-surface-2 transition-colors duration-150 disabled:opacity-50"
               >
                 {t.studio.configure}
               </button>
@@ -114,7 +113,7 @@ export function StudioInstallPanel({
                   type="button"
                   onClick={() => void act(() => StudioApi.upgrade(installation.id))}
                   disabled={isSubmitting}
-                  className="h-8 px-3 text-[12px] font-medium border border-[var(--accent)] text-[var(--accent)] hover:bg-[var(--surface-2)] transition-colors duration-150 disabled:opacity-50"
+                  className="h-8 px-3 text-[12px] font-medium border border-accent text-accent hover:bg-surface-2 transition-colors duration-150 disabled:opacity-50"
                 >
                   {t.studio.upgradeNow}
                 </button>
@@ -123,7 +122,7 @@ export function StudioInstallPanel({
                 type="button"
                 onClick={() => void act(() => StudioApi.uninstall(installation.id))}
                 disabled={isSubmitting}
-                className="h-8 px-3 text-[12px] font-medium text-[var(--text-muted)] hover:text-[var(--status-error)] transition-colors duration-150 disabled:opacity-50"
+                className="h-8 px-3 text-[12px] font-medium text-fg-muted hover:text-danger transition-colors duration-150 disabled:opacity-50"
               >
                 {t.studio.uninstall}
               </button>
@@ -133,20 +132,19 @@ export function StudioInstallPanel({
               type="button"
               onClick={() => setDialogOpen(true)}
               disabled={isSubmitting}
-              className="h-8 px-4 inline-flex items-center gap-1.5 text-[12px] font-medium border border-[var(--accent)] text-[var(--accent)] hover:bg-[var(--surface-2)] transition-colors duration-150 disabled:opacity-50"
+              className="h-8 px-4 inline-flex items-center gap-1.5 text-[12px] font-medium border border-accent text-accent hover:bg-surface-2 transition-colors duration-150 disabled:opacity-50"
             >
               {isSubmitting && <Icon name="loader" size={13} className="animate-spin" />}
               {t.studio.install}
             </button>
           )}
-        </div>
+      </div>
+
+      {installation?.status === "UPGRADE_AVAILABLE" && (
+        <p className="text-[11px] text-accent">{t.studio.upgradeAvailable}</p>
       )}
 
-      {installation?.status === "UPGRADE_AVAILABLE" && !isDialogOpen && (
-        <p className="text-[11px] text-[var(--accent)]">{t.studio.upgradeAvailable}</p>
-      )}
-
-      {error && <p className="text-[11px] text-[var(--status-error)]">{error}</p>}
+      {error && <p className="text-[11px] text-danger">{error}</p>}
     </div>
   );
 }

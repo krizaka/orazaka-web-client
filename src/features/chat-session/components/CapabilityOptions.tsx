@@ -17,6 +17,8 @@ import type { TranslationDictionary } from "@/core/context/LocaleContext";
 import { Field, selectClass } from "@/features/chat-session/components/CapabilityOptionsParts";
 import type { ModelOption } from "@/features/chat-session/components/CapabilityOptionsParts";
 
+import { cn } from "@krizaka/ui/cn";
+
 interface CapabilityOptionsProps {
   studio: ComposerStudio;
   options: Options;
@@ -109,7 +111,7 @@ export function CapabilityOptions({
   const selectedModel = models.find((m) => m.value === options.model);
 
   return (
-    <section className="flex flex-col gap-2.5 border-b border-[var(--border-subtle)] pb-2.5">
+    <section className="flex flex-col gap-2.5 border-b border-border-subtle pb-2.5">
       <div className="flex flex-wrap items-end gap-2.5">
         <Field label={t.chat.optModel}>
           <select
@@ -188,7 +190,7 @@ export function CapabilityOptions({
       </div>
 
       {selectedModel?.description && (
-        <p className="text-[11px] leading-snug text-[var(--text-muted)]">
+        <p className="text-[11px] leading-snug text-fg-muted">
           {selectedModel.description}
         </p>
       )}
@@ -197,11 +199,12 @@ export function CapabilityOptions({
         <button
           type="button"
           onClick={onAttach}
-          className={`inline-flex w-fit items-center gap-2 rounded-lg border px-3 py-1.5 text-xs font-medium transition-colors duration-150 cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] ${
+          className={cn(
+            "inline-flex w-fit items-center gap-2 rounded-lg border px-3 py-1.5 text-xs font-medium transition-colors duration-150 cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-ring",
             attachment
-              ? "border-[var(--accent)]/30 bg-[var(--accent-soft)] text-[var(--accent)]"
-              : "border-dashed border-[var(--border-default)] text-[var(--text-secondary)] hover:border-[var(--accent)] hover:text-[var(--text-primary)]"
-          }`}
+              ? "border-accent/30 bg-accent-soft text-accent"
+              : "border-dashed border-border-default text-fg-secondary hover:border-accent hover:text-fg"
+          )}
         >
           <Icon name={attachment ? "check" : "attach"} size={14} />
           <span className="max-w-[200px] truncate">
@@ -214,11 +217,12 @@ export function CapabilityOptions({
         <button
           type="button"
           onClick={onAttach}
-          className={`inline-flex w-fit items-center gap-2 rounded-lg border px-3 py-1.5 text-xs font-medium transition-colors duration-150 cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] ${
+          className={cn(
+            "inline-flex w-fit items-center gap-2 rounded-lg border px-3 py-1.5 text-xs font-medium transition-colors duration-150 cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-ring",
             attachment
-              ? "border-[var(--accent)]/30 bg-[var(--accent-soft)] text-[var(--accent)]"
-              : "border-dashed border-[var(--border-default)] text-[var(--text-secondary)] hover:border-[var(--accent)] hover:text-[var(--text-primary)]"
-          }`}
+              ? "border-accent/30 bg-accent-soft text-accent"
+              : "border-dashed border-border-default text-fg-secondary hover:border-accent hover:text-fg"
+          )}
         >
           <Icon name={attachment ? "check" : "image"} size={14} />
           <span className="max-w-[200px] truncate">

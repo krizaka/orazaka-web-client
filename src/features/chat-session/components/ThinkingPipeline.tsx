@@ -18,10 +18,10 @@ interface Props {
 
 /** Three-dot fallback when no pipeline schema arrived (e.g. media jobs). */
 const DotIndicator: React.FC = () => (
-  <section className="bg-[var(--surface-1)] border border-[var(--border-subtle)] rounded-2xl rounded-tl-md px-5 py-3 flex items-center gap-2 h-11">
-    <span className="w-2 h-2 bg-[var(--accent)] rounded-full animate-bounce [animation-delay:0ms]" />
-    <span className="w-2 h-2 bg-[var(--accent)] rounded-full animate-bounce [animation-delay:150ms]" />
-    <span className="w-2 h-2 bg-[var(--accent)] rounded-full animate-bounce [animation-delay:300ms]" />
+  <section className="bg-surface-1 border border-border-subtle rounded-2xl rounded-tl-md px-5 py-3 flex items-center gap-2 h-11">
+    <span className="w-2 h-2 bg-accent rounded-full animate-bounce [animation-delay:0ms]" />
+    <span className="w-2 h-2 bg-accent rounded-full animate-bounce [animation-delay:150ms]" />
+    <span className="w-2 h-2 bg-accent rounded-full animate-bounce [animation-delay:300ms]" />
   </section>
 );
 
@@ -55,21 +55,21 @@ export const ThinkingPipeline: React.FC<Props> = ({
 
   return (
     <div className="flex items-start gap-3 animate-in fade-in slide-in-from-left-3 duration-300">
-      <figure className="w-9 h-9 rounded-2xl bg-[var(--surface-2)] border border-[var(--border-subtle)] flex items-center justify-center text-[11px] font-bold text-[var(--text-secondary)]">
+      <figure className="w-9 h-9 rounded-2xl bg-surface-2 border border-border-subtle flex items-center justify-center text-[11px] font-bold text-fg-secondary">
         {t.chat.ai}
       </figure>
 
       {chatPipeline && current ? (
-        <section className="bg-[var(--surface-1)] border border-[var(--border-subtle)] rounded-2xl rounded-tl-md px-4 py-3 min-w-[15rem] max-w-md">
+        <section className="bg-surface-1 border border-border-subtle rounded-2xl rounded-tl-md px-4 py-3 min-w-[15rem] max-w-md">
           <div className="flex items-center gap-2 mb-2">
             <span className="relative flex h-2 w-2">
-              <span className="absolute inline-flex h-full w-full rounded-full bg-[var(--accent)] opacity-60 motion-safe:animate-ping" />
-              <span className="relative inline-flex h-2 w-2 rounded-full bg-[var(--accent)]" />
+              <span className="absolute inline-flex h-full w-full rounded-full bg-accent opacity-60 motion-safe:animate-ping" />
+              <span className="relative inline-flex h-2 w-2 rounded-full bg-accent" />
             </span>
-            <span className="text-[11px] font-semibold tracking-wide text-[var(--text-secondary)]">
+            <span className="text-[11px] font-semibold tracking-wide text-fg-secondary">
               {t.chat.typing}
             </span>
-            <span className="ml-auto text-[10px] font-mono text-[var(--text-muted)]">
+            <span className="ml-auto text-[10px] font-mono text-fg-muted">
               {allDone ? total : doneCount + 1}/{total}
             </span>
           </div>
@@ -82,7 +82,7 @@ export const ThinkingPipeline: React.FC<Props> = ({
               animate={{ opacity: 1, y: 0 }}
               exit={reduce ? { opacity: 0 } : { opacity: 0, y: -6 }}
               transition={{ duration: 0.22, ease: "easeOut" }}
-              className="flex items-center gap-2 text-[12px] text-[var(--text-primary)]"
+              className="flex items-center gap-2 text-[12px] text-fg"
             >
               {allDone ? (
                 <Icon
@@ -90,20 +90,20 @@ export const ThinkingPipeline: React.FC<Props> = ({
                   size={14}
                   className={
                     current.phase === "core"
-                      ? "text-[var(--accent)]"
-                      : "text-status-success"
+                      ? "text-accent"
+                      : "text-success"
                   }
                 />
               ) : (
                 <Icon
                   name="loader"
                   size={14}
-                  className="text-[var(--accent)] motion-safe:animate-spin"
+                  className="text-accent motion-safe:animate-spin"
                 />
               )}
               <span className="leading-tight font-medium">{current.label}</span>
               {current.phase === "dynamic" && (
-                <span className="ml-auto pl-2 text-[9px] font-semibold uppercase tracking-wider text-status-success">
+                <span className="ml-auto pl-2 text-[9px] font-semibold uppercase tracking-wider text-success">
                   routed
                 </span>
               )}

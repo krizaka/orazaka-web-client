@@ -10,6 +10,7 @@ import type {
   ThemeAccent,
   ThemeLayout,
 } from "@/constants/settings.constants";
+import type { Appearance } from "@/core/hooks/useAppearance";
 
 export interface Settings {
   language: string;
@@ -19,6 +20,6 @@ export interface Settings {
   themeTagline: string;
   themeAccent: ThemeAccent;
   themeLayout: ThemeLayout;
-  theme: "dark" | "light" | "custom" | "system" | "cyberpunk" | "solarized";
+  theme: Appearance;
   tenantId: string;
 }

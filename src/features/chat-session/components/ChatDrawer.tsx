@@ -39,14 +39,14 @@ export function ChatDrawer({
         aria-label="Close drawer"
         onClick={onClose}
       />
-      <div className="relative flex flex-col w-72 max-w-[80vw] h-full bg-white/95 dark:bg-surface-1/95 border-r border-border-subtle/80 dark:border-border-subtle/60 backdrop-blur-md z-50">
-        <div className="p-4 border-b border-border-subtle/80 dark:border-border-subtle/60 flex justify-between items-center bg-white/50 dark:bg-surface-1/50">
-          <span className="text-sm font-semibold text-text-primary">
+      <div className="relative flex flex-col w-72 max-w-[80vw] h-full bg-surface-1/95 border-r border-border-subtle/60 backdrop-blur-md z-50">
+        <div className="p-4 border-b border-border-subtle/60 flex justify-between items-center bg-surface-1/50">
+          <span className="text-sm font-semibold text-fg">
             {t.chat.memoryBlocks}
           </span>
           <button
             onClick={onClose}
-            className="p-1 rounded-lg text-text-secondary hover:text-text-muted hover:bg-surface-2 dark:hover:bg-surface-2 transition-colors"
+            className="p-1 rounded-lg text-fg-secondary hover:text-fg-muted hover:bg-surface-2 transition-colors"
           >
             <svg
               className="w-5 h-5"

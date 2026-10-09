@@ -4,6 +4,8 @@ import React from "react";
 import { Button, Icon } from "@krizaka/orazaka-design-system";
 import type { TranslationDictionary } from "@/core/context/LocaleContext";
 
+import { cn } from "@krizaka/ui/cn";
+
 interface AdminToolbarProps {
   loadingModels: boolean;
   errorMessage: string | null;
@@ -28,11 +30,11 @@ export const AdminToolbar: React.FC<AdminToolbarProps> = ({
   <>
     <header className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
       <div className="space-y-1">
-        <h2 className="text-3xl font-extrabold tracking-tight text-text-primary flex items-center gap-2">
-          <Icon name="sliders" className="h-8 w-8 text-status-warning" />
+        <h2 className="text-3xl font-extrabold tracking-tight text-fg flex items-center gap-2">
+          <Icon name="sliders" className="h-8 w-8 text-warning" />
           {t.admin.title}
         </h2>
-        <p className="text-text-muted dark:text-text-secondary text-sm">
+        <p className="text-fg-secondary text-sm">
           {t.admin.subtitle}
         </p>
       </div>
@@ -40,16 +42,16 @@ export const AdminToolbar: React.FC<AdminToolbarProps> = ({
         <Button
           variant="outline"
           onClick={onRefresh}
-          className="rounded-xl flex items-center space-x-2 text-sm font-semibold border-border-subtle dark:hover:bg-surface-1 transition-colors"
+          className="rounded-xl flex items-center space-x-2 text-sm font-semibold border-border-subtle transition-colors hover:bg-surface-1"
         >
           <Icon name="refresh"
-            className={`w-4 h-4 ${loadingModels ? "animate-spin" : ""}`}
+            className={cn("w-4 h-4", loadingModels ? "animate-spin" : "")}
           />
           <span>{t.admin.refresh}</span>
         </Button>
         <Button
           onClick={onAddModel}
-          className="rounded-xl flex items-center space-x-2 text-sm font-semibold bg-status-warning hover:bg-status-warning text-white shadow-md border-transparent transition-colors"
+          className="rounded-xl flex items-center space-x-2 text-sm font-semibold bg-warning hover:bg-warning text-on-accent shadow-md border-transparent transition-colors"
         >
           <Icon name="plus" className="w-4 h-4" />
           <span>{t.admin.addModel}</span>
@@ -58,12 +60,12 @@ export const AdminToolbar: React.FC<AdminToolbarProps> = ({
     </header>
 
     {errorMessage && (
-      <div className="p-4 bg-status-error/20 border border-status-error/50 rounded-2xl flex items-start gap-3 text-status-error">
+      <div className="p-4 bg-danger/20 border border-danger/50 rounded-2xl flex items-start gap-3 text-danger">
         <Icon name="warning" className="h-5 w-5 flex-shrink-0 mt-0.5" />
         <div className="text-sm font-medium flex-1">{errorMessage}</div>
         <button
           onClick={onClearError}
-          className="text-status-error hover:text-status-error"
+          className="text-danger hover:text-danger"
         >
           <Icon name="close" className="h-4 w-4" />
         </button>

@@ -4,6 +4,8 @@ import * as React from "react";
 import { Icon } from "@krizaka/orazaka-design-system";
 import { MODEL_CATEGORY } from "@/core/constants/capability.constants";
 
+import { cn } from "@krizaka/ui/cn";
+
 /* ─── Category metadata ─── */
 export const CATEGORY_META: Record<string, { icon: string; color: string }> = {
   [MODEL_CATEGORY.SPEECH]: {
@@ -14,7 +16,7 @@ export const CATEGORY_META: Record<string, { icon: string; color: string }> = {
   [MODEL_CATEGORY.IMAGE]: {
     icon: "🎨",
     color:
-      "bg-status-success/10 border-status-success/20 text-status-success",
+      "bg-success/10 border-success/20 text-success",
   },
   [MODEL_CATEGORY.VIDEO]: {
     icon: "🎬",
@@ -23,7 +25,7 @@ export const CATEGORY_META: Record<string, { icon: string; color: string }> = {
   [MODEL_CATEGORY.VISION]: {
     icon: "👁️",
     color:
-      "bg-status-warning/10 border-status-warning/20 text-status-warning",
+      "bg-warning/10 border-warning/20 text-warning",
   },
   [MODEL_CATEGORY.AUDIO]: {
     icon: "🔊",
@@ -31,7 +33,7 @@ export const CATEGORY_META: Record<string, { icon: string; color: string }> = {
   },
   theme: {
     icon: "🎨",
-    color: "bg-status-error/10 border-status-error/20 text-status-error",
+    color: "bg-danger/10 border-danger/20 text-danger",
   },
   code: {
     icon: "⚡",
@@ -50,13 +52,13 @@ export function Tooltip({ text }: Readonly<{ text: string }>) {
         onMouseLeave={() => setShow(false)}
         onFocus={() => setShow(true)}
         onBlur={() => setShow(false)}
-        className="p-0.5 text-[var(--text-muted)] hover:text-[var(--text-secondary)] transition-colors"
+        className="p-0.5 text-fg-muted hover:text-fg-secondary transition-colors"
         aria-label="Help"
       >
         <Icon name="info" className="h-3.5 w-3.5" />
       </button>
       {show && (
-        <span className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-1.5 text-[11px] leading-snug rounded-lg bg-[var(--surface-3)] text-[var(--text-primary)] border border-[var(--border-subtle)] shadow-lg max-w-52 text-center z-50 animate-in fade-in zoom-in-95 duration-150 whitespace-normal">
+        <span className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-1.5 text-[11px] leading-snug rounded-lg bg-surface-3 text-fg border border-border-subtle shadow-lg max-w-52 text-center z-50 animate-in fade-in zoom-in-95 duration-150 whitespace-normal">
           {text}
         </span>
       )}
@@ -87,11 +89,12 @@ export function CategorySelector({
             type="button"
             disabled={disabled}
             onClick={() => onSelect(cat.value)}
-            className={`flex flex-col items-center gap-1 p-2.5 rounded-xl border text-xs font-medium transition-all duration-200 ${
+            className={cn(
+              "flex flex-col items-center gap-1 p-2.5 rounded-xl border text-xs font-medium transition-all duration-200",
               isSelected
-                ? `${meta.color} border-current shadow-sm scale-[1.02]`
-                : "border-[var(--border-subtle)] text-[var(--text-secondary)] hover:border-[var(--border-default)] hover:bg-[var(--surface-2)]"
-            }`}
+                ? cn(meta.color, "border-current shadow-sm scale-[1.02]")
+                : "border-border-subtle text-fg-secondary hover:border-border-default hover:bg-surface-2"
+            )}
           >
             <span className="text-base">{meta.icon}</span>
             <span className="truncate w-full text-center leading-tight">

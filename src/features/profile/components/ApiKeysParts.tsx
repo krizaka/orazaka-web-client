@@ -11,15 +11,15 @@ import type { ApiKeyInfo, GeneratedKey } from "@/features/profile/hooks/useApiKe
 export function ApiKeysEmptyState({ onCreate }: Readonly<{ onCreate: () => void }>) {
   const { t } = useTranslation();
   return (
-    <div className="flex flex-col items-center gap-3 rounded-[var(--radius-lg)] border border-dashed border-[var(--border-subtle)] px-4 py-8 text-center">
-      <span className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-[var(--accent-soft)] text-[var(--accent)]">
+    <div className="flex flex-col items-center gap-3 rounded-lg border border-dashed border-border-subtle px-4 py-8 text-center">
+      <span className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-accent-soft text-accent">
         <Icon name="key" size={20} />
       </span>
       <div className="space-y-1">
-        <p className="text-sm font-medium text-[var(--text-primary)]">
+        <p className="text-sm font-medium text-fg">
           {t.apiKeys.emptyTitle}
         </p>
-        <p className="max-w-sm text-xs text-[var(--text-muted)]">
+        <p className="max-w-sm text-xs text-fg-muted">
           {t.apiKeys.emptyDesc}
         </p>
       </div>
@@ -51,14 +51,14 @@ export function ApiKeyRow({
     <li className="flex items-center justify-between gap-3 px-4 py-3">
       <div className="min-w-0 space-y-1">
         <div className="flex items-center gap-2">
-          <p className="truncate text-sm font-medium text-[var(--text-primary)]">
+          <p className="truncate text-sm font-medium text-fg">
             {apiKey.name}
           </p>
-          <code className="rounded bg-[var(--surface-2)] px-1.5 py-0.5 font-mono text-[11px] text-[var(--text-secondary)]">
+          <code className="rounded bg-surface-2 px-1.5 py-0.5 font-mono text-[11px] text-fg-secondary">
             {apiKey.keyPrefix}…
           </code>
         </div>
-        <p className="text-[11px] text-[var(--text-muted)]">
+        <p className="text-[11px] text-fg-muted">
           {t.apiKeys.created}:{" "}
           {format(parseISO(apiKey.createdAt), "PP", { locale: dfLocale })}
           {" · "}
@@ -71,7 +71,7 @@ export function ApiKeyRow({
         size="sm"
         onClick={onDelete}
         disabled={disabled}
-        className="shrink-0 gap-1.5 text-[var(--status-error)]"
+        className="shrink-0 gap-1.5 text-danger"
       >
         <Icon name="trash" size={15} />
         {t.apiKeys.revoke}
@@ -108,7 +108,7 @@ export function CreateApiKeyForm({
       <div className="space-y-1.5">
         <label
           htmlFor="api-key-name"
-          className="text-xs font-medium text-[var(--text-secondary)]"
+          className="text-xs font-medium text-fg-secondary"
         >
           {t.apiKeys.nameLabel}
         </label>
@@ -122,7 +122,7 @@ export function CreateApiKeyForm({
         />
       </div>
       {error !== "none" && (
-        <p className="text-xs text-[var(--status-error)]">
+        <p className="text-xs text-danger">
           {error === "limit" ? t.apiKeys.limitReached : t.apiKeys.createError}
         </p>
       )}
@@ -161,9 +161,9 @@ export function RevealKeyPanel({
 
   return (
     <div className="space-y-4">
-      <p className="text-xs text-[var(--text-muted)]">{t.apiKeys.revealDesc}</p>
+      <p className="text-xs text-fg-muted">{t.apiKeys.revealDesc}</p>
       <div className="flex items-center gap-2">
-        <code className="min-w-0 flex-1 truncate rounded-[var(--radius-md)] border border-[var(--border-subtle)] bg-[var(--surface-2)] px-3 py-2 font-mono text-xs text-[var(--text-primary)]">
+        <code className="min-w-0 flex-1 truncate rounded-md border border-border-subtle bg-surface-2 px-3 py-2 font-mono text-xs text-fg">
           {generated.key}
         </code>
         <Button

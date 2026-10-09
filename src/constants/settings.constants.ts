@@ -20,14 +20,12 @@ export const THEME_ACCENTS = [
   "violet",
 ] as const;
 export const THEME_LAYOUTS = ["standard", "compact"] as const;
-export const THEME_MODES = ["light", "dark", "custom", "system"] as const;
 
 // ── Derived Pure Types (zero JavaScript footprint) ─────────────────────
 
 export type AiPersona = (typeof AI_PERSONAS)[number];
 export type ThemeAccent = (typeof THEME_ACCENTS)[number];
 export type ThemeLayout = (typeof THEME_LAYOUTS)[number];
-export type ThemeMode = (typeof THEME_MODES)[number];
 
 // ── Exhaustive i18n Label Keys (Record<K, V> compile-time guard) ───────
 
@@ -49,11 +47,4 @@ export const THEME_ACCENT_LABELS: Record<ThemeAccent, string> = {
 export const THEME_LAYOUT_LABELS: Record<ThemeLayout, string> = {
   standard: "settings.standardLayout",
   compact: "settings.compactLayout",
-};
-
-export const THEME_MODE_LABELS: Record<ThemeMode, string> = {
-  light: "settings.themeLight",
-  dark: "settings.themeDark",
-  custom: "settings.themeCustom",
-  system: "settings.themeSystem",
 };

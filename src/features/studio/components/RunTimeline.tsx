@@ -4,6 +4,8 @@ import { Icon, type IconName } from "@krizaka/orazaka-design-system";
 import { useTranslation } from "@/core/context/LocaleContext";
 import type { RunStep, RunStepStatus } from "@krizaka/orazaka-shared";
 
+import { cn } from "@krizaka/ui/cn";
+
 interface RunTimelineProps {
   steps: RunStep[];
 }
@@ -19,12 +21,12 @@ const STEP_ICON: Record<RunStepStatus, IconName> = {
 };
 
 const STEP_TONE: Record<RunStepStatus, string> = {
-  PENDING: "text-[var(--text-muted)]",
-  RUNNING: "text-[var(--accent)]",
-  SUCCEEDED: "text-[var(--status-success)]",
-  FAILED: "text-[var(--status-error)]",
-  SKIPPED: "text-[var(--text-muted)]",
-  CANCELLED: "text-[var(--text-muted)]",
+  PENDING: "text-fg-muted",
+  RUNNING: "text-accent",
+  SUCCEEDED: "text-success",
+  FAILED: "text-danger",
+  SKIPPED: "text-fg-muted",
+  CANCELLED: "text-fg-muted",
 };
 
 /**
@@ -43,8 +45,8 @@ export function RunTimeline({ steps }: Readonly<RunTimelineProps>) {
 
   return (
     <section className="flex flex-col gap-2">
-      <h2 className="hud-label text-[10px] text-[var(--text-muted)]">{t.studio.runSteps}</h2>
-      <ul className="flex flex-col divide-y divide-[var(--border-subtle)] border border-[var(--border-subtle)]">
+      <h2 className="hud-label text-[10px] text-fg-muted">{t.studio.runSteps}</h2>
+      <ul className="flex flex-col divide-y divide-border-subtle border border-border-subtle">
         {steps.map((step) => (
           <RunTimelineRow key={`${step.stepId}-${step.ordinal}`} step={step} />
         ))}
@@ -64,21 +66,23 @@ function RunTimelineRow({ step }: Readonly<RunTimelineRowProps>) {
       <Icon
         name={STEP_ICON[step.status]}
         size={14}
-        className={`flex-shrink-0 ${STEP_TONE[step.status]} ${
+        className={cn(
+          "flex-shrink-0",
+          STEP_TONE[step.status],
           step.status === "RUNNING" ? "animate-spin" : ""
-        }`}
+        )}
       />
-      <span className="text-[12px] font-medium text-[var(--text-primary)]">
+      <span className="text-[12px] font-medium text-fg">
         {step.stepId}
         {step.ordinal > 0 && (
-          <span className="text-[var(--text-muted)]"> #{step.ordinal + 1}</span>
+          <span className="text-fg-muted"> #{step.ordinal + 1}</span>
         )}
       </span>
-      <span className={`hud-label text-[10px] ml-auto ${STEP_TONE[step.status]}`}>
+      <span className={cn("hud-label text-[10px] ml-auto", STEP_TONE[step.status])}>
         {step.status}
       </span>
       {step.error && (
-        <span className="text-[10px] text-[var(--status-error)] max-w-[40%] truncate">
+        <span className="text-[10px] text-danger max-w-[40%] truncate">
           {step.error}
         </span>
       )}

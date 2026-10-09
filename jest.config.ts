@@ -14,7 +14,7 @@ const config = {
     "^@krizaka/ui$": "<rootDir>/../node_modules/@krizaka/ui/dist/index.js",
     "^@krizaka/ui/(.*)$": "<rootDir>/../node_modules/@krizaka/ui/dist/$1.js",
   },
-  testPathIgnorePatterns: ["<rootDir>/node_modules/", "<rootDir>/.next/", "<rootDir>/src/__tests__/helpers/", "<rootDir>/e2e/"],
+  testPathIgnorePatterns: ["<rootDir>/node_modules/", "<rootDir>/.next/", "<rootDir>/src/__tests__/helpers/", "<rootDir>/e2e/", "<rootDir>/scripts/"],
   collectCoverageFrom: [
     "src/**/*.{ts,tsx}",
     "!src/**/*.d.ts",

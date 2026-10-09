@@ -11,8 +11,7 @@ import React, {
 import { useAuth } from "@/core/hooks/useAuth";
 import type { Job } from "@/core/types/jobs.types";
 import { JobsApi } from "@/services/jobs.api";
-import { ToastOverlay } from "@/core/components/ToastOverlay";
-import type { Toast } from "@/core/components/ToastOverlay";
+import { toast } from "@krizaka/ui/toast";
 import { parseISO } from "date-fns";
 import { useChatStreamClient } from "@/core/hooks/useChatStreamClient";
 import { useJobSSE } from "@/core/hooks/useJobSSE";
@@ -25,12 +24,6 @@ const JobStreamContext = createContext<JobStreamContextType | undefined>(
   undefined,
 );
 
-let toastIdCounter = 0;
-const generateToastId = () => {
-  toastIdCounter += 1;
-  return `toast-${toastIdCounter}`;
-};
-
 /**
  * Global React Context Provider establishing a persistent EventSource stream
  * pointing to the BFF proxy. Tracks and broadcasts all async task progress.
@@ -40,7 +33,6 @@ export function JobStreamProvider({
 }: Readonly<{ children: React.ReactNode }>) {
   const { isAuthenticated, user } = useAuth();
   const [jobs, setJobs] = useState<Job[]>([]);
-  const [toasts, setToasts] = useState<Toast[]>([]);
   const [jobProgress, setJobProgress] = useState<Record<string, number>>({});
   const jobsRef = useRef<Job[]>([]);
   useEffect(() => {
@@ -97,20 +89,10 @@ export function JobStreamProvider({
     )
     .slice(0, 5);
 
-  const removeToast = React.useCallback((id: string) => {
-    setToasts((prev) => prev.filter((t) => t.id !== id));
+  /** A job's progression, announced by the platform Toaster (mounted once in Providers). */
+  const addToast = React.useCallback((message: string, type: "info" | "success" | "error") => {
+    toast[type](message, { duration: 5000 });
   }, []);
-
-  const addToast = React.useCallback(
-    (message: string, type: "info" | "success" | "error") => {
-      const id = generateToastId();
-      setToasts((prev) => [...prev, { id, message, type }]);
-      setTimeout(() => {
-        removeToast(id);
-      }, 5000);
-    },
-    [removeToast],
-  );
 
   const fetchJobs = React.useCallback(async () => {
     if (!isAuthenticated) return;
@@ -184,8 +166,6 @@ export function JobStreamProvider({
     jobs,
     activeJobsCount,
     lastJobs,
-    toasts,
-    removeToast,
     refreshJobs: fetchJobs,
     activeConversationId,
     setActiveConversationId,
@@ -218,7 +198,7 @@ export function JobStreamProvider({
     setRagError,
     jobProgress,
   }), [
-    jobs, activeJobsCount, lastJobs, toasts, removeToast, fetchJobs,
+    jobs, activeJobsCount, lastJobs, fetchJobs,
     activeConversationId, playgroundInputs, setPlaygroundInput,
     playgroundResults, setPlaygroundResult, activeJobIdByNodeId,
     setActiveJobIdForNode, videoAnalysisJobId, chatInput, isChatStreaming,
@@ -231,7 +211,6 @@ export function JobStreamProvider({
   return (
     <JobStreamContext.Provider value={contextValue}>
       {children}
-      <ToastOverlay toasts={toasts} onRemoveToast={removeToast} />
     </JobStreamContext.Provider>
   );
 }

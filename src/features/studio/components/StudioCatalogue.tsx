@@ -6,6 +6,8 @@ import { StudioLoadError, StudioLoading } from "./StudioAsyncState";
 import { useStudios } from "@/features/studio/hooks/useStudios";
 import { StudioCard } from "@/features/studio/components/StudioCard";
 
+import { cn } from "@krizaka/ui/cn";
+
 /**
  * The Explore tab: the whole catalogue, filterable by trade.
  *
@@ -44,7 +46,7 @@ export function StudioCatalogue() {
       </div>
 
       {studios.length === 0 ? (
-        <p className="py-16 text-center text-[12px] text-[var(--text-muted)]">
+        <p className="py-16 text-center text-[12px] text-fg-muted">
           {t.studio.emptyCatalogue}
         </p>
       ) : (
@@ -70,11 +72,12 @@ function FilterChip({ label, active, onSelect }: Readonly<FilterChipProps>) {
     <button
       type="button"
       onClick={onSelect}
-      className={`h-7 px-2.5 text-[11px] font-medium border transition-colors duration-150 ${
+      className={cn(
+        "h-7 px-2.5 text-[11px] font-medium border transition-colors duration-150",
         active
-          ? "border-[var(--accent)] text-[var(--accent)] bg-[var(--surface-2)]"
-          : "border-[var(--border-subtle)] text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:bg-[var(--surface-2)]"
-      }`}
+          ? "border-accent text-accent bg-surface-2"
+          : "border-border-subtle text-fg-muted hover:text-fg hover:bg-surface-2"
+      )}
     >
       {label}
     </button>

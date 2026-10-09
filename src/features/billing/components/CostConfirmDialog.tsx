@@ -1,6 +1,8 @@
 "use client";
 
-import { Button, Dialog } from "@krizaka/orazaka-design-system";
+import { Button } from "@krizaka/ui/button";
+import { Dialog } from "@krizaka/ui/dialog";
+import { useTranslation } from "@/core/context/LocaleContext";
 import { formatCredits } from "@krizaka/orazaka-shared";
 import { useCostEstimate } from "@/features/billing/hooks/useCostEstimate";
 
@@ -30,6 +32,8 @@ export interface CostConfirmDialogProps {
  * When the estimate cannot be fetched the dialog still confirms, without a price.
  * Blocking the action would turn a billing hiccup into an outage of the product;
  * showing a guessed number would be worse than showing none.
+ *
+ * A @krizaka/ui Dialog (Radix: focus trap, Escape, focus return); Escape and the close button cancel.
  */
 export function CostConfirmDialog({
   open,
@@ -39,50 +43,43 @@ export function CostConfirmDialog({
   onConfirm,
   onCancel,
 }: CostConfirmDialogProps) {
+  const { t } = useTranslation();
   const { estimate, isLoading } = useCostEstimate(open ? capability : null, modelName);
 
   const unaffordable = estimate ? !estimate.affordable : false;
 
   return (
-    <Dialog open={open} onClose={onCancel} title={actionLabel}>
-      <div className="space-y-4">
-        {isLoading && (
-          <p className="text-sm text-[var(--text-muted)]">Estimation du coût…</p>
-        )}
+    <Dialog.Root open={open} onOpenChange={(next) => !next && onCancel()}>
+      <Dialog.Content size="sm" closeLabel={t.billing.cancel}>
+        <Dialog.Header>
+          <Dialog.Title>{actionLabel}</Dialog.Title>
+        </Dialog.Header>
+        <Dialog.Body className="space-y-2">
+          {isLoading && <p className="text-sm text-fg-muted">{t.billing.estimating}</p>}
 
-        {!isLoading && estimate && (
-          <div className="space-y-2">
-            <p className="text-sm text-[var(--text-primary)]">
-              Cette action coûtera environ{" "}
-              <strong>{formatCredits(estimate.estimateCredits)} crédits</strong>.
-            </p>
-            <p className="text-sm text-[var(--text-muted)]">
-              Solde disponible : {formatCredits(estimate.availableCredits)} crédits.
-            </p>
-            {unaffordable && (
-              <p className="text-sm text-[var(--danger)]">
-                Solde insuffisant — rechargez ou changez d’offre pour continuer.
+          {!isLoading && estimate && (
+            <>
+              <p className="text-sm text-fg">
+                {t.billing.estimate.replace("{credits}", formatCredits(estimate.estimateCredits))}
               </p>
-            )}
-          </div>
-        )}
+              <p className="text-sm text-fg-muted">
+                {t.billing.available.replace("{credits}", formatCredits(estimate.availableCredits))}
+              </p>
+              {unaffordable && <p className="text-sm text-danger">{t.billing.insufficient}</p>}
+            </>
+          )}
 
-        {!isLoading && !estimate && (
-          <p className="text-sm text-[var(--text-muted)]">
-            Le coût n’a pas pu être estimé. L’action reste possible et sera facturée
-            à la consommation réelle.
-          </p>
-        )}
-
-        <div className="flex justify-end gap-2">
+          {!isLoading && !estimate && <p className="text-sm text-fg-muted">{t.billing.noEstimate}</p>}
+        </Dialog.Body>
+        <Dialog.Footer>
           <Button variant="ghost" onClick={onCancel}>
-            Annuler
+            {t.billing.cancel}
           </Button>
           <Button onClick={onConfirm} disabled={unaffordable}>
-            Confirmer
+            {t.billing.confirm}
           </Button>
-        </div>
-      </div>
-    </Dialog>
+        </Dialog.Footer>
+      </Dialog.Content>
+    </Dialog.Root>
   );
 }

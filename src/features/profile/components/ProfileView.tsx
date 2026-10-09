@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { Button, Card, CardContent } from "@krizaka/orazaka-design-system";
+import { Button } from "@krizaka/orazaka-design-system";
 import { useTenant } from "@/core/context/TenantContext";
 import { useTranslation } from "@/core/context/LocaleContext";
 import { useProfile } from "@/features/profile/hooks/useProfile";
@@ -12,6 +12,9 @@ import { AccountTab } from "./AccountTab";
 import { AppearanceTab } from "./AppearanceTab";
 import { WorkspaceTab } from "./WorkspaceTab";
 import { IntegrationsTab } from "./IntegrationsTab";
+
+import { Card } from "@krizaka/ui/card";
+import { cn } from "@krizaka/ui/cn";
 
 /**
  * ProfileView — the single home for identity and every former Settings feature,
@@ -31,16 +34,16 @@ export function ProfileView() {
   if (isLoading) {
     return (
       <section className="mx-auto max-w-5xl space-y-6">
-        <div className="h-28 animate-pulse rounded-xl bg-[var(--surface-2)]" />
-        <div className="h-12 animate-pulse rounded-xl bg-[var(--surface-2)]" />
-        <div className="h-64 animate-pulse rounded-xl bg-[var(--surface-2)]" />
+        <div className="h-28 animate-pulse rounded-xl bg-surface-2" />
+        <div className="h-12 animate-pulse rounded-xl bg-surface-2" />
+        <div className="h-64 animate-pulse rounded-xl bg-surface-2" />
       </section>
     );
   }
 
   if (error || !profile) {
     return (
-      <section className="mx-auto max-w-5xl rounded-xl border border-[var(--status-error)]/20 bg-[var(--status-error)]/5 p-4 text-[var(--status-error)]">
+      <section className="mx-auto max-w-5xl rounded-xl border border-danger/20 bg-danger/5 p-4 text-danger">
         <p className="font-semibold">{t.profile.failedLoad}</p>
         <p className="text-sm opacity-80">
           {(error as Error)?.message || t.profile.unauthError}
@@ -85,29 +88,41 @@ export function ProfileView() {
   return (
     <section className="mx-auto max-w-5xl space-y-6 animate-in fade-in slide-in-from-bottom-3 duration-300">
       {/* Hero header */}
-      <Card className="relative overflow-hidden bg-[var(--surface-1)] shadow-sm">
+      <Card.Root className="relative overflow-hidden bg-surface-1 shadow-sm">
         <figure
-          className={`absolute inset-x-0 top-0 h-20 bg-gradient-to-r ${accentClasses.accentGradient} opacity-10`}
+          className={cn(
+            "absolute inset-x-0 top-0 h-20 bg-gradient-to-r",
+            accentClasses.accentGradient,
+            "opacity-10"
+          )}
         />
-        <CardContent className="flex items-center gap-5 pb-6 pt-8">
+        <Card.Body padding="lg" className="flex items-center gap-5 pb-6 pt-8">
           <figure
-            className={`flex h-16 w-16 flex-shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br ${accentClasses.accentGradient} text-xl font-bold text-white shadow-lg`}
+            className={cn(
+              "flex h-16 w-16 flex-shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br",
+              accentClasses.accentGradient,
+              "text-xl font-bold shadow-lg", accentClasses.textOn
+            )}
           >
             {initials}
           </figure>
           <section className="min-w-0 flex-1">
-            <h1 className="truncate text-xl font-bold text-[var(--text-primary)]">
+            <h1 className="truncate text-xl font-bold text-fg">
               {profile.username}
             </h1>
-            <p className="truncate text-sm text-[var(--text-muted)]">{profile.email}</p>
+            <p className="truncate text-sm text-fg-muted">{profile.email}</p>
             <span
-              className={`mt-2 inline-flex items-center rounded-full bg-gradient-to-r ${accentClasses.accentGradient} px-3 py-1 text-[10px] font-semibold text-white shadow-sm`}
+              className={cn(
+                "mt-2 inline-flex items-center rounded-full bg-gradient-to-r",
+                accentClasses.accentGradient,
+                "px-3 py-1 text-[10px] font-semibold shadow-sm", accentClasses.textOn
+              )}
             >
               {tier}
             </span>
           </section>
-        </CardContent>
-      </Card>
+        </Card.Body>
+      </Card.Root>
 
       {/* Tabs */}
       <ProfileTabs tabs={tabs} active={active} onChange={selectTab} />
@@ -127,11 +142,11 @@ export function ProfileView() {
 
       {/* Sticky Save bar — appears on pending appearance/workspace edits */}
       {pf.isDirty && (
-        <div className="sticky bottom-4 z-20 flex items-center justify-between gap-3 rounded-xl border border-[var(--border-default)] bg-[color-mix(in_srgb,var(--surface-1)_92%,transparent)] p-3 pl-4 shadow-lg backdrop-blur-xl animate-in fade-in slide-in-from-bottom-2 duration-200">
-          <span className="flex items-center gap-2 text-sm text-[var(--text-secondary)]">
+        <div className="sticky bottom-4 z-20 flex items-center justify-between gap-3 rounded-xl border border-border-default bg-surface-1/92 p-3 pl-4 shadow-lg backdrop-blur-xl animate-in fade-in slide-in-from-bottom-2 duration-200">
+          <span className="flex items-center gap-2 text-sm text-fg-secondary">
             <span className="relative flex h-2 w-2">
-              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[var(--accent)] opacity-60" />
-              <span className="relative inline-flex h-2 w-2 rounded-full bg-[var(--accent)]" />
+              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-accent opacity-60" />
+              <span className="relative inline-flex h-2 w-2 rounded-full bg-accent" />
             </span>
             {t.profile.unsavedChanges}
           </span>

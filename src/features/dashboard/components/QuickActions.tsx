@@ -1,6 +1,8 @@
 import * as React from "react";
 import { Icon, type IconName } from "@krizaka/orazaka-design-system";
 
+import { cn } from "@krizaka/ui/cn";
+
 interface QuickActionsProps {
   onStartNewChat: () => void;
   onResumeProfile: () => void;
@@ -71,18 +73,23 @@ export function QuickActions({
           <button
             key={label}
             onClick={onClick}
-            className="glass-card w-full text-left flex items-start gap-4 p-[var(--space-card)] rounded-[var(--radius-lg)] border border-[var(--border-subtle)] bg-[var(--surface-1)] hover:border-[var(--accent)] hover:shadow-[var(--shadow-glow)] hover-lift transition-[border-color,box-shadow,transform] duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] cursor-pointer"
+            className="glass-card w-full text-left flex items-start gap-4 p-(--orazaka-space-card) rounded-lg border border-border-subtle bg-surface-1 hover:border-accent hover:shadow-md hover-lift transition-[border-color,box-shadow,transform] duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-ring cursor-pointer"
           >
             <div
-              className={`p-2 rounded-[var(--radius-md)] ${accentClasses.bgSoft} ${accentClasses.text} flex-shrink-0`}
+              className={cn(
+                "p-2 rounded-md",
+                accentClasses.bgSoft,
+                accentClasses.text,
+                "flex-shrink-0"
+              )}
             >
               <Icon name={icon} size={16} />
             </div>
             <div className="flex-1 min-w-0">
-              <h4 className="fluid-sm font-semibold text-[var(--text-primary)]">
+              <h4 className="fluid-sm font-semibold text-fg">
                 {label}
               </h4>
-              <p className="fluid-xs text-[var(--text-secondary)] mt-1 leading-relaxed">
+              <p className="fluid-xs text-fg-secondary mt-1 leading-relaxed">
                 {desc}
               </p>
             </div>

@@ -96,8 +96,6 @@ export function createMockJobStreamContext(overrides: Record<string, any> = {}) 
     jobs: [],
     activeJobsCount: 0,
     lastJobs: [],
-    toasts: [],
-    removeToast: jest.fn(),
     refreshJobs: jest.fn().mockResolvedValue(undefined),
     activeConversationId: "",
     setActiveConversationId: jest.fn(),

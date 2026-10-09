@@ -16,11 +16,10 @@ jest.mock("@/core/hooks/useSettings", () => ({
   }),
 }));
 
-jest.mock("@/core/providers/ThemeProvider", () => ({
-  useTheme: () => ({
-    setTheme: jest.fn(),
-    theme: "dark",
-  }),
+const mockSetAppearance = jest.fn();
+jest.mock("@/core/hooks/useAppearance", () => ({
+  ...jest.requireActual("@/core/hooks/useAppearance"),
+  useAppearance: () => ({ appearance: "system", setAppearance: mockSetAppearance }),
 }));
 
 function Consumer() {
@@ -45,7 +44,16 @@ describe("TenantContext", () => {
     expect(screen.getByTestId("name")).toHaveTextContent("TestTenant");
     expect(screen.getByTestId("accent")).toHaveTextContent("emerald");
     expect(screen.getByTestId("tagline")).toHaveTextContent("Test Tagline");
-    expect(screen.getByTestId("gradient")).toHaveTextContent("from-status-success to-status-success");
+    expect(screen.getByTestId("gradient")).toHaveTextContent("from-success to-success");
+  });
+
+  it("applies the stored theme preference through the organisation's mechanism", () => {
+    render(
+      <TenantProvider>
+        <Consumer />
+      </TenantProvider>,
+    );
+    expect(mockSetAppearance).toHaveBeenCalledWith("dark");
   });
 
   it("throws when useTenant is used outside provider", () => {

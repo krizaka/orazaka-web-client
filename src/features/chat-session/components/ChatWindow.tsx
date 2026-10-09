@@ -143,7 +143,7 @@ export const ChatWindow: React.FC<{ initialConversationId: string }> = ({
   };
 
   return (
-    <main className="flex h-full w-full bg-[var(--surface-0)] overflow-hidden relative">
+    <main className="flex h-full w-full bg-surface-0 overflow-hidden relative">
       <ChatDrawer
         isOpen={isThreadDrawerOpen}
         onClose={() => setIsThreadDrawerOpen(false)}
@@ -170,7 +170,7 @@ export const ChatWindow: React.FC<{ initialConversationId: string }> = ({
         </aside>
       )}
 
-      <section className="flex-1 flex flex-col h-full min-w-0 bg-[var(--surface-0)]">
+      <section className="flex-1 flex flex-col h-full min-w-0 bg-surface-0">
         {activeConversationId ? (
           <>
             <ChatHeader
@@ -205,7 +205,7 @@ export const ChatWindow: React.FC<{ initialConversationId: string }> = ({
                 <button
                   type="button"
                   onClick={scrollToBottom}
-                  className="sticky bottom-4 left-1/2 -translate-x-1/2 z-10 inline-flex items-center gap-1.5 px-3 py-1.5 bg-[var(--surface-2)] border border-[var(--border-default)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--surface-3)] shadow-lg transition-all duration-200 text-[11px] font-medium animate-in fade-in slide-in-from-bottom-2 duration-200"
+                  className="sticky bottom-4 left-1/2 -translate-x-1/2 z-10 inline-flex items-center gap-1.5 px-3 py-1.5 bg-surface-2 border border-border-default text-fg-secondary hover:text-fg hover:bg-surface-3 shadow-lg transition-all duration-200 text-[11px] font-medium animate-in fade-in slide-in-from-bottom-2 duration-200"
                   aria-label="Scroll to bottom"
                 >
                   <Icon name="arrowDown" size={14} />

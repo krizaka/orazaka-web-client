@@ -8,7 +8,7 @@ import { useTranslation } from "@/core/context/LocaleContext";
 import type { Locale } from "@/core/context/translations.types";
 import { Button } from "@krizaka/orazaka-design-system";
 import { Input } from "@krizaka/orazaka-design-system";
-import { useToast } from "@/core/context/ToastContext";
+import { toast } from "@krizaka/ui/toast";
 
 const LOCALES: { code: Locale; label: string }[] = [
   { code: "en", label: "EN" },
@@ -46,7 +46,6 @@ const CONTENT = {
 
 export default function ContactPage() {
   const { t, locale, setLocale } = useTranslation();
-  const { addToast } = useToast();
   const c = CONTENT[locale] || CONTENT.en;
 
   const [name, setName] = React.useState("");
@@ -58,7 +57,7 @@ export default function ContactPage() {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!name || !email || !subject || !message) {
-      addToast(c.errorMsg, "error");
+      toast.error(c.errorMsg);
       return;
     }
 
@@ -68,7 +67,7 @@ export default function ContactPage() {
     await new Promise((resolve) => setTimeout(resolve, 1500));
 
     setIsSubmitting(false);
-    addToast(c.successMsg, "success");
+    toast.success(c.successMsg);
 
     setName("");
     setEmail("");
@@ -77,9 +76,9 @@ export default function ContactPage() {
   };
 
   return (
-    <main className="min-h-screen flex flex-col items-center p-6 bg-[var(--surface-0)] ambient-grid w-full overflow-y-auto">
+    <main className="min-h-screen flex flex-col items-center p-6 bg-surface-0 ambient-grid w-full overflow-y-auto">
       {/* Navbar header */}
-      <header className="w-full max-w-2xl flex items-center justify-between py-4 mb-6 border-b border-[var(--border-subtle)]">
+      <header className="w-full max-w-2xl flex items-center justify-between py-4 mb-6 border-b border-border-subtle">
         <Link href="/login" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
           <img
             src="/logo.svg"
@@ -88,14 +87,14 @@ export default function ContactPage() {
             height={24}
             className="w-6 h-6"
           />
-          <span className="text-lg font-bold tracking-tight text-[var(--text-primary)]">
+          <span className="text-lg font-bold tracking-tight text-fg">
             Orazaka
           </span>
         </Link>
 
         <Link
           href="/login"
-          className="text-xs font-semibold px-3 py-1.5 rounded-lg border border-[var(--border-default)] hover:border-[var(--accent)] transition-colors hover:text-[var(--accent)] text-[var(--text-secondary)]"
+          className="text-xs font-semibold px-3 py-1.5 rounded-lg border border-border-default hover:border-accent transition-colors hover:text-accent text-fg-secondary"
         >
           {c.backToLogin}
         </Link>
@@ -103,11 +102,11 @@ export default function ContactPage() {
 
       {/* Main Glass Card container */}
       <article className="w-full max-w-2xl glass-card rounded-2xl p-6 md:p-10 space-y-6 animate-fade-up shadow-2xl">
-        <header className="space-y-2 border-b border-[var(--border-subtle)] pb-4">
-          <h1 className="text-3xl font-extrabold tracking-tight text-[var(--text-primary)]">
+        <header className="space-y-2 border-b border-border-subtle pb-4">
+          <h1 className="text-3xl font-extrabold tracking-tight text-fg">
             {c.title}
           </h1>
-          <p className="text-[var(--text-secondary)] text-sm leading-relaxed">
+          <p className="text-fg-secondary text-sm leading-relaxed">
             {c.subtitle}
           </p>
         </header>
@@ -115,7 +114,7 @@ export default function ContactPage() {
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="grid gap-4 md:grid-cols-2">
             <div className="space-y-2">
-              <label htmlFor="contact-name" className="text-sm font-medium text-[var(--text-secondary)]">
+              <label htmlFor="contact-name" className="text-sm font-medium text-fg-secondary">
                 {c.nameLabel}
               </label>
               <Input
@@ -127,7 +126,7 @@ export default function ContactPage() {
               />
             </div>
             <div className="space-y-2">
-              <label htmlFor="contact-email" className="text-sm font-medium text-[var(--text-secondary)]">
+              <label htmlFor="contact-email" className="text-sm font-medium text-fg-secondary">
                 {c.emailLabel}
               </label>
               <Input
@@ -141,7 +140,7 @@ export default function ContactPage() {
           </div>
 
           <div className="space-y-2">
-            <label htmlFor="contact-subject" className="text-sm font-medium text-[var(--text-secondary)]">
+            <label htmlFor="contact-subject" className="text-sm font-medium text-fg-secondary">
               {c.subjectLabel}
             </label>
             <Input
@@ -154,7 +153,7 @@ export default function ContactPage() {
           </div>
 
           <div className="space-y-2">
-            <label htmlFor="contact-message" className="text-sm font-medium text-[var(--text-secondary)]">
+            <label htmlFor="contact-message" className="text-sm font-medium text-fg-secondary">
               {c.messageLabel}
             </label>
             <textarea
@@ -163,7 +162,7 @@ export default function ContactPage() {
               onChange={(e) => setMessage(e.target.value)}
               required
               rows={5}
-              className="w-full rounded-lg border border-[var(--border-default)] bg-[var(--surface-2)] px-3 py-2 text-sm text-[var(--text-primary)] focus:border-[var(--accent)] focus:outline-none focus:ring-1 focus:ring-[var(--accent)] transition-all duration-150"
+              className="w-full rounded-lg border border-border-default bg-surface-2 px-3 py-2 text-sm text-fg focus:border-accent focus:outline-none focus:ring-1 focus:ring-ring transition-all duration-150"
             />
           </div>
 
@@ -199,15 +198,15 @@ export default function ContactPage() {
       </article>
 
       {/* Public Footer */}
-      <footer className="w-full max-w-2xl flex items-center justify-between py-6 mt-6 border-t border-[var(--border-subtle)] text-xs text-[var(--text-muted)]">
+      <footer className="w-full max-w-2xl flex items-center justify-between py-6 mt-6 border-t border-border-subtle text-xs text-fg-muted">
         <div className="flex gap-4">
-          <Link href="/privacy" className="hover:text-[var(--accent)] transition-colors">
+          <Link href="/privacy" className="hover:text-accent transition-colors">
             {t.auth.legalPrivacy}
           </Link>
-          <Link href="/terms" className="hover:text-[var(--accent)] transition-colors">
+          <Link href="/terms" className="hover:text-accent transition-colors">
             {t.auth.legalTerms}
           </Link>
-          <Link href="/contact" className="hover:text-[var(--accent)] transition-colors underline">
+          <Link href="/contact" className="hover:text-accent transition-colors underline">
             {t.auth.legalContact}
           </Link>
         </div>

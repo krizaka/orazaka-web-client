@@ -1,13 +1,10 @@
 import type { Job } from "@/core/types/jobs.types";
-import type { Toast } from "@/core/components/ToastOverlay";
 import type { ChatPipelineSchema } from "@/core/types/pipeline.types";
 
 export interface JobStreamContextType {
   jobs: Job[];
   activeJobsCount: number;
   lastJobs: Job[];
-  toasts: Toast[];
-  removeToast: (id: string) => void;
   refreshJobs: () => Promise<void>;
   activeConversationId: string;
   setActiveConversationId: (id: string) => void;

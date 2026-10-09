@@ -70,7 +70,7 @@ export const JobModal: React.FC<JobModalProps> = ({
   return (
     <dialog
       open
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-in fade-in duration-200 w-full h-full m-0 max-w-none max-h-none border-none bg-transparent"
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-overlay backdrop-blur-sm animate-in fade-in duration-200 w-full h-full m-0 max-w-none max-h-none border-none bg-transparent"
       aria-label={`Job ${job.id} details`}
     >
       {/* Backdrop dismiss button — accessible and native */}
@@ -81,17 +81,17 @@ export const JobModal: React.FC<JobModalProps> = ({
         onClick={onClose}
       />
       <article
-        className="glass-card rounded-2xl max-w-2xl w-full max-h-[85vh] flex flex-col overflow-hidden animate-in zoom-in-95 slide-in-from-bottom-3 duration-300 text-[var(--text-primary)] relative z-10"
+        className="glass-card rounded-2xl max-w-2xl w-full max-h-[85vh] flex flex-col overflow-hidden animate-in zoom-in-95 slide-in-from-bottom-3 duration-300 text-fg relative z-10"
       >
         {/* ── Header ── */}
-        <header className="flex items-center justify-between p-5 border-b border-[var(--border-subtle)]">
+        <header className="flex items-center justify-between p-5 border-b border-border-subtle">
           <section className="flex items-center gap-3">
             <StatusPill status={job.status} />
             <section className="flex flex-col">
-              <h3 className="font-semibold text-[13px] text-[var(--text-primary)]">
+              <h3 className="font-semibold text-[13px] text-fg">
                 {t.jobs?.title || "Task Details"}
               </h3>
-              <span className="text-[10px] text-[var(--text-muted)] font-mono">
+              <span className="text-[10px] text-fg-muted font-mono">
                 {job.featureKey}
               </span>
             </section>
@@ -104,7 +104,7 @@ export const JobModal: React.FC<JobModalProps> = ({
             />
             <button
               onClick={onClose}
-              className="p-2 rounded-xl hover:bg-[var(--surface-2)] text-[var(--text-muted)] hover:text-[var(--text-primary)] transition-all duration-150"
+              className="p-2 rounded-xl hover:bg-surface-2 text-fg-muted hover:text-fg transition-all duration-150"
               aria-label="Close details"
             >
               <Icon name="close" className="w-4 h-4" />
@@ -113,13 +113,13 @@ export const JobModal: React.FC<JobModalProps> = ({
         </header>
 
         {/* ── Progress Timeline ── */}
-        <section className="px-5 py-3 border-b border-[var(--border-subtle)]">
+        <section className="px-5 py-3 border-b border-border-subtle">
           <ProgressTimeline status={job.status} />
           <StageLabels status={job.status} />
         </section>
 
         {/* ── Pill Tabs ── */}
-        <section className="flex items-center gap-1.5 px-5 py-2.5 border-b border-[var(--border-subtle)] bg-[var(--surface-0)]/50">
+        <section className="flex items-center gap-1.5 px-5 py-2.5 border-b border-border-subtle bg-surface-0/50">
           <PillTab
             label={t.jobs?.payloadModalTitle || "Input"}
             icon="fileJson"
@@ -144,11 +144,11 @@ export const JobModal: React.FC<JobModalProps> = ({
             />
           )}
           {/* Keyboard hint */}
-          <span className="ml-auto text-[9px] text-[var(--text-muted)] font-mono hidden sm:inline-flex items-center gap-1">
-            <kbd className="px-1 py-0.5 rounded bg-[var(--surface-2)] border border-[var(--border-subtle)] text-[8px]">
+          <span className="ml-auto text-[9px] text-fg-muted font-mono hidden sm:inline-flex items-center gap-1">
+            <kbd className="px-1 py-0.5 rounded bg-surface-2 border border-border-subtle text-[8px]">
               ←
             </kbd>{" "}
-            <kbd className="px-1 py-0.5 rounded bg-[var(--surface-2)] border border-[var(--border-subtle)] text-[8px]">
+            <kbd className="px-1 py-0.5 rounded bg-surface-2 border border-border-subtle text-[8px]">
               →
             </kbd>{" "}
             switch
@@ -160,17 +160,17 @@ export const JobModal: React.FC<JobModalProps> = ({
           {/* Meta bar */}
           <section className="flex flex-wrap items-center justify-between gap-3 text-[11px] glass-card p-3 rounded-xl">
             <section className="flex items-center gap-2">
-              <span className="font-semibold text-[var(--text-muted)]">ID</span>
-              <span className="font-mono text-[var(--text-secondary)] bg-[var(--surface-2)] px-2 py-0.5 rounded-md">
+              <span className="font-semibold text-fg-muted">ID</span>
+              <span className="font-mono text-fg-secondary bg-surface-2 px-2 py-0.5 rounded-md">
                 {job.id}
               </span>
             </section>
             <button
               onClick={() => onCopy(String(job.id), "modal-id")}
-              className="inline-flex items-center gap-1 px-2 py-1 rounded-lg text-[10px] font-medium text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:bg-[var(--surface-3)] transition-colors"
+              className="inline-flex items-center gap-1 px-2 py-1 rounded-lg text-[10px] font-medium text-fg-muted hover:text-fg hover:bg-surface-3 transition-colors"
             >
               {copiedId === "modal-id" ? (
-                <Icon name="check" className="w-3 h-3 text-status-success" />
+                <Icon name="check" className="w-3 h-3 text-success" />
               ) : (
                 <Icon name="copy" className="w-3 h-3" />
               )}
@@ -180,23 +180,23 @@ export const JobModal: React.FC<JobModalProps> = ({
 
           {activeTab === "result" ? (
             <section className="flex flex-col gap-4">
-              <section className="p-4 rounded-xl border border-[var(--border-subtle)] bg-[var(--surface-2)]">
+              <section className="p-4 rounded-xl border border-border-subtle bg-surface-2">
                 <ResultDisplay payload={job.result} />
               </section>
-              <details className="text-[11px] text-[var(--text-muted)]">
-                <summary className="cursor-pointer select-none font-semibold hover:text-[var(--text-secondary)] transition-colors">
+              <details className="text-[11px] text-fg-muted">
+                <summary className="cursor-pointer select-none font-semibold hover:text-fg-secondary transition-colors">
                   Show Raw JSON Output
                 </summary>
                 <section className="relative mt-2">
-                  <pre className="bg-[var(--surface-2)] text-[var(--text-primary)] p-4 rounded-xl overflow-auto text-[11px] font-mono max-h-64 leading-relaxed border border-[var(--border-subtle)] scrollbar-thin">
+                  <pre className="bg-surface-2 text-fg p-4 rounded-xl overflow-auto text-[11px] font-mono max-h-64 leading-relaxed border border-border-subtle scrollbar-thin">
                     {dataToDisplay}
                   </pre>
                   <button
                     onClick={() => onCopy(dataToDisplay, "modal-json")}
-                    className="absolute top-3 right-3 p-1.5 bg-[var(--surface-3)] hover:bg-[var(--surface-3)] border border-[var(--border-subtle)] text-[var(--text-muted)] hover:text-[var(--text-primary)] rounded-lg transition-colors"
+                    className="absolute top-3 right-3 p-1.5 bg-surface-3 hover:bg-surface-3 border border-border-subtle text-fg-muted hover:text-fg rounded-lg transition-colors"
                   >
                     {copiedId === "modal-json" ? (
-                      <Icon name="check" className="w-3.5 h-3.5 text-status-success" />
+                      <Icon name="check" className="w-3.5 h-3.5 text-success" />
                     ) : (
                       <Icon name="copy" className="w-3.5 h-3.5" />
                     )}
@@ -206,15 +206,15 @@ export const JobModal: React.FC<JobModalProps> = ({
             </section>
           ) : (
             <section className="relative">
-              <pre className="bg-[var(--surface-2)] text-[var(--text-primary)] p-4 rounded-xl overflow-auto text-[11px] font-mono max-h-96 leading-relaxed border border-[var(--border-subtle)] scrollbar-thin">
+              <pre className="bg-surface-2 text-fg p-4 rounded-xl overflow-auto text-[11px] font-mono max-h-96 leading-relaxed border border-border-subtle scrollbar-thin">
                 {dataToDisplay}
               </pre>
               <button
                 onClick={() => onCopy(dataToDisplay, "modal-json")}
-                className="absolute top-3 right-3 p-1.5 bg-[var(--surface-3)] hover:bg-[var(--surface-3)] border border-[var(--border-subtle)] text-[var(--text-muted)] hover:text-[var(--text-primary)] rounded-lg transition-colors"
+                className="absolute top-3 right-3 p-1.5 bg-surface-3 hover:bg-surface-3 border border-border-subtle text-fg-muted hover:text-fg rounded-lg transition-colors"
               >
                 {copiedId === "modal-json" ? (
-                  <Icon name="check" className="w-3.5 h-3.5 text-status-success" />
+                  <Icon name="check" className="w-3.5 h-3.5 text-success" />
                 ) : (
                   <Icon name="copy" className="w-3.5 h-3.5" />
                 )}
@@ -224,9 +224,9 @@ export const JobModal: React.FC<JobModalProps> = ({
         </section>
 
         {/* ── Footer ── */}
-        <footer className="flex justify-between items-center gap-3 p-4 border-t border-[var(--border-subtle)]">
-          <span className="text-[9px] text-[var(--text-muted)] font-mono hidden sm:block">
-            <kbd className="px-1 py-0.5 rounded bg-[var(--surface-2)] border border-[var(--border-subtle)] text-[8px]">
+        <footer className="flex justify-between items-center gap-3 p-4 border-t border-border-subtle">
+          <span className="text-[9px] text-fg-muted font-mono hidden sm:block">
+            <kbd className="px-1 py-0.5 rounded bg-surface-2 border border-border-subtle text-[8px]">
               Esc
             </kbd>{" "}
             close
@@ -234,7 +234,7 @@ export const JobModal: React.FC<JobModalProps> = ({
           <Button
             variant="outline"
             onClick={onClose}
-            className="rounded-xl text-[11px] font-semibold border-[var(--border-default)]"
+            className="rounded-xl text-[11px] font-semibold border-border-default"
           >
             {t.admin?.cancel || "Close"}
           </Button>

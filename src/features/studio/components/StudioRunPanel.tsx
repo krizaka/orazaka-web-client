@@ -48,15 +48,15 @@ export function StudioRunPanel({ studio, installation }: Readonly<StudioRunPanel
   }
 
   return (
-    <section className="flex flex-col gap-3 p-4 border border-[var(--border-subtle)] bg-[var(--surface-1)]">
-      <h2 className="text-[13px] font-semibold text-[var(--text-primary)]">{t.studio.runTitle}</h2>
+    <section className="flex flex-col gap-3 p-4 border border-border-subtle bg-surface-1">
+      <h2 className="text-[13px] font-semibold text-fg">{t.studio.runTitle}</h2>
       <RunForm
         inputSchema={studio.inputSchema}
         estimatedCredits={studio.estimatedCredits}
         isSubmitting={isSubmitting}
         onSubmit={(inputs) => void start(inputs)}
       />
-      {error && <p className="text-[11px] text-[var(--status-error)]">{error}</p>}
+      {error && <p className="text-[11px] text-danger">{error}</p>}
     </section>
   );
 }

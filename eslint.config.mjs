@@ -1,6 +1,7 @@
 import { defineConfig, globalIgnores } from "eslint/config";
 import nextVitals from "eslint-config-next/core-web-vitals";
 import nextTs from "eslint-config-next/typescript";
+import { krizakaUiRestrictedSyntax } from "@krizaka/config/eslint/krizaka-ui";
 
 const eslintConfig = defineConfig([
   ...nextVitals,
@@ -20,6 +21,9 @@ const eslintConfig = defineConfig([
       
       "no-restricted-syntax": [
         "error",
+        // 0. The four Krizaka UI rules (@krizaka/config), strict: no raw palette colour, no `light:`, no arbitrary
+        //    `[var(--…)]` utility, no template string in className. krizaka-ratchet holds the same four at zero.
+        ...krizakaUiRestrictedSyntax(),
         // 1. Orazaka Invariant: Banning traditional TS Enums
         {
           selector: "TSEnumDeclaration",
@@ -70,13 +74,13 @@ const eslintConfig = defineConfig([
           selector:
             "Literal[value=/(bg|text|border|ring|from|to|via|fill|stroke|divide|outline|decoration|caret|placeholder|accent|shadow)-(zinc|gray|slate|neutral|stone|red|rose|orange|amber|yellow|lime|green|emerald|teal|cyan|sky|blue|indigo|violet|purple|fuchsia|pink)-[0-9]{2,3}/]",
           message:
-            "Hardcoded Tailwind palette color classes are banned in Orazaka — they break theme switching and dark mode. Use the HSL design tokens via the @theme bridge: text-text-{primary,secondary,muted}, bg-surface-{0..3}, border-border-{subtle,default,strong}, {text,bg,border}-status-{error,success,warning}, *-accent (opacity modifiers like /10 are supported).",
+            "Hardcoded Tailwind palette color classes are banned in Orazaka — they break theme switching and dark mode. Use the role utilities of @krizaka/tailwind: text-fg / text-fg-secondary / text-fg-muted, bg-surface-{0..3}, border-border-{subtle,default,strong}, {text,bg,border}-{success,warning,danger,info}, *-accent, text-on-accent (opacity modifiers like /10 are supported).",
         },
         {
           selector:
             "TemplateElement[value.cooked=/(bg|text|border|ring|from|to|via|fill|stroke|divide|outline|decoration|caret|placeholder|accent|shadow)-(zinc|gray|slate|neutral|stone|red|rose|orange|amber|yellow|lime|green|emerald|teal|cyan|sky|blue|indigo|violet|purple|fuchsia|pink)-[0-9]{2,3}/]",
           message:
-            "Hardcoded Tailwind palette color classes are banned in Orazaka — they break theme switching and dark mode. Use the HSL design tokens via the @theme bridge: text-text-{primary,secondary,muted}, bg-surface-{0..3}, border-border-{subtle,default,strong}, {text,bg,border}-status-{error,success,warning}, *-accent (opacity modifiers like /10 are supported).",
+            "Hardcoded Tailwind palette color classes are banned in Orazaka — they break theme switching and dark mode. Use the role utilities of @krizaka/tailwind: text-fg / text-fg-secondary / text-fg-muted, bg-surface-{0..3}, border-border-{subtle,default,strong}, {text,bg,border}-{success,warning,danger,info}, *-accent, text-on-accent (opacity modifiers like /10 are supported).",
         },
       ],
       

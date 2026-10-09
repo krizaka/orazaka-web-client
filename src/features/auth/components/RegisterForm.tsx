@@ -12,13 +12,13 @@ const SUPPORTED_LANGUAGES = [
 
 // ─── Styles ────────────────────────────────────────────────────────
 const fieldLabelClass =
-  "text-sm font-medium leading-none text-text-secondary peer-disabled:cursor-not-allowed peer-disabled:opacity-70";
+  "text-sm font-medium leading-none text-fg-secondary peer-disabled:cursor-not-allowed peer-disabled:opacity-70";
 
 const selectClass =
-  "w-full rounded-xl border border-input-border bg-input-bg px-3 py-2 text-sm " +
-  "text-input-text shadow-sm backdrop-blur-sm transition-all duration-200 " +
+  "w-full rounded-xl border border-border-default bg-surface-2 px-3 py-2 text-sm " +
+  "text-fg shadow-sm backdrop-blur-sm transition-all duration-200 " +
   "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-border-subtle " +
-  "dark:focus-visible:ring-border-subtle focus-visible:border-transparent " +
+  "focus-visible:border-transparent focus-visible:ring-border-subtle " +
   "disabled:cursor-not-allowed disabled:opacity-50";
 
 /**
@@ -76,7 +76,7 @@ export function RegisterForm({ onSuccess, onError }: Readonly<RegisterFormProps>
     <form id="form-register" onSubmit={handleRegister} className="space-y-4">
       <div className="space-y-2">
         <label htmlFor="reg-username" className={fieldLabelClass}>
-          {t.auth.usernameLabel} <span className="text-status-error">*</span>
+          {t.auth.usernameLabel} <span className="text-danger">*</span>
         </label>
         <Input
           id="reg-username"
@@ -91,7 +91,7 @@ export function RegisterForm({ onSuccess, onError }: Readonly<RegisterFormProps>
       </div>
       <div className="space-y-2">
         <label htmlFor="reg-email" className={fieldLabelClass}>
-          {t.auth.emailLabel} <span className="text-status-error">*</span>
+          {t.auth.emailLabel} <span className="text-danger">*</span>
         </label>
         <Input
           id="reg-email"
@@ -105,7 +105,7 @@ export function RegisterForm({ onSuccess, onError }: Readonly<RegisterFormProps>
       </div>
       <div className="space-y-2">
         <label htmlFor="reg-password" className={fieldLabelClass}>
-          {t.auth.passwordLabel} <span className="text-status-error">*</span>
+          {t.auth.passwordLabel} <span className="text-danger">*</span>
         </label>
         <Input
           id="reg-password"
@@ -120,7 +120,7 @@ export function RegisterForm({ onSuccess, onError }: Readonly<RegisterFormProps>
       </div>
       <div className="space-y-2">
         <label htmlFor="reg-confirm-password" className={fieldLabelClass}>
-          {t.auth.confirmPasswordLabel} <span className="text-status-error">*</span>
+          {t.auth.confirmPasswordLabel} <span className="text-danger">*</span>
         </label>
         <Input
           id="reg-confirm-password"
@@ -157,7 +157,7 @@ export function RegisterForm({ onSuccess, onError }: Readonly<RegisterFormProps>
       >
         {isPending ? t.auth.creatingAccountBtn : t.auth.createAccountBtn}
       </Button>
-      <p className="text-center text-xs text-text-muted dark:text-text-secondary">
+      <p className="text-center text-xs text-fg-secondary">
         {t.auth.termsNotice}
       </p>
     </form>

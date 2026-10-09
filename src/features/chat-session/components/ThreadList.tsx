@@ -3,6 +3,8 @@ import { format } from "date-fns";
 import { ChatThread } from "@/core/types/chat.types";
 import { useTranslation } from "@/core/context/LocaleContext";
 
+import { cn } from "@krizaka/ui/cn";
+
 interface Props {
   threads: ChatThread[];
   activeId: string;
@@ -30,22 +32,22 @@ export const ThreadList: React.FC<Props> = ({
     return (
       <div className="space-y-2 p-4">
         {[1, 2, 3].map((n) => (
-          <div key={n} className="h-12 bg-[var(--surface-2)] rounded-lg" />
+          <div key={n} className="h-12 bg-surface-2 rounded-lg" />
         ))}
       </div>
     );
   }
 
   return (
-    <div className="flex flex-col h-full bg-[var(--surface-1)] border-r border-[var(--border-subtle)]">
-      <div className="p-4 border-b border-[var(--border-subtle)] flex items-center justify-between">
-        <h2 className="text-sm font-semibold text-[var(--text-primary)]">
+    <div className="flex flex-col h-full bg-surface-1 border-r border-border-subtle">
+      <div className="p-4 border-b border-border-subtle flex items-center justify-between">
+        <h2 className="text-sm font-semibold text-fg">
           {t.chat.memoryBlocks}
         </h2>
         <button
           id="btn-new-block"
           onClick={onCreateThread}
-          className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg border border-[var(--border-default)] bg-[var(--surface-2)] text-[var(--text-secondary)] hover:bg-[var(--surface-3)] transition-colors duration-150"
+          className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg border border-border-default bg-surface-2 text-fg-secondary hover:bg-surface-3 transition-colors duration-150"
         >
           <svg
             className="w-3.5 h-3.5"
@@ -69,18 +71,19 @@ export const ThreadList: React.FC<Props> = ({
           return (
             <div
               key={thread.conversationId}
-              className={`group w-full relative flex items-center justify-between rounded-lg transition-colors duration-150 text-sm border ${
+              className={cn(
+                "group w-full relative flex items-center justify-between rounded-lg transition-colors duration-150 text-sm border",
                 isActive
-                  ? "bg-[var(--surface-2)] border-[var(--border-default)] text-[var(--text-primary)] font-semibold"
-                  : "bg-transparent border-transparent text-[var(--text-secondary)] hover:bg-[var(--surface-2)]"
-              }`}
+                  ? "bg-surface-2 border-border-default text-fg font-semibold"
+                  : "bg-transparent border-transparent text-fg-secondary hover:bg-surface-2"
+              )}
             >
               <button
                 onClick={() => onSelectThread(thread.conversationId)}
                 className="flex-1 text-left p-3 min-w-0"
               >
                 <div className="truncate pr-6">{thread.title}</div>
-                <div className="text-xs text-[var(--text-muted)] mt-1">
+                <div className="text-xs text-fg-muted mt-1">
                   {format(thread.updatedAt, "yyyy-MM-dd")}
                 </div>
               </button>
@@ -90,7 +93,7 @@ export const ThreadList: React.FC<Props> = ({
                   e.stopPropagation();
                   onDeleteThread(thread.conversationId);
                 }}
-                className="absolute right-3 p-1.5 rounded-lg text-[var(--text-muted)] hover:text-status-error dark:hover:text-status-error hover:bg-[var(--surface-3)] opacity-0 group-hover:opacity-100 focus:opacity-100 transition-all duration-150"
+                className="absolute right-3 p-1.5 rounded-lg text-fg-muted hover:text-danger hover:bg-surface-3 opacity-0 group-hover:opacity-100 focus:opacity-100 transition-all duration-150"
                 title="Delete Session"
               >
                 <svg

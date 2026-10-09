@@ -34,7 +34,7 @@ export const ChatTimeline: React.FC<Props> = ({
   if (isLoadingMessages) {
     return (
       <div className="h-full flex items-center justify-center">
-        <span className="text-[var(--text-muted)] text-[13px] animate-pulse">
+        <span className="text-fg-muted text-[13px] animate-pulse">
           {t.chat.loadingMessages}
         </span>
       </div>
@@ -43,7 +43,7 @@ export const ChatTimeline: React.FC<Props> = ({
 
   if (!messages || messages.length === 0) {
     return (
-      <div className="h-full flex items-center justify-center text-[var(--text-muted)] text-[13px]">
+      <div className="h-full flex items-center justify-center text-fg-muted text-[13px]">
         {t.chat.noActiveConversation}
       </div>
     );
@@ -69,7 +69,7 @@ export const ChatTimeline: React.FC<Props> = ({
       )}
       <div ref={messagesEndRef} />
       {error && (
-        <div className="p-4 bg-status-error/5 text-status-error rounded-xl text-[13px] border border-status-error/20">
+        <div className="p-4 bg-danger/5 text-danger rounded-xl text-[13px] border border-danger/20">
           {t.chat.connectionError}
         </div>
       )}

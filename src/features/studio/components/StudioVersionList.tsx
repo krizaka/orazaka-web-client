@@ -25,8 +25,8 @@ export function StudioVersionList({ versions }: Readonly<StudioVersionListProps>
 
   return (
     <section className="flex flex-col gap-2">
-      <h2 className="hud-label text-[10px] text-[var(--text-muted)]">{t.studio.versionHistory}</h2>
-      <ul className="flex flex-col divide-y divide-[var(--border-subtle)] border border-[var(--border-subtle)]">
+      <h2 className="hud-label text-[10px] text-fg-muted">{t.studio.versionHistory}</h2>
+      <ul className="flex flex-col divide-y divide-border-subtle border border-border-subtle">
         {published.map((version) => (
           <StudioVersionRow key={version.version} version={version} />
         ))}
@@ -46,14 +46,14 @@ function StudioVersionRow({ version }: Readonly<StudioVersionRowProps>) {
   return (
     <li className="flex flex-col gap-1 p-3">
       <div className="flex items-center justify-between gap-3">
-        <span className="text-[12px] font-semibold text-[var(--text-primary)]">
+        <span className="text-[12px] font-semibold text-fg">
           {version.version}
         </span>
-        <span className="hud-label text-[10px] text-[var(--text-muted)]">
+        <span className="hud-label text-[10px] text-fg-muted">
           {version.publishedAt ? format(new Date(version.publishedAt), "dd MMM yyyy") : ""}
         </span>
       </div>
-      <p className="text-[11px] leading-snug text-[var(--text-secondary)]">
+      <p className="text-[11px] leading-snug text-fg-secondary">
         {version.changelog ?? t.studio.noChangelog}
       </p>
     </li>
