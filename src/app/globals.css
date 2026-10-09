@@ -8,7 +8,9 @@
      → @krizaka/ui/tailwind.css   Tailwind scans the @krizaka/ui primitives (Card, Dialog, Toaster, Popover…)
      → @krizaka/orazaka-design-system/theme.css
                                   the Orazaka identity: Electric Blue and the named themes as --kz-* overrides
-   theme.css imports the two platform layers itself (kit 2.x), so the app writes two lines and gets the four.
+   theme.css imports the two platform layers itself (kit 2.x). The app also declares @krizaka/ui/tailwind.css (a
+   @source, nothing else): Tailwind then scans the primitives the app itself resolves — not only the copy the kit
+   resolves, which can be another version while the workspace lockfile catches up.
 
    No variable is defined here: components write roles, a theme is a set of token values (dark on :root,
    html.light, html.theme-<name>). Fonts (--font-inter, --font-krizaka-display, --font-krizaka-mono…) come from
@@ -16,4 +18,5 @@
    ═══════════════════════════════════════════════════ */
 
 @import "tailwindcss";
+@import "@krizaka/ui/tailwind.css";
 @import "@krizaka/orazaka-design-system/theme.css";
