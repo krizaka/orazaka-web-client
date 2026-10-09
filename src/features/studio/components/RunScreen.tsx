@@ -53,22 +53,22 @@ export function RunScreen({ runId }: Readonly<RunScreenProps>) {
     <div className="flex flex-col gap-6">
       <Link
         href="/studios"
-        className="inline-flex items-center gap-1.5 self-start text-[11px] font-medium text-[var(--text-muted)] hover:text-[var(--text-primary)] transition-colors duration-150"
+        className="inline-flex items-center gap-1.5 self-start text-[11px] font-medium text-fg-muted hover:text-fg transition-colors duration-150"
       >
         <Icon name="arrowLeft" size={13} />
         {t.studio.back}
       </Link>
 
       <header className="flex flex-col gap-1">
-        <h1 className="text-[15px] font-semibold tracking-[-0.02em] text-[var(--text-primary)]">
+        <h1 className="text-[15px] font-semibold tracking-[-0.02em] text-fg">
           {headline[run.status]}
         </h1>
-        <span className="hud-label text-[10px] text-[var(--text-muted)]">
+        <span className="hud-label text-[10px] text-fg-muted">
           {run.studioKey} · {run.blueprintVersion} ·{" "}
           {format(new Date(run.startedAt), "dd MMM yyyy HH:mm")}
         </span>
         {run.errorMessage && (
-          <p className="text-[11px] text-[var(--status-error)]">{run.errorMessage}</p>
+          <p className="text-[11px] text-danger">{run.errorMessage}</p>
         )}
       </header>
 
@@ -78,7 +78,7 @@ export function RunScreen({ runId }: Readonly<RunScreenProps>) {
             <button
               type="button"
               onClick={() => void act(() => StudioApi.approveRun(run.id))}
-              className="h-8 px-3 text-[12px] font-medium border border-[var(--accent)] text-[var(--accent)] hover:bg-[var(--surface-2)] transition-colors duration-150"
+              className="h-8 px-3 text-[12px] font-medium border border-accent text-accent hover:bg-surface-2 transition-colors duration-150"
             >
               {t.studio.approve}
             </button>
@@ -86,7 +86,7 @@ export function RunScreen({ runId }: Readonly<RunScreenProps>) {
           <button
             type="button"
             onClick={() => void act(() => StudioApi.cancelRun(run.id))}
-            className="h-8 px-3 text-[12px] font-medium text-[var(--text-muted)] hover:text-[var(--status-error)] transition-colors duration-150"
+            className="h-8 px-3 text-[12px] font-medium text-fg-muted hover:text-danger transition-colors duration-150"
           >
             {t.studio.cancelRun}
           </button>

@@ -1,16 +1,7 @@
 "use client";
 
 import * as React from "react";
-import {
-  Button,
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-  Dialog,
-  Icon,
-} from "@krizaka/orazaka-design-system";
+import { Button, Dialog, Icon } from "@krizaka/orazaka-design-system";
 import { useTranslation } from "@/core/context/LocaleContext";
 import {
   MAX_API_KEYS,
@@ -22,6 +13,8 @@ import {
   CreateApiKeyForm,
   RevealKeyPanel,
 } from "./ApiKeysParts";
+
+import { Card } from "@krizaka/ui/card";
 
 interface ApiKeysSectionProps {
   fetchHeaders: () => Promise<Record<string, string>>;
@@ -55,18 +48,18 @@ export function ApiKeysSection({
   } = useApiKeys(fetchHeaders);
 
   return (
-    <Card className="bg-[var(--surface-1)] shadow-sm">
-      <CardHeader className="flex flex-row items-start justify-between gap-3">
+    <Card.Root className="bg-surface-1 shadow-sm">
+      <Card.Body padding="lg" className="flex flex-row items-start justify-between gap-3">
         <div className="space-y-1">
-          <CardTitle className="flex items-center gap-2 text-base font-semibold text-[var(--text-primary)]">
-            <span className="inline-flex h-7 w-7 items-center justify-center rounded-lg bg-[var(--accent-soft)] text-[var(--accent)]">
+          <Card.Title className="line-clamp-none tracking-tight group-hover:text-fg flex items-center gap-2 text-base font-semibold text-fg">
+            <span className="inline-flex h-7 w-7 items-center justify-center rounded-lg bg-accent-soft text-accent">
               <Icon name="key" size={16} />
             </span>
             {t.apiKeys.title}
-          </CardTitle>
-          <CardDescription className="text-[var(--text-secondary)]">
+          </Card.Title>
+          <Card.Description className="line-clamp-none text-sm text-fg-secondary">
             {t.apiKeys.subtitle}
-          </CardDescription>
+          </Card.Description>
         </div>
         {keys.length > 0 && (
           <Button
@@ -80,13 +73,13 @@ export function ApiKeysSection({
             {t.apiKeys.create}
           </Button>
         )}
-      </CardHeader>
+      </Card.Body>
 
-      <CardContent>
+      <Card.Body padding="lg" className="block pt-0">
         {(() => {
           if (isLoading) {
             return (
-              <p className="text-xs text-[var(--text-muted)]">
+              <p className="text-xs text-fg-muted">
                 {t.apiKeys.loading}
               </p>
             );
@@ -96,7 +89,7 @@ export function ApiKeysSection({
           }
           return (
             <>
-              <ul className="divide-y divide-[var(--border-subtle)] overflow-hidden rounded-[var(--radius-lg)] border border-[var(--border-subtle)]">
+              <ul className="divide-y divide-border-subtle overflow-hidden rounded-lg border border-border-subtle">
                 {keys.map((apiKey) => (
                   <ApiKeyRow
                     key={apiKey.id}
@@ -106,13 +99,13 @@ export function ApiKeysSection({
                   />
                 ))}
               </ul>
-              <p className="mt-3 text-center text-xs text-[var(--text-muted)]">
+              <p className="mt-3 text-center text-xs text-fg-muted">
                 {keys.length} / {MAX_API_KEYS} {t.apiKeys.limitCaption}
               </p>
             </>
           );
         })()}
-      </CardContent>
+      </Card.Body>
 
       <Dialog
         open={isCreateOpen}
@@ -142,6 +135,6 @@ export function ApiKeysSection({
           <RevealKeyPanel generated={generated} onDone={dismissGenerated} />
         )}
       </Dialog>
-    </Card>
+    </Card.Root>
   );
 }

@@ -42,28 +42,28 @@ export function StudioDetail({ studioKey }: Readonly<StudioDetailProps>) {
     <div className="flex flex-col gap-6">
       <Link
         href="/studios"
-        className="inline-flex items-center gap-1.5 self-start text-[11px] font-medium text-[var(--text-muted)] hover:text-[var(--text-primary)] transition-colors duration-150"
+        className="inline-flex items-center gap-1.5 self-start text-[11px] font-medium text-fg-muted hover:text-fg transition-colors duration-150"
       >
         <Icon name="arrowLeft" size={13} />
         {t.studio.back}
       </Link>
 
       <header className="flex items-start gap-3">
-        <span className="flex items-center justify-center w-11 h-11 flex-shrink-0 border border-[var(--border-subtle)] bg-[var(--surface-2)] text-[var(--accent)]">
+        <span className="flex items-center justify-center w-11 h-11 flex-shrink-0 border border-border-subtle bg-surface-2 text-accent">
           <Icon name={studio.iconKey as IconName} size={22} />
         </span>
         <div className="flex flex-col gap-1">
-          <h1 className="text-[17px] font-semibold tracking-[-0.02em] text-[var(--text-primary)]">
+          <h1 className="text-[17px] font-semibold tracking-[-0.02em] text-fg">
             {studio.label}
           </h1>
           {studio.tagline && (
-            <p className="text-[13px] text-[var(--text-secondary)]">{studio.tagline}</p>
+            <p className="text-[13px] text-fg-secondary">{studio.tagline}</p>
           )}
           <div className="flex items-center gap-2 pt-0.5">
-            <span className="hud-label text-[10px] text-[var(--text-muted)]">
+            <span className="hud-label text-[10px] text-fg-muted">
               {studio.profession}
             </span>
-            <span className="hud-label text-[10px] text-[var(--text-muted)]">
+            <span className="hud-label text-[10px] text-fg-muted">
               {pricingLabel[studio.pricing]}
             </span>
           </div>
@@ -71,20 +71,20 @@ export function StudioDetail({ studioKey }: Readonly<StudioDetailProps>) {
       </header>
 
       {studio.description && (
-        <p className="text-[13px] leading-relaxed text-[var(--text-secondary)]">
+        <p className="text-[13px] leading-relaxed text-fg-secondary">
           {studio.description}
         </p>
       )}
 
       {studio.estimatedCredits > 0 && (
-        <div className="flex items-baseline gap-2 p-3 border border-[var(--border-subtle)] bg-[var(--surface-1)]">
-          <span className="hud-label text-[10px] text-[var(--text-muted)]">
+        <div className="flex items-baseline gap-2 p-3 border border-border-subtle bg-surface-1">
+          <span className="hud-label text-[10px] text-fg-muted">
             {t.studio.estimatedCost}
           </span>
-          <span className="text-[15px] font-semibold text-[var(--text-primary)]">
+          <span className="text-[15px] font-semibold text-fg">
             {studio.estimatedCredits}
           </span>
-          <span className="text-[11px] text-[var(--text-muted)]">{t.studio.creditsPerRun}</span>
+          <span className="text-[11px] text-fg-muted">{t.studio.creditsPerRun}</span>
         </div>
       )}
 

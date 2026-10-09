@@ -31,12 +31,12 @@ export function InstalledStudios({ onBrowse }: Readonly<InstalledStudiosProps>) 
   if (installations.length === 0) {
     return (
       <div className="flex flex-col items-center gap-3 py-16">
-        <Icon name="studio" size={22} className="text-[var(--text-muted)]" />
-        <p className="text-[12px] text-[var(--text-secondary)]">{t.studio.emptyInstalled}</p>
+        <Icon name="studio" size={22} className="text-fg-muted" />
+        <p className="text-[12px] text-fg-secondary">{t.studio.emptyInstalled}</p>
         <button
           type="button"
           onClick={onBrowse}
-          className="px-3 h-8 text-[12px] font-medium border border-[var(--accent)] text-[var(--accent)] hover:bg-[var(--surface-2)] transition-colors duration-150"
+          className="px-3 h-8 text-[12px] font-medium border border-accent text-accent hover:bg-surface-2 transition-colors duration-150"
         >
           {t.studio.emptyInstalledCta}
         </button>
@@ -50,22 +50,22 @@ export function InstalledStudios({ onBrowse }: Readonly<InstalledStudiosProps>) 
         <Link
           key={installation.id}
           href={`/studios/${installation.studioKey}`}
-          className="group flex flex-col gap-2 p-4 border border-[var(--border-subtle)] bg-[var(--surface-1)] transition-all duration-200 hover:border-[var(--accent)] hover:bg-[var(--surface-2)]"
+          className="group flex flex-col gap-2 p-4 border border-border-subtle bg-surface-1 transition-all duration-200 hover:border-accent hover:bg-surface-2"
         >
           <div className="flex items-start justify-between gap-2">
-            <span className="flex items-center justify-center w-9 h-9 border border-[var(--border-subtle)] bg-[var(--surface-2)] text-[var(--accent)]">
+            <span className="flex items-center justify-center w-9 h-9 border border-border-subtle bg-surface-2 text-accent">
               <Icon name={installation.iconKey as IconName} size={18} />
             </span>
             {installation.status === "UPGRADE_AVAILABLE" && (
-              <span className="hud-label text-[10px] text-[var(--accent)]">
+              <span className="hud-label text-[10px] text-accent">
                 {t.studio.upgradeAvailable}
               </span>
             )}
           </div>
-          <h3 className="text-[13px] font-semibold text-[var(--text-primary)]">
+          <h3 className="text-[13px] font-semibold text-fg">
             {installation.label}
           </h3>
-          <span className="hud-label text-[10px] text-[var(--text-muted)]">
+          <span className="hud-label text-[10px] text-fg-muted">
             {t.studio.pinnedVersion} {installation.pinnedVersion}
           </span>
         </Link>

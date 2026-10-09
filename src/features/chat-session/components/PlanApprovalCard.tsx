@@ -41,53 +41,53 @@ export function PlanApprovalCard({
   return (
     <section
       className="glass-card p-0 overflow-hidden animate-in fade-in slide-in-from-bottom-3 duration-500"
-      style={{ borderRadius: "var(--radius-lg)" }}
+      style={{ borderRadius: "var(--kz-radius-lg)" }}
     >
       {/* Header bar */}
-      <header className="flex items-center gap-3 px-5 py-4 border-b border-[var(--border-subtle)] bg-[var(--surface-2)]/30">
-        <span className="inline-flex items-center justify-center w-8 h-8 bg-[var(--accent-soft)] border border-[var(--accent)]/20"
-              style={{ borderRadius: "var(--radius-sm)" }}>
-          <Icon name="shield" size={16} className="text-[var(--accent)]" />
+      <header className="flex items-center gap-3 px-5 py-4 border-b border-border-subtle bg-surface-2/30">
+        <span className="inline-flex items-center justify-center w-8 h-8 bg-accent-soft border border-accent/20"
+              style={{ borderRadius: "var(--kz-radius-sm)" }}>
+          <Icon name="shield" size={16} className="text-accent" />
         </span>
         <div>
-          <h3 className="text-sm font-bold text-[var(--text-primary)] tracking-tight">
+          <h3 className="text-sm font-bold text-fg tracking-tight">
             Execution Plan — Awaiting Approval
           </h3>
-          <p className="text-[11px] text-[var(--text-muted)] mt-0.5">
+          <p className="text-[11px] text-fg-muted mt-0.5">
             Review the proposed steps before execution proceeds.
           </p>
         </div>
 
         {/* Status pill */}
-        <span className="ml-auto inline-flex items-center gap-1.5 px-3 py-1 text-[10px] font-semibold uppercase tracking-wider bg-status-warning/10 text-status-warning border border-status-warning/20"
-              style={{ borderRadius: "var(--radius-full)" }}>
-          <span className="w-1.5 h-1.5 rounded-full bg-status-warning animate-pulse" />
+        <span className="ml-auto inline-flex items-center gap-1.5 px-3 py-1 text-[10px] font-semibold uppercase tracking-wider bg-warning/10 text-warning border border-warning/20"
+              style={{ borderRadius: "var(--kz-radius-full)" }}>
+          <span className="w-1.5 h-1.5 rounded-full bg-warning animate-pulse" />
           Awaiting
         </span>
       </header>
 
       {/* Step matrix */}
-      <ul className="divide-y divide-[var(--border-subtle)]">
+      <ul className="divide-y divide-border-subtle">
         {steps.map((step, idx) => (
           <li
             key={step.id}
-            className="flex items-start gap-3 px-5 py-3 transition-colors duration-150 hover:bg-[var(--surface-2)]/30"
+            className="flex items-start gap-3 px-5 py-3 transition-colors duration-150 hover:bg-surface-2/30"
           >
             {/* Step index badge */}
             <span
-              className="flex-shrink-0 w-6 h-6 flex items-center justify-center text-[10px] font-bold border border-[var(--border-default)] bg-[var(--surface-2)] text-[var(--text-muted)]"
-              style={{ borderRadius: "var(--radius-sm)" }}
+              className="flex-shrink-0 w-6 h-6 flex items-center justify-center text-[10px] font-bold border border-border-default bg-surface-2 text-fg-muted"
+              style={{ borderRadius: "var(--kz-radius-sm)" }}
             >
               {idx + 1}
             </span>
 
             {/* Step content */}
             <div className="flex-1 min-w-0">
-              <p className="text-[13px] font-medium text-[var(--text-primary)] leading-snug">
+              <p className="text-[13px] font-medium text-fg leading-snug">
                 {step.label}
               </p>
               {step.description && (
-                <p className="text-[11px] text-[var(--text-secondary)] mt-0.5 leading-relaxed">
+                <p className="text-[11px] text-fg-secondary mt-0.5 leading-relaxed">
                   {step.description}
                 </p>
               )}
@@ -96,11 +96,11 @@ export function PlanApprovalCard({
             {/* Status indicator */}
             <span className="flex-shrink-0 mt-0.5">
               {step.status === "approved" ? (
-                <Icon name="checkCircle" size={16} className="text-status-success" />
+                <Icon name="checkCircle" size={16} className="text-success" />
               ) : step.status === "rejected" ? (
-                <Icon name="error" size={16} className="text-status-error" />
+                <Icon name="error" size={16} className="text-danger" />
               ) : (
-                <Icon name="circle" size={16} className="text-[var(--text-muted)]" />
+                <Icon name="circle" size={16} className="text-fg-muted" />
               )}
             </span>
           </li>
@@ -108,15 +108,15 @@ export function PlanApprovalCard({
       </ul>
 
       {/* Action bar */}
-      <footer className="flex items-center gap-3 px-5 py-4 border-t border-[var(--border-subtle)] bg-[var(--surface-2)]/20">
+      <footer className="flex items-center gap-3 px-5 py-4 border-t border-border-subtle bg-surface-2/20">
         {/* Primary: Approve */}
         <button
           id="plan-approve-btn"
           type="button"
           onClick={onApprove}
           disabled={isProcessing}
-          className="inline-flex items-center gap-2 px-5 py-2 text-[12px] font-bold bg-[var(--accent)] text-white shadow-md hover:opacity-90 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
-          style={{ borderRadius: "var(--radius-sm)" }}
+          className="inline-flex items-center gap-2 px-5 py-2 text-[12px] font-bold bg-accent text-on-accent shadow-md hover:opacity-90 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+          style={{ borderRadius: "var(--kz-radius-sm)" }}
         >
           {isProcessing ? (
             <Icon name="loader" size={14} className="animate-spin" />
@@ -132,8 +132,8 @@ export function PlanApprovalCard({
           type="button"
           onClick={onRequestAdjustments}
           disabled={isProcessing}
-          className="inline-flex items-center gap-2 px-4 py-2 text-[12px] font-medium border border-[var(--border-default)] bg-[var(--surface-2)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--surface-3)] transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
-          style={{ borderRadius: "var(--radius-sm)" }}
+          className="inline-flex items-center gap-2 px-4 py-2 text-[12px] font-medium border border-border-default bg-surface-2 text-fg-secondary hover:text-fg hover:bg-surface-3 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+          style={{ borderRadius: "var(--kz-radius-sm)" }}
         >
           <Icon name="edit" size={14} />
           Request Adjustments

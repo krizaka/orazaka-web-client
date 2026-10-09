@@ -84,7 +84,7 @@ export default function HomePage() {
 
   if (isLoading || !isAuthenticated) {
     return (
-      <section className="flex min-h-screen items-center justify-center bg-[var(--surface-0)] ambient-grid">
+      <section className="flex min-h-screen items-center justify-center bg-surface-0 ambient-grid">
         <div className="w-full max-w-6xl px-6 space-y-8">
           {/* Skeleton header */}
           <div className="space-y-2">
@@ -120,7 +120,7 @@ export default function HomePage() {
   };
 
   return (
-    <section className="flex h-screen overflow-hidden bg-[var(--surface-0)] transition-colors duration-200">
+    <section className="flex h-screen overflow-hidden bg-surface-0 transition-colors duration-200">
       <Sidebar />
 
       <div className="flex flex-1 flex-col overflow-hidden">
@@ -131,24 +131,24 @@ export default function HomePage() {
             {/* ── Section 1: Welcome Header ──────────────────── */}
             <header className="flex items-baseline justify-between">
               <div className="space-y-1">
-                <h2 className="fluid-2xl font-bold tracking-tight text-[var(--text-primary)] flex items-center gap-2">
-                  <Icon name={greetingIcon} className="h-6 w-6 text-[var(--accent)]" />
+                <h2 className="fluid-2xl font-bold tracking-tight text-fg flex items-center gap-2">
+                  <Icon name={greetingIcon} className="h-6 w-6 text-accent" />
                   {t.dashboard.welcome},{" "}
-                  <span className="text-[var(--accent)]">
+                  <span className="text-accent">
                     {user?.name || "Admin"}
                   </span>
                 </h2>
-                <p className="text-[var(--text-secondary)] fluid-sm">
+                <p className="text-fg-secondary fluid-sm">
                   {t.dashboard.overview}
                 </p>
               </div>
               <div className="hidden lg:flex items-center gap-3">
                 {/* Sovereignty status — threads the shared on-prem motif */}
-                <span className="inline-flex items-center gap-1.5 rounded-full border border-[var(--border-subtle)] bg-[var(--surface-1)] px-2.5 py-1 text-[11px] font-medium text-[var(--text-secondary)]">
-                  <span className="h-1.5 w-1.5 rounded-full bg-[var(--status-success)] motion-safe:animate-pulse" />
+                <span className="inline-flex items-center gap-1.5 rounded-full border border-border-subtle bg-surface-1 px-2.5 py-1 text-[11px] font-medium text-fg-secondary">
+                  <span className="h-1.5 w-1.5 rounded-full bg-success motion-safe:animate-pulse" />
                   Local · sovereign
                 </span>
-                <kbd className="flex items-center gap-1 px-2 py-1 rounded-md bg-[var(--surface-2)] border border-[var(--border-subtle)] text-[10px] font-mono text-[var(--text-muted)]">
+                <kbd className="flex items-center gap-1 px-2 py-1 rounded-md bg-surface-2 border border-border-subtle text-[10px] font-mono text-fg-muted">
                   ⌘K
                 </kbd>
               </div>

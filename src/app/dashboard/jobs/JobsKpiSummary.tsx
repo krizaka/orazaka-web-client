@@ -8,6 +8,8 @@ import { useTranslation } from "@/core/context/LocaleContext";
 import { computeJobStats } from "./jobStats.utils";
 import { AnimatedCounter } from "./AnimatedCounter";
 
+import { cn } from "@krizaka/ui/cn";
+
 interface JobsKpiSummaryProps {
   jobs: Job[];
 }
@@ -43,7 +45,7 @@ export const JobsKpiSummary: React.FC<JobsKpiSummaryProps> = ({ jobs }) => {
       gradient: "from-surface-3/20 via-surface-3/10 to-transparent",
       glow: "shadow-surface-3/5",
       iconBg: "bg-surface-3/10",
-      accent: "text-text-primary",
+      accent: "text-fg",
     },
     {
       icon: <Icon name="trendingUp" className="w-4 h-4" />,
@@ -54,20 +56,20 @@ export const JobsKpiSummary: React.FC<JobsKpiSummaryProps> = ({ jobs }) => {
       sub: `${stats.failed} failed`,
       gradient:
         stats.completed / Math.max(stats.total, 1) > 0.8
-          ? "from-status-success/20 via-status-success/5 to-transparent"
-          : "from-status-warning/20 via-status-warning/5 to-transparent",
+          ? "from-success/20 via-success/5 to-transparent"
+          : "from-warning/20 via-warning/5 to-transparent",
       glow:
         stats.completed / Math.max(stats.total, 1) > 0.8
-          ? "shadow-status-success/10"
-          : "shadow-status-warning/10",
+          ? "shadow-success/10"
+          : "shadow-warning/10",
       iconBg:
         stats.completed / Math.max(stats.total, 1) > 0.8
-          ? "bg-status-success/10"
-          : "bg-status-warning/10",
+          ? "bg-success/10"
+          : "bg-warning/10",
       accent:
         stats.completed / Math.max(stats.total, 1) > 0.8
-          ? "text-status-success"
-          : "text-status-warning",
+          ? "text-success"
+          : "text-warning",
     },
     {
       icon: <Icon name="timer" className="w-4 h-4" />,
@@ -98,10 +100,10 @@ export const JobsKpiSummary: React.FC<JobsKpiSummaryProps> = ({ jobs }) => {
       value: stats.uniqueFeatures,
       valueSuffix: "",
       sub: stats.topFeature || "—",
-      gradient: "from-status-warning/20 via-status-warning/5 to-transparent",
-      glow: "shadow-status-warning/10",
-      iconBg: "bg-status-warning/10",
-      accent: "text-status-warning",
+      gradient: "from-warning/20 via-warning/5 to-transparent",
+      glow: "shadow-warning/10",
+      iconBg: "bg-warning/10",
+      accent: "text-warning",
     },
     {
       icon: <Icon name="zap" className="w-4 h-4" />,
@@ -122,25 +124,22 @@ export const JobsKpiSummary: React.FC<JobsKpiSummaryProps> = ({ jobs }) => {
       {cards.map((card, i) => (
         <div
           key={card.label}
-          className={`
-            group relative overflow-hidden
-            flex flex-col gap-1.5 p-4 rounded-2xl
-            bg-white/[0.03] dark:bg-white/[0.02]
-            border border-white/[0.06]
-            backdrop-blur-xl
-            ${card.glow} shadow-lg
-            transition-all duration-300
-            hover:scale-[1.03] hover:shadow-xl
-            hover:border-white/[0.12]
-            hover:bg-white/[0.05]
-          `}
+          className={cn(
+            "group relative overflow-hidden flex flex-col gap-1.5 p-4 rounded-2xl bg-fg/2 border border-fg/6 backdrop-blur-xl",
+            card.glow,
+            "shadow-lg transition-all duration-300 hover:scale-[1.03] hover:shadow-xl hover:border-fg/12 hover:bg-fg/5"
+          )}
           style={{
             animationDelay: `${i * 60}ms`,
           }}
         >
           {/* Gradient overlay */}
           <div
-            className={`absolute inset-0 bg-gradient-to-br ${card.gradient} opacity-60 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none`}
+            className={cn(
+              "absolute inset-0 bg-gradient-to-br",
+              card.gradient,
+              "opacity-60 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
+            )}
           />
 
           {/* Subtle grid pattern */}
@@ -148,7 +147,7 @@ export const JobsKpiSummary: React.FC<JobsKpiSummaryProps> = ({ jobs }) => {
             className="absolute inset-0 opacity-[0.015] pointer-events-none"
             style={{
               backgroundImage:
-                "linear-gradient(var(--grid-color) 1px, transparent 1px), linear-gradient(90deg, var(--grid-color) 1px, transparent 1px)",
+                "linear-gradient(var(--orazaka-grid-color) 1px, transparent 1px), linear-gradient(90deg, var(--orazaka-grid-color) 1px, transparent 1px)",
               backgroundSize: "20px 20px",
             }}
           />
@@ -158,18 +157,27 @@ export const JobsKpiSummary: React.FC<JobsKpiSummaryProps> = ({ jobs }) => {
             {/* Icon + Label */}
             <header className="flex items-center gap-1.5">
               <figure
-                className={`${card.iconBg} p-1 rounded-md ${card.accent} transition-transform duration-300 group-hover:scale-110`}
+                className={cn(
+                  card.iconBg,
+                  "p-1 rounded-md",
+                  card.accent,
+                  "transition-transform duration-300 group-hover:scale-110"
+                )}
               >
                 {card.icon}
               </figure>
-              <span className="text-[9px] font-bold uppercase tracking-[0.12em] text-text-muted dark:text-text-secondary">
+              <span className="text-fg-secondary font-bold uppercase tracking-[0.12em] text-fg-muted">
                 {card.label}
               </span>
             </header>
 
             {/* Value */}
             <figure
-              className={`text-xl font-black tracking-tight ${card.accent} transition-colors duration-300`}
+              className={cn(
+                "text-xl font-black tracking-tight",
+                card.accent,
+                "transition-colors duration-300"
+              )}
             >
               {card.displayOverride ? (
                 card.displayOverride
@@ -179,14 +187,18 @@ export const JobsKpiSummary: React.FC<JobsKpiSummaryProps> = ({ jobs }) => {
             </figure>
 
             {/* Sub text */}
-            <footer className="text-[10px] text-text-muted font-medium truncate">
+            <footer className="text-[10px] text-fg-muted font-medium truncate">
               {card.sub}
             </footer>
           </section>
 
           {/* Glow dot */}
           <div
-            className={`absolute -top-1 -right-1 w-2 h-2 rounded-full ${card.accent.replace("text-", "bg-")} opacity-40 blur-[2px] group-hover:opacity-70 transition-opacity duration-500`}
+            className={cn(
+              "absolute -top-1 -right-1 w-2 h-2 rounded-full",
+              card.accent.replace("text-", "bg-"),
+              "opacity-40 blur-[2px] group-hover:opacity-70 transition-opacity duration-500"
+            )}
           />
         </div>
       ))}

@@ -1,14 +1,7 @@
 "use client";
 
 import * as React from "react";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-  Input,
-} from "@krizaka/orazaka-design-system";
+import { Input } from "@krizaka/orazaka-design-system";
 import { useTranslation } from "@/core/context/LocaleContext";
 import {
   AI_PERSONAS,
@@ -17,6 +10,8 @@ import {
 } from "@/constants/settings.constants";
 import { FieldLabel, SelectField } from "./ProfileFormParts";
 import type { UseProfileForm } from "@/features/profile/hooks/useProfileForm";
+
+import { Card } from "@krizaka/ui/card";
 
 /**
  * Workspace tab (admin-only) — tenant branding (Inversion of Control) plus the
@@ -27,16 +22,16 @@ export function WorkspaceTab({ pf }: Readonly<{ pf: UseProfileForm }>) {
   const { form, setField } = pf;
 
   return (
-    <Card className="bg-[var(--surface-1)] shadow-sm">
-      <CardHeader>
-        <CardTitle className="text-base font-semibold text-[var(--text-primary)]">
+    <Card.Root className="bg-surface-1 shadow-sm">
+      <Card.Body padding="lg" className="gap-1.5">
+        <Card.Title className="line-clamp-none tracking-tight group-hover:text-fg text-base font-semibold text-fg">
           {t.profile.workspaceTitle}
-        </CardTitle>
-        <CardDescription className="text-[var(--text-muted)]">
+        </Card.Title>
+        <Card.Description className="line-clamp-none text-sm text-fg-muted">
           {t.profile.workspaceDesc}
-        </CardDescription>
-      </CardHeader>
-      <CardContent className="space-y-6">
+        </Card.Description>
+      </Card.Body>
+      <Card.Body padding="lg" className="block pt-0 space-y-6">
         <div className="space-y-1.5">
           <FieldLabel htmlFor="workspace-name">{t.settings.appName}</FieldLabel>
           <Input
@@ -85,7 +80,7 @@ export function WorkspaceTab({ pf }: Readonly<{ pf: UseProfileForm }>) {
             ))}
           </SelectField>
         </div>
-      </CardContent>
-    </Card>
+      </Card.Body>
+    </Card.Root>
   );
 }

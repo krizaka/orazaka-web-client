@@ -43,17 +43,17 @@ export function PackMarketplace() {
   return (
     <section className="flex flex-col gap-8">
       <header className="flex flex-col gap-1">
-        <h1 className="text-[18px] font-medium text-[var(--text-primary)]">{t.packs.title}</h1>
-        <p className="max-w-2xl text-[13px] text-[var(--text-muted)]">{t.packs.subtitle}</p>
+        <h1 className="text-[18px] font-medium text-fg">{t.packs.title}</h1>
+        <p className="max-w-2xl text-[13px] text-fg-muted">{t.packs.subtitle}</p>
       </header>
 
       {error && (
         <div className="flex items-center gap-3">
-          <p className="text-[12px] text-[var(--status-error)]">{error}</p>
+          <p className="text-[12px] text-danger">{error}</p>
           <button
             type="button"
             onClick={reload}
-            className="h-7 border border-[var(--border-subtle)] px-2 text-[12px] text-[var(--text-primary)] transition-colors duration-150 hover:bg-[var(--surface-2)]"
+            className="h-7 border border-border-subtle px-2 text-[12px] text-fg transition-colors duration-150 hover:bg-surface-2"
           >
             {t.packs.retry}
           </button>
@@ -63,10 +63,10 @@ export function PackMarketplace() {
       {included.length > 0 && (
         <div className="flex flex-col gap-3">
           <header className="flex flex-col gap-0.5">
-            <h2 className="text-[13px] font-medium text-[var(--text-secondary)]">
+            <h2 className="text-[13px] font-medium text-fg-secondary">
               {t.packs.includedTitle}
             </h2>
-            <p className="text-[12px] text-[var(--text-muted)]">{t.packs.includedSubtitle}</p>
+            <p className="text-[12px] text-fg-muted">{t.packs.includedSubtitle}</p>
           </header>
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
             {included.map((pack) => (
@@ -87,14 +87,14 @@ export function PackMarketplace() {
         const shelf = verticals.filter((pack) => pack.categoryKey === category.categoryKey);
         return (
           <div key={category.categoryKey} className="flex flex-col gap-3">
-            <h2 className="text-[13px] font-medium text-[var(--text-secondary)]">
+            <h2 className="text-[13px] font-medium text-fg-secondary">
               {category.label}
             </h2>
 
             {isLoading ? (
-              <p className="text-[12px] text-[var(--text-muted)]">…</p>
+              <p className="text-[12px] text-fg-muted">…</p>
             ) : shelf.length === 0 ? (
-              <p className="text-[12px] text-[var(--text-muted)]">{t.packs.emptyCategory}</p>
+              <p className="text-[12px] text-fg-muted">{t.packs.emptyCategory}</p>
             ) : (
               <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
                 {shelf.map((pack) => (

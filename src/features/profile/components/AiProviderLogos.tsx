@@ -1,5 +1,7 @@
 import * as React from "react";
 
+import { cn } from "@krizaka/ui/cn";
+
 /* ─── Inline SVG provider logos ───────────────────────────────────────────
    Rendered tonally via `currentColor` so they inherit theme text/accent
    colors and read correctly across every theme (no hardcoded brand hex). */
@@ -97,11 +99,12 @@ export function ProviderGlyph({
 }: Readonly<{ provider: ProviderConfig; active?: boolean }>) {
   return (
     <span
-      className={`inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-[var(--radius-md)] border p-2 transition-colors ${
+      className={cn(
+        "inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-md border p-2 transition-colors",
         active
-          ? "border-[var(--accent)] bg-[var(--accent-soft)] text-[var(--accent)]"
-          : "border-[var(--border-subtle)] bg-[var(--surface-2)] text-[var(--text-secondary)]"
-      }`}
+          ? "border-accent bg-accent-soft text-accent"
+          : "border-border-subtle bg-surface-2 text-fg-secondary"
+      )}
     >
       {provider.icon}
     </span>

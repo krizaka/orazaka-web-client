@@ -1,6 +1,8 @@
 import * as React from "react";
 import { Icon, type IconName } from "@krizaka/orazaka-design-system";
 
+import { cn } from "@krizaka/ui/cn";
+
 /**
  * Properties required by the {@link MetricsGrid} component.
  */
@@ -159,40 +161,40 @@ function MetricCard({
     metric.delta === undefined
       ? ""
       : metric.delta > 0
-        ? "text-[var(--status-success)]"
+        ? "text-success"
         : metric.delta < 0
-          ? "text-[var(--status-error)]"
-          : "text-[var(--text-muted)]";
+          ? "text-danger"
+          : "text-fg-muted";
 
   const deltaArrow =
     metric.delta === undefined ? "" : metric.delta > 0 ? "↑" : metric.delta < 0 ? "↓" : "→";
 
   return (
-    <article className="glass-card rounded-[var(--radius-lg)] p-[var(--space-card)] hover:border-[var(--border-default)] hover-lift transition-all duration-200">
+    <article className="glass-card rounded-lg p-(--orazaka-space-card) hover:border-border-default hover-lift transition-all duration-200">
       {/* Header row */}
       <header className="flex items-center justify-between mb-3">
-        <span className="text-[10px] font-semibold uppercase tracking-wider text-[var(--text-muted)]">
+        <span className="text-[10px] font-semibold uppercase tracking-wider text-fg-muted">
           {label}
         </span>
-        <div className="p-1.5 rounded-[var(--radius-sm)] bg-[var(--surface-2)]">
-          <Icon name={metric.icon} size={14} className="text-[var(--text-muted)]" />
+        <div className="p-1.5 rounded-sm bg-surface-2">
+          <Icon name={metric.icon} size={14} className="text-fg-muted" />
         </div>
       </header>
 
       {/* Value with count-up animation */}
       <p className="flex items-baseline gap-2">
-        <span className={`text-3xl font-extrabold tracking-tight font-mono ${accentText}`}>
+        <span className={cn("text-3xl font-extrabold tracking-tight font-mono", accentText)}>
           {metric.format(animatedValue)}
         </span>
         {metric.delta !== undefined && (
-          <span className={`text-xs font-semibold ${deltaColor}`}>
+          <span className={cn("text-xs font-semibold", deltaColor)}>
             {deltaArrow} {Math.abs(metric.delta)}%
           </span>
         )}
       </p>
 
       {/* Description */}
-      <p className="text-[11px] text-[var(--text-muted)] mt-1.5">{desc}</p>
+      <p className="text-[11px] text-fg-muted mt-1.5">{desc}</p>
 
       {/* Mini sparkline */}
       <svg
@@ -203,7 +205,7 @@ function MetricCard({
         <polyline
           points="0,12 10,10 20,8 30,11 40,6 50,9 60,4 70,7 80,5"
           fill="none"
-          stroke="var(--accent)"
+          stroke="var(--kz-accent)"
           strokeWidth="1.2"
           strokeLinecap="round"
           strokeLinejoin="round"

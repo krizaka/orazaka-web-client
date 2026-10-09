@@ -25,7 +25,7 @@ export default function ProfilePage() {
   if (isLoading || !isAuthenticated) return null;
 
   return (
-    <section className="flex h-screen overflow-hidden bg-[var(--surface-0)] transition-colors duration-200">
+    <section className="flex h-screen overflow-hidden bg-surface-0 transition-colors duration-200">
       <Sidebar />
       <div className="flex flex-1 flex-col overflow-hidden">
         <Header />

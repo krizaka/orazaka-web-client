@@ -34,16 +34,16 @@ export default function ChatPage() {
   if (isLoading || !isAuthenticated) return null;
 
   return (
-    <section className="flex h-screen w-screen overflow-hidden bg-background">
+    <section className="flex h-screen w-screen overflow-hidden bg-surface-0">
       <Sidebar />
 
       <div className="flex flex-1 flex-col overflow-hidden min-w-0">
         <Header />
 
-        <main className="flex-1 flex flex-col overflow-hidden bg-background">
+        <main className="flex-1 flex flex-col overflow-hidden bg-surface-0">
           <Suspense
             fallback={
-              <output className="p-6 text-text-muted text-sm animate-pulse">
+              <output className="p-6 text-fg-muted text-sm animate-pulse">
                 Loading chat...
               </output>
             }

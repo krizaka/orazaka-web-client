@@ -3,6 +3,8 @@
 import * as React from "react";
 import { Icon, type IconName } from "@krizaka/orazaka-design-system";
 
+import { cn } from "@krizaka/ui/cn";
+
 export interface ProfileTab {
   id: string;
   label: string;
@@ -51,7 +53,7 @@ export function ProfileTabs({ tabs, active, onChange }: Readonly<ProfileTabsProp
     <div
       role="tablist"
       aria-label="Profile sections"
-      className="sticky top-0 z-10 -mx-1 flex gap-1 overflow-x-auto scrollbar-thin rounded-xl border border-[var(--border-subtle)] bg-[color-mix(in_srgb,var(--surface-1)_88%,transparent)] p-1 backdrop-blur-xl backdrop-saturate-150"
+      className="sticky top-0 z-10 -mx-1 flex gap-1 overflow-x-auto scrollbar-thin rounded-xl border border-border-subtle bg-surface-1/88 p-1 backdrop-blur-xl backdrop-saturate-150"
     >
       {tabs.map((tab, index) => {
         const isActive = tab.id === active;
@@ -68,20 +70,21 @@ export function ProfileTabs({ tabs, active, onChange }: Readonly<ProfileTabsProp
             tabIndex={isActive ? 0 : -1}
             onClick={() => onChange(tab.id)}
             onKeyDown={(e) => onKeyDown(e, index)}
-            className={`relative flex flex-1 min-w-fit items-center justify-center gap-2 whitespace-nowrap rounded-lg px-4 py-2 text-sm font-medium transition-colors duration-200 cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] ${
+            className={cn(
+              "relative flex flex-1 min-w-fit items-center justify-center gap-2 whitespace-nowrap rounded-lg px-4 py-2 text-sm font-medium transition-colors duration-200 cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-ring",
               isActive
-                ? "bg-[var(--surface-2)] text-[var(--text-primary)] shadow-sm"
-                : "text-[var(--text-secondary)] hover:bg-[var(--surface-2)] hover:text-[var(--text-primary)]"
-            }`}
+                ? "bg-surface-2 text-fg shadow-sm"
+                : "text-fg-secondary hover:bg-surface-2 hover:text-fg"
+            )}
           >
             <Icon
               name={tab.icon}
               size={16}
-              className={isActive ? "text-[var(--accent)]" : ""}
+              className={isActive ? "text-accent" : ""}
             />
             {tab.label}
             {isActive && (
-              <span className="absolute inset-x-3 -bottom-px h-px bg-[var(--accent)] opacity-60" />
+              <span className="absolute inset-x-3 -bottom-px h-px bg-accent opacity-60" />
             )}
           </button>
         );

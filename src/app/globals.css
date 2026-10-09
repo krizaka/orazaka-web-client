@@ -1,18 +1,22 @@
 /* ═══════════════════════════════════════════════════
    ORAZAKA WEB-CLIENT — Global stylesheet
    ─────────────────────────────────────────────────
-   Design tokens, themes, base typography, keyframes and
-   shared utility/component classes live in the design
-   system (@krizaka/orazaka-design-system/theme.css), the single
-   source shared with orazaka-web-admin. This file only
-   wires Tailwind + the design-system theme; theme.css
-   itself tells Tailwind to scan the design-system
-   sources, so their utility classes are generated.
+   The platform wiring, in this order:
+     tailwindcss
+     → @krizaka/tailwind          the --kz-* tokens as role utilities (bg-surface-1, text-fg-secondary,
+                                  border-border-subtle, text-accent, text-danger…), motion
+     → @krizaka/ui/tailwind.css   Tailwind scans the @krizaka/ui primitives (Card, Dialog, Toaster, Popover…)
+     → @krizaka/orazaka-design-system/theme.css
+                                  the Orazaka identity: Electric Blue and the named themes as --kz-* overrides
+   theme.css imports the two platform layers itself (kit 2.x). The app also declares @krizaka/ui/tailwind.css (a
+   @source, nothing else): Tailwind then scans the primitives the app itself resolves — not only the copy the kit
+   resolves, which can be another version while the workspace lockfile catches up.
 
-   Fonts (--font-inter, --font-krizaka-display,
-   --font-krizaka-mono …) are provided at runtime by
-   next/font in layout.tsx; theme.css references them.
+   No variable is defined here: components write roles, a theme is a set of token values (dark on :root,
+   html.light, html.theme-<name>). Fonts (--font-inter, --font-krizaka-display, --font-krizaka-mono…) come from
+   next/font in layout.tsx.
    ═══════════════════════════════════════════════════ */
 
 @import "tailwindcss";
+@import "@krizaka/ui/tailwind.css";
 @import "@krizaka/orazaka-design-system/theme.css";

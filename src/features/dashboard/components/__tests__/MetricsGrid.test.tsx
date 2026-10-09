@@ -13,7 +13,7 @@ const mockT = {
   },
 } as never;
 
-const accent = { text: "text-status-warning" };
+const accent = { text: "text-warning" };
 
 describe("MetricsGrid", () => {
   it("renders three metric cards", () => {

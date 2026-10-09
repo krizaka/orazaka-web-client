@@ -15,7 +15,7 @@ export function CreditBalance() {
   const { available, isLow, isLoading } = useWallet();
 
   if (isLoading) {
-    return <span className="text-sm text-[var(--text-muted)]">…</span>;
+    return <span className="text-sm text-fg-muted">…</span>;
   }
 
   return (

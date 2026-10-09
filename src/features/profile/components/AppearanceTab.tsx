@@ -1,13 +1,6 @@
 "use client";
 
 import * as React from "react";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@krizaka/orazaka-design-system";
 import { useTranslation } from "@/core/context/LocaleContext";
 import {
   THEME_LAYOUTS,
@@ -19,6 +12,7 @@ import type { Locale } from "@/core/context/translations.types";
 import { ThemeModeSelector } from "./ThemeModeSelector";
 import { SelectField } from "./ProfileFormParts";
 import type { UseProfileForm } from "@/features/profile/hooks/useProfileForm";
+import { Card } from "@krizaka/ui/card";
 
 /**
  * Appearance tab — theme mode (instant), accent, density, and language.
@@ -30,19 +24,19 @@ export function AppearanceTab({ pf }: Readonly<{ pf: UseProfileForm }>) {
   const { form, setField, setTheme, setLanguage, availableThemes } = pf;
 
   return (
-    <Card className="bg-[var(--surface-1)] shadow-sm">
-      <CardHeader>
-        <CardTitle className="text-base font-semibold text-[var(--text-primary)]">
+    <Card.Root className="bg-surface-1 shadow-sm">
+      <Card.Body padding="lg" className="gap-1.5">
+        <Card.Title className="line-clamp-none tracking-tight group-hover:text-fg text-base font-semibold text-fg">
           {t.profile.appearanceTitle}
-        </CardTitle>
-        <CardDescription className="text-[var(--text-muted)]">
+        </Card.Title>
+        <Card.Description className="line-clamp-none text-sm text-fg-muted">
           {t.profile.appearanceDesc}
-        </CardDescription>
-      </CardHeader>
-      <CardContent className="space-y-6">
+        </Card.Description>
+      </Card.Body>
+      <Card.Body padding="lg" className="block pt-0 space-y-6">
         <ThemeModeSelector theme={form.theme} onThemeChange={setTheme} />
 
-        <hr className="border-[var(--border-subtle)]" />
+        <hr className="border-border-subtle" />
 
         <div className="grid gap-5 sm:grid-cols-3">
           <SelectField
@@ -85,7 +79,7 @@ export function AppearanceTab({ pf }: Readonly<{ pf: UseProfileForm }>) {
             <option value="fr">{t.settings.french}</option>
           </SelectField>
         </div>
-      </CardContent>
-    </Card>
+      </Card.Body>
+    </Card.Root>
   );
 }

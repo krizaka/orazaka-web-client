@@ -14,7 +14,7 @@ let mockLastJobs: { id: string; featureKey: string; status: string }[] = [];
 
 jest.mock("@/core/context/TenantContext", () => ({
   useTenant: () => ({
-    accentClasses: { text: "text-status-warning", bgSoft: "bg-status-warning/10" },
+    accentClasses: { text: "text-warning", bgSoft: "bg-warning/10" },
   }),
 }));
 
@@ -29,7 +29,8 @@ jest.mock("@/core/context/LocaleContext", () => ({
   useTranslation: () => ({
     t: {
       notifications: {
-        title: "Notifications",
+        title: "Background Tasks",
+        region: "Notifications",
         active: "active",
         noTasks: "No tasks",
         viewAll: "View All",
@@ -83,7 +84,7 @@ describe("NotificationBell", () => {
 
   it("shows dropdown when bellOpen is true", () => {
     render(<NotificationBell bellOpen={true} onToggle={jest.fn()} />);
-    expect(screen.getByText("Notifications")).toBeInTheDocument();
+    expect(screen.getByText("Background Tasks")).toBeInTheDocument();
     expect(screen.getByText("View All")).toBeInTheDocument();
   });
 
@@ -124,10 +125,18 @@ describe("NotificationBell", () => {
     expect(screen.getByText("Speech Generation")).toBeInTheDocument();
   });
 
-  it("closes dropdown on backdrop click", () => {
+  it("closes on Escape (Radix popover)", () => {
     const onToggle = jest.fn();
     render(<NotificationBell bellOpen={true} onToggle={onToggle} />);
-    fireEvent.click(screen.getByLabelText("Close notifications"));
+    fireEvent.keyDown(screen.getByText("Background Tasks"), { key: "Escape" });
+    expect(onToggle).toHaveBeenCalledWith(false);
+  });
+
+  it("closes when a job is followed", () => {
+    mockLastJobs = [{ id: "job-12345678-abcd", featureKey: "chat.text", status: "COMPLETED" }];
+    const onToggle = jest.fn();
+    render(<NotificationBell bellOpen={true} onToggle={onToggle} />);
+    fireEvent.click(screen.getByText("Text Generation"));
     expect(onToggle).toHaveBeenCalledWith(false);
   });
 });

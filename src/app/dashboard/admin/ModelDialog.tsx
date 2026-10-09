@@ -9,6 +9,8 @@ import { CATEGORY_META, Tooltip, CategorySelector } from "./ModelDialogParts";
 import { ModelDialogHeader } from "./ModelDialogHeader";
 import { buildModelCategories } from "./modelDialogCategories";
 
+import { cn } from "@krizaka/ui/cn";
+
 interface ModelDialogProps {
   isOpen: boolean;
   onClose: () => void;
@@ -42,12 +44,12 @@ export function ModelDialog({
 
   const catMeta = CATEGORY_META[formModel.category] || CATEGORY_META.code;
   const labelClass =
-    "text-xs font-semibold text-[var(--text-muted)] uppercase tracking-wider flex items-center gap-1.5";
+    "text-xs font-semibold text-fg-muted uppercase tracking-wider flex items-center gap-1.5";
   const inputClass =
-    "bg-[var(--surface-2)] border-[var(--border-default)] text-[var(--text-primary)] text-sm rounded-xl focus:ring-2 focus:ring-[var(--accent)] transition-all duration-200";
+    "bg-surface-2 border-border-default text-fg text-sm rounded-xl focus:ring-2 focus:ring-ring transition-all duration-200";
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-in fade-in duration-200">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-overlay backdrop-blur-sm animate-in fade-in duration-200">
       <button
         type="button"
         className="fixed inset-0 bg-transparent border-none cursor-default"
@@ -55,7 +57,7 @@ export function ModelDialog({
         onClick={() => !saving && onClose()}
       />
 
-      <div className="relative w-full max-w-2xl bg-[var(--surface-1)] border border-[var(--border-subtle)] shadow-2xl rounded-2xl flex flex-col animate-in zoom-in-95 slide-in-from-bottom-3 duration-300 z-10 max-h-[90vh] overflow-hidden">
+      <div className="relative w-full max-w-2xl bg-surface-1 border border-border-subtle shadow-2xl rounded-2xl flex flex-col animate-in zoom-in-95 slide-in-from-bottom-3 duration-300 z-10 max-h-[90vh] overflow-hidden">
         {/* Header with gradient accent */}
         <ModelDialogHeader
           catMeta={catMeta}
@@ -74,12 +76,12 @@ export function ModelDialog({
 
         {/* Error banner */}
         {errorMessage && (
-          <div className="mx-5 mt-4 p-3 bg-status-error/5 border border-status-error/20 rounded-xl flex items-start gap-2.5 text-status-error animate-in slide-in-from-top-2 duration-200">
+          <div className="mx-5 mt-4 p-3 bg-danger/5 border border-danger/20 rounded-xl flex items-start gap-2.5 text-danger animate-in slide-in-from-top-2 duration-200">
             <Icon name="warning" className="h-4 w-4 flex-shrink-0 mt-0.5" />
             <div className="text-xs font-medium flex-1">{errorMessage}</div>
             <button
               onClick={() => setErrorMessage(null)}
-              className="text-status-error hover:text-status-error"
+              className="text-danger hover:text-danger"
             >
               <Icon name="close" className="h-3.5 w-3.5" />
             </button>
@@ -121,7 +123,7 @@ export function ModelDialog({
                 onChange={(e) =>
                   setFormModel({ ...formModel, providerName: e.target.value })
                 }
-                className={`${inputClass} w-full h-10 px-3 py-2`}
+                className={cn(inputClass, "w-full h-10 px-3 py-2")}
               >
                 {providers.map((prov) => (
                   <option key={prov} value={prov}>
@@ -185,7 +187,7 @@ export function ModelDialog({
 
           {/* Default checkbox */}
           <div
-            className="flex items-center gap-3 bg-[var(--surface-2)] p-3.5 rounded-xl border border-[var(--border-subtle)] cursor-pointer hover:border-[var(--border-default)] transition-all duration-200"
+            className="flex items-center gap-3 bg-surface-2 p-3.5 rounded-xl border border-border-subtle cursor-pointer hover:border-border-default transition-all duration-200"
           >
             <input
               type="checkbox"
@@ -195,16 +197,16 @@ export function ModelDialog({
               onChange={(e) =>
                 setFormModel({ ...formModel, isDefault: e.target.checked })
               }
-              className="h-4 w-4 rounded border-[var(--border-default)] text-[var(--accent)] focus:ring-[var(--accent)] cursor-pointer"
+              className="h-4 w-4 rounded border-border-default text-accent focus:ring-ring cursor-pointer"
             />
             <label
               htmlFor="isDefaultCheckbox"
               className="flex flex-col gap-0.5 select-none cursor-pointer"
             >
-              <span className="text-xs font-semibold text-[var(--text-primary)]">
+              <span className="text-xs font-semibold text-fg">
                 {t.admin.setAsDefaultLabel}
               </span>
-              <span className="text-[10px] text-[var(--text-muted)]">
+              <span className="text-[10px] text-fg-muted">
                 {t.admin.helpDefault}
               </span>
             </label>
@@ -212,8 +214,8 @@ export function ModelDialog({
         </form>
 
         {/* Footer */}
-        <footer className="flex items-center justify-between p-5 border-t border-[var(--border-subtle)] bg-[var(--surface-0)]">
-          <span className="text-[10px] text-[var(--text-muted)] select-none hidden sm:inline">
+        <footer className="flex items-center justify-between p-5 border-t border-border-subtle bg-surface-0">
+          <span className="text-[10px] text-fg-muted select-none hidden sm:inline">
             Esc
           </span>
           <div className="flex items-center gap-3 ml-auto">
@@ -222,7 +224,7 @@ export function ModelDialog({
               variant="outline"
               disabled={saving}
               onClick={onClose}
-              className="rounded-xl border-[var(--border-default)] text-sm"
+              className="rounded-xl border-border-default text-sm"
             >
               {t.admin.cancel}
             </Button>
@@ -230,7 +232,7 @@ export function ModelDialog({
               type="submit"
               form="model-dialog-form"
               disabled={saving}
-              className="rounded-xl bg-[var(--accent)] hover:bg-[var(--accent-hover)] text-white font-semibold text-sm flex items-center justify-center gap-1.5 px-5"
+              className="rounded-xl bg-accent hover:bg-accent-hover text-on-accent font-semibold text-sm flex items-center justify-center gap-1.5 px-5"
             >
               {saving && <Icon name="refresh" className="h-3.5 w-3.5 animate-spin" />}
               <span>

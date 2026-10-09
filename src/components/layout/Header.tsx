@@ -3,12 +3,14 @@
 import * as React from "react";
 import Link from "next/link";
 import { useAuth } from "@/core/hooks/useAuth";
-import { ThemeToggle } from "@/components/ui/ThemeToggle";
+import { ThemeToggle } from "@krizaka/ui/theme";
 import { useSidebar } from "@/core/context/SidebarContext";
 import { useTenant } from "@/core/context/TenantContext";
 import { useTranslation } from "@/core/context/LocaleContext";
 import { Icon } from "@krizaka/orazaka-design-system";
 import { NotificationBell } from "./NotificationBell";
+
+import { cn } from "@krizaka/ui/cn";
 
 /**
  * Global Header layout Component — Calm Obsidian 2026.
@@ -40,14 +42,14 @@ export const Header: React.FC = () => {
   }, [user]);
 
   const dropdownPanelClass =
-    "absolute right-0 mt-2 rounded-lg border border-[var(--border-default)] bg-[var(--surface-2)] p-1 shadow-lg z-20";
+    "absolute right-0 mt-2 rounded-lg border border-border-default bg-surface-2 p-1 shadow-lg z-20";
 
   return (
-    <header className="sticky top-0 z-30 flex h-14 w-full items-center justify-between border-b border-[var(--border-subtle)] bg-[var(--surface-1)] px-5">
+    <header className="sticky top-0 z-30 flex h-14 w-full items-center justify-between border-b border-border-subtle bg-surface-1 px-5">
       <div className="flex items-center md:hidden">
         <button
           onClick={open}
-          className="mr-2 p-2 rounded-lg text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:bg-[var(--surface-2)] transition-colors duration-150 focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)]"
+          className="mr-2 p-2 rounded-lg text-fg-muted hover:text-fg hover:bg-surface-2 transition-colors duration-150 focus:outline-none focus-visible:ring-2 focus-visible:ring-ring"
           aria-label="Open Sidebar"
         >
           <Icon name="menu" size={20} />
@@ -62,7 +64,7 @@ export const Header: React.FC = () => {
               setLangDropdownOpen(!langDropdownOpen);
               setBellOpen(false);
             }}
-            className="flex items-center gap-1.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] rounded-lg px-2.5 py-1.5 text-xs font-medium text-[var(--text-secondary)] hover:bg-[var(--surface-2)] hover:text-[var(--text-primary)] transition-colors duration-150"
+            className="flex items-center gap-1.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-lg px-2.5 py-1.5 text-xs font-medium text-fg-secondary hover:bg-surface-2 hover:text-fg transition-colors duration-150"
             aria-label="Change Language"
           >
             <Icon name="language" size={16} />
@@ -78,17 +80,18 @@ export const Header: React.FC = () => {
                 aria-label="Close language menu"
                 onClick={() => setLangDropdownOpen(false)}
               />
-              <div className={`${dropdownPanelClass} w-36`}>
+              <div className={cn(dropdownPanelClass, "w-36")}>
                 <button
                   onClick={() => {
                     setLocale("en");
                     setLangDropdownOpen(false);
                   }}
-                  className={`w-full flex items-center justify-between rounded-lg px-3 py-2 text-sm text-left transition-colors duration-150 ${
+                  className={cn(
+                    "w-full flex items-center justify-between rounded-lg px-3 py-2 text-sm text-left transition-colors duration-150",
                     locale === "en"
-                      ? `${accentClasses.bgSoft} ${accentClasses.text} font-medium`
-                      : "text-[var(--text-secondary)] hover:bg-[var(--surface-3)] hover:text-[var(--text-primary)]"
-                  }`}
+                      ? cn(accentClasses.bgSoft, accentClasses.text, "font-medium")
+                      : "text-fg-secondary hover:bg-surface-3 hover:text-fg"
+                  )}
                 >
                   <span>{t.settings.english}</span>
                   {locale === "en" && <Icon name="shield" size={14} />}
@@ -98,11 +101,12 @@ export const Header: React.FC = () => {
                     setLocale("fr");
                     setLangDropdownOpen(false);
                   }}
-                  className={`w-full flex items-center justify-between rounded-lg px-3 py-2 text-sm text-left transition-colors duration-150 ${
+                  className={cn(
+                    "w-full flex items-center justify-between rounded-lg px-3 py-2 text-sm text-left transition-colors duration-150",
                     locale === "fr"
-                      ? `${accentClasses.bgSoft} ${accentClasses.text} font-medium`
-                      : "text-[var(--text-secondary)] hover:bg-[var(--surface-3)] hover:text-[var(--text-primary)]"
-                  }`}
+                      ? cn(accentClasses.bgSoft, accentClasses.text, "font-medium")
+                      : "text-fg-secondary hover:bg-surface-3 hover:text-fg"
+                  )}
                 >
                   <span>{t.settings.french}</span>
                   {locale === "fr" && <Icon name="shield" size={14} />}
@@ -112,7 +116,12 @@ export const Header: React.FC = () => {
           )}
         </div>
 
-        <ThemeToggle />
+        <ThemeToggle
+          id="theme-toggle"
+          label={(mode) =>
+            ({ "dark": t.header.themeDark, "light": t.header.themeLight, "system": t.header.themeSystem })[mode]
+          }
+        />
 
         {/* Notification Bell Dropdown */}
         {isAuthenticated && (
@@ -130,13 +139,17 @@ export const Header: React.FC = () => {
           <Link
             href="/profile"
             title={t.header.profile}
-            className="flex items-center gap-2.5 rounded-lg p-1 transition-colors duration-150 hover:bg-[var(--surface-2)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)]"
+            className="flex items-center gap-2.5 rounded-lg p-1 transition-colors duration-150 hover:bg-surface-2 focus:outline-none focus-visible:ring-2 focus-visible:ring-ring"
           >
-            <span className="hidden text-sm font-medium text-[var(--text-secondary)] sm:inline-block">
+            <span className="hidden text-sm font-medium text-fg-secondary sm:inline-block">
               {user.name || user.email || "Admin"}
             </span>
             <div
-              className={`flex h-7 w-7 items-center justify-center rounded-full ${accentClasses.bg} text-xs font-semibold text-white`}
+              className={cn(
+                "flex h-7 w-7 items-center justify-center rounded-full",
+                accentClasses.bg,
+                "text-xs font-semibold", accentClasses.textOn
+              )}
             >
               {initial}
             </div>

@@ -6,6 +6,8 @@ import { useTranslation } from "@/core/context/LocaleContext";
 import { PipelineInterceptorRow } from "@/app/dashboard/admin/PipelineInterceptorRow";
 import type { InterceptorConfig } from "@/app/dashboard/admin/pipelineConfig.types";
 
+import { cn } from "@krizaka/ui/cn";
+
 interface PipelineConfigCardProps {
   fetchWithAuth: (url: string, options?: RequestInit) => Promise<Response>;
 }
@@ -125,14 +127,14 @@ export function PipelineConfigCard({ fetchWithAuth }: Readonly<PipelineConfigCar
 
   if (loading) {
     return (
-      <section className="bg-card-bg/70 border border-card-border rounded-2xl p-6 shadow-sm backdrop-blur-lg">
+      <section className="bg-surface-1/70 border border-border-subtle rounded-2xl p-6 shadow-sm backdrop-blur-lg">
         <article className="animate-pulse space-y-3">
-          <span className="h-5 w-56 bg-surface-3 dark:bg-surface-2 rounded block" />
-          <span className="h-3 w-80 bg-surface-3 dark:bg-surface-2 rounded block" />
+          <span className="h-5 w-56 bg-surface-2 rounded block" />
+          <span className="h-3 w-80 bg-surface-2 rounded block" />
           {[1, 2, 3, 4].map((i) => (
             <span
               key={i}
-              className="h-14 bg-surface-2 dark:bg-surface-1 rounded-xl block"
+              className="h-14 bg-surface-1 rounded-xl block"
             />
           ))}
         </article>
@@ -141,15 +143,16 @@ export function PipelineConfigCard({ fetchWithAuth }: Readonly<PipelineConfigCar
   }
 
   return (
-    <section className="bg-card-bg/70 border border-card-border rounded-2xl p-6 shadow-sm backdrop-blur-lg relative">
+    <section className="bg-surface-1/70 border border-border-subtle rounded-2xl p-6 shadow-sm backdrop-blur-lg relative">
       {/* Toast */}
       {toast && (
         <aside
-          className={`absolute top-4 right-4 z-10 flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium shadow-lg animate-in fade-in slide-in-from-top-2 duration-300 ${
+          className={cn(
+            "absolute top-4 right-4 z-10 flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium shadow-lg animate-in fade-in slide-in-from-top-2 duration-300",
             toast.type === "success"
-              ? "bg-status-success/40 text-status-success border border-status-success"
-              : "bg-status-error/40 text-status-error border border-status-error"
-          }`}
+              ? "bg-success/40 text-success border border-success"
+              : "bg-danger/40 text-danger border border-danger"
+          )}
         >
           {toast.type === "success" ? (
             <Icon name="checkCircle" className="w-4 h-4" />
@@ -163,13 +166,13 @@ export function PipelineConfigCard({ fetchWithAuth }: Readonly<PipelineConfigCar
       {/* Header */}
       <header className="flex items-center justify-between mb-4">
         <article>
-          <h3 className="text-lg font-bold text-text-primary flex items-center gap-2">
-            <span className="inline-flex items-center justify-center w-7 h-7 rounded-lg bg-status-warning/10 text-status-warning">
+          <h3 className="text-lg font-bold text-fg flex items-center gap-2">
+            <span className="inline-flex items-center justify-center w-7 h-7 rounded-lg bg-warning/10 text-warning">
               ⚡
             </span>
             {pl.title}
           </h3>
-          <p className="text-xs text-text-muted dark:text-text-secondary mt-0.5">
+          <p className="text-xs text-fg-secondary mt-0.5">
             {pl.subtitle}
           </p>
         </article>
@@ -177,7 +180,7 @@ export function PipelineConfigCard({ fetchWithAuth }: Readonly<PipelineConfigCar
           <button
             onClick={handleReset}
             disabled={saving}
-            className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg border border-border-subtle text-text-muted dark:text-text-secondary hover:bg-surface-2 dark:hover:bg-surface-2 transition-colors disabled:opacity-50"
+            className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg border border-border-subtle text-fg-secondary hover:bg-surface-2 transition-colors disabled:opacity-50"
           >
             <Icon name="refresh" className="w-3.5 h-3.5" />
             {pl.resetToDefault}
@@ -185,7 +188,7 @@ export function PipelineConfigCard({ fetchWithAuth }: Readonly<PipelineConfigCar
           <button
             onClick={handleSave}
             disabled={saving || !dirty}
-            className="flex items-center gap-1.5 px-4 py-1.5 text-xs font-semibold rounded-lg bg-status-warning hover:bg-status-warning text-white shadow-md transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            className="flex items-center gap-1.5 px-4 py-1.5 text-xs font-semibold rounded-lg bg-warning hover:bg-warning text-on-accent shadow-md transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {saving ? (
               <Icon name="loader" className="w-3.5 h-3.5 animate-spin" />
@@ -198,7 +201,7 @@ export function PipelineConfigCard({ fetchWithAuth }: Readonly<PipelineConfigCar
       </header>
 
       {/* Drag hint */}
-      <div className="flex items-center gap-1.5 mb-3 text-[11px] text-text-secondary dark:text-text-muted">
+      <div className="flex items-center gap-1.5 mb-3 text-fg-muted text-fg-secondary">
         <Icon name="info" className="w-3 h-3" />
         {pl.dragHint}
       </div>

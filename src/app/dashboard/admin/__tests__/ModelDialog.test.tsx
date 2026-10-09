@@ -123,7 +123,7 @@ describe("ModelDialog", () => {
     expect(screen.getByText("Some error")).toBeInTheDocument();
     
     // Find the button inside the error banner container
-    const errorBanner = container.querySelector(".bg-status-error\\/5");
+    const errorBanner = container.querySelector(".bg-danger\\/5");
     expect(errorBanner).not.toBeNull();
     const clearErrorBtn = errorBanner!.querySelector("button");
     expect(clearErrorBtn).not.toBeNull();

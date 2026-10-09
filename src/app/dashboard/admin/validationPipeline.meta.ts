@@ -47,26 +47,26 @@ export const COLOR_CLASSES: Record<
 > = {
   emerald: {
     badge:
-      "bg-status-success/10 text-status-success border-status-success/20",
-    ring: "ring-status-success/30",
-    glow: "shadow-status-success/10",
+      "bg-success/10 text-success border-success/20",
+    ring: "ring-success/30",
+    glow: "hover:shadow-success/10",
   },
   sky: {
     badge:
       "bg-accent/10 text-accent border-accent/20",
     ring: "ring-accent/30",
-    glow: "shadow-accent/10",
+    glow: "hover:shadow-accent/10",
   },
   violet: {
     badge:
       "bg-accent/10 text-accent border-accent/20",
     ring: "ring-accent/30",
-    glow: "shadow-accent/10",
+    glow: "hover:shadow-accent/10",
   },
   amber: {
     badge:
-      "bg-status-warning/10 text-status-warning border-status-warning/20",
-    ring: "ring-status-warning/30",
-    glow: "shadow-status-warning/10",
+      "bg-warning/10 text-warning border-warning/20",
+    ring: "ring-warning/30",
+    glow: "hover:shadow-warning/10",
   },
 };

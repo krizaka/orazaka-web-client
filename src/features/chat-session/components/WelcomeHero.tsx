@@ -39,22 +39,22 @@ export function WelcomeHero({ t, onPrompt }: Readonly<WelcomeHeroProps>) {
   return (
     <div className="flex w-full max-w-2xl flex-col items-center px-6 text-center motion-safe:animate-in motion-safe:fade-in motion-safe:slide-in-from-bottom-3 motion-safe:duration-500">
       {/* Brand mark */}
-      <div className="relative mb-6 flex h-16 w-16 items-center justify-center rounded-2xl border border-[var(--border-subtle)] bg-[var(--surface-1)] shadow-sm">
-        <span className="absolute inset-0 rounded-2xl bg-[var(--accent)] opacity-[0.06] blur-xl" />
+      <div className="relative mb-6 flex h-16 w-16 items-center justify-center rounded-2xl border border-border-subtle bg-surface-1 shadow-sm">
+        <span className="absolute inset-0 rounded-2xl bg-accent opacity-[0.06] blur-xl" />
         <SentinelMini size={34} />
       </div>
 
-      <h2 className="text-[var(--text-xl)] font-bold tracking-tight text-[var(--text-primary)]">
+      <h2 className="text-xl font-bold tracking-tight text-fg">
         Good {period},{" "}
-        <span className="text-[var(--accent)]">{userName}</span>.
+        <span className="text-accent">{userName}</span>.
       </h2>
-      <p className="mt-2 text-[var(--text-sm)] text-[var(--text-muted)]">
+      <p className="mt-2 text-sm text-fg-muted">
         {t.chat.startConversationDesc}
       </p>
 
       {/* Sovereignty chip — threads the shared "on-prem, zero egress" motif */}
-      <span className="mt-4 inline-flex items-center gap-2 rounded-full border border-[var(--border-subtle)] bg-[var(--surface-1)] px-3 py-1.5 text-xs font-medium text-[var(--text-secondary)]">
-        <Icon name="shield" className="h-3.5 w-3.5 text-[var(--accent)]" />
+      <span className="mt-4 inline-flex items-center gap-2 rounded-full border border-border-subtle bg-surface-1 px-3 py-1.5 text-xs font-medium text-fg-secondary">
+        <Icon name="shield" className="h-3.5 w-3.5 text-accent" />
         {t.chat.localBadge}
       </span>
 
@@ -65,12 +65,12 @@ export function WelcomeHero({ t, onPrompt }: Readonly<WelcomeHeroProps>) {
             key={label}
             type="button"
             onClick={() => onPrompt(label)}
-            className="group flex flex-col items-start gap-3 rounded-xl border border-[var(--border-subtle)] bg-[var(--surface-1)] p-4 text-left transition-all duration-200 cursor-pointer hover:-translate-y-0.5 hover:border-[var(--accent)] hover:shadow-[var(--shadow-md)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] motion-safe:animate-in motion-safe:fade-in"
+            className="group flex flex-col items-start gap-3 rounded-xl border border-border-subtle bg-surface-1 p-4 text-left transition-all duration-200 cursor-pointer hover:-translate-y-0.5 hover:border-accent hover:shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-ring motion-safe:animate-in motion-safe:fade-in"
           >
-            <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-[var(--accent-soft)] text-[var(--accent)] transition-transform duration-200 group-hover:scale-105">
+            <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-accent-soft text-accent transition-transform duration-200 group-hover:scale-105">
               <Icon name={icon} className="h-4 w-4" />
             </span>
-            <span className="text-sm font-medium text-[var(--text-primary)]">
+            <span className="text-sm font-medium text-fg">
               {label}
             </span>
           </button>

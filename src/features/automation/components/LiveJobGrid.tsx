@@ -5,38 +5,40 @@ import { useState } from "react";
 import { format, formatISO, parseISO, subMinutes } from "date-fns";
 import type { AutomationJob } from "@/features/automation/components/liveJobGrid.types";
 
+import { cn } from "@krizaka/ui/cn";
+
 const STATUS_CONFIG: Record<
   AutomationJob["status"],
   { label: string; color: string; icon: string }
 > = {
   PENDING_APPROVAL: {
     label: "Pending Approval",
-    color: "hsl(45, 100%, 51%)",
+    color: "var(--kz-warning)",
     icon: "⏳",
   },
   APPROVED: {
     label: "Approved",
-    color: "hsl(210, 100%, 56%)",
+    color: "var(--kz-accent)",
     icon: "✅",
   },
   RUNNING: {
     label: "Running",
-    color: "hsl(280, 80%, 60%)",
+    color: "var(--kz-accent-2)",
     icon: "⚡",
   },
   COMPLETED: {
     label: "Completed",
-    color: "hsl(142, 72%, 42%)",
+    color: "var(--kz-success)",
     icon: "✓",
   },
   FAILED: {
     label: "Failed",
-    color: "hsl(0, 84%, 60%)",
+    color: "var(--kz-danger)",
     icon: "✗",
   },
   AWAITING_CLI_EXECUTION: {
     label: "Awaiting CLI",
-    color: "hsl(200, 80%, 50%)",
+    color: "var(--kz-info)",
     icon: "🖥️",
   },
 };
@@ -191,11 +193,11 @@ export default function LiveJobGrid() {
         {jobs.map((job) => (
           <article
             key={job.id}
-            className={`glass-card live-job-card ${(() => {
+            className={cn("glass-card live-job-card", (() => {
               if (job.status === "PENDING_APPROVAL") return "live-job-card-pending";
               if (job.status === "RUNNING") return "glass-card-active";
               return "";
-            })()}`}
+            })())}
             id={`job-card-${job.id}`}
           >
             <div className="live-job-card-header">

@@ -4,14 +4,6 @@ import * as React from "react";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { Button } from "@krizaka/orazaka-design-system";
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-  CardContent,
-  CardFooter,
-} from "@krizaka/orazaka-design-system";
 import { Icon } from "@krizaka/orazaka-design-system";
 import { useTranslation } from "@/core/context/LocaleContext";
 import { InterceptionFormField } from "./InterceptionFormField";
@@ -19,6 +11,7 @@ import {
   useInterceptionSchema,
   useResolveInterception,
 } from "@/features/auth/hooks/useInterception";
+import { Card } from "@krizaka/ui/card";
 
 interface InterceptionFormProps {
   schemaId: string;
@@ -87,8 +80,8 @@ export function InterceptionForm({
   if (isLoading) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[300px] space-y-4">
-        <Icon name="loader" size={32} className="animate-spin text-status-success" />
-        <p className="text-text-muted text-sm dark:text-text-secondary">
+        <Icon name="loader" size={32} className="animate-spin text-success" />
+        <p className="text-fg-secondary text-sm">
           {t.interception.loadingSchema}
         </p>
       </div>
@@ -97,15 +90,16 @@ export function InterceptionForm({
 
   if (error || !schema) {
     return (
-      <Card className="max-w-md mx-auto border-status-error/30 bg-status-error/5 backdrop-blur-md">
-        <CardHeader>
-          <div className="flex items-center space-x-2 text-status-error">
+      <Card.Root className="max-w-md mx-auto border-danger/30 bg-danger/5 backdrop-blur-md">
+        <Card.Body padding="lg" className="gap-1.5">
+          <div className="flex items-center space-x-2 text-danger">
             <Icon name="error" size={24} />
-            <CardTitle>{t.interception.loadingError}</CardTitle>
+            <Card.Title
+              className="line-clamp-none text-lg leading-none tracking-tight group-hover:text-fg">{t.interception.loadingError}</Card.Title>
           </div>
-          <CardDescription>{t.interception.loadingErrorDesc}</CardDescription>
-        </CardHeader>
-        <CardFooter>
+          <Card.Description className="line-clamp-none text-sm">{t.interception.loadingErrorDesc}</Card.Description>
+        </Card.Body>
+        <Card.Footer className="px-6 pb-6 text-sm">
           <Button
             variant="outline"
             onClick={() => globalThis.location.reload()}
@@ -113,26 +107,26 @@ export function InterceptionForm({
           >
             {t.interception.retry}
           </Button>
-        </CardFooter>
-      </Card>
+        </Card.Footer>
+      </Card.Root>
     );
   }
 
   return (
-    <Card className="max-w-xl mx-auto border-border-subtle/80 bg-white/70 shadow-2xl dark:border-border-subtle/60 dark:bg-surface-0/60 backdrop-blur-xl transition-all duration-300">
+    <Card.Root className="max-w-xl mx-auto border-border-subtle/60 bg-surface-0/60 shadow-2xl backdrop-blur-xl transition-all duration-300">
       <form onSubmit={handleSubmit}>
-        <CardHeader className="space-y-2">
-          <CardTitle className="text-2xl font-bold tracking-tight bg-gradient-to-r from-surface-1 to-surface-3 dark:from-surface-1 dark:to-surface-3 bg-clip-text text-transparent">
+        <Card.Body padding="lg" className="gap-1.5 space-y-2">
+          <Card.Title className="line-clamp-none group-hover:text-transparent text-2xl font-bold tracking-tight bg-gradient-to-r from-surface-1 to-surface-3 bg-clip-text text-transparent">
             {schema.title}
-          </CardTitle>
-          <CardDescription className="text-text-muted dark:text-text-secondary">
+          </Card.Title>
+          <Card.Description className="line-clamp-none text-sm text-fg-secondary">
             {schema.description}
-          </CardDescription>
-        </CardHeader>
+          </Card.Description>
+        </Card.Body>
 
-        <CardContent className="space-y-6">
+        <Card.Body padding="lg" className="block pt-0 space-y-6">
           {errorMsg && (
-            <div className="flex items-start space-x-2 rounded-xl border border-status-error/20 bg-status-error/5 p-3.5 text-sm text-status-error animate-in fade-in slide-in-from-top-1">
+            <div className="flex items-start space-x-2 rounded-xl border border-danger/20 bg-danger/5 p-3.5 text-sm text-danger animate-in fade-in slide-in-from-top-1">
               <Icon name="error" size={20} className="flex-shrink-0 mt-0.5" />
               <span>{errorMsg}</span>
             </div>
@@ -150,13 +144,13 @@ export function InterceptionForm({
               />
             ))}
           </div>
-        </CardContent>
+        </Card.Body>
 
-        <CardFooter>
+        <Card.Footer className="px-6 pb-6 text-sm">
           <Button
             type="submit"
             disabled={isPending}
-            className="w-full flex items-center justify-center space-x-2 bg-gradient-to-r from-status-success to-status-success hover:from-status-success hover:to-status-success text-white font-medium shadow-lg hover:shadow-status-success/10 transition-all duration-300"
+            className="w-full flex items-center justify-center space-x-2 bg-gradient-to-r from-success to-success hover:from-success hover:to-success text-on-accent font-medium shadow-lg hover:shadow-success/10 transition-all duration-300"
           >
             {isPending ? (
               <>
@@ -167,8 +161,8 @@ export function InterceptionForm({
               <span>{t.interception.submitPreferences}</span>
             )}
           </Button>
-        </CardFooter>
+        </Card.Footer>
       </form>
-    </Card>
+    </Card.Root>
   );
 }

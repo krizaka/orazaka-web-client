@@ -14,7 +14,7 @@ const mockT = {
   },
 } as never;
 
-const accentClasses = { text: "text-status-warning", bgSoft: "bg-status-warning/10" };
+const accentClasses = { text: "text-warning", bgSoft: "bg-warning/10" };
 
 describe("QuickActions", () => {
   const onStartNewChat = jest.fn();

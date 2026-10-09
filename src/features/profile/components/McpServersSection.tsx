@@ -1,23 +1,16 @@
 "use client";
 
 import * as React from "react";
-import {
-  Input,
-  Button,
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-  Icon,
-} from "@krizaka/orazaka-design-system";
+import { Input, Button, Icon } from "@krizaka/orazaka-design-system";
 import { useTranslation } from "@/core/context/LocaleContext";
 import { useMcpServers } from "@/features/profile/hooks/useMcpServers";
 
+import { Card } from "@krizaka/ui/card";
+
 const selectClass =
-  "flex h-10 w-full rounded-md border border-card-border bg-card-bg px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-1 focus:ring-card-border";
-const inputClass = "bg-card-bg border-card-border text-foreground";
-const labelClass = "text-sm font-medium text-foreground opacity-80";
+  "flex h-10 w-full rounded-md border border-border-subtle bg-surface-1 px-3 py-2 text-sm text-fg focus:outline-none focus:ring-1 focus:ring-border-subtle";
+const inputClass = "bg-surface-1 border-border-subtle text-fg";
+const labelClass = "text-sm font-medium text-fg opacity-80";
 
 interface McpServersSectionProps {
   fetchHeaders: () => Promise<Record<string, string>>;
@@ -54,23 +47,23 @@ export function McpServersSection({ fetchHeaders }: Readonly<McpServersSectionPr
   } = useMcpServers(fetchHeaders);
 
   return (
-    <Card className="bg-[var(--surface-1)] shadow-sm">
-      <CardHeader className="flex flex-row items-start justify-between gap-3">
+    <Card.Root className="bg-surface-1 shadow-sm">
+      <Card.Body padding="lg" className="flex flex-row items-start justify-between gap-3">
         <div className="space-y-1">
-          <CardTitle className="flex items-center gap-2 text-base font-semibold text-[var(--text-primary)]">
-            <span className="inline-flex h-7 w-7 items-center justify-center rounded-lg bg-[var(--accent-soft)] text-[var(--accent)]">
+          <Card.Title className="line-clamp-none tracking-tight group-hover:text-fg flex items-center gap-2 text-base font-semibold text-fg">
+            <span className="inline-flex h-7 w-7 items-center justify-center rounded-lg bg-accent-soft text-accent">
               <Icon name="mcp" size={16} />
             </span>
             {t.settings.mcpServersTitle}
-          </CardTitle>
-          <CardDescription className="text-[var(--text-secondary)]">
+          </Card.Title>
+          <Card.Description className="line-clamp-none text-sm text-fg-secondary">
             {t.settings.mcpServersDesc}
-          </CardDescription>
+          </Card.Description>
         </div>
-      </CardHeader>
-      <CardContent className="space-y-4">
+      </Card.Body>
+      <Card.Body padding="lg" className="block pt-0 space-y-4">
       {serverMessage && (
-        <div className="p-3 bg-status-success/20 border border-status-success/40 rounded-xl text-xs font-semibold text-status-success">
+        <div className="p-3 bg-success/20 border border-success/40 rounded-xl text-xs font-semibold text-success">
           {serverMessage}
         </div>
       )}
@@ -83,17 +76,17 @@ export function McpServersSection({ fetchHeaders }: Readonly<McpServersSectionPr
             return <p className="text-xs opacity-70">{t.settings.mcpNoServers}</p>;
           }
           return (
-            <ul className="divide-y divide-card-border border border-card-border rounded-xl overflow-hidden bg-card-bg/50">
+            <ul className="divide-y divide-border-subtle border border-border-subtle rounded-xl overflow-hidden bg-surface-1/50">
               {servers.map((srv) => (
                 <li
                   key={srv.id}
                   className="flex items-center justify-between p-3 text-xs"
                 >
                   <article className="space-y-1">
-                    <h4 className="font-semibold text-foreground flex items-center gap-2">
+                    <h4 className="font-semibold text-fg flex items-center gap-2">
                       <span>{srv.label}</span>
                       {isAdmin && (
-                        <span className="px-1.5 py-0.5 rounded bg-surface-3 dark:bg-surface-2 text-[10px]">
+                        <span className="px-1.5 py-0.5 rounded bg-surface-2 text-[10px]">
                           {srv.transportType}
                         </span>
                       )}
@@ -107,7 +100,7 @@ export function McpServersSection({ fetchHeaders }: Readonly<McpServersSectionPr
                     variant="outline"
                     onClick={() => handleDeleteServer(srv.id)}
                     disabled={isSavingServer}
-                    className="text-status-error border-status-error/20 hover:bg-status-error dark:hover:bg-status-error/20 px-2 py-1 h-7 text-[10px]"
+                    className="text-danger border-danger/20 hover:bg-danger/20 px-2 py-1 h-7 text-[10px]"
                   >
                     {t.settings.mcpDelete}
                   </Button>
@@ -119,7 +112,7 @@ export function McpServersSection({ fetchHeaders }: Readonly<McpServersSectionPr
       </section>
       <form
         onSubmit={handleSaveServer}
-        className="space-y-3 p-4 border border-card-border rounded-xl bg-card-bg/20"
+        className="space-y-3 p-4 border border-border-subtle rounded-xl bg-surface-1/20"
       >
         <div className="space-y-2">
           <label className={labelClass}>{t.settings.mcpLabel}</label>
@@ -205,7 +198,7 @@ export function McpServersSection({ fetchHeaders }: Readonly<McpServersSectionPr
           {t.settings.mcpRegister}
         </Button>
       </form>
-      </CardContent>
-    </Card>
+      </Card.Body>
+    </Card.Root>
   );
 }

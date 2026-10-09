@@ -35,30 +35,30 @@ export function SentinelMascot() {
         <defs>
           {/* Core energy gradient */}
           <radialGradient id="core-glow" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stopColor="var(--accent)" stopOpacity="0.9" />
-            <stop offset="40%" stopColor="var(--accent)" stopOpacity="0.4" />
-            <stop offset="100%" stopColor="var(--accent)" stopOpacity="0" />
+            <stop offset="0%" stopColor="var(--kz-accent)" stopOpacity="0.9" />
+            <stop offset="40%" stopColor="var(--kz-accent)" stopOpacity="0.4" />
+            <stop offset="100%" stopColor="var(--kz-accent)" stopOpacity="0" />
           </radialGradient>
 
           {/* Breathing bloom gradient — larger, softer */}
           <radialGradient id="breathing-bloom" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stopColor="var(--accent)" stopOpacity="0.25" />
-            <stop offset="50%" stopColor="var(--accent)" stopOpacity="0.08" />
-            <stop offset="100%" stopColor="var(--accent)" stopOpacity="0" />
+            <stop offset="0%" stopColor="var(--kz-accent)" stopOpacity="0.25" />
+            <stop offset="50%" stopColor="var(--kz-accent)" stopOpacity="0.08" />
+            <stop offset="100%" stopColor="var(--kz-accent)" stopOpacity="0" />
           </radialGradient>
 
           {/* Ring gradient */}
           <linearGradient id="ring-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="var(--accent)" stopOpacity="0.8" />
-            <stop offset="50%" stopColor="var(--accent)" stopOpacity="0.1" />
-            <stop offset="100%" stopColor="var(--accent)" stopOpacity="0.6" />
+            <stop offset="0%" stopColor="var(--kz-accent)" stopOpacity="0.8" />
+            <stop offset="50%" stopColor="var(--kz-accent)" stopOpacity="0.1" />
+            <stop offset="100%" stopColor="var(--kz-accent)" stopOpacity="0.6" />
           </linearGradient>
 
           {/* Outer ring gradient */}
           <linearGradient id="ring-gradient-outer" x1="100%" y1="0%" x2="0%" y2="100%">
-            <stop offset="0%" stopColor="var(--accent)" stopOpacity="0.5" />
-            <stop offset="40%" stopColor="var(--accent)" stopOpacity="0.05" />
-            <stop offset="80%" stopColor="var(--accent)" stopOpacity="0.4" />
+            <stop offset="0%" stopColor="var(--kz-accent)" stopOpacity="0.5" />
+            <stop offset="40%" stopColor="var(--kz-accent)" stopOpacity="0.05" />
+            <stop offset="80%" stopColor="var(--kz-accent)" stopOpacity="0.4" />
           </linearGradient>
 
           {/* HUD scanline filter */}
@@ -93,7 +93,7 @@ export function SentinelMascot() {
         {/* ── Orbital text ring (slow rotation) ───────────────── */}
         <g className="rotator-slow" style={{ transformOrigin: "200px 200px" }}>
           <text
-            fill="var(--accent)"
+            fill="var(--kz-accent)"
             opacity="0.25"
             fontSize="9"
             fontFamily="var(--font-inter, 'Inter'), sans-serif"
@@ -120,9 +120,9 @@ export function SentinelMascot() {
             opacity="0.5"
           />
           {/* Orbital energy nodes */}
-          <circle cx="370" cy="200" r="3" fill="var(--accent)" opacity="0.7" className="hud-pulse" />
-          <circle cx="30" cy="200" r="2" fill="var(--accent)" opacity="0.5" className="hud-pulse" />
-          <circle cx="200" cy="30" r="2.5" fill="var(--accent)" opacity="0.6" className="hud-pulse" />
+          <circle cx="370" cy="200" r="3" fill="var(--kz-accent)" opacity="0.7" className="hud-pulse" />
+          <circle cx="30" cy="200" r="2" fill="var(--kz-accent)" opacity="0.5" className="hud-pulse" />
+          <circle cx="200" cy="30" r="2.5" fill="var(--kz-accent)" opacity="0.6" className="hud-pulse" />
         </g>
 
         {/* ── Middle orbital ring (fast rotation) ────────────── */}
@@ -151,15 +151,15 @@ export function SentinelMascot() {
                 y1={y1}
                 x2={x2}
                 y2={y2}
-                stroke="var(--accent)"
+                stroke="var(--kz-accent)"
                 strokeWidth="1"
                 opacity="0.3"
               />
             );
           })}
           {/* Fast ring energy nodes */}
-          <circle cx="330" cy="200" r="2.5" fill="var(--accent)" className="hud-pulse" />
-          <circle cx="200" cy="330" r="2" fill="var(--accent)" opacity="0.8" className="hud-pulse" />
+          <circle cx="330" cy="200" r="2.5" fill="var(--kz-accent)" className="hud-pulse" />
+          <circle cx="200" cy="330" r="2" fill="var(--kz-accent)" opacity="0.8" className="hud-pulse" />
         </g>
 
         {/* ── Inner hexagon frame ────────────────────────────── */}
@@ -167,7 +167,7 @@ export function SentinelMascot() {
           <polygon
             points="200,120 269,160 269,240 200,280 131,240 131,160"
             fill="none"
-            stroke="var(--accent)"
+            stroke="var(--kz-accent)"
             strokeWidth="0.8"
             opacity="0.25"
           />
@@ -175,7 +175,7 @@ export function SentinelMascot() {
           <polygon
             points="200,145 247,170 247,230 200,255 153,230 153,170"
             fill="none"
-            stroke="var(--accent)"
+            stroke="var(--kz-accent)"
             strokeWidth="0.5"
             opacity="0.15"
           />
@@ -198,7 +198,7 @@ export function SentinelMascot() {
             cy="200"
             r="28"
             fill="none"
-            stroke="var(--accent)"
+            stroke="var(--kz-accent)"
             strokeWidth="1.5"
             opacity="0.8"
           />
@@ -207,7 +207,7 @@ export function SentinelMascot() {
             cx="200"
             cy="200"
             r="12"
-            fill="var(--accent)"
+            fill="var(--kz-accent)"
             opacity="0.9"
           />
           {/* Core highlight */}
@@ -222,14 +222,14 @@ export function SentinelMascot() {
 
         {/* ── HUD crosshair scanlines ────────────────────────── */}
         <g opacity="0.12">
-          <line x1="200" y1="80" x2="200" y2="160" stroke="var(--accent)" strokeWidth="0.5" />
-          <line x1="200" y1="240" x2="200" y2="320" stroke="var(--accent)" strokeWidth="0.5" />
-          <line x1="80" y1="200" x2="160" y2="200" stroke="var(--accent)" strokeWidth="0.5" />
-          <line x1="240" y1="200" x2="320" y2="200" stroke="var(--accent)" strokeWidth="0.5" />
+          <line x1="200" y1="80" x2="200" y2="160" stroke="var(--kz-accent)" strokeWidth="0.5" />
+          <line x1="200" y1="240" x2="200" y2="320" stroke="var(--kz-accent)" strokeWidth="0.5" />
+          <line x1="80" y1="200" x2="160" y2="200" stroke="var(--kz-accent)" strokeWidth="0.5" />
+          <line x1="240" y1="200" x2="320" y2="200" stroke="var(--kz-accent)" strokeWidth="0.5" />
         </g>
 
         {/* ── Corner brackets — targeting frame ──────────────── */}
-        <g stroke="var(--accent)" strokeWidth="1" opacity="0.2" fill="none">
+        <g stroke="var(--kz-accent)" strokeWidth="1" opacity="0.2" fill="none">
           {/* Top-left */}
           <polyline points="60,80 60,60 80,60" />
           {/* Top-right */}

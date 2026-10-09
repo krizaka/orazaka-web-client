@@ -1,21 +1,14 @@
 "use client";
 
 import * as React from "react";
-import {
-  Button,
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-  Dialog,
-  Icon,
-} from "@krizaka/orazaka-design-system";
+import { Button, Dialog, Icon } from "@krizaka/orazaka-design-system";
 import { useTranslation } from "@/core/context/LocaleContext";
 import { useAiProviders } from "@/features/profile/hooks/useAiProviders";
 import { findProvider, PROVIDERS } from "./AiProviderLogos";
 import { ProviderConnectionForm } from "./AiProviderConnectionForm";
 import { ProviderEmptyState, ProviderRow } from "./AiProvidersParts";
+
+import { Card } from "@krizaka/ui/card";
 
 interface AiProvidersSectionProps {
   fetchHeaders: () => Promise<Record<string, string>>;
@@ -59,18 +52,18 @@ export function AiProvidersSection({
       : PROVIDERS.filter((p) => availableIds.includes(p.id));
 
   return (
-    <Card className="bg-[var(--surface-1)] shadow-sm">
-      <CardHeader className="flex flex-row items-start justify-between gap-3">
+    <Card.Root className="bg-surface-1 shadow-sm">
+      <Card.Body padding="lg" className="flex flex-row items-start justify-between gap-3">
         <div className="space-y-1">
-          <CardTitle className="flex items-center gap-2 text-base font-semibold text-[var(--text-primary)]">
-            <span className="inline-flex h-7 w-7 items-center justify-center rounded-lg bg-[var(--accent-soft)] text-[var(--accent)]">
+          <Card.Title className="line-clamp-none tracking-tight group-hover:text-fg flex items-center gap-2 text-base font-semibold text-fg">
+            <span className="inline-flex h-7 w-7 items-center justify-center rounded-lg bg-accent-soft text-accent">
               <Icon name="key" size={16} />
             </span>
             {t.providers.title}
-          </CardTitle>
-          <CardDescription className="text-[var(--text-secondary)]">
+          </Card.Title>
+          <Card.Description className="line-clamp-none text-sm text-fg-secondary">
             {t.providers.subtitle}
-          </CardDescription>
+          </Card.Description>
         </div>
         {canAdd && configuredIds.length > 0 && (
           <Button
@@ -83,13 +76,13 @@ export function AiProvidersSection({
             {t.providers.addConnection}
           </Button>
         )}
-      </CardHeader>
+      </Card.Body>
 
-      <CardContent>
+      <Card.Body padding="lg" className="block pt-0">
         {(() => {
           if (isLoading) {
             return (
-              <p className="text-xs text-[var(--text-muted)]">
+              <p className="text-xs text-fg-muted">
                 {t.providers.loading}
               </p>
             );
@@ -99,7 +92,7 @@ export function AiProvidersSection({
           }
           return (
             <>
-              <ul className="divide-y divide-[var(--border-subtle)] overflow-hidden rounded-[var(--radius-lg)] border border-[var(--border-subtle)]">
+              <ul className="divide-y divide-border-subtle overflow-hidden rounded-lg border border-border-subtle">
                 {configuredIds.map((id) => {
                   const provider = findProvider(id);
                   if (!provider) return null;
@@ -115,14 +108,14 @@ export function AiProvidersSection({
                 })}
               </ul>
               {!canAdd && (
-                <p className="mt-3 text-center text-xs text-[var(--text-muted)]">
+                <p className="mt-3 text-center text-xs text-fg-muted">
                   {t.providers.allConfigured}
                 </p>
               )}
             </>
           );
         })()}
-      </CardContent>
+      </Card.Body>
 
       <Dialog
         open={modal.mode !== "closed"}
@@ -152,6 +145,6 @@ export function AiProvidersSection({
           />
         )}
       </Dialog>
-    </Card>
+    </Card.Root>
   );
 }

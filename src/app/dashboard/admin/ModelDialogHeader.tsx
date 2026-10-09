@@ -1,6 +1,8 @@
 import { Icon } from "@krizaka/orazaka-design-system";
 import type { ReactNode } from "react";
 
+import { cn } from "@krizaka/ui/cn";
+
 interface ModelDialogHeaderProps {
   catMeta: { color: string; icon: ReactNode };
   title: string;
@@ -18,24 +20,28 @@ export function ModelDialogHeader({
   onClose,
 }: Readonly<ModelDialogHeaderProps>) {
   return (
-    <header className="flex items-center justify-between p-5 border-b border-[var(--border-subtle)] bg-[var(--surface-0)]">
+    <header className="flex items-center justify-between p-5 border-b border-border-subtle bg-surface-0">
       <div className="flex items-center gap-3">
         <span
-          className={`inline-flex items-center justify-center w-9 h-9 rounded-xl text-lg border ${catMeta.color} transition-all duration-300`}
+          className={cn(
+            "inline-flex items-center justify-center w-9 h-9 rounded-xl text-lg border",
+            catMeta.color,
+            "transition-all duration-300"
+          )}
         >
           {catMeta.icon}
         </span>
         <div>
-          <h3 className="text-base font-semibold text-[var(--text-primary)]">
+          <h3 className="text-base font-semibold text-fg">
             {title}
           </h3>
-          <p className="text-xs text-[var(--text-muted)]">{subtitle}</p>
+          <p className="text-xs text-fg-muted">{subtitle}</p>
         </div>
       </div>
       <button
         disabled={saving}
         onClick={onClose}
-        className="p-2 text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:bg-[var(--surface-2)] rounded-xl transition-all duration-150"
+        className="p-2 text-fg-muted hover:text-fg hover:bg-surface-2 rounded-xl transition-all duration-150"
       >
         <Icon name="close" className="h-4 w-4" />
       </button>

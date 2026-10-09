@@ -1,7 +1,9 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Button, Dialog } from "@krizaka/orazaka-design-system";
+import { Button } from "@krizaka/ui/button";
+import { Dialog } from "@krizaka/ui/dialog";
+import { useTranslation } from "@/core/context/LocaleContext";
 import { BillingApi } from "@/services/billing.api";
 import { formatCredits, formatPrice, type Plan } from "@krizaka/orazaka-shared";
 
@@ -22,6 +24,7 @@ export interface TopUpDialogProps {
  * only offers `top_up_credits` to actors whose plan permits it.
  */
 export function TopUpDialog({ open, onClose }: TopUpDialogProps) {
+  const { t } = useTranslation();
   const [plans, setPlans] = useState<Plan[]>([]);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -40,41 +43,39 @@ export function TopUpDialog({ open, onClose }: TopUpDialogProps) {
   }, [open]);
 
   return (
-    <Dialog open={open} onClose={onClose} title="Recharger vos crédits">
-      <div className="space-y-4">
-        {isLoading && <p className="text-sm text-[var(--text-muted)]">Chargement…</p>}
+    <Dialog.Root open={open} onOpenChange={(next) => !next && onClose()}>
+      <Dialog.Content closeLabel={t.billing.close}>
+        <Dialog.Header>
+          <Dialog.Title>{t.billing.topUpTitle}</Dialog.Title>
+        </Dialog.Header>
+        <Dialog.Body className="space-y-4">
+          {isLoading && <p className="text-sm text-fg-muted">{t.billing.loading}</p>}
 
-        {!isLoading && plans.length === 0 && (
-          <p className="text-sm text-[var(--text-muted)]">
-            Aucune offre disponible pour le moment.
-          </p>
-        )}
+          {!isLoading && plans.length === 0 && <p className="text-sm text-fg-muted">{t.billing.noPlans}</p>}
 
-        <ul className="space-y-2">
-          {plans.map((plan) => (
-            <li
-              key={plan.planKey}
-              className="flex items-center justify-between rounded-lg border border-[var(--border-subtle)] px-4 py-3"
-            >
-              <div>
-                <p className="text-sm font-medium text-[var(--text-primary)]">{plan.label}</p>
-                <p className="text-xs text-[var(--text-muted)]">
-                  {formatCredits(plan.monthlyCreditGrant)} crédits / mois
-                </p>
-              </div>
-              <span className="text-sm text-[var(--text-primary)]">
-                {formatPrice(plan.priceCents, plan.currency)}
-              </span>
-            </li>
-          ))}
-        </ul>
-
-        <div className="flex justify-end">
+          <ul className="space-y-2">
+            {plans.map((plan) => (
+              <li
+                key={plan.planKey}
+                className="flex items-center justify-between rounded-lg border border-border-subtle px-4 py-3"
+              >
+                <span>
+                  <span className="block text-sm font-medium text-fg">{plan.label}</span>
+                  <span className="block text-xs text-fg-muted">
+                    {t.billing.perMonth.replace("{credits}", formatCredits(plan.monthlyCreditGrant))}
+                  </span>
+                </span>
+                <span className="text-sm text-fg">{formatPrice(plan.priceCents, plan.currency)}</span>
+              </li>
+            ))}
+          </ul>
+        </Dialog.Body>
+        <Dialog.Footer>
           <Button variant="ghost" onClick={onClose}>
-            Fermer
+            {t.billing.close}
           </Button>
-        </div>
-      </div>
-    </Dialog>
+        </Dialog.Footer>
+      </Dialog.Content>
+    </Dialog.Root>
   );
 }

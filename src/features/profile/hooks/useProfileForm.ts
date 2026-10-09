@@ -3,7 +3,7 @@
 import * as React from "react";
 import { getSession } from "next-auth/react";
 import { useSettings } from "@/core/hooks/useSettings";
-import { useTheme, type Theme } from "@/core/providers/ThemeProvider";
+import { type Appearance, toAppearance, useAppearance } from "@/core/hooks/useAppearance";
 import { useTranslation, type Locale } from "@/core/context/LocaleContext";
 import {
   THEME_ACCENTS,
@@ -12,7 +12,6 @@ import {
   type ThemeAccent,
   type ThemeLayout,
 } from "@/constants/settings.constants";
-import { THEME_MODE } from "@/core/constants/http.constants";
 
 /** Editable workspace/appearance preferences, mirrored from `Settings`. */
 export interface ProfileFormState {
@@ -22,7 +21,7 @@ export interface ProfileFormState {
   themeTagline: string;
   themeAccent: ThemeAccent;
   themeLayout: ThemeLayout;
-  theme: Theme;
+  theme: Appearance;
   tenantId: string;
 }
 
@@ -33,7 +32,7 @@ const EMPTY: ProfileFormState = {
   themeTagline: "Decoupled Intelligence",
   themeAccent: "zinc",
   themeLayout: "standard",
-  theme: THEME_MODE.SYSTEM as Theme,
+  theme: "system",
   tenantId: "orazaka-default",
 };
 
@@ -41,13 +40,13 @@ const EMPTY: ProfileFormState = {
  * Shared form state for the Profile Appearance + Workspace tabs.
  *
  * Lifts the preference state formerly held inside the deleted `SettingsForm`,
- * wrapping {@link useSettings} (persistence) and {@link useTheme} (instant theme).
+ * wrapping {@link useSettings} (persistence) and {@link useAppearance} (instant theme).
  * Exposes a single `save()` and a `isDirty` flag that drives the sticky Save bar.
  */
 export function useProfileForm() {
   const { settings, isLoading, updateSettings, isUpdating } = useSettings();
   const { setLocale, t } = useTranslation();
-  const { setTheme: applyTheme } = useTheme();
+  const { setAppearance: applyTheme } = useAppearance();
 
   const [form, setForm] = React.useState<ProfileFormState>(EMPTY);
   const [baseline, setBaseline] = React.useState<ProfileFormState>(EMPTY);
@@ -65,7 +64,7 @@ export function useProfileForm() {
       themeTagline: settings.themeTagline || EMPTY.themeTagline,
       themeAccent: settings.themeAccent || EMPTY.themeAccent,
       themeLayout: settings.themeLayout || EMPTY.themeLayout,
-      theme: (settings.theme as Theme) || EMPTY.theme,
+      theme: toAppearance(settings.theme),
       tenantId: settings.tenantId || EMPTY.tenantId,
     };
     // eslint-disable-next-line react-hooks/set-state-in-effect
@@ -130,7 +129,7 @@ export function useProfileForm() {
 
   /** Theme changes apply instantly via the ThemeProvider (still persisted on save). */
   const setTheme = React.useCallback(
-    (value: Theme) => {
+    (value: Appearance) => {
       setField("theme", value);
       applyTheme(value);
     },

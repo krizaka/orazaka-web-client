@@ -2,13 +2,13 @@
 
 import { ReactNode } from "react";
 import { SessionProvider } from "next-auth/react";
+import { ThemeProvider } from "@krizaka/ui/theme";
 import { QueryProvider } from "./QueryProvider";
-import { ThemeProvider } from "./ThemeProvider";
 import { SidebarProvider } from "@/core/context/SidebarContext";
 import { TenantProvider } from "@/core/context/TenantContext";
 import { LocaleProvider } from "@/core/context/LocaleContext";
 import { JobStreamProvider } from "@/core/context/JobStreamContext";
-import { ToastProvider } from "@/core/context/ToastContext";
+import { AppToaster } from "@/core/components/AppToaster";
 import { CommandPalette } from "@krizaka/orazaka-design-system";
 
 interface ProvidersProps {
@@ -18,22 +18,24 @@ interface ProvidersProps {
 /**
  * Unified application provider tree wrapping all required context contexts.
  *
+ * The theme is the organisation's (@krizaka/ui/theme): <ThemeScript /> in the root layout applies the persisted
+ * choice before the first paint, this provider keeps it; {@link useAppearance} maps it to the profile's value.
+ *
  * @param props The provider tree properties.
  * @returns The wrapped ReactNode provider layout.
  */
 export function Providers({ children }: Readonly<ProvidersProps>) {
   return (
-    <ThemeProvider>
+    <ThemeProvider defaultMode="system">
       <SessionProvider>
         <QueryProvider>
           <LocaleProvider>
             <TenantProvider>
               <SidebarProvider>
                 <JobStreamProvider>
-                  <ToastProvider>
-                    <CommandPalette />
-                    {children}
-                  </ToastProvider>
+                  <CommandPalette />
+                  {children}
+                  <AppToaster />
                 </JobStreamProvider>
               </SidebarProvider>
             </TenantProvider>

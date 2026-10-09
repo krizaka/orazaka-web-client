@@ -5,6 +5,8 @@ import { Button, Icon, Input } from "@krizaka/orazaka-design-system";
 import { useTranslation } from "@/core/context/LocaleContext";
 import { ProviderGlyph, type ProviderConfig } from "./AiProviderLogos";
 
+import { cn } from "@krizaka/ui/cn";
+
 /* ─── Reusable masked key field ───────────────────────────────────────────── */
 function KeyField({
   value,
@@ -25,7 +27,7 @@ function KeyField({
   const id = React.useId();
   return (
     <div className="space-y-1.5">
-      <label htmlFor={id} className="text-xs font-medium text-[var(--text-secondary)]">
+      <label htmlFor={id} className="text-xs font-medium text-fg-secondary">
         {t.providers.apiKey}
       </label>
       <div className="relative">
@@ -44,7 +46,7 @@ function KeyField({
           onClick={onToggleReveal}
           disabled={disabled}
           aria-label={isRevealed ? t.providers.keyHide : t.providers.keyReveal}
-          className="absolute right-2 top-1/2 inline-flex h-7 w-7 -translate-y-1/2 items-center justify-center rounded text-[var(--text-muted)] transition-colors hover:text-[var(--text-primary)] disabled:opacity-50"
+          className="absolute right-2 top-1/2 inline-flex h-7 w-7 -translate-y-1/2 items-center justify-center rounded text-fg-muted transition-colors hover:text-fg disabled:opacity-50"
         >
           <Icon name={isRevealed ? "eyeOff" : "eye"} size={16} />
         </button>
@@ -94,7 +96,7 @@ export function ProviderConnectionForm({
     >
       {mode === "add" ? (
         <fieldset className="space-y-2">
-          <legend className="mb-2 text-xs font-medium text-[var(--text-secondary)]">
+          <legend className="mb-2 text-xs font-medium text-fg-secondary">
             {t.providers.selectProvider}
           </legend>
           <div className="grid grid-cols-2 gap-2">
@@ -106,14 +108,15 @@ export function ProviderConnectionForm({
                   type="button"
                   onClick={() => onSelect(provider.id)}
                   aria-pressed={active}
-                  className={`flex items-center gap-2.5 rounded-[var(--radius-md)] border p-2.5 text-left transition-all ${
+                  className={cn(
+                    "flex items-center gap-2.5 rounded-md border p-2.5 text-left transition-all",
                     active
-                      ? "border-[var(--accent)] bg-[var(--accent-soft)]"
-                      : "border-[var(--border-subtle)] bg-[var(--surface-1)] hover:border-[var(--border-default)]"
-                  }`}
+                      ? "border-accent bg-accent-soft"
+                      : "border-border-subtle bg-surface-1 hover:border-border-default"
+                  )}
                 >
                   <ProviderGlyph provider={provider} active={active} />
-                  <span className="truncate text-xs font-medium text-[var(--text-primary)]">
+                  <span className="truncate text-xs font-medium text-fg">
                     {provider.name}
                   </span>
                 </button>
@@ -123,13 +126,13 @@ export function ProviderConnectionForm({
         </fieldset>
       ) : (
         selected && (
-          <div className="flex items-center gap-3 rounded-[var(--radius-md)] border border-[var(--border-subtle)] bg-[var(--surface-2)] p-3">
+          <div className="flex items-center gap-3 rounded-md border border-border-subtle bg-surface-2 p-3">
             <ProviderGlyph provider={selected} active />
             <div>
-              <p className="text-sm font-semibold text-[var(--text-primary)]">
+              <p className="text-sm font-semibold text-fg">
                 {selected.name}
               </p>
-              <p className="text-xs text-[var(--text-secondary)]">
+              <p className="text-xs text-fg-secondary">
                 {t.providers.editKeyHint}
               </p>
             </div>
@@ -147,7 +150,7 @@ export function ProviderConnectionForm({
       />
 
       {error && (
-        <p className="flex items-center gap-1.5 text-xs font-medium text-[var(--status-error)]">
+        <p className="flex items-center gap-1.5 text-xs font-medium text-danger">
           <Icon name="error" size={14} />
           {t.providers.saveError}
         </p>

@@ -39,10 +39,10 @@ export function InterceptionFormField({
 }: Readonly<InterceptionFormFieldProps>) {
   return (
     <div className="space-y-2">
-      <label className="text-sm font-medium text-text-secondary flex items-center justify-between">
+      <label className="text-sm font-medium text-fg-secondary flex items-center justify-between">
         <span>{field.label}</span>
         {field.required && (
-          <span className="text-xs text-status-error font-normal">
+          <span className="text-xs text-danger font-normal">
             {locale === "fr" ? "* requis" : "* required"}
           </span>
         )}
@@ -55,7 +55,7 @@ export function InterceptionFormField({
           value={value}
           onChange={(e) => onChange(e.target.value)}
           disabled={disabled}
-          className="w-full bg-white/50 dark:bg-surface-1/30"
+          className="w-full bg-surface-1/30"
         />
       )}
 
@@ -66,7 +66,7 @@ export function InterceptionFormField({
           value={value}
           onChange={(e) => onChange(e.target.value)}
           disabled={disabled}
-          className="flex w-full rounded-xl border border-border-subtle/80 bg-white/50 px-3 py-2 text-sm backdrop-blur-sm transition-all duration-200 placeholder:text-text-secondary focus:outline-none focus:ring-2 focus:ring-border-subtle dark:focus-visible:ring-border-subtle disabled:cursor-not-allowed disabled:opacity-50 dark:border-border-subtle/60 dark:bg-surface-1/30 dark:placeholder:text-text-muted focus:ring-status-success dark:text-text-primary"
+          className="flex w-full rounded-xl border border-border-subtle/60 bg-surface-1/30 px-3 py-2 text-sm backdrop-blur-sm transition-all duration-200 placeholder:text-fg-muted focus:outline-none focus:ring-2 focus:ring-border-subtle disabled:cursor-not-allowed disabled:opacity-50 focus:ring-success focus-visible:ring-border-subtle text-fg"
         />
       )}
 
@@ -75,13 +75,13 @@ export function InterceptionFormField({
           value={value}
           onChange={(e) => onChange(e.target.value)}
           disabled={disabled}
-          className="flex h-10 w-full rounded-xl border border-border-subtle/80 bg-white/50 px-3 py-2 text-sm backdrop-blur-sm transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-border-subtle dark:focus-visible:ring-border-subtle disabled:cursor-not-allowed disabled:opacity-50 dark:border-border-subtle/60 dark:bg-surface-1/30 focus:ring-status-success dark:text-text-primary"
+          className="flex h-10 w-full rounded-xl border border-border-subtle/60 bg-surface-1/30 px-3 py-2 text-sm backdrop-blur-sm transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-border-subtle disabled:cursor-not-allowed disabled:opacity-50 focus:ring-success focus-visible:ring-border-subtle text-fg"
         >
           {field.options?.map((opt) => (
             <option
               key={opt.value}
               value={opt.value}
-              className="bg-white dark:bg-surface-0 text-text-primary"
+              className="bg-surface-0 text-fg"
             >
               {opt.label}
             </option>

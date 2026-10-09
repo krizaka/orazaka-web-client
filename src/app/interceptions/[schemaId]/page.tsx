@@ -24,7 +24,7 @@ export default async function InterceptionPage({
   const { schemaId } = await params;
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center p-6 bg-gradient-to-tr from-surface-1 via-surface-2 to-surface-3 dark:from-surface-0 dark:via-surface-1 dark:to-surface-0 transition-colors duration-300">
+    <main className="flex min-h-screen flex-col items-center justify-center p-6 bg-gradient-to-tr from-surface-0 via-surface-1 to-surface-0 transition-colors duration-300">
       <div className="w-full max-w-xl">
         <h1 className="sr-only">Required Action - {schemaId}</h1>
         <InterceptionForm schemaId={schemaId} />

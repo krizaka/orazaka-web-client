@@ -7,6 +7,8 @@ import { Icon, SentinelMini } from "@krizaka/orazaka-design-system";
 import { ChatMessage } from "@/core/types/chat.types";
 import { useTranslation } from "@/core/context/LocaleContext";
 
+import { cn } from "@krizaka/ui/cn";
+
 interface Props {
   message: ChatMessage;
   /** Stagger index for slide-in animation delay */
@@ -37,18 +39,19 @@ export const MessageBubble: React.FC<Props> = ({ message, index = 0 }) => {
 
   return (
     <article
-      className={`flex w-full mb-4 group/msg ${isUser ? "justify-end" : "justify-start"}`}
+      className={cn("flex w-full mb-4 group/msg", isUser ? "justify-end" : "justify-start")}
       style={{
         animationDelay: `${Math.min(index * 50, 300)}ms`,
         animationFillMode: "backwards",
       }}
     >
       <section
-        className={`flex max-w-[75%] gap-3 items-start animate-in fade-in duration-300 ${
+        className={cn(
+          "flex max-w-[75%] gap-3 items-start animate-in fade-in duration-300",
           isUser
             ? "flex-row-reverse slide-in-from-right-3"
             : "flex-row slide-in-from-left-3"
-        }`}
+        )}
         style={{
           animationDelay: `${Math.min(index * 50, 300)}ms`,
           animationFillMode: "backwards",
@@ -56,11 +59,12 @@ export const MessageBubble: React.FC<Props> = ({ message, index = 0 }) => {
       >
         {/* Avatar */}
         <figure
-          className={`h-9 w-9 rounded-2xl flex items-center justify-center text-[11px] font-bold border select-none flex-shrink-0 transition-colors duration-200 ${
+          className={cn(
+            "h-9 w-9 rounded-2xl flex items-center justify-center text-[11px] font-bold border select-none flex-shrink-0 transition-colors duration-200",
             isUser
-              ? "bg-[var(--accent-soft)] border-[var(--accent)]/20 text-[var(--accent)]"
-              : "bg-[var(--surface-2)] border-[var(--border-subtle)] text-[var(--text-secondary)]"
-          }`}
+              ? "bg-accent-soft border-accent/20 text-accent"
+              : "bg-surface-2 border-border-subtle text-fg-secondary"
+          )}
         >
           {isUser ? "U" : <SentinelMini size={18} />}
         </figure>
@@ -68,34 +72,36 @@ export const MessageBubble: React.FC<Props> = ({ message, index = 0 }) => {
         {/* Text bubble + actions */}
         <section className="relative">
           <section
-            className={`p-4 rounded-2xl border text-[13px] leading-[1.7] text-[var(--text-primary)] transition-shadow duration-200 ${
+            className={cn(
+              "p-4 rounded-2xl border text-[13px] leading-[1.7] text-fg transition-shadow duration-200",
               isUser
-                ? "bg-[var(--accent-soft)] border-[var(--accent)]/10 rounded-tr-md"
-                : "bg-[var(--surface-1)] border-[var(--border-subtle)] rounded-tl-md"
-            }`}
+                ? "bg-accent-soft border-accent/10 rounded-tr-md"
+                : "bg-surface-1 border-border-subtle rounded-tl-md"
+            )}
           >
             <p className="whitespace-pre-wrap">{message.content}</p>
-            <span className="text-[10px] text-[var(--text-muted)] block mt-2 text-right select-none tabular-nums">
+            <span className="text-[10px] text-fg-muted block mt-2 text-right select-none tabular-nums">
               {format(message.timestamp, "HH:mm")}
             </span>
           </section>
 
           {/* Hover action bar */}
           <section
-            className={`absolute -bottom-3 opacity-0 group-hover/msg:opacity-100 transition-all duration-200 flex items-center gap-1 ${
+            className={cn(
+              "absolute -bottom-3 opacity-0 group-hover/msg:opacity-100 transition-all duration-200 flex items-center gap-1",
               isUser ? "right-0" : "left-0"
-            }`}
+            )}
           >
             <button
               type="button"
               onClick={handleCopy}
-              className="inline-flex items-center gap-1 px-2 py-1 rounded-lg text-[10px] font-medium bg-[var(--surface-2)] border border-[var(--border-subtle)] text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:bg-[var(--surface-3)] transition-all duration-150 shadow-sm"
+              className="inline-flex items-center gap-1 px-2 py-1 rounded-lg text-[10px] font-medium bg-surface-2 border border-border-subtle text-fg-muted hover:text-fg hover:bg-surface-3 transition-all duration-150 shadow-sm"
               aria-label={t.chat.copyMessage}
             >
               {copied ? (
                 <>
-                  <Icon name="check" size={12} className="text-status-success" />
-                  <span className="text-status-success">
+                  <Icon name="check" size={12} className="text-success" />
+                  <span className="text-success">
                     {t.chat.copiedMessage}
                   </span>
                 </>

@@ -4,6 +4,8 @@
 import React from "react";
 import { Icon } from "@krizaka/orazaka-design-system";
 
+import { cn } from "@krizaka/ui/cn";
+
 /**
  * SystemHealthHud — Compact real-time system health panel.
  * Shows memory pressure, active model, pipeline state, and uptime.
@@ -22,28 +24,28 @@ export function SystemHealthHud() {
 
   const memoryColor =
     health.memoryPercent > 85
-      ? "var(--status-error)"
+      ? "var(--kz-danger)"
       : health.memoryPercent > 60
-        ? "var(--status-warning)"
-        : "var(--status-success)";
+        ? "var(--kz-warning)"
+        : "var(--kz-success)";
 
   return (
-    <section className="glass-card rounded-[var(--radius-lg)] p-[var(--space-card)] space-y-4">
+    <section className="glass-card rounded-lg p-(--orazaka-space-card) space-y-4">
       {/* Header */}
       <header className="flex items-center gap-2">
-        <Icon name="model" size={16} className="text-[var(--accent)]" />
+        <Icon name="model" size={16} className="text-accent" />
         <h3 className="hud-label !mb-0">SYSTEM HEALTH</h3>
       </header>
 
       {/* Active Model */}
       <article className="space-y-1">
-        <span className="text-[10px] uppercase tracking-wider text-[var(--text-muted)] font-semibold">
+        <span className="text-[10px] uppercase tracking-wider text-fg-muted font-semibold">
           Active Model
         </span>
         <p className="flex items-center gap-2">
-          <span className="status-dot text-[var(--status-success)]" />
+          <span className="status-dot text-success" />
           <span className="hud-value">{health.activeModel}</span>
-          <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-[var(--surface-2)] text-[var(--text-muted)] font-medium">
+          <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-surface-2 text-fg-muted font-medium">
             {health.provider}
           </span>
         </p>
@@ -52,17 +54,20 @@ export function SystemHealthHud() {
       {/* Memory Pressure Gauge */}
       <figure className="space-y-2">
         <figcaption className="flex items-center justify-between">
-          <span className="text-[10px] uppercase tracking-wider text-[var(--text-muted)] font-semibold">
+          <span className="text-[10px] uppercase tracking-wider text-fg-muted font-semibold">
             Memory Pressure
           </span>
           <span
-            className={`hud-value text-xs ${health.memoryPercent > 85 ? "text-[var(--status-error)]" : health.memoryPercent > 60 ? "text-[var(--status-warning)]" : "text-[var(--status-success)]"}`}
+            className={cn(
+              "hud-value text-xs",
+              health.memoryPercent > 85 ? "text-danger" : health.memoryPercent > 60 ? "text-warning" : "text-success"
+            )}
           >
             {health.memoryPercent}%
           </span>
         </figcaption>
         {/* Gauge bar */}
-        <aside className="h-1.5 rounded-full bg-[var(--surface-3)] overflow-hidden">
+        <aside className="h-1.5 rounded-full bg-surface-3 overflow-hidden">
           { }
           <span
             className="block h-full rounded-full transition-all duration-700 ease-out"
@@ -92,12 +97,12 @@ export function SystemHealthHud() {
       {/* Stats row */}
       <section className="grid grid-cols-2 gap-3">
         <article className="space-y-1">
-          <span className="text-[10px] uppercase tracking-wider text-[var(--text-muted)] font-semibold">
+          <span className="text-[10px] uppercase tracking-wider text-fg-muted font-semibold">
             Pipeline
           </span>
           <p className="flex items-center gap-1.5">
             <span
-              className={`status-dot ${health.pipelineEnabled ? "text-[var(--status-success)]" : "text-[var(--status-error)]"}`}
+              className={cn("status-dot", health.pipelineEnabled ? "text-success" : "text-danger")}
             />
             <span className="hud-value text-xs">
               {health.pipelineEnabled ? "Enabled" : "Disabled"}
@@ -105,7 +110,7 @@ export function SystemHealthHud() {
           </p>
         </article>
         <article className="space-y-1">
-          <span className="text-[10px] uppercase tracking-wider text-[var(--text-muted)] font-semibold">
+          <span className="text-[10px] uppercase tracking-wider text-fg-muted font-semibold">
             Requests Today
           </span>
           <span className="hud-value text-xs block">
@@ -115,9 +120,9 @@ export function SystemHealthHud() {
       </section>
 
       {/* Uptime */}
-      <footer className="pt-2 border-t border-[var(--border-subtle)]">
+      <footer className="pt-2 border-t border-border-subtle">
         <p className="flex items-center justify-between">
-          <span className="text-[10px] text-[var(--text-muted)]">Uptime</span>
+          <span className="text-[10px] text-fg-muted">Uptime</span>
           <span className="hud-value text-[11px]">
             {Math.floor(health.uptimeHours / 24)}d {health.uptimeHours % 24}h
           </span>

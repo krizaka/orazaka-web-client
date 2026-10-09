@@ -1,7 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import { Button, Icon } from "@krizaka/orazaka-design-system";
+import { Icon } from "@krizaka/orazaka-design-system";
+import { Alert } from "@krizaka/ui/alert";
+import { Button } from "@krizaka/ui/button";
+import { useTranslation } from "@/core/context/LocaleContext";
 import { formatCredits } from "@krizaka/orazaka-shared";
 import { useWallet } from "@/features/billing/hooks/useWallet";
 
@@ -20,8 +23,11 @@ export interface LowBalanceBannerProps {
  * Dismissible, and dismissal is per-session rather than permanent: the warning is
  * relevant again the next time they sign in with a balance still low, and a
  * banner that could be silenced forever would stop being a warning.
+ *
+ * A @krizaka/ui Alert (tone warning: announced at once, role "alert").
  */
 export function LowBalanceBanner({ onTopUp }: LowBalanceBannerProps) {
+  const { t } = useTranslation();
   const { available, isLow } = useWallet();
   const [dismissed, setDismissed] = useState(false);
 
@@ -30,27 +36,24 @@ export function LowBalanceBanner({ onTopUp }: LowBalanceBannerProps) {
   }
 
   return (
-    <div
-      role="status"
-      className="flex items-center justify-between gap-4 rounded-lg border border-[var(--warning)]/40 bg-[var(--warning)]/10 px-4 py-3"
-    >
-      <div className="flex items-center gap-3">
-        <Icon name="warning" className="h-4 w-4 shrink-0 text-[var(--warning)]" />
-        <p className="text-sm text-[var(--text-primary)]">
-          Il vous reste <strong>{formatCredits(available)} crédits</strong>. Les
-          générations coûteuses risquent d’être refusées.
-        </p>
-      </div>
-      <div className="flex shrink-0 items-center gap-2">
-        {onTopUp && (
-          <Button size="sm" onClick={onTopUp}>
-            Recharger
+    <Alert
+      tone="warning"
+      icon={<Icon name="warning" />}
+      title={t.billing.lowBalanceTitle}
+      action={
+        <>
+          {onTopUp && (
+            <Button size="sm" onClick={onTopUp}>
+              {t.billing.topUp}
+            </Button>
+          )}
+          <Button size="sm" variant="ghost" onClick={() => setDismissed(true)}>
+            {t.billing.dismiss}
           </Button>
-        )}
-        <Button size="sm" variant="ghost" onClick={() => setDismissed(true)}>
-          Masquer
-        </Button>
-      </div>
-    </div>
+        </>
+      }
+    >
+      {t.billing.lowBalance.replace("{credits}", formatCredits(available))}
+    </Alert>
   );
 }

@@ -71,9 +71,9 @@ export default function PrivacyPage() {
   const c = CONTENT[locale] || CONTENT.en;
 
   return (
-    <main className="min-h-screen flex flex-col items-center p-6 bg-[var(--surface-0)] ambient-grid w-full overflow-y-auto">
+    <main className="min-h-screen flex flex-col items-center p-6 bg-surface-0 ambient-grid w-full overflow-y-auto">
       {/* Navbar header */}
-      <header className="w-full max-w-4xl flex items-center justify-between py-4 mb-6 border-b border-[var(--border-subtle)]">
+      <header className="w-full max-w-4xl flex items-center justify-between py-4 mb-6 border-b border-border-subtle">
         <Link href="/login" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
           <img
             src="/logo.svg"
@@ -82,14 +82,14 @@ export default function PrivacyPage() {
             height={24}
             className="w-6 h-6"
           />
-          <span className="text-lg font-bold tracking-tight text-[var(--text-primary)]">
+          <span className="text-lg font-bold tracking-tight text-fg">
             Orazaka
           </span>
         </Link>
 
         <Link
           href="/login"
-          className="text-xs font-semibold px-3 py-1.5 rounded-lg border border-[var(--border-default)] hover:border-[var(--accent)] transition-colors hover:text-[var(--accent)] text-[var(--text-secondary)]"
+          className="text-xs font-semibold px-3 py-1.5 rounded-lg border border-border-default hover:border-accent transition-colors hover:text-accent text-fg-secondary"
         >
           {c.backToLogin}
         </Link>
@@ -97,17 +97,17 @@ export default function PrivacyPage() {
 
       {/* Main Glass Card container */}
       <article className="w-full max-w-4xl glass-card rounded-2xl p-6 md:p-10 space-y-8 animate-fade-up shadow-2xl">
-        <header className="space-y-2 border-b border-[var(--border-subtle)] pb-6">
-          <h1 className="text-3xl font-extrabold tracking-tight text-[var(--text-primary)] md:text-4xl">
+        <header className="space-y-2 border-b border-border-subtle pb-6">
+          <h1 className="text-3xl font-extrabold tracking-tight text-fg md:text-4xl">
             {c.title}
           </h1>
-          <p className="text-[var(--accent)] font-medium text-sm md:text-base">
+          <p className="text-accent font-medium text-sm md:text-base">
             {c.subtitle}
           </p>
-          <p className="text-xs text-[var(--text-muted)] pt-1">{c.lastUpdated}</p>
+          <p className="text-xs text-fg-muted pt-1">{c.lastUpdated}</p>
         </header>
 
-        <p className="text-[var(--text-secondary)] text-sm md:text-base leading-relaxed">
+        <p className="text-fg-secondary text-sm md:text-base leading-relaxed">
           {c.intro}
         </p>
 
@@ -115,12 +115,12 @@ export default function PrivacyPage() {
           {c.sections.map((section, idx) => (
             <section
               key={idx}
-              className="p-5 rounded-xl border border-[var(--border-subtle)] bg-[var(--surface-1)] hover:border-[var(--border-strong)] transition-colors duration-200"
+              className="p-5 rounded-xl border border-border-subtle bg-surface-1 hover:border-border-strong transition-colors duration-200"
             >
-              <h2 className="text-base font-bold text-[var(--text-primary)] mb-2">
+              <h2 className="text-base font-bold text-fg mb-2">
                 {section.title}
               </h2>
-              <p className="text-xs text-[var(--text-secondary)] leading-relaxed">
+              <p className="text-xs text-fg-secondary leading-relaxed">
                 {section.text}
               </p>
             </section>
@@ -129,15 +129,15 @@ export default function PrivacyPage() {
       </article>
 
       {/* Public Footer */}
-      <footer className="w-full max-w-4xl flex items-center justify-between py-6 mt-6 border-t border-[var(--border-subtle)] text-xs text-[var(--text-muted)]">
+      <footer className="w-full max-w-4xl flex items-center justify-between py-6 mt-6 border-t border-border-subtle text-xs text-fg-muted">
         <div className="flex gap-4">
-          <Link href="/privacy" className="hover:text-[var(--accent)] transition-colors underline">
+          <Link href="/privacy" className="hover:text-accent transition-colors underline">
             {t.auth.legalPrivacy}
           </Link>
-          <Link href="/terms" className="hover:text-[var(--accent)] transition-colors">
+          <Link href="/terms" className="hover:text-accent transition-colors">
             {t.auth.legalTerms}
           </Link>
-          <Link href="/contact" className="hover:text-[var(--accent)] transition-colors">
+          <Link href="/contact" className="hover:text-accent transition-colors">
             {t.auth.legalContact}
           </Link>
         </div>

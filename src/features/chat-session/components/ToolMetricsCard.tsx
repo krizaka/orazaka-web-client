@@ -41,8 +41,8 @@ export function ToolMetricsCard({ payload }: Readonly<ToolMetricsCardProps>) {
   return (
     <article className="glass-card p-4 max-w-lg w-full animate-in fade-in slide-in-from-bottom-2 duration-300">
       {/* Header */}
-      <div className="flex items-center gap-2 mb-3 pb-2 border-b border-[var(--border-subtle)]">
-        <div className="w-6 h-6 flex items-center justify-center bg-[var(--accent-soft)] text-[var(--accent)]">
+      <div className="flex items-center gap-2 mb-3 pb-2 border-b border-border-subtle">
+        <div className="w-6 h-6 flex items-center justify-center bg-accent-soft text-accent">
           <svg
             className="w-3.5 h-3.5"
             fill="none"
@@ -57,10 +57,10 @@ export function ToolMetricsCard({ payload }: Readonly<ToolMetricsCardProps>) {
             />
           </svg>
         </div>
-        <span className="text-xs font-semibold text-[var(--text-primary)] tracking-wide uppercase">
+        <span className="text-xs font-semibold text-fg tracking-wide uppercase">
           {payload.toolName}
         </span>
-        <span className="ml-auto text-[10px] text-[var(--text-muted)] font-mono">
+        <span className="ml-auto text-[10px] text-fg-muted font-mono">
           METRICS
         </span>
       </div>
@@ -70,15 +70,15 @@ export function ToolMetricsCard({ payload }: Readonly<ToolMetricsCardProps>) {
         {metrics.map((metric) => (
           <div
             key={metric.label}
-            className="flex flex-col gap-0.5 p-2 bg-[var(--surface-2)] border border-[var(--border-subtle)] transition-colors duration-200 hover:border-[var(--border-default)]"
+            className="flex flex-col gap-0.5 p-2 bg-surface-2 border border-border-subtle transition-colors duration-200 hover:border-border-default"
           >
-            <span className="text-[10px] font-medium text-[var(--text-muted)] uppercase tracking-wider">
+            <span className="text-[10px] font-medium text-fg-muted uppercase tracking-wider">
               {metric.label}
             </span>
-            <span className="text-sm font-semibold text-[var(--text-primary)] font-mono">
+            <span className="text-sm font-semibold text-fg font-mono">
               {metric.value}
               {metric.unit && (
-                <span className="text-[10px] text-[var(--text-muted)] ml-0.5">
+                <span className="text-[10px] text-fg-muted ml-0.5">
                   {metric.unit}
                 </span>
               )}

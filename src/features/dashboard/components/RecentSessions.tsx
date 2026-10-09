@@ -1,7 +1,7 @@
 import * as React from "react";
-import { Card } from "@krizaka/orazaka-design-system";
 import { Button } from "@krizaka/orazaka-design-system";
 import { Icon } from "@krizaka/orazaka-design-system";
+import { Card } from "@krizaka/ui/card";
 
 interface Thread {
   conversationId: string;
@@ -48,13 +48,13 @@ export function RecentSessions({
     <div className="md:col-span-3 space-y-4">
       <h3 className="hud-label px-1">{t.dashboard.recentActivity}</h3>
 
-      <Card className="p-[var(--space-card)] overflow-hidden">
+      <Card.Root className="p-(--orazaka-space-card) overflow-hidden">
         {recentThreads.length === 0 ? (
           <div className="text-center py-12">
-            <div className="mx-auto mb-4 w-12 h-12 rounded-[var(--radius-lg)] bg-[var(--surface-2)] flex items-center justify-center">
-              <Icon name="chat" size={20} className="text-[var(--text-muted)]" />
+            <div className="mx-auto mb-4 w-12 h-12 rounded-lg bg-surface-2 flex items-center justify-center">
+              <Icon name="chat" size={20} className="text-fg-muted" />
             </div>
-            <p className="fluid-sm text-[var(--text-secondary)] mb-4">
+            <p className="fluid-sm text-fg-secondary mb-4">
               {t.dashboard.noRecentSessions}
             </p>
             <Button onClick={onStartNewChat} size="sm">
@@ -62,30 +62,30 @@ export function RecentSessions({
             </Button>
           </div>
         ) : (
-          <ul className="divide-y divide-[var(--border-subtle)] -mx-1">
+          <ul className="divide-y divide-border-subtle -mx-1">
             {recentThreads.map((thread) => (
               <li key={thread.conversationId}>
                 <button
                   type="button"
                   onClick={() => onResumeSession(thread.conversationId)}
-                  className="flex w-full items-center justify-between py-3.5 px-3 rounded-[var(--radius-md)] cursor-pointer transition-all duration-200 hover:bg-[var(--surface-2)] hover:shadow-[var(--shadow-xs)] group text-left"
+                  className="flex w-full items-center justify-between py-3.5 px-3 rounded-md cursor-pointer transition-all duration-200 hover:bg-surface-2 hover:shadow-xs group text-left"
                 >
                 <div className="flex items-center min-w-0 mr-4">
-                  <div className="w-9 h-9 rounded-[var(--radius-md)] bg-[var(--surface-2)] flex items-center justify-center mr-3.5 text-[var(--text-muted)] group-hover:text-[var(--accent)] transition-colors duration-200 border border-[var(--border-subtle)]">
+                  <div className="w-9 h-9 rounded-md bg-surface-2 flex items-center justify-center mr-3.5 text-fg-muted group-hover:text-accent transition-colors duration-200 border border-border-subtle">
                     <Icon name="chat" size={16} />
                   </div>
                   <div className="min-w-0">
-                    <p className="fluid-sm font-semibold text-[var(--text-primary)] truncate max-w-[200px] sm:max-w-[320px]">
+                    <p className="fluid-sm font-semibold text-fg truncate max-w-[200px] sm:max-w-[320px]">
                       {thread.title}
                     </p>
-                    <span className="fluid-xs text-[var(--text-muted)] font-mono tracking-wider flex items-center mt-0.5">
+                    <span className="fluid-xs text-fg-muted font-mono tracking-wider flex items-center mt-0.5">
                       <Icon name="history" size={12} className="mr-1" />
                       {formatDate(thread.updatedAt)}
                     </span>
                   </div>
                 </div>
 
-                <div className="flex items-center fluid-xs text-[var(--text-muted)] font-medium group-hover:text-[var(--accent)] transition-colors duration-200">
+                <div className="flex items-center fluid-xs text-fg-muted font-medium group-hover:text-accent transition-colors duration-200">
                   <span className="mr-1.5 hidden sm:inline-block font-semibold tracking-wide uppercase">
                     {t.dashboard.resumeSession}
                   </span>
@@ -96,7 +96,7 @@ export function RecentSessions({
             ))}
           </ul>
         )}
-      </Card>
+      </Card.Root>
     </div>
   );
 }

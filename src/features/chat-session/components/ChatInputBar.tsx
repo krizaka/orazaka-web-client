@@ -3,8 +3,8 @@
 
 import React from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Button } from "@krizaka/orazaka-design-system";
-import { Icon } from "@krizaka/orazaka-design-system";
+import { Button, Icon } from "@krizaka/orazaka-design-system";
+import { cn } from "@krizaka/ui/cn";
 import { ContextPlusMenu } from "./ContextPlusMenu";
 import { ChatIndicators } from "./ChatIndicators";
 import { CapabilityOptions } from "./CapabilityOptions";
@@ -59,11 +59,12 @@ export const ChatInputBar: React.FC<ChatInputBarProps> = ({
         key="chat-input-form"
         layoutId="chat-input-bar"
         onSubmit={onSubmit}
-        className={`w-full bg-transparent flex flex-col items-center relative z-25 ${
+        className={cn(
+          "w-full bg-transparent flex flex-col items-center relative z-25",
           isCentered
             ? "px-6 py-0 flex-1 justify-center"
             : "px-4 pb-5 md:pb-7 pt-0"
-        }`}
+        )}
         layout
         transition={{
           layout: { type: "spring", stiffness: 300, damping: 30, mass: 0.8 },
@@ -71,9 +72,10 @@ export const ChatInputBar: React.FC<ChatInputBarProps> = ({
       >
         <motion.section
           layoutId="chat-input-card"
-          className={`glass-card w-full shadow-xl p-3 flex flex-col gap-2 transition-[border-color,box-shadow] duration-300 focus-within:border-[var(--accent)] focus-within:shadow-[var(--accent-glow)] ${
+          className={cn(
+            "glass-card w-full shadow-xl p-3 flex flex-col gap-2 transition-[border-color,box-shadow] duration-300 focus-within:border-accent focus-within:shadow-(--orazaka-accent-glow)",
             isCentered ? "max-w-2xl" : "max-w-3xl"
-          }`}
+          )}
           layout
         >
           <ChatIndicators
@@ -106,11 +108,13 @@ export const ChatInputBar: React.FC<ChatInputBarProps> = ({
                 default, or the staged generation capability — opens the capability menu, and
                 clears back to Chat via the inline ✕. */}
             <div
-              className={`flex items-center rounded-full border transition-all duration-150 flex-shrink-0 mb-0.5 ${
+              className={cn(
+                "flex items-center rounded-full border transition-all duration-150 flex-shrink-0 mb-0.5",
                 selectedStudio
-                  ? "border-[var(--accent)] bg-[var(--accent-soft)] text-[var(--accent)]"
-                  : "border-[var(--border-subtle)] bg-[var(--surface-2)] text-[var(--text-secondary)]"
-              } ${isAgentBusy ? "opacity-40 pointer-events-none" : ""}`}
+                  ? "border-accent bg-accent-soft text-accent"
+                  : "border-border-subtle bg-surface-2 text-fg-secondary",
+                isAgentBusy ? "opacity-40 pointer-events-none" : ""
+              )}
             >
               <button
                 type="button"
@@ -118,14 +122,14 @@ export const ChatInputBar: React.FC<ChatInputBarProps> = ({
                 disabled={isAgentBusy}
                 aria-label={t.chat.addCapability}
                 aria-expanded={isPlusMenuOpen}
-                className="flex items-center gap-1.5 rounded-full pl-2.5 pr-1.5 py-2 text-xs font-medium transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)]"
+                className="flex items-center gap-1.5 rounded-full pl-2.5 pr-1.5 py-2 text-xs font-medium transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-ring"
               >
                 <Icon name="spark" size={15} />
                 <span className="max-w-[120px] truncate">
                   {selectedStudio ? selectedStudio.label : t.chat.modeChat}
                 </span>
                 <svg
-                  className={`w-3.5 h-3.5 transition-transform duration-200 ${isPlusMenuOpen ? "rotate-180" : ""}`}
+                  className={cn("w-3.5 h-3.5 transition-transform duration-200", isPlusMenuOpen && "rotate-180")}
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
@@ -163,9 +167,8 @@ export const ChatInputBar: React.FC<ChatInputBarProps> = ({
                 type="button"
                 onClick={() => fileInputRef.current?.click()}
                 disabled={isAgentBusy}
-                className={`absolute left-3 bottom-3 p-1.5 text-[var(--text-muted)] hover:text-[var(--text-primary)] transition-all duration-150 z-10 ${
-                  isAgentBusy ? "opacity-40 cursor-not-allowed pointer-events-none" : ""
-                }`}
+                className={cn("absolute left-3 bottom-3 p-1.5 text-fg-muted hover:text-fg transition-all duration-150 z-10",
+                  isAgentBusy && "opacity-40 cursor-not-allowed pointer-events-none")}
                 aria-label="Attach File"
               >
                 <Icon name="attach" size={20} />
@@ -186,9 +189,10 @@ export const ChatInputBar: React.FC<ChatInputBarProps> = ({
                 disabled={isAgentBusy}
                 placeholder={isAgentBusy ? t.chat.typing : t.chat.typeMessage}
                 rows={1}
-                className={`w-full pl-10 pr-24 py-3 bg-transparent border-0 text-[var(--text-primary)] placeholder:text-[var(--text-muted)] focus:outline-none focus:ring-0 resize-none overflow-hidden text-sm leading-relaxed transition-opacity duration-200 ${
+                className={cn(
+                  "w-full pl-10 pr-24 py-3 bg-transparent border-0 text-fg placeholder:text-fg-muted focus:outline-none focus:ring-0 resize-none overflow-hidden text-sm leading-relaxed transition-opacity duration-200",
                   isAgentBusy ? "opacity-50 cursor-not-allowed" : ""
-                }`}
+                )}
                 style={{
                   minHeight: "44px",
                   maxHeight: "140px",
@@ -204,7 +208,7 @@ export const ChatInputBar: React.FC<ChatInputBarProps> = ({
                 autoComplete="off"
               />
               <section className="absolute right-2 bottom-1.5 flex items-center gap-2">
-                <span className="text-[10px] text-[var(--text-muted)] hidden sm:inline-block select-none">
+                <span className="text-[10px] text-fg-muted hidden sm:inline-block select-none">
                   {t.chat.cmdEnterHint}
                 </span>
                 <Button

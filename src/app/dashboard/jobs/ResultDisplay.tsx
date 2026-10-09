@@ -31,18 +31,18 @@ function JobResultDisplay({ job, jobId }: Readonly<JobResultDisplayProps>) {
 
   if (job.status === JOB_STATUS.PENDING || job.status === JOB_STATUS.PROCESSING) {
     return (
-      <div className="flex flex-col gap-2 p-4 rounded-lg bg-surface-1/50 dark:bg-surface-0/20 border border-dashed border-border-subtle">
-        <div className="flex items-center gap-2 text-text-secondary font-semibold text-sm">
+      <div className="flex flex-col gap-2 p-4 rounded-lg bg-surface-0/20 border border-dashed border-border-subtle">
+        <div className="flex items-center gap-2 text-fg-secondary font-semibold text-sm">
           <Icon name="loader" className="h-4 w-4 animate-spin text-accent" />
           <span>{t.playground.taskActive}</span>
         </div>
-        <p className="text-xs text-text-muted dark:text-text-secondary">
+        <p className="text-xs text-fg-secondary">
           {t.playground.status}
           <span className="font-semibold uppercase text-accent">
             {job.status}
           </span>
         </p>
-        <p className="text-[10px] text-text-secondary font-mono">
+        <p className="text-[10px] text-fg-secondary font-mono">
           {t.playground.jobId} {jobId}
         </p>
       </div>
@@ -51,9 +51,9 @@ function JobResultDisplay({ job, jobId }: Readonly<JobResultDisplayProps>) {
 
   if (job.status === JOB_STATUS.FAILED) {
     return (
-      <div className="flex flex-col gap-2 p-4 rounded-lg bg-status-error/10 border border-status-error/30 text-status-error">
+      <div className="flex flex-col gap-2 p-4 rounded-lg bg-danger/10 border border-danger/30 text-danger">
         <div className="flex items-center gap-1.5 font-semibold text-sm">
-          <Icon name="alertCircle" className="h-4 w-4 text-status-error" />
+          <Icon name="alertCircle" className="h-4 w-4 text-danger" />
           <span>{t.playground.taskFailed}</span>
         </div>
         <p className="text-xs font-mono whitespace-pre-wrap leading-relaxed">
@@ -67,8 +67,8 @@ function JobResultDisplay({ job, jobId }: Readonly<JobResultDisplayProps>) {
     const resultObj = job.result;
     if (!resultObj) {
       return (
-        <div className="flex items-center gap-2 text-text-muted py-2">
-          <Icon name="checkCircle" className="h-4 w-4 text-status-success" />
+        <div className="flex items-center gap-2 text-fg-muted py-2">
+          <Icon name="checkCircle" className="h-4 w-4 text-success" />
           <span>{t.playground.taskCompletedNoOutput}</span>
         </div>
       );
@@ -89,7 +89,7 @@ export function ResultDisplay({ payload }: Readonly<ResultDisplayProps>) {
     const job = jobs.find((j) => j.id === jobId);
     if (!job) {
       return (
-        <div className="flex items-center gap-2 text-text-muted py-2">
+        <div className="flex items-center gap-2 text-fg-muted py-2">
           <Icon name="loader" className="h-4 w-4 animate-spin text-accent" />
           <span>{t.playground.taskQueued.replace("{jobId}", jobId)}</span>
         </div>
@@ -124,16 +124,16 @@ function ResultDisplayInner({ payload }: Readonly<ResultDisplayProps>) {
       return (
         <div className="flex flex-col gap-2 mt-2">
           <div className="flex items-center gap-2">
-            <span className="text-xs font-semibold px-2 py-0.5 rounded bg-status-warning/10 text-status-warning border border-status-warning/20">
+            <span className="text-xs font-semibold px-2 py-0.5 rounded bg-warning/10 text-warning border border-warning/20">
               {t.playground.keyframesExtracted}{" "}
               {(p.keyframeCount as number) ?? 0}
             </span>
           </div>
-          <div className="rounded-lg bg-surface-1 dark:bg-surface-0/40 p-4 border border-border-subtle text-sm">
-            <span className="text-xs font-semibold text-text-secondary uppercase tracking-widest block mb-2">
+          <div className="rounded-lg bg-surface-0/40 p-4 border border-border-subtle text-sm">
+            <span className="text-xs font-semibold text-fg-secondary uppercase tracking-widest block mb-2">
               {t.playground.transcript}
             </span>
-            <p className="text-text-secondary leading-relaxed italic">
+            <p className="text-fg-secondary leading-relaxed italic">
               {(p.transcript as string) || t.playground.noDialogueDetected}
             </p>
           </div>
@@ -144,7 +144,7 @@ function ResultDisplayInner({ payload }: Readonly<ResultDisplayProps>) {
 
   if ((content || analysis) && !rawUrl) {
     return (
-      <pre className="mt-2 overflow-x-auto rounded bg-surface-0 p-4 font-mono text-xs text-text-primary whitespace-pre-wrap break-all">
+      <pre className="mt-2 overflow-x-auto rounded bg-surface-0 p-4 font-mono text-xs text-fg whitespace-pre-wrap break-all">
         {content || analysis}
       </pre>
     );
@@ -152,7 +152,7 @@ function ResultDisplayInner({ payload }: Readonly<ResultDisplayProps>) {
 
   if (!rawUrl) {
     return (
-      <p className="text-text-muted dark:text-text-secondary text-sm">
+      <p className="text-fg-secondary text-sm">
         {t.playground.noAssetOutput}
       </p>
     );
@@ -160,7 +160,7 @@ function ResultDisplayInner({ payload }: Readonly<ResultDisplayProps>) {
 
   if (isVideo(format, rawUrl)) {
     return (
-      <div className="mt-4 flex flex-col items-center justify-center rounded-lg border border-border-subtle bg-surface-1/50 dark:bg-surface-0/20 p-4">
+      <div className="mt-4 flex flex-col items-center justify-center rounded-lg border border-border-subtle bg-surface-0/20 p-4">
         <video
           src={absoluteUrl}
           controls
@@ -168,11 +168,11 @@ function ResultDisplayInner({ payload }: Readonly<ResultDisplayProps>) {
           muted
           playsInline
           loop
-          className="max-h-[512px] w-full max-w-[512px] rounded-md bg-black shadow-md"
+          className="max-h-[512px] w-full max-w-[512px] rounded-md bg-media shadow-md"
         >
           <track kind="captions" />
         </video>
-        <span className="mt-2 text-xs text-text-muted dark:text-text-secondary font-semibold uppercase tracking-wider">
+        <span className="mt-2 text-xs text-fg-secondary font-semibold uppercase tracking-wider">
           {t.playground.localCPlusPlusInference}
         </span>
       </div>
@@ -181,7 +181,7 @@ function ResultDisplayInner({ payload }: Readonly<ResultDisplayProps>) {
 
   if (isAudio(format, rawUrl)) {
     return (
-      <div className="mt-4 flex flex-col items-center justify-center rounded-xl border border-border-subtle/80 bg-surface-1/40 dark:bg-surface-1/10 p-6 shadow-sm backdrop-blur-sm transition-all duration-300">
+      <div className="mt-4 flex flex-col items-center justify-center rounded-xl border border-border-subtle/80 bg-surface-1/10 p-6 shadow-sm backdrop-blur-sm transition-all duration-300">
         <audio
           src={absoluteUrl}
           controls
@@ -190,7 +190,7 @@ function ResultDisplayInner({ payload }: Readonly<ResultDisplayProps>) {
         >
           <track kind="captions" />
         </audio>
-        <span className="mt-3 text-[10px] text-text-secondary dark:text-text-muted font-semibold uppercase tracking-widest">
+        <span className="mt-3 text-fg-muted text-fg-secondary font-semibold uppercase tracking-widest">
           {t.playground.localAudioGeneration}
         </span>
       </div>
@@ -199,7 +199,7 @@ function ResultDisplayInner({ payload }: Readonly<ResultDisplayProps>) {
 
   if (isImage(format, rawUrl)) {
     return (
-      <div className="mt-4 flex flex-col items-center justify-center rounded-lg border border-border-subtle bg-surface-1/50 dark:bg-surface-0/20 p-4">
+      <div className="mt-4 flex flex-col items-center justify-center rounded-lg border border-border-subtle bg-surface-0/20 p-4">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src={absoluteUrl}
@@ -207,7 +207,7 @@ function ResultDisplayInner({ payload }: Readonly<ResultDisplayProps>) {
           className="max-h-[512px] w-full max-w-[512px] rounded-md object-contain shadow-md transition-all duration-300"
           loading="lazy"
         />
-        <span className="mt-2 text-xs text-text-muted dark:text-text-secondary font-semibold uppercase tracking-wider">
+        <span className="mt-2 text-xs text-fg-secondary font-semibold uppercase tracking-wider">
           {t.playground.localImageGeneration}
         </span>
       </div>
@@ -215,7 +215,7 @@ function ResultDisplayInner({ payload }: Readonly<ResultDisplayProps>) {
   }
 
   return (
-    <pre className="mt-2 overflow-x-auto rounded bg-surface-0 p-4 font-mono text-xs text-text-primary whitespace-pre-wrap break-all">
+    <pre className="mt-2 overflow-x-auto rounded bg-surface-0 p-4 font-mono text-xs text-fg whitespace-pre-wrap break-all">
       {rawUrl}
     </pre>
   );

@@ -4,6 +4,8 @@ import * as React from "react";
 import { Icon } from "@krizaka/orazaka-design-system";
 import type { IconName } from "@krizaka/orazaka-design-system";
 
+import { cn } from "@krizaka/ui/cn";
+
 /* ─── Copyable Field Component ─── */
 export function CopyableField({
   label,
@@ -26,28 +28,26 @@ export function CopyableField({
 
   return (
     <article className="group space-y-1.5">
-      <p className="flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-wider text-[var(--text-muted)]">
+      <p className="flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-wider text-fg-muted">
         <Icon name={icon} className="h-3 w-3" />
         {label}
       </p>
       <section className="flex items-center gap-2">
         <p
-          className={`flex-1 text-sm text-[var(--text-primary)] ${
-            isMono
-              ? "select-all break-all rounded-lg border border-[var(--border-subtle)] bg-[var(--surface-2)] p-2.5 font-mono"
-              : "font-medium"
-          }`}
+          className={cn("flex-1 text-sm text-fg", isMono
+            ? "select-all break-all rounded-lg border border-border-subtle bg-surface-2 p-2.5 font-mono"
+            : "font-medium")}
         >
           {value}
         </p>
         <button
           type="button"
           onClick={handleCopy}
-          className="rounded-lg p-1.5 text-[var(--text-muted)] opacity-0 transition-all duration-150 hover:bg-[var(--surface-2)] hover:text-[var(--text-primary)] group-hover:opacity-100 focus:opacity-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)]"
+          className="rounded-lg p-1.5 text-fg-muted opacity-0 transition-all duration-150 hover:bg-surface-2 hover:text-fg group-hover:opacity-100 focus:opacity-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-ring"
           aria-label="Copy"
         >
           {copied ? (
-            <Icon name="check" className="h-3.5 w-3.5 text-[var(--status-success)]" />
+            <Icon name="check" className="h-3.5 w-3.5 text-success" />
           ) : (
             <Icon name="copy" className="h-3.5 w-3.5" />
           )}

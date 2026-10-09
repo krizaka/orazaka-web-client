@@ -3,6 +3,8 @@ import { Icon, type IconName } from "@krizaka/orazaka-design-system";
 import type { ComposerStudio } from "@krizaka/orazaka-shared";
 import type { TranslationDictionary } from "@/core/context/LocaleContext";
 
+import { cn } from "@krizaka/ui/cn";
+
 interface Props {
   isOpen: boolean;
   onClose: () => void;
@@ -78,7 +80,7 @@ export const ContextPlusMenu: React.FC<Props> = ({
     if (group.length === 0) return null;
     return (
       <div className="flex flex-col gap-0.5">
-        <div className="px-2.5 pb-1 pt-1.5 text-[10px] font-semibold uppercase tracking-wider text-[var(--text-muted)]">
+        <div className="px-2.5 pb-1 pt-1.5 text-[10px] font-semibold uppercase tracking-wider text-fg-muted">
           {label}
         </div>
         {group.map((studio) => {
@@ -95,18 +97,19 @@ export const ContextPlusMenu: React.FC<Props> = ({
                 onExecuteNode(studio);
                 onClose();
               }}
-              className={`flex w-full items-center gap-3 rounded-lg px-2.5 py-2 text-left text-sm font-medium transition-colors duration-150 focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] ${
+              className={cn(
+                "flex w-full items-center gap-3 rounded-lg px-2.5 py-2 text-left text-sm font-medium transition-colors duration-150 focus:outline-none focus-visible:ring-2 focus-visible:ring-ring",
                 unavailable
-                  ? "cursor-not-allowed opacity-40 text-[var(--text-muted)]"
-                  : "cursor-pointer text-[var(--text-secondary)] hover:bg-[var(--surface-2)] hover:text-[var(--text-primary)]"
-              }`}
+                  ? "cursor-not-allowed opacity-40 text-fg-muted"
+                  : "cursor-pointer text-fg-secondary hover:bg-surface-2 hover:text-fg"
+              )}
             >
-              <span className="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-lg bg-[var(--accent-soft)] text-[var(--accent)]">
+              <span className="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-lg bg-accent-soft text-accent">
                 <Icon name={studioIcon(studio.iconKey)} size={15} />
               </span>
               <span className="flex-1">{studio.label}</span>
               {unavailable && (
-                <span className="text-[10px] font-semibold uppercase tracking-wide text-[var(--text-muted)]">
+                <span className="text-[10px] font-semibold uppercase tracking-wide text-fg-muted">
                   {t.operationGraph.stateLocked}
                 </span>
               )}
@@ -121,10 +124,10 @@ export const ContextPlusMenu: React.FC<Props> = ({
     <div
       ref={menuRef}
       role="menu"
-      className="absolute bottom-16 left-4 z-40 flex w-72 flex-col gap-1 rounded-2xl border border-[var(--border-default)] bg-[color-mix(in_srgb,var(--surface-1)_94%,transparent)] p-2 shadow-xl backdrop-blur-xl animate-in slide-in-from-bottom-2 fade-in duration-200"
+      className="absolute bottom-16 left-4 z-40 flex w-72 flex-col gap-1 rounded-2xl border border-border-default bg-surface-1/94 p-2 shadow-xl backdrop-blur-xl animate-in slide-in-from-bottom-2 fade-in duration-200"
     >
       {studios.length === 0 ? (
-        <div className="px-3 py-3 text-xs italic text-[var(--text-muted)]">
+        <div className="px-3 py-3 text-xs italic text-fg-muted">
           {t.chat.noActiveConversation}
         </div>
       ) : (

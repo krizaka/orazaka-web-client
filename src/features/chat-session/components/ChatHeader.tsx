@@ -49,12 +49,12 @@ export function ChatHeader({
   };
 
   return (
-    <header className="p-4 border-b border-[var(--border-subtle)] bg-[var(--surface-1)] flex items-center justify-between">
+    <header className="p-4 border-b border-border-subtle bg-surface-1 flex items-center justify-between">
       <div className="flex items-center gap-3 w-full">
         <button
           type="button"
           onClick={onOpenDrawer}
-          className="p-2 rounded-lg md:hidden border border-[var(--border-default)] transition-colors"
+          className="p-2 rounded-lg md:hidden border border-border-default transition-colors"
         >
           <svg
             className="w-5 h-5"
@@ -81,18 +81,18 @@ export function ChatHeader({
                 onBlur={handleSave}
                 onKeyDown={handleKeyDown}
                 autoFocus
-                className="text-sm font-semibold text-[var(--text-primary)] bg-[var(--surface-2)] border border-[var(--border-default)] rounded px-2 py-0.5 focus:outline-none focus:ring-1 focus:ring-[var(--accent)] max-w-md w-full"
+                className="text-sm font-semibold text-fg bg-surface-2 border border-border-default rounded px-2 py-0.5 focus:outline-none focus:ring-1 focus:ring-ring max-w-md w-full"
               />
             ) : (
               <>
-                <h1 className="text-sm font-semibold text-[var(--text-primary)] truncate">
+                <h1 className="text-sm font-semibold text-fg truncate">
                   {threadTitle || t.chat.sessionTitle}
                 </h1>
                 <button
                   type="button"
                   id="btn-edit-session-title"
                   onClick={() => setIsEditing(true)}
-                  className="p-1 text-[var(--text-muted)] hover:text-[var(--text-primary)] transition-colors"
+                  className="p-1 text-fg-muted hover:text-fg transition-colors"
                   title="Rename Session"
                 >
                   <svg
@@ -112,7 +112,7 @@ export function ChatHeader({
               </>
             )}
           </section>
-          <span className="text-xs text-[var(--text-muted)] mt-0.5 font-mono">
+          <span className="text-xs text-fg-muted mt-0.5 font-mono">
             {t.chat.id}: {activeConversationId}
           </span>
         </section>

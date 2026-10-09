@@ -33,16 +33,16 @@ export function StudioLockNotice({ reason, packKey }: Readonly<StudioLockNoticeP
   };
 
   return (
-    <div className="flex flex-col gap-2 p-3 border border-[var(--status-warning)]/40 bg-[var(--status-warning)]/8">
-      <p className="flex items-center gap-1.5 text-[12px] text-[var(--text-primary)]">
-        <Icon name="shield" size={14} className="flex-shrink-0 text-[var(--status-warning)]" />
+    <div className="flex flex-col gap-2 p-3 border border-warning/40 bg-warning/8">
+      <p className="flex items-center gap-1.5 text-[12px] text-fg">
+        <Icon name="shield" size={14} className="flex-shrink-0 text-warning" />
         {copy[reason]}
       </p>
 
       {reason === "REQUIRES_PURCHASE" && packKey && (
         <Link
           href={`/packs?pack=${encodeURIComponent(packKey)}`}
-          className="self-start h-8 px-3 inline-flex items-center text-[12px] font-medium border border-[var(--accent)] text-[var(--accent)] hover:bg-[var(--surface-2)] transition-colors duration-150"
+          className="self-start h-8 px-3 inline-flex items-center text-[12px] font-medium border border-accent text-accent hover:bg-surface-2 transition-colors duration-150"
         >
           {t.studio.buyPackage}
         </Link>
@@ -51,7 +51,7 @@ export function StudioLockNotice({ reason, packKey }: Readonly<StudioLockNoticeP
       {reason === "REQUIRES_PLAN" && (
         <Link
           href="/billing"
-          className="self-start h-8 px-3 inline-flex items-center text-[12px] font-medium border border-[var(--accent)] text-[var(--accent)] hover:bg-[var(--surface-2)] transition-colors duration-150"
+          className="self-start h-8 px-3 inline-flex items-center text-[12px] font-medium border border-accent text-accent hover:bg-surface-2 transition-colors duration-150"
         >
           {t.studio.upgradePlan}
         </Link>

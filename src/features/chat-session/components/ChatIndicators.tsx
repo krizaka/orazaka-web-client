@@ -5,6 +5,8 @@ import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { Icon } from "@krizaka/orazaka-design-system";
 import type { TranslationDictionary } from "@/core/context/LocaleContext";
 
+import { cn } from "@krizaka/ui/cn";
+
 interface ChatIndicatorProps {
   attachment: { assetId: string; name: string } | null;
   isUploadingAttachment: boolean;
@@ -35,7 +37,10 @@ const ClearButton: React.FC<{ onClick: () => void; className: string; label: str
     type="button"
     onClick={onClick}
     whileTap={{ scale: 0.85 }}
-    className={`flex h-4 w-4 items-center justify-center rounded-full transition-colors ${className}`}
+    className={cn(
+      "flex h-4 w-4 items-center justify-center rounded-full transition-colors",
+      className
+    )}
     aria-label={label}
   >
     <Icon name="close" size={12} />
@@ -59,21 +64,21 @@ export const ChatIndicators: React.FC<ChatIndicatorProps> = ({
   if (!hasContent) return null;
 
   return (
-    <section className="flex flex-wrap items-center gap-2 px-1 border-b border-[var(--border-subtle)] pb-2 mb-1">
+    <section className="flex flex-wrap items-center gap-2 px-1 border-b border-border-subtle pb-2 mb-1">
       <AnimatePresence mode="popLayout" initial={false}>
         {attachment && (
           <motion.article
             key="attachment"
             layout
             {...chip}
-            className={`${CHIP_BASE} bg-status-success/10 text-status-success border-status-success/20`}
+            className={cn(CHIP_BASE, "bg-success/10 text-success border-success/20")}
           >
             <Icon name="attach" size={14} />
             <span className="max-w-[180px] truncate">{attachment.name}</span>
             <ClearButton
               onClick={onClearAttachment}
               label={t.chat.clear}
-              className="hover:bg-status-success/20"
+              className="hover:bg-success/20"
             />
           </motion.article>
         )}
@@ -82,7 +87,7 @@ export const ChatIndicators: React.FC<ChatIndicatorProps> = ({
             key="uploading"
             layout
             {...chip}
-            className="text-xs text-[var(--text-muted)] px-1"
+            className="text-xs text-fg-muted px-1"
           >
             {t.chat.uploadingFile}
           </motion.span>

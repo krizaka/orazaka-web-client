@@ -1,41 +1,95 @@
-/* eslint-disable no-restricted-syntax */
 "use client";
 
 import * as React from "react";
-import type { Theme } from "@/core/providers/ThemeProvider";
+import { cn } from "@krizaka/ui/cn";
+import type { Appearance } from "@/core/hooks/useAppearance";
+
+/**
+ * How a preview reads its tokens. A theme the kit can scope (`.theme-dark`, `.theme-<name>` — design system 2.1)
+ * is drawn with the roles inside its island, so the preview shows the real overridden tokens. Light has no island
+ * yet (@krizaka/tokens declares it on `html.light` only): it is drawn with the invariant tokens, and "system" is
+ * half light, half dark.
+ */
+export type PreviewIsland = { kind: "island"; className: string } | { kind: "light" } | { kind: "system" };
+
+export function previewIsland(value: Appearance): PreviewIsland {
+  if (value === "light") return { kind: "light" };
+  if (value === "system") return { kind: "system" };
+  return { kind: "island", className: value === "dark" ? "theme-dark" : `theme-${value}` };
+}
 
 interface ThemePreviewCardProps {
-  value: Theme;
+  value: Appearance;
   label: string;
   desc: string;
   icon: React.ReactNode;
-  preview: {
-    sidebar: string;
-    header: string;
-    body: string;
-    accent: string;
-    text: string;
-  };
   isActive: boolean;
   onClick: () => void;
-  index: number;
   clickToApplyLabel: string;
 }
 
+/** A miniature of the app (sidebar, header, text, an accent button) written with roles only. */
+function MiniApp({ light = false, className }: Readonly<{ light?: boolean; className?: string }>) {
+  const surface = light ? "bg-fg-on-media" : "bg-surface-0";
+  const panel = light ? "bg-fg-on-media/90" : "bg-surface-1";
+  const line = light ? "bg-scrim/25" : "bg-fg-muted";
+  const edge = light ? "border-scrim/10" : "border-border-subtle";
+  return (
+    <span aria-hidden className={cn("absolute inset-0 block rounded-none", surface, className)}>
+      <span className={cn("absolute bottom-0 left-0 top-0 block w-[22px] border-r", panel, edge)}>
+        <span className="flex flex-col gap-1.5 px-1 pt-3">
+          <span className="block h-2.5 w-2.5 rounded-sm bg-accent/60" />
+          <span className={cn("block h-1 w-2.5 rounded-full opacity-60", line)} />
+          <span className={cn("block h-1 w-2.5 rounded-full opacity-40", line)} />
+        </span>
+      </span>
+      <span className={cn("absolute left-[22px] right-0 top-0 block h-[14px] border-b", panel, edge)}>
+        <span className={cn("absolute left-2 top-1/2 block h-1 w-5 -translate-y-1/2 rounded-full opacity-50", line)} />
+      </span>
+      <span className="absolute bottom-0 left-[22px] right-0 top-[14px] flex flex-col gap-[5px] p-2">
+        <span className={cn("block h-[5px] w-[65%] rounded-full opacity-60", line)} />
+        <span className={cn("block h-[5px] w-[45%] rounded-full opacity-45", line)} />
+        <span className={cn("block h-[5px] w-[55%] rounded-full opacity-50", line)} />
+        <span className="mt-auto flex items-center gap-1.5">
+          <span className="block h-[7px] w-[28px] rounded-sm bg-accent" />
+          <span className={cn("block h-[5px] w-[18px] rounded-full opacity-30", line)} />
+        </span>
+      </span>
+    </span>
+  );
+}
+
+function Preview({ value }: Readonly<{ value: Appearance }>) {
+  const island = previewIsland(value);
+  if (island.kind === "island") {
+    return (
+      <span data-island={island.className} className={cn("absolute inset-0 block", island.className)}>
+        <MiniApp />
+      </span>
+    );
+  }
+  if (island.kind === "light") return <MiniApp light />;
+  return (
+    <>
+      <MiniApp light />
+      <span data-island="theme-dark" className="theme-dark absolute inset-0 block [clip-path:polygon(55%_0,100%_0,100%_100%,45%_100%)]">
+        <MiniApp />
+      </span>
+    </>
+  );
+}
+
 /**
- * Individual theme preview card with mini app layout preview,
- * animated gradient border on active state, selection pulse,
- * and hover interaction guidance.
+ * Individual theme preview card: a miniature of the app drawn in the theme it offers (its tokens, read through the
+ * kit's islands), an animated gradient border on the active one, a selection pulse and hover guidance.
  */
 export function ThemePreviewCard({
   value,
   label,
   desc,
   icon,
-  preview,
   isActive,
   onClick,
-  index,
   clickToApplyLabel,
 }: Readonly<ThemePreviewCardProps>) {
   const [justSelected, setJustSelected] = React.useState(false);
@@ -49,112 +103,44 @@ export function ThemePreviewCard({
 
   return (
     <button
-      key={value}
       type="button"
       id={`theme-card-${value}`}
+      aria-pressed={isActive}
       onClick={handleClick}
-      style={{ animationDelay: `${index * 50}ms` }}
-      className={[
-        "group relative flex flex-col rounded-xl overflow-hidden text-left",
-        "transition-all duration-250 ease-out cursor-pointer",
-        "focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2",
+      className={cn(
+        "group relative flex cursor-pointer flex-col overflow-hidden rounded-xl text-left",
+        "duration-250 transition-all ease-out",
+        "focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
         "animation-fade-up",
-        justSelected ? "theme-card-pulse" : "",
+        justSelected && "theme-card-pulse",
         isActive
           ? "theme-card-active border border-transparent shadow-lg"
-          : "border border-card-border hover:border-border-subtle dark:hover:border-border-subtle hover:shadow-md opacity-70 hover:opacity-100",
-      ].join(" ")}
+          : "border border-border-subtle opacity-70 hover:border-border-default hover:opacity-100 hover:shadow-md",
+      )}
     >
-      {/* ── Mini Preview Window ─────────────────────── */}
-      <figure className="relative h-[80px] overflow-hidden bg-surface-3 dark:bg-surface-2">
-        {/* Sidebar */}
-        <aside
-          className={`absolute left-0 top-0 bottom-0 w-[22px] ${preview.sidebar} border-r border-black/5`}
-        >
-          <nav className="flex flex-col gap-1.5 pt-3 px-1">
-            <span className="w-2.5 h-2.5 rounded-sm bg-white/20 block" />
-            <span className="w-2.5 h-1 rounded-full bg-white/15 block" />
-            <span className="w-2.5 h-1 rounded-full bg-white/10 block" />
-            <span className="w-2.5 h-1 rounded-full bg-white/10 block" />
-          </nav>
-        </aside>
-        {/* Header */}
-        <header
-          className={`absolute left-[22px] top-0 right-0 h-[14px] ${preview.header} border-b border-black/5`}
-        >
-          <nav className="flex items-center justify-between h-full px-2">
-            <span
-              className={`w-5 h-1 rounded-full ${preview.text} opacity-50 block`}
-            />
-            <span className="flex gap-1">
-              <span className="w-1.5 h-1.5 rounded-full bg-white/15 block" />
-              <span className="w-1.5 h-1.5 rounded-full bg-white/15 block" />
-            </span>
-          </nav>
-        </header>
-        {/* Body */}
-        <main
-          className={`absolute left-[22px] top-[14px] right-0 bottom-0 ${preview.body} p-2 flex flex-col gap-[5px]`}
-        >
-          <span
-            className={`h-[5px] w-[65%] rounded-full ${preview.text} opacity-50 block`}
-          />
-          <span
-            className={`h-[5px] w-[45%] rounded-full ${preview.text} opacity-35 block`}
-          />
-          <span
-            className={`h-[5px] w-[55%] rounded-full ${preview.text} opacity-40 block`}
-          />
-          {/* Accent button */}
-          <footer className="mt-auto flex gap-1.5 items-center">
-            <span
-              className={`h-[7px] w-[28px] rounded-sm ${preview.accent} opacity-90 block`}
-            />
-            <span
-              className={`h-[5px] w-[18px] rounded-full ${preview.text} opacity-25 block`}
-            />
-          </footer>
-        </main>
-        {/* Active checkmark */}
+      <figure className="relative h-[80px] overflow-hidden bg-surface-2">
+        <Preview value={value} />
         {isActive && (
-          <mark className="absolute top-1 right-1 w-[18px] h-[18px] rounded-full bg-status-success flex items-center justify-center shadow-md theme-check-pop">
-            <svg
-              className="w-2.5 h-2.5 text-white"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth={3}
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M4.5 12.75l6 6 9-13.5"
-              />
+          <mark className="theme-check-pop absolute right-1 top-1 flex h-[18px] w-[18px] items-center justify-center rounded-full bg-success shadow-md">
+            <svg className="h-2.5 w-2.5 text-on-accent" fill="none" viewBox="0 0 24 24" strokeWidth={3} stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
             </svg>
           </mark>
         )}
-        {/* Hover overlay */}
         {!isActive && (
-          <figcaption className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-200 flex items-center justify-center">
-            <span className="text-[10px] font-medium text-white opacity-0 group-hover:opacity-100 transition-opacity duration-200 bg-black/50 px-2 py-0.5 rounded-full backdrop-blur-sm">
+          <figcaption className="absolute inset-0 flex items-center justify-center bg-transparent transition-colors duration-200 group-hover:bg-scrim/30">
+            <span className="rounded-full bg-scrim px-2 py-0.5 text-[10px] font-medium text-fg-on-media opacity-0 backdrop-blur-sm transition-opacity duration-200 group-hover:opacity-100">
               {clickToApplyLabel}
             </span>
           </figcaption>
         )}
       </figure>
 
-      {/* ── Label row ──────────────────────────────── */}
-      <footer className="flex items-center gap-1.5 px-3 pt-2.5 pb-0.5 bg-card-bg">
-        <span className="text-foreground/60 group-hover:text-foreground/90 transition-colors">
-          {icon}
-        </span>
-        <span className="text-[11px] font-semibold text-foreground tracking-wide truncate">
-          {label}
-        </span>
+      <footer className="flex items-center gap-1.5 bg-surface-1 px-3 pb-0.5 pt-2.5">
+        <span className="text-fg/60 transition-colors group-hover:text-fg/90">{icon}</span>
+        <span className="truncate text-[11px] font-semibold tracking-wide text-fg">{label}</span>
       </footer>
-      <span className="text-[10px] text-foreground/40 px-3 pb-2.5 leading-tight bg-card-bg">
-        {desc}
-      </span>
+      <span className="bg-surface-1 px-3 pb-2.5 text-[10px] leading-tight text-fg-muted">{desc}</span>
     </button>
   );
 }
