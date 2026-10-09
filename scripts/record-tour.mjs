@@ -165,7 +165,7 @@ async function record(id, state) {
     execFileSync("ffprobe", ["-v", "error", "-show_entries", "format=duration", "-of", "default=nw=1:nk=1", `${target}.mp4`]).toString(),
   );
   execFileSync("ffmpeg", ["-y", "-loglevel", "error", "-ss", (duration * 0.7).toFixed(2), "-i", `${target}.mp4`, "-frames:v", "1", "-q:v", "4", `${target}.jpg`]);
-  console.log(`✓ ${id}  ${duration.toFixed(1)} s → ${path.relative(process.cwd(), target)}.{webm,mp4,jpg}`);
+  process.stdout.write(`✓ ${id}  ${duration.toFixed(1)} s → ${path.relative(process.cwd(), target)}.{webm,mp4,jpg}` + "\n");
 }
 
 try {
