@@ -41,6 +41,9 @@ function loadRootEnv(): void {
 loadRootEnv();
 
 const nextConfig: NextConfig = {
+  // `next dev` would otherwise append its own block to AGENTS.md on every start; this repository's
+  // AGENTS.md only scopes the workspace contract and must not drift (AGENTS.md §13).
+  agentRules: false,
   // @krizaka/ui: the primitives the design system re-exports since 2.0 (ES modules) — listed so next/jest
   // transforms them like the design system itself.
   transpilePackages: ["@krizaka/orazaka-design-system", "@krizaka/orazaka-shared", "@krizaka/ui"],

@@ -16,6 +16,7 @@ jest.mock("@/core/context/LocaleContext", () => ({
         legalContact: "Contact",
         langSwitchLabel: "Language",
       },
+      landing: { footer: { license: "Open source · Apache-2.0", by: "A Krizaka product" } },
     },
     locale: "en",
     setLocale: jest.fn(),
@@ -52,8 +53,8 @@ describe("AuthLayout", () => {
 
   it("renders copyright and link", () => {
     render(<AuthLayout><div>form</div></AuthLayout>);
-    expect(screen.getByText(/Orazaka · MIT License - by/)).toBeInTheDocument();
-    const link = screen.getByRole("link", { name: "krizaka" });
+    expect(screen.getByText(/Orazaka · Open source · Apache-2.0/)).toBeInTheDocument();
+    const link = screen.getByRole("link", { name: "A Krizaka product" });
     expect(link).toBeInTheDocument();
     expect(link).toHaveAttribute("href", "https://www.krizaka.com/");
   });

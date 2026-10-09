@@ -3,6 +3,8 @@
  * @description Shared type definitions for the internationalization dictionary.
  */
 
+import type { LandingDictionary } from "./translations.landing.types";
+
 export type Locale = "en" | "fr";
 
 export interface TranslationDictionary {
@@ -54,6 +56,14 @@ export interface TranslationDictionary {
   dashboard: {
     welcome: string;
     overview: string;
+    /** Status chip beside the greeting — the shared sovereignty motif. */
+    sovereignBadge: string;
+    conversations: string;
+    conversationsDesc: string;
+    credits: string;
+    creditsDesc: string;
+    studiosInstalled: string;
+    studiosInstalledDesc: string;
     activeSessions: string;
     tokensUsed: string;
     memoryNodes: string;
@@ -713,4 +723,6 @@ export interface TranslationDictionary {
     includedSubtitle: string;
     included: string;
   };
+  /** The public home page (visitors without a session). */
+  landing: LandingDictionary;
 }

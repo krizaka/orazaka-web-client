@@ -4,6 +4,7 @@
  */
 
 import { type Locale, type TranslationDictionary } from "./translations.types";
+import { landing } from "./translations.landing";
 import { THEME_MODE } from "@/core/constants/http.constants";
 export type { Locale, TranslationDictionary };
 
@@ -56,6 +57,13 @@ export const translations: Record<Locale, TranslationDictionary> = {
     dashboard: {
       welcome: "Welcome back",
       overview: "Here's a quick overview of your Orazaka workspace.",
+      sovereignBadge: "Local · sovereign",
+      conversations: "Conversations",
+      conversationsDesc: "Threads kept on your server",
+      credits: "Credits available",
+      creditsDesc: "Spent only when you run something",
+      studiosInstalled: "Studios installed",
+      studiosInstalledDesc: "Workflows ready to run",
       activeSessions: "Active Sessions",
       tokensUsed: "Tokens Used",
       memoryNodes: "Memory Nodes",
@@ -760,6 +768,7 @@ export const translations: Record<Locale, TranslationDictionary> = {
       includedSubtitle: "Capabilities your plan already gives you. There is nothing to install — open a Studio and run it.",
       included: "Included",
     },
+    landing: landing.en,
   },
   fr: {
     sidebar: {
@@ -807,6 +816,13 @@ export const translations: Record<Locale, TranslationDictionary> = {
     dashboard: {
       welcome: "Bon retour",
       overview: "Voici un aperçu rapide de votre espace de travail Orazaka.",
+      sovereignBadge: "Local · souverain",
+      conversations: "Conversations",
+      conversationsDesc: "Fils conservés sur votre serveur",
+      credits: "Crédits disponibles",
+      creditsDesc: "Dépensés seulement quand vous lancez quelque chose",
+      studiosInstalled: "Studios installés",
+      studiosInstalledDesc: "Parcours prêts à lancer",
       activeSessions: "Sessions actives",
       tokensUsed: "Jetons utilisés",
       memoryNodes: "Nœuds de mémoire",
@@ -1526,5 +1542,6 @@ export const translations: Record<Locale, TranslationDictionary> = {
       includedSubtitle: "Des capacités que votre offre vous donne déjà. Rien à installer — ouvrez un Studio et lancez-le.",
       included: "Inclus",
     },
+    landing: landing.fr,
   },
 };

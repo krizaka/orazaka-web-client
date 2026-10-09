@@ -97,14 +97,14 @@ export function AuthLayout({ children }: Readonly<AuthLayoutProps>) {
         </div>
 
         <p className="login-hero-footer">
-          © {new Date().getFullYear()} Orazaka · MIT License - by{" "}
+          © {new Date().getFullYear()} Orazaka · {t.landing.footer.license} ·{" "}
           <a
             href="https://www.krizaka.com/"
             target="_blank"
             rel="noopener noreferrer"
             className="hover:text-accent transition-colors duration-150 underline underline-offset-2"
           >
-            krizaka
+            {t.landing.footer.by}
           </a>
         </p>
       </section>

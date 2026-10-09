@@ -48,8 +48,9 @@ const krizakaMono = JetBrains_Mono({
  * Application global metadata configurations.
  */
 export const metadata: Metadata = {
-  title: "Orazaka UI",
-  description: "Advanced AI Coding Interface",
+  title: "Orazaka — the AI that never leaves home",
+  description:
+    "Sovereign AI workspace by Krizaka: chat, documents, images, video and agents running on your own machines.",
   icons: {
     icon: [{ url: "/favicon.svg", type: "image/svg+xml" }],
     shortcut: "/favicon.svg",
