@@ -39,3 +39,6 @@ next-env.d.ts
 *.log
 var/
 scratch/
+
+# product tour output (scripts/record-tour.mjs) — published in krizaka-com, not here
+/tour/

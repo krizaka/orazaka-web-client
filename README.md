@@ -67,6 +67,19 @@ Requirements: Node.js 22+.
   the Orazaka identity (Electric Blue, the named themes) from `@krizaka/orazaka-design-system/theme.css`.
 - The one-shot migration that got here is `scripts/codemods/roles.mjs` (jscodeshift, tested by `npm run test:codemods`).
 
+## Product tour (krizaka.com)
+
+The clips on [krizaka.com/products/orazaka](https://www.krizaka.com/en/products/orazaka) are recorded on this
+application, never mocked: `scripts/record-tour.mjs` drives a production build with Playwright (landing → chat answered
+by the local model → Studios → Packs and Appearance) and encodes each clip with ffmpeg (1280×800, VP9 `.webm`, H.264
+`.mp4`, `.jpg` poster).
+
+```bash
+npm run build && npm run start          # with the stack up (orazaka start && orazaka dev)
+npm run record:tour                     # ORAZAKA_URL, OUT (default tour/); `-- chat` re-records one clip
+cp tour/* <krizaka-com>/public/assets/orazaka/tour/
+```
+
 ## Governance
 
 This repository follows the Orazaka governance contract — [AGENTS.md](https://github.com/krizaka/orazaka/blob/main/AGENTS.md)
