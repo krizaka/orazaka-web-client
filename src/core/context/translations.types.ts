@@ -53,9 +53,14 @@ export interface TranslationDictionary {
     themeDark: string;
     themeLight: string;
     themeSystem: string;
+    openSidebar: string;
+    changeLanguage: string;
+    closeLanguageMenu: string;
   };
   dashboard: {
     welcome: string;
+    /** Time-of-day greeting; `{name}` is the signed-in user's first name. */
+    greeting: { morning: string; afternoon: string; evening: string };
     overview: string;
     /** Status chip beside the greeting — the shared sovereignty motif. */
     sovereignBadge: string;
@@ -137,6 +142,8 @@ export interface TranslationDictionary {
     username: string;
     email: string;
     assignedAuth: string;
+    /** A role's name for people, by authority (`ROLE_USER`); an unknown authority shows as is. */
+    roles: Record<string, string>;
     noAuth: string;
     prefMetadata: string;
     prefDesc: string;
@@ -658,6 +665,8 @@ export interface TranslationDictionary {
     tabMine: string;
     tabExplore: string;
     allProfessions: string;
+    /** A profession's name by its catalogue key; a key with no name here shows as is. */
+    professions: Record<string, string>;
     emptyCatalogue: string;
     emptyInstalled: string;
     emptyInstalledCta: string;

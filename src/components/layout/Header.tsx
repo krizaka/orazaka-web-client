@@ -50,7 +50,7 @@ export const Header: React.FC = () => {
         <button
           onClick={open}
           className="mr-2 p-2 rounded-lg text-fg-muted hover:text-fg hover:bg-surface-2 transition-colors duration-150 focus:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-          aria-label="Open Sidebar"
+          aria-label={t.header.openSidebar}
         >
           <MenuIcon size={20} />
         </button>
@@ -65,7 +65,7 @@ export const Header: React.FC = () => {
               setBellOpen(false);
             }}
             className="flex items-center gap-1.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-lg px-2.5 py-1.5 text-xs font-medium text-fg-secondary hover:bg-surface-2 hover:text-fg transition-colors duration-150"
-            aria-label="Change Language"
+            aria-label={t.header.changeLanguage}
           >
             <GlobeIcon size={16} />
             <span className="uppercase">{locale}</span>
@@ -77,7 +77,7 @@ export const Header: React.FC = () => {
               <button
                 type="button"
                 className="fixed inset-0 z-10 bg-transparent border-none cursor-default"
-                aria-label="Close language menu"
+                aria-label={t.header.closeLanguageMenu}
                 onClick={() => setLangDropdownOpen(false)}
               />
               <div className={cn(dropdownPanelClass, "w-36")}>

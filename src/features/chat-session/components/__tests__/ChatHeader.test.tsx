@@ -25,9 +25,9 @@ describe("ChatHeader", () => {
     expect(screen.getByText("My Chat")).toBeInTheDocument();
   });
 
-  it("renders conversation ID", () => {
+  it("does not show the conversation's technical id", () => {
     render(<ChatHeader {...defaultProps} />);
-    expect(screen.getByText(/conv-123/)).toBeInTheDocument();
+    expect(screen.queryByText(/conv-123/)).not.toBeInTheDocument();
   });
 
   it("renders fallback title when empty", () => {

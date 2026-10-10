@@ -37,7 +37,7 @@ jest.mock("@/core/context/LocaleContext", () => ({
     setLocale: mockSetLocale,
     t: {
       settings: { english: "English", french: "French" },
-      header: { profile: "Profile", settings: "Settings", logout: "Logout", themeDark: "Dark theme", themeLight: "Light theme", themeSystem: "System theme" },
+      header: { profile: "Profile", settings: "Settings", logout: "Logout", themeDark: "Dark theme", themeLight: "Light theme", themeSystem: "System theme", openSidebar: "Open Sidebar", changeLanguage: "Change Language", closeLanguageMenu: "Close language menu" },
       notifications: {
         title: "Notifications",
         active: "active",

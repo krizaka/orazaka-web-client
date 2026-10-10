@@ -6,6 +6,7 @@ import { fr, enUS } from "date-fns/locale";
 import { useRouter } from "next/navigation";
 import { Skeleton, Icon } from "@krizaka/orazaka-design-system";
 import { useAuth } from "@/core/hooks/useAuth";
+import { Greeting } from "@/core/components/Greeting";
 import { Sidebar } from "@/components/layout/Sidebar";
 import { Header } from "@/components/layout/Header";
 import { useTenant } from "@/core/context/TenantContext";
@@ -83,12 +84,9 @@ export function DashboardHome() {
               <section className="space-y-1">
                 <h2 className="fluid-2xl font-bold tracking-tight text-fg flex items-center gap-2">
                   <Icon name={greetingIcon} className="h-6 w-6 text-accent" />
-                  {t.dashboard.welcome}
-                  {user?.name && (
-                    <>
-                      ,<span className="text-accent">{user.name}</span>
-                    </>
-                  )}
+                  <span>
+                    <Greeting />
+                  </span>
                 </h2>
                 <p className="text-fg-secondary fluid-sm">{t.dashboard.overview}</p>
               </section>

@@ -27,7 +27,7 @@ const PIPELINE_NODES: PipelineNode[] = [
   { id: "router", label: "Router", icon: "router", order: 7, status: "active", aiDep: true },
   { id: "tool", label: "Tool", icon: "tool", order: 8, status: "idle", aiDep: false },
   { id: "cost", label: "CostShield", icon: "costShield", order: 9, status: "active", aiDep: false },
-  { id: "quantum", label: "Quantum", icon: "quantum", order: 10, status: "active", aiDep: true },
+  { id: "validation", label: "Validation", icon: "quantum", order: 10, status: "active", aiDep: true },
 ];
 
 
