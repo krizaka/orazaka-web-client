@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import { cn } from "@krizaka/ui/cn";
+import { RadioGroup } from "@krizaka/ui/radio-group";
 import type { Appearance } from "@/core/hooks/useAppearance";
 
 /**
@@ -18,13 +19,14 @@ export function previewIsland(value: Appearance): PreviewIsland {
   return { kind: "island", className: value === "dark" ? "theme-dark" : `theme-${value}` };
 }
 
-interface ThemePreviewCardProps {
+interface AppearanceOptionProps {
   value: Appearance;
   label: string;
   desc: string;
   icon: React.ReactNode;
   isActive: boolean;
-  onClick: () => void;
+  /** Just chosen: a short pulse confirms the click. */
+  pulse?: boolean;
   clickToApplyLabel: string;
 }
 
@@ -80,55 +82,39 @@ function Preview({ value }: Readonly<{ value: Appearance }>) {
 }
 
 /**
- * Individual theme preview card: a miniature of the app drawn in the theme it offers (its tokens, read through the
- * kit's islands), an animated gradient border on the active one, a selection pulse and hover guidance.
+ * One appearance of the picker: a `RadioGroup.Card` from @krizaka/ui (the whole card is the radio, its words name it)
+ * holding a miniature of the app drawn in the theme it offers (its tokens, read through the kit's islands), the
+ * animated border of the chosen one and hover guidance. The group ({@link AppearancePicker}) owns the choice.
  */
-export function ThemePreviewCard({
-  value,
-  label,
-  desc,
-  icon,
-  isActive,
-  onClick,
-  clickToApplyLabel,
-}: Readonly<ThemePreviewCardProps>) {
-  const [justSelected, setJustSelected] = React.useState(false);
-
-  const handleClick = () => {
-    if (isActive) return;
-    setJustSelected(true);
-    onClick();
-    setTimeout(() => setJustSelected(false), 350);
-  };
-
+export function AppearanceOption({ value, label, desc, icon, isActive, pulse, clickToApplyLabel }: Readonly<AppearanceOptionProps>) {
   return (
-    <button
-      type="button"
+    <RadioGroup.Card
+      value={value}
       id={`theme-card-${value}`}
-      aria-pressed={isActive}
-      onClick={handleClick}
       className={cn(
-        "group relative flex cursor-pointer flex-col overflow-hidden rounded-xl text-left",
-        "duration-250 transition-all ease-out",
-        "focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
+        "group relative cursor-pointer gap-0 overflow-hidden rounded-xl p-0",
+        "duration-250 transition-all ease-out focus-visible:ring-offset-2",
         "animation-fade-up",
-        justSelected && "theme-card-pulse",
+        pulse && "theme-card-pulse",
         isActive
-          ? "theme-card-active border border-transparent shadow-lg"
-          : "border border-border-subtle opacity-70 hover:border-border-default hover:opacity-100 hover:shadow-md",
+          ? "theme-card-active border-transparent bg-surface-1 shadow-lg"
+          : "border-border-subtle opacity-70 hover:border-border-default hover:opacity-100 hover:shadow-md",
       )}
     >
-      <figure className="relative h-[80px] overflow-hidden bg-surface-2">
+      <figure className="relative h-[80px] w-full overflow-hidden bg-surface-2">
         <Preview value={value} />
         {isActive && (
           <mark className="theme-check-pop absolute right-1 top-1 flex h-[18px] w-[18px] items-center justify-center rounded-full bg-success shadow-md">
-            <svg className="h-2.5 w-2.5 text-on-accent" fill="none" viewBox="0 0 24 24" strokeWidth={3} stroke="currentColor">
+            <svg aria-hidden className="h-2.5 w-2.5 text-on-accent" fill="none" viewBox="0 0 24 24" strokeWidth={3} stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
             </svg>
           </mark>
         )}
         {!isActive && (
-          <figcaption className="absolute inset-0 flex items-center justify-center bg-transparent transition-colors duration-200 group-hover:bg-scrim/30">
+          <figcaption
+            aria-hidden
+            className="absolute inset-0 flex items-center justify-center bg-transparent transition-colors duration-200 group-hover:bg-scrim/30"
+          >
             <span className="rounded-full bg-scrim px-2 py-0.5 text-[10px] font-medium text-fg-on-media opacity-0 backdrop-blur-sm transition-opacity duration-200 group-hover:opacity-100">
               {clickToApplyLabel}
             </span>
@@ -136,11 +122,13 @@ export function ThemePreviewCard({
         )}
       </figure>
 
-      <footer className="flex items-center gap-1.5 bg-surface-1 px-3 pb-0.5 pt-2.5">
-        <span className="text-fg/60 transition-colors group-hover:text-fg/90">{icon}</span>
+      <span className="flex w-full items-center gap-1.5 bg-surface-1 px-3 pb-0.5 pt-2.5">
+        <span aria-hidden className="text-fg/60 transition-colors group-hover:text-fg/90">
+          {icon}
+        </span>
         <span className="truncate text-[11px] font-semibold tracking-wide text-fg">{label}</span>
-      </footer>
-      <span className="bg-surface-1 px-3 pb-2.5 text-[10px] leading-tight text-fg-muted">{desc}</span>
-    </button>
+      </span>
+      <span className="w-full bg-surface-1 px-3 pb-2.5 text-[10px] leading-tight text-fg-muted">{desc}</span>
+    </RadioGroup.Card>
   );
 }

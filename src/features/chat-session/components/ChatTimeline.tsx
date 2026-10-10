@@ -56,7 +56,7 @@ export const ChatTimeline: React.FC<Props> = ({
         return (
           <React.Fragment key={msg.id}>
             <ChatMessage message={msg} index={idx} />
-            {toolPayload && <ToolMetricsCard payload={toolPayload} />}
+            {toolPayload && <ToolMetricsCard payload={toolPayload} label={t.chat.toolMetrics} />}
           </React.Fragment>
         );
       })}

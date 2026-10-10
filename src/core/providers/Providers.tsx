@@ -9,7 +9,7 @@ import { TenantProvider } from "@/core/context/TenantContext";
 import { LocaleProvider } from "@/core/context/LocaleContext";
 import { JobStreamProvider } from "@/core/context/JobStreamContext";
 import { AppToaster } from "@/core/components/AppToaster";
-import { CommandPalette } from "@krizaka/orazaka-design-system";
+import { AppCommandPalette } from "@/core/components/AppCommandPalette";
 
 interface ProvidersProps {
   children: ReactNode;
@@ -33,7 +33,7 @@ export function Providers({ children }: Readonly<ProvidersProps>) {
             <TenantProvider>
               <SidebarProvider>
                 <JobStreamProvider>
-                  <CommandPalette />
+                  <AppCommandPalette />
                   {children}
                   <AppToaster />
                 </JobStreamProvider>

@@ -99,6 +99,8 @@ export interface TranslationDictionary {
     typing: string;
     loadingMessages: string;
     noActiveConversation: string;
+    /** The caption of a tool's metrics card in the conversation. */
+    toolMetrics: string;
     memoryBlocks: string;
     newBlock: string;
     ai: string;
@@ -665,6 +667,8 @@ export interface TranslationDictionary {
     tabMine: string;
     tabExplore: string;
     allProfessions: string;
+    /** The accessible name of the trade filter. */
+    filterByTrade: string;
     /** A profession's name by its catalogue key; a key with no name here shows as is. */
     professions: Record<string, string>;
     emptyCatalogue: string;
@@ -735,7 +739,67 @@ export interface TranslationDictionary {
     includedSubtitle: string;
     included: string;
   };
+  automation: AutomationDictionary;
+  /** Accessible names of icon-only controls. */
+  a11y: A11yDictionary;
+  /** The ⌘K palette: its words (the entries reuse the sidebar's). */
+  commandPalette: {
+    label: string;
+    placeholder: string;
+    results: string;
+    empty: string;
+    navigate: string;
+    open: string;
+    close: string;
+    sectionGo: string;
+    sectionAccount: string;
+  };
   /** The public home page (visitors without a session). */
   landing: LandingDictionary;
   features: FeaturesDictionary;
+}
+
+/** The automation page (connectors and the jobs awaiting approval). `{name}` is the connector's name. */
+export interface AutomationDictionary {
+  connectorsTitle: string;
+  connectorsSubtitle: string;
+  status: Record<"connected" | "disconnected" | "pending", string>;
+  connect: string;
+  disconnect: string;
+  toggle: string;
+  configure: string;
+  apiKey: string;
+  apiKeyPlaceholder: string;
+  saveCredentials: string;
+  /** One description per connector id. */
+  connectors: Record<"jira" | "whatsapp" | "messenger" | "slack" | "cli-agent", string>;
+  jobsTitle: string;
+  jobsSubtitle: string;
+  pending: string;
+  running: string;
+  payload: string;
+  approve: string;
+  revoke: string;
+  empty: string;
+  jobStatus: Record<
+    "PENDING_APPROVAL" | "APPROVED" | "RUNNING" | "COMPLETED" | "FAILED" | "AWAITING_CLI_EXECUTION",
+    string
+  >;
+}
+
+/** Accessible names of icon-only controls (a button showing only an icon still needs a name). */
+export interface A11yDictionary {
+  closeDialog: string;
+  closeDetails: string;
+  closeHistory: string;
+  help: string;
+  copy: string;
+  copyJobId: string;
+  socialLogin: string;
+  socialRegister: string;
+  productOverview: string;
+  profileSections: string;
+  scrollToBottom: string;
+  toggleReasoning: string;
+  attachFile: string;
 }

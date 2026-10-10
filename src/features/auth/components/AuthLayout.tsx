@@ -37,7 +37,7 @@ export function AuthLayout({ children }: Readonly<AuthLayoutProps>) {
       {/* ── Left: Marketing hero ───────────────────────────────────── */}
       <section
         className="login-hero gradient-mesh ambient-grid"
-        aria-label="Product overview"
+        aria-label={t.a11y.productOverview}
       >
         <div className="login-hero-content">
           <div className="login-hero-brand">

@@ -5,6 +5,7 @@ import { AuthLayout } from "@/features/auth/components/AuthLayout";
 jest.mock("@/core/context/LocaleContext", () => ({
   useTranslation: () => ({
     t: {
+      a11y: jest.requireActual("@/core/context/translations.automation").a11y.en,
       auth: {
         heroHeadline: "Welcome to Orazaka",
         heroTagline: "AI orchestration platform",

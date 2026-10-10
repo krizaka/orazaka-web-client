@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { useTranslation } from "@/core/context/LocaleContext";
 import { Icon } from "@krizaka/orazaka-design-system";
 import { MODEL_CATEGORY } from "@/core/constants/capability.constants";
 
@@ -43,6 +44,7 @@ export const CATEGORY_META: Record<string, { icon: string; color: string }> = {
 
 /* ─── Tooltip ─── */
 export function Tooltip({ text }: Readonly<{ text: string }>) {
+  const { t } = useTranslation();
   const [show, setShow] = React.useState(false);
   return (
     <span className="relative inline-flex">
@@ -53,7 +55,7 @@ export function Tooltip({ text }: Readonly<{ text: string }>) {
         onFocus={() => setShow(true)}
         onBlur={() => setShow(false)}
         className="p-0.5 text-fg-muted hover:text-fg-secondary transition-colors"
-        aria-label="Help"
+        aria-label={t.a11y.help}
       >
         <Icon name="info" className="h-3.5 w-3.5" />
       </button>

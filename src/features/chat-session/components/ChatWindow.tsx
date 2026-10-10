@@ -9,7 +9,7 @@ import { ThreadList } from "./ThreadList";
 import { ChatHeader } from "./ChatHeader";
 import { ChatDrawer } from "./ChatDrawer";
 import { ChatInputBar } from "./ChatInputBar";
-import { ChatEmptyState } from "./ChatEmptyState";
+import { WelcomeHero } from "./WelcomeHero";
 import { useTranslation } from "@/core/context/LocaleContext";
 import type { ComposerStudio } from "@krizaka/orazaka-shared";
 import { useJobStream } from "@/core/context/JobStreamContext";
@@ -206,7 +206,7 @@ export const ChatWindow: React.FC<{ initialConversationId: string }> = ({
                   type="button"
                   onClick={scrollToBottom}
                   className="sticky bottom-4 left-1/2 -translate-x-1/2 z-10 inline-flex items-center gap-1.5 px-3 py-1.5 bg-surface-2 border border-border-default text-fg-secondary hover:text-fg hover:bg-surface-3 shadow-lg transition-all duration-200 text-[11px] font-medium animate-in fade-in slide-in-from-bottom-2 duration-200"
-                  aria-label="Scroll to bottom"
+                  aria-label={t.a11y.scrollToBottom}
                 >
                   <Icon name="arrowDown" size={14} />
                   {t.chat.newMessages}
@@ -224,14 +224,11 @@ export const ChatWindow: React.FC<{ initialConversationId: string }> = ({
           </>
         ) : (
           <>
-            {/* Empty state: centered input + WelcomeHero */}
-            <ChatEmptyState
-              t={t}
-              onPrompt={(label) => {
-                // Selecting a welcome card creates the thread and sends immediately.
-                handleFirstSend(label);
-              }}
-            />
+            {/* No conversation yet: the welcome (greeting and starter prompts), then the composer. */}
+            <section className="flex flex-1 flex-col items-center justify-center px-4">
+              {/* Selecting a welcome card creates the thread and sends immediately. */}
+              <WelcomeHero t={t} onPrompt={(label) => handleFirstSend(label)} />
+            </section>
 
             <ChatInputBar
               {...composerSharedProps}

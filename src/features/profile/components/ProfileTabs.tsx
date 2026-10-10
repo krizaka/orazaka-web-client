@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { useTranslation } from "@/core/context/LocaleContext";
 import { Icon, type IconName } from "@krizaka/orazaka-design-system";
 
 import { cn } from "@krizaka/ui/cn";
@@ -25,6 +26,7 @@ interface ProfileTabsProps {
  * scrollable on narrow viewports so it never overflows.
  */
 export function ProfileTabs({ tabs, active, onChange }: Readonly<ProfileTabsProps>) {
+  const { t } = useTranslation();
   const refs = React.useRef<(HTMLButtonElement | null)[]>([]);
 
   const focusTab = (index: number) => {
@@ -52,7 +54,7 @@ export function ProfileTabs({ tabs, active, onChange }: Readonly<ProfileTabsProp
   return (
     <div
       role="tablist"
-      aria-label="Profile sections"
+      aria-label={t.a11y.profileSections}
       className="sticky top-0 z-10 -mx-1 flex gap-1 overflow-x-auto scrollbar-thin rounded-xl border border-border-subtle bg-surface-1/88 p-1 backdrop-blur-xl backdrop-saturate-150"
     >
       {tabs.map((tab, index) => {

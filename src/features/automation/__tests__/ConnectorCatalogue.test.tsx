@@ -1,74 +1,59 @@
 import "@testing-library/jest-dom";
 import { render, screen, fireEvent } from "@testing-library/react";
 import ConnectorCatalogue from "@/features/automation/components/ConnectorCatalogue";
+import { translations } from "@/core/context/translations";
+
+jest.mock("@/core/context/LocaleContext", () => ({
+  useTranslation: () => ({ t: jest.requireActual("@/core/context/translations").translations.en, locale: "en" }),
+}));
+
+const t = translations.en.automation;
 
 describe("ConnectorCatalogue", () => {
-  it("renders title", () => {
+  it("renders the translated title and subtitle", () => {
     render(<ConnectorCatalogue />);
-    expect(screen.getByText("Integration Connectors")).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: t.connectorsTitle })).toBeInTheDocument();
+    expect(screen.getByText(t.connectorsSubtitle)).toBeInTheDocument();
   });
 
-  it("renders subtitle", () => {
+  it("renders every connector with its description", () => {
     render(<ConnectorCatalogue />);
-    expect(screen.getByText("Connect your enterprise tools for automated workflows")).toBeInTheDocument();
+    for (const name of ["Jira Cloud", "WhatsApp Business", "Messenger", "Slack", "Local CLI Agent"]) {
+      expect(screen.getByText(name)).toBeInTheDocument();
+    }
+    expect(screen.getByText(t.connectors.jira)).toBeInTheDocument();
   });
 
-  it("renders all connector names", () => {
+  it("starts with every connector inactive, each with a connect button", () => {
     render(<ConnectorCatalogue />);
-    expect(screen.getByText("Jira Cloud")).toBeInTheDocument();
-    expect(screen.getByText("WhatsApp Business")).toBeInTheDocument();
-    expect(screen.getByText("Messenger")).toBeInTheDocument();
-    expect(screen.getByText("Slack")).toBeInTheDocument();
-    expect(screen.getByText("Local CLI Agent")).toBeInTheDocument();
+    expect(screen.getAllByText(t.status.disconnected)).toHaveLength(5);
+    expect(screen.getAllByText(t.connect)).toHaveLength(5);
   });
 
-  it("renders all connectors as inactive initially", () => {
+  it("connects and disconnects a connector", () => {
     render(<ConnectorCatalogue />);
-    const inactiveLabels = screen.getAllByText("Inactive");
-    expect(inactiveLabels).toHaveLength(5);
+    const button = screen.getByRole("button", { name: t.toggle.replace("{name}", "Slack") });
+    fireEvent.click(button);
+    expect(screen.getByText(t.status.connected)).toBeInTheDocument();
+    expect(screen.getByText(t.disconnect)).toBeInTheDocument();
+    fireEvent.click(button);
+    expect(screen.queryByText(t.disconnect)).toBeNull();
   });
 
-  it("renders connect buttons for all connectors", () => {
+  it("opens and closes the credentials panel", () => {
     render(<ConnectorCatalogue />);
-    const connectBtns = screen.getAllByText("Connect");
-    expect(connectBtns).toHaveLength(5);
+    const configure = screen.getByRole("button", { name: t.configure.replace("{name}", "Jira Cloud") });
+    fireEvent.click(configure);
+    expect(configure).toHaveAttribute("aria-expanded", "true");
+    expect(screen.getByLabelText(t.apiKey)).toHaveAttribute("type", "password");
+    expect(screen.getByRole("button", { name: t.saveCredentials })).toBeInTheDocument();
+    fireEvent.click(configure);
+    expect(screen.queryByLabelText(t.apiKey)).toBeNull();
   });
 
-  it("toggles connector to connected", () => {
-    render(<ConnectorCatalogue />);
-    fireEvent.click(screen.getByLabelText("Toggle Jira Cloud connection"));
-    expect(screen.getByText("Connected")).toBeInTheDocument();
-    expect(screen.getByText("Disconnect")).toBeInTheDocument();
-  });
-
-  it("toggles back to disconnected", () => {
-    render(<ConnectorCatalogue />);
-    const btn = screen.getByLabelText("Toggle Slack connection");
-    fireEvent.click(btn);
-    expect(screen.getByText("Disconnect")).toBeInTheDocument();
-    fireEvent.click(btn);
-    expect(screen.queryByText("Disconnect")).toBeNull();
-  });
-
-  it("expands config panel on gear click", () => {
-    render(<ConnectorCatalogue />);
-    fireEvent.click(screen.getByLabelText("Configure Jira Cloud"));
-    expect(screen.getByText("API Key")).toBeInTheDocument();
-    expect(screen.getByText("Save Credentials")).toBeInTheDocument();
-  });
-
-  it("collapses config panel on second click", () => {
-    render(<ConnectorCatalogue />);
-    const configBtn = screen.getByLabelText("Configure Jira Cloud");
-    fireEvent.click(configBtn);
-    expect(screen.getByText("API Key")).toBeInTheDocument();
-    fireEvent.click(configBtn);
-    expect(screen.queryByText("API Key")).toBeNull();
-  });
-
-  it("renders connector descriptions", () => {
-    render(<ConnectorCatalogue />);
-    expect(screen.getByText(/Automated ticket creation/)).toBeInTheDocument();
-    expect(screen.getByText(/Outbound notification streaming/)).toBeInTheDocument();
+  it("draws no emoji and no inline brand colour", () => {
+    const { container } = render(<ConnectorCatalogue />);
+    expect(container.innerHTML).not.toMatch(/style="[^"]*hsl\(/);
+    expect(container.textContent).not.toMatch(/\p{Extended_Pictographic}/u);
   });
 });

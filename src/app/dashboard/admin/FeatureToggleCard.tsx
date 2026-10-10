@@ -1,6 +1,8 @@
 "use client";
 
 import React from "react";
+import { Card } from "@krizaka/ui/card";
+import { Switch } from "@krizaka/ui/switch";
 import type { TranslationDictionary } from "@/core/context/LocaleContext";
 
 interface Feature {
@@ -15,46 +17,41 @@ interface FeatureToggleCardProps {
 }
 
 /**
- * Renders the Capabilities Registry Overrides card with toggle switches
- * for each database-configured feature flag.
+ * The capabilities registry overrides: one switch per database-configured feature flag. A product composite on the
+ * @krizaka/ui card and switch (role="switch", Space and Enter toggle).
  */
-export const FeatureToggleCard: React.FC<FeatureToggleCardProps> = ({
-  features,
-  onToggle,
-  t,
-}) => (
-  <div className="bg-surface-1/70 border border-border-subtle rounded-2xl p-6 shadow-sm flex flex-col gap-4 backdrop-blur-lg">
-    <h3 className="text-lg font-bold text-fg border-b pb-2 border-border-subtle">
-      {t.admin.featureOverridesTitle}
-    </h3>
-    {features.length === 0 ? (
-      <p className="text-sm text-fg-secondary py-4 text-center italic">
-        {t.admin.featureNoOverrides}
-      </p>
-    ) : (
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {features.map((feat) => (
-          <div
-            key={feat.featureKey}
-            className="flex items-center justify-between p-3.5 bg-surface-0 rounded-xl border border-border-subtle"
-          >
-            <div className="flex flex-col gap-0.5 min-w-0 pr-2">
-              <span className="text-xs font-bold text-fg font-mono truncate block">
-                {feat.featureKey}
-              </span>
-              <span className="text-[10px] text-fg-secondary">
-                {t.admin.featureOverrideEnabled}
-              </span>
-            </div>
-            <input
-              type="checkbox"
-              checked={feat.isEnabled}
-              onChange={() => onToggle(feat.featureKey, feat.isEnabled)}
-              className="h-4.5 w-4.5 rounded border-border-subtle text-warning focus:ring-warning cursor-pointer"
-            />
-          </div>
-        ))}
-      </div>
-    )}
-  </div>
+export const FeatureToggleCard: React.FC<FeatureToggleCardProps> = ({ features, onToggle, t }) => (
+  <Card.Root className="rounded-2xl border-border-subtle bg-surface-1/70 shadow-sm backdrop-blur-lg">
+    <Card.Body padding="lg" className="gap-4">
+      <Card.Title className="line-clamp-none border-b border-border-subtle pb-2 text-lg font-bold group-hover:text-fg">
+        {t.admin.featureOverridesTitle}
+      </Card.Title>
+      {features.length === 0 ? (
+        <p className="py-4 text-center text-sm italic text-fg-secondary">{t.admin.featureNoOverrides}</p>
+      ) : (
+        <ul className="grid grid-cols-1 gap-4 md:grid-cols-2">
+          {features.map((feat) => {
+            const id = `feature-override-${feat.featureKey}`;
+            return (
+              <li
+                key={feat.featureKey}
+                className="flex items-center justify-between rounded-xl border border-border-subtle bg-surface-0 p-3.5"
+              >
+                <label htmlFor={id} className="flex min-w-0 cursor-pointer flex-col gap-0.5 pr-2">
+                  <span className="block truncate font-mono text-xs font-bold text-fg">{feat.featureKey}</span>
+                  <span className="text-[10px] text-fg-secondary">{t.admin.featureOverrideEnabled}</span>
+                </label>
+                <Switch
+                  id={id}
+                  size="sm"
+                  checked={feat.isEnabled}
+                  onCheckedChange={() => onToggle(feat.featureKey, feat.isEnabled)}
+                />
+              </li>
+            );
+          })}
+        </ul>
+      )}
+    </Card.Body>
+  </Card.Root>
 );

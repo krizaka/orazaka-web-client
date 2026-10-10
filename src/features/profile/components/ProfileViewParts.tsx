@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { useTranslation } from "@/core/context/LocaleContext";
 import { Icon } from "@krizaka/orazaka-design-system";
 import type { IconName } from "@krizaka/orazaka-design-system";
 
@@ -18,6 +19,7 @@ export function CopyableField({
   icon: IconName;
   isMono?: boolean;
 }>) {
+  const { t } = useTranslation();
   const [copied, setCopied] = React.useState(false);
 
   const handleCopy = async () => {
@@ -44,7 +46,7 @@ export function CopyableField({
           type="button"
           onClick={handleCopy}
           className="rounded-lg p-1.5 text-fg-muted opacity-0 transition-all duration-150 hover:bg-surface-2 hover:text-fg group-hover:opacity-100 focus:opacity-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-          aria-label="Copy"
+          aria-label={t.a11y.copy}
         >
           {copied ? (
             <Icon name="check" className="h-3.5 w-3.5 text-success" />

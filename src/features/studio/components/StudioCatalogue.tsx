@@ -6,7 +6,10 @@ import { StudioLoadError, StudioLoading } from "./StudioAsyncState";
 import { useStudios } from "@/features/studio/hooks/useStudios";
 import { StudioCard } from "@/features/studio/components/StudioCard";
 
-import { cn } from "@krizaka/ui/cn";
+import { Chip } from "@krizaka/ui/chip";
+
+/** The value of the "all trades" chip (no trade is called "*"). */
+const ALL = "*";
 
 /**
  * The Explore tab: the whole catalogue, filterable by trade.
@@ -29,21 +32,22 @@ export function StudioCatalogue() {
 
   return (
     <div className="flex flex-col gap-4">
-      <div className="flex flex-wrap items-center gap-1.5">
-        <FilterChip
-          label={t.studio.allProfessions}
-          active={profession === null}
-          onSelect={() => setProfession(null)}
-        />
+      <Chip.Group
+        type="single"
+        size="sm"
+        required
+        label={t.studio.filterByTrade}
+        value={profession ?? ALL}
+        onValueChange={(value) => setProfession(value === ALL ? null : value)}
+        className="gap-1.5"
+      >
+        <Chip value={ALL}>{t.studio.allProfessions}</Chip>
         {professions.map((trade) => (
-          <FilterChip
-            key={trade}
-            label={t.studio.professions[trade] ?? trade}
-            active={profession === trade}
-            onSelect={() => setProfession(trade)}
-          />
+          <Chip key={trade} value={trade}>
+            {t.studio.professions[trade] ?? trade}
+          </Chip>
         ))}
-      </div>
+      </Chip.Group>
 
       {studios.length === 0 ? (
         <p className="py-16 text-center text-[12px] text-fg-muted">
@@ -57,29 +61,5 @@ export function StudioCatalogue() {
         </div>
       )}
     </div>
-  );
-}
-
-interface FilterChipProps {
-  label: string;
-  active: boolean;
-  onSelect: () => void;
-}
-
-/** One trade filter. Extracted so the grid above stays a layout, not a loop body. */
-function FilterChip({ label, active, onSelect }: Readonly<FilterChipProps>) {
-  return (
-    <button
-      type="button"
-      onClick={onSelect}
-      className={cn(
-        "h-7 px-2.5 text-[11px] font-medium border transition-colors duration-150",
-        active
-          ? "border-accent text-accent bg-surface-2"
-          : "border-border-subtle text-fg-muted hover:text-fg hover:bg-surface-2"
-      )}
-    >
-      {label}
-    </button>
   );
 }

@@ -1,49 +1,25 @@
-/* eslint-disable no-restricted-syntax */
 "use client";
 
 import { useState } from "react";
 import { format, formatISO, parseISO, subMinutes } from "date-fns";
+import { PlayIcon } from "@krizaka/icons";
+import { Badge } from "@krizaka/ui/badge";
+import { Button } from "@krizaka/ui/button";
+import { Card } from "@krizaka/ui/card";
+import { EmptyState } from "@krizaka/ui/empty-state";
+import { useTranslation } from "@/core/context/LocaleContext";
 import type { AutomationJob } from "@/features/automation/components/liveJobGrid.types";
 
-import { cn } from "@krizaka/ui/cn";
+const TONE = {
+  PENDING_APPROVAL: "warning",
+  APPROVED: "accent",
+  RUNNING: "accent",
+  COMPLETED: "success",
+  FAILED: "danger",
+  AWAITING_CLI_EXECUTION: "neutral",
+} as const satisfies Record<AutomationJob["status"], string>;
 
-const STATUS_CONFIG: Record<
-  AutomationJob["status"],
-  { label: string; color: string; icon: string }
-> = {
-  PENDING_APPROVAL: {
-    label: "Pending Approval",
-    color: "var(--kz-warning)",
-    icon: "⏳",
-  },
-  APPROVED: {
-    label: "Approved",
-    color: "var(--kz-accent)",
-    icon: "✅",
-  },
-  RUNNING: {
-    label: "Running",
-    color: "var(--kz-accent-2)",
-    icon: "⚡",
-  },
-  COMPLETED: {
-    label: "Completed",
-    color: "var(--kz-success)",
-    icon: "✓",
-  },
-  FAILED: {
-    label: "Failed",
-    color: "var(--kz-danger)",
-    icon: "✗",
-  },
-  AWAITING_CLI_EXECUTION: {
-    label: "Awaiting CLI",
-    color: "var(--kz-info)",
-    icon: "🖥️",
-  },
-};
-
-// Demo data for development
+// Demo data for development.
 const DEMO_JOBS: AutomationJob[] = [
   {
     id: "job-001",
@@ -83,159 +59,97 @@ const DEMO_JOBS: AutomationJob[] = [
   },
 ];
 
-function JobStatusChip({
-  status,
-}: Readonly<{ status: AutomationJob["status"] }>) {
-  const config = STATUS_CONFIG[status];
+/** A job's state: the @krizaka/ui badge in its status tone, its dot pulsing while it runs. */
+export function AutomationStatusBadge({ status }: Readonly<{ status: AutomationJob["status"] }>) {
+  const { t } = useTranslation();
   return (
-    <span
-      className="job-status-chip"
-      style={{ "--chip-color": config.color } as React.CSSProperties}
-    >
-      <span className="job-status-chip-icon">{config.icon}</span>
-      {config.label}
-    </span>
+    <Badge tone={TONE[status]} size="md" dot pulse={status === "RUNNING"}>
+      {t.automation.jobStatus[status]}
+    </Badge>
   );
 }
 
-function ApprovalActions({
-  jobId,
-  onApprove,
-  onRevoke,
-}: Readonly<{
-  jobId: string;
-  onApprove: (id: string) => void;
-  onRevoke: (id: string) => void;
-}>) {
-  return (
-    <div className="job-approval-actions">
-      <button
-        className="job-approve-btn"
-        onClick={() => onApprove(jobId)}
-        id={`approve-${jobId}`}
-        aria-label="Approve execution"
-      >
-        <span className="job-approve-btn-icon">▶</span>
-        <span>Approve Execution</span>
-      </button>
-      <button
-        className="job-revoke-btn"
-        onClick={() => onRevoke(jobId)}
-        id={`revoke-${jobId}`}
-        aria-label="Revoke job"
-      >
-        Revoke Job
-      </button>
-    </div>
-  );
-}
-
+/** The jobs awaiting approval or running: one @krizaka/ui card each, approve or revoke. */
 export default function LiveJobGrid() {
+  const { t } = useTranslation();
   const [jobs, setJobs] = useState<AutomationJob[]>(DEMO_JOBS);
 
-  const handleApprove = async (jobId: string) => {
-    setJobs((prev) =>
-      prev.map((j) =>
-        j.id === jobId ? { ...j, status: "APPROVED" as const } : j,
-      ),
-    );
-    try {
-      await fetch(`/api/v1/jobs/${jobId}/approve`, {
-        method: "POST",
-      });
-    } catch {
-      // Silently handle — job already updated optimistically
-    }
+  const approve = async (jobId: string) => {
+    setJobs((previous) => previous.map((j) => (j.id === jobId ? { ...j, status: "APPROVED" as const } : j)));
+    // Optimistic: the job is already shown approved.
+    await fetch(`/api/v1/jobs/${jobId}/approve`, { method: "POST" }).catch(() => undefined);
   };
 
-  const handleRevoke = async (jobId: string) => {
-    setJobs((prev) => prev.filter((j) => j.id !== jobId));
-    try {
-      await fetch(`/api/v1/jobs/${jobId}/revoke`, {
-        method: "POST",
-      });
-    } catch {
-      // Silently handle
-    }
+  const revoke = async (jobId: string) => {
+    setJobs((previous) => previous.filter((j) => j.id !== jobId));
+    await fetch(`/api/v1/jobs/${jobId}/revoke`, { method: "POST" }).catch(() => undefined);
   };
 
-  const pendingCount = jobs.filter(
-    (j) => j.status === "PENDING_APPROVAL",
-  ).length;
-  const runningCount = jobs.filter((j) => j.status === "RUNNING").length;
+  const count = (status: AutomationJob["status"]) => jobs.filter((j) => j.status === status).length;
 
   return (
-    <section className="live-job-grid" id="live-job-grid">
-      <header className="live-job-grid-header">
-        <div>
-          <h2 className="hud-title live-job-grid-title">Active Automations</h2>
-          <p className="live-job-grid-subtitle">
-            Real-time task monitoring and approval control
-          </p>
-        </div>
-        <div className="live-job-grid-stats">
-          <div className="live-job-stat">
-            <span className="hud-label">Pending</span>
-            <span className="hud-value live-job-stat-pending">
-              {pendingCount}
-            </span>
-          </div>
-          <div className="live-job-stat">
-            <span className="hud-label">Running</span>
-            <span className="hud-value live-job-stat-running">
-              {runningCount}
-            </span>
-          </div>
-        </div>
+    <section id="live-job-grid" className="flex flex-col gap-6 py-8">
+      <header className="flex flex-wrap items-end justify-between gap-4">
+        <hgroup className="flex flex-col gap-1">
+          <h2 className="hud-title text-2xl text-fg">{t.automation.jobsTitle}</h2>
+          <p className="text-sm text-fg-secondary">{t.automation.jobsSubtitle}</p>
+        </hgroup>
+        <dl className="flex gap-6">
+          <Stat label={t.automation.pending} value={count("PENDING_APPROVAL")} />
+          <Stat label={t.automation.running} value={count("RUNNING")} />
+        </dl>
       </header>
 
-      <div className="live-job-list stagger-children">
-        {jobs.map((job) => (
-          <article
-            key={job.id}
-            className={cn("glass-card live-job-card", (() => {
-              if (job.status === "PENDING_APPROVAL") return "live-job-card-pending";
-              if (job.status === "RUNNING") return "glass-card-active";
-              return "";
-            })())}
-            id={`job-card-${job.id}`}
-          >
-            <div className="live-job-card-header">
-              <div className="live-job-card-meta">
-                <span className="hud-label">{job.connectorType}</span>
-                <h3 className="live-job-card-action">{job.action}</h3>
-              </div>
-              <JobStatusChip status={job.status} />
-            </div>
-
-            <div className="live-job-card-payload">
-              <span className="hud-label">Payload</span>
-              <code className="live-job-card-code">
-                {JSON.stringify(job.payload, null, 2)}
-              </code>
-            </div>
-
-            <div className="live-job-card-footer">
-              <span className="live-job-card-time">
-                {format(parseISO(job.createdAt), "HH:mm:ss")}
-              </span>
-              {job.status === "PENDING_APPROVAL" && (
-                <ApprovalActions
-                  jobId={job.id}
-                  onApprove={handleApprove}
-                  onRevoke={handleRevoke}
-                />
-              )}
-            </div>
-          </article>
-        ))}
-
-        {jobs.length === 0 && (
-          <div className="live-job-empty glass-card">
-            <p>No active automation jobs</p>
-          </div>
-        )}
-      </div>
+      {jobs.length === 0 ? (
+        <EmptyState title={t.automation.empty} />
+      ) : (
+        <ul className="stagger-children flex flex-col gap-3">
+          {jobs.map((job) => (
+            <li key={job.id} id={`job-card-${job.id}`}>
+              <Card.Root className={job.status === "PENDING_APPROVAL" ? "border-warning/50" : undefined}>
+                <Card.Body padding="md" className="gap-3 p-5">
+                  <header className="flex items-start justify-between gap-3">
+                    <span className="flex flex-col gap-0.5">
+                      <span className="hud-label">{job.connectorType}</span>
+                      <Card.Title className="line-clamp-none font-mono text-sm group-hover:text-fg">{job.action}</Card.Title>
+                    </span>
+                    <AutomationStatusBadge status={job.status} />
+                  </header>
+                  <span className="hud-label">{t.automation.payload}</span>
+                  <code className="block whitespace-pre-wrap rounded-lg bg-surface-2 px-3 py-2 font-mono text-xs text-fg-secondary">
+                    {JSON.stringify(job.payload, null, 2)}
+                  </code>
+                  <Card.Footer className="justify-between">
+                    <time dateTime={job.createdAt} className="font-mono" suppressHydrationWarning>
+                      {format(parseISO(job.createdAt), "HH:mm:ss")}
+                    </time>
+                    {job.status === "PENDING_APPROVAL" && (
+                      <span className="flex gap-2">
+                        <Button id={`revoke-${job.id}`} variant="ghost" size="sm" onClick={() => revoke(job.id)}>
+                          {t.automation.revoke}
+                        </Button>
+                        <Button id={`approve-${job.id}`} size="sm" onClick={() => approve(job.id)}>
+                          <PlayIcon size={14} />
+                          {t.automation.approve}
+                        </Button>
+                      </span>
+                    )}
+                  </Card.Footer>
+                </Card.Body>
+              </Card.Root>
+            </li>
+          ))}
+        </ul>
+      )}
     </section>
+  );
+}
+
+function Stat({ label, value }: Readonly<{ label: string; value: number }>) {
+  return (
+    <span className="flex flex-col items-end">
+      <dt className="hud-label">{label}</dt>
+      <dd className="font-display text-xl font-bold tabular-nums text-fg">{value}</dd>
+    </span>
   );
 }

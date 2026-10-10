@@ -17,6 +17,7 @@ jest.mock("@/core/constants/capability.constants", () => ({
 jest.mock("@/core/context/LocaleContext", () => ({
   useTranslation: () => ({
     t: {
+      a11y: jest.requireActual("@/core/context/translations.automation").a11y.en,
       admin: {
         editModelTitle: "Edit Model",
         addModelTitle: "Add Model",
@@ -113,7 +114,7 @@ describe("ModelDialog", () => {
 
   it("calls onClose when backdrop clicked", () => {
     render(<ModelDialog {...defaultProps} />);
-    const backdropBtn = screen.getByLabelText("Close dialog");
+    const backdropBtn = screen.getByLabelText("Close the dialog");
     fireEvent.click(backdropBtn);
     expect(defaultProps.onClose).toHaveBeenCalled();
   });

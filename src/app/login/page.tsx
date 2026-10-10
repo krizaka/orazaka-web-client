@@ -185,7 +185,7 @@ export default function LoginPage() {
 
           <nav
             className="grid grid-cols-2 gap-4"
-            aria-label="Social login options"
+            aria-label={t.a11y.socialLogin}
           >
             <Button
               id="btn-github"

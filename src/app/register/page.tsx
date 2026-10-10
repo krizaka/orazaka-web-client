@@ -71,7 +71,7 @@ export default function RegisterPage() {
 
           <nav
             className="grid grid-cols-2 gap-4"
-            aria-label="Social registration options"
+            aria-label={t.a11y.socialRegister}
           >
             <Button
               id="btn-github"

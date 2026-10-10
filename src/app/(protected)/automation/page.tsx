@@ -1,26 +1,20 @@
 import ConnectorCatalogue from "@/features/automation/components/ConnectorCatalogue";
 import LiveJobGrid from "@/features/automation/components/LiveJobGrid";
-import "@/features/automation/components/automation.css";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Automations | Orazaka",
-  description:
-    "Enterprise automation hub — connect external tools, approve jobs, and monitor live task execution.",
+  description: "Connect your tools, approve jobs and follow their execution.",
 };
 
-/**
- * Automation dashboard page combining the Connector Catalogue and Live Job Grid.
- * This page follows the Jarvis 2026 HUD design language with glassmorphic cards
- * and ambient grid backgrounds.
- */
+/** The automation page: the connector catalogue and the jobs awaiting approval, on the @krizaka/ui primitives. */
 export default function AutomationPage() {
   return (
-    <main className="automation-page ambient-grid">
-      <div className="automation-page-container">
+    <main className="ambient-grid min-h-full">
+      <section className="mx-auto w-full max-w-6xl px-4 py-6 sm:px-6">
         <ConnectorCatalogue />
         <LiveJobGrid />
-      </div>
+      </section>
     </main>
   );
 }

@@ -9,7 +9,7 @@ import {
   type ThemeLayout,
 } from "@/constants/settings.constants";
 import type { Locale } from "@/core/context/translations.types";
-import { ThemeModeSelector } from "./ThemeModeSelector";
+import { AppearancePicker } from "./AppearancePicker";
 import { SelectField } from "./ProfileFormParts";
 import type { UseProfileForm } from "@/features/profile/hooks/useProfileForm";
 import { Card } from "@krizaka/ui/card";
@@ -34,7 +34,7 @@ export function AppearanceTab({ pf }: Readonly<{ pf: UseProfileForm }>) {
         </Card.Description>
       </Card.Body>
       <Card.Body padding="lg" className="block pt-0 space-y-6">
-        <ThemeModeSelector theme={form.theme} onThemeChange={setTheme} />
+        <AppearancePicker theme={form.theme} onThemeChange={setTheme} />
 
         <hr className="border-border-subtle" />
 

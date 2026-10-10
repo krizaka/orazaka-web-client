@@ -6,6 +6,7 @@
 import { type Locale, type TranslationDictionary } from "./translations.types";
 import { landing } from "./translations.landing";
 import { features } from "./translations.features";
+import { a11y, automation } from "./translations.automation";
 import { THEME_MODE } from "@/core/constants/http.constants";
 export type { Locale, TranslationDictionary };
 
@@ -104,6 +105,7 @@ export const translations: Record<Locale, TranslationDictionary> = {
       typing: "Typing...",
       loadingMessages: "Loading messages...",
       noActiveConversation: "No active conversation.",
+      toolMetrics: "Metrics",
       memoryBlocks: "Conversations",
       newBlock: "New conversation",
       ai: "AI",
@@ -712,6 +714,7 @@ export const translations: Record<Locale, TranslationDictionary> = {
       tabMine: "My Studios",
       tabExplore: "Explore",
       allProfessions: "All trades",
+      filterByTrade: "Filter by trade",
       professions: { general: "General", legal: "Legal", "real-estate": "Real estate", sales: "Sales", trades: "Trades" },
       emptyCatalogue: "No Studio matches this trade yet.",
       emptyInstalled: "You have not installed a Studio yet.",
@@ -778,6 +781,19 @@ export const translations: Record<Locale, TranslationDictionary> = {
       includedTitle: "Included",
       includedSubtitle: "Capabilities your plan already gives you. There is nothing to install — open a Studio and run it.",
       included: "Included",
+    },
+    automation: automation.en,
+    a11y: a11y.en,
+    commandPalette: {
+      label: "Command palette",
+      placeholder: "Search a page…",
+      results: "Pages",
+      empty: "No page matches",
+      navigate: "Move",
+      open: "Open",
+      close: "Close",
+      sectionGo: "Go to",
+      sectionAccount: "Account",
     },
     landing: landing.en,
     features: features.en,
@@ -874,6 +890,7 @@ export const translations: Record<Locale, TranslationDictionary> = {
       typing: "Génération...",
       loadingMessages: "Chargement des messages...",
       noActiveConversation: "Aucune conversation active.",
+      toolMetrics: "Mesures",
       memoryBlocks: "Conversations",
       newBlock: "Nouvelle conversation",
       ai: "IA",
@@ -1496,6 +1513,7 @@ export const translations: Record<Locale, TranslationDictionary> = {
       tabMine: "Mes Studios",
       tabExplore: "Explorer",
       allProfessions: "Tous les métiers",
+      filterByTrade: "Filtrer par métier",
       professions: { general: "Général", legal: "Juridique", "real-estate": "Immobilier", sales: "Vente", trades: "Artisans" },
       emptyCatalogue: "Aucun Studio ne correspond à ce métier pour l'instant.",
       emptyInstalled: "Vous n'avez pas encore installé de Studio.",
@@ -1562,6 +1580,19 @@ export const translations: Record<Locale, TranslationDictionary> = {
       includedTitle: "Inclus",
       includedSubtitle: "Des capacités que votre offre vous donne déjà. Rien à installer — ouvrez un Studio et lancez-le.",
       included: "Inclus",
+    },
+    automation: automation.fr,
+    a11y: a11y.fr,
+    commandPalette: {
+      label: "Palette de commandes",
+      placeholder: "Chercher une page…",
+      results: "Pages",
+      empty: "Aucune page ne correspond",
+      navigate: "Parcourir",
+      open: "Ouvrir",
+      close: "Fermer",
+      sectionGo: "Aller à",
+      sectionAccount: "Compte",
     },
     landing: landing.fr,
     features: features.fr,

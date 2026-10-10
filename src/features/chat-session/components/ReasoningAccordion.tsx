@@ -2,6 +2,7 @@
 "use client";
 
 import React, { useState } from "react";
+import { useTranslation } from "@/core/context/LocaleContext";
 import { Icon } from "@krizaka/orazaka-design-system";
 
 import { cn } from "@krizaka/ui/cn";
@@ -27,6 +28,7 @@ export function ReasoningAccordion({
   content,
   isStreaming = false,
 }: Readonly<ReasoningAccordionProps>) {
+  const { t } = useTranslation();
   const [isExpanded, setIsExpanded] = useState(false);
 
   if (!content) return null;
@@ -42,7 +44,7 @@ export function ReasoningAccordion({
         onClick={() => setIsExpanded(!isExpanded)}
         className="w-full flex items-center gap-2 px-4 py-2.5 text-left transition-colors duration-150 hover:bg-surface-2/50"
         aria-expanded={isExpanded}
-        aria-label="Toggle reasoning view"
+        aria-label={t.a11y.toggleReasoning}
       >
         <Icon
           name="spark"

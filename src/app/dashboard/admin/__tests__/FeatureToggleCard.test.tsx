@@ -31,23 +31,24 @@ describe("FeatureToggleCard", () => {
     expect(screen.getByText("media.video")).toBeInTheDocument();
   });
 
-  it("renders checkboxes for each feature", () => {
+  it("renders a switch for each feature, named by its key", () => {
     const features = [
       { featureKey: "chat.text", isEnabled: true },
       { featureKey: "media.video", isEnabled: false },
     ];
     render(<FeatureToggleCard features={features} onToggle={jest.fn()} t={mockT} />);
-    const checkboxes = screen.getAllByRole("checkbox");
-    expect(checkboxes).toHaveLength(2);
-    expect(checkboxes[0]).toBeChecked();
-    expect(checkboxes[1]).not.toBeChecked();
+    const switches = screen.getAllByRole("switch");
+    expect(switches).toHaveLength(2);
+    expect(switches[0]).toBeChecked();
+    expect(switches[1]).not.toBeChecked();
+    expect(screen.getByRole("switch", { name: /chat\.text/ })).toBe(switches[0]);
   });
 
-  it("calls onToggle when checkbox changed", () => {
+  it("calls onToggle when the switch is pressed", () => {
     const onToggle = jest.fn();
     const features = [{ featureKey: "chat.text", isEnabled: true }];
     render(<FeatureToggleCard features={features} onToggle={onToggle} t={mockT} />);
-    fireEvent.click(screen.getByRole("checkbox"));
+    fireEvent.click(screen.getByRole("switch"));
     expect(onToggle).toHaveBeenCalledWith("chat.text", true);
   });
 });

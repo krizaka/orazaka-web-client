@@ -1,12 +1,8 @@
 "use client";
 
 import React from "react";
-
-interface ToolMetric {
-  label: string;
-  value: string | number;
-  unit?: string;
-}
+import { Card } from "@krizaka/ui/card";
+import { Icon } from "@krizaka/orazaka-design-system";
 
 interface ToolMetricsPayload {
   type: "tool_metrics";
@@ -16,77 +12,44 @@ interface ToolMetricsPayload {
 
 interface ToolMetricsCardProps {
   payload: ToolMetricsPayload;
+  /** The caption ("Metrics"), translated. */
+  label: string;
 }
 
 /**
- * ToolMetricsCard — Generative UI for structured tool metric payloads.
- *
- * When the SSE stream contains a JSON block with `"type":"tool_metrics"`,
- * this component renders a reactive grid card instead of plain markdown text.
- * Uses the existing Krizaka design system (glass-card, CSS variables).
+ * ToolMetricsCard — generative UI for a structured tool metrics payload: when the stream holds a
+ * `{"type":"tool_metrics"}` block, the figures are drawn as a @krizaka/ui card (`Card.Stat` per figure) instead of
+ * plain markdown.
  *
  * @example Payload shape:
  * ```json
  * {"type":"tool_metrics","toolName":"doctor","data":{"cpu":"82%","memory":"4.2GB","latency":"120ms"}}
  * ```
  */
-export function ToolMetricsCard({ payload }: Readonly<ToolMetricsCardProps>) {
-  const metrics: ToolMetric[] = Object.entries(payload.data).map(
-    ([key, value]) => ({
-      label: formatLabel(key),
-      value,
-    }),
-  );
-
+export function ToolMetricsCard({ payload, label }: Readonly<ToolMetricsCardProps>) {
   return (
-    <article className="glass-card p-4 max-w-lg w-full animate-in fade-in slide-in-from-bottom-2 duration-300">
-      {/* Header */}
-      <div className="flex items-center gap-2 mb-3 pb-2 border-b border-border-subtle">
-        <div className="w-6 h-6 flex items-center justify-center bg-accent-soft text-accent">
-          <svg
-            className="w-3.5 h-3.5"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            strokeWidth={2}
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M10.5 6h9.75M10.5 6a1.5 1.5 0 11-3 0m3 0a1.5 1.5 0 10-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-9.75 0h9.75"
-            />
-          </svg>
-        </div>
-        <span className="text-xs font-semibold text-fg tracking-wide uppercase">
-          {payload.toolName}
-        </span>
-        <span className="ml-auto text-[10px] text-fg-muted font-mono">
-          METRICS
-        </span>
-      </div>
-
-      {/* Metrics Grid */}
-      <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
-        {metrics.map((metric) => (
-          <div
-            key={metric.label}
-            className="flex flex-col gap-0.5 p-2 bg-surface-2 border border-border-subtle transition-colors duration-200 hover:border-border-default"
-          >
-            <span className="text-[10px] font-medium text-fg-muted uppercase tracking-wider">
-              {metric.label}
-            </span>
-            <span className="text-sm font-semibold text-fg font-mono">
-              {metric.value}
-              {metric.unit && (
-                <span className="text-[10px] text-fg-muted ml-0.5">
-                  {metric.unit}
-                </span>
-              )}
-            </span>
-          </div>
-        ))}
-      </div>
-    </article>
+    <Card.Root className="w-full max-w-lg animate-in fade-in slide-in-from-bottom-2 duration-300">
+      <Card.Body className="gap-3">
+        <header className="flex items-center gap-2 border-b border-border-subtle pb-2">
+          <span className="flex h-6 w-6 items-center justify-center rounded-md bg-accent-soft text-fg-accent">
+            <Icon name="sliders" size={14} />
+          </span>
+          <Card.Title className="text-xs uppercase tracking-wide group-hover:text-fg">{payload.toolName}</Card.Title>
+          <span className="ml-auto font-mono text-[10px] uppercase text-fg-muted">{label}</span>
+        </header>
+        <section className="grid grid-cols-2 gap-3 sm:grid-cols-3">
+          {Object.entries(payload.data).map(([key, value]) => (
+            <Card.Stat
+              key={key}
+              label={formatLabel(key)}
+              className="rounded-md border border-border-subtle bg-surface-2 p-2 [&>p:last-child]:font-mono [&>p:last-child]:text-sm"
+            >
+              {value}
+            </Card.Stat>
+          ))}
+        </section>
+      </Card.Body>
+    </Card.Root>
   );
 }
 
@@ -94,22 +57,13 @@ export function ToolMetricsCard({ payload }: Readonly<ToolMetricsCardProps>) {
  * Attempts to parse a raw string as a ToolMetrics JSON payload.
  * Returns the parsed payload or null if not a valid tool_metrics block.
  */
-export function parseToolMetrics(
-  raw: string,
-): ToolMetricsPayload | null {
+export function parseToolMetrics(raw: string): ToolMetricsPayload | null {
   try {
     // Check for JSON block markers in markdown
-    const jsonMatch = raw.match(
-      /```(?:json)?\s*(\{[\s\S]*?"type"\s*:\s*"tool_metrics"[\s\S]*?\})\s*```/,
-    );
+    const jsonMatch = raw.match(/```(?:json)?\s*(\{[\s\S]*?"type"\s*:\s*"tool_metrics"[\s\S]*?\})\s*```/);
     const toParse = jsonMatch ? jsonMatch[1] : raw;
     const parsed = JSON.parse(toParse);
-    if (
-      parsed &&
-      parsed.type === "tool_metrics" &&
-      typeof parsed.toolName === "string" &&
-      typeof parsed.data === "object"
-    ) {
+    if (parsed && parsed.type === "tool_metrics" && typeof parsed.toolName === "string" && typeof parsed.data === "object") {
       return parsed as ToolMetricsPayload;
     }
   } catch {

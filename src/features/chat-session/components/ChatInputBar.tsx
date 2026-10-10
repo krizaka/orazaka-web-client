@@ -169,7 +169,7 @@ export const ChatInputBar: React.FC<ChatInputBarProps> = ({
                 disabled={isAgentBusy}
                 className={cn("absolute left-3 bottom-3 p-1.5 text-fg-muted hover:text-fg transition-all duration-150 z-10",
                   isAgentBusy && "opacity-40 cursor-not-allowed pointer-events-none")}
-                aria-label="Attach File"
+                aria-label={t.a11y.attachFile}
               >
                 <Icon name="attach" size={20} />
               </button>
