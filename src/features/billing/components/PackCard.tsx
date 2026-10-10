@@ -55,7 +55,7 @@ export function PackCard({
     <article className="flex flex-col gap-3 border border-border-subtle bg-surface-1 p-4">
       <header className="flex items-start justify-between gap-3">
         <hgroup className="flex items-start gap-2">
-          <Icon name={pack.iconKey as IconName} size={16} className="mt-0.5 flex-shrink-0" />
+          <Icon name={pack.iconKey as IconName} fallback="layers" size={16} className="mt-0.5 flex-shrink-0" />
           <div>
             <h3 className="text-[14px] font-medium text-fg">{pack.label}</h3>
             {pack.tagline && (

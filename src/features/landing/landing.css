@@ -1,0 +1,91 @@
+/* The public pages of Orazaka (home and /features/*): the light, glass and slow motion of the isometric
+   illustrations, and the theme switch of the product captures. Roles only (--kz-*): every rule follows the theme
+   (dark on :root, html.light) and the brand. Nothing loops fast; everything stands still under
+   prefers-reduced-motion (BRAND.md §4). */
+
+/* ── Isometric illustrations ─────────────────────────────── */
+.iso-scene { overflow: visible; }
+.iso-edge { stroke: var(--kz-accent-text); stroke-width: 1.5; stroke-linejoin: round; }
+.iso-edge-soft { stroke: var(--kz-accent-text); stroke-opacity: 0.55; stroke-width: 1; }
+.iso-lit-top { fill: color-mix(in oklab, var(--kz-surface-3) 86%, var(--kz-accent)); }
+.iso-vent { stroke: var(--kz-accent); stroke-width: 2.4; stroke-linecap: round; opacity: 0.85; }
+.iso-ring { stroke: var(--kz-accent-text); stroke-opacity: 0.35; stroke-dasharray: 3 7; }
+.iso-text-line { stroke: var(--kz-text-muted); stroke-width: 2.2; stroke-linecap: round; }
+.iso-dome-base { stroke: var(--kz-accent-text); stroke-opacity: 0.3; stroke-dasharray: 2 6; }
+.iso-dome-glass { stroke: var(--kz-accent-text); stroke-opacity: 0.5; stroke-width: 1.2; }
+.iso-core { filter: drop-shadow(0 0 6px var(--kz-accent)); }
+.iso-led { filter: drop-shadow(0 0 4px var(--kz-accent)); }
+.iso-badge { stroke: var(--kz-accent); stroke-width: 1.5; filter: drop-shadow(0 6px 18px color-mix(in oklab, var(--kz-accent) 45%, transparent)); }
+.iso-stop { fill: var(--kz-surface-1); stroke: var(--kz-accent-text); stroke-width: 2; }
+.iso-screen { fill: color-mix(in oklab, var(--kz-surface-3) 84%, var(--kz-accent)); }
+.iso-beam { stroke: var(--kz-accent); stroke-width: 3; stroke-linecap: round; stroke-dasharray: 2 9; opacity: 0.8; }
+.iso-stop-accent-strong { stop-color: var(--kz-accent); stop-opacity: 0.34; }
+.iso-stop-accent-soft { stop-color: var(--kz-accent); stop-opacity: 0.1; }
+.iso-stop-clear { stop-color: var(--kz-accent); stop-opacity: 0; }
+
+.iso-flow { stroke: var(--kz-accent); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 3 9; opacity: 0.9; }
+.iso-flow-blocked { stroke-dasharray: 2 7; opacity: 0.6; }
+
+/* Slow motion: the light breathes, objects float a few pixels, light travels along the paths. */
+@keyframes iso-breathe { 50% { opacity: 0.45; } }
+@keyframes iso-float { to { transform: translateY(-7px); } }
+@keyframes iso-dash { to { stroke-dashoffset: -96; } }
+@keyframes iso-dash-out { to { stroke-dashoffset: 96; } }
+.iso-led, .iso-core { animation: iso-breathe 4.8s ease-in-out infinite; }
+.iso-led-late { animation-delay: -2.2s; }
+.iso-float { animation: iso-float 9s ease-in-out infinite alternate; }
+.iso-float-late { animation: iso-float 11s ease-in-out -4s infinite alternate; }
+.iso-float-later { animation: iso-float 10s ease-in-out -7s infinite alternate; }
+.iso-flow { animation: iso-dash 7s linear infinite; }
+.iso-flow-late { animation-delay: -2.5s; }
+.iso-flow-later { animation-delay: -5s; }
+.iso-flow-out { animation-name: iso-dash-out; }
+.iso-beam { animation: iso-dash 5s linear infinite; }
+
+/* ── Product captures (our own screenshots) ──────────────── */
+/* Two captures per view, one per theme: the page shows the one of its theme. */
+.landing-capture-light { display: none; }
+html.light .landing-capture-light { display: block; }
+html.light .landing-capture-dark { display: none; }
+
+/* The hero's depth of field: its media layer is stronger than a plain section's (SectionBackdrop draws it at 50 %). */
+.landing-hero > .kz-backdrop-media { opacity: 0.85; --kz-backdrop-blur: 14px; }
+html.light .landing-hero > .kz-backdrop-media { opacity: 0.6; }
+
+/* The hero's depth of field: the real workspace, tilted and blurred behind the sovereign chat. */
+.landing-hero-capture {
+  position: absolute;
+  right: -12%;
+  top: 14%;
+  width: 72%;
+  max-width: 980px;
+  transform: perspective(1400px) rotateY(-16deg) rotateX(8deg);
+  border: 1px solid var(--kz-accent);
+  border-radius: 18px;
+  filter: brightness(1.35) saturate(1.2);
+  mask-image: linear-gradient(to left, #000 40%, transparent 98%);
+}
+/* On a phone the chat already fills the screen: no capture behind it (and nothing heavy before the first paint). */
+@media (max-width: 1023px) {
+  .landing-hero-capture { display: none !important; }
+}
+
+/* A capture inside a card: sharp at the top, blurred and fading into the card below (depth of field). */
+.landing-card-capture {
+  mask-image: linear-gradient(to bottom, #000 0%, transparent 92%);
+  filter: blur(1.5px) saturate(1.1);
+  transition: filter 0.6s var(--kz-ease), transform 0.6s var(--kz-ease);
+}
+@media (hover: hover) {
+  .group:hover .landing-card-capture { filter: blur(0) saturate(1.15); transform: translateY(-4px); }
+}
+
+/* The terminal of "How it works": a caret that blinks slowly. */
+@keyframes landing-caret { 50% { opacity: 0; } }
+.landing-caret { animation: landing-caret 1.2s steps(1) infinite; }
+
+@media (prefers-reduced-motion: reduce) {
+  .iso-led, .iso-core, .iso-float, .iso-float-late, .iso-float-later, .iso-flow, .iso-beam, .landing-caret { animation: none; }
+  .landing-card-capture { transition: none; }
+  .group:hover .landing-card-capture { transform: none; }
+}

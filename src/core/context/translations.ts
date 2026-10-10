@@ -5,6 +5,7 @@
 
 import { type Locale, type TranslationDictionary } from "./translations.types";
 import { landing } from "./translations.landing";
+import { features } from "./translations.features";
 import { THEME_MODE } from "@/core/constants/http.constants";
 export type { Locale, TranslationDictionary };
 
@@ -19,6 +20,7 @@ export const translations: Record<Locale, TranslationDictionary> = {
       studios: "Studios",
       packs: "Packs",
       logout: "Log out",
+      closeMenu: "Close the menu",
       memoryBlocks: "Memory Blocks",
       playground: "Playground",
       jobsHistory: "Task History",
@@ -200,13 +202,15 @@ export const translations: Record<Locale, TranslationDictionary> = {
       themeCustom: "Sovereign Theme",
       themeCyberpunk: "Cyberpunk Theme",
       themeSolarized: "Solarized Theme",
+      themeElectric: "Electric Blue",
       themeSystem: "System Preference",
       themeSystemDesc: "Follows your OS appearance",
-      themeLightDesc: "Clean & bright workspace",
-      themeDarkDesc: "Deep ambient dark mode",
+      themeLightDesc: "Orazaka orange on light",
+      themeDarkDesc: "Orazaka orange on deep dark",
       themeCustomDesc: "Sovereign deep slate",
       themeCyberpunkDesc: "Neon synthwave aesthetic",
       themeSolarizedDesc: "Warm solarized palette",
+      themeElectricDesc: "The former blue identity",
       themeApplied: "applied",
       themeClickToApply: "Click to apply",
       themeChangesInstant: "Changes apply instantly across the whole interface",
@@ -769,6 +773,7 @@ export const translations: Record<Locale, TranslationDictionary> = {
       included: "Included",
     },
     landing: landing.en,
+    features: features.en,
   },
   fr: {
     sidebar: {
@@ -777,6 +782,7 @@ export const translations: Record<Locale, TranslationDictionary> = {
       studios: "Studios",
       packs: "Packs",
       logout: "Se déconnecter",
+      closeMenu: "Fermer le menu",
       memoryBlocks: "Blocs de mémoire",
       playground: "Playground",
       jobsHistory: "Historique des tâches",
@@ -962,13 +968,15 @@ export const translations: Record<Locale, TranslationDictionary> = {
       themeCustom: "Thème Souverain",
       themeCyberpunk: "Thème Cyberpunk",
       themeSolarized: "Thème Solarisé",
+      themeElectric: "Bleu Électrique",
       themeSystem: "Préférence Système",
       themeSystemDesc: "Suit l'apparence de votre OS",
-      themeLightDesc: "Espace de travail lumineux",
-      themeDarkDesc: "Mode sombre ambiant profond",
+      themeLightDesc: "L'orange Orazaka sur fond clair",
+      themeDarkDesc: "L'orange Orazaka sur fond sombre",
       themeCustomDesc: "Ardoise souveraine profonde",
       themeCyberpunkDesc: "Esthétique néon synthwave",
       themeSolarizedDesc: "Palette solarisée chaleureuse",
+      themeElectricDesc: "L'ancienne identité bleue",
       themeApplied: "appliqué",
       themeClickToApply: "Cliquer pour appliquer",
       themeChangesInstant:
@@ -1543,5 +1551,6 @@ export const translations: Record<Locale, TranslationDictionary> = {
       included: "Inclus",
     },
     landing: landing.fr,
+    features: features.fr,
   },
 };

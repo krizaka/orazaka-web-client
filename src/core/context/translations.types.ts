@@ -3,7 +3,7 @@
  * @description Shared type definitions for the internationalization dictionary.
  */
 
-import type { LandingDictionary } from "./translations.landing.types";
+import type { FeaturesDictionary, LandingDictionary } from "./translations.landing.types";
 
 export type Locale = "en" | "fr";
 
@@ -14,6 +14,7 @@ export interface TranslationDictionary {
     studios: string;
     packs: string;
     logout: string;
+    closeMenu: string;
     memoryBlocks: string;
     playground: string;
     jobsHistory: string;
@@ -191,6 +192,7 @@ export interface TranslationDictionary {
     themeCustom: string;
     themeCyberpunk: string;
     themeSolarized: string;
+    themeElectric: string;
     themeSystem: string;
     themeSystemDesc: string;
     themeLightDesc: string;
@@ -198,6 +200,7 @@ export interface TranslationDictionary {
     themeCustomDesc: string;
     themeCyberpunkDesc: string;
     themeSolarizedDesc: string;
+    themeElectricDesc: string;
     themeApplied: string;
     themeClickToApply: string;
     themeChangesInstant: string;
@@ -725,4 +728,5 @@ export interface TranslationDictionary {
   };
   /** The public home page (visitors without a session). */
   landing: LandingDictionary;
+  features: FeaturesDictionary;
 }

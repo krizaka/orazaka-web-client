@@ -1,4 +1,3 @@
-/* eslint-disable */
 /**
  * @file route.ts
  * @description Catch-all API Route Handler that acts as a server-side BFF (Backend-for-Frontend) proxy

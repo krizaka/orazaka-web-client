@@ -6,7 +6,9 @@ import path from "node:path";
 // @krizaka/ui as this app resolves it (it may be nested under the app while the workspace root holds the version
 // the design system asked for).
 // Jest runs from the app directory (npm scripts, the workspace reactor).
-const ui = path.dirname(createRequire(path.join(process.cwd(), "package.json")).resolve("@krizaka/ui/package.json"));
+const resolveFromApp = createRequire(path.join(process.cwd(), "package.json")).resolve;
+const ui = path.dirname(resolveFromApp("@krizaka/ui/package.json"));
+const icons = path.dirname(resolveFromApp("@krizaka/icons/package.json"));
 
 const createJestConfig = nextJest({
   dir: "./",
@@ -20,6 +22,8 @@ const config = {
     // condition only, which Jest's CommonJS resolver does not read: map them to their files.
     "^@krizaka/ui$": `${ui}/dist/index.js`,
     "^@krizaka/ui/(.*)$": `${ui}/dist/$1.js`,
+    // @krizaka/icons: the same `import`-only exports.
+    "^@krizaka/icons$": `${icons}/dist/index.js`,
   },
   testPathIgnorePatterns: ["<rootDir>/node_modules/", "<rootDir>/.next/", "<rootDir>/src/__tests__/helpers/", "<rootDir>/e2e/", "<rootDir>/scripts/"],
   collectCoverageFrom: [

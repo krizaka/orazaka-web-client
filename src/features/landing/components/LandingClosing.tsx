@@ -1,47 +1,39 @@
 "use client";
 
 import Link from "next/link";
-import { KrizakaLogo } from "@krizaka/ui";
+import { ForwardIcon } from "@krizaka/icons";
+import { OrazakaLogo } from "@krizaka/ui";
 import { Button } from "@krizaka/ui/button";
-import { useTranslation } from "@/core/context/LocaleContext";
+import { SectionBackdrop } from "@krizaka/ui/section-backdrop";
 
-/** The last call to action and the footer (legal pages, licence, the Krizaka signature). */
-export function LandingClosing() {
-  const { t } = useTranslation();
-  const c = t.landing.cta;
-  const f = t.landing.footer;
-
+/** The last call to action of a public page: the Orazaka mark under its light dome, a promise and the two ways in. */
+export function LandingClosing({
+  eyebrow,
+  title,
+  lead,
+  primary,
+  secondary,
+  secondaryHref = "/login",
+}: Readonly<{ eyebrow: string; title: string; lead: string; primary: string; secondary: string; secondaryHref?: string }>) {
   return (
-    <>
-      <section className="border-t border-border-subtle ambient-grid">
-        <article className="mx-auto flex max-w-3xl flex-col items-center gap-6 px-5 py-24 text-center">
-          <h2 className="font-display text-3xl font-bold tracking-tight text-fg sm:text-4xl">{c.title}</h2>
-          <p className="max-w-xl text-base leading-relaxed text-fg-secondary">{c.lead}</p>
-          <nav className="flex flex-wrap justify-center gap-3" aria-label={c.primary}>
-            <Button asChild variant="primary" size="lg" shape="pill">
-              <Link href="/register">{c.primary}</Link>
-            </Button>
-            <Button asChild size="lg" shape="pill" variant="ghost">
-              <Link href="/login">{c.secondary}</Link>
-            </Button>
-          </nav>
-        </article>
-      </section>
-
-      <footer className="border-t border-border-subtle">
-        <nav className="mx-auto flex max-w-6xl flex-wrap items-center gap-x-6 gap-y-3 px-5 py-8 text-sm text-fg-muted">
-          <a href="https://www.krizaka.com" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 hover:text-fg">
-            <KrizakaLogo size={20} animated={false} />
-            {f.by}
-          </a>
-          <span>{f.license}</span>
-          <span className="ml-auto flex gap-5">
-            <Link href="/privacy" className="hover:text-fg">{f.privacy}</Link>
-            <Link href="/terms" className="hover:text-fg">{f.terms}</Link>
-            <Link href="/contact" className="hover:text-fg">{f.contact}</Link>
-          </span>
+    <SectionBackdrop grid className="border-t border-border-subtle">
+      <article data-reveal className="mx-auto flex max-w-3xl flex-col items-center gap-6 px-4 py-24 text-center sm:px-5 lg:py-32">
+        <OrazakaLogo size={104} />
+        <p className="font-mono text-xs font-semibold uppercase tracking-[0.18em] text-fg-accent">{eyebrow}</p>
+        <h2 className="font-display text-3xl font-bold tracking-tight text-balance text-fg sm:text-5xl">{title}</h2>
+        <p className="max-w-xl text-base leading-relaxed text-pretty text-fg-secondary sm:text-lg">{lead}</p>
+        <nav className="flex flex-wrap justify-center gap-3" aria-label={primary}>
+          <Button asChild variant="primary" size="lg" shape="pill" className="kz-sheen">
+            <Link href="/register">
+              {primary}
+              <ForwardIcon size={18} />
+            </Link>
+          </Button>
+          <Button asChild size="lg" shape="pill" variant="ghost">
+            <Link href={secondaryHref}>{secondary}</Link>
+          </Button>
         </nav>
-      </footer>
-    </>
+      </article>
+    </SectionBackdrop>
   );
 }

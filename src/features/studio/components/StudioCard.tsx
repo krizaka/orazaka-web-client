@@ -41,7 +41,7 @@ export function StudioCard({ studio }: Readonly<StudioCardProps>) {
     >
       <div className="flex items-start justify-between gap-3">
         <span className="flex items-center justify-center w-9 h-9 border border-border-subtle bg-surface-2 text-accent">
-          <Icon name={studio.iconKey as IconName} size={18} />
+          <Icon name={studio.iconKey as IconName} fallback="studio" size={18} />
         </span>
         <span className="hud-label text-[10px] text-fg-muted">
           {pricingLabel[studio.pricing]}

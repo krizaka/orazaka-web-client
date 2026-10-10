@@ -50,7 +50,7 @@ export function StudioDetail({ studioKey }: Readonly<StudioDetailProps>) {
 
       <header className="flex items-start gap-3">
         <span className="flex items-center justify-center w-11 h-11 flex-shrink-0 border border-border-subtle bg-surface-2 text-accent">
-          <Icon name={studio.iconKey as IconName} size={22} />
+          <Icon name={studio.iconKey as IconName} fallback="studio" size={22} />
         </span>
         <div className="flex flex-col gap-1">
           <h1 className="text-[17px] font-semibold tracking-[-0.02em] text-fg">
