@@ -6,7 +6,7 @@
 //   npm run record:tour -- prepare         # Eric holds three conversations first (kept for the recordings)
 //   npm run record:tour                    # every clip; `-- chat create` re-records some. ORAZAKA_URL, OUT (tour/)
 //
-// Clips, chained by the site: home (the public landing page), dashboard (Eric's workspace), chat (a question
+// Clips: showcase (the krizaka.com home card, filmed close up at 960×600), home (the public landing page), dashboard (Eric's workspace), chat (a question
 // answered from the policy pasted under it, streamed by the local model), create (a product visual generated on
 // this machine), studios (his Studios), packs (what his plan holds), settings (Appearance, theme switch).
 // Each clip is recorded at 1440×900 by Playwright, then encoded by ffmpeg to 1280×800 at 25 fps: VP9 .webm, H.264
@@ -17,7 +17,7 @@ import { mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { setHours, setMinutes, startOfDay } from "date-fns";
-import { ERIC, PREPARED, RECORDED_DOCUMENT, RECORDED_QUESTION, RECORDED_VISUAL } from "./tour/eric.mjs";
+import { ERIC, PREPARED, RECORDED_DOCUMENT, RECORDED_QUESTION, RECORDED_VISUAL, SHOWCASE_VISUAL } from "./tour/eric.mjs";
 
 const BASE = (process.env.ORAZAKA_URL || "http://localhost:3000").replace(/\/$/, "");
 const OUT = path.resolve(process.env.OUT || "tour");
@@ -27,6 +27,9 @@ const ARGS = process.argv.slice(2);
 const PREPARE = ARGS.includes("prepare");
 const ONLY = ARGS.filter((a) => a !== "prepare");
 const VIEWPORT = { width: 1440, height: 900 };
+// The home-page card plays at a third of a screen: its clip is filmed in a smaller window, so the same interface
+// fills the frame at a size that reads there (no micro-text). Same 16:10, upscaled to 1280×800 like the others.
+const CLOSE_UP = { width: 960, height: 600 };
 // The browser's clock reads 18:40 today (TOUR_TIME=HH:MM): the greeting and the timestamps of an evening's work
 // look the same whenever the tour is re-recorded. Time still flows; only its starting point is set.
 const [TOUR_H, TOUR_M] = (process.env.TOUR_TIME || "18:40").split(":").map(Number);
@@ -51,12 +54,12 @@ const raw = await mkdtemp(path.join(os.tmpdir(), "orazaka-tour-"));
 const pause = (page, ms) => page.waitForTimeout(ms);
 
 /** A browser context in dark English, signed in when `state` is given. */
-async function context(state, record) {
+async function context(state, record, viewport = VIEWPORT) {
   const ctx = await browser.newContext({
-    viewport: VIEWPORT,
+    viewport,
     colorScheme: "dark",
     storageState: state,
-    recordVideo: record ? { dir: raw, size: VIEWPORT } : undefined,
+    recordVideo: record ? { dir: raw, size: viewport } : undefined,
   });
   await ctx.clock.setSystemTime(setMinutes(setHours(startOfDay(new Date()), TOUR_H), TOUR_M));
   await ctx.addInitScript(() => {
@@ -186,6 +189,40 @@ const CLIPS = {
     };
   },
 
+  // The home page's card: what a generic chat does not do, in one take — "runs locally" in view, a question
+  // answered from the policy pasted under it while the engine's real steps tick by, then a product visual
+  // rendered on the machine (the wait for the image engine is cut, as in `create`).
+  async showcase(page, cut) {
+    await page.goto(`${BASE}/chat`, { waitUntil: "load" });
+    await page.locator("textarea").first().waitFor();
+    return async () => {
+      await pause(page, 1800); // "Good evening, Eric." · "Runs locally · nothing leaves your network"
+      const box = page.locator("textarea").first();
+      await box.click();
+      await box.pressSequentially(RECORDED_QUESTION, { delay: 14 });
+      await page.keyboard.insertText(`\n\n${RECORDED_DOCUMENT}`);
+      await pause(page, 500);
+      await page.getByRole("button", { name: /^Send/ }).click();
+      await page.waitForURL(/conversationId=/, { timeout: 30_000 });
+      await awaitAnswer(page, RECORDED_DOCUMENT.length);
+      await pause(page, 2600);
+      await page.getByRole("button", { name: /Add Capability/ }).click();
+      await pause(page, 900);
+      await page.getByRole("menu").getByText(/^Image generation$/).click();
+      await pause(page, 500);
+      await page.locator("textarea").first().pressSequentially(SHOWCASE_VISUAL, { delay: 14 });
+      await page.getByRole("button", { name: /^Send/ }).click();
+      await page.getByText(/Generating/).first().waitFor({ timeout: 30_000 });
+      await pause(page, 1500);
+      cut.from();
+      await page.getByText(/Generating/).first().waitFor({ state: "detached", timeout: 300_000 });
+      await pause(page, 400);
+      cut.to();
+      await page.locator("main img").last().scrollIntoViewIfNeeded().catch(() => {});
+      await pause(page, 3800);
+    };
+  },
+
   async studios(page) {
     await page.goto(`${BASE}/studios`, { waitUntil: "load" });
     return async () => {
@@ -227,7 +264,7 @@ const CLIPS = {
 
 /** Records one clip, then encodes it next to the others (dropping the wait the clip declared). */
 async function record(id, state) {
-  const ctx = await context(id === "home" ? undefined : state, true);
+  const ctx = await context(id === "home" ? undefined : state, true, id === "showcase" ? CLOSE_UP : VIEWPORT);
   const page = await ctx.newPage();
   const opened = Date.now();
   const at = () => (Date.now() - opened) / 1000;

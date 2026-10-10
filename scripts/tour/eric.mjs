@@ -54,3 +54,6 @@ export const RECORDED_DOCUMENT = RETURNS_POLICY;
 /** The recorded visual: a product shot for the shop, generated on this machine. */
 export const RECORDED_VISUAL =
   "Product photo of a sculpted ceramic table lamp with a warm orange glow, on a dark slate plinth, soft rim light, deep ink-blue background, minimal studio setting";
+
+/** The home card's visual: the same lamp, for the shop's product page. */
+export const SHOWCASE_VISUAL = "Product photo of the ceramic table lamp, warm orange glow, dark slate plinth, ink-blue background";
