@@ -49,9 +49,15 @@ function contentOf(run: Run): { content: string; kind: MediaKind } {
  * finished, what it produced, and — on a Studio with more than one step — that there
  * was more than one job involved.
  *
+ * A run outlives the component that started it: the first message of a conversation navigates into
+ * the new thread, and a reload starts from the stored history. So the placeholders of the open
+ * conversation are picked up from its history — any `run-pending` bubble still empty is followed
+ * again, whoever started it.
+ *
  * @param userId - whose history the rewritten message belongs to
+ * @param conversationId - the open conversation, whose pending runs are resumed
  */
-export function useComposerRunReconciler(userId: string) {
+export function useComposerRunReconciler(userId: string, conversationId?: string) {
   const queryClient = useQueryClient();
   const { t } = useTranslation();
   const pendingRef = useRef<Map<string, PendingRun>>(new Map());
@@ -65,6 +71,26 @@ export function useComposerRunReconciler(userId: string) {
     },
     [],
   );
+
+  useEffect(() => {
+    if (!conversationId) return;
+    const queryKey = ["chatMessages", userId, conversationId];
+    const resume = () => {
+      const messages = queryClient.getQueryData<ChatMessage[]>(queryKey) ?? [];
+      let added = false;
+      for (const message of messages) {
+        if (message.kind !== "run-pending" || message.content || pendingRef.current.has(message.runId)) continue;
+        pendingRef.current.set(message.runId, { conversationId, messageId: message.id });
+        added = true;
+      }
+      if (added) setTracked(pendingRef.current.size);
+    };
+    resume();
+    const key = JSON.stringify(queryKey);
+    return queryClient.getQueryCache().subscribe((event) => {
+      if (JSON.stringify(event.query.queryKey) === key) resume();
+    });
+  }, [queryClient, userId, conversationId]);
 
   const rewrite = useCallback(
     (ref: PendingRun, patch: { content: string; kind: MediaKind }) => {

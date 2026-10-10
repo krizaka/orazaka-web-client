@@ -36,7 +36,7 @@ export function useChatActions({ activeConversationId }: UseChatActionsProps) {
   const queryClient = useQueryClient();
 
   const userId = user?.id || user?.email || "anonymous";
-  const { trackRun } = useComposerRunReconciler(userId);
+  const { trackRun } = useComposerRunReconciler(userId, activeConversationId);
 
   const [selectedStudio, setSelectedFeature] = useState<ComposerStudio | null>(
     null,
@@ -51,24 +51,28 @@ export function useChatActions({ activeConversationId }: UseChatActionsProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const appendToCache = useCallback(
-    (message: ChatMessage) => {
-      const cacheKey = ["chatMessages", userId, activeConversationId];
+    (message: ChatMessage, conversationId: string) => {
+      const cacheKey = ["chatMessages", userId, conversationId];
       queryClient.setQueryData<ChatMessage[]>(cacheKey, (old = []) => {
         const updated = [...old, message];
-        saveStoredMessages(userId, activeConversationId, updated);
+        saveStoredMessages(userId, conversationId, updated);
         return updated;
       });
     },
-    [queryClient, userId, activeConversationId],
+    [queryClient, userId],
   );
 
   const nodeMutation = useMutation({
-    mutationFn: startComposerRun,
+    // `conversationId` names the thread the run belongs to when it is not the active one yet: the
+    // first message of a new conversation creates the thread and runs in it in the same gesture.
+    mutationFn: ({ conversationId: _thread, ...run }: Parameters<typeof startComposerRun>[0] & { conversationId?: string }) =>
+      startComposerRun(run),
     // A run is asynchronous, so the text path's user-bubble echo is bypassed. Mirror
     // it here (covers both handleSend and handleExecuteNode) so the user's request
     // appears in the timeline, not just the acknowledgement.
     onMutate: (vars) =>
-      appendToCache({
+      appendToCache(
+        {
         id: `user-${Date.now()}`,
         role: "user",
         content: vars.prompt,
@@ -84,23 +88,22 @@ export function useChatActions({ activeConversationId }: UseChatActionsProps) {
               },
             }
           : {}),
-      }),
-    onSuccess: (run) => {
+        },
+        vars.conversationId ?? activeConversationId,
+      ),
+    onSuccess: (run, vars) => {
       const messageId = `assistant-${Date.now()}`;
       if (!run) {
         return;
       }
       // Render a "generating" placeholder linking to the run, and follow the run so
       // what it produced is swapped into this message when it finishes.
-      appendToCache({
-        id: messageId,
-        role: "assistant",
-        content: "",
-        timestamp: Date.now(),
-        kind: "run-pending",
-        runId: run.id,
-      });
-      trackRun(run.id, activeConversationId, messageId);
+      const thread = vars.conversationId ?? activeConversationId;
+      appendToCache(
+        { id: messageId, role: "assistant", content: "", timestamp: Date.now(), kind: "run-pending", runId: run.id },
+        thread,
+      );
+      trackRun(run.id, thread, messageId);
     },
   });
 
@@ -220,6 +223,28 @@ export function useChatActions({ activeConversationId }: UseChatActionsProps) {
     [chatInput, attachment, selectedOptions, nodeMutation, setChatInput],
   );
 
+  /**
+   * Runs the staged Studio in a thread that was just created (the first message of a conversation).
+   * Returns false when nothing is staged, so the caller sends a chat message instead.
+   */
+  const runStagedIn = useCallback(
+    (conversationId: string): boolean => {
+      if (!selectedStudio) return false;
+      nodeMutation.mutate({
+        studio: selectedStudio,
+        prompt: chatInput.trim() || `Run ${selectedStudio.label}`,
+        assetId: attachment?.assetId,
+        options: selectedOptions,
+        conversationId,
+      });
+      setSelectedFeature(null);
+      setSelectedOptions({});
+      setAttachment(null);
+      return true;
+    },
+    [selectedStudio, chatInput, attachment, selectedOptions, nodeMutation],
+  );
+
   const updateOptions = useCallback(
     (patch: Partial<ComposerRunOptions>) =>
       setSelectedOptions((prev) => ({ ...prev, ...patch })),
@@ -247,5 +272,6 @@ export function useChatActions({ activeConversationId }: UseChatActionsProps) {
     handleFileChange,
     handleSend,
     handleExecuteNode,
+    runStagedIn,
   };
 }

@@ -61,7 +61,7 @@ export function StudioDetail({ studioKey }: Readonly<StudioDetailProps>) {
           )}
           <div className="flex items-center gap-2 pt-0.5">
             <span className="hud-label text-[10px] text-fg-muted">
-              {studio.profession}
+              {t.studio.professions[studio.profession] ?? studio.profession}
             </span>
             <span className="hud-label text-[10px] text-fg-muted">
               {pricingLabel[studio.pricing]}

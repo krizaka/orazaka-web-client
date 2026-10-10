@@ -67,6 +67,7 @@ export const ChatWindow: React.FC<{ initialConversationId: string }> = ({
     handleFileChange,
     handleSend,
     handleExecuteNode,
+    runStagedIn,
   } = useChatActions({ activeConversationId });
 
   const {
@@ -143,7 +144,7 @@ export const ChatWindow: React.FC<{ initialConversationId: string }> = ({
   };
 
   return (
-    <main className="flex h-full w-full bg-surface-0 overflow-hidden relative">
+    <div className="flex h-full w-full bg-surface-0 overflow-hidden relative">
       <ChatDrawer
         isOpen={isThreadDrawerOpen}
         onClose={() => setIsThreadDrawerOpen(false)}
@@ -174,7 +175,6 @@ export const ChatWindow: React.FC<{ initialConversationId: string }> = ({
         {activeConversationId ? (
           <>
             <ChatHeader
-              activeConversationId={activeConversationId}
               threadTitle={threadTitle}
               onOpenDrawer={() => setIsThreadDrawerOpen(true)}
               onRename={(title) =>
@@ -237,13 +237,13 @@ export const ChatWindow: React.FC<{ initialConversationId: string }> = ({
               {...composerSharedProps}
               onSubmit={(e) => {
                 e.preventDefault();
-                handleFirstSend(chatInput);
+                handleFirstSend(chatInput, runStagedIn);
               }}
               isCentered={isInputCentered}
             />
           </>
         )}
       </section>
-    </main>
+    </div>
   );
 };

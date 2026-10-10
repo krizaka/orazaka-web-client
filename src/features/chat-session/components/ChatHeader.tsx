@@ -1,24 +1,22 @@
 import React, { useState, useEffect } from "react";
 
 interface ChatHeaderProps {
-  activeConversationId: string;
   threadTitle: string;
   onOpenDrawer: () => void;
   onRename: (title: string) => void;
   t: {
     chat: {
       sessionTitle: string;
-      id: string;
     };
   };
 }
 
 /**
- * Chat session header — displays thread title (inline-editable) and conversation ID.
+ * Chat session header — the thread title, inline-editable. The conversation's id is an address for
+ * the application, not something its reader needs, so it is not shown.
  * Calm Obsidian 2026 — solid surface, no backdrop-blur.
  */
 export function ChatHeader({
-  activeConversationId,
   threadTitle,
   onOpenDrawer,
   onRename,
@@ -112,9 +110,6 @@ export function ChatHeader({
               </>
             )}
           </section>
-          <span className="text-xs text-fg-muted mt-0.5 font-mono">
-            {t.chat.id}: {activeConversationId}
-          </span>
         </section>
       </div>
     </header>

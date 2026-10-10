@@ -50,14 +50,22 @@ export function useChatThreadActions({
 
   /**
    * First message of a brand-new conversation: create the thread (titled from the prompt), seed the
-   * user message into its cache, navigate in, and open the SSE stream.
+   * user message into its cache, navigate in, and open the SSE stream — or, when a Studio is staged,
+   * run it in the new thread instead.
    */
-  const handleFirstSend = async (prompt: string) => {
+  const handleFirstSend = async (prompt: string, runStagedIn?: (conversationId: string) => boolean) => {
     const trimmed = prompt.trim();
     if (!trimmed) return;
     try {
       const newThread = await createThread(deriveThreadTitle(trimmed));
       const newId = newThread.conversationId;
+      // A Studio staged in the composer runs in the new thread (it echoes the request itself).
+      if (runStagedIn?.(newId)) {
+        setActiveConversationId(newId);
+        setChatInput("");
+        router.push(`/chat?conversationId=${newId}`);
+        return;
+      }
       const userMsg: ChatMessage = {
         id: `user-${Date.now()}`,
         role: "user",

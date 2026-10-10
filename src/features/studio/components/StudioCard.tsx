@@ -58,7 +58,7 @@ export function StudioCard({ studio }: Readonly<StudioCardProps>) {
       </div>
 
       <div className="mt-auto flex items-center justify-between gap-2 pt-1">
-        <span className="hud-label text-[10px] text-fg-muted">{studio.profession}</span>
+        <span className="hud-label text-[10px] text-fg-muted">{t.studio.professions[studio.profession] ?? studio.profession}</span>
         {studio.locked ? (
           <span className="flex items-center gap-1 text-[10px] font-medium text-warning">
             <Icon name="shield" size={12} />

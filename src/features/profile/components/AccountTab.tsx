@@ -48,9 +48,9 @@ export function AccountTab({ profile, t }: Readonly<AccountTabProps>) {
                   profile.authorities.map((auth) => (
                     <span
                       key={auth}
-                      className="inline-flex items-center rounded-lg border border-border-subtle bg-surface-2 px-2.5 py-1 font-mono text-[11px] font-medium text-fg-secondary"
+                      className="inline-flex items-center rounded-lg border border-border-subtle bg-surface-2 px-2.5 py-1 text-xs font-medium text-fg-secondary"
                     >
-                      {auth}
+                      {t.profile.roles[auth] ?? auth}
                     </span>
                   ))
                 ) : (

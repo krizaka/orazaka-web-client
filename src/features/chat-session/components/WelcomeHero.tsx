@@ -3,7 +3,7 @@
 import React from "react";
 import { Icon, SentinelMini } from "@krizaka/orazaka-design-system";
 import type { IconName } from "@krizaka/orazaka-design-system";
-import { useAuth } from "@/core/hooks/useAuth";
+import { Greeting } from "@/core/components/Greeting";
 import type { TranslationDictionary } from "@/core/context/LocaleContext";
 
 interface WelcomeHeroProps {
@@ -16,19 +16,10 @@ interface WelcomeHeroProps {
  * WelcomeHero — branded, calm entry point for a new conversation.
  *
  * Replaces the old typewriter/emoji treatment with the Sentinel brand mark, a
- * static time-of-day greeting, and three actionable prompt cards that submit on
+ * time-of-day greeting from the dictionary, and three actionable prompt cards that submit on
  * click. No "AI" cliché, reduced-motion safe (entrance only).
  */
 export function WelcomeHero({ t, onPrompt }: Readonly<WelcomeHeroProps>) {
-  const { user } = useAuth();
-
-  const period = (() => {
-    const hour = new Date().getHours();
-    if (hour < 12) return "morning";
-    if (hour < 18) return "afternoon";
-    return "evening";
-  })();
-  const userName = user?.name?.split(" ")[0] || "there";
 
   const cards: { label: string; icon: IconName }[] = [
     { label: t.chat.suggestionImage, icon: "image" },
@@ -45,8 +36,7 @@ export function WelcomeHero({ t, onPrompt }: Readonly<WelcomeHeroProps>) {
       </div>
 
       <h2 className="text-xl font-bold tracking-tight text-fg">
-        Good {period},{" "}
-        <span className="text-accent">{userName}</span>.
+        <Greeting suffix="." />
       </h2>
       <p className="mt-2 text-sm text-fg-muted">
         {t.chat.startConversationDesc}

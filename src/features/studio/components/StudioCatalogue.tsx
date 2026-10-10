@@ -38,7 +38,7 @@ export function StudioCatalogue() {
         {professions.map((trade) => (
           <FilterChip
             key={trade}
-            label={trade}
+            label={t.studio.professions[trade] ?? trade}
             active={profession === trade}
             onSelect={() => setProfession(trade)}
           />
