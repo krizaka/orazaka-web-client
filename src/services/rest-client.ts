@@ -10,7 +10,14 @@
 
 import { signOut } from "next-auth/react";
 
+/**
+ * An error body: RFC 9457 Problem Details from a service on the Krizaka kit (`detail`, with a
+ * stable `code` and the `requestId`), or the legacy `{ error }` of a service not yet migrated.
+ */
 interface ApiError {
+  detail?: string;
+  code?: string;
+  requestId?: string;
   error?: string;
 }
 
@@ -50,7 +57,8 @@ async function invalidateSession(): Promise<void> {
  * @template T - Expected JSON response shape (parsed; `undefined` for empty bodies).
  * @param path - Absolute app path, e.g. `/api/v1/profile`.
  * @param init - Optional method (default `GET`) and JSON body.
- * @throws {Error} On non-2xx responses, using the server `error` field when present.
+ * @throws {Error} On non-2xx responses, using the server's Problem Details `detail` (or legacy
+ *   `error`) when present.
  */
 export async function restRequest<T>(
   path: string,
@@ -66,7 +74,8 @@ export async function restRequest<T>(
     let message = `REST request failed: ${response.status} ${response.statusText}`;
     try {
       const err = (await response.json()) as ApiError;
-      if (err?.error) message = err.error;
+      const reason = err?.detail ?? err?.error;
+      if (reason) message = reason;
     } catch {
       // Non-JSON error body — keep the status-based message.
     }
