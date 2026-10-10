@@ -14,7 +14,7 @@ import {
   MODEL_CATEGORY,
 } from "@/core/constants/capability.constants";
 import type { TranslationDictionary } from "@/core/context/LocaleContext";
-import { Field, selectClass } from "@/features/chat-session/components/CapabilityOptionsParts";
+import { CapabilityField } from "@/features/chat-session/components/CapabilityOptionsParts";
 import type { ModelOption } from "@/features/chat-session/components/CapabilityOptionsParts";
 
 import { cn } from "@krizaka/ui/cn";
@@ -113,9 +113,8 @@ export function CapabilityOptions({
   return (
     <section className="flex flex-col gap-2.5 border-b border-border-subtle pb-2.5">
       <div className="flex flex-wrap items-end gap-2.5">
-        <Field label={t.chat.optModel}>
-          <select
-            className={selectClass}
+        <CapabilityField
+            label={t.chat.optModel}
             value={options.model ?? ""}
             onChange={(e) => onChange({ model: e.target.value || undefined })}
           >
@@ -130,14 +129,12 @@ export function CapabilityOptions({
                 {m.compatible ? m.label : `${m.label} (incompatible)`}
               </option>
             ))}
-          </select>
-        </Field>
+          </CapabilityField>
 
         {showVoice && (
-          <Field label={t.chat.optVoice}>
-            <select
-              className={selectClass}
-              value={options.voice ?? ""}
+          <CapabilityField
+            label={t.chat.optVoice}
+            value={options.voice ?? ""}
               onChange={(e) => onChange({ voice: e.target.value || undefined })}
             >
               <option value="">{t.chat.optAuto}</option>
@@ -146,15 +143,13 @@ export function CapabilityOptions({
                   {v}
                 </option>
               ))}
-            </select>
-          </Field>
+            </CapabilityField>
         )}
 
         {showSize && (
-          <Field label={t.chat.optSize}>
-            <select
-              className={selectClass}
-              value={options.size ?? ""}
+          <CapabilityField
+            label={t.chat.optSize}
+            value={options.size ?? ""}
               onChange={(e) => onChange({ size: e.target.value || undefined })}
             >
               <option value="">{t.chat.optAuto}</option>
@@ -163,15 +158,13 @@ export function CapabilityOptions({
                   {s}
                 </option>
               ))}
-            </select>
-          </Field>
+            </CapabilityField>
         )}
 
         {showDuration && (
-          <Field label={t.chat.optDuration}>
-            <select
-              className={selectClass}
-              value={options.durationSeconds != null ? String(options.durationSeconds) : ""}
+          <CapabilityField
+            label={t.chat.optDuration}
+            value={options.durationSeconds != null ? String(options.durationSeconds) : ""}
               onChange={(e) =>
                 onChange({
                   durationSeconds: e.target.value ? Number(e.target.value) : undefined,
@@ -184,8 +177,7 @@ export function CapabilityOptions({
                   {d}s
                 </option>
               ))}
-            </select>
-          </Field>
+            </CapabilityField>
         )}
       </div>
 

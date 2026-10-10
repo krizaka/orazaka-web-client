@@ -80,7 +80,7 @@ export const JobRow: React.FC<JobRowProps> = ({
             <button
               onClick={() => onCopy(job.id, job.id)}
               className="p-1 text-fg-muted hover:text-fg rounded-md transition-colors"
-              aria-label="Copy full job ID"
+              aria-label={t.a11y.copyJobId}
             >
               {copiedId === job.id ? (
                 <Icon name="check" className="w-3.5 h-3.5 text-success" />

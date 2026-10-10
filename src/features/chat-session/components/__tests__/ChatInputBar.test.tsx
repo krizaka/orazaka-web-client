@@ -18,6 +18,7 @@ jest.mock("@/features/chat-session/components/CapabilityOptions", () => ({
 }));
 
 const defaultT = {
+  a11y: { attachFile: "Attach File" },
   chat: {
     typeMessage: "Type a message...",
     typing: "Typing...",

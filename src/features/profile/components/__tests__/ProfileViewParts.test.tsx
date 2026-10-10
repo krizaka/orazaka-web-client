@@ -2,6 +2,11 @@ import "@testing-library/jest-dom";
 import { render, screen, fireEvent } from "@testing-library/react";
 import { CopyableField } from "@/features/profile/components/ProfileViewParts";
 
+jest.mock("@/core/context/LocaleContext", () => ({
+  useTranslation: () => ({ t: { a11y: jest.requireActual("@/core/context/translations.automation").a11y.en }, locale: "en" }),
+}));
+
+
 jest.mock("@krizaka/orazaka-design-system", () => ({
   Icon: ({ name }: { readonly name: string }) => (
     <span data-testid="mock-icon">{name}</span>

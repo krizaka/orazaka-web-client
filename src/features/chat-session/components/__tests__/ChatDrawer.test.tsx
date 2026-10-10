@@ -15,20 +15,20 @@ const baseProps = {
   isLoadingThreads: false,
   onCreateThread: jest.fn(),
   onDeleteThread: jest.fn(),
-  t: { chat: { memoryBlocks: "Memory Blocks" } },
+  t: { chat: { memoryBlocks: "Memory Blocks" }, a11y: { closeHistory: "Close the conversations" } },
 };
 
 describe("ChatDrawer", () => {
   afterEach(() => jest.clearAllMocks());
 
   it("renders nothing when closed", () => {
-    const { container } = render(<ChatDrawer {...baseProps} isOpen={false} />);
-    expect(container.innerHTML).toBe("");
+    render(<ChatDrawer {...baseProps} isOpen={false} />);
+    expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
   });
 
-  it("renders title when open", () => {
+  it("is a dialog named by its title when open", () => {
     render(<ChatDrawer {...baseProps} />);
-    expect(screen.getByText("Memory Blocks")).toBeInTheDocument();
+    expect(screen.getByRole("dialog", { name: "Memory Blocks" })).toBeInTheDocument();
   });
 
   it("renders thread list", () => {
@@ -36,9 +36,15 @@ describe("ChatDrawer", () => {
     expect(screen.getByTestId("thread-list")).toBeInTheDocument();
   });
 
-  it("calls onClose when backdrop clicked", () => {
+  it("closes from its translated close button", () => {
     render(<ChatDrawer {...baseProps} />);
-    fireEvent.click(screen.getByLabelText("Close drawer"));
+    fireEvent.click(screen.getByRole("button", { name: "Close the conversations" }));
+    expect(baseProps.onClose).toHaveBeenCalled();
+  });
+
+  it("closes on Escape", () => {
+    render(<ChatDrawer {...baseProps} />);
+    fireEvent.keyDown(screen.getByRole("dialog"), { key: "Escape" });
     expect(baseProps.onClose).toHaveBeenCalled();
   });
 });

@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Button } from "@krizaka/ui/button";
 import { Dialog } from "@krizaka/ui/dialog";
+import { Field, Input, Select } from "@krizaka/ui/field";
 import { useTranslation } from "@/core/context/LocaleContext";
 import { useConfigSchema, type ConfigField } from "@/features/studio/hooks/useConfigSchema";
 
@@ -72,7 +73,7 @@ function InstallForm({
     <>
       <Dialog.Body className="flex flex-col gap-3">
         {fields.map((field) => (
-          <ConfigInput
+          <StudioConfigField
             key={field.key}
             field={field}
             value={values[field.key] ?? ""}
@@ -93,44 +94,34 @@ function InstallForm({
   );
 }
 
-interface ConfigInputProps {
+interface ConfigFieldProps {
   field: ConfigField;
   value: string;
   disabled: boolean;
   onChange: (value: string) => void;
 }
 
-/** One generated field. A sub-component so the dialog stays a layout, not a loop body. */
-function ConfigInput({ field, value, disabled, onChange }: Readonly<ConfigInputProps>) {
+/** One generated field: `Field.Root`, `Field.Label` and `Select` or `Input` from @krizaka/ui/field. */
+function StudioConfigField({ field, value, disabled, onChange }: Readonly<ConfigFieldProps>) {
   const inputId = `studio-config-${field.key}`;
+  const control = { id: inputId, value, disabled, className: "h-9 text-xs" };
 
   return (
-    <label htmlFor={inputId} className="flex flex-col gap-1">
-      <span className="hud-label text-[10px] text-fg-muted">{field.title}</span>
+    <Field.Root className="gap-1">
+      <Field.Label htmlFor={inputId} className="hud-label text-[10px] text-fg-muted">
+        {field.title}
+      </Field.Label>
       {field.options ? (
-        <select
-          id={inputId}
-          value={value}
-          disabled={disabled}
-          onChange={(event) => onChange(event.target.value)}
-          className="h-8 px-2 text-[12px] border border-border-subtle bg-surface-2 text-fg focus:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:opacity-50"
-        >
+        <Select {...control} onChange={(event) => onChange(event.target.value)}>
           {field.options.map((option) => (
             <option key={option} value={option}>
               {option}
             </option>
           ))}
-        </select>
+        </Select>
       ) : (
-        <input
-          id={inputId}
-          type="text"
-          value={value}
-          disabled={disabled}
-          onChange={(event) => onChange(event.target.value)}
-          className="h-8 px-2 text-[12px] border border-border-subtle bg-surface-2 text-fg focus:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:opacity-50"
-        />
+        <Input {...control} type="text" onChange={(event) => onChange(event.target.value)} />
       )}
-    </label>
+    </Field.Root>
   );
 }

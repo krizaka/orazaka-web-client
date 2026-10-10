@@ -2,6 +2,11 @@ import "@testing-library/jest-dom";
 import { render, screen, fireEvent } from "@testing-library/react";
 import { ProfileTabs, type ProfileTab } from "@/features/profile/components/ProfileTabs";
 
+jest.mock("@/core/context/LocaleContext", () => ({
+  useTranslation: () => ({ t: { a11y: jest.requireActual("@/core/context/translations.automation").a11y.en }, locale: "en" }),
+}));
+
+
 const tabs: ProfileTab[] = [
   { id: "account", label: "Account", icon: "profile" },
   { id: "appearance", label: "Appearance", icon: "sun" },

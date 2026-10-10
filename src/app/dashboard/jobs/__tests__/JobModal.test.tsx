@@ -5,6 +5,7 @@ import { JobModal } from "@/app/dashboard/jobs/JobModal";
 jest.mock("@/core/context/LocaleContext", () => ({
   useTranslation: () => ({
     t: {
+      a11y: jest.requireActual("@/core/context/translations.automation").a11y.en,
       jobs: {
         jobDetails: "Job Details",
         payload: "Payload",

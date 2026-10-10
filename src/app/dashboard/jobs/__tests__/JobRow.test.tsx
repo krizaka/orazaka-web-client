@@ -5,6 +5,7 @@ import { JobRow } from "@/app/dashboard/jobs/JobRow";
 jest.mock("@/core/context/LocaleContext", () => ({
   useTranslation: () => ({
     t: {
+      a11y: jest.requireActual("@/core/context/translations.automation").a11y.en,
       notifications: {
         videoGen: "Video Generation",
         imageGen: "Image Generation",
@@ -130,7 +131,7 @@ describe("JobRow", () => {
     render(
       <table><tbody><JobRow job={baseJob as never} {...baseProps} /></tbody></table>,
     );
-    fireEvent.click(screen.getByLabelText("Copy full job ID"));
+    fireEvent.click(screen.getByLabelText("Copy the full job ID"));
     expect(baseProps.onCopy).toHaveBeenCalledWith(baseJob.id, baseJob.id);
   });
 

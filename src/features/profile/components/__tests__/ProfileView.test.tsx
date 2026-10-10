@@ -22,6 +22,7 @@ jest.mock("@/core/context/TenantContext", () => ({
 jest.mock("@/core/context/LocaleContext", () => ({
   useTranslation: () => ({
     t: {
+      a11y: jest.requireActual("@/core/context/translations.automation").a11y.en,
       settings: { saving: "Saving…" },
       profile: {
         failedLoad: "Failed to load profile",

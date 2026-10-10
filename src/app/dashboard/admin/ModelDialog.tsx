@@ -53,7 +53,7 @@ export function ModelDialog({
       <button
         type="button"
         className="fixed inset-0 bg-transparent border-none cursor-default"
-        aria-label="Close dialog"
+        aria-label={t.a11y.closeDialog}
         onClick={() => !saving && onClose()}
       />
 

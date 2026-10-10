@@ -77,7 +77,7 @@ export const JobModal: React.FC<JobModalProps> = ({
       <button
         type="button"
         className="fixed inset-0 w-full h-full bg-transparent border-none cursor-default"
-        aria-label="Close dialog"
+        aria-label={t.a11y.closeDialog}
         onClick={onClose}
       />
       <article
@@ -105,7 +105,7 @@ export const JobModal: React.FC<JobModalProps> = ({
             <button
               onClick={onClose}
               className="p-2 rounded-xl hover:bg-surface-2 text-fg-muted hover:text-fg transition-all duration-150"
-              aria-label="Close details"
+              aria-label={t.a11y.closeDetails}
             >
               <Icon name="close" className="w-4 h-4" />
             </button>

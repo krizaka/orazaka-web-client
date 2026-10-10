@@ -1,4 +1,7 @@
+"use client";
+
 import React from "react";
+import { Dialog } from "@krizaka/ui/dialog";
 import { ThreadList } from "./ThreadList";
 import { ChatThread } from "@/core/types/chat.types";
 
@@ -12,12 +15,16 @@ interface ChatDrawerProps {
   onCreateThread: () => void;
   onDeleteThread: (id: string) => void;
   t: {
-    chat: {
-      memoryBlocks: string;
-    };
+    chat: { memoryBlocks: string };
+    a11y: { closeHistory: string };
   };
 }
 
+/**
+ * The conversations on a phone: the @krizaka/ui dialog as a side panel (Radix: focus trap, Escape, a tap outside,
+ * focus return). @krizaka/ui places a panel on the right only; this one keeps its 1.x place on the left through
+ * `className` — a `left` placement is requested upstream (krizaka/krizaka-ui#43).
+ */
 export function ChatDrawer({
   isOpen,
   onClose,
@@ -29,41 +36,18 @@ export function ChatDrawer({
   onDeleteThread,
   t,
 }: Readonly<ChatDrawerProps>) {
-  if (!isOpen) return null;
-
   return (
-    <aside className="fixed inset-0 z-50 md:hidden flex">
-      <button
-        type="button"
-        className="fixed inset-0 bg-surface-0/60 backdrop-blur-sm border-none cursor-default"
-        aria-label="Close drawer"
-        onClick={onClose}
-      />
-      <div className="relative flex flex-col w-72 max-w-[80vw] h-full bg-surface-1/95 border-r border-border-subtle/60 backdrop-blur-md z-50">
-        <div className="p-4 border-b border-border-subtle/60 flex justify-between items-center bg-surface-1/50">
-          <span className="text-sm font-semibold text-fg">
-            {t.chat.memoryBlocks}
-          </span>
-          <button
-            onClick={onClose}
-            className="p-1 rounded-lg text-fg-secondary hover:text-fg-muted hover:bg-surface-2 transition-colors"
-          >
-            <svg
-              className="w-5 h-5"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={1.5}
-                d="M6 18 18 6M6 6l12 12"
-              />
-            </svg>
-          </button>
-        </div>
-        <div className="flex-1 overflow-y-auto">
+    <Dialog.Root open={isOpen} onOpenChange={(open) => !open && onClose()}>
+      <Dialog.Content
+        placement="right"
+        closeLabel={t.a11y.closeHistory}
+        aria-describedby={undefined}
+        className="left-0 right-auto w-72 max-w-[80vw] border-l-0 border-r bg-surface-1/95 backdrop-blur-md md:hidden"
+      >
+        <Dialog.Header className="border-b border-border-subtle/60 pb-4">
+          <Dialog.Title className="text-sm font-semibold">{t.chat.memoryBlocks}</Dialog.Title>
+        </Dialog.Header>
+        <Dialog.Body className="px-0 pb-0">
           <ThreadList
             threads={threads}
             activeId={activeConversationId}
@@ -78,8 +62,8 @@ export function ChatDrawer({
             }}
             onDeleteThread={onDeleteThread}
           />
-        </div>
-      </div>
-    </aside>
+        </Dialog.Body>
+      </Dialog.Content>
+    </Dialog.Root>
   );
 }

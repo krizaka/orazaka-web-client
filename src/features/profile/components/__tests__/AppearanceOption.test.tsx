@@ -1,6 +1,7 @@
 import "@testing-library/jest-dom";
-import { render, screen, fireEvent } from "@testing-library/react";
-import { previewIsland, ThemePreviewCard } from "@/features/profile/components/ThemePreviewCard";
+import { render, screen } from "@testing-library/react";
+import { RadioGroup } from "@krizaka/ui/radio-group";
+import { previewIsland, AppearanceOption } from "@/features/profile/components/AppearanceOption";
 
 const defaultProps = {
   value: "dark" as const,
@@ -8,45 +9,42 @@ const defaultProps = {
   desc: "Easy on the eyes",
   icon: <span data-testid="icon">🌙</span>,
   isActive: false,
-  onClick: jest.fn(),
   clickToApplyLabel: "Click to apply",
 };
 
-describe("ThemePreviewCard", () => {
+/** An option lives in its group (Radix): the group holds the choice. */
+function Option(props: React.ComponentProps<typeof AppearanceOption>) {
+  return (
+    <RadioGroup.Root value={props.isActive ? props.value : ""} label="Appearance">
+      <AppearanceOption {...props} />
+    </RadioGroup.Root>
+  );
+}
+
+describe("AppearanceOption", () => {
   afterEach(() => {
     jest.clearAllMocks();
   });
 
   it("renders label and description", () => {
-    render(<ThemePreviewCard {...defaultProps} />);
+    render(<Option {...defaultProps} />);
     expect(screen.getByText("Dark Mode")).toBeInTheDocument();
     expect(screen.getByText("Easy on the eyes")).toBeInTheDocument();
   });
 
   it("renders the icon", () => {
-    render(<ThemePreviewCard {...defaultProps} />);
+    render(<Option {...defaultProps} />);
     expect(screen.getByTestId("icon")).toBeInTheDocument();
   });
 
-  it("calls onClick when clicked (not active)", () => {
-    const onClick = jest.fn();
-    render(<ThemePreviewCard {...defaultProps} onClick={onClick} />);
-    fireEvent.click(screen.getByRole("button"));
-    expect(onClick).toHaveBeenCalledTimes(1);
-  });
-
-  it("does NOT call onClick when already active", () => {
-    const onClick = jest.fn();
-    render(
-      <ThemePreviewCard {...defaultProps} isActive={true} onClick={onClick} />,
-    );
-    fireEvent.click(screen.getByRole("button"));
-    expect(onClick).not.toHaveBeenCalled();
+  it("is a radio named by its words", () => {
+    render(<Option {...defaultProps} />);
+    expect(screen.getByRole("radio", { name: /Dark Mode/ })).not.toBeChecked();
   });
 
   it("shows checkmark when active", () => {
     const { container } = render(
-      <ThemePreviewCard {...defaultProps} isActive={true} />,
+      <Option {...defaultProps} isActive={true} />,
     );
     const mark = container.querySelector("mark");
     expect(mark).toBeInTheDocument();
@@ -54,39 +52,39 @@ describe("ThemePreviewCard", () => {
 
   it("does not show checkmark when not active", () => {
     const { container } = render(
-      <ThemePreviewCard {...defaultProps} isActive={false} />,
+      <Option {...defaultProps} isActive={false} />,
     );
     const mark = container.querySelector("mark");
     expect(mark).not.toBeInTheDocument();
   });
 
   it("shows hover overlay when not active", () => {
-    render(<ThemePreviewCard {...defaultProps} isActive={false} />);
+    render(<Option {...defaultProps} isActive={false} />);
     expect(screen.getByText("Click to apply")).toBeInTheDocument();
   });
 
   it("does not show hover overlay when active", () => {
-    render(<ThemePreviewCard {...defaultProps} isActive={true} />);
+    render(<Option {...defaultProps} isActive={true} />);
     expect(screen.queryByText("Click to apply")).not.toBeInTheDocument();
   });
 
   it("applies active class when isActive", () => {
-    render(<ThemePreviewCard {...defaultProps} isActive={true} />);
-    const button = screen.getByRole("button");
+    render(<Option {...defaultProps} isActive={true} />);
+    const button = screen.getByRole("radio");
     expect(button.className).toContain("theme-card-active");
   });
 
   it("draws a theme inside its island, so the preview reads that theme's tokens", () => {
-    const { container, rerender } = render(<ThemePreviewCard {...defaultProps} value="cyberpunk" />);
+    const { container, rerender } = render(<Option {...defaultProps} value="cyberpunk" />);
     expect(container.querySelector("[data-island]")).toHaveClass("theme-cyberpunk");
-    rerender(<ThemePreviewCard {...defaultProps} value="dark" />);
+    rerender(<Option {...defaultProps} value="dark" />);
     expect(container.querySelector("[data-island]")).toHaveClass("theme-dark");
   });
 
   it("draws light with the invariant tokens and system half light, half dark", () => {
-    const { container, rerender } = render(<ThemePreviewCard {...defaultProps} value="light" />);
+    const { container, rerender } = render(<Option {...defaultProps} value="light" />);
     expect(container.querySelector("[data-island]")).toBeNull();
-    rerender(<ThemePreviewCard {...defaultProps} value="system" />);
+    rerender(<Option {...defaultProps} value="system" />);
     expect(container.querySelectorAll("[data-island='theme-dark']")).toHaveLength(1);
   });
 
@@ -96,8 +94,8 @@ describe("ThemePreviewCard", () => {
     expect(previewIsland("solarized")).toEqual({ kind: "island", className: "theme-solarized" });
   });
 
-  it("exposes the selection as aria-pressed", () => {
-    render(<ThemePreviewCard {...defaultProps} isActive={true} />);
-    expect(screen.getByRole("button")).toHaveAttribute("aria-pressed", "true");
+  it("exposes the selection as a checked radio", () => {
+    render(<Option {...defaultProps} isActive={true} />);
+    expect(screen.getByRole("radio")).toBeChecked();
   });
 });

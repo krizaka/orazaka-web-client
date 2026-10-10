@@ -32,6 +32,7 @@ jest.mock("@/core/hooks/useAuth", () => ({
 jest.mock("@/core/context/LocaleContext", () => ({
   useTranslation: () => ({
     t: {
+      a11y: jest.requireActual("@/core/context/translations.automation").a11y.en,
       auth: {
         loginTitle: "Welcome Back",
         loginSubtitle: "Sign in to your account",

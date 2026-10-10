@@ -1,5 +1,6 @@
 import * as React from "react";
-import { Icon } from "@krizaka/orazaka-design-system";
+import { cn } from "@krizaka/ui/cn";
+import { Field, Select } from "@krizaka/ui/field";
 
 export interface ModelOption {
   value: string;
@@ -13,22 +14,22 @@ export interface ModelOption {
   requiresReferenceImage?: boolean;
 }
 
-export const selectClass =
-  "h-8 w-full cursor-pointer appearance-none rounded-lg border border-border-default bg-surface-2 pl-2.5 pr-7 text-xs text-fg transition-colors focus:outline-none focus:ring-2 focus:ring-ring";
-
-export function Field({
+/**
+ * One option of the composer (model, voice, size, duration): a labelled native select — `Field.Root`, `Field.Label`
+ * and `Select` from @krizaka/ui/field, at the composer's compact size.
+ */
+export function CapabilityField({
   label,
-  children,
-}: Readonly<{ label: string; children: React.ReactNode }>) {
+  className,
+  ...props
+}: Readonly<{ label: string } & React.ComponentProps<typeof Select>>) {
+  const id = React.useId();
   return (
-    <label className="flex min-w-[120px] flex-1 flex-col gap-1">
-      <span className="text-[10px] font-semibold uppercase tracking-wider text-fg-muted">
+    <Field.Root className="min-w-[120px] flex-1 gap-1">
+      <Field.Label htmlFor={id} className="text-[10px] uppercase tracking-wider text-fg-muted">
         {label}
-      </span>
-      <span className="relative">
-        {children}
-        <Icon name="chevronDown" className="pointer-events-none absolute right-2 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-fg-muted" />
-      </span>
-    </label>
+      </Field.Label>
+      <Select id={id} className={cn("h-8 cursor-pointer pl-2.5 text-xs", className)} {...props} />
+    </Field.Root>
   );
 }
