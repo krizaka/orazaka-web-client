@@ -48,6 +48,7 @@ jest.mock("@/core/context/LocaleContext", () => ({
         adminPanel: "Admin",
         navigation: "NAVIGATION",
         logout: "Log out",
+        closeMenu: "Close Sidebar",
         videoCategory: "Video",
         audioCategory: "Audio",
         textCategory: "Text",

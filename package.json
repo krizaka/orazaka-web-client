@@ -18,6 +18,7 @@
   },
   "dependencies": {
     "@dagrejs/dagre": "^3.0.0",
+    "@krizaka/icons": "^0.1.0-beta.0",
     "@krizaka/orazaka-design-system": "*",
     "@krizaka/orazaka-shared": "*",
     "@krizaka/tailwind": "^2.0.0-beta.1",

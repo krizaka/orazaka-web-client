@@ -6,7 +6,7 @@ import { useTenant } from "@/core/context/TenantContext";
 import { useJobStream } from "@/core/context/JobStreamContext";
 import { useTranslation } from "@/core/context/LocaleContext";
 import { MODEL_CATEGORY } from "@/core/constants/capability.constants";
-import { Icon } from "@krizaka/orazaka-design-system";
+import { CheckIcon, NotificationIcon, WarningIcon } from "@krizaka/icons";
 import { JOB_STATUS } from "@/core/constants/http.constants";
 
 import { cn } from "@krizaka/ui/cn";
@@ -40,7 +40,7 @@ export const NotificationBell: React.FC<NotificationBellProps> = ({
           className="relative rounded-xl p-2 text-fg-muted transition-all duration-200 hover:bg-surface-1/50 hover:text-fg focus:outline-none focus-visible:ring-2 focus-visible:ring-ring"
           aria-label={t.notifications.region}
         >
-          <Icon name="notification" size={20} />
+          <NotificationIcon size={20} />
           {activeJobsCount > 0 && (
             <span className="absolute right-1 top-1 flex h-4 w-4 animate-pulse items-center justify-center rounded-full bg-danger text-[10px] font-bold text-on-accent">
               {activeJobsCount}
@@ -97,9 +97,9 @@ function JobItem({ job, onSelect }: Readonly<{ job: Job; onSelect: () => void }>
       return <span className="mt-0.5 block h-4 w-4 flex-shrink-0 animate-spin rounded-full border-2 border-border-subtle border-t-fg-secondary" />;
     }
     if (job.status === JOB_STATUS.COMPLETED) {
-      return <Icon name="checkCircle" size={16} className="mt-0.5 flex-shrink-0 text-success" />;
+      return <CheckIcon size={16} className="mt-0.5 flex-shrink-0 text-success" />;
     }
-    return <Icon name="warning" size={16} className="mt-0.5 flex-shrink-0 text-danger" />;
+    return <WarningIcon size={16} className="mt-0.5 flex-shrink-0 text-danger" />;
   })();
 
   return (

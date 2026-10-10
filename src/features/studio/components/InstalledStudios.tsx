@@ -54,7 +54,7 @@ export function InstalledStudios({ onBrowse }: Readonly<InstalledStudiosProps>) 
         >
           <div className="flex items-start justify-between gap-2">
             <span className="flex items-center justify-center w-9 h-9 border border-border-subtle bg-surface-2 text-accent">
-              <Icon name={installation.iconKey as IconName} size={18} />
+              <Icon name={installation.iconKey as IconName} fallback="studio" size={18} />
             </span>
             {installation.status === "UPGRADE_AVAILABLE" && (
               <span className="hud-label text-[10px] text-accent">

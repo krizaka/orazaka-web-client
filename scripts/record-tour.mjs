@@ -87,7 +87,8 @@ const CLIPS = {
     await page.goto(`${BASE}/`, { waitUntil: "load" });
     return async () => {
       await pause(page, 5200); // the sovereign chat answers on its own
-      for (const dy of [640, 700, 900, 900]) await glide(page, dy, 1500);
+      // Hero → why (the isometric scene) → platform → cost & control → how → Studios → the last call.
+      for (const dy of [760, 900, 1000, 900, 900, 900, 900]) await glide(page, dy, 1700);
       await pause(page, 800);
     };
   },
@@ -102,7 +103,12 @@ const CLIPS = {
       await box.pressSequentially(QUESTION, { delay: 28 });
       await pause(page, 400);
       await page.getByRole("button", { name: /^Send/ }).click();
-      // Streamed by the local model: wait until the answer stops growing.
+      // The composer is locked while the engine works (ERR-126): the turn is over when it is editable again. A cold
+      // model can think for a while before its first token, so "the page stopped changing" is not the signal.
+      const composer = (locked) => page.waitForFunction((l) => document.querySelector("textarea")?.disabled === l, locked, { timeout: locked ? 5_000 : 120_000, polling: 250 }).catch(() => {});
+      await composer(true);
+      await composer(false);
+      // Then let the streamed answer settle.
       let last = "";
       for (let stable = 0, i = 0; stable < 4 && i < 90; i++) {
         await pause(page, 500);

@@ -7,7 +7,7 @@ import { ThemeToggle } from "@krizaka/ui/theme";
 import { useSidebar } from "@/core/context/SidebarContext";
 import { useTenant } from "@/core/context/TenantContext";
 import { useTranslation } from "@/core/context/LocaleContext";
-import { Icon } from "@krizaka/orazaka-design-system";
+import { CheckIcon, ChevronDownIcon, GlobeIcon, MenuIcon } from "@krizaka/icons";
 import { NotificationBell } from "./NotificationBell";
 
 import { cn } from "@krizaka/ui/cn";
@@ -52,7 +52,7 @@ export const Header: React.FC = () => {
           className="mr-2 p-2 rounded-lg text-fg-muted hover:text-fg hover:bg-surface-2 transition-colors duration-150 focus:outline-none focus-visible:ring-2 focus-visible:ring-ring"
           aria-label="Open Sidebar"
         >
-          <Icon name="menu" size={20} />
+          <MenuIcon size={20} />
         </button>
       </div>
       <div className="flex-1" /> {/* Spacer */}
@@ -67,9 +67,9 @@ export const Header: React.FC = () => {
             className="flex items-center gap-1.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-lg px-2.5 py-1.5 text-xs font-medium text-fg-secondary hover:bg-surface-2 hover:text-fg transition-colors duration-150"
             aria-label="Change Language"
           >
-            <Icon name="language" size={16} />
+            <GlobeIcon size={16} />
             <span className="uppercase">{locale}</span>
-            <Icon name="chevronDown" size={12} className="opacity-50" />
+            <ChevronDownIcon size={12} className="opacity-50" />
           </button>
 
           {langDropdownOpen && (
@@ -94,7 +94,7 @@ export const Header: React.FC = () => {
                   )}
                 >
                   <span>{t.settings.english}</span>
-                  {locale === "en" && <Icon name="shield" size={14} />}
+                  {locale === "en" && <CheckIcon size={14} />}
                 </button>
                 <button
                   onClick={() => {
@@ -109,7 +109,7 @@ export const Header: React.FC = () => {
                   )}
                 >
                   <span>{t.settings.french}</span>
-                  {locale === "fr" && <Icon name="shield" size={14} />}
+                  {locale === "fr" && <CheckIcon size={14} />}
                 </button>
               </div>
             </>

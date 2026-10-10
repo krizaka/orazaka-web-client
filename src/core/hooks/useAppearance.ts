@@ -10,16 +10,18 @@ import { useTheme } from "@krizaka/ui/theme";
  *
  * The profile stores a single value (`preferences.theme`): "system" | "light" | "dark" or a named theme. A named
  * theme sets every colour role, so its mode only decides `color-scheme`: solarized is light, the others dark.
+ * `electric` is the 1.x blue identity, kept for the people who prefer it (the default is the Orazaka orange).
  */
 
 /** The named themes of @krizaka/orazaka-design-system (theme.css). */
-export const NAMED_THEMES = ["custom", "cyberpunk", "solarized", "krizaka"] as const;
+export const NAMED_THEMES = ["electric", "custom", "cyberpunk", "solarized", "krizaka"] as const;
 export type NamedTheme = (typeof NAMED_THEMES)[number];
 
 export const APPEARANCES = ["system", "light", "dark", ...NAMED_THEMES] as const;
 export type Appearance = (typeof APPEARANCES)[number];
 
 const NAMED_MODE: Record<NamedTheme, "dark" | "light"> = {
+  electric: "dark",
   custom: "dark",
   cyberpunk: "dark",
   solarized: "light",

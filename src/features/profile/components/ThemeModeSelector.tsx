@@ -55,6 +55,12 @@ export function ThemeModeSelector({
       desc: t.settings.themeDarkDesc,
     },
     {
+      value: "electric",
+      label: t.settings.themeElectric,
+      icon: <Icon name="spark" className="w-3.5 h-3.5" />,
+      desc: t.settings.themeElectricDesc,
+    },
+    {
       value: "custom",
       label: t.settings.themeCustom,
       icon: <Icon name="shield" className="w-3.5 h-3.5" />,
@@ -63,7 +69,7 @@ export function ThemeModeSelector({
     {
       value: "cyberpunk",
       label: t.settings.themeCyberpunk,
-      icon: <Icon name="spark" className="w-3.5 h-3.5" />,
+      icon: <Icon name="cpu" className="w-3.5 h-3.5" />,
       desc: t.settings.themeCyberpunkDesc,
     },
     {
@@ -100,7 +106,7 @@ export function ThemeModeSelector({
       </header>
 
       {/* ── Theme grid ─────────────────────────────── */}
-      <div className="grid gap-2.5 grid-cols-3 stagger-children">
+      <div className="grid gap-2.5 grid-cols-2 sm:grid-cols-4 stagger-children">
         {options.map((opt) => (
           <ThemePreviewCard
             key={opt.value}
