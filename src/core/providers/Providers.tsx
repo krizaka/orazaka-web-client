@@ -11,6 +11,7 @@ import { LocaleProvider } from "@/core/context/LocaleContext";
 import { JobStreamProvider } from "@/core/context/JobStreamContext";
 import { AppToaster } from "@/core/components/AppToaster";
 import { AppCommandPalette } from "@/core/components/AppCommandPalette";
+import { AppCharts } from "@/core/components/AppCharts";
 
 interface ProvidersProps {
   children: ReactNode;
@@ -21,6 +22,8 @@ interface ProvidersProps {
  *
  * The theme is the organisation's (@krizaka/ui/theme): <ThemeScript /> in the root layout applies the persisted
  * choice before the first paint, this provider keeps it; {@link useAppearance} maps it to the profile's value.
+ *
+ * <AppCharts> gives every chart the reader's locale, the Orazaka palette and its words.
  *
  * <MotionObserver /> is mounted once here: every `[data-reveal]` of the app (the landing and the signed-in screens)
  * rises into view, and `.kz-spotlight` cards follow the pointer.
@@ -39,7 +42,7 @@ export function Providers({ children }: Readonly<ProvidersProps>) {
                 <JobStreamProvider>
                   <AppCommandPalette />
                   <MotionObserver />
-                  {children}
+                  <AppCharts>{children}</AppCharts>
                   <AppToaster />
                 </JobStreamProvider>
               </SidebarProvider>

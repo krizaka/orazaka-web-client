@@ -5,6 +5,7 @@ import { JobsTable } from "@/app/dashboard/jobs/JobsTable";
 jest.mock("@/core/context/LocaleContext", () => ({
   useTranslation: () => ({
     t: {
+      insights: { pagination: { nav: "Pages", page: "Page {page}", compact: "Page {page} of {count}", pageSize: "Rows per page" } },
       jobs: {
         colId: "ID",
         colFeature: "Feature",

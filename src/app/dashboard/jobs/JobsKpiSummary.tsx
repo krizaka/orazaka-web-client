@@ -6,7 +6,8 @@ import { Icon } from "@krizaka/orazaka-design-system";
 import { Job } from "@/core/types/jobs.types";
 import { useTranslation } from "@/core/context/LocaleContext";
 import { computeJobStats } from "./jobStats.utils";
-import { AnimatedCounter } from "./AnimatedCounter";
+import { NumberTicker } from "@krizaka/ui/number-ticker";
+import { INTL_LOCALES } from "@/core/constants/locale.constants";
 
 import { cn } from "@krizaka/ui/cn";
 
@@ -32,7 +33,7 @@ interface CardDef {
  * Each card features animated counters, gradient borders, and glow effects.
  */
 export const JobsKpiSummary: React.FC<JobsKpiSummaryProps> = ({ jobs }) => {
-  const { t } = useTranslation();
+  const { locale, t } = useTranslation();
   const stats = React.useMemo(() => computeJobStats(jobs), [jobs]);
 
   const cards: CardDef[] = [
@@ -182,7 +183,10 @@ export const JobsKpiSummary: React.FC<JobsKpiSummaryProps> = ({ jobs }) => {
               {card.displayOverride ? (
                 card.displayOverride
               ) : (
-                <AnimatedCounter value={card.value} suffix={card.valueSuffix} />
+                <>
+                  <NumberTicker value={card.value} locale={INTL_LOCALES[locale]} trigger="change" align="start" />
+                  {card.valueSuffix}
+                </>
               )}
             </figure>
 

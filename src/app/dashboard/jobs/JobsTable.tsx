@@ -5,7 +5,11 @@ import { Job } from "@/core/types/jobs.types";
 import { useTranslation } from "@/core/context/LocaleContext";
 import { JobRow } from "./JobRow";
 import { JobKpiBar } from "./JobKpiBar";
-import { Button, Icon } from "@krizaka/orazaka-design-system";
+import { Loader } from "@krizaka/ui/loader";
+import { Pagination } from "@krizaka/ui/pagination";
+import { fill } from "@/core/context/fill";
+
+const PAGE_SIZES = [10, 20, 50] as const;
 
 export interface JobsTableProps {
   jobs: Job[];
@@ -68,8 +72,7 @@ export const JobsTable: React.FC<JobsTableProps> = ({
                     colSpan={7}
                     className="text-center py-24 text-fg-muted"
                   >
-                    <Icon name="loader" className="w-6 h-6 animate-spin mx-auto mb-2 text-fg-secondary" />
-                    <span>{t.jobs.loading}</span>
+                    <Loader variant="block" label={t.jobs.loading} delay={0} />
                   </td>
                 </tr>
               );
@@ -101,52 +104,26 @@ export const JobsTable: React.FC<JobsTableProps> = ({
         </table>
       </div>
 
-      {/* Pagination controls */}
       {totalPages > 1 && (
-        <footer className="flex items-center justify-between p-4 border-t border-border-subtle/60 bg-surface-1/40 text-xs font-semibold text-fg-secondary">
-          <div className="flex items-center space-x-4">
-            <span>
-              {t.jobs.paginationShowing} {currentPage * pageSize + 1} -{" "}
-              {Math.min((currentPage + 1) * pageSize, totalElements)}{" "}
-              {t.jobs.paginationOf} {totalElements} {t.jobs.paginationTasks}
-            </span>
-            <select
-              value={pageSize}
-              onChange={(e) => {
-                onPageSizeChange(Number(e.target.value));
-              }}
-              className="border border-border-subtle bg-transparent rounded-lg p-1 text-xs focus:outline-none"
-            >
-              <option value={10}>10 {t.jobs.perPage}</option>
-              <option value={20}>20 {t.jobs.perPage}</option>
-              <option value={50}>50 {t.jobs.perPage}</option>
-            </select>
-          </div>
-          <div className="flex items-center space-x-2">
-            <Button
-              variant="ghost"
-              disabled={currentPage === 0 || loading}
-              onClick={() => onPageChange(Math.max(0, currentPage - 1))}
-              className="h-8 px-2.5 rounded-lg border border-border-subtle hover:bg-surface-2 disabled:opacity-40"
-            >
-              <Icon name="chevronLeft" className="w-4 h-4 mr-1" />
-              <span>{t.jobs.previous}</span>
-            </Button>
-            <span className="px-2.5 py-1 rounded-lg bg-surface-2 border border-border-subtle/60 text-fg-secondary font-bold">
-              {currentPage + 1} / {totalPages}
-            </span>
-            <Button
-              variant="ghost"
-              disabled={currentPage === totalPages - 1 || loading}
-              onClick={() =>
-                onPageChange(Math.min(totalPages - 1, currentPage + 1))
-              }
-              className="h-8 px-2.5 rounded-lg border border-border-subtle hover:bg-surface-2 disabled:opacity-40"
-            >
-              <span>{t.jobs.next}</span>
-              <Icon name="chevronRight" className="w-4 h-4 ml-1" />
-            </Button>
-          </div>
+        <footer className="border-t border-border-subtle/60 bg-surface-1/40 p-4">
+          <Pagination
+            page={currentPage + 1}
+            pageCount={totalPages}
+            onPageChange={(page) => onPageChange(page - 1)}
+            pageSize={pageSize}
+            pageSizeOptions={PAGE_SIZES}
+            onPageSizeChange={onPageSizeChange}
+            disabled={loading}
+            status={`${t.jobs.paginationShowing} ${currentPage * pageSize + 1}–${Math.min((currentPage + 1) * pageSize, totalElements)} ${t.jobs.paginationOf} ${totalElements} ${t.jobs.paginationTasks}`}
+            labels={{
+              nav: t.insights.pagination.nav,
+              previous: t.jobs.previous,
+              next: t.jobs.next,
+              page: (page) => fill(t.insights.pagination.page, { page }),
+              compact: (page, count) => fill(t.insights.pagination.compact, { page, count }),
+              pageSize: t.insights.pagination.pageSize,
+            }}
+          />
         </footer>
       )}
     </article>

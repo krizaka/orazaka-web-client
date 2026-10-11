@@ -3,12 +3,12 @@
 
 import { useEffect, useRef, useCallback } from "react";
 import type { Job } from "@/core/types/jobs.types";
-import { resolveFeatureLabel } from "@/core/constants/capability.constants";
 
 interface JobSSECallbacks {
   onJobUpdate: (job: Job) => void;
   onJobProgress: (jobId: string, progress: number) => void;
-  onToast: (message: string, type: "info" | "success" | "error") => void;
+  /** A job changed state: started, completed or failed — the caller tells the person (in their language). */
+  onJobEvent: (job: Job, event: "started" | "completed" | "failed") => void;
   getJobs: () => Job[];
 }
 
@@ -18,7 +18,7 @@ interface JobSSECallbacks {
  *
  * @param isAuthenticated Whether the user is authenticated.
  * @param hasActiveJobs Whether there are active jobs to monitor.
- * @param callbacks Event handlers for job updates, progress, and toast notifications.
+ * @param callbacks Event handlers for job updates, progress, and state changes.
  */
 export function useJobSSE(
   isAuthenticated: boolean,
@@ -34,36 +34,20 @@ export function useJobSSE(
     callbacksRef.current = callbacks;
   }, [callbacks]);
 
-  const resolveFeatureName = useCallback(
-    (featureKey: string): string => resolveFeatureLabel(featureKey),
-    [],
-  );
-
   const handleJobStatus = useCallback(
     (event: MessageEvent) => {
       try {
         const updatedJob: Job = JSON.parse(event.data);
         callbacksRef.current.onJobUpdate(updatedJob);
 
-        const featureName = resolveFeatureName(updatedJob.featureKey);
-
         if (updatedJob.status === "PROCESSING") {
-          callbacksRef.current.onToast(
-            `⚡ Task [${featureName}] has started processing`,
-            "info",
-          );
+          callbacksRef.current.onJobEvent(updatedJob, "started");
         } else if (updatedJob.status === "COMPLETED") {
           callbacksRef.current.onJobProgress(updatedJob.id, 100);
-          callbacksRef.current.onToast(
-            `🎉 ${featureName} Completed successfully!`,
-            "success",
-          );
+          callbacksRef.current.onJobEvent(updatedJob, "completed");
         } else if (updatedJob.status === "FAILED") {
           callbacksRef.current.onJobProgress(updatedJob.id, 0);
-          callbacksRef.current.onToast(
-            `❌ ${featureName} Failed: ${updatedJob.errorMessage || "Unknown error"}`,
-            "error",
-          );
+          callbacksRef.current.onJobEvent(updatedJob, "failed");
         }
 
         if (["COMPLETED", "FAILED"].includes(updatedJob.status)) {
@@ -88,7 +72,7 @@ export function useJobSSE(
         console.error("Failed to parse job SSE event data", err);
       }
     },
-    [resolveFeatureName],
+    [],
   );
 
   const handleJobProgress = useCallback((event: MessageEvent) => {

@@ -3,11 +3,13 @@
 import Link from "next/link";
 import { Button } from "@krizaka/ui/button";
 import { Mascot } from "@krizaka/ui/mascots";
-import { Spinner } from "@krizaka/ui/spinner";
+import { Loader } from "@krizaka/ui/loader";
 import { useTranslation } from "@/core/context/LocaleContext";
 
 /**
- * The waiting state of a Studio screen: a short wait, so a spinner — a mascot is for the long ones (a run).
+ * The waiting state of a Studio screen: a short wait, so the Krizaka loader — nothing for the first instants (a fast
+ * answer never flashes), then the glyph with its words, and a still frame under reduced motion. A mascot is for the
+ * long waits (a run).
  *
  * Four screens showed this, and one of them had drifted to a different gap — which is how
  * this kind of duplication ends: not with a bug, with a layout that is subtly wrong on one
@@ -16,9 +18,7 @@ import { useTranslation } from "@/core/context/LocaleContext";
 export function StudioLoading() {
   const { t } = useTranslation();
   return (
-    <div className="flex items-center justify-center py-16 text-fg-muted">
-      <Spinner label={t.dashboard.loading} />
-    </div>
+    <Loader variant="block" label={t.dashboard.loading} className="py-6" />
   );
 }
 

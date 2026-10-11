@@ -55,13 +55,6 @@ jest.mock("@krizaka/orazaka-design-system", () => ({
     <button {...props}>{children}</button>
   ),
   Icon: () => <span />,
-  Dialog: ({ open, children, title }: { open: boolean; children: React.ReactNode; title?: string }) =>
-    open ? (
-      <div data-testid="dialog">
-        {title}
-        {children}
-      </div>
-    ) : null,
 }));
 
 jest.mock("@/features/profile/components/AiProvidersParts", () => ({
@@ -161,14 +154,15 @@ describe("AiProvidersSection", () => {
   it("opens the dialog with the form when modal mode is add", () => {
     mockHookState = buildState({ modal: { mode: "add", providerId: "gemini" } });
     render(<AiProvidersSection fetchHeaders={async () => ({})} />);
-    expect(screen.getByTestId("dialog")).toBeInTheDocument();
+    // The real @krizaka/ui dialog (portalled, Radix): found by its role.
+    expect(screen.getByRole("dialog")).toBeInTheDocument();
     expect(screen.getByTestId("form")).toHaveTextContent("add");
   });
 
   it("keeps the dialog closed when modal mode is closed", () => {
     mockHookState = buildState();
     render(<AiProvidersSection fetchHeaders={async () => ({})} />);
-    expect(screen.queryByTestId("dialog")).not.toBeInTheDocument();
+    expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
   });
 
   it("shows the all-configured note when no providers remain", () => {

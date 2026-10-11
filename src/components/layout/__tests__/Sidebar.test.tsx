@@ -65,6 +65,7 @@ jest.mock("@/core/context/LocaleContext", () => ({
         speechSynthesis: "TTS",
         visionAnalysis: "Vision",
       },
+      insights: { credits: { nav: "Credits" } },
     },
     locale: "en",
   }),

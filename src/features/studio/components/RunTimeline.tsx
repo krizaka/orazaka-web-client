@@ -1,37 +1,32 @@
 "use client";
 
-import type { ComponentType } from "react";
-import { CheckIcon, ClockIcon, CloseIcon, ForwardIcon, type IconProps, WarningIcon } from "@krizaka/icons";
-import { Spinner } from "@krizaka/ui/spinner";
-import { useTranslation } from "@/core/context/LocaleContext";
+import { useEffect } from "react";
+import { Progress } from "@krizaka/ui/progress";
+import { Stepper, type Step, type StepStatus } from "@krizaka/ui/stepper";
 import type { RunStep, RunStepStatus } from "@krizaka/orazaka-shared";
-
-import { cn } from "@krizaka/ui/cn";
+import { useJobStream } from "@/core/context/JobStreamContext";
+import { useTranslation } from "@/core/context/LocaleContext";
+import { useNow } from "@/core/hooks/useNow";
+import { formatEta, remainingFor } from "@/core/jobs/jobInsights";
 
 interface RunTimelineProps {
   steps: RunStep[];
 }
 
-/** Which glyph each step state shows. Owned here so the row below stays presentational. */
-const STEP_ICON: Record<Exclude<RunStepStatus, "RUNNING">, ComponentType<IconProps>> = {
-  PENDING: ClockIcon,
-  SUCCEEDED: CheckIcon,
-  FAILED: WarningIcon,
-  SKIPPED: ForwardIcon,
-  CANCELLED: CloseIcon,
-};
-
-const STEP_TONE: Record<RunStepStatus, string> = {
-  PENDING: "text-fg-muted",
-  RUNNING: "text-fg-accent",
-  SUCCEEDED: "text-fg-success",
-  FAILED: "text-fg-danger",
-  SKIPPED: "text-fg-muted",
-  CANCELLED: "text-fg-muted",
+/** How each state of a run's step reads on the Stepper. A skipped step is behind the run, like a done one. */
+const STEP_STATUS: Record<RunStepStatus, StepStatus> = {
+  PENDING: "upcoming",
+  RUNNING: "current",
+  SUCCEEDED: "done",
+  SKIPPED: "done",
+  FAILED: "error",
+  CANCELLED: "upcoming",
 };
 
 /**
- * The per-step live timeline.
+ * The per-step live timeline, on the Krizaka Stepper: done steps are checked and linked, the running one carries its
+ * job's progress (the worker's percentage over SSE) and the time left — the median the same work took on this
+ * machine, never a guess — and a failed one says why.
  *
  * Fan-out instances are shown individually rather than collapsed: when three of five
  * photos succeeded and two failed, "describe: partial" tells the user nothing they
@@ -39,48 +34,46 @@ const STEP_TONE: Record<RunStepStatus, string> = {
  */
 export function RunTimeline({ steps }: Readonly<RunTimelineProps>) {
   const { t } = useTranslation();
+  const { jobs, jobProgress, refreshJobs } = useJobStream();
+  const running = steps.some((step) => step.status === "RUNNING");
+  const now = useNow(running);
+  // A step's job the live stream does not know yet (the run was started elsewhere — a composer, the API): load the
+  // jobs once, so the stream follows it (its progress, its ETA, its toasts).
+  const unknownJob = steps.some((step) => step.status === "RUNNING" && step.jobId && !jobs.some((j) => j.id === step.jobId));
+  useEffect(() => {
+    if (unknownJob) void refreshJobs();
+  }, [unknownJob, refreshJobs]);
 
   if (steps.length === 0) {
     return null;
   }
 
+  const items: Step[] = steps.map((step) => {
+    const status = STEP_STATUS[step.status];
+    const job = step.jobId ? jobs.find((j) => j.id === step.jobId) : undefined;
+    const percent = step.jobId ? jobProgress[step.jobId] : undefined;
+    const left = status === "current" && job ? remainingFor(job, jobs, now) : null;
+    const eta = left === null ? undefined : formatEta(left, t.insights.queue);
+    return {
+      title: step.ordinal > 0 ? `${step.stepId} #${step.ordinal + 1}` : step.stepId,
+      status,
+      value: typeof percent === "number" && percent > 0 ? percent / 100 : undefined,
+      description: step.status === "CANCELLED" ? t.studio.runCancelled : eta,
+      content:
+        status === "current" ? (
+          <Progress size="sm" label={step.stepId} value={typeof percent === "number" && percent > 0 ? percent : undefined} eta={eta} className="w-72 max-w-full" />
+        ) : status === "error" && step.error ? (
+          <p role="alert" className="text-xs text-fg-danger">
+            {step.error}
+          </p>
+        ) : undefined,
+    };
+  });
+
   return (
-    <section className="flex flex-col gap-2">
+    <section className="flex flex-col gap-3">
       <h2 className="text-xs font-semibold uppercase tracking-wider text-fg-muted">{t.studio.runSteps}</h2>
-      <ul className="flex flex-col divide-y divide-border-subtle overflow-hidden rounded-xl border border-border-default bg-surface-1">
-        {steps.map((step) => (
-          <RunTimelineRow key={`${step.stepId}-${step.ordinal}`} step={step} />
-        ))}
-      </ul>
+      <Stepper steps={items} labels={t.insights.queue.steps} className="rounded-xl border border-border-default bg-surface-1 p-5" />
     </section>
-  );
-}
-
-interface RunTimelineRowProps {
-  step: RunStep;
-}
-
-/** One node of the DAG. A sub-component so the list above stays a list. */
-function RunTimelineRow({ step }: Readonly<RunTimelineRowProps>) {
-  const { t } = useTranslation();
-  const Glyph = step.status === "RUNNING" ? null : STEP_ICON[step.status];
-  return (
-    <li className="flex items-center gap-2.5 px-4 py-3">
-      {Glyph ? <Glyph size={16} className={cn("flex-shrink-0", STEP_TONE[step.status])} /> : <Spinner size="sm" label={t.studio.runRunning} />}
-      <span className="text-[13px] font-medium text-fg">
-        {step.stepId}
-        {step.ordinal > 0 && (
-          <span className="text-fg-muted"> #{step.ordinal + 1}</span>
-        )}
-      </span>
-      <span className={cn("ml-auto text-[11px] font-semibold uppercase tracking-wider", STEP_TONE[step.status])}>
-        {step.status}
-      </span>
-      {step.error && (
-        <span className="max-w-[40%] truncate text-[11px] text-fg-danger">
-          {step.error}
-        </span>
-      )}
-    </li>
   );
 }
