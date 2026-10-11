@@ -6,6 +6,7 @@ import { Button } from "@krizaka/ui/button";
 import { Card } from "@krizaka/ui/card";
 import type { RunArtefact } from "@krizaka/orazaka-shared";
 import { useTranslation } from "@/core/context/LocaleContext";
+import { asReport, ReportFindings } from "./ReportFindings";
 
 interface RunOutputsProps {
   outputs: readonly RunArtefact[];
@@ -47,7 +48,8 @@ interface RunOutputRowProps {
 function RunOutputRow({ artefact, index }: Readonly<RunOutputRowProps>) {
   const { t } = useTranslation();
   const [copied, setCopied] = useState(false);
-  const media = artefact.type !== "TEXT" && artefact.value !== "";
+  const media = (artefact.type === "IMAGE" || artefact.type === "VIDEO" || artefact.type === "AUDIO") && artefact.value !== "";
+  const report = artefact.type === "TEXT" ? asReport(artefact.value) : null;
 
   const copy = async () => {
     await navigator.clipboard.writeText(artefact.value);
@@ -57,6 +59,11 @@ function RunOutputRow({ artefact, index }: Readonly<RunOutputRowProps>) {
 
   return (
     <Card.Root reveal={index} className={media ? undefined : "md:col-span-2"}>
+      {report && (
+        <Card.Body padding="lg" className="gap-3 pb-0">
+          <ReportFindings report={report} />
+        </Card.Body>
+      )}
       <ArtefactMedia artefact={artefact} />
       <Card.Body className="gap-2">
         <header className="flex items-center gap-3">
@@ -76,7 +83,7 @@ function RunOutputRow({ artefact, index }: Readonly<RunOutputRowProps>) {
             </Button>
           </span>
         </header>
-        {artefact.type === "TEXT" ? (
+        {artefact.type === "TEXT" && !report ? (
           <p className="whitespace-pre-wrap break-words text-[13px] leading-relaxed text-fg">{artefact.value}</p>
         ) : null}
       </Card.Body>
