@@ -7,14 +7,15 @@
 //   npm run record:tour                    # every clip; `-- chat create` re-records some. ORAZAKA_URL, OUT (tour/)
 //
 // Clips (1280×800, the krizaka.com tour, in this order): creations (what a generation looks like the moment it lands:
-// a product photo appearing, then the clip and the voice-over generated earlier on this machine), studios (the
+// a product photo appearing, then the gallery of what was made on this machine, the voice-over playing), studios (the
 // catalogue and a Studio's page), documents (a lease checked against the law, then a supplier invoice examined),
 // voice (a voice-over generated, then played with its waveform), notifications (the bell, then a result), chat (a
 // question answered from the policy pasted under it), packs. And showcase: the krizaka.com home card (960×600,
-// ≤ 20 s, the "wow" first: a generation landing, the video, the waveform — the context after).
+// ≤ 20 s, the "wow" first: a generation landing, the gallery, the waveform playing — the context after).
 // Every screen is filmed once it has settled (settle(): network idle, images decoded, videos playable, no spinner).
-// Waits for a generation are cut and the cut is declared on the site. Prerequisite: `orazaka demo seed --runs
-// --with-video` (Eric's real work: the voice-over, the video and the document checks the clips open).
+// Waits for a generation are cut and the cut is declared on the site. Prerequisite: `orazaka demo seed --runs`
+// (Eric's real work: the voice-over and the document checks the clips open). No video: a Studio's video output cannot
+// be opened yet (the worker's job has no row the asset route can authorise), so the tour shows none rather than fake one.
 import { execFileSync } from "node:child_process";
 import { mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import os from "node:os";
@@ -119,12 +120,14 @@ async function ask(page, text) {
   await awaitAnswer(page, text.length / 2);
 }
 
-/** Scrolls the page (or its scrolling container) smoothly by `dy` pixels. */
-async function glide(page, dy, ms = 1400, selector) {
-  await page.evaluate(
-    ({ dy, selector }) => (selector ? document.querySelector(selector) : window)?.scrollBy({ top: dy, behavior: "smooth" }),
-    { dy, selector },
-  );
+/** Scrolls the page smoothly by `dy` pixels: the element that actually scrolls (the app's main pane), else the window. */
+async function glide(page, dy, ms = 1400) {
+  await page.evaluate((dy) => {
+    const pane = [...document.querySelectorAll("main, section, div")].find(
+      (el) => el.scrollHeight > el.clientHeight + 10 && ["auto", "scroll"].includes(getComputedStyle(el).overflowY),
+    );
+    (pane ?? window).scrollBy({ top: dy, behavior: "smooth" });
+  }, dy);
   await pause(page, ms);
 }
 
@@ -137,12 +140,17 @@ async function settle(page, extra = 600) {
       () =>
         [...document.images].every((img) => img.complete && img.naturalWidth > 0) &&
         [...document.querySelectorAll("video")].every((v) => v.readyState >= 3) &&
-        !document.querySelector('[role="status"][aria-label] svg.animate-spin, [aria-busy="true"]'),
+        !document.querySelector('[role="status"][aria-label] svg.animate-spin, [aria-busy="true"]') &&
+        // Cards that rise into view (data-reveal) are filmed once they have arrived, never mid-blur.
+        [...document.querySelectorAll("[data-reveal]")].every((el) => {
+          const r = el.getBoundingClientRect();
+          return el.classList.contains("kz-in") || r.top > innerHeight || r.bottom < 0;
+        }),
       null,
       { timeout: 30_000, polling: 250 },
     )
     .catch(() => {});
-  await pause(page, extra);
+  await pause(page, Math.max(extra, 900)); // the reveal transition (0.8 s) ends before the frame counts
 }
 
 /** Calls the edge as Eric (the session's bearer is not readable from the page): the API the run form posts to. */
@@ -191,8 +199,8 @@ async function gallery(page) {
 
 /** Each clip opens its page, then returns what to play once the page has settled; `cut` drops a wait. */
 const CLIPS = {
-  // The home card of krizaka.com: the wow first — a photo landing within two seconds, then the clip and the waveform
-  // already generated on this machine — and the context (the prompts, "nothing left the machine") after.
+  // The home card of krizaka.com: the wow first — a photo landing within two seconds, then the gallery and the
+  // waveform of a voice-over generated on this machine — and the context (the prompts, "nothing left the machine") after.
   async showcase(page, cut) {
     const run = await api("POST", "/api/v1/studios/image-generation/runs", { inputs: { prompt: SHOWCASE_VISUAL } });
     await page.goto(`${BASE}/studios/runs/${run.id}`, { waitUntil: "load" });
@@ -203,7 +211,7 @@ const CLIPS = {
       await pause(page, 3200);
       await gallery(page);
       await pause(page, 6500);
-      await glide(page, 260, 1400, "main");
+      await glide(page, 260, 1400);
       await pause(page, 2600);
     };
   },
@@ -218,7 +226,7 @@ const CLIPS = {
       await pause(page, 3500);
       await gallery(page);
       await pause(page, 7000);
-      await glide(page, 420, 1800, "main");
+      await glide(page, 420, 1800);
       await pause(page, 2400);
     };
   },
@@ -228,17 +236,17 @@ const CLIPS = {
     await settle(page);
     return async () => {
       await pause(page, 1600);
-      await page.getByRole("radio", { name: /^Legal$/ }).or(page.getByRole("button", { name: /^Legal$/ })).first().click().catch(() => {});
-      await settle(page, 1400);
-      await page.getByRole("radio", { name: /^All trades$/ }).or(page.getByRole("button", { name: /^All trades$/ })).first().click().catch(() => {});
-      await settle(page, 1000);
-      await glide(page, 520, 1800, "main");
+      await page.getByRole("radio", { name: /^Legal$/ }).click();
+      await settle(page, 2600);
+      await page.getByRole("radio", { name: /^All trades$/ }).click();
+      await settle(page, 1200);
+      await glide(page, 520, 1800);
       await page.getByText(/^Compliance Check$/).first().hover();
       await pause(page, 1200);
       await page.getByText(/^Compliance Check$/).first().click();
       await page.waitForURL(/\/studios\/compliance-check/);
       await settle(page, 2600);
-      await glide(page, 400, 1600, "main");
+      await glide(page, 400, 1600);
       await pause(page, 1600);
     };
   },
@@ -258,12 +266,12 @@ const CLIPS = {
       await settle(page, 700);
       await awaitRun(page, cut);
       await pause(page, 2400);
-      await glide(page, 520, 2000, "main");
+      await glide(page, 520, 2000);
       await pause(page, 2600);
       const invoice = await latestRun("document-authenticity");
       await page.goto(`${BASE}/studios/runs/${invoice.id}`, { waitUntil: "load" });
       await settle(page, 2200);
-      await glide(page, 420, 1800, "main");
+      await glide(page, 420, 1800);
       await pause(page, 2000);
     };
   },
@@ -295,12 +303,12 @@ const CLIPS = {
       await pause(page, 1600);
       await page.getByRole("button", { name: /^Notifications$/ }).click();
       await settle(page, 2600);
-      await page.getByRole("dialog").or(page.locator("[data-radix-popper-content-wrapper]")).getByRole("link").first().click();
-      await page.waitForURL(/jobId=/);
+      await page.locator('[data-radix-popper-content-wrapper] a[href*="jobId="]').first().click();
+      await page.waitForURL(/jobId=/, { timeout: 15_000 });
       await settle(page, 3200);
       await page.keyboard.press("Escape");
       await settle(page, 1200);
-      await glide(page, 600, 2000, "main");
+      await glide(page, 600, 2000);
       await pause(page, 1600);
     };
   },
@@ -328,9 +336,9 @@ const CLIPS = {
     await settle(page);
     return async () => {
       await pause(page, 2400);
-      await glide(page, 520, 1800, "main");
+      await glide(page, 520, 1800);
       await pause(page, 1800);
-      await glide(page, 520, 1800, "main");
+      await glide(page, 520, 1800);
       await pause(page, 2200);
     };
   },

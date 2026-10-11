@@ -33,7 +33,7 @@ export function RunOutputs({ outputs }: Readonly<RunOutputsProps>) {
       <h2 className="text-xs font-semibold uppercase tracking-wider text-fg-muted">{t.studio.runOutputs}</h2>
       <div className="grid gap-3 md:grid-cols-2">
         {outputs.map((artefact, index) => (
-          <RunOutputRow key={artefact.key} artefact={artefact} index={index} />
+          <RunOutputRow key={artefact.key} artefact={artefact} index={index} wide={outputs.length === 1} />
         ))}
       </div>
     </section>
@@ -43,10 +43,12 @@ export function RunOutputs({ outputs }: Readonly<RunOutputsProps>) {
 interface RunOutputRowProps {
   artefact: RunArtefact;
   index?: number;
+  /** The only result: it takes the whole width. */
+  wide?: boolean;
 }
 
 /** One artefact: the media first (what impresses), then its label and its actions. */
-function RunOutputRow({ artefact, index }: Readonly<RunOutputRowProps>) {
+function RunOutputRow({ artefact, index, wide }: Readonly<RunOutputRowProps>) {
   const { t } = useTranslation();
   const [copied, setCopied] = useState(false);
   const media = (artefact.type === "IMAGE" || artefact.type === "VIDEO" || artefact.type === "AUDIO") && artefact.value !== "";
@@ -59,7 +61,7 @@ function RunOutputRow({ artefact, index }: Readonly<RunOutputRowProps>) {
   };
 
   return (
-    <Card.Root reveal={index} className={media ? undefined : "md:col-span-2"}>
+    <Card.Root reveal={index} className={media && !wide ? undefined : "md:col-span-2"}>
       {report && (
         <Card.Body padding="lg" className="gap-3 pb-0">
           <ReportFindings report={report} />
@@ -133,7 +135,7 @@ function ArtefactMedia({ artefact }: Readonly<RunOutputRowProps>) {
     <img
       src={source}
       alt={artefact.label}
-      className="aspect-[4/3] w-full bg-media object-cover"
+      className="max-h-[520px] w-full bg-media object-contain"
     />
   );
 }
