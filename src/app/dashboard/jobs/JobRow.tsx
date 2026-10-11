@@ -1,5 +1,7 @@
 "use client";
 
+import { CheckIcon, CopyIcon } from "@krizaka/icons";
+import { Button, IconButton } from "@krizaka/ui/button";
 import * as React from "react";
 import {
   parseISO,
@@ -9,7 +11,7 @@ import {
 import { fr, enUS } from "date-fns/locale";
 import { useTranslation } from "@/core/context/LocaleContext";
 import { Job } from "@/core/types/jobs.types";
-import { Button, Icon } from "@krizaka/orazaka-design-system";
+import { Icon } from "@krizaka/orazaka-design-system";
 import { JOB_STATUS } from "@/core/constants/http.constants";
 import { JobStatusBadge } from "@/app/dashboard/jobs/JobStatusBadge";
 
@@ -77,17 +79,9 @@ export const JobRow: React.FC<JobRowProps> = ({
         <td className="p-4 font-mono text-[11px]">
           <div className="flex items-center space-x-1.5 text-fg-secondary">
             <span title={job.id}>{job.id.substring(0, 8)}...</span>
-            <button
-              onClick={() => onCopy(job.id, job.id)}
-              className="p-1 text-fg-muted hover:text-fg rounded-md transition-colors"
-              aria-label={t.a11y.copyJobId}
-            >
-              {copiedId === job.id ? (
-                <Icon name="check" className="w-3.5 h-3.5 text-success" />
-              ) : (
-                <Icon name="copy" className="w-3.5 h-3.5" />
-              )}
-            </button>
+            <IconButton variant="ghost" size="sm" className="w-8 px-0" onClick={() => onCopy(job.id, job.id)} label={t.a11y.copyJobId}>
+              {copiedId === job.id ? <CheckIcon size={14} className="text-fg-success" /> : <CopyIcon size={14} />}
+            </IconButton>
           </div>
         </td>
 
@@ -199,24 +193,10 @@ export const JobRow: React.FC<JobRowProps> = ({
                   <Icon name="warning" className="w-3.5 h-3.5 mr-1.5" />
                   {t.jobs?.errorDetails || "Error details:"}
                 </span>
-                <button
-                  onClick={() =>
-                    onCopy(job.errorMessage || "", `err-${job.id}`)
-                  }
-                  className="text-xs font-semibold text-danger hover:text-danger flex items-center space-x-1"
-                >
-                  {copiedId === `err-${job.id}` ? (
-                    <>
-                      <Icon name="check" className="w-3 h-3 text-success" />
-                      <span className="text-success">{t.jobs.copied}</span>
-                    </>
-                  ) : (
-                    <>
-                      <Icon name="copy" className="w-3 h-3" />
-                      <span>{t.jobs.copyError}</span>
-                    </>
-                  )}
-                </button>
+                <Button variant="ghost" size="sm" onClick={() => onCopy(job.errorMessage || "", `err-${job.id}`)}>
+                  {copiedId === `err-${job.id}` ? <CheckIcon size={14} className="text-fg-success" /> : <CopyIcon size={14} />}
+                  {copiedId === `err-${job.id}` ? t.jobs.copied : t.jobs.copyError}
+                </Button>
               </div>
               <pre className="text-xs font-mono text-danger overflow-x-auto whitespace-pre-wrap leading-relaxed max-w-full">
                 {job.errorMessage}

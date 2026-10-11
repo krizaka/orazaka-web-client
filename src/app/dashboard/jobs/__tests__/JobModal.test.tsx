@@ -3,43 +3,7 @@ import { render, screen, fireEvent } from "@testing-library/react";
 import { JobModal } from "@/app/dashboard/jobs/JobModal";
 
 jest.mock("@/core/context/LocaleContext", () => ({
-  useTranslation: () => ({
-    t: {
-      a11y: jest.requireActual("@/core/context/translations.automation").a11y.en,
-      jobs: {
-        jobDetails: "Job Details",
-        payload: "Payload",
-        result: "Result",
-        error: "Error",
-        close: "Close",
-        noData: "No data",
-        copyId: "Copy ID",
-        status: "Status",
-        featureKey: "Feature",
-        createdAt: "Created",
-        updatedAt: "Updated",
-        duration: "Duration",
-        progress: "Progress",
-      },
-    },
-    locale: "en",
-  }),
-}));
-
-jest.mock("@/core/constants/http.constants", () => ({
-  JOB_STATUS: {
-    COMPLETED: "COMPLETED",
-    FAILED: "FAILED",
-    PENDING: "PENDING",
-    PROCESSING: "PROCESSING",
-  },
-}));
-
-jest.mock("@krizaka/orazaka-design-system", () => ({
-  ...jest.requireActual("@krizaka/orazaka-design-system"),
-  Button: ({ children, ...props }: { children: React.ReactNode } & React.ButtonHTMLAttributes<HTMLButtonElement>) => (
-    <button {...props}>{children}</button>
-  ),
+  useTranslation: () => ({ t: jest.requireActual("@/core/context/translations").translations.en, locale: "en" }),
 }));
 
 jest.mock("@/app/dashboard/jobs/ResultDisplay", () => ({
@@ -51,9 +15,6 @@ jest.mock("@/app/dashboard/jobs/JobModalParts", () => ({
   StageLabels: () => <div data-testid="stage-labels" />,
   StatusPill: ({ status }: { status: string }) => <span>{status}</span>,
   LiveElapsed: () => <span>0s</span>,
-  PillTab: ({ label, isActive, onClick }: { label: string; isActive: boolean; onClick: () => void }) => (
-    <button onClick={onClick} data-active={isActive}>{label}</button>
-  ),
 }));
 
 const baseJob = {
@@ -98,7 +59,7 @@ describe("JobModal", () => {
     render(
       <JobModal job={baseJob as never} modalType="payload" onClose={onClose} copiedId={null} onCopy={onCopy} />,
     );
-    fireEvent.keyDown(document, { key: "Escape" });
+    fireEvent.keyDown(screen.getByRole("dialog"), { key: "Escape" });
     expect(onClose).toHaveBeenCalled();
   });
 });

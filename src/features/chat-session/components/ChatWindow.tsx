@@ -1,5 +1,6 @@
 "use client";
 
+import { Button } from "@krizaka/ui/button";
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Icon } from "@krizaka/orazaka-design-system";
@@ -202,15 +203,17 @@ export const ChatWindow: React.FC<{ initialConversationId: string }> = ({
 
               {/* Scroll to bottom FAB */}
               {showScrollFab && (
-                <button
-                  type="button"
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  shape="pill"
                   onClick={scrollToBottom}
-                  className="sticky bottom-4 left-1/2 -translate-x-1/2 z-10 inline-flex items-center gap-1.5 px-3 py-1.5 bg-surface-2 border border-border-default text-fg-secondary hover:text-fg hover:bg-surface-3 shadow-lg transition-all duration-200 text-[11px] font-medium animate-in fade-in slide-in-from-bottom-2 duration-200"
+                  className="sticky bottom-4 left-1/2 z-10 -translate-x-1/2 shadow-lg"
                   aria-label={t.a11y.scrollToBottom}
                 >
                   <Icon name="arrowDown" size={14} />
                   {t.chat.newMessages}
-                </button>
+                </Button>
               )}
             </article>
 

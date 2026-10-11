@@ -1,9 +1,9 @@
+import { Button } from "@krizaka/ui/button";
 import React, { useRef, useEffect } from "react";
 import { Icon, type IconName } from "@krizaka/orazaka-design-system";
 import type { ComposerStudio } from "@krizaka/orazaka-shared";
 import type { TranslationDictionary } from "@/core/context/LocaleContext";
 
-import { cn } from "@krizaka/ui/cn";
 
 interface Props {
   isOpen: boolean;
@@ -86,9 +86,9 @@ export const ContextPlusMenu: React.FC<Props> = ({
         {group.map((studio) => {
           const unavailable = !studio.available;
           return (
-            <button
+            <Button
               key={studio.studioKey}
-              type="button"
+              variant="ghost"
               disabled={unavailable}
               title={unavailable ? studio.lockedReason : undefined}
               aria-disabled={unavailable}
@@ -97,14 +97,9 @@ export const ContextPlusMenu: React.FC<Props> = ({
                 onExecuteNode(studio);
                 onClose();
               }}
-              className={cn(
-                "flex w-full items-center gap-3 rounded-lg px-2.5 py-2 text-left text-sm font-medium transition-colors duration-150 focus:outline-none focus-visible:ring-2 focus-visible:ring-ring",
-                unavailable
-                  ? "cursor-not-allowed opacity-40 text-fg-muted"
-                  : "cursor-pointer text-fg-secondary hover:bg-surface-2 hover:text-fg"
-              )}
+              className="h-auto w-full justify-start gap-3 px-2.5 py-2 text-left font-medium"
             >
-              <span className="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-lg bg-accent-soft text-accent">
+              <span className="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-lg bg-accent-soft text-fg-accent">
                 <Icon name={studioIcon(studio.iconKey)} size={15} />
               </span>
               <span className="flex-1">{studio.label}</span>
@@ -113,7 +108,7 @@ export const ContextPlusMenu: React.FC<Props> = ({
                   {t.operationGraph.stateLocked}
                 </span>
               )}
-            </button>
+            </Button>
           );
         })}
       </div>

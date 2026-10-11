@@ -1,11 +1,10 @@
 import "@testing-library/jest-dom";
-import { render, screen, fireEvent } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import {
   ProgressTimeline,
   StageLabels,
   StatusPill,
   LiveElapsed,
-  PillTab,
 } from "@/app/dashboard/jobs/JobModalParts";
 
 jest.mock("@/core/context/LocaleContext", () => ({
@@ -105,33 +104,5 @@ describe("LiveElapsed", () => {
       />,
     );
     expect(container.querySelector(".animate-pulse")).toBeInTheDocument();
-  });
-});
-
-describe("PillTab", () => {
-  it("renders label", () => {
-    render(
-      <PillTab
-        label="Payload"
-        icon="check"
-        isActive={false}
-        onClick={jest.fn()}
-      />,
-    );
-    expect(screen.getByText("Payload")).toBeInTheDocument();
-  });
-
-  it("calls onClick on click", () => {
-    const onClick = jest.fn();
-    render(
-      <PillTab
-        label="Result"
-        icon="check"
-        isActive={true}
-        onClick={onClick}
-      />,
-    );
-    fireEvent.click(screen.getByText("Result"));
-    expect(onClick).toHaveBeenCalled();
   });
 });

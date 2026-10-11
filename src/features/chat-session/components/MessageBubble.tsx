@@ -1,6 +1,7 @@
 /* eslint-disable no-restricted-syntax */
 "use client";
 
+import { Button } from "@krizaka/ui/button";
 import React from "react";
 import { format } from "date-fns";
 import { Icon, SentinelMini } from "@krizaka/orazaka-design-system";
@@ -92,26 +93,10 @@ export const MessageBubble: React.FC<Props> = ({ message, index = 0 }) => {
               isUser ? "right-0" : "left-0"
             )}
           >
-            <button
-              type="button"
-              onClick={handleCopy}
-              className="inline-flex items-center gap-1 px-2 py-1 rounded-lg text-[10px] font-medium bg-surface-2 border border-border-subtle text-fg-muted hover:text-fg hover:bg-surface-3 transition-all duration-150 shadow-sm"
-              aria-label={t.chat.copyMessage}
-            >
-              {copied ? (
-                <>
-                  <Icon name="check" size={12} className="text-success" />
-                  <span className="text-success">
-                    {t.chat.copiedMessage}
-                  </span>
-                </>
-              ) : (
-                <>
-                  <Icon name="copy" size={12} />
-                  <span>{t.chat.copyMessage}</span>
-                </>
-              )}
-            </button>
+            <Button variant="secondary" size="sm" className="h-7 gap-1 px-2 text-[11px] shadow-sm" onClick={handleCopy} aria-label={t.chat.copyMessage}>
+              {copied ? <Icon name="check" size={12} className="text-fg-success" /> : <Icon name="copy" size={12} />}
+              {copied ? t.chat.copiedMessage : t.chat.copyMessage}
+            </Button>
           </section>
         </section>
       </section>

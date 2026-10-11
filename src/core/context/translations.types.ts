@@ -836,6 +836,10 @@ export interface ShowcaseDictionary {
     runningTitle: string;
     runningBody: string;
     result: string;
+    copyId: string;
+    rawJson: string;
+    close: string;
   };
+  chat: { approvePlan: string; adjustPlan: string; thinking: string; reasoning: string };
   notifications: { emptyTitle: string; emptyBody: string; running: string; done: string; failed: string };
 }

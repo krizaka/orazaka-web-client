@@ -9,6 +9,7 @@ jest.mock("@/core/context/LocaleContext", () => ({
         memoryBlocks: "Memory Blocks",
         newBlock: "New Block",
       },
+      a11y: { deleteConversation: "Delete this conversation" },
     },
     locale: "en",
   }),

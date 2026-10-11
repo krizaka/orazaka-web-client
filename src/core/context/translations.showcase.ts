@@ -29,6 +29,15 @@ export const showcase: Record<"en" | "fr", ShowcaseDictionary> = {
       runningTitle: "{count} running on your machine",
       runningBody: "You can keep working: the bell tells you when each one is done.",
       result: "Result",
+      copyId: "Copy the ID",
+      rawJson: "Raw JSON",
+      close: "Close",
+    },
+    chat: {
+      approvePlan: "Approve and run the plan",
+      adjustPlan: "Ask for changes",
+      thinking: "Thinking…",
+      reasoning: "Reasoning",
     },
     notifications: {
       emptyTitle: "All quiet",
@@ -60,6 +69,15 @@ export const showcase: Record<"en" | "fr", ShowcaseDictionary> = {
       runningTitle: "{count} en cours sur votre machine",
       runningBody: "Vous pouvez continuer à travailler : la cloche vous prévient quand chacune est terminée.",
       result: "Résultat",
+      copyId: "Copier l'identifiant",
+      rawJson: "JSON brut",
+      close: "Fermer",
+    },
+    chat: {
+      approvePlan: "Approuver et lancer le plan",
+      adjustPlan: "Demander des modifications",
+      thinking: "Réflexion…",
+      reasoning: "Raisonnement",
     },
     notifications: {
       emptyTitle: "Tout est calme",
