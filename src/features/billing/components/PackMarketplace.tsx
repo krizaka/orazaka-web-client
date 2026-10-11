@@ -3,9 +3,7 @@
 import { useTranslation } from "@/core/context/LocaleContext";
 import { usePacks } from "@/features/billing/hooks/usePacks";
 import { PackCard } from "@/features/billing/components/PackCard";
-import { useStudios } from "@/features/studio/hooks/useStudios";
 import { Button } from "@krizaka/ui/button";
-import { useMemo } from "react";
 
 /**
  * The packs marketplace — where a user adds a pack to their account.
@@ -35,13 +33,10 @@ import { useMemo } from "react";
  * that shelf would be a category pretending to be a kind. The band is hidden when empty:
  * unlike a shelf, it is not somewhere new to look.
  */
-export function PackMarketplace() {
+export function PackMarketplace({ studios }: Readonly<{ studios: ReadonlyMap<string, { label: string; iconKey: string }> }>) {
   const { t, locale } = useTranslation();
   const { packs, categories, ownedKeys, isLoading, error, pendingKey, reload, subscribe, remove } =
     usePacks(locale, t.packs.loadError);
-
-  const { studios: catalogue } = useStudios(null);
-  const studios = useMemo(() => new Map(catalogue.map((s) => [s.studioKey, { label: s.label, iconKey: s.iconKey }])), [catalogue]);
 
   const included = packs.filter((pack) => pack.access === "INCLUDED");
   const verticals = packs.filter((pack) => pack.access !== "INCLUDED");

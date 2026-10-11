@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { PackMarketplace } from "@/features/billing/components/PackMarketplace";
+import { PacksScreen } from "./PacksScreen";
 
 export const metadata: Metadata = {
   title: "Packs | Orazaka",
@@ -16,7 +16,7 @@ export const metadata: Metadata = {
 export default function PacksPage() {
   return (
     <main className="mx-auto w-full max-w-5xl px-4 py-6 sm:px-6">
-      <PackMarketplace />
+      <PacksScreen />
     </main>
   );
 }
