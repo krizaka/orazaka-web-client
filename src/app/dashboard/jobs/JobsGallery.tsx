@@ -8,6 +8,7 @@ import { Button } from "@krizaka/ui/button";
 import { Card } from "@krizaka/ui/card";
 import { jobKind, jobLabel, jobMediaUrl, jobPrompt } from "@/core/jobs/jobMedia";
 import { useTranslation } from "@/core/context/LocaleContext";
+import { AudioWaveform } from "@/components/media/AudioWaveform";
 import type { Job } from "@/core/types/jobs.types";
 
 interface JobsGalleryProps {
@@ -56,9 +57,7 @@ export function JobsGallery({ jobs, onOpen, limit = 6 }: Readonly<JobsGalleryPro
               {kind === "audio" && (
                 <div className="flex flex-col gap-3 bg-linear-to-br from-accent/15 via-media to-accent-2/15 p-4">
                   <SoundIcon size={28} className="text-fg-accent" nodeColor="var(--kz-accent)" />
-                  <audio src={url} controls className="w-full">
-                    <track kind="captions" />
-                  </audio>
+                  <AudioWaveform src={url} label={jobLabel(t, job)} />
                 </div>
               )}
             </Card.Media>

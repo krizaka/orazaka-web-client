@@ -11,6 +11,7 @@ import { useJobs } from "@/features/jobs/hooks/useJobs";
 import { Job } from "@/core/types/jobs.types";
 import { Button } from "@krizaka/ui/button";
 import { Spinner } from "@krizaka/ui/spinner";
+import { Badge } from "@krizaka/ui/badge";
 import { JobsTable } from "./JobsTable";
 import { JobsKpiSummary } from "./JobsKpiSummary";
 import { JobModal } from "./JobModal";
@@ -53,6 +54,9 @@ function JobsDashboardContent() {
     isLoading: loading,
     refresh: refreshJobsQuery,
   } = useJobs(currentPage, pageSize, isAuthenticated);
+
+  // The gallery reads further back than one page of the table: the last media generated, whatever ran since.
+  const { jobs: recentJobs } = useJobs(0, 60, isAuthenticated);
 
   const [searchQuery, setSearchQuery] = React.useState("");
   const [activeTab, setActiveTab] = React.useState<
@@ -169,6 +173,9 @@ function JobsDashboardContent() {
               <div className="flex flex-col gap-1">
                 <h1 className="font-display text-2xl font-bold tracking-[-0.02em] text-fg">{t.jobs.title}</h1>
                 <p className="text-sm text-fg-secondary">{t.jobs.subtitle}</p>
+                <Badge tone="success" dot className="mt-1 self-start">
+                  {t.showcase.media.local}
+                </Badge>
               </div>
               <Button variant="secondary" size="sm" onClick={handleRefresh} loading={loading}>
                 {t.jobs.refresh}
@@ -181,7 +188,7 @@ function JobsDashboardContent() {
               <JobsEmpty />
             ) : (
               <>
-                <JobsGallery jobs={pageData} onOpen={(job) => handleOpenModal(job, "result")} />
+                <JobsGallery jobs={recentJobs} onOpen={(job) => handleOpenModal(job, "result")} />
 
             {/* Filters panel */}
             <JobsFilterBar

@@ -33,6 +33,11 @@ export const showcase: Record<"en" | "fr", ShowcaseDictionary> = {
       rawJson: "Raw JSON",
       close: "Close",
     },
+    media: {
+      play: "Play",
+      pause: "Pause",
+      local: "Generated on this machine — nothing left it",
+    },
     dashboard: {
       studios: "Open a Studio",
       studiosDesc: "Document checks, product visuals, voice-overs, prospecting — ready-made workflows.",
@@ -80,6 +85,11 @@ export const showcase: Record<"en" | "fr", ShowcaseDictionary> = {
       copyId: "Copier l'identifiant",
       rawJson: "JSON brut",
       close: "Fermer",
+    },
+    media: {
+      play: "Lire",
+      pause: "Pause",
+      local: "Généré sur cette machine — rien n'en est sorti",
     },
     dashboard: {
       studios: "Ouvrir un Studio",

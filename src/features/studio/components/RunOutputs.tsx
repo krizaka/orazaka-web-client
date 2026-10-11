@@ -7,6 +7,7 @@ import { Card } from "@krizaka/ui/card";
 import type { RunArtefact } from "@krizaka/orazaka-shared";
 import { useTranslation } from "@/core/context/LocaleContext";
 import { asReport, ReportFindings } from "./ReportFindings";
+import { AudioWaveform } from "@/components/media/AudioWaveform";
 
 interface RunOutputsProps {
   outputs: readonly RunArtefact[];
@@ -122,9 +123,7 @@ function ArtefactMedia({ artefact }: Readonly<RunOutputRowProps>) {
 
   if (artefact.type === "AUDIO") {
     return (
-      <audio src={source} controls className="w-full px-4 pt-4">
-        <track kind="captions" />
-      </audio>
+      <AudioWaveform src={source} label={artefact.label} className="px-4 pt-4" />
     );
   }
 
