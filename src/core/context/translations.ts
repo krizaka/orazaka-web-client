@@ -7,6 +7,7 @@ import { type Locale, type TranslationDictionary } from "./translations.types";
 import { landing } from "./translations.landing";
 import { features } from "./translations.features";
 import { a11y, automation } from "./translations.automation";
+import { showcase } from "./translations.showcase";
 import { THEME_MODE } from "@/core/constants/http.constants";
 export type { Locale, TranslationDictionary };
 
@@ -784,6 +785,7 @@ export const translations: Record<Locale, TranslationDictionary> = {
     },
     automation: automation.en,
     a11y: a11y.en,
+    showcase: showcase.en,
     commandPalette: {
       label: "Command palette",
       placeholder: "Search a page…",
@@ -1583,6 +1585,7 @@ export const translations: Record<Locale, TranslationDictionary> = {
     },
     automation: automation.fr,
     a11y: a11y.fr,
+    showcase: showcase.fr,
     commandPalette: {
       label: "Palette de commandes",
       placeholder: "Chercher une page…",

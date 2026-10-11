@@ -1,7 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import { Icon } from "@krizaka/orazaka-design-system";
+import { CheckIcon, CopyIcon, DownloadIcon } from "@krizaka/icons";
+import { Button } from "@krizaka/ui/button";
+import { Card } from "@krizaka/ui/card";
 import type { RunArtefact } from "@krizaka/orazaka-shared";
 import { useTranslation } from "@/core/context/LocaleContext";
 
@@ -26,10 +28,10 @@ export function RunOutputs({ outputs }: Readonly<RunOutputsProps>) {
 
   return (
     <section className="flex flex-col gap-2">
-      <h2 className="hud-label text-[10px] text-fg-muted">{t.studio.runOutputs}</h2>
-      <div className="flex flex-col divide-y divide-border-subtle border border-border-subtle">
-        {outputs.map((artefact) => (
-          <RunOutputRow key={artefact.key} artefact={artefact} />
+      <h2 className="text-xs font-semibold uppercase tracking-wider text-fg-muted">{t.studio.runOutputs}</h2>
+      <div className="grid gap-3 md:grid-cols-2">
+        {outputs.map((artefact, index) => (
+          <RunOutputRow key={artefact.key} artefact={artefact} index={index} />
         ))}
       </div>
     </section>
@@ -38,12 +40,14 @@ export function RunOutputs({ outputs }: Readonly<RunOutputsProps>) {
 
 interface RunOutputRowProps {
   artefact: RunArtefact;
+  index?: number;
 }
 
-/** One artefact with its copy action. A sub-component so the list stays a list. */
-function RunOutputRow({ artefact }: Readonly<RunOutputRowProps>) {
+/** One artefact: the media first (what impresses), then its label and its actions. */
+function RunOutputRow({ artefact, index }: Readonly<RunOutputRowProps>) {
   const { t } = useTranslation();
   const [copied, setCopied] = useState(false);
+  const media = artefact.type !== "TEXT" && artefact.value !== "";
 
   const copy = async () => {
     await navigator.clipboard.writeText(artefact.value);
@@ -52,29 +56,31 @@ function RunOutputRow({ artefact }: Readonly<RunOutputRowProps>) {
   };
 
   return (
-    <article className="flex flex-col gap-2 p-3">
-      <header className="flex items-start gap-3">
-        <div className="flex flex-col gap-0.5 min-w-0">
-          <span className="hud-label text-[10px] text-fg-muted">{artefact.label}</span>
-          {artefact.type === "TEXT" ? (
-            <span className="text-[12px] text-fg break-words whitespace-pre-wrap">
-              {artefact.value}
-            </span>
-          ) : (
-            <span className="text-[11px] text-fg-muted break-all">{artefact.value}</span>
-          )}
-        </div>
-        <button
-          type="button"
-          onClick={() => void copy()}
-          className="ml-auto flex-shrink-0 h-7 px-2 inline-flex items-center gap-1 text-[11px] font-medium border border-border-subtle text-fg-secondary hover:bg-surface-2 transition-colors duration-150"
-        >
-          <Icon name={copied ? "check" : "copy"} size={12} />
-          {copied ? t.studio.copied : t.studio.copy}
-        </button>
-      </header>
+    <Card.Root reveal={index} className={media ? undefined : "md:col-span-2"}>
       <ArtefactMedia artefact={artefact} />
-    </article>
+      <Card.Body className="gap-2">
+        <header className="flex items-center gap-3">
+          <span className="text-xs font-semibold uppercase tracking-wider text-fg-muted">{artefact.label}</span>
+          <span className="ml-auto flex items-center gap-1.5">
+            {media && (
+              <Button asChild variant="secondary" size="sm">
+                <a href={artefact.value} download>
+                  <DownloadIcon size={14} />
+                  {t.showcase.studio.download}
+                </a>
+              </Button>
+            )}
+            <Button variant="secondary" size="sm" onClick={() => void copy()}>
+              {copied ? <CheckIcon size={14} /> : <CopyIcon size={14} />}
+              {copied ? t.studio.copied : t.studio.copy}
+            </Button>
+          </span>
+        </header>
+        {artefact.type === "TEXT" ? (
+          <p className="whitespace-pre-wrap break-words text-[13px] leading-relaxed text-fg">{artefact.value}</p>
+        ) : null}
+      </Card.Body>
+    </Card.Root>
   );
 }
 
@@ -100,7 +106,7 @@ function ArtefactMedia({ artefact }: Readonly<RunOutputRowProps>) {
         src={source}
         controls
         playsInline
-        className="w-full max-w-sm border border-border-subtle"
+        className="aspect-video w-full bg-media object-contain"
       >
         <track kind="captions" />
       </video>
@@ -109,7 +115,7 @@ function ArtefactMedia({ artefact }: Readonly<RunOutputRowProps>) {
 
   if (artefact.type === "AUDIO") {
     return (
-      <audio src={source} controls className="w-full max-w-sm">
+      <audio src={source} controls className="w-full px-4 pt-4">
         <track kind="captions" />
       </audio>
     );
@@ -121,7 +127,7 @@ function ArtefactMedia({ artefact }: Readonly<RunOutputRowProps>) {
     <img
       src={source}
       alt={artefact.label}
-      className="w-full max-w-sm border border-border-subtle"
+      className="aspect-[4/3] w-full bg-media object-cover"
     />
   );
 }

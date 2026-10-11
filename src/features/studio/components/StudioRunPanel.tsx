@@ -1,5 +1,6 @@
 "use client";
 
+import { Card } from "@krizaka/ui/card";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useTranslation } from "@/core/context/LocaleContext";
@@ -48,15 +49,17 @@ export function StudioRunPanel({ studio, installation }: Readonly<StudioRunPanel
   }
 
   return (
-    <section className="flex flex-col gap-3 p-4 border border-border-subtle bg-surface-1">
-      <h2 className="text-[13px] font-semibold text-fg">{t.studio.runTitle}</h2>
+    <Card.Root>
+      <Card.Body padding="lg" className="gap-4">
+      <h2 className="text-base font-semibold text-fg">{t.studio.runTitle}</h2>
       <RunForm
         inputSchema={studio.inputSchema}
         estimatedCredits={studio.estimatedCredits}
         isSubmitting={isSubmitting}
         onSubmit={(inputs) => void start(inputs)}
       />
-      {error && <p className="text-[11px] text-danger">{error}</p>}
-    </section>
+      {error && <p role="alert" className="text-xs text-fg-danger">{error}</p>}
+      </Card.Body>
+    </Card.Root>
   );
 }

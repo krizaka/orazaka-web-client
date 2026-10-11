@@ -1,6 +1,7 @@
 /* eslint-disable */
 "use client";
 
+import { LocaleSwitch } from "@/components/LocaleSwitch";
 import React from "react";
 import Link from "next/link";
 import { SentinelMascot } from "@/features/auth/components/SentinelMascot";
@@ -15,11 +16,6 @@ const HERO_FEATURES: { index: string; key: "heroFeature1" | "heroFeature2" | "he
 ];
 
 /** Available locales for the discreet footer switcher */
-const LOCALES: { code: Locale; label: string }[] = [
-  { code: "en", label: "EN" },
-  { code: "fr", label: "FR" },
-];
-
 interface AuthLayoutProps {
   children: React.ReactNode;
 }
@@ -127,22 +123,7 @@ export function AuthLayout({ children }: Readonly<AuthLayoutProps>) {
 
           <span className="auth-footer-separator" aria-hidden="true" />
 
-          <nav className="auth-lang-switcher-inline" aria-label={t.auth.langSwitchLabel}>
-            {LOCALES.map(({ code, label }, i) => (
-              <React.Fragment key={code}>
-                {i > 0 && <span className="auth-lang-divider" aria-hidden="true">/</span>}
-                <button
-                  type="button"
-                  className="auth-lang-link"
-                  data-active={locale === code}
-                  onClick={() => setLocale(code)}
-                  aria-current={locale === code ? "true" : undefined}
-                >
-                  {label}
-                </button>
-              </React.Fragment>
-            ))}
-          </nav>
+          <LocaleSwitch />
         </footer>
       </section>
     </main>

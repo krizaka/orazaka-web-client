@@ -16,13 +16,10 @@ jest.mock("@/core/context/LocaleContext", () => ({
         free: "Free",
         priceUnavailable: "—",
       },
+      showcase: { packs: { studiosIncluded: "Studios in this pack" } },
     },
     locale: "en",
   }),
-}));
-
-jest.mock("@krizaka/orazaka-design-system", () => ({
-  Icon: () => <span />,
 }));
 
 function pack(kind: PackSummary["kind"], access: PackSummary["access"]): PackSummary {
@@ -54,6 +51,7 @@ function renderCard(
       isPending={false}
       onSubscribe={jest.fn()}
       onRemove={jest.fn()}
+      studios={new Map()}
     />,
   );
 }

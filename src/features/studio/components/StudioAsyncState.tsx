@@ -1,23 +1,23 @@
 "use client";
 
 import Link from "next/link";
-import { Icon } from "@krizaka/orazaka-design-system";
+import { Button } from "@krizaka/ui/button";
+import { Mascot } from "@krizaka/ui/mascots";
+import { Spinner } from "@krizaka/ui/spinner";
 import { useTranslation } from "@/core/context/LocaleContext";
 
-const ACTION_CLASS =
-  "px-3 h-8 inline-flex items-center text-[12px] font-medium border border-border-subtle text-fg hover:bg-surface-2 transition-colors duration-150";
-
 /**
- * The waiting state of a Studio screen.
+ * The waiting state of a Studio screen: a short wait, so a spinner — a mascot is for the long ones (a run).
  *
  * Four screens showed this, and one of them had drifted to a different gap — which is how
  * this kind of duplication ends: not with a bug, with a layout that is subtly wrong on one
  * page and nobody can say which page is right.
  */
 export function StudioLoading() {
+  const { t } = useTranslation();
   return (
     <div className="flex items-center justify-center py-16 text-fg-muted">
-      <Icon name="loader" size={16} className="animate-spin" />
+      <Spinner label={t.dashboard.loading} />
     </div>
   );
 }
@@ -28,7 +28,7 @@ interface StudioLoadErrorProps {
 }
 
 /**
- * The failed state of a Studio screen.
+ * The failed state of a Studio screen: the owl, worried, and the one action that can help.
  *
  * Offers a retry when retrying could work, and a way back when it could not: retrying a
  * Studio that no longer exists just fails again, which reads as the app being broken.
@@ -37,17 +37,18 @@ export function StudioLoadError({ onRetry }: Readonly<StudioLoadErrorProps>) {
   const { t } = useTranslation();
 
   return (
-    <div className="flex flex-col items-center gap-3 py-16">
-      <Icon name="alertCircle" size={20} className="text-danger" />
-      <p className="text-[12px] text-fg-secondary">{t.studio.loadError}</p>
+    <div role="alert" className="flex flex-col items-center gap-3 py-12 text-center">
+      <Mascot bird="owl" mood="error" size={104} />
+      <p className="text-sm font-semibold text-fg">{t.showcase.studio.loadErrorTitle}</p>
+      <p className="max-w-sm text-[13px] text-fg-secondary">{t.studio.loadError}</p>
       {onRetry ? (
-        <button type="button" onClick={onRetry} className={ACTION_CLASS}>
+        <Button variant="secondary" size="sm" onClick={onRetry}>
           {t.studio.retry}
-        </button>
+        </Button>
       ) : (
-        <Link href="/studios" className={ACTION_CLASS}>
-          {t.studio.back}
-        </Link>
+        <Button asChild variant="secondary" size="sm">
+          <Link href="/studios">{t.studio.back}</Link>
+        </Button>
       )}
     </div>
   );

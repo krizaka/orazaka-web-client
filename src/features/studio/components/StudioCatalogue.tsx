@@ -7,6 +7,7 @@ import { useStudios } from "@/features/studio/hooks/useStudios";
 import { StudioCard } from "@/features/studio/components/StudioCard";
 
 import { Chip } from "@krizaka/ui/chip";
+import { Mascot } from "@krizaka/ui/mascots";
 
 /** The value of the "all trades" chip (no trade is called "*"). */
 const ALL = "*";
@@ -50,13 +51,14 @@ export function StudioCatalogue() {
       </Chip.Group>
 
       {studios.length === 0 ? (
-        <p className="py-16 text-center text-[12px] text-fg-muted">
-          {t.studio.emptyCatalogue}
-        </p>
+        <div role="status" className="flex flex-col items-center gap-3 py-12 text-center">
+          <Mascot bird="owl" mood="empty" size={104} />
+          <p className="text-[13px] text-fg-secondary">{t.studio.emptyCatalogue}</p>
+        </div>
       ) : (
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-          {studios.map((studio) => (
-            <StudioCard key={studio.studioKey} studio={studio} />
+          {studios.map((studio, index) => (
+            <StudioCard key={studio.studioKey} studio={studio} index={index} />
           ))}
         </div>
       )}

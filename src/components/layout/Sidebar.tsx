@@ -5,6 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { ChatIcon, ClockIcon, CloseIcon, HomeIcon, LogoutIcon, PackIcon, ShieldIcon, StudioIcon, type IconProps } from "@krizaka/icons";
 import { OrazakaLogo } from "@krizaka/ui";
+import { Button, IconButton } from "@krizaka/ui/button";
 import { cn } from "@krizaka/ui/cn";
 import { useAuth } from "@/core/hooks/useAuth";
 import { useSidebar } from "@/core/context/SidebarContext";
@@ -76,15 +77,9 @@ export function Sidebar() {
             })}
           </ul>
           <footer className="mt-1 w-full border-t border-border-subtle px-1.5 pt-2">
-            <button
-              type="button"
-              onClick={logout}
-              aria-label={t.sidebar.logout}
-              className="group relative flex h-10 w-full items-center justify-center rounded-lg text-fg-muted transition-colors duration-200 hover:bg-danger/8 hover:text-danger focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-danger"
-            >
+            <IconButton variant="ghost" onClick={logout} label={t.sidebar.logout} className="group relative w-full hover:text-fg-danger">
               <LogoutIcon size={19} />
-              <span aria-hidden="true" className={tooltip}>{t.sidebar.logout}</span>
-            </button>
+            </IconButton>
           </footer>
         </nav>
       </aside>
@@ -98,14 +93,9 @@ export function Sidebar() {
                 <OrazakaLogo size={26} />
                 <span className="text-[13px] font-semibold tracking-[-0.02em] text-fg">{config.displayName}</span>
               </Link>
-              <button
-                type="button"
-                onClick={close}
-                aria-label={t.sidebar.closeMenu}
-                className="grid h-10 w-10 place-items-center rounded-lg text-fg-muted transition-colors hover:bg-surface-2 hover:text-fg"
-              >
+              <IconButton variant="ghost" onClick={close} label={t.sidebar.closeMenu}>
                 <CloseIcon size={18} />
-              </button>
+              </IconButton>
             </header>
             <p className="hud-label mb-1 mt-3 px-5">{t.sidebar.navigation}</p>
             <ul className="flex-1 space-y-0.5 overflow-auto px-3">
@@ -131,17 +121,18 @@ export function Sidebar() {
               })}
             </ul>
             <footer className="border-t border-border-subtle p-3">
-              <button
-                type="button"
+              <Button
+                variant="ghost"
+                size="lg"
                 onClick={() => {
                   close();
                   logout();
                 }}
-                className="flex h-11 w-full items-center gap-3 rounded-lg px-3 text-sm font-medium text-fg-secondary transition-colors duration-200 hover:bg-danger/8 hover:text-danger"
+                className="w-full justify-start gap-3 px-3 hover:text-fg-danger"
               >
                 <LogoutIcon size={18} className="flex-shrink-0" />
                 {t.sidebar.logout}
-              </button>
+              </Button>
             </footer>
           </nav>
         </section>

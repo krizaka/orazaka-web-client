@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from "react";
+import { EditIcon, MenuIcon } from "@krizaka/icons";
+import { IconButton } from "@krizaka/ui/button";
 
 interface ChatHeaderProps {
   threadTitle: string;
@@ -7,6 +9,10 @@ interface ChatHeaderProps {
   t: {
     chat: {
       sessionTitle: string;
+    };
+    a11y: {
+      renameConversation: string;
+      openConversations: string;
     };
   };
 }
@@ -49,25 +55,9 @@ export function ChatHeader({
   return (
     <header className="p-4 border-b border-border-subtle bg-surface-1 flex items-center justify-between">
       <div className="flex items-center gap-3 w-full">
-        <button
-          type="button"
-          onClick={onOpenDrawer}
-          className="p-2 rounded-lg md:hidden border border-border-default transition-colors"
-        >
-          <svg
-            className="w-5 h-5"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={1.5}
-              d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"
-            />
-          </svg>
-        </button>
+        <IconButton variant="ghost" onClick={onOpenDrawer} label={t.a11y.openConversations} className="md:hidden">
+          <MenuIcon size={20} />
+        </IconButton>
         <section className="flex flex-col flex-1 min-w-0">
           <section className="flex items-center gap-2">
             {isEditing ? (
@@ -86,27 +76,16 @@ export function ChatHeader({
                 <h1 className="text-sm font-semibold text-fg truncate">
                   {threadTitle || t.chat.sessionTitle}
                 </h1>
-                <button
-                  type="button"
+                <IconButton
                   id="btn-edit-session-title"
+                  variant="ghost"
+                  size="sm"
+                  className="w-8 px-0"
                   onClick={() => setIsEditing(true)}
-                  className="p-1 text-fg-muted hover:text-fg transition-colors"
-                  title="Rename Session"
+                  label={t.a11y.renameConversation}
                 >
-                  <svg
-                    className="w-4 h-4"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    strokeWidth={2}
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L6.832 19.82a4.5 4.5 0 01-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 011.13-1.897L16.863 4.487zm0 0L19.5 7.125"
-                    />
-                  </svg>
-                </button>
+                  <EditIcon size={15} />
+                </IconButton>
               </>
             )}
           </section>

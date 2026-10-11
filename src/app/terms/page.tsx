@@ -1,15 +1,11 @@
 /* eslint-disable */
 "use client";
 
+import { LocaleSwitch } from "@/components/LocaleSwitch";
 import * as React from "react";
 import Link from "next/link";
 import { useTranslation } from "@/core/context/LocaleContext";
 import type { Locale } from "@/core/context/translations.types";
-
-const LOCALES: { code: Locale; label: string }[] = [
-  { code: "en", label: "EN" },
-  { code: "fr", label: "FR" },
-];
 
 const CONTENT = {
   en: {
@@ -142,21 +138,7 @@ export default function TermsPage() {
           </Link>
         </div>
 
-        <nav className="auth-lang-switcher-inline" aria-label={t.auth.langSwitchLabel}>
-          {LOCALES.map(({ code, label }, i) => (
-            <React.Fragment key={code}>
-              {i > 0 && <span className="auth-lang-divider">/</span>}
-              <button
-                type="button"
-                className="auth-lang-link"
-                data-active={locale === code}
-                onClick={() => setLocale(code)}
-              >
-                {label}
-              </button>
-            </React.Fragment>
-          ))}
-        </nav>
+        <LocaleSwitch />
       </footer>
     </main>
   );

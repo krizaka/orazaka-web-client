@@ -742,6 +742,7 @@ export interface TranslationDictionary {
   automation: AutomationDictionary;
   /** Accessible names of icon-only controls. */
   a11y: A11yDictionary;
+  showcase: ShowcaseDictionary;
   /** The ⌘K palette: its words (the entries reuse the sidebar's). */
   commandPalette: {
     label: string;
@@ -802,4 +803,39 @@ export interface A11yDictionary {
   scrollToBottom: string;
   toggleReasoning: string;
   attachFile: string;
+  showPassword: string;
+  hidePassword: string;
+  openMenu: string;
+  closeMenu: string;
+  deleteConversation: string;
+  renameConversation: string;
+  openConversations: string;
+}
+
+/** The moments a mascot speaks, and the Studios, packs, jobs and notifications surfaces. `{x}` are placeholders. */
+export interface ShowcaseDictionary {
+  studio: {
+    installedEmptyTitle: string;
+    installedEmptyBody: string;
+    loadErrorTitle: string;
+    runRunningBody: string;
+    runSucceededBody: string;
+    runFailedBody: string;
+    /** `{done}`, `{total}` */
+    stepsProgress: string;
+    download: string;
+    /** `{pack}` */
+    included: string;
+  };
+  packs: { studiosIncluded: string };
+  jobs: {
+    emptyTitle: string;
+    emptyBody: string;
+    emptyCta: string;
+    /** `{count}` */
+    runningTitle: string;
+    runningBody: string;
+    result: string;
+  };
+  notifications: { emptyTitle: string; emptyBody: string; running: string; done: string; failed: string };
 }

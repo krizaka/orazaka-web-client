@@ -1,6 +1,7 @@
 /* eslint-disable */
 "use client";
 
+import { LocaleSwitch } from "@/components/LocaleSwitch";
 import * as React from "react";
 import Link from "next/link";
 import { Icon } from "@krizaka/orazaka-design-system";
@@ -9,11 +10,6 @@ import type { Locale } from "@/core/context/translations.types";
 import { Button } from "@krizaka/orazaka-design-system";
 import { Input } from "@krizaka/orazaka-design-system";
 import { toast } from "@krizaka/ui/toast";
-
-const LOCALES: { code: Locale; label: string }[] = [
-  { code: "en", label: "EN" },
-  { code: "fr", label: "FR" },
-];
 
 const CONTENT = {
   en: {
@@ -211,21 +207,7 @@ export default function ContactPage() {
           </Link>
         </div>
 
-        <nav className="auth-lang-switcher-inline" aria-label={t.auth.langSwitchLabel}>
-          {LOCALES.map(({ code, label }, i) => (
-            <React.Fragment key={code}>
-              {i > 0 && <span className="auth-lang-divider">/</span>}
-              <button
-                type="button"
-                className="auth-lang-link"
-                data-active={locale === code}
-                onClick={() => setLocale(code)}
-              >
-                {label}
-              </button>
-            </React.Fragment>
-          ))}
-        </nav>
+        <LocaleSwitch />
       </footer>
     </main>
   );

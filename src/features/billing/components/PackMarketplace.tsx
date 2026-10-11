@@ -3,6 +3,9 @@
 import { useTranslation } from "@/core/context/LocaleContext";
 import { usePacks } from "@/features/billing/hooks/usePacks";
 import { PackCard } from "@/features/billing/components/PackCard";
+import { useStudios } from "@/features/studio/hooks/useStudios";
+import { Button } from "@krizaka/ui/button";
+import { useMemo } from "react";
 
 /**
  * The packs marketplace — where a user adds a pack to their account.
@@ -37,39 +40,36 @@ export function PackMarketplace() {
   const { packs, categories, ownedKeys, isLoading, error, pendingKey, reload, subscribe, remove } =
     usePacks(locale, t.packs.loadError);
 
+  const { studios: catalogue } = useStudios(null);
+  const studios = useMemo(() => new Map(catalogue.map((s) => [s.studioKey, { label: s.label, iconKey: s.iconKey }])), [catalogue]);
+
   const included = packs.filter((pack) => pack.access === "INCLUDED");
   const verticals = packs.filter((pack) => pack.access !== "INCLUDED");
 
   return (
     <section className="flex flex-col gap-8">
       <header className="flex flex-col gap-1">
-        <h1 className="text-[18px] font-medium text-fg">{t.packs.title}</h1>
-        <p className="max-w-2xl text-[13px] text-fg-muted">{t.packs.subtitle}</p>
+        <h1 className="font-display text-2xl font-bold tracking-[-0.02em] text-fg">{t.packs.title}</h1>
+        <p className="max-w-2xl text-sm text-fg-secondary">{t.packs.subtitle}</p>
       </header>
 
       {error && (
         <div className="flex items-center gap-3">
-          <p className="text-[12px] text-danger">{error}</p>
-          <button
-            type="button"
-            onClick={reload}
-            className="h-7 border border-border-subtle px-2 text-[12px] text-fg transition-colors duration-150 hover:bg-surface-2"
-          >
+          <p role="alert" className="text-xs text-fg-danger">{error}</p>
+          <Button variant="secondary" size="sm" onClick={reload}>
             {t.packs.retry}
-          </button>
+          </Button>
         </div>
       )}
 
       {included.length > 0 && (
         <div className="flex flex-col gap-3">
           <header className="flex flex-col gap-0.5">
-            <h2 className="text-[13px] font-medium text-fg-secondary">
-              {t.packs.includedTitle}
-            </h2>
-            <p className="text-[12px] text-fg-muted">{t.packs.includedSubtitle}</p>
+            <h2 className="text-base font-semibold text-fg">{t.packs.includedTitle}</h2>
+            <p className="text-[13px] text-fg-muted">{t.packs.includedSubtitle}</p>
           </header>
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-            {included.map((pack) => (
+            {included.map((pack, index) => (
               <PackCard
                 key={pack.packKey}
                 pack={pack}
@@ -77,6 +77,8 @@ export function PackMarketplace() {
                 isPending={pendingKey === pack.packKey}
                 onSubscribe={() => subscribe(pack.packKey)}
                 onRemove={() => remove(pack.packKey)}
+                studios={studios}
+                index={index}
               />
             ))}
           </div>
@@ -87,9 +89,7 @@ export function PackMarketplace() {
         const shelf = verticals.filter((pack) => pack.categoryKey === category.categoryKey);
         return (
           <div key={category.categoryKey} className="flex flex-col gap-3">
-            <h2 className="text-[13px] font-medium text-fg-secondary">
-              {category.label}
-            </h2>
+            <h2 className="text-base font-semibold text-fg">{category.label}</h2>
 
             {isLoading ? (
               <p className="text-[12px] text-fg-muted">…</p>
@@ -97,7 +97,7 @@ export function PackMarketplace() {
               <p className="text-[12px] text-fg-muted">{t.packs.emptyCategory}</p>
             ) : (
               <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-                {shelf.map((pack) => (
+                {shelf.map((pack, index) => (
                   <PackCard
                     key={pack.packKey}
                     pack={pack}
@@ -105,6 +105,8 @@ export function PackMarketplace() {
                     isPending={pendingKey === pack.packKey}
                     onSubscribe={() => subscribe(pack.packKey)}
                     onRemove={() => remove(pack.packKey)}
+                    studios={studios}
+                    index={index}
                   />
                 ))}
               </div>

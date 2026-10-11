@@ -10,6 +10,10 @@ export interface InputField {
   options: string[] | null;
   required: boolean;
   maxItems: number | null;
+  /** The schema's `description`: a line of help under the field. */
+  description: string | null;
+  /** A long text (`maxLength` over 500): a text area rather than a line. */
+  multiline: boolean;
 }
 
 /**
@@ -41,6 +45,8 @@ export function useInputSchema(inputSchema: string | null): InputField[] {
           type?: string;
           enum?: string[];
           maxItems?: number;
+          maxLength?: number;
+          description?: string;
         };
         let type: InputField["type"] = "string";
         if (Array.isArray(spec.enum)) {
@@ -55,6 +61,8 @@ export function useInputSchema(inputSchema: string | null): InputField[] {
           options: Array.isArray(spec.enum) ? spec.enum : null,
           required: required.has(key),
           maxItems: typeof spec.maxItems === "number" ? spec.maxItems : null,
+          description: spec.description ?? null,
+          multiline: type === "string" && typeof spec.maxLength === "number" && spec.maxLength > 500,
         };
       });
     } catch {
