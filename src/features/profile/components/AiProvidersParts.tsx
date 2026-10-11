@@ -1,5 +1,6 @@
 "use client";
 
+import { IconButton } from "@krizaka/ui/button";
 import { Button, Icon } from "@krizaka/orazaka-design-system";
 import { useTranslation } from "@/core/context/LocaleContext";
 import { ProviderGlyph, type ProviderConfig } from "./AiProviderLogos";
@@ -39,24 +40,12 @@ export function ProviderRow({
         </p>
       </div>
       <div className="flex items-center gap-1">
-        <button
-          type="button"
-          onClick={onEdit}
-          disabled={disabled}
-          aria-label={`${t.providers.editConnection} — ${provider.name}`}
-          className="inline-flex h-8 w-8 items-center justify-center rounded-lg text-fg-muted transition-colors hover:bg-surface-3 hover:text-fg disabled:opacity-50"
-        >
+        <IconButton variant="ghost" size="sm" className="w-8 px-0" onClick={onEdit} disabled={disabled} label={`${t.providers.editConnection} — ${provider.name}`}>
           <Icon name="edit" size={16} />
-        </button>
-        <button
-          type="button"
-          onClick={onDelete}
-          disabled={disabled}
-          aria-label={`${t.providers.deleteProvider} — ${provider.name}`}
-          className="inline-flex h-8 w-8 items-center justify-center rounded-lg text-fg-muted transition-colors hover:bg-danger/12 hover:text-danger disabled:opacity-50"
-        >
+        </IconButton>
+        <IconButton variant="ghost" size="sm" className="w-8 px-0 hover:text-fg-danger" onClick={onDelete} disabled={disabled} label={`${t.providers.deleteProvider} — ${provider.name}`}>
           <Icon name="trash" size={16} />
-        </button>
+        </IconButton>
       </div>
     </li>
   );

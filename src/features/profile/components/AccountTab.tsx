@@ -1,5 +1,6 @@
 "use client";
 
+import { Button } from "@krizaka/ui/button";
 import * as React from "react";
 import { Icon } from "@krizaka/orazaka-design-system";
 import type { UserProfile } from "@/services/profile.api";
@@ -65,11 +66,11 @@ export function AccountTab({ profile, t }: Readonly<AccountTabProps>) {
       </Card.Root>
 
       <Card.Root className="bg-surface-1 shadow-sm">
-        <button
-          type="button"
+        <Button
+          variant="ghost"
           onClick={() => setShowPrefs((v) => !v)}
           aria-expanded={showPrefs}
-          className="flex w-full items-center justify-between gap-2 p-6 text-left transition-colors hover:bg-surface-2/40 focus:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-xl"
+          className="h-auto w-full justify-between gap-2 whitespace-normal rounded-xl p-6 text-left font-normal"
         >
           <span className="flex flex-col gap-1">
             <span className="text-base font-semibold text-fg">
@@ -85,7 +86,7 @@ export function AccountTab({ profile, t }: Readonly<AccountTabProps>) {
               showPrefs ? "rotate-180" : ""
             )}
           />
-        </button>
+        </Button>
         {showPrefs && (
           <Card.Body
             padding="lg"

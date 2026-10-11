@@ -65,10 +65,10 @@ export function RecentSessions({
           <ul className="divide-y divide-border-subtle -mx-1">
             {recentThreads.map((thread) => (
               <li key={thread.conversationId}>
-                <button
-                  type="button"
+                <Button
+                  variant="ghost"
                   onClick={() => onResumeSession(thread.conversationId)}
-                  className="flex w-full items-center justify-between py-3.5 px-3 rounded-md cursor-pointer transition-all duration-200 hover:bg-surface-2 hover:shadow-xs group text-left"
+                  className="group h-auto w-full justify-between px-3 py-3.5 text-left font-normal"
                 >
                 <div className="flex items-center min-w-0 mr-4">
                   <div className="w-9 h-9 rounded-md bg-surface-2 flex items-center justify-center mr-3.5 text-fg-muted group-hover:text-accent transition-colors duration-200 border border-border-subtle">
@@ -91,7 +91,7 @@ export function RecentSessions({
                   </span>
                   <Icon name="arrowRight" size={14} className="transform group-hover:translate-x-0.5 transition-transform duration-200" />
                 </div>
-                </button>
+                </Button>
               </li>
             ))}
           </ul>

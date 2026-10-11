@@ -840,6 +840,7 @@ export interface ShowcaseDictionary {
     rawJson: string;
     close: string;
   };
+  dashboard: { studios: string; studiosDesc: string; creations: string; creationsDesc: string; latestCreations: string; seeAll: string };
   chat: { approvePlan: string; adjustPlan: string; thinking: string; reasoning: string };
   notifications: { emptyTitle: string; emptyBody: string; running: string; done: string; failed: string };
 }

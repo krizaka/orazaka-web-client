@@ -9,7 +9,6 @@ import { useAuth } from "@/core/hooks/useAuth";
 import { Greeting } from "@/core/components/Greeting";
 import { Sidebar } from "@/components/layout/Sidebar";
 import { Header } from "@/components/layout/Header";
-import { useTenant } from "@/core/context/TenantContext";
 import { useTranslation } from "@/core/context/LocaleContext";
 import { useChatStream } from "@/features/chat-session/hooks/useChatStream";
 import { useWallet } from "@/features/billing/hooks/useWallet";
@@ -18,6 +17,12 @@ import { InterceptorPipeline } from "@/features/dashboard/components/Interceptor
 import { WorkspaceSummary } from "@/features/dashboard/components/WorkspaceSummary";
 import { QuickActions } from "@/features/dashboard/components/QuickActions";
 import { RecentSessions } from "@/features/dashboard/components/RecentSessions";
+import { JobsGallery } from "@/app/dashboard/jobs/JobsGallery";
+import { useJobs } from "@/features/jobs/hooks/useJobs";
+import { jobMediaUrl } from "@/core/jobs/jobMedia";
+import { ChatIcon, ImageIcon, StudioIcon } from "@krizaka/icons";
+import { Button } from "@krizaka/ui/button";
+import Link from "next/link";
 
 const DATE_LOCALES = { fr, en: enUS } as const;
 
@@ -28,11 +33,11 @@ const DATE_LOCALES = { fr, en: enUS } as const;
 export function DashboardHome() {
   const router = useRouter();
   const { isAuthenticated, isLoading, user } = useAuth();
-  const { accentClasses } = useTenant();
   const { locale, t } = useTranslation();
   const { threads } = useChatStream("dashboard");
   const { wallet, available } = useWallet();
   const { installations } = useInstallations();
+  const { jobs } = useJobs(0, 12, isAuthenticated);
 
   React.useEffect(() => {
     if (!isLoading && !isAuthenticated) router.push("/login");
@@ -107,13 +112,26 @@ export function DashboardHome() {
               labels={t.dashboard}
             />
 
+            {jobs.some((job) => jobMediaUrl(job)) && (
+              <section className="flex flex-col gap-3">
+                <header className="flex items-center justify-between px-1">
+                  <h3 className="text-xs font-semibold uppercase tracking-wider text-fg-muted">{t.showcase.dashboard.latestCreations}</h3>
+                  <Button asChild variant="ghost" size="sm">
+                    <Link href="/dashboard/jobs">{t.showcase.dashboard.seeAll}</Link>
+                  </Button>
+                </header>
+                <JobsGallery jobs={jobs} limit={3} onOpen={(job) => router.push(`/dashboard/jobs?jobId=${job.id}`)} />
+              </section>
+            )}
+
             <section className="grid gap-6 md:grid-cols-3">
               <QuickActions
-                onStartNewChat={handleStartNewChat}
-                onResumeProfile={() => router.push("/profile")}
-                onConfigureSettings={() => router.push("/profile")}
-                accentClasses={accentClasses}
-                t={t}
+                title={t.dashboard.quickActions}
+                actions={[
+                  { icon: ChatIcon, label: t.dashboard.startNewChat, desc: t.dashboard.startNewChatDesc, onClick: handleStartNewChat },
+                  { icon: StudioIcon, label: t.showcase.dashboard.studios, desc: t.showcase.dashboard.studiosDesc, onClick: () => router.push("/studios") },
+                  { icon: ImageIcon, label: t.showcase.dashboard.creations, desc: t.showcase.dashboard.creationsDesc, onClick: () => router.push("/dashboard/jobs") },
+                ]}
               />
               <RecentSessions
                 recentThreads={recentThreads}

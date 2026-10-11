@@ -33,6 +33,14 @@ export const showcase: Record<"en" | "fr", ShowcaseDictionary> = {
       rawJson: "Raw JSON",
       close: "Close",
     },
+    dashboard: {
+      studios: "Open a Studio",
+      studiosDesc: "Document checks, product visuals, voice-overs, prospecting — ready-made workflows.",
+      creations: "Your creations",
+      creationsDesc: "Every image, video and voice-over generated on your machine.",
+      latestCreations: "Latest creations",
+      seeAll: "See all",
+    },
     chat: {
       approvePlan: "Approve and run the plan",
       adjustPlan: "Ask for changes",
@@ -72,6 +80,14 @@ export const showcase: Record<"en" | "fr", ShowcaseDictionary> = {
       copyId: "Copier l'identifiant",
       rawJson: "JSON brut",
       close: "Fermer",
+    },
+    dashboard: {
+      studios: "Ouvrir un Studio",
+      studiosDesc: "Vérification de documents, visuels produit, voix off, prospection — des workflows prêts à l'emploi.",
+      creations: "Vos créations",
+      creationsDesc: "Chaque image, vidéo et voix off générée sur votre machine.",
+      latestCreations: "Dernières créations",
+      seeAll: "Tout voir",
     },
     chat: {
       approvePlan: "Approuver et lancer le plan",
