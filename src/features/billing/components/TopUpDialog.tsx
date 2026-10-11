@@ -5,7 +5,8 @@ import { Button } from "@krizaka/ui/button";
 import { Dialog } from "@krizaka/ui/dialog";
 import { useTranslation } from "@/core/context/LocaleContext";
 import { BillingApi } from "@/services/billing.api";
-import { formatCredits, formatPrice, type Plan } from "@krizaka/orazaka-shared";
+import { formatCredits, type Plan } from "@krizaka/orazaka-shared";
+import { useMoney } from "@/core/hooks/useMoney";
 
 export interface TopUpDialogProps {
   /** Whether the dialog is open. */
@@ -25,6 +26,7 @@ export interface TopUpDialogProps {
  */
 export function TopUpDialog({ open, onClose }: TopUpDialogProps) {
   const { t } = useTranslation();
+  const money = useMoney();
   const [plans, setPlans] = useState<Plan[]>([]);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -65,7 +67,7 @@ export function TopUpDialog({ open, onClose }: TopUpDialogProps) {
                     {t.billing.perMonth.replace("{credits}", formatCredits(plan.monthlyCreditGrant))}
                   </span>
                 </span>
-                <span className="text-sm text-fg">{formatPrice(plan.priceCents, plan.currency)}</span>
+                <span className="text-sm text-fg">{money(plan.priceCents, plan.currency)}</span>
               </li>
             ))}
           </ul>

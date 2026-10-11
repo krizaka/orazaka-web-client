@@ -5,8 +5,9 @@ import { Badge } from "@krizaka/ui/badge";
 import { Button } from "@krizaka/ui/button";
 import { Card } from "@krizaka/ui/card";
 import { CatalogueIcon } from "@/components/icons/CatalogueIcon";
-import { formatCredits, formatPrice, type PackSummary } from "@krizaka/orazaka-shared";
+import { formatCredits, type PackSummary } from "@krizaka/orazaka-shared";
 import { useTranslation } from "@/core/context/LocaleContext";
+import { useMoney } from "@/core/hooks/useMoney";
 
 interface PackCardProps {
   pack: PackSummary;
@@ -58,9 +59,11 @@ export function PackCard({
   index,
 }: Readonly<PackCardProps>) {
   const { t } = useTranslation();
+  const money = useMoney();
   const isIncluded = pack.access === "INCLUDED";
   const isBuyable = pack.access === "BUYABLE";
-  let price = formatPrice(pack.priceCents ?? 0, "EUR");
+  // A pack price names no currency: it is in the billing currency (CAD by default, money.constants.ts).
+  let price = money(pack.priceCents ?? 0);
   if (pack.priceCents === null) price = t.packs.priceUnavailable;
   else if (pack.priceCents === 0) price = t.packs.free;
 

@@ -43,10 +43,11 @@ function renderCard(
   kind: PackSummary["kind"],
   access: PackSummary["access"],
   isOwned = false,
+  priceCents: number | null = 0,
 ) {
   render(
     <PackCard
-      pack={pack(kind, access)}
+      pack={{ ...pack(kind, access), priceCents }}
       isOwned={isOwned}
       isPending={false}
       onSubscribe={jest.fn()}
@@ -92,5 +93,12 @@ describe("PackCard — the band is the server's verdict (ADR-061, ADR-066)", () 
 
     expect(screen.getByText("Owned")).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Remove" })).toBeInTheDocument();
+  });
+
+  it("prices a paid pack in the billing currency — Canadian dollars, named", () => {
+    renderCard("VERTICAL", "BUYABLE", false, 7900);
+
+    expect(screen.getByText("CA$79.00")).toBeInTheDocument();
+    expect(screen.queryByText(/€/)).not.toBeInTheDocument();
   });
 });
