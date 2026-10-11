@@ -15,12 +15,17 @@ Next.js (App Router) client of the Orazaka platform with its mandatory BFF.
 [![CI](https://github.com/krizaka/orazaka-web-client/actions/workflows/ci.yml/badge.svg)](https://github.com/krizaka/orazaka-web-client/actions/workflows/ci.yml)
 [![License: Apache-2.0](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE)
 [![Orazaka](https://img.shields.io/badge/part%20of-Orazaka-f67e23)](https://github.com/krizaka/orazaka#repositories)
-[![Docs](https://img.shields.io/badge/docs-krizaka.com-f67e23)](https://www.krizaka.com/en/products/orazaka)
+[![Docs](https://img.shields.io/badge/docs-krizaka.com%2Fdocs%2Forazaka-f67e23)](https://www.krizaka.com/docs/orazaka)
 
-[Documentation](https://www.krizaka.com/en/products/orazaka) · [Website](https://www.krizaka.com) · [Krizaka on GitHub](https://github.com/krizaka)
+[Documentation](https://www.krizaka.com/docs/orazaka) · [Demos](https://www.krizaka.com/en/products/orazaka/demos) · [Website](https://www.krizaka.com) · [Krizaka on GitHub](https://github.com/krizaka)
 
 </div>
 <!-- /krizaka-header -->
+
+<p align="center">
+  <a href="https://www.krizaka.com/en/products/orazaka/demos"><img src="https://raw.githubusercontent.com/krizaka/.github/main/profile/assets/orazaka-tour.gif" alt="This web client, signed in as Eric: a customer's return request answered from his own returns policy, then a product photo generated locally" width="760"></a>
+  <br><sub>Recorded on this application: Eric answers a customer from his own returns policy, then generates the product photo — everything ran on one Mac. <a href="https://www.krizaka.com/en/products/orazaka/demos">More demos</a></sub>
+</p>
 
 **Layer:** Client application · **Version:** `1.0.0-SNAPSHOT` · **License:** Apache-2.0 ·
 part of the [Orazaka platform](https://github.com/krizaka/orazaka) by [Krizaka](https://krizaka.com)
@@ -29,7 +34,8 @@ part of the [Orazaka platform](https://github.com/krizaka/orazaka) by [Krizaka](
 
 The Next.js (App Router) client of the platform (port `3000`). The browser **never** calls a service
 directly: every request goes through the BFF routes (`/api/**`) authenticated by the next-auth
-session. Built on [@krizaka/orazaka-design-system](https://github.com/krizaka/orazaka-ui-kit).
+session. Built on [`@krizaka/ui`](https://www.krizaka.com/docs/ui) and the Orazaka identity,
+[`@krizaka/orazaka-design-system`](https://www.npmjs.com/package/@krizaka/orazaka-design-system) (Orazaka Orange).
 
 ```bash
 npm install && npm run dev
@@ -53,7 +59,7 @@ node scripts/workspace.mjs clone
 cd orazaka-apps/ui && npm install
 ```
 
-**Standalone**: add `@krizaka:registry=https://npm.pkg.github.com` to `.npmrc`, then `npm install`.
+**Standalone**: `npm install` — the `@krizaka/*` packages come from the public npm registry, no `.npmrc` or token.
 
 Requirements: Node.js 22+.
 
@@ -67,7 +73,7 @@ Requirements: Node.js 22+.
   `:root`, light on `html.light`, a named theme (`custom`, `cyberpunk`, `solarized`, `krizaka`) on
   `html.theme-<name>`. `useAppearance()` maps the profile's single preference onto it.
 - **Primitives.** `Card.*`, `Dialog`, `Toaster`/`toast`, `Popover`, `Alert`, `Button` come from `@krizaka/ui`;
-  the Orazaka identity (Electric Blue, the named themes) from `@krizaka/orazaka-design-system/theme.css`.
+  the Orazaka identity (Orazaka Orange, `#f67e23`, and the named themes) from `@krizaka/orazaka-design-system/theme.css`.
 - The one-shot migration that got here is `scripts/codemods/roles.mjs` (jscodeshift, tested by `npm run test:codemods`).
 
 ## Product tour (krizaka.com)
@@ -81,8 +87,9 @@ site says so) → his Studios → plan and credits → appearance. What Eric wor
 `scripts/tour/eric.mjs`; the browser clock is set to 18:40 so the greeting reads "Good evening, Eric" (`TOUR_TIME`).
 
 ```bash
-orazaka start && orazaka dev            # the stack, with the image engine (sd-server)
-orazaka demo seed --fresh               # Eric, with an empty history
+# from orazaka-apps/ui in the workspace (the CLI is not on npm yet: `npx orazaka` is the workspace copy)
+npx orazaka start && npx orazaka dev    # the stack, with the image engine (sd-server)
+npx orazaka demo seed --fresh           # Eric, with an empty history
 npm run build && npm run start
 npm run record:tour -- prepare          # Eric holds three conversations (his dashboard and history show them)
 npm run record:tour                     # ORAZAKA_URL, OUT (default tour/); `-- chat create` re-records some
