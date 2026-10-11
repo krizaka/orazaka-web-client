@@ -17,3 +17,4 @@
 
 1. `npm run validate` (or `lint` + `build`) is green inside the workspace (`orazaka-apps/ui`).
 2. No hard-coded colors, 250-line cap per component, types only from `@krizaka/orazaka-shared` (AGENTS.md §8).
+3. PR captures (screenshots, recordings, metrics) are never committed: they go to Bunny Storage under `pr-assets/<repo>/<pr-or-topic>/` with [`scripts/pr-assets.mjs`](https://github.com/krizaka/krizaka-com/blob/main/scripts/pr-assets.mjs) of krizaka-com (its AGENTS.md §5.1), and the PR body links their CDN URLs. `docs/screenshots/`, `.github/pr-assets/` and `.github/screenshots/` are git-ignored.
