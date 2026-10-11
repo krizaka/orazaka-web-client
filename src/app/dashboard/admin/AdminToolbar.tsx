@@ -1,5 +1,6 @@
 "use client";
 
+import { IconButton } from "@krizaka/ui/button";
 import React from "react";
 import { Button, Icon } from "@krizaka/orazaka-design-system";
 import type { TranslationDictionary } from "@/core/context/LocaleContext";
@@ -63,12 +64,9 @@ export const AdminToolbar: React.FC<AdminToolbarProps> = ({
       <div className="p-4 bg-danger/20 border border-danger/50 rounded-2xl flex items-start gap-3 text-danger">
         <Icon name="warning" className="h-5 w-5 flex-shrink-0 mt-0.5" />
         <div className="text-sm font-medium flex-1">{errorMessage}</div>
-        <button
-          onClick={onClearError}
-          className="text-danger hover:text-danger"
-        >
+        <IconButton variant="ghost" size="sm" className="h-6 w-6 px-0" onClick={onClearError} label={t.a11y.closeDetails}>
           <Icon name="close" className="h-4 w-4" />
-        </button>
+        </IconButton>
       </div>
     )}
   </>

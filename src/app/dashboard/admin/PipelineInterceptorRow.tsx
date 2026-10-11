@@ -1,5 +1,6 @@
 "use client";
 
+import { Switch } from "@krizaka/ui/switch";
 import * as React from "react";
 import { Icon } from "@krizaka/orazaka-design-system";
 import type { InterceptorConfig } from "@/app/dashboard/admin/pipelineConfig.types";
@@ -82,21 +83,7 @@ export function PipelineInterceptorRow({
       )}
 
       {/* Toggle */}
-      <button
-        onClick={() => onToggle(idx)}
-        className={cn(
-          "relative flex-shrink-0 w-9 h-5 rounded-full transition-colors duration-200",
-          item.enabled ? "bg-warning" : "bg-surface-3"
-        )}
-        aria-label={`${enabledLabel} ${item.displayLabel}`}
-      >
-        <span
-          className={cn(
-            "absolute top-0.5 left-0.5 w-4 h-4 rounded-full bg-fg-on-media shadow-sm transition-transform duration-200",
-            item.enabled ? "translate-x-4" : "translate-x-0"
-          )}
-        />
-      </button>
+      <Switch size="sm" checked={item.enabled} onCheckedChange={() => onToggle(idx)} label={`${enabledLabel} ${item.displayLabel}`} />
     </li>
   );
 }
