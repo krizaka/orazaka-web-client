@@ -32,12 +32,6 @@ jest.mock("@/app/dashboard/jobs/jobStats.utils", () => ({
   }),
 }));
 
-jest.mock("@/app/dashboard/jobs/AnimatedCounter", () => ({
-  AnimatedCounter: ({ value, suffix }: { value: number; suffix?: string }) => (
-    <span>{value}{suffix}</span>
-  ),
-}));
-
 describe("JobsKpiSummary", () => {
   const jobs: never[] = [];
 
@@ -56,8 +50,8 @@ describe("JobsKpiSummary", () => {
     expect(screen.getByText("Models Used")).toBeInTheDocument();
   });
 
-  it("renders total count from AnimatedCounter", () => {
+  it("renders the total as a NumberTicker, read once by assistive technology", () => {
     render(<JobsKpiSummary jobs={jobs} />);
-    expect(screen.getByText("42")).toBeInTheDocument();
+    expect(screen.getAllByText("42").some((node) => node.classList.contains("sr-only"))).toBe(true);
   });
 });

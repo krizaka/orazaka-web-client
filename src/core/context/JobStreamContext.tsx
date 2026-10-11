@@ -11,11 +11,11 @@ import React, {
 import { useAuth } from "@/core/hooks/useAuth";
 import type { Job } from "@/core/types/jobs.types";
 import { JobsApi } from "@/services/jobs.api";
-import { toast } from "@krizaka/ui/toast";
 import { parseISO } from "date-fns";
 import { useChatStreamClient } from "@/core/hooks/useChatStreamClient";
 import { useJobSSE } from "@/core/hooks/useJobSSE";
 import { useJobReconciliation } from "@/core/hooks/useJobReconciliation";
+import { useJobToasts } from "@/core/hooks/useJobToasts";
 import { JOB_STATUS } from "@/core/constants/http.constants";
 import type { JobStreamContextType } from "@/core/context/jobStream.types";
 import { usePlaygroundState } from "@/core/hooks/usePlaygroundState";
@@ -89,10 +89,12 @@ export function JobStreamProvider({
     )
     .slice(0, 5);
 
-  /** A job's progression, announced by the platform Toaster (mounted once in Providers). */
-  const addToast = React.useCallback((message: string, type: "info" | "success" | "error") => {
-    toast[type](message, { duration: 5000 });
-  }, []);
+  /** A job's progression, announced by the platform Toaster (mounted once in Providers), in the reader's language. */
+  const jobToasts = useJobToasts();
+  const handleJobEvent = React.useCallback(
+    (job: Job, event: "started" | "completed" | "failed") => jobToasts[event](job),
+    [jobToasts],
+  );
 
   const fetchJobs = React.useCallback(async () => {
     if (!isAuthenticated) return;
@@ -147,14 +149,16 @@ export function JobStreamProvider({
         return prev;
       });
       setJobProgress((prev) => ({ ...prev, [jobId]: progress }));
+      const job = jobsRef.current.find((j) => j.id === jobId);
+      if (job) jobToasts.progressed(job, progress);
     },
-    [],
+    [jobToasts],
   );
 
   useJobSSE(isAuthenticated, hasActiveJobs, {
     onJobUpdate: handleJobUpdate,
     onJobProgress: handleJobProgress,
-    onToast: addToast,
+    onJobEvent: handleJobEvent,
     getJobs: () => jobsRef.current,
   });
 

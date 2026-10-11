@@ -21,6 +21,7 @@ export function AppCommandPalette() {
     { id: "studios", label: t.sidebar.studios, icon: "studio", href: "/studios", section: go },
     { id: "packs", label: t.sidebar.packs, icon: "layers", href: "/packs", section: go },
     { id: "jobs", label: t.sidebar.jobsHistory, icon: "history", href: "/dashboard/jobs", section: go },
+    { id: "credits", label: t.insights.credits.nav, icon: "spark", href: "/billing", section: go },
     ...(user?.role === "admin"
       ? [{ id: "admin", label: t.sidebar.adminPanel, icon: "admin", href: "/dashboard/admin", section: go } as const]
       : []),

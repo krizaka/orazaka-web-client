@@ -3,7 +3,7 @@
 import type { ComponentType } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { ChatIcon, ClockIcon, CloseIcon, HomeIcon, LogoutIcon, PackIcon, ShieldIcon, StudioIcon, type IconProps } from "@krizaka/icons";
+import { ChatIcon, ClockIcon, CloseIcon, CreditsIcon, HomeIcon, LogoutIcon, PackIcon, ShieldIcon, StudioIcon, type IconProps } from "@krizaka/icons";
 import { OrazakaLogo } from "@krizaka/ui";
 import { Button, IconButton } from "@krizaka/ui/button";
 import { cn } from "@krizaka/ui/cn";
@@ -39,6 +39,7 @@ export function Sidebar() {
     { href: "/studios", icon: StudioIcon, label: t.sidebar.studios },
     { href: "/packs", icon: PackIcon, label: t.sidebar.packs },
     { href: "/dashboard/jobs", icon: ClockIcon, label: t.sidebar.jobsHistory },
+    { href: "/billing", icon: CreditsIcon, label: t.insights.credits.nav },
     { href: "/dashboard/admin", icon: ShieldIcon, label: t.sidebar.adminPanel, adminOnly: true },
   ].filter((item) => !item.adminOnly || user?.role === "admin");
 

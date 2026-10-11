@@ -10,7 +10,7 @@ import { useJobStream } from "@/core/context/JobStreamContext";
 import { useJobs } from "@/features/jobs/hooks/useJobs";
 import { Job } from "@/core/types/jobs.types";
 import { Button } from "@krizaka/ui/button";
-import { Spinner } from "@krizaka/ui/spinner";
+import { Loader } from "@krizaka/ui/loader";
 import { Badge } from "@krizaka/ui/badge";
 import { JobsTable } from "./JobsTable";
 import { JobsKpiSummary } from "./JobsKpiSummary";
@@ -154,8 +154,8 @@ function JobsDashboardContent() {
 
   if (isLoading || !isAuthenticated) {
     return (
-      <section className="flex min-h-screen items-center justify-center bg-surface-0">
-        <Spinner label={t.dashboard.loading} />
+      <section className="min-h-screen bg-surface-0">
+        <Loader variant="page" label={t.insights.loading.jobs} />
       </section>
     );
   }
@@ -182,7 +182,7 @@ function JobsDashboardContent() {
               </Button>
             </header>
 
-            <JobsRunningBanner jobs={running} />
+            <JobsRunningBanner jobs={running} history={recentJobs} />
 
             {!loading && totalElements === 0 && running.length === 0 ? (
               <JobsEmpty />

@@ -4,7 +4,6 @@
  */
 
 import {
-  resolveFeatureLabel,
   resolveProviderFromFeature,
   resolveMediaKind,
   resolveDefaultModel,
@@ -19,50 +18,6 @@ import {
   COMMERCIAL_DEFAULTS,
   NODE_ICON,
 } from "@/core/constants/capability.constants";
-
-// ── resolveFeatureLabel ──────────────────────────────────────────────────────
-
-describe("resolveFeatureLabel", () => {
-  test("resolves video feature", () => {
-    expect(resolveFeatureLabel("ai.media.video.generate")).toBe(
-      "Video Generation",
-    );
-  });
-
-  test("distinguishes video analysis from video generation", () => {
-    expect(resolveFeatureLabel("orazaka.core.media.video.analysis")).toBe(
-      "Video Analysis",
-    );
-  });
-
-  test("resolves image feature", () => {
-    expect(resolveFeatureLabel("orazaka.core.chat.image")).toBe(
-      "Image Generation",
-    );
-  });
-
-  test("resolves speech feature", () => {
-    expect(resolveFeatureLabel("orazaka.core.media.speech")).toBe(
-      "Speech Generation",
-    );
-  });
-
-  test("resolves audio feature", () => {
-    expect(resolveFeatureLabel("orazaka.core.media.audio.analysis")).toBe(
-      "Audio Processing",
-    );
-  });
-
-  test("resolves vision feature", () => {
-    expect(resolveFeatureLabel("orazaka.core.media.vision")).toBe(
-      "Vision Analysis",
-    );
-  });
-
-  test("returns Task for unknown features", () => {
-    expect(resolveFeatureLabel("unknown.feature")).toBe("Task");
-  });
-});
 
 // ── resolveProviderFromFeature ───────────────────────────────────────────────
 

@@ -9,6 +9,7 @@ import path from "node:path";
 const resolveFromApp = createRequire(path.join(process.cwd(), "package.json")).resolve;
 const ui = path.dirname(resolveFromApp("@krizaka/ui/package.json"));
 const icons = path.dirname(resolveFromApp("@krizaka/icons/package.json"));
+const charts = path.dirname(resolveFromApp("@krizaka/charts/package.json"));
 
 const createJestConfig = nextJest({
   dir: "./",
@@ -16,12 +17,15 @@ const createJestConfig = nextJest({
 
 const config = {
   testEnvironment: "jsdom",
+  setupFiles: ["<rootDir>/jest/setup.ts"],
   moduleNameMapper: {
     "^@/(.*)$": "<rootDir>/src/$1",
     // @krizaka/ui (re-exported by @krizaka/orazaka-design-system 2.x) exposes its entries under the `import`
     // condition only, which Jest's CommonJS resolver does not read: map them to their files.
     "^@krizaka/ui$": `${ui}/dist/index.js`,
     "^@krizaka/ui/(.*)$": `${ui}/dist/$1.js`,
+    // @krizaka/charts: the same `import`-only exports.
+    "^@krizaka/charts/(.*)$": `${charts}/dist/$1.js`,
     // @krizaka/icons: the same `import`-only exports.
     "^@krizaka/icons$": `${icons}/dist/index.js`,
   },

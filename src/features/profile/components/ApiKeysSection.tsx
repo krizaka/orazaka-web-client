@@ -1,12 +1,10 @@
 "use client";
 
 import * as React from "react";
-import { Button, Dialog, Icon } from "@krizaka/orazaka-design-system";
+import { Button, Icon } from "@krizaka/orazaka-design-system";
+import { Dialog } from "@krizaka/ui/dialog";
 import { useTranslation } from "@/core/context/LocaleContext";
-import {
-  MAX_API_KEYS,
-  useApiKeys,
-} from "@/features/profile/hooks/useApiKeys";
+import { MAX_API_KEYS, useApiKeys } from "@/features/profile/hooks/useApiKeys";
 import {
   ApiKeyRow,
   ApiKeysEmptyState,
@@ -49,7 +47,10 @@ export function ApiKeysSection({
 
   return (
     <Card.Root className="bg-surface-1 shadow-sm">
-      <Card.Body padding="lg" className="flex flex-row items-start justify-between gap-3">
+      <Card.Body
+        padding="lg"
+        className="flex flex-row items-start justify-between gap-3"
+      >
         <div className="space-y-1">
           <Card.Title className="line-clamp-none tracking-tight group-hover:text-fg flex items-center gap-2 text-base font-semibold text-fg">
             <span className="inline-flex h-7 w-7 items-center justify-center rounded-lg bg-accent-soft text-accent">
@@ -78,11 +79,7 @@ export function ApiKeysSection({
       <Card.Body padding="lg" className="block pt-0">
         {(() => {
           if (isLoading) {
-            return (
-              <p className="text-xs text-fg-muted">
-                {t.apiKeys.loading}
-              </p>
-            );
+            return <p className="text-xs text-fg-muted">{t.apiKeys.loading}</p>;
           }
           if (keys.length === 0) {
             return <ApiKeysEmptyState onCreate={openCreate} />;
@@ -107,34 +104,44 @@ export function ApiKeysSection({
         })()}
       </Card.Body>
 
-      <Dialog
+      <Dialog.Root
         open={isCreateOpen}
-        onClose={closeCreate}
-        closeLabel={t.apiKeys.cancel}
-        title={t.apiKeys.create}
-        description={t.apiKeys.subtitle}
+        onOpenChange={(next) => !next && closeCreate()}
       >
-        <CreateApiKeyForm
-          draftName={draftName}
-          onNameChange={setDraftName}
-          isSaving={isSaving}
-          error={error}
-          onCancel={closeCreate}
-          onSubmit={submit}
-        />
-      </Dialog>
+        <Dialog.Content closeLabel={t.apiKeys.cancel}>
+          <Dialog.Header>
+            <Dialog.Title>{t.apiKeys.create}</Dialog.Title>
+            <Dialog.Description>{t.apiKeys.subtitle}</Dialog.Description>
+          </Dialog.Header>
+          <Dialog.Body>
+            <CreateApiKeyForm
+              draftName={draftName}
+              onNameChange={setDraftName}
+              isSaving={isSaving}
+              error={error}
+              onCancel={closeCreate}
+              onSubmit={submit}
+            />
+          </Dialog.Body>
+        </Dialog.Content>
+      </Dialog.Root>
 
-      <Dialog
+      <Dialog.Root
         open={generated !== null}
-        onClose={dismissGenerated}
-        closeLabel={t.apiKeys.done}
-        title={t.apiKeys.revealTitle}
-        description={generated?.name}
+        onOpenChange={(next) => !next && dismissGenerated()}
       >
-        {generated && (
-          <RevealKeyPanel generated={generated} onDone={dismissGenerated} />
-        )}
-      </Dialog>
+        <Dialog.Content closeLabel={t.apiKeys.done}>
+          <Dialog.Header>
+            <Dialog.Title>{t.apiKeys.revealTitle}</Dialog.Title>
+            <Dialog.Description>{generated?.name}</Dialog.Description>
+          </Dialog.Header>
+          <Dialog.Body>
+            {generated && (
+              <RevealKeyPanel generated={generated} onDone={dismissGenerated} />
+            )}
+          </Dialog.Body>
+        </Dialog.Content>
+      </Dialog.Root>
     </Card.Root>
   );
 }

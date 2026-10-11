@@ -4,6 +4,7 @@
  */
 
 import type { FeaturesDictionary, LandingDictionary } from "./translations.landing.types";
+import type { InsightsDictionary } from "./translations.insights";
 
 export type Locale = "en" | "fr";
 
@@ -743,6 +744,8 @@ export interface TranslationDictionary {
   /** Accessible names of icon-only controls. */
   a11y: A11yDictionary;
   showcase: ShowcaseDictionary;
+  /** Charts, credits, the live job queue and the waits. */
+  insights: InsightsDictionary;
   /** The ⌘K palette: its words (the entries reuse the sidebar's). */
   commandPalette: {
     label: string;

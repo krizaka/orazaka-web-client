@@ -50,7 +50,7 @@ describe("useJobSSE", () => {
     const callbacks = {
       onJobUpdate: jest.fn(),
       onJobProgress: jest.fn(),
-      onToast: jest.fn(),
+      onJobEvent: jest.fn(),
       getJobs: jest.fn().mockReturnValue([]),
     };
     const { unmount } = renderHook(() => useJobSSE(false, true, callbacks));
@@ -62,7 +62,7 @@ describe("useJobSSE", () => {
     const callbacks = {
       onJobUpdate: jest.fn(),
       onJobProgress: jest.fn(),
-      onToast: jest.fn(),
+      onJobEvent: jest.fn(),
       getJobs: jest.fn().mockReturnValue([]),
     };
     renderHook(() => useJobSSE(true, false, callbacks));
@@ -73,7 +73,7 @@ describe("useJobSSE", () => {
     const callbacks = {
       onJobUpdate: jest.fn(),
       onJobProgress: jest.fn(),
-      onToast: jest.fn(),
+      onJobEvent: jest.fn(),
       getJobs: jest.fn().mockReturnValue([]),
     };
     const { rerender } = renderHook(
@@ -91,7 +91,7 @@ describe("useJobSSE", () => {
     const callbacks = {
       onJobUpdate: jest.fn(),
       onJobProgress: jest.fn(),
-      onToast: jest.fn(),
+      onJobEvent: jest.fn(),
       getJobs: jest.fn().mockReturnValue([]),
     };
     renderHook(() => useJobSSE(true, true, callbacks));
@@ -103,7 +103,7 @@ describe("useJobSSE", () => {
     const callbacks = {
       onJobUpdate: jest.fn(),
       onJobProgress: jest.fn(),
-      onToast: jest.fn(),
+      onJobEvent: jest.fn(),
       getJobs: jest.fn().mockReturnValue([]),
     };
     renderHook(() => useJobSSE(true, true, callbacks));
@@ -113,17 +113,14 @@ describe("useJobSSE", () => {
       es.dispatchEvent("job-status", JSON.stringify(job));
     });
     expect(callbacks.onJobUpdate).toHaveBeenCalledWith(job);
-    expect(callbacks.onToast).toHaveBeenCalledWith(
-      expect.stringContaining("started processing"),
-      "info",
-    );
+    expect(callbacks.onJobEvent).toHaveBeenCalledWith(job, "started");
   });
 
   it("calls onJobUpdate on job-status event (COMPLETED)", () => {
     const callbacks = {
       onJobUpdate: jest.fn(),
       onJobProgress: jest.fn(),
-      onToast: jest.fn(),
+      onJobEvent: jest.fn(),
       getJobs: jest.fn().mockReturnValue([]),
     };
     renderHook(() => useJobSSE(true, true, callbacks));
@@ -134,10 +131,7 @@ describe("useJobSSE", () => {
     });
     expect(callbacks.onJobUpdate).toHaveBeenCalledWith(job);
     expect(callbacks.onJobProgress).toHaveBeenCalledWith("j1", 100);
-    expect(callbacks.onToast).toHaveBeenCalledWith(
-      expect.stringContaining("Completed successfully!"),
-      "success",
-    );
+    expect(callbacks.onJobEvent).toHaveBeenCalledWith(job, "completed");
     expect(es.close).toHaveBeenCalled();
   });
 
@@ -145,7 +139,7 @@ describe("useJobSSE", () => {
     const callbacks = {
       onJobUpdate: jest.fn(),
       onJobProgress: jest.fn(),
-      onToast: jest.fn(),
+      onJobEvent: jest.fn(),
       getJobs: jest.fn().mockReturnValue([]),
     };
     renderHook(() => useJobSSE(true, true, callbacks));
@@ -156,10 +150,7 @@ describe("useJobSSE", () => {
     });
     expect(callbacks.onJobUpdate).toHaveBeenCalledWith(job);
     expect(callbacks.onJobProgress).toHaveBeenCalledWith("j1", 0);
-    expect(callbacks.onToast).toHaveBeenCalledWith(
-      expect.stringContaining("Failed: Bad error"),
-      "error",
-    );
+    expect(callbacks.onJobEvent).toHaveBeenCalledWith(job, "failed");
     expect(es.close).toHaveBeenCalled();
   });
 
@@ -167,7 +158,7 @@ describe("useJobSSE", () => {
     const callbacks = {
       onJobUpdate: jest.fn(),
       onJobProgress: jest.fn(),
-      onToast: jest.fn(),
+      onJobEvent: jest.fn(),
       getJobs: jest.fn().mockReturnValue([
         { id: "j2", status: "PROCESSING" }
       ]),
@@ -185,7 +176,7 @@ describe("useJobSSE", () => {
     const callbacks = {
       onJobUpdate: jest.fn(),
       onJobProgress: jest.fn(),
-      onToast: jest.fn(),
+      onJobEvent: jest.fn(),
       getJobs: jest.fn().mockReturnValue([]),
     };
     renderHook(() => useJobSSE(true, true, callbacks));
@@ -200,7 +191,7 @@ describe("useJobSSE", () => {
     const callbacks = {
       onJobUpdate: jest.fn(),
       onJobProgress: jest.fn(),
-      onToast: jest.fn(),
+      onJobEvent: jest.fn(),
       getJobs: jest.fn().mockReturnValue([]),
     };
     renderHook(() => useJobSSE(true, true, callbacks));
@@ -220,7 +211,7 @@ describe("useJobSSE", () => {
     const callbacks = {
       onJobUpdate: jest.fn(),
       onJobProgress: jest.fn(),
-      onToast: jest.fn(),
+      onJobEvent: jest.fn(),
       getJobs: jest.fn().mockReturnValue([]),
     };
     const { unmount } = renderHook(() => useJobSSE(true, true, callbacks));

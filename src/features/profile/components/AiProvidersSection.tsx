@@ -1,7 +1,8 @@
 "use client";
 
 import * as React from "react";
-import { Button, Dialog, Icon } from "@krizaka/orazaka-design-system";
+import { Button, Icon } from "@krizaka/orazaka-design-system";
+import { Dialog } from "@krizaka/ui/dialog";
 import { useTranslation } from "@/core/context/LocaleContext";
 import { useAiProviders } from "@/features/profile/hooks/useAiProviders";
 import { findProvider, PROVIDERS } from "./AiProviderLogos";
@@ -53,7 +54,10 @@ export function AiProvidersSection({
 
   return (
     <Card.Root className="bg-surface-1 shadow-sm">
-      <Card.Body padding="lg" className="flex flex-row items-start justify-between gap-3">
+      <Card.Body
+        padding="lg"
+        className="flex flex-row items-start justify-between gap-3"
+      >
         <div className="space-y-1">
           <Card.Title className="line-clamp-none tracking-tight group-hover:text-fg flex items-center gap-2 text-base font-semibold text-fg">
             <span className="inline-flex h-7 w-7 items-center justify-center rounded-lg bg-accent-soft text-accent">
@@ -82,9 +86,7 @@ export function AiProvidersSection({
         {(() => {
           if (isLoading) {
             return (
-              <p className="text-xs text-fg-muted">
-                {t.providers.loading}
-              </p>
+              <p className="text-xs text-fg-muted">{t.providers.loading}</p>
             );
           }
           if (configuredIds.length === 0) {
@@ -117,34 +119,39 @@ export function AiProvidersSection({
         })()}
       </Card.Body>
 
-      <Dialog
+      <Dialog.Root
         open={modal.mode !== "closed"}
-        onClose={closeModal}
-        closeLabel={t.providers.cancel}
-        title={
-          modal.mode === "edit"
-            ? t.providers.editConnection
-            : t.providers.addConnection
-        }
-        description={t.providers.modalSubtitle}
+        onOpenChange={(next) => !next && closeModal()}
       >
-        {modal.mode !== "closed" && (
-          <ProviderConnectionForm
-            mode={modal.mode}
-            pickable={pickable}
-            selected={selected}
-            onSelect={selectProvider}
-            draftKey={draftKey}
-            onKeyChange={setDraftKey}
-            isRevealed={isRevealed}
-            onToggleReveal={toggleReveal}
-            isSaving={isSaving}
-            error={error}
-            onCancel={closeModal}
-            onSubmit={submit}
-          />
-        )}
-      </Dialog>
+        <Dialog.Content closeLabel={t.providers.cancel}>
+          <Dialog.Header>
+            <Dialog.Title>
+              {modal.mode === "edit"
+                ? t.providers.editConnection
+                : t.providers.addConnection}
+            </Dialog.Title>
+            <Dialog.Description>{t.providers.modalSubtitle}</Dialog.Description>
+          </Dialog.Header>
+          <Dialog.Body>
+            {modal.mode !== "closed" && (
+              <ProviderConnectionForm
+                mode={modal.mode}
+                pickable={pickable}
+                selected={selected}
+                onSelect={selectProvider}
+                draftKey={draftKey}
+                onKeyChange={setDraftKey}
+                isRevealed={isRevealed}
+                onToggleReveal={toggleReveal}
+                isSaving={isSaving}
+                error={error}
+                onCancel={closeModal}
+                onSubmit={submit}
+              />
+            )}
+          </Dialog.Body>
+        </Dialog.Content>
+      </Dialog.Root>
     </Card.Root>
   );
 }

@@ -18,26 +18,36 @@ import { WorkspaceSummary } from "@/features/dashboard/components/WorkspaceSumma
 import { QuickActions } from "@/features/dashboard/components/QuickActions";
 import { RecentSessions } from "@/features/dashboard/components/RecentSessions";
 import { JobsGallery } from "@/app/dashboard/jobs/JobsGallery";
-import { useJobs } from "@/features/jobs/hooks/useJobs";
+import { CreditsMeter } from "@/features/billing/components/CreditsMeter";
+import { usePlan } from "@/features/billing/hooks/usePlan";
+import { ActivityCharts } from "@/features/insights/components/ActivityCharts";
+import { StudiosUsedChart } from "@/features/insights/components/UsageCharts";
+import { useInsights } from "@/features/insights/hooks/useInsights";
+import { useStudios } from "@/features/studio/hooks/useStudios";
 import { jobMediaUrl } from "@/core/jobs/jobMedia";
 import { ChatIcon, ImageIcon, StudioIcon } from "@krizaka/icons";
 import { Button } from "@krizaka/ui/button";
 import Link from "next/link";
+import { INTL_LOCALES } from "@/core/constants/locale.constants";
 
 const DATE_LOCALES = { fr, en: enUS } as const;
 
 /**
- * The signed-in home: greeting, the interceptor pipeline (admins), the workspace's real figures,
- * quick actions and the latest conversations.
+ * The signed-in home: greeting, the interceptor pipeline (admins), the workspace's real figures, the credits and
+ * the charts of the person's own work (jobs per day, kinds, Studios used), the latest creations, quick actions and
+ * the latest conversations.
  */
 export function DashboardHome() {
   const router = useRouter();
   const { isAuthenticated, isLoading, user } = useAuth();
   const { locale, t } = useTranslation();
   const { threads } = useChatStream("dashboard");
-  const { wallet, available } = useWallet();
+  const { wallet, available, isLoading: walletLoading } = useWallet();
   const { installations } = useInstallations();
-  const { jobs } = useJobs(0, 12, isAuthenticated);
+  const { jobs, runs, isLoading: insightsLoading, hasError } = useInsights(isAuthenticated);
+  const { plan } = usePlan(isAuthenticated);
+  const { studios } = useStudios(null);
+  const studioLabel = React.useCallback((key: string) => studios.find((s) => s.studioKey === key)?.label ?? key, [studios]);
 
   React.useEffect(() => {
     if (!isLoading && !isAuthenticated) router.push("/login");
@@ -109,8 +119,16 @@ export function DashboardHome() {
                 credits: wallet ? available : null,
                 studios: installations.length,
               }}
+              locale={INTL_LOCALES[locale]}
               labels={t.dashboard}
             />
+
+            <ActivityCharts jobs={jobs} loading={insightsLoading} error={hasError} />
+
+            <section className="grid gap-4 lg:grid-cols-2">
+              <CreditsMeter wallet={wallet} available={available} plan={plan} loading={walletLoading} href="/billing" />
+              <StudiosUsedChart runs={runs} studioLabel={studioLabel} loading={insightsLoading} error={hasError} />
+            </section>
 
             {jobs.some((job) => jobMediaUrl(job)) && (
               <section className="flex flex-col gap-3">

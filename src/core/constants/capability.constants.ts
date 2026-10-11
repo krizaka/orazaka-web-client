@@ -47,32 +47,6 @@ export const CATEGORY_VALUES: readonly ModelCategoryValue[] = Object.values(
 /** Admin-specific categories extending MODEL_CATEGORY with theme/code. */
 export const CATEGORIES = [...CATEGORY_VALUES, "theme", "code"] as const;
 
-// ─── Feature Label Resolution ────────────────────────────────────────────────
-// Maps feature-key substrings to human-readable labels.
-
-// Rules are first-match, so the more specific *.analysis keys MUST precede the
-// generic media-category keys (otherwise "…video.analysis" matches "video" and
-// is mislabelled "Video Generation").
-const FEATURE_LABEL_RULES: readonly { keyword: string; label: string }[] = [
-  { keyword: "video.analysis", label: "Video Analysis" },
-  { keyword: "video_analysis", label: "Video Analysis" },
-  { keyword: MODEL_CATEGORY.VISION, label: "Vision Analysis" },
-  { keyword: MODEL_CATEGORY.VIDEO, label: "Video Generation" },
-  { keyword: MODEL_CATEGORY.IMAGE, label: "Image Generation" },
-  { keyword: MODEL_CATEGORY.SPEECH, label: "Speech Generation" },
-  { keyword: MODEL_CATEGORY.AUDIO, label: "Audio Processing" },
-];
-
-/**
- * Resolves a human-readable label from a feature key string.
- * Replaces scattered `featureKey.includes("video")` chains.
- */
-export function resolveFeatureLabel(featureKey: string): string {
-  const lower = featureKey.toLowerCase();
-  const match = FEATURE_LABEL_RULES.find((r) => lower.includes(r.keyword));
-  return match?.label ?? "Task";
-}
-
 // ─── Feature Key → Provider Mapping ──────────────────────────────────────────
 
 const PROVIDER_RULES: readonly { keyword: string; provider: string }[] = [
