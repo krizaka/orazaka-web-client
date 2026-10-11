@@ -1,7 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import { Icon } from "@krizaka/orazaka-design-system";
+import { CheckIcon } from "@krizaka/icons";
+import { Badge } from "@krizaka/ui/badge";
+import { Button } from "@krizaka/ui/button";
 import { useTranslation } from "@/core/context/LocaleContext";
 import { StudioApi } from "@/services/studio.api";
 import { InstallDialog } from "@/features/studio/components/InstallDialog";
@@ -76,10 +78,10 @@ export function StudioInstallPanel({
 
   if (studio.kind === "TOOLKIT") {
     return (
-      <span className="inline-flex items-center gap-1.5 h-8 self-start px-3 text-[12px] font-medium border border-success/40 text-success">
-        <Icon name="check" size={13} />
+      <Badge tone="success" size="md" className="self-start">
+        <CheckIcon size={13} />
         {t.studio.included}
-      </span>
+      </Badge>
     );
   }
 
@@ -94,57 +96,36 @@ export function StudioInstallPanel({
         onCancel={() => setDialogOpen(false)}
       />
       <div className="flex flex-wrap items-center gap-2">
-          {installation ? (
-            <>
-              <span className="inline-flex items-center gap-1.5 h-8 px-3 text-[12px] font-medium border border-success/40 text-success">
-                <Icon name="check" size={13} />
-                {t.studio.installed}
-              </span>
-              <button
-                type="button"
-                onClick={() => setDialogOpen(true)}
-                disabled={isSubmitting}
-                className="h-8 px-3 text-[12px] font-medium border border-border-subtle text-fg hover:bg-surface-2 transition-colors duration-150 disabled:opacity-50"
-              >
-                {t.studio.configure}
-              </button>
-              {installation.status === "UPGRADE_AVAILABLE" && (
-                <button
-                  type="button"
-                  onClick={() => void act(() => StudioApi.upgrade(installation.id))}
-                  disabled={isSubmitting}
-                  className="h-8 px-3 text-[12px] font-medium border border-accent text-accent hover:bg-surface-2 transition-colors duration-150 disabled:opacity-50"
-                >
-                  {t.studio.upgradeNow}
-                </button>
-              )}
-              <button
-                type="button"
-                onClick={() => void act(() => StudioApi.uninstall(installation.id))}
-                disabled={isSubmitting}
-                className="h-8 px-3 text-[12px] font-medium text-fg-muted hover:text-danger transition-colors duration-150 disabled:opacity-50"
-              >
-                {t.studio.uninstall}
-              </button>
-            </>
-          ) : (
-            <button
-              type="button"
-              onClick={() => setDialogOpen(true)}
-              disabled={isSubmitting}
-              className="h-8 px-4 inline-flex items-center gap-1.5 text-[12px] font-medium border border-accent text-accent hover:bg-surface-2 transition-colors duration-150 disabled:opacity-50"
-            >
-              {isSubmitting && <Icon name="loader" size={13} className="animate-spin" />}
-              {t.studio.install}
-            </button>
-          )}
+        {installation ? (
+          <>
+            <Badge tone="success" size="md">
+              <CheckIcon size={13} />
+              {t.studio.installed}
+            </Badge>
+            <Button variant="secondary" size="sm" onClick={() => setDialogOpen(true)} disabled={isSubmitting}>
+              {t.studio.configure}
+            </Button>
+            {installation.status === "UPGRADE_AVAILABLE" && (
+              <Button variant="primary" size="sm" onClick={() => void act(() => StudioApi.upgrade(installation.id))} disabled={isSubmitting}>
+                {t.studio.upgradeNow}
+              </Button>
+            )}
+            <Button variant="ghost" size="sm" onClick={() => void act(() => StudioApi.uninstall(installation.id))} disabled={isSubmitting}>
+              {t.studio.uninstall}
+            </Button>
+          </>
+        ) : (
+          <Button variant="primary" size="md" onClick={() => setDialogOpen(true)} loading={isSubmitting}>
+            {t.studio.install}
+          </Button>
+        )}
       </div>
 
       {installation?.status === "UPGRADE_AVAILABLE" && (
-        <p className="text-[11px] text-accent">{t.studio.upgradeAvailable}</p>
+        <p className="text-xs text-fg-accent">{t.studio.upgradeAvailable}</p>
       )}
 
-      {error && <p className="text-[11px] text-danger">{error}</p>}
+      {error && <p role="alert" className="text-xs text-fg-danger">{error}</p>}
     </div>
   );
 }

@@ -1,5 +1,6 @@
 "use client";
 
+import { IconButton } from "@krizaka/ui/button";
 import * as React from "react";
 import { useTranslation } from "@/core/context/LocaleContext";
 import { Icon } from "@krizaka/orazaka-design-system";
@@ -42,18 +43,15 @@ export function CopyableField({
         >
           {value}
         </p>
-        <button
-          type="button"
+        <IconButton
+          variant="ghost"
+          size="sm"
           onClick={handleCopy}
-          className="rounded-lg p-1.5 text-fg-muted opacity-0 transition-all duration-150 hover:bg-surface-2 hover:text-fg group-hover:opacity-100 focus:opacity-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-          aria-label={t.a11y.copy}
+          className="w-8 px-0 opacity-0 group-hover:opacity-100 focus:opacity-100"
+          label={t.a11y.copy}
         >
-          {copied ? (
-            <Icon name="check" className="h-3.5 w-3.5 text-success" />
-          ) : (
-            <Icon name="copy" className="h-3.5 w-3.5" />
-          )}
-        </button>
+          {copied ? <Icon name="check" className="h-3.5 w-3.5 text-fg-success" /> : <Icon name="copy" className="h-3.5 w-3.5" />}
+        </IconButton>
       </section>
     </article>
   );

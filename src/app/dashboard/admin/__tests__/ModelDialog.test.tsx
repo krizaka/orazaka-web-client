@@ -198,7 +198,7 @@ describe("ModelDialog", () => {
     });
   });
 
-  it("shows tooltip text on hover", () => {
+  it("shows tooltip text on focus (Radix tooltip)", async () => {
     render(<ModelDialog {...defaultProps} />);
     
     // Find a help button (tooltip trigger)
@@ -209,17 +209,10 @@ describe("ModelDialog", () => {
     // Tooltip text shouldn't be visible initially
     expect(screen.queryByText("Help Category")).not.toBeInTheDocument();
 
-    // Trigger hover
     act(() => {
-      fireEvent.mouseEnter(trigger);
+      trigger.focus();
     });
-    expect(screen.getByText("Help Category")).toBeInTheDocument();
-
-    // Trigger leave
-    act(() => {
-      fireEvent.mouseLeave(trigger);
-    });
-    expect(screen.queryByText("Help Category")).not.toBeInTheDocument();
+    expect((await screen.findAllByText("Help Category")).length).toBeGreaterThan(0);
 
     // Trigger focus
     act(() => {

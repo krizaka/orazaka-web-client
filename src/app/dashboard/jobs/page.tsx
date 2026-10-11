@@ -9,16 +9,20 @@ import { useTranslation } from "@/core/context/LocaleContext";
 import { useJobStream } from "@/core/context/JobStreamContext";
 import { useJobs } from "@/features/jobs/hooks/useJobs";
 import { Job } from "@/core/types/jobs.types";
-import { Button, Icon } from "@krizaka/orazaka-design-system";
+import { Button } from "@krizaka/ui/button";
+import { Spinner } from "@krizaka/ui/spinner";
+import { Badge } from "@krizaka/ui/badge";
 import { JobsTable } from "./JobsTable";
 import { JobsKpiSummary } from "./JobsKpiSummary";
 import { JobModal } from "./JobModal";
 import { JobsFilterBar } from "./JobsFilterBar";
+import { JobsGallery } from "./JobsGallery";
+import { JobsRunningBanner } from "./JobsRunningBanner";
+import { JobsEmpty } from "./JobsEmpty";
 import { Suspense } from "react";
 import { getSession } from "next-auth/react";
 import { JOB_STATUS } from "@/core/constants/http.constants";
 
-import { cn } from "@krizaka/ui/cn";
 
 const FEATURE_DISPLAY_MAP: Record<string, string> = {
   video: "video",
@@ -51,6 +55,9 @@ function JobsDashboardContent() {
     refresh: refreshJobsQuery,
   } = useJobs(currentPage, pageSize, isAuthenticated);
 
+  // The gallery reads further back than one page of the table: the last media generated, whatever ran since.
+  const { jobs: recentJobs } = useJobs(0, 60, isAuthenticated);
+
   const [searchQuery, setSearchQuery] = React.useState("");
   const [activeTab, setActiveTab] = React.useState<
     "all" | "active" | "completed" | "failed"
@@ -70,6 +77,11 @@ function JobsDashboardContent() {
   const pageData = React.useMemo(() => {
     return pageJobs.map((j) => liveJobs.find((l) => l.id === j.id) || j);
   }, [pageJobs, liveJobs]);
+
+  const running = React.useMemo(
+    () => liveJobs.filter((j) => j.status === JOB_STATUS.PENDING || j.status === JOB_STATUS.PROCESSING),
+    [liveJobs],
+  );
 
   const handleCopy = (text: string, id: string) => {
     navigator.clipboard.writeText(text);
@@ -143,9 +155,7 @@ function JobsDashboardContent() {
   if (isLoading || !isAuthenticated) {
     return (
       <section className="flex min-h-screen items-center justify-center bg-surface-0">
-        <span className="text-fg-muted text-sm animate-pulse">
-          {t.dashboard.loading}
-        </span>
+        <Spinner label={t.dashboard.loading} />
       </section>
     );
   }
@@ -159,30 +169,26 @@ function JobsDashboardContent() {
 
         <main className="flex-1 overflow-auto p-6 scrollbar-thin ambient-grid">
           <section className="mx-auto max-w-6xl space-y-6 animate-in fade-in slide-in-from-bottom-3 duration-300">
-            {/* Header controls */}
-            <header className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-              <div className="space-y-1">
-                <h2 className="text-3xl font-extrabold tracking-tight text-fg">
-                  {t.jobs?.title || "My Tasks"}
-                </h2>
-                <p className="text-fg-secondary text-sm">
-                  {t.jobs?.subtitle ||
-                    "Track your asynchronous AI runs and background jobs in real-time."}
-                </p>
+            <header className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+              <div className="flex flex-col gap-1">
+                <h1 className="font-display text-2xl font-bold tracking-[-0.02em] text-fg">{t.jobs.title}</h1>
+                <p className="text-sm text-fg-secondary">{t.jobs.subtitle}</p>
+                <Badge tone="success" dot className="mt-1 self-start">
+                  {t.showcase.media.local}
+                </Badge>
               </div>
-              <div className="flex items-center space-x-2">
-                <Button
-                  variant="outline"
-                  onClick={handleRefresh}
-                  className="rounded-xl flex items-center space-x-2 text-sm font-semibold border-border-subtle transition-colors hover:bg-surface-1"
-                >
-                  <Icon name="refresh"
-                    className={cn("w-4 h-4", loading ? "animate-spin" : "")}
-                  />
-                  <span>{t.jobs.refresh}</span>
-                </Button>
-              </div>
+              <Button variant="secondary" size="sm" onClick={handleRefresh} loading={loading}>
+                {t.jobs.refresh}
+              </Button>
             </header>
+
+            <JobsRunningBanner jobs={running} />
+
+            {!loading && totalElements === 0 && running.length === 0 ? (
+              <JobsEmpty />
+            ) : (
+              <>
+                <JobsGallery jobs={recentJobs} onOpen={(job) => handleOpenModal(job, "result")} />
 
             {/* Filters panel */}
             <JobsFilterBar
@@ -213,6 +219,8 @@ function JobsDashboardContent() {
               copiedId={copiedId}
               onCopy={handleCopy}
             />
+              </>
+            )}
           </section>
         </main>
       </section>

@@ -7,6 +7,7 @@ const mockT = {
     sessionTitle: "New Chat",
     id: "ID",
   },
+  a11y: { renameConversation: "Rename this conversation", openConversations: "Open your conversations" },
 } as never;
 
 describe("ChatHeader", () => {
@@ -37,13 +38,13 @@ describe("ChatHeader", () => {
 
   it("enters edit mode on rename click", () => {
     render(<ChatHeader {...defaultProps} />);
-    fireEvent.click(screen.getByTitle("Rename Session"));
+    fireEvent.click(screen.getByTitle("Rename this conversation"));
     expect(screen.getByDisplayValue("My Chat")).toBeInTheDocument();
   });
 
   it("calls onRename on Enter key", () => {
     render(<ChatHeader {...defaultProps} />);
-    fireEvent.click(screen.getByTitle("Rename Session"));
+    fireEvent.click(screen.getByTitle("Rename this conversation"));
     const input = screen.getByDisplayValue("My Chat");
     fireEvent.change(input, { target: { value: "Renamed Chat" } });
     fireEvent.keyDown(input, { key: "Enter" });
@@ -52,7 +53,7 @@ describe("ChatHeader", () => {
 
   it("cancels edit on Escape key", () => {
     render(<ChatHeader {...defaultProps} />);
-    fireEvent.click(screen.getByTitle("Rename Session"));
+    fireEvent.click(screen.getByTitle("Rename this conversation"));
     const input = screen.getByDisplayValue("My Chat");
     fireEvent.change(input, { target: { value: "Changed" } });
     fireEvent.keyDown(input, { key: "Escape" });
@@ -62,7 +63,7 @@ describe("ChatHeader", () => {
 
   it("calls onRename on blur", () => {
     render(<ChatHeader {...defaultProps} />);
-    fireEvent.click(screen.getByTitle("Rename Session"));
+    fireEvent.click(screen.getByTitle("Rename this conversation"));
     const input = screen.getByDisplayValue("My Chat");
     fireEvent.change(input, { target: { value: "New Name" } });
     fireEvent.blur(input);
@@ -71,7 +72,7 @@ describe("ChatHeader", () => {
 
   it("does not call onRename if title unchanged", () => {
     render(<ChatHeader {...defaultProps} />);
-    fireEvent.click(screen.getByTitle("Rename Session"));
+    fireEvent.click(screen.getByTitle("Rename this conversation"));
     fireEvent.keyDown(screen.getByDisplayValue("My Chat"), { key: "Enter" });
     expect(defaultProps.onRename).not.toHaveBeenCalled();
   });

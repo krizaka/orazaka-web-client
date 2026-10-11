@@ -4,7 +4,7 @@ import * as React from "react";
 import Link from "next/link";
 import { CloseIcon, MenuIcon } from "@krizaka/icons";
 import { OrazakaLogo } from "@krizaka/ui";
-import { Button } from "@krizaka/ui/button";
+import { Button, IconButton } from "@krizaka/ui/button";
 import { ThemeToggle } from "@krizaka/ui/theme";
 import { cn } from "@krizaka/ui/cn";
 import { useTranslation } from "@/core/context/LocaleContext";
@@ -23,18 +23,16 @@ function Locales({ className }: Readonly<{ className?: string }>) {
   return (
     <span role="group" aria-label={t.landing.nav.langLabel} className={cn("items-center", className)}>
       {LOCALES.map(({ code, label }) => (
-        <button
+        <Button
           key={code}
-          type="button"
+          variant="ghost"
+          size="sm"
           onClick={() => setLocale(code)}
           aria-pressed={locale === code}
-          className={cn(
-            "min-h-9 rounded-md px-2 font-mono text-xs transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
-            locale === code ? "text-fg-accent" : "text-fg-secondary hover:text-fg",
-          )}
+          className="px-2 font-mono aria-pressed:text-fg-accent"
         >
           {label}
-        </button>
+        </Button>
       ))}
     </span>
   );
@@ -81,16 +79,16 @@ export function LandingNav({ onHome = true }: Readonly<{ onHome?: boolean }>) {
           <Button asChild variant="primary" size="sm" shape="pill" className="kz-sheen">
             <Link href="/register">{n.getStarted}</Link>
           </Button>
-          <button
-            type="button"
+          <IconButton
+            variant="ghost"
             onClick={() => setOpen((v) => !v)}
             aria-expanded={open}
             aria-controls="landing-menu"
-            aria-label={open ? n.closeMenu : n.openMenu}
-            className="grid h-10 w-10 place-items-center rounded-lg text-fg-secondary transition-colors hover:bg-surface-2 hover:text-fg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring md:hidden"
+            label={open ? n.closeMenu : n.openMenu}
+            className="md:hidden"
           >
             {open ? <CloseIcon size={20} /> : <MenuIcon size={20} />}
-          </button>
+          </IconButton>
         </span>
       </nav>
 

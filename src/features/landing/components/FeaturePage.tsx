@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import { ForwardIcon } from "@krizaka/icons";
-import { MotionObserver } from "@krizaka/ui";
 import { Button } from "@krizaka/ui/button";
 import { SectionBackdrop } from "@krizaka/ui/section-backdrop";
 import { useTranslation } from "@/core/context/LocaleContext";
@@ -26,7 +25,6 @@ export function FeaturePage({ id }: Readonly<{ id: FeatureId }>) {
 
   return (
     <>
-      <MotionObserver />
       <LandingNav onHome={false} />
       <main className="min-h-screen bg-surface-0 text-fg">
         <SectionBackdrop grid className="border-b border-border-subtle">

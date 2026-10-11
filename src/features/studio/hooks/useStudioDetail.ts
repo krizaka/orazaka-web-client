@@ -35,6 +35,10 @@ export function useStudioDetail(studioKey: string): StudioDetailState {
   const [hasError, setHasError] = useState(false);
 
   const load = useCallback(async () => {
+    if (!studioKey) {
+      // Not known yet (a run screen before its run has loaded): nothing to ask for.
+      return;
+    }
     setIsLoading(true);
     setNotFound(false);
     setHasError(false);

@@ -1,9 +1,9 @@
 "use client";
 
-import { Icon } from "@krizaka/orazaka-design-system";
+import { SearchIcon } from "@krizaka/icons";
+import { Chip } from "@krizaka/ui/chip";
+import { Input } from "@krizaka/ui/field";
 import type { TranslationDictionary } from "@/core/context/LocaleContext";
-
-import { cn } from "@krizaka/ui/cn";
 
 export type JobTab = "all" | "active" | "completed" | "failed";
 
@@ -15,57 +15,42 @@ interface JobsFilterBarProps {
   t: TranslationDictionary;
 }
 
-/** Status-tab segmented control + feature-key search for the jobs dashboard. */
-export function JobsFilterBar({
-  activeTab,
-  onTabChange,
-  searchQuery,
-  onSearchChange,
-  t,
-}: Readonly<JobsFilterBarProps>) {
+/** Status filter (the @krizaka/ui chips, one at a time) + search, on the platform's field. */
+export function JobsFilterBar({ activeTab, onTabChange, searchQuery, onSearchChange, t }: Readonly<JobsFilterBarProps>) {
+  const labels: Record<JobTab, string> = {
+    all: t.jobs.statusAll,
+    active: t.jobs.statusActive,
+    completed: t.jobs.statusCompleted,
+    failed: t.jobs.statusFailed,
+  };
   return (
-    <nav className="flex flex-col md:flex-row gap-4 items-center justify-between bg-surface-1 p-4 rounded-2xl border border-border-subtle/60 shadow-sm backdrop-blur-md">
-      <div className="flex bg-surface-2/55 p-1 rounded-xl w-full md:w-auto">
+    <nav className="flex flex-col items-stretch justify-between gap-3 md:flex-row md:items-center">
+      <Chip.Group
+        type="single"
+        size="sm"
+        required
+        label={t.jobs.title}
+        value={activeTab}
+        onValueChange={(value) => onTabChange((value || "all") as JobTab)}
+        className="gap-1.5"
+      >
         {(["all", "active", "completed", "failed"] as const).map((tab) => (
-          <button
-            key={tab}
-            onClick={() => onTabChange(tab)}
-            className={cn(
-              "flex-1 md:flex-initial px-4 py-1.5 rounded-lg text-xs font-bold transition-all duration-200 capitalize",
-              activeTab === tab
-                ? "bg-surface-3 text-fg shadow-sm"
-                : "text-fg-secondary hover:text-fg"
-            )}
-          >
-            {
-              {
-                all: t.jobs?.statusAll || "All Tasks",
-                active: t.jobs?.statusActive || "Active",
-                completed: t.jobs?.statusCompleted || "Completed",
-                failed: t.jobs?.statusFailed || "Failed",
-              }[tab]
-            }
-          </button>
+          <Chip key={tab} value={tab}>
+            {labels[tab]}
+          </Chip>
         ))}
-      </div>
+      </Chip.Group>
 
       <div className="relative w-full md:w-72">
-        <Icon name="search" className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-fg-secondary pointer-events-none" />
-        <input
-          type="text"
-          placeholder={t.jobs?.searchPlaceholder || "Search tasks by feature key..."}
+        <SearchIcon size={16} className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-fg-muted" />
+        <Input
+          type="search"
+          aria-label={t.jobs.searchPlaceholder}
+          placeholder={t.jobs.searchPlaceholder}
           value={searchQuery}
           onChange={(e) => onSearchChange(e.target.value)}
-          className="w-full pl-10 pr-4 py-2 rounded-xl text-sm border border-border-subtle/60 bg-transparent text-fg focus:outline-none focus:ring-2 focus:ring-border-subtle transition-all duration-200"
+          className="pl-9"
         />
-        {searchQuery && (
-          <button
-            onClick={() => onSearchChange("")}
-            className="absolute right-3.5 top-1/2 -translate-y-1/2 text-fg-secondary hover:text-fg"
-          >
-            <Icon name="close" className="w-3.5 h-3.5" />
-          </button>
-        )}
       </div>
     </nav>
   );

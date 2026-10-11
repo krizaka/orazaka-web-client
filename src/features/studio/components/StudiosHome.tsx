@@ -21,15 +21,15 @@ export function StudiosHome() {
   return (
     <Tabs.Root value={tab} onValueChange={(value) => setTab(value as StudioTab)} className="gap-5">
       <header className="flex flex-col gap-1">
-        <h1 className="text-[17px] font-semibold tracking-[-0.02em] text-fg">{t.studio.title}</h1>
-        <p className="text-[12px] text-fg-secondary">{t.studio.subtitle}</p>
+        <h1 className="font-display text-2xl font-bold tracking-[-0.02em] text-fg">{t.studio.title}</h1>
+        <p className="text-sm text-fg-secondary">{t.studio.subtitle}</p>
       </header>
 
       <Tabs.List aria-label={t.studio.title} className="border-border-subtle">
-        <Tabs.Trigger value="mine" className="py-2 text-[12px] font-medium">
+        <Tabs.Trigger value="mine" className="py-2 text-[13px] font-medium">
           {t.studio.tabMine}
         </Tabs.Trigger>
-        <Tabs.Trigger value="explore" className="py-2 text-[12px] font-medium">
+        <Tabs.Trigger value="explore" className="py-2 text-[13px] font-medium">
           {t.studio.tabExplore}
         </Tabs.Trigger>
       </Tabs.List>

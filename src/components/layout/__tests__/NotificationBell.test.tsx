@@ -38,6 +38,10 @@ jest.mock("@/core/context/LocaleContext", () => ({
         imageGen: "Image Generation",
         speechGen: "Speech Generation",
         textGen: "Text Generation",
+        videoAnalysis: "Video Analysis",
+      },
+      showcase: {
+        notifications: { emptyTitle: "No tasks", emptyBody: "Nothing yet", running: "Running", done: "Ready", failed: "Failed" },
       },
     },
     locale: "en",
@@ -45,7 +49,7 @@ jest.mock("@/core/context/LocaleContext", () => ({
 }));
 
 jest.mock("@/core/constants/capability.constants", () => ({
-  MODEL_CATEGORY: { VIDEO: "video", IMAGE: "image", SPEECH: "speech" },
+  MODEL_CATEGORY: { VIDEO: "video", IMAGE: "image", SPEECH: "speech", VISION: "vision", AUDIO: "audio" },
 }));
 
 jest.mock("@/core/constants/http.constants", () => ({
@@ -65,8 +69,8 @@ describe("NotificationBell", () => {
   });
 
   it("does not show count badge when no active jobs", () => {
-    const { container } = render(<NotificationBell bellOpen={false} onToggle={jest.fn()} />);
-    expect(container.querySelector(".animate-pulse")).not.toBeInTheDocument();
+    render(<NotificationBell bellOpen={false} onToggle={jest.fn()} />);
+    expect(screen.queryByText(/^\d+$/)).not.toBeInTheDocument();
   });
 
   it("shows count badge when active jobs present", () => {

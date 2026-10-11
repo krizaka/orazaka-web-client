@@ -1,5 +1,6 @@
 "use client";
 
+import { Card } from "@krizaka/ui/card";
 import React from "react";
 import { Icon, SentinelMini } from "@krizaka/orazaka-design-system";
 import type { IconName } from "@krizaka/orazaka-design-system";
@@ -51,19 +52,16 @@ export function WelcomeHero({ t, onPrompt }: Readonly<WelcomeHeroProps>) {
       {/* Actionable prompt cards */}
       <div className="mt-8 grid w-full grid-cols-1 gap-3 stagger-children sm:grid-cols-3">
         {cards.map(({ label, icon }) => (
-          <button
-            key={label}
-            type="button"
-            onClick={() => onPrompt(label)}
-            className="group flex flex-col items-start gap-3 rounded-xl border border-border-subtle bg-surface-1 p-4 text-left transition-all duration-200 cursor-pointer hover:-translate-y-0.5 hover:border-accent hover:shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-ring motion-safe:animate-in motion-safe:fade-in"
-          >
-            <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-accent-soft text-accent transition-transform duration-200 group-hover:scale-105">
-              <Icon name={icon} className="h-4 w-4" />
-            </span>
-            <span className="text-sm font-medium text-fg">
-              {label}
-            </span>
-          </button>
+          <Card.Root key={label} asChild interactive>
+            <button type="button" onClick={() => onPrompt(label)} className="text-left">
+              <Card.Body className="gap-3">
+                <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-accent-soft text-fg-accent">
+                  <Icon name={icon} className="h-4 w-4" />
+                </span>
+                <span className="text-sm font-medium text-fg">{label}</span>
+              </Card.Body>
+            </button>
+          </Card.Root>
         ))}
       </div>
     </div>

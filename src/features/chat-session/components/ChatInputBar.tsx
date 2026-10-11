@@ -3,7 +3,8 @@
 
 import React from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Button, Icon } from "@krizaka/orazaka-design-system";
+import { Button, Icon, IconButton } from "@krizaka/orazaka-design-system";
+import { ChevronDownIcon, CloseIcon } from "@krizaka/icons";
 import { cn } from "@krizaka/ui/cn";
 import { ContextPlusMenu } from "./ContextPlusMenu";
 import { ChatIndicators } from "./ChatIndicators";
@@ -107,51 +108,25 @@ export const ChatInputBar: React.FC<ChatInputBarProps> = ({
             {/* Visible capability/mode selector (Gemini-style): shows the active mode — Chat by
                 default, or the staged generation capability — opens the capability menu, and
                 clears back to Chat via the inline ✕. */}
-            <div
-              className={cn(
-                "flex items-center rounded-full border transition-all duration-150 flex-shrink-0 mb-0.5",
-                selectedStudio
-                  ? "border-accent bg-accent-soft text-accent"
-                  : "border-border-subtle bg-surface-2 text-fg-secondary",
-                isAgentBusy ? "opacity-40 pointer-events-none" : ""
-              )}
-            >
-              <button
-                type="button"
+            <div className="mb-0.5 flex flex-shrink-0 items-center gap-0.5">
+              <Button
+                variant="outline"
+                size="sm"
+                shape="pill"
                 onClick={onTogglePlusMenu}
                 disabled={isAgentBusy}
                 aria-label={t.chat.addCapability}
                 aria-expanded={isPlusMenuOpen}
-                className="flex items-center gap-1.5 rounded-full pl-2.5 pr-1.5 py-2 text-xs font-medium transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                className={cn("gap-1.5 pl-2.5 pr-2 font-medium", selectedStudio && "border-accent bg-accent-soft text-fg-accent")}
               >
                 <Icon name="spark" size={15} />
-                <span className="max-w-[120px] truncate">
-                  {selectedStudio ? selectedStudio.label : t.chat.modeChat}
-                </span>
-                <svg
-                  className={cn("w-3.5 h-3.5 transition-transform duration-200", isPlusMenuOpen && "rotate-180")}
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  strokeWidth={2}
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M19.5 8.25l-7.5 7.5-7.5-7.5"
-                  />
-                </svg>
-              </button>
+                <span className="max-w-[120px] truncate">{selectedStudio ? selectedStudio.label : t.chat.modeChat}</span>
+                <ChevronDownIcon size={14} className={cn("transition-transform duration-200", isPlusMenuOpen && "rotate-180")} />
+              </Button>
               {selectedStudio && (
-                <button
-                  type="button"
-                  onClick={onClearStudio}
-                  disabled={isAgentBusy}
-                  aria-label={t.chat.clear}
-                  className="pl-0.5 pr-2 py-2 transition-opacity hover:opacity-70 focus:outline-none"
-                >
-                  <Icon name="close" size={13} />
-                </button>
+                <IconButton variant="ghost" size="sm" shape="pill" className="w-8 px-0" onClick={onClearStudio} disabled={isAgentBusy} label={t.chat.clear}>
+                  <CloseIcon size={13} />
+                </IconButton>
               )}
             </div>
 
@@ -163,16 +138,15 @@ export const ChatInputBar: React.FC<ChatInputBarProps> = ({
             />
 
             <section className="flex-1 relative flex items-end">
-              <button
-                type="button"
+              <IconButton
+                variant="ghost"
                 onClick={() => fileInputRef.current?.click()}
                 disabled={isAgentBusy}
-                className={cn("absolute left-3 bottom-3 p-1.5 text-fg-muted hover:text-fg transition-all duration-150 z-10",
-                  isAgentBusy && "opacity-40 cursor-not-allowed pointer-events-none")}
-                aria-label={t.a11y.attachFile}
+                className="absolute bottom-1.5 left-1.5 z-10"
+                label={t.a11y.attachFile}
               >
                 <Icon name="attach" size={20} />
-              </button>
+              </IconButton>
               <textarea
                 data-testid="chat-input"
                 value={input}

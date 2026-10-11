@@ -1,3 +1,5 @@
+import { Button } from "@krizaka/ui/button";
+import { Mascot } from "@krizaka/ui/mascots";
 import React from "react";
 import { motion, useReducedMotion } from "framer-motion";
 import ReactMarkdown from "react-markdown";
@@ -142,22 +144,15 @@ export const ChatMessage: React.FC<Props> = ({ message, index = 0 }) => {
       case "audio":
         return <ContentAudio content={message.content} />;
       case "run-pending":
+        // A generation takes a while on a laptop: the duck (it builds) thinks beside what runs — a long wait is the
+        // moment a mascot is for.
         return (
           <div className="flex items-center gap-3 text-[13px]">
-            <span className="flex gap-1" aria-hidden="true">
-              <span className="h-1.5 w-1.5 rounded-full bg-accent animate-bounce motion-reduce:animate-none [animation-delay:-0.3s]" />
-              <span className="h-1.5 w-1.5 rounded-full bg-accent animate-bounce motion-reduce:animate-none [animation-delay:-0.15s]" />
-              <span className="h-1.5 w-1.5 rounded-full bg-accent animate-bounce motion-reduce:animate-none" />
-            </span>
-            <span className="text-fg-secondary">
-              {message.content || t.chat.generating}
-            </span>
-            <a
-              href={`/studios/runs/${message.runId}`}
-              className="text-accent hover:underline whitespace-nowrap"
-            >
-              {t.chat.viewTask} →
-            </a>
+            <Mascot bird="duck" mood="thinking" size={56} />
+            <span className="text-fg-secondary">{message.content || t.chat.generating}</span>
+            <Button asChild variant="ghost" size="sm">
+              <a href={`/studios/runs/${message.runId}`}>{t.chat.viewTask} →</a>
+            </Button>
           </div>
         );
       case "text":

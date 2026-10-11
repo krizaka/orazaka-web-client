@@ -1,6 +1,8 @@
 /* eslint-disable no-restricted-syntax */
 "use client";
 
+import { Button } from "@krizaka/ui/button";
+import { useTranslation } from "@/core/context/LocaleContext";
 import React from "react";
 import { Icon } from "@krizaka/orazaka-design-system";
 
@@ -38,6 +40,7 @@ export function PlanApprovalCard({
   onRequestAdjustments,
   isProcessing = false,
 }: Readonly<PlanApprovalCardProps>) {
+  const { t } = useTranslation();
   return (
     <section
       className="glass-card p-0 overflow-hidden animate-in fade-in slide-in-from-bottom-3 duration-500"
@@ -110,34 +113,16 @@ export function PlanApprovalCard({
       {/* Action bar */}
       <footer className="flex items-center gap-3 px-5 py-4 border-t border-border-subtle bg-surface-2/20">
         {/* Primary: Approve */}
-        <button
-          id="plan-approve-btn"
-          type="button"
-          onClick={onApprove}
-          disabled={isProcessing}
-          className="inline-flex items-center gap-2 px-5 py-2 text-[12px] font-bold bg-accent text-on-accent shadow-md hover:opacity-90 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
-          style={{ borderRadius: "var(--kz-radius-sm)" }}
-        >
-          {isProcessing ? (
-            <Icon name="loader" size={14} className="animate-spin" />
-          ) : (
-            <Icon name="check" size={14} />
-          )}
-          Approve &amp; Execute Planning
-        </button>
+        <Button id="plan-approve-btn" variant="primary" size="sm" onClick={onApprove} loading={isProcessing}>
+          <Icon name="check" size={14} />
+          {t.showcase.chat.approvePlan}
+        </Button>
 
         {/* Secondary: Request Adjustments */}
-        <button
-          id="plan-adjust-btn"
-          type="button"
-          onClick={onRequestAdjustments}
-          disabled={isProcessing}
-          className="inline-flex items-center gap-2 px-4 py-2 text-[12px] font-medium border border-border-default bg-surface-2 text-fg-secondary hover:text-fg hover:bg-surface-3 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
-          style={{ borderRadius: "var(--kz-radius-sm)" }}
-        >
+        <Button id="plan-adjust-btn" variant="secondary" size="sm" onClick={onRequestAdjustments} disabled={isProcessing}>
           <Icon name="edit" size={14} />
-          Request Adjustments
-        </button>
+          {t.showcase.chat.adjustPlan}
+        </Button>
       </footer>
     </section>
   );

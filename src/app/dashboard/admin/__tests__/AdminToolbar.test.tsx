@@ -9,6 +9,7 @@ const mockT = {
     refresh: "Refresh",
     addModel: "Add Model",
   },
+  a11y: { closeDetails: "Close details" },
 } as never;
 
 describe("AdminToolbar", () => {

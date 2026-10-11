@@ -1,5 +1,6 @@
 "use client";
 
+import { IconButton } from "@krizaka/ui/button";
 import * as React from "react";
 import { Button, Icon, Input } from "@krizaka/orazaka-design-system";
 import { useTranslation } from "@/core/context/LocaleContext";
@@ -41,15 +42,16 @@ function KeyField({
           autoComplete="off"
           className="pr-10 font-mono"
         />
-        <button
-          type="button"
+        <IconButton
+          variant="ghost"
+          size="sm"
           onClick={onToggleReveal}
           disabled={disabled}
-          aria-label={isRevealed ? t.providers.keyHide : t.providers.keyReveal}
-          className="absolute right-2 top-1/2 inline-flex h-7 w-7 -translate-y-1/2 items-center justify-center rounded text-fg-muted transition-colors hover:text-fg disabled:opacity-50"
+          label={isRevealed ? t.providers.keyHide : t.providers.keyReveal}
+          className="absolute right-1 top-1/2 w-8 -translate-y-1/2 px-0"
         >
           <Icon name={isRevealed ? "eyeOff" : "eye"} size={16} />
-        </button>
+        </IconButton>
       </div>
     </div>
   );
@@ -103,23 +105,18 @@ export function ProviderConnectionForm({
             {pickable.map((provider) => {
               const active = selected?.id === provider.id;
               return (
-                <button
+                <Button
                   key={provider.id}
-                  type="button"
+                  variant="outline"
                   onClick={() => onSelect(provider.id)}
                   aria-pressed={active}
-                  className={cn(
-                    "flex items-center gap-2.5 rounded-md border p-2.5 text-left transition-all",
-                    active
-                      ? "border-accent bg-accent-soft"
-                      : "border-border-subtle bg-surface-1 hover:border-border-default"
-                  )}
+                  className={cn("h-auto justify-start gap-2.5 p-2.5 text-left font-normal", active && "border-accent bg-accent-soft")}
                 >
                   <ProviderGlyph provider={provider} active={active} />
                   <span className="truncate text-xs font-medium text-fg">
                     {provider.name}
                   </span>
-                </button>
+                </Button>
               );
             })}
           </div>

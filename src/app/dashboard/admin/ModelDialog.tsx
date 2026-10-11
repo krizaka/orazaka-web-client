@@ -1,5 +1,6 @@
 "use client";
 
+import { IconButton } from "@krizaka/ui/button";
 import * as React from "react";
 import { Button, Icon } from "@krizaka/orazaka-design-system";
 import { Input } from "@krizaka/orazaka-design-system";
@@ -79,12 +80,9 @@ export function ModelDialog({
           <div className="mx-5 mt-4 p-3 bg-danger/5 border border-danger/20 rounded-xl flex items-start gap-2.5 text-danger animate-in slide-in-from-top-2 duration-200">
             <Icon name="warning" className="h-4 w-4 flex-shrink-0 mt-0.5" />
             <div className="text-xs font-medium flex-1">{errorMessage}</div>
-            <button
-              onClick={() => setErrorMessage(null)}
-              className="text-danger hover:text-danger"
-            >
+            <IconButton variant="ghost" size="sm" className="h-6 w-6 px-0" onClick={() => setErrorMessage(null)} label={t.a11y.closeDetails}>
               <Icon name="close" className="h-3.5 w-3.5" />
-            </button>
+            </IconButton>
           </div>
         )}
 

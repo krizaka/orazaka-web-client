@@ -8,6 +8,8 @@ import { useSidebar } from "@/core/context/SidebarContext";
 import { useTenant } from "@/core/context/TenantContext";
 import { useTranslation } from "@/core/context/LocaleContext";
 import { CheckIcon, ChevronDownIcon, GlobeIcon, MenuIcon } from "@krizaka/icons";
+import { Button, IconButton } from "@krizaka/ui/button";
+import { DropdownMenu } from "@krizaka/ui/dropdown-menu";
 import { NotificationBell } from "./NotificationBell";
 
 import { cn } from "@krizaka/ui/cn";
@@ -41,80 +43,38 @@ export const Header: React.FC = () => {
     return val[0].toUpperCase();
   }, [user]);
 
-  const dropdownPanelClass =
-    "absolute right-0 mt-2 rounded-lg border border-border-default bg-surface-2 p-1 shadow-lg z-20";
-
   return (
     <header className="sticky top-0 z-30 flex h-14 w-full items-center justify-between border-b border-border-subtle bg-surface-1 px-5">
       <div className="flex items-center md:hidden">
-        <button
-          onClick={open}
-          className="mr-2 p-2 rounded-lg text-fg-muted hover:text-fg hover:bg-surface-2 transition-colors duration-150 focus:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-          aria-label={t.header.openSidebar}
-        >
+        <IconButton variant="ghost" onClick={open} label={t.header.openSidebar} className="mr-2">
           <MenuIcon size={20} />
-        </button>
+        </IconButton>
       </div>
       <div className="flex-1" /> {/* Spacer */}
-      <div className="flex items-center gap-3">
-        {/* Language Switcher Dropdown */}
-        <div className="relative">
-          <button
-            onClick={() => {
-              setLangDropdownOpen(!langDropdownOpen);
-              setBellOpen(false);
-            }}
-            className="flex items-center gap-1.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-lg px-2.5 py-1.5 text-xs font-medium text-fg-secondary hover:bg-surface-2 hover:text-fg transition-colors duration-150"
-            aria-label={t.header.changeLanguage}
-          >
-            <GlobeIcon size={16} />
-            <span className="uppercase">{locale}</span>
-            <ChevronDownIcon size={12} className="opacity-50" />
-          </button>
-
-          {langDropdownOpen && (
-            <>
-              <button
-                type="button"
-                className="fixed inset-0 z-10 bg-transparent border-none cursor-default"
-                aria-label={t.header.closeLanguageMenu}
-                onClick={() => setLangDropdownOpen(false)}
-              />
-              <div className={cn(dropdownPanelClass, "w-36")}>
-                <button
-                  onClick={() => {
-                    setLocale("en");
-                    setLangDropdownOpen(false);
-                  }}
-                  className={cn(
-                    "w-full flex items-center justify-between rounded-lg px-3 py-2 text-sm text-left transition-colors duration-150",
-                    locale === "en"
-                      ? cn(accentClasses.bgSoft, accentClasses.text, "font-medium")
-                      : "text-fg-secondary hover:bg-surface-3 hover:text-fg"
-                  )}
-                >
-                  <span>{t.settings.english}</span>
-                  {locale === "en" && <CheckIcon size={14} />}
-                </button>
-                <button
-                  onClick={() => {
-                    setLocale("fr");
-                    setLangDropdownOpen(false);
-                  }}
-                  className={cn(
-                    "w-full flex items-center justify-between rounded-lg px-3 py-2 text-sm text-left transition-colors duration-150",
-                    locale === "fr"
-                      ? cn(accentClasses.bgSoft, accentClasses.text, "font-medium")
-                      : "text-fg-secondary hover:bg-surface-3 hover:text-fg"
-                  )}
-                >
-                  <span>{t.settings.french}</span>
-                  {locale === "fr" && <CheckIcon size={14} />}
-                </button>
-              </div>
-            </>
-          )}
-        </div>
+      <div className="flex items-center gap-2">
+        <DropdownMenu.Root
+          open={langDropdownOpen}
+          onOpenChange={(openState) => {
+            setLangDropdownOpen(openState);
+            if (openState) setBellOpen(false);
+          }}
+        >
+          <DropdownMenu.Trigger asChild>
+            <Button variant="ghost" size="sm" aria-label={t.header.changeLanguage}>
+              <GlobeIcon size={16} />
+              <span className="uppercase">{locale}</span>
+              <ChevronDownIcon size={12} className="opacity-50" />
+            </Button>
+          </DropdownMenu.Trigger>
+          <DropdownMenu.Content className="w-40">
+            {(["en", "fr"] as const).map((code) => (
+              <DropdownMenu.Item key={code} onSelect={() => setLocale(code)} className="justify-between">
+                <span>{code === "en" ? t.settings.english : t.settings.french}</span>
+                {locale === code && <CheckIcon size={14} className="text-fg-accent" />}
+              </DropdownMenu.Item>
+            ))}
+          </DropdownMenu.Content>
+        </DropdownMenu.Root>
 
         <ThemeToggle
           id="theme-toggle"

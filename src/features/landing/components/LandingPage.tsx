@@ -1,6 +1,5 @@
 "use client";
 
-import { MotionObserver } from "@krizaka/ui";
 import { useTranslation } from "@/core/context/LocaleContext";
 import { LandingNav } from "@/features/landing/components/LandingNav";
 import { LandingHero } from "@/features/landing/components/LandingHero";
@@ -25,7 +24,6 @@ export function LandingPage() {
 
   return (
     <>
-      <MotionObserver />
       <LandingNav />
       <main className="min-h-screen bg-surface-0 text-fg">
         <LandingHero />

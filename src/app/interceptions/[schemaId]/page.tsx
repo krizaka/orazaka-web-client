@@ -1,4 +1,5 @@
 import { Metadata } from "next";
+import { Mascot } from "@krizaka/ui/mascots";
 import { InterceptionForm } from "@/features/auth/components/InterceptionForm";
 
 /**
@@ -27,6 +28,10 @@ export default async function InterceptionPage({
     <main className="flex min-h-screen flex-col items-center justify-center p-6 bg-gradient-to-tr from-surface-0 via-surface-1 to-surface-0 transition-colors duration-300">
       <div className="w-full max-w-xl">
         <h1 className="sr-only">Required Action - {schemaId}</h1>
+        {/* The first thing a new account meets: the owl welcomes it — one mascot, at onboarding. */}
+        <div className="mb-2 flex justify-center">
+          <Mascot bird="owl" mood="welcome" size={96} />
+        </div>
         <InterceptionForm schemaId={schemaId} />
       </div>
     </main>

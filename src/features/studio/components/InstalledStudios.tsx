@@ -1,7 +1,12 @@
 "use client";
 
 import Link from "next/link";
-import { Icon, type IconName } from "@krizaka/orazaka-design-system";
+import { ForwardIcon } from "@krizaka/icons";
+import { Badge } from "@krizaka/ui/badge";
+import { Button } from "@krizaka/ui/button";
+import { Card } from "@krizaka/ui/card";
+import { Mascot } from "@krizaka/ui/mascots";
+import { CatalogueIcon } from "@/components/icons/CatalogueIcon";
 import { useTranslation } from "@/core/context/LocaleContext";
 import { StudioLoadError, StudioLoading } from "./StudioAsyncState";
 import { useInstallations } from "@/features/studio/hooks/useInstallations";
@@ -13,7 +18,7 @@ interface InstalledStudiosProps {
 /**
  * The My Studios tab: what this actor has installed.
  *
- * An empty state that only says "nothing here" is a dead end, so it hands the user
+ * An empty state that only says "nothing here" is a dead end, so the owl hands the user
  * straight back to the catalogue — the tab they actually wanted.
  */
 export function InstalledStudios({ onBrowse }: Readonly<InstalledStudiosProps>) {
@@ -30,45 +35,42 @@ export function InstalledStudios({ onBrowse }: Readonly<InstalledStudiosProps>) 
 
   if (installations.length === 0) {
     return (
-      <div className="flex flex-col items-center gap-3 py-16">
-        <Icon name="studio" size={22} className="text-fg-muted" />
-        <p className="text-[12px] text-fg-secondary">{t.studio.emptyInstalled}</p>
-        <button
-          type="button"
-          onClick={onBrowse}
-          className="px-3 h-8 text-[12px] font-medium border border-accent text-accent hover:bg-surface-2 transition-colors duration-150"
-        >
+      <div role="status" className="flex flex-col items-center gap-3 py-12 text-center">
+        <Mascot bird="owl" mood="empty" size={112} />
+        <p className="text-sm font-semibold text-fg">{t.showcase.studio.installedEmptyTitle}</p>
+        <p className="max-w-sm text-[13px] text-fg-secondary">{t.showcase.studio.installedEmptyBody}</p>
+        <Button variant="primary" size="sm" onClick={onBrowse}>
           {t.studio.emptyInstalledCta}
-        </button>
+        </Button>
       </div>
     );
   }
 
   return (
     <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-      {installations.map((installation) => (
-        <Link
-          key={installation.id}
-          href={`/studios/${installation.studioKey}`}
-          className="group flex flex-col gap-2 p-4 border border-border-subtle bg-surface-1 transition-all duration-200 hover:border-accent hover:bg-surface-2"
-        >
-          <div className="flex items-start justify-between gap-2">
-            <span className="flex items-center justify-center w-9 h-9 border border-border-subtle bg-surface-2 text-accent">
-              <Icon name={installation.iconKey as IconName} fallback="studio" size={18} />
-            </span>
-            {installation.status === "UPGRADE_AVAILABLE" && (
-              <span className="hud-label text-[10px] text-accent">
-                {t.studio.upgradeAvailable}
-              </span>
-            )}
-          </div>
-          <h3 className="text-[13px] font-semibold text-fg">
-            {installation.label}
-          </h3>
-          <span className="hud-label text-[10px] text-fg-muted">
-            {t.studio.pinnedVersion} {installation.pinnedVersion}
-          </span>
-        </Link>
+      {installations.map((installation, index) => (
+        <Card.Root key={installation.id} asChild interactive reveal={index}>
+          <Link href={`/studios/${installation.studioKey}`}>
+            <Card.Body className="gap-4">
+              <div className="flex items-start justify-between gap-2">
+                <span className="grid h-11 w-11 place-items-center rounded-xl bg-accent-soft text-fg-accent ring-1 ring-inset ring-accent/25">
+                  <CatalogueIcon iconKey={installation.iconKey} size={22} />
+                </span>
+                {installation.status === "UPGRADE_AVAILABLE" && <Badge tone="accent">{t.studio.upgradeAvailable}</Badge>}
+              </div>
+              <Card.Title className="line-clamp-none text-[15px]">{installation.label}</Card.Title>
+              <Card.Footer>
+                <span className="font-mono text-[11px] text-fg-muted">
+                  {t.studio.pinnedVersion} {installation.pinnedVersion}
+                </span>
+                <span className="ml-auto flex items-center gap-1 text-[12px] font-semibold text-fg-accent">
+                  {t.studio.open}
+                  <ForwardIcon size={14} className="transition-transform duration-200 group-hover:translate-x-0.5" />
+                </span>
+              </Card.Footer>
+            </Card.Body>
+          </Link>
+        </Card.Root>
       ))}
     </div>
   );

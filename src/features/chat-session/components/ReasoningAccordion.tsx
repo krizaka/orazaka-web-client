@@ -1,6 +1,7 @@
 /* eslint-disable no-restricted-syntax */
 "use client";
 
+import { Button } from "@krizaka/ui/button";
 import React, { useState } from "react";
 import { useTranslation } from "@/core/context/LocaleContext";
 import { Icon } from "@krizaka/orazaka-design-system";
@@ -39,10 +40,10 @@ export function ReasoningAccordion({
       style={{ borderRadius: "var(--kz-radius-md)" }}
     >
       {/* Toggle header */}
-      <button
-        type="button"
+      <Button
+        variant="ghost"
         onClick={() => setIsExpanded(!isExpanded)}
-        className="w-full flex items-center gap-2 px-4 py-2.5 text-left transition-colors duration-150 hover:bg-surface-2/50"
+        className="h-auto w-full justify-start gap-2 rounded-none px-4 py-2.5 text-left font-normal"
         aria-expanded={isExpanded}
         aria-label={t.a11y.toggleReasoning}
       >
@@ -55,7 +56,7 @@ export function ReasoningAccordion({
           )}
         />
         <span className="text-[11px] font-semibold uppercase tracking-wider text-fg-muted">
-          {isStreaming ? "Thinking…" : "Reasoning"}
+          {isStreaming ? t.showcase.chat.thinking : t.showcase.chat.reasoning}
         </span>
 
         {/* Streaming pulse indicator */}
@@ -75,7 +76,7 @@ export function ReasoningAccordion({
             isExpanded ? "rotate-180" : ""
           )}
         />
-      </button>
+      </Button>
 
       {/* Collapsible body */}
       <div

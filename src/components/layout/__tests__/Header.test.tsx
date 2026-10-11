@@ -93,16 +93,16 @@ describe("Header", () => {
     expect(screen.getByTestId("notif-bell")).toBeInTheDocument();
   });
 
-  it("opens language dropdown", () => {
+  it("opens language dropdown (Radix menu: Enter on the trigger)", () => {
     render(<Header />);
-    fireEvent.click(screen.getByLabelText("Change Language"));
+    fireEvent.keyDown(screen.getByLabelText("Change Language"), { key: "Enter" });
     expect(screen.getByText("English")).toBeInTheDocument();
     expect(screen.getByText("French")).toBeInTheDocument();
   });
 
   it("switches to French locale", () => {
     render(<Header />);
-    fireEvent.click(screen.getByLabelText("Change Language"));
+    fireEvent.keyDown(screen.getByLabelText("Change Language"), { key: "Enter" });
     fireEvent.click(screen.getByText("French"));
     expect(mockSetLocale).toHaveBeenCalledWith("fr");
   });

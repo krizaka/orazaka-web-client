@@ -1,5 +1,6 @@
 "use client";
 
+import { Button } from "@krizaka/ui/button";
 import * as React from "react";
 import { Icon } from "@krizaka/orazaka-design-system";
 import { useTranslation } from "@/core/context/LocaleContext";
@@ -177,26 +178,14 @@ export function PipelineConfigCard({ fetchWithAuth }: Readonly<PipelineConfigCar
           </p>
         </article>
         <nav className="flex items-center gap-2">
-          <button
-            onClick={handleReset}
-            disabled={saving}
-            className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg border border-border-subtle text-fg-secondary hover:bg-surface-2 transition-colors disabled:opacity-50"
-          >
-            <Icon name="refresh" className="w-3.5 h-3.5" />
+          <Button variant="secondary" size="sm" onClick={handleReset} disabled={saving}>
+            <Icon name="refresh" className="h-3.5 w-3.5" />
             {pl.resetToDefault}
-          </button>
-          <button
-            onClick={handleSave}
-            disabled={saving || !dirty}
-            className="flex items-center gap-1.5 px-4 py-1.5 text-xs font-semibold rounded-lg bg-warning hover:bg-warning text-on-accent shadow-md transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            {saving ? (
-              <Icon name="loader" className="w-3.5 h-3.5 animate-spin" />
-            ) : (
-              <Icon name="save" className="w-3.5 h-3.5" />
-            )}
+          </Button>
+          <Button variant="primary" size="sm" onClick={handleSave} disabled={!dirty} loading={saving}>
+            <Icon name="save" className="h-3.5 w-3.5" />
             {saving ? pl.saving : pl.saveOrder}
-          </button>
+          </Button>
         </nav>
       </header>
 

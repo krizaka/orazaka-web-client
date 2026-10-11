@@ -1,5 +1,6 @@
 "use client";
 
+import { Button } from "@krizaka/ui/button";
 import * as React from "react";
 import { useTranslation } from "@/core/context/LocaleContext";
 import { Icon, type IconName } from "@krizaka/orazaka-design-system";
@@ -60,8 +61,10 @@ export function ProfileTabs({ tabs, active, onChange }: Readonly<ProfileTabsProp
       {tabs.map((tab, index) => {
         const isActive = tab.id === active;
         return (
-          <button
+          <Button
             key={tab.id}
+            variant="ghost"
+            size="sm"
             ref={(el) => {
               refs.current[index] = el;
             }}
@@ -72,23 +75,18 @@ export function ProfileTabs({ tabs, active, onChange }: Readonly<ProfileTabsProp
             tabIndex={isActive ? 0 : -1}
             onClick={() => onChange(tab.id)}
             onKeyDown={(e) => onKeyDown(e, index)}
-            className={cn(
-              "relative flex flex-1 min-w-fit items-center justify-center gap-2 whitespace-nowrap rounded-lg px-4 py-2 text-sm font-medium transition-colors duration-200 cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-ring",
-              isActive
-                ? "bg-surface-2 text-fg shadow-sm"
-                : "text-fg-secondary hover:bg-surface-2 hover:text-fg"
-            )}
+            className={cn("min-w-fit flex-1 gap-2 font-medium", isActive && "bg-surface-2 text-fg shadow-sm")}
           >
             <Icon
               name={tab.icon}
               size={16}
-              className={isActive ? "text-accent" : ""}
+              className={isActive ? "text-fg-accent" : ""}
             />
             {tab.label}
             {isActive && (
               <span className="absolute inset-x-3 -bottom-px h-px bg-accent opacity-60" />
             )}
-          </button>
+          </Button>
         );
       })}
     </div>

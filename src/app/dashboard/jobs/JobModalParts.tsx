@@ -4,7 +4,6 @@ import * as React from "react";
 import { parseISO } from "date-fns";
 import { Icon } from "@krizaka/orazaka-design-system";
 import type { IconName } from "@krizaka/orazaka-design-system";
-import { useTenant } from "@/core/context/TenantContext";
 import { useTranslation } from "@/core/context/LocaleContext";
 import { JOB_STATUS } from "@/core/constants/http.constants";
 
@@ -215,36 +214,3 @@ export function LiveElapsed({
 
 /* ─── Tab Item ─── */
 export type TabKey = "payload" | "result" | "error";
-
-export function PillTab({
-  label,
-  icon,
-  isActive,
-  variant = "default",
-  onClick,
-}: Readonly<{
-  label: string;
-  icon: IconName;
-  isActive: boolean;
-  variant?: "default" | "error";
-  onClick: () => void;
-}>) {
-  const { accentClasses } = useTenant();
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      className={cn(
-        "inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-[11px] font-semibold transition-all duration-200",
-        (() => {
-            if (!isActive) return "text-fg-muted hover:text-fg-secondary hover:bg-surface-2";
-            if (variant === "error") return "bg-danger/10 text-danger shadow-sm";
-            return cn("bg-accent-soft shadow-sm", accentClasses.text);
-          })()
-      )}
-    >
-      <Icon name={icon} className="w-3.5 h-3.5" />
-      {label}
-    </button>
-  );
-}

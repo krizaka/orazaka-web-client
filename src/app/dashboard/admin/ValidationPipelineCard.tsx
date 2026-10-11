@@ -1,5 +1,8 @@
 "use client";
 
+import { useTranslation } from "@/core/context/LocaleContext";
+import { Switch } from "@krizaka/ui/switch";
+import { Button } from "@krizaka/ui/button";
 import * as React from "react";
 import { Icon } from "@krizaka/orazaka-design-system";
 
@@ -15,6 +18,7 @@ interface ValidationPipelineCardProps {
 export function ValidationPipelineCard({
   fetchWithAuth,
 }: Readonly<ValidationPipelineCardProps>) {
+  const { t } = useTranslation();
   const [tiers, setTiers] = React.useState<ValidationTierConfig[]>([]);
   const [loading, setLoading] = React.useState(true);
   const [saving, setSaving] = React.useState(false);
@@ -139,19 +143,10 @@ export function ValidationPipelineCard({
             Configure the 4-tier autonomous self-correction chain.
           </p>
         </article>
-        <button
-          id="save-validation-pipeline"
-          onClick={handleSave}
-          disabled={saving || !dirty}
-          className="flex items-center gap-1.5 px-4 py-1.5 text-xs font-semibold rounded-lg bg-accent hover:bg-accent text-on-accent shadow-md transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-        >
-          {saving ? (
-            <Icon name="loader" className="w-3.5 h-3.5 animate-spin" />
-          ) : (
-            <Icon name="save" className="w-3.5 h-3.5" />
-          )}
-          {saving ? "Saving…" : "Save Changes"}
-        </button>
+        <Button id="save-validation-pipeline" variant="primary" size="sm" onClick={handleSave} disabled={!dirty} loading={saving}>
+          <Icon name="save" className="h-3.5 w-3.5" />
+          {saving ? t.admin.pipeline.saving : t.admin.saveChanges}
+        </Button>
       </header>
 
       {/* Tier cards */}
@@ -209,24 +204,13 @@ export function ValidationPipelineCard({
               )}
 
               {/* Toggle */}
-              <button
+              <Switch
                 id={`toggle-tier-${tier.stepType}`}
-                onClick={() => handleToggle(idx)}
-                className={cn(
-                  "relative flex-shrink-0 w-10 h-5 rounded-full transition-colors duration-200",
-                  tier.enabled
-                    ? "bg-accent"
-                    : "bg-surface-3"
-                )}
-                aria-label={`Toggle ${meta.label}`}
-              >
-                <span
-                  className={cn(
-                    "absolute top-0.5 left-0.5 w-4 h-4 rounded-full bg-fg-on-media shadow-sm transition-transform duration-200",
-                    tier.enabled ? "translate-x-5" : "translate-x-0"
-                  )}
-                />
-              </button>
+                size="sm"
+                checked={tier.enabled}
+                onCheckedChange={() => handleToggle(idx)}
+                label={meta.label}
+              />
             </li>
           );
         })}

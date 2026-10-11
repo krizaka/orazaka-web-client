@@ -1,7 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import { Icon, type IconName } from "@krizaka/orazaka-design-system";
+import { BackIcon } from "@krizaka/icons";
+import { Badge } from "@krizaka/ui/badge";
+import { Button } from "@krizaka/ui/button";
+import { CatalogueIcon } from "@/components/icons/CatalogueIcon";
 import { useTranslation } from "@/core/context/LocaleContext";
 import { usePricingLabel } from "@/features/studio/hooks/usePricingLabel";
 import { StudioLoadError, StudioLoading } from "./StudioAsyncState";
@@ -40,51 +43,38 @@ export function StudioDetail({ studioKey }: Readonly<StudioDetailProps>) {
 
   return (
     <div className="flex flex-col gap-6">
-      <Link
-        href="/studios"
-        className="inline-flex items-center gap-1.5 self-start text-[11px] font-medium text-fg-muted hover:text-fg transition-colors duration-150"
-      >
-        <Icon name="arrowLeft" size={13} />
-        {t.studio.back}
-      </Link>
+      <Button asChild variant="ghost" size="sm" className="self-start">
+        <Link href="/studios">
+          <BackIcon size={15} />
+          {t.studio.back}
+        </Link>
+      </Button>
 
-      <header className="flex items-start gap-3">
-        <span className="flex items-center justify-center w-11 h-11 flex-shrink-0 border border-border-subtle bg-surface-2 text-accent">
-          <Icon name={studio.iconKey as IconName} fallback="studio" size={22} />
+      <header className="flex items-start gap-4">
+        <span className="grid h-14 w-14 flex-shrink-0 place-items-center rounded-2xl bg-accent-soft text-fg-accent ring-1 ring-inset ring-accent/25">
+          <CatalogueIcon iconKey={studio.iconKey} size={28} />
         </span>
-        <div className="flex flex-col gap-1">
-          <h1 className="text-[17px] font-semibold tracking-[-0.02em] text-fg">
-            {studio.label}
-          </h1>
-          {studio.tagline && (
-            <p className="text-[13px] text-fg-secondary">{studio.tagline}</p>
-          )}
-          <div className="flex items-center gap-2 pt-0.5">
-            <span className="hud-label text-[10px] text-fg-muted">
-              {t.studio.professions[studio.profession] ?? studio.profession}
-            </span>
-            <span className="hud-label text-[10px] text-fg-muted">
-              {pricingLabel[studio.pricing]}
-            </span>
+        <div className="flex flex-col gap-1.5">
+          <h1 className="font-display text-2xl font-bold tracking-[-0.02em] text-fg">{studio.label}</h1>
+          {studio.tagline && <p className="text-[15px] text-fg-secondary">{studio.tagline}</p>}
+          <div className="flex flex-wrap items-center gap-2 pt-0.5">
+            <Badge>{t.studio.professions[studio.profession] ?? studio.profession}</Badge>
+            <Badge tone={studio.pricing === "PAID" ? "neutral" : "accent"}>{pricingLabel[studio.pricing]}</Badge>
           </div>
         </div>
       </header>
 
       {studio.description && (
-        <p className="text-[13px] leading-relaxed text-fg-secondary">
+        <p className="max-w-2xl text-sm leading-relaxed text-fg-secondary">
           {studio.description}
         </p>
       )}
 
       {studio.estimatedCredits > 0 && (
-        <div className="flex items-baseline gap-2 p-3 border border-border-subtle bg-surface-1">
-          <span className="hud-label text-[10px] text-fg-muted">
-            {t.studio.estimatedCost}
-          </span>
-          <span className="text-[15px] font-semibold text-fg">
-            {studio.estimatedCredits}
-          </span>
-          <span className="text-[11px] text-fg-muted">{t.studio.creditsPerRun}</span>
+        <div className="flex items-baseline gap-2 self-start rounded-xl border border-border-default bg-surface-1 px-4 py-3">
+          <span className="text-xs font-semibold uppercase tracking-wider text-fg-muted">{t.studio.estimatedCost}</span>
+          <span className="font-display text-xl font-bold tabular-nums text-fg">{studio.estimatedCredits}</span>
+          <span className="text-xs text-fg-muted">{t.studio.creditsPerRun}</span>
         </div>
       )}
 

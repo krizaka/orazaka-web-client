@@ -166,7 +166,7 @@ export const JobsKpiSummary: React.FC<JobsKpiSummaryProps> = ({ jobs }) => {
               >
                 {card.icon}
               </figure>
-              <span className="text-fg-secondary font-bold uppercase tracking-[0.12em] text-fg-muted">
+              <span className="truncate text-[10px] font-semibold uppercase tracking-wider text-fg-muted">
                 {card.label}
               </span>
             </header>

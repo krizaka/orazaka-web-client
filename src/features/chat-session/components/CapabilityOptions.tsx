@@ -1,5 +1,6 @@
 "use client";
 
+import { Button } from "@krizaka/ui/button";
 import * as React from "react";
 import { getSession } from "next-auth/react";
 import { Icon } from "@krizaka/orazaka-design-system";
@@ -188,39 +189,27 @@ export function CapabilityOptions({
       )}
 
       {needsAttachment && (
-        <button
-          type="button"
+        <Button
+          variant="outline"
+          size="sm"
           onClick={onAttach}
-          className={cn(
-            "inline-flex w-fit items-center gap-2 rounded-lg border px-3 py-1.5 text-xs font-medium transition-colors duration-150 cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-ring",
-            attachment
-              ? "border-accent/30 bg-accent-soft text-accent"
-              : "border-dashed border-border-default text-fg-secondary hover:border-accent hover:text-fg"
-          )}
+          className={cn("w-fit", attachment ? "border-accent/40 bg-accent-soft text-fg-accent" : "border-dashed")}
         >
           <Icon name={attachment ? "check" : "attach"} size={14} />
-          <span className="max-w-[200px] truncate">
-            {attachment ? attachment.name : t.chat.attachToAnalyze}
-          </span>
-        </button>
+          <span className="max-w-[200px] truncate">{attachment ? attachment.name : t.chat.attachToAnalyze}</span>
+        </Button>
       )}
 
       {selectedModel?.requiresReferenceImage && !needsAttachment && (
-        <button
-          type="button"
+        <Button
+          variant="outline"
+          size="sm"
           onClick={onAttach}
-          className={cn(
-            "inline-flex w-fit items-center gap-2 rounded-lg border px-3 py-1.5 text-xs font-medium transition-colors duration-150 cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-ring",
-            attachment
-              ? "border-accent/30 bg-accent-soft text-accent"
-              : "border-dashed border-border-default text-fg-secondary hover:border-accent hover:text-fg"
-          )}
+          className={cn("w-fit", attachment ? "border-accent/40 bg-accent-soft text-fg-accent" : "border-dashed")}
         >
           <Icon name={attachment ? "check" : "image"} size={14} />
-          <span className="max-w-[200px] truncate">
-            {attachment ? attachment.name : t.chat.attachReferenceImage}
-          </span>
-        </button>
+          <span className="max-w-[200px] truncate">{attachment ? attachment.name : t.chat.attachReferenceImage}</span>
+        </Button>
       )}
     </section>
   );

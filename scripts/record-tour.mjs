@@ -6,18 +6,23 @@
 //   npm run record:tour -- prepare         # Eric holds three conversations first (kept for the recordings)
 //   npm run record:tour                    # every clip; `-- chat create` re-records some. ORAZAKA_URL, OUT (tour/)
 //
-// Clips: showcase (the krizaka.com home card, filmed close up at 960×600), home (the public landing page), dashboard (Eric's workspace), chat (a question
-// answered from the policy pasted under it, streamed by the local model), create (a product visual generated on
-// this machine), studios (his Studios), packs (what his plan holds), settings (Appearance, theme switch).
-// Each clip is recorded at 1440×900 by Playwright, then encoded by ffmpeg to 1280×800 at 25 fps: VP9 .webm, H.264
-// .mp4 (faststart) and a .jpg poster — the format of the Orochia clips. Waiting for the image engine is cut from
-// the create clip (the cut is declared on the site). Sign-in happens outside the recording.
+// Clips (1280×800, the krizaka.com tour, in this order): creations (what a generation looks like the moment it lands:
+// a product photo appearing, then the gallery of what was made on this machine, the voice-over playing), studios (the
+// catalogue and a Studio's page), documents (a lease checked against the law, then a supplier invoice examined),
+// voice (a voice-over generated, then played with its waveform), notifications (the bell, then a result), chat (a
+// question answered from the policy pasted under it), packs. And showcase: the krizaka.com home card (960×600,
+// ≤ 20 s, the "wow" first: a generation landing, the gallery, the waveform playing — the context after).
+// Every screen is filmed once it has settled (settle(): network idle, images decoded, videos playable, no spinner).
+// Waits for a generation are cut and the cut is declared on the site. Prerequisite: `orazaka demo seed --runs`
+// (Eric's real work: the voice-over and the document checks the clips open). No video: a Studio's video output cannot
+// be opened yet (the worker's job has no row the asset route can authorise), so the tour shows none rather than fake one.
 import { execFileSync } from "node:child_process";
 import { mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { setHours, setMinutes, startOfDay } from "date-fns";
-import { ERIC, PREPARED, RECORDED_DOCUMENT, RECORDED_QUESTION, RECORDED_VISUAL, SHOWCASE_VISUAL } from "./tour/eric.mjs";
+import { ERIC, PREPARED, RECORDED_DOCUMENT, RECORDED_QUESTION, RECORDED_VISUAL, RECORDED_VOICE, SHOWCASE_VISUAL } from "./tour/eric.mjs";
+import { DEMO_LEASE } from "./tour/documents.mjs";
 
 const BASE = (process.env.ORAZAKA_URL || "http://localhost:3000").replace(/\/$/, "");
 const OUT = path.resolve(process.env.OUT || "tour");
@@ -115,42 +120,215 @@ async function ask(page, text) {
   await awaitAnswer(page, text.length / 2);
 }
 
-/** Scrolls the page (or its scrolling container) smoothly by `dy` pixels. */
-async function glide(page, dy, ms = 1400, selector) {
-  await page.evaluate(
-    ({ dy, selector }) => (selector ? document.querySelector(selector) : window)?.scrollBy({ top: dy, behavior: "smooth" }),
-    { dy, selector },
-  );
+/** Scrolls the page smoothly by `dy` pixels: the element that actually scrolls (the app's main pane), else the window. */
+async function glide(page, dy, ms = 1400) {
+  await page.evaluate((dy) => {
+    const pane = [...document.querySelectorAll("main, section, div")].find(
+      (el) => el.scrollHeight > el.clientHeight + 10 && ["auto", "scroll"].includes(getComputedStyle(el).overflowY),
+    );
+    (pane ?? window).scrollBy({ top: dy, behavior: "smooth" });
+  }, dy);
   await pause(page, ms);
+}
+
+/** Waits until the screen is really there: network idle, fonts, every image decoded, every video playable, no spinner. */
+async function settle(page, extra = 600) {
+  await page.waitForLoadState("networkidle").catch(() => {});
+  await page.evaluate(() => document.fonts?.ready);
+  await page
+    .waitForFunction(
+      () =>
+        [...document.images].every((img) => img.complete && img.naturalWidth > 0) &&
+        [...document.querySelectorAll("video")].every((v) => v.readyState >= 3) &&
+        !document.querySelector('[role="status"][aria-label] svg.animate-spin, [aria-busy="true"]') &&
+        // Cards that rise into view (data-reveal) are filmed once they have arrived, never mid-blur.
+        [...document.querySelectorAll("[data-reveal]")].every((el) => {
+          const r = el.getBoundingClientRect();
+          return el.classList.contains("kz-in") || r.top > innerHeight || r.bottom < 0;
+        }),
+      null,
+      { timeout: 30_000, polling: 250 },
+    )
+    .catch(() => {});
+  await pause(page, Math.max(extra, 900)); // the reveal transition (0.8 s) ends before the frame counts
+}
+
+/** Calls the edge as Eric (the session's bearer is not readable from the page): the API the run form posts to. */
+async function api(method, path, body) {
+  const edge = (process.env.ROUTER_URL || "http://localhost:8088").replace(/\/$/, "");
+  const login = await fetch(`${edge}/api/v1/auth/login`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email: LOGIN, password: PASSWORD }),
+  }).then((r) => r.json());
+  const res = await fetch(`${edge}${path}`, {
+    method,
+    headers: { Authorization: `Bearer ${login.token}`, ...(body ? { "Content-Type": "application/json" } : {}) },
+    body: body ? JSON.stringify(body) : undefined,
+  });
+  if (!res.ok) throw new Error(`${method} ${path}: HTTP ${res.status} ${await res.text()}`);
+  return res.json();
+}
+
+/** The latest successful run of a Studio (Eric's seeded work), or a clear error telling what to seed. */
+async function latestRun(studioKey) {
+  const runs = await api("GET", "/api/v1/studios/runs?limit=200");
+  const run = runs.find((r) => r.studioKey === studioKey && r.status === "SUCCEEDED");
+  if (!run) throw new Error(`No finished ${studioKey} run for Eric: \`orazaka demo seed --runs --with-video\` first.`);
+  return run;
+}
+
+/** A run screen until its result is on screen; the wait is cut. */
+async function awaitRun(page, cut) {
+  cut.from();
+  await page.getByText(/Run finished|Exécution terminée/).first().waitFor({ timeout: 600_000 });
+  await settle(page, 300);
+  cut.to();
+}
+
+/** The gallery of the jobs page, with the voice-over playing (its waveform fills as it plays); its arrival is cut. */
+async function gallery(page, cut) {
+  cut.from();
+  await page.goto(`${BASE}/dashboard/jobs`, { waitUntil: "load" });
+  await settle(page, 400);
+  cut.to();
+  const play = page.getByRole("button", { name: /^Play/ }).first();
+  if (await play.count()) {
+    await play.scrollIntoViewIfNeeded();
+    await play.click();
+  }
 }
 
 /** Each clip opens its page, then returns what to play once the page has settled; `cut` drops a wait. */
 const CLIPS = {
-  async home(page) {
-    await page.goto(`${BASE}/`, { waitUntil: "load" });
+  // The home card of krizaka.com: the wow first — a photo landing within two seconds, then the gallery and the
+  // waveform of a voice-over generated on this machine — and the context (the prompts, "nothing left the machine") after.
+  async showcase(page, cut) {
+    const run = await api("POST", "/api/v1/studios/image-generation/runs", { inputs: { prompt: SHOWCASE_VISUAL } });
+    await page.goto(`${BASE}/studios/runs/${run.id}`, { waitUntil: "load" });
+    await settle(page, 200);
     return async () => {
-      await pause(page, 5200); // the sovereign chat answers on its own
-      for (const dy of [760, 900, 1000, 900, 900, 900, 900]) await glide(page, dy, 1700);
-      await pause(page, 800);
+      await pause(page, 900);
+      await awaitRun(page, cut);
+      await pause(page, 3200);
+      await gallery(page, cut);
+      await pause(page, 6500);
+      await glide(page, 260, 1400);
+      await pause(page, 2600);
     };
   },
 
-  async dashboard(page) {
-    await page.goto(`${BASE}/`, { waitUntil: "load" });
-    await page.getByText(/Good (morning|afternoon|evening)/).waitFor();
+  async creations(page, cut) {
+    const run = await api("POST", "/api/v1/studios/image-generation/runs", { inputs: { prompt: RECORDED_VISUAL } });
+    await page.goto(`${BASE}/studios/runs/${run.id}`, { waitUntil: "load" });
+    await settle(page, 200);
     return async () => {
-      await pause(page, 2600);
-      const recent = page.locator("main").getByRole("button").filter({ hasText: /Summarise|Draft|sales/i }).first();
-      if (await recent.count()) await recent.hover();
+      await pause(page, 1200);
+      await awaitRun(page, cut);
+      await pause(page, 3500);
+      await gallery(page, cut);
+      await pause(page, 7000);
+      await glide(page, 420, 1800);
+      await pause(page, 2400);
+    };
+  },
+
+  async studios(page) {
+    await page.goto(`${BASE}/studios`, { waitUntil: "load" });
+    await settle(page);
+    return async () => {
       await pause(page, 1600);
-      await glide(page, 420, 1800, "main");
+      await page.getByRole("radio", { name: /^Legal$/ }).click();
+      await settle(page, 2600);
+      await page.getByRole("radio", { name: /^All trades$/ }).click();
+      await settle(page, 1200);
+      await glide(page, 520, 1800);
+      await page.getByText(/^Compliance Check$/).first().hover();
+      await pause(page, 1200);
+      await page.getByText(/^Compliance Check$/).first().click();
+      await page.waitForURL(/\/studios\/compliance-check/);
+      await settle(page, 2600);
+      await glide(page, 400, 1600);
+      await pause(page, 1600);
+    };
+  },
+
+  async documents(page, cut) {
+    await page.goto(`${BASE}/studios/compliance-check`, { waitUntil: "load" });
+    await settle(page);
+    return async () => {
+      await pause(page, 1200);
+      const field = page.locator("#studio-run-document");
+      await field.scrollIntoViewIfNeeded();
+      await field.fill(DEMO_LEASE);
+      await page.locator("#studio-run-jurisdiction").selectOption("FR");
+      await pause(page, 900);
+      await page.getByRole("button", { name: /^Run$/ }).click();
+      await page.waitForURL(/\/studios\/runs\//, { timeout: 30_000 });
+      await settle(page, 700);
+      await awaitRun(page, cut);
+      await pause(page, 2400);
+      await glide(page, 520, 2000);
+      await pause(page, 2600);
+      const invoice = await latestRun("document-authenticity");
+      cut.from();
+      await page.goto(`${BASE}/studios/runs/${invoice.id}`, { waitUntil: "load" });
+      await settle(page, 300);
+      cut.to();
+      await pause(page, 2200);
+      await glide(page, 420, 1800);
+      await pause(page, 2000);
+    };
+  },
+
+  async voice(page, cut) {
+    await page.goto(`${BASE}/studios/speech-synthesis`, { waitUntil: "load" });
+    await settle(page);
+    return async () => {
+      await pause(page, 1200);
+      const field = page.locator("#studio-run-text");
+      await field.scrollIntoViewIfNeeded();
+      await field.click();
+      await field.pressSequentially(RECORDED_VOICE, { delay: 16 });
+      await pause(page, 600);
+      await page.getByRole("button", { name: /^Run$/ }).click();
+      await page.waitForURL(/\/studios\/runs\//, { timeout: 30_000 });
+      await settle(page, 600);
+      await awaitRun(page, cut);
+      await pause(page, 1200);
+      await page.getByRole("button", { name: /^Play/ }).first().click();
+      await pause(page, 7000);
+    };
+  },
+
+  async notifications(page, cut) {
+    await page.goto(`${BASE}/`, { waitUntil: "load" });
+    await settle(page);
+    return async () => {
+      await pause(page, 1400);
+      await page.getByRole("button", { name: /^Notifications$/ }).click();
+      await pause(page, 3400); // the bell: what ran, with a thumbnail of what it made
+      await page.getByRole("link", { name: /View all task history/ }).click();
+      cut.from();
+      await page.waitForURL(/\/dashboard\/jobs/);
+      await settle(page, 300);
+      cut.to();
       await pause(page, 1800);
+      await page.getByRole("button", { name: /^Result/ }).first().click();
+      cut.from();
+      await page.getByRole("dialog").waitFor({ timeout: 15_000 });
+      await settle(page, 300);
+      cut.to();
+      await pause(page, 3400);
+      await page.keyboard.press("Escape");
+      await pause(page, 900);
     };
   },
 
   async chat(page) {
     await page.goto(`${BASE}/chat`, { waitUntil: "load" });
     await page.locator("textarea").first().waitFor();
+    await settle(page);
     return async () => {
       await pause(page, 1400);
       const box = page.locator("textarea").first();
@@ -165,113 +343,30 @@ const CLIPS = {
     };
   },
 
-  async create(page, cut) {
-    await page.goto(`${BASE}/chat`, { waitUntil: "load" });
-    await page.locator("textarea").first().waitFor();
-    return async () => {
-      await pause(page, 1200);
-      await page.getByRole("button", { name: /Add Capability/ }).click();
-      await pause(page, 1100);
-      await page.getByRole("menu").getByText(/^Image generation$/).click();
-      await pause(page, 700);
-      const box = page.locator("textarea").first();
-      await box.click();
-      await box.pressSequentially(RECORDED_VISUAL, { delay: 18 });
-      await pause(page, 600);
-      await page.getByRole("button", { name: /^Send/ }).click();
-      await page.getByText(/Generating/).first().waitFor({ timeout: 30_000 });
-      await pause(page, 2500);
-      cut.from();
-      await page.getByText(/Generating/).first().waitFor({ state: "detached", timeout: 300_000 });
-      await pause(page, 600);
-      cut.to();
-      await pause(page, 4200);
-    };
-  },
-
-  // The home page's card: what a generic chat does not do, in one take — "runs locally" in view, a question
-  // answered from the policy pasted under it while the engine's real steps tick by, then a product visual
-  // rendered on the machine (the wait for the image engine is cut, as in `create`).
-  async showcase(page, cut) {
-    await page.goto(`${BASE}/chat`, { waitUntil: "load" });
-    await page.locator("textarea").first().waitFor();
-    return async () => {
-      await pause(page, 1800); // "Good evening, Eric." · "Runs locally · nothing leaves your network"
-      const box = page.locator("textarea").first();
-      await box.click();
-      await box.pressSequentially(RECORDED_QUESTION, { delay: 14 });
-      await page.keyboard.insertText(`\n\n${RECORDED_DOCUMENT}`);
-      await pause(page, 500);
-      await page.getByRole("button", { name: /^Send/ }).click();
-      await page.waitForURL(/conversationId=/, { timeout: 30_000 });
-      await awaitAnswer(page, RECORDED_DOCUMENT.length);
-      await pause(page, 2600);
-      await page.getByRole("button", { name: /Add Capability/ }).click();
-      await pause(page, 900);
-      await page.getByRole("menu").getByText(/^Image generation$/).click();
-      await pause(page, 500);
-      await page.locator("textarea").first().pressSequentially(SHOWCASE_VISUAL, { delay: 14 });
-      await page.getByRole("button", { name: /^Send/ }).click();
-      await page.getByText(/Generating/).first().waitFor({ timeout: 30_000 });
-      await pause(page, 1500);
-      cut.from();
-      await page.getByText(/Generating/).first().waitFor({ state: "detached", timeout: 300_000 });
-      await pause(page, 400);
-      cut.to();
-      await page.locator("main img").last().scrollIntoViewIfNeeded().catch(() => {});
-      await pause(page, 3800);
-    };
-  },
-
-  async studios(page) {
-    await page.goto(`${BASE}/studios`, { waitUntil: "load" });
-    return async () => {
-      await pause(page, 1400);
-      await page.getByRole("tab", { name: /Explore/ }).or(page.getByRole("button", { name: /Explore/ })).first().click();
-      await pause(page, 2200);
-      await page.getByRole("button", { name: /^Sales$/ }).first().click();
-      await pause(page, 1600);
-      await page.getByText(/^Lead Research$/).first().hover();
-      await pause(page, 1800);
-      await page.getByText(/^Follow-up Sequences$/).first().hover();
-      await pause(page, 2200);
-    };
-  },
-
   async packs(page) {
     await page.goto(`${BASE}/packs`, { waitUntil: "load" });
+    await settle(page);
     return async () => {
-      await pause(page, 2600);
-      await page.getByText(/^Owned$/).first().hover().catch(() => {});
+      await pause(page, 2400);
+      await glide(page, 520, 1800);
       await pause(page, 1800);
-      await page.goto(`${BASE}/`, { waitUntil: "load" });
-      await page.getByText(/Credits available/i).first().hover();
-      await pause(page, 2600);
-    };
-  },
-
-  async settings(page) {
-    await page.goto(`${BASE}/profile?tab=appearance`, { waitUntil: "load" });
-    return async () => {
-      await pause(page, 2000);
-      await page.getByRole("button", { name: /Light Mode/ }).click();
+      await glide(page, 520, 1800);
       await pause(page, 2200);
-      await page.getByRole("button", { name: /Dark Mode/ }).click();
-      await pause(page, 2000);
     };
   },
 };
 
 /** Records one clip, then encodes it next to the others (dropping the wait the clip declared). */
 async function record(id, state) {
-  const ctx = await context(id === "home" ? undefined : state, true, id === "showcase" ? CLOSE_UP : VIEWPORT);
+  const ctx = await context(state, true, id === "showcase" ? CLOSE_UP : VIEWPORT);
   const page = await ctx.newPage();
   const opened = Date.now();
   const at = () => (Date.now() - opened) / 1000;
-  const skip = {};
-  const cut = { from: () => (skip.from = at()), to: () => (skip.to = at()) };
+  // Every wait the clip declares (a generation, a page arriving) is dropped from the final cut.
+  const cuts = [];
+  const cut = { from: () => cuts.push({ from: at() }), to: () => (cuts.at(-1).to = at()) };
   const play = await CLIPS[id](page, cut);
-  await pause(page, 1500); // fonts, data, first paint settle before the clip starts
+  await settle(page, 800); // fonts, data, media, first paint settle before the clip starts
   const start = at();
   await play();
   const video = page.video();
@@ -279,15 +374,19 @@ async function record(id, state) {
   const source = await video.path();
 
   const target = path.join(OUT, id);
-  const drop = skip.from && skip.to ? `select='not(between(t,${(skip.from - start).toFixed(2)},${(skip.to - start).toFixed(2)}))',setpts=N/FRAME_RATE/TB,` : "";
+  const spans = cuts.filter((c) => c.to).map((c) => `between(t,${(c.from - start).toFixed(2)},${(c.to - start).toFixed(2)})`);
+  const drop = spans.length ? `select='not(${spans.join("+")})',setpts=N/FRAME_RATE/TB,` : "";
   const trim = ["-y", "-loglevel", "error", "-ss", start.toFixed(2), "-i", source, "-vf", `fps=25,${drop}scale=1280:800:flags=lanczos`, "-an"];
   execFileSync("ffmpeg", [...trim, "-c:v", "libvpx-vp9", "-b:v", "0", "-crf", "42", "-row-mt", "1", "-deadline", "good", "-cpu-used", "2", `${target}.webm`]);
   execFileSync("ffmpeg", [...trim, "-c:v", "libx264", "-crf", "28", "-preset", "slow", "-pix_fmt", "yuv420p", "-movflags", "+faststart", `${target}.mp4`]);
   const duration = Number(
     execFileSync("ffprobe", ["-v", "error", "-show_entries", "format=duration", "-of", "default=nw=1:nk=1", `${target}.mp4`]).toString(),
   );
-  execFileSync("ffmpeg", ["-y", "-loglevel", "error", "-ss", (duration * 0.7).toFixed(2), "-i", `${target}.mp4`, "-frames:v", "1", "-q:v", "4", `${target}.jpg`]);
-  const cutNote = drop ? ` (${(skip.to - skip.from).toFixed(0)} s of generation cut)` : "";
+  // The poster is the moment worth stopping on: the generation that just landed for the openers, else late in the clip.
+  const posterAt = { showcase: 3.2, creations: 4.2 }[id] ?? duration * 0.7;
+  execFileSync("ffmpeg", ["-y", "-loglevel", "error", "-ss", Math.min(posterAt, duration - 0.2).toFixed(2), "-i", `${target}.mp4`, "-frames:v", "1", "-q:v", "4", `${target}.jpg`]);
+  const cutSeconds = cuts.filter((c) => c.to).reduce((sum, c) => sum + c.to - c.from, 0);
+  const cutNote = drop ? ` (${cutSeconds.toFixed(0)} s of waiting cut)` : "";
   process.stdout.write(`✓ ${id}  ${duration.toFixed(1)} s${cutNote} → ${path.relative(process.cwd(), target)}.{webm,mp4,jpg}` + "\n");
 }
 

@@ -1,10 +1,11 @@
 "use client";
 
+import { EyeIcon, EyeOffIcon } from "@krizaka/icons";
+import { IconButton } from "@krizaka/ui/button";
 import * as React from "react";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { Icon } from "@krizaka/orazaka-design-system";
 import { Input } from "@krizaka/orazaka-design-system";
 import { Button } from "@krizaka/orazaka-design-system";
 import { useAuth } from "@/core/hooks/useAuth";
@@ -120,16 +121,16 @@ export default function LoginPage() {
                   autoComplete="current-password"
                   className="pr-10"
                 />
-                <button
-                  type="button"
+                <IconButton
                   id="btn-toggle-password"
+                  variant="ghost"
                   onClick={() => setShowPassword((v) => !v)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-fg-muted hover:text-fg-secondary transition-colors duration-150"
-                  aria-label={showPassword ? "Hide password" : "Show password"}
+                  className="absolute right-0 top-1/2 -translate-y-1/2"
+                  label={showPassword ? t.a11y.hidePassword : t.a11y.showPassword}
                   tabIndex={-1}
                 >
-                  {showPassword ? <Icon name="eyeOff" className="h-4 w-4" /> : <Icon name="eye" className="h-4 w-4" />}
-                </button>
+                  {showPassword ? <EyeOffIcon size={16} /> : <EyeIcon size={16} />}
+                </IconButton>
               </div>
               <div className="flex justify-end">
                 <Link

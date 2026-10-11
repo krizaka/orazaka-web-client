@@ -1,7 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { Icon } from "@krizaka/orazaka-design-system";
+import { LockIcon } from "@krizaka/icons";
+import { Button } from "@krizaka/ui/button";
 import { useTranslation } from "@/core/context/LocaleContext";
 import type { LockReason } from "@krizaka/orazaka-shared";
 
@@ -33,28 +34,22 @@ export function StudioLockNotice({ reason, packKey }: Readonly<StudioLockNoticeP
   };
 
   return (
-    <div className="flex flex-col gap-2 p-3 border border-warning/40 bg-warning/8">
-      <p className="flex items-center gap-1.5 text-[12px] text-fg">
-        <Icon name="shield" size={14} className="flex-shrink-0 text-warning" />
+    <div className="flex flex-col gap-3 rounded-xl border border-warning/40 bg-warning/10 p-4">
+      <p className="flex items-center gap-2 text-sm text-fg">
+        <LockIcon size={16} className="flex-shrink-0 text-fg-warning" />
         {copy[reason]}
       </p>
 
       {reason === "REQUIRES_PURCHASE" && packKey && (
-        <Link
-          href={`/packs?pack=${encodeURIComponent(packKey)}`}
-          className="self-start h-8 px-3 inline-flex items-center text-[12px] font-medium border border-accent text-accent hover:bg-surface-2 transition-colors duration-150"
-        >
-          {t.studio.buyPackage}
-        </Link>
+        <Button asChild variant="primary" size="sm" className="self-start">
+          <Link href={`/packs?pack=${encodeURIComponent(packKey)}`}>{t.studio.buyPackage}</Link>
+        </Button>
       )}
 
       {reason === "REQUIRES_PLAN" && (
-        <Link
-          href="/billing"
-          className="self-start h-8 px-3 inline-flex items-center text-[12px] font-medium border border-accent text-accent hover:bg-surface-2 transition-colors duration-150"
-        >
-          {t.studio.upgradePlan}
-        </Link>
+        <Button asChild variant="primary" size="sm" className="self-start">
+          <Link href="/billing">{t.studio.upgradePlan}</Link>
+        </Button>
       )}
     </div>
   );

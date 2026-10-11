@@ -1,5 +1,6 @@
 "use client";
 
+import { IconButton } from "@krizaka/ui/button";
 import * as React from "react";
 import { Icon } from "@krizaka/orazaka-design-system";
 import { useTranslation } from "@/core/context/LocaleContext";
@@ -100,20 +101,12 @@ export function CategoryCard({
                 )}
               </article>
               <section className="flex items-center gap-1.5 shrink-0 opacity-80 group-hover:opacity-100 transition-opacity">
-                <button
-                  onClick={() => onEdit(model)}
-                  className="p-2 rounded-xl text-fg-secondary hover:text-fg hover:bg-surface-2 transition-colors"
-                  title={t.admin.editModelTitle}
-                >
+                <IconButton variant="ghost" size="sm" className="w-8 px-0" onClick={() => onEdit(model)} label={t.admin.editModelTitle}>
                   <Icon name="edit" className="h-4 w-4" />
-                </button>
-                <button
-                  onClick={() => model.id && onDelete(model.id)}
-                  className="p-2 rounded-xl text-fg-secondary hover:text-danger hover:bg-danger/20 transition-colors"
-                  title={t.admin.deleteModelTitle}
-                >
+                </IconButton>
+                <IconButton variant="ghost" size="sm" className="w-8 px-0 hover:text-fg-danger" onClick={() => model.id && onDelete(model.id)} label={t.admin.deleteModelTitle}>
                   <Icon name="trash" className="h-4 w-4" />
-                </button>
+                </IconButton>
               </section>
             </li>
           ))}

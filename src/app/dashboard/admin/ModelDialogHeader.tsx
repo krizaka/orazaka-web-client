@@ -1,3 +1,5 @@
+import { useTranslation } from "@/core/context/LocaleContext";
+import { IconButton } from "@krizaka/ui/button";
 import { Icon } from "@krizaka/orazaka-design-system";
 import type { ReactNode } from "react";
 
@@ -19,6 +21,7 @@ export function ModelDialogHeader({
   saving,
   onClose,
 }: Readonly<ModelDialogHeaderProps>) {
+  const { t } = useTranslation();
   return (
     <header className="flex items-center justify-between p-5 border-b border-border-subtle bg-surface-0">
       <div className="flex items-center gap-3">
@@ -38,13 +41,9 @@ export function ModelDialogHeader({
           <p className="text-xs text-fg-muted">{subtitle}</p>
         </div>
       </div>
-      <button
-        disabled={saving}
-        onClick={onClose}
-        className="p-2 text-fg-muted hover:text-fg hover:bg-surface-2 rounded-xl transition-all duration-150"
-      >
+      <IconButton variant="ghost" disabled={saving} onClick={onClose} label={t.a11y.closeDetails}>
         <Icon name="close" className="h-4 w-4" />
-      </button>
+      </IconButton>
     </header>
   );
 }

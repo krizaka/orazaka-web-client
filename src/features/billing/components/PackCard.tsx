@@ -1,6 +1,10 @@
 "use client";
 
-import { Icon, type IconName } from "@krizaka/orazaka-design-system";
+import { CheckIcon } from "@krizaka/icons";
+import { Badge } from "@krizaka/ui/badge";
+import { Button } from "@krizaka/ui/button";
+import { Card } from "@krizaka/ui/card";
+import { CatalogueIcon } from "@/components/icons/CatalogueIcon";
 import { formatCredits, formatPrice, type PackSummary } from "@krizaka/orazaka-shared";
 import { useTranslation } from "@/core/context/LocaleContext";
 
@@ -10,6 +14,10 @@ interface PackCardProps {
   isPending: boolean;
   onSubscribe: () => void;
   onRemove: () => void;
+  /** The Studios of the catalogue by key — their name and icon, in the reader's language. */
+  studios: ReadonlyMap<string, { label: string; iconKey: string }>;
+  /** Its place on the shelf: the cards arrive one after the other. */
+  index?: number;
 }
 
 /**
@@ -46,73 +54,76 @@ export function PackCard({
   isPending,
   onSubscribe,
   onRemove,
+  studios,
+  index,
 }: Readonly<PackCardProps>) {
   const { t } = useTranslation();
   const isIncluded = pack.access === "INCLUDED";
   const isBuyable = pack.access === "BUYABLE";
+  let price = formatPrice(pack.priceCents ?? 0, "EUR");
+  if (pack.priceCents === null) price = t.packs.priceUnavailable;
+  else if (pack.priceCents === 0) price = t.packs.free;
 
   return (
-    <article className="flex flex-col gap-3 border border-border-subtle bg-surface-1 p-4">
-      <header className="flex items-start justify-between gap-3">
-        <hgroup className="flex items-start gap-2">
-          <Icon name={pack.iconKey as IconName} fallback="layers" size={16} className="mt-0.5 flex-shrink-0" />
-          <div>
-            <h3 className="text-[14px] font-medium text-fg">{pack.label}</h3>
-            {pack.tagline && (
-              <p className="text-[11px] text-fg-muted">{pack.tagline}</p>
-            )}
+    <Card.Root reveal={index} interactive>
+      <Card.Body className="gap-4">
+        <header className="flex items-start justify-between gap-3">
+          <span className="grid h-11 w-11 flex-shrink-0 place-items-center rounded-xl bg-accent-soft text-fg-accent ring-1 ring-inset ring-accent/25">
+            <CatalogueIcon iconKey={pack.iconKey} size={22} />
+          </span>
+          {(isOwned || isIncluded) && (
+            <Badge tone="success">
+              <CheckIcon size={12} />
+              {isIncluded ? t.packs.included : t.packs.owned}
+            </Badge>
+          )}
+        </header>
+
+        <div className="flex flex-col gap-1">
+          <Card.Title className="line-clamp-none text-[15px]">{pack.label}</Card.Title>
+          {pack.tagline && <Card.Description className="line-clamp-none text-[13px] leading-snug">{pack.tagline}</Card.Description>}
+        </div>
+
+        <p className="flex items-baseline gap-1.5 text-sm text-fg">
+          <span className="font-display text-xl font-bold tabular-nums">{price}</span>
+          {pack.includedCredits !== null && pack.includedCredits > 0 && (
+            <span className="text-xs text-fg-muted">
+              · {formatCredits(pack.includedCredits)} {t.packs.includedCredits}
+            </span>
+          )}
+        </p>
+
+        {pack.studioKeys.length > 0 && (
+          <div className="flex flex-col gap-2">
+            <span className="text-[11px] font-semibold uppercase tracking-wider text-fg-muted">{t.showcase.packs.studiosIncluded}</span>
+            <ul className="flex flex-col gap-1.5">
+              {pack.studioKeys.map((studioKey) => {
+                const studio = studios.get(studioKey);
+                return (
+                  <li key={studioKey} className="flex items-center gap-2 text-[13px] text-fg-secondary">
+                    <CatalogueIcon iconKey={studio?.iconKey} size={16} className="flex-shrink-0 text-fg-accent" />
+                    {studio?.label ?? studioKey}
+                  </li>
+                );
+              })}
+            </ul>
           </div>
-        </hgroup>
-        {(isOwned || isIncluded) && (
-          <span className="inline-flex flex-shrink-0 items-center gap-1 text-[11px] text-success">
-            <Icon name="check" size={12} />
-            {isIncluded ? t.packs.included : t.packs.owned}
-          </span>
         )}
-      </header>
 
-      <p className="text-[13px] text-fg">
-        {pack.priceCents === null
-          ? t.packs.priceUnavailable
-          : pack.priceCents === 0
-            ? t.packs.free
-            : formatPrice(pack.priceCents, "EUR")}
-        {pack.includedCredits !== null && pack.includedCredits > 0 && (
-          <span className="text-fg-muted">
-            {" · "}
-            {formatCredits(pack.includedCredits)} {t.packs.includedCredits}
-          </span>
+        {isBuyable && (
+          <Card.Footer>
+            {isOwned ? (
+              <Button variant="ghost" size="sm" onClick={onRemove} loading={isPending}>
+                {t.packs.remove}
+              </Button>
+            ) : (
+              <Button variant="primary" size="sm" onClick={onSubscribe} loading={isPending}>
+                {isPending ? t.packs.subscribing : t.packs.subscribe}
+              </Button>
+            )}
+          </Card.Footer>
         )}
-      </p>
-
-      {pack.studioKeys.length > 0 && (
-        <ul className="flex flex-wrap gap-1.5">
-          {pack.studioKeys.map((studioKey) => (
-            <li
-              key={studioKey}
-              className="border border-border-subtle px-1.5 py-0.5 text-[11px] text-fg-muted"
-            >
-              {studioKey}
-            </li>
-          ))}
-        </ul>
-      )}
-
-      {isBuyable && (
-        <button
-          type="button"
-          onClick={isOwned ? onRemove : onSubscribe}
-          disabled={isPending}
-          className={
-            isOwned
-              ? "h-8 self-start px-3 text-[12px] font-medium text-fg-muted transition-colors duration-150 hover:text-danger disabled:opacity-50"
-              : "inline-flex h-8 items-center gap-1.5 self-start border border-accent px-3 text-[12px] font-medium text-accent transition-colors duration-150 hover:bg-surface-2 disabled:opacity-50"
-          }
-        >
-          {isPending && <Icon name="loader" size={13} className="animate-spin" />}
-          {isOwned ? t.packs.remove : isPending ? t.packs.subscribing : t.packs.subscribe}
-        </button>
-      )}
-    </article>
+      </Card.Body>
+    </Card.Root>
   );
 }
