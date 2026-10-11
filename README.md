@@ -87,7 +87,7 @@ site says so) → his Studios → plan and credits → appearance. What Eric wor
 `scripts/tour/eric.mjs`; the browser clock is set to 18:40 so the greeting reads "Good evening, Eric" (`TOUR_TIME`).
 
 ```bash
-# from orazaka-apps/ui in the workspace (the CLI is not on npm yet: `npx orazaka` is the workspace copy)
+# from the workspace (`npx orazaka` = @krizaka/orazaka-cli on npm, or the workspace copy inside orazaka-apps/ui)
 npx orazaka start && npx orazaka dev    # the stack, with the image engine (sd-server)
 npx orazaka demo seed --fresh           # Eric, with an empty history
 npm run build && npm run start
