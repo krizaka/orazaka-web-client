@@ -186,10 +186,12 @@ async function awaitRun(page, cut) {
   cut.to();
 }
 
-/** The gallery of the jobs page, with the voice-over playing (its waveform fills as it plays). */
-async function gallery(page) {
+/** The gallery of the jobs page, with the voice-over playing (its waveform fills as it plays); its arrival is cut. */
+async function gallery(page, cut) {
+  cut.from();
   await page.goto(`${BASE}/dashboard/jobs`, { waitUntil: "load" });
   await settle(page, 400);
+  cut.to();
   const play = page.getByRole("button", { name: /^Play/ }).first();
   if (await play.count()) {
     await play.scrollIntoViewIfNeeded();
@@ -209,7 +211,7 @@ const CLIPS = {
       await pause(page, 900);
       await awaitRun(page, cut);
       await pause(page, 3200);
-      await gallery(page);
+      await gallery(page, cut);
       await pause(page, 6500);
       await glide(page, 260, 1400);
       await pause(page, 2600);
@@ -224,7 +226,7 @@ const CLIPS = {
       await pause(page, 1200);
       await awaitRun(page, cut);
       await pause(page, 3500);
-      await gallery(page);
+      await gallery(page, cut);
       await pause(page, 7000);
       await glide(page, 420, 1800);
       await pause(page, 2400);
@@ -269,8 +271,11 @@ const CLIPS = {
       await glide(page, 520, 2000);
       await pause(page, 2600);
       const invoice = await latestRun("document-authenticity");
+      cut.from();
       await page.goto(`${BASE}/studios/runs/${invoice.id}`, { waitUntil: "load" });
-      await settle(page, 2200);
+      await settle(page, 300);
+      cut.to();
+      await pause(page, 2200);
       await glide(page, 420, 1800);
       await pause(page, 2000);
     };
@@ -296,20 +301,27 @@ const CLIPS = {
     };
   },
 
-  async notifications(page) {
+  async notifications(page, cut) {
     await page.goto(`${BASE}/`, { waitUntil: "load" });
     await settle(page);
     return async () => {
-      await pause(page, 1600);
+      await pause(page, 1400);
       await page.getByRole("button", { name: /^Notifications$/ }).click();
-      await settle(page, 2600);
-      await page.locator('[data-radix-popper-content-wrapper] a[href*="jobId="]').first().click();
-      await page.waitForURL(/jobId=/, { timeout: 15_000 });
-      await settle(page, 3200);
+      await pause(page, 3400); // the bell: what ran, with a thumbnail of what it made
+      await page.getByRole("link", { name: /View all task history/ }).click();
+      cut.from();
+      await page.waitForURL(/\/dashboard\/jobs/);
+      await settle(page, 300);
+      cut.to();
+      await pause(page, 1800);
+      await page.getByRole("button", { name: /^Result/ }).first().click();
+      cut.from();
+      await page.getByRole("dialog").waitFor({ timeout: 15_000 });
+      await settle(page, 300);
+      cut.to();
+      await pause(page, 3400);
       await page.keyboard.press("Escape");
-      await settle(page, 1200);
-      await glide(page, 600, 2000);
-      await pause(page, 1600);
+      await pause(page, 900);
     };
   },
 
@@ -350,8 +362,9 @@ async function record(id, state) {
   const page = await ctx.newPage();
   const opened = Date.now();
   const at = () => (Date.now() - opened) / 1000;
-  const skip = {};
-  const cut = { from: () => (skip.from = at()), to: () => (skip.to = at()) };
+  // Every wait the clip declares (a generation, a page arriving) is dropped from the final cut.
+  const cuts = [];
+  const cut = { from: () => cuts.push({ from: at() }), to: () => (cuts.at(-1).to = at()) };
   const play = await CLIPS[id](page, cut);
   await settle(page, 800); // fonts, data, media, first paint settle before the clip starts
   const start = at();
@@ -361,7 +374,8 @@ async function record(id, state) {
   const source = await video.path();
 
   const target = path.join(OUT, id);
-  const drop = skip.from && skip.to ? `select='not(between(t,${(skip.from - start).toFixed(2)},${(skip.to - start).toFixed(2)}))',setpts=N/FRAME_RATE/TB,` : "";
+  const spans = cuts.filter((c) => c.to).map((c) => `between(t,${(c.from - start).toFixed(2)},${(c.to - start).toFixed(2)})`);
+  const drop = spans.length ? `select='not(${spans.join("+")})',setpts=N/FRAME_RATE/TB,` : "";
   const trim = ["-y", "-loglevel", "error", "-ss", start.toFixed(2), "-i", source, "-vf", `fps=25,${drop}scale=1280:800:flags=lanczos`, "-an"];
   execFileSync("ffmpeg", [...trim, "-c:v", "libvpx-vp9", "-b:v", "0", "-crf", "42", "-row-mt", "1", "-deadline", "good", "-cpu-used", "2", `${target}.webm`]);
   execFileSync("ffmpeg", [...trim, "-c:v", "libx264", "-crf", "28", "-preset", "slow", "-pix_fmt", "yuv420p", "-movflags", "+faststart", `${target}.mp4`]);
@@ -371,7 +385,8 @@ async function record(id, state) {
   // The poster is the moment worth stopping on: the generation that just landed for the openers, else late in the clip.
   const posterAt = { showcase: 3.2, creations: 4.2 }[id] ?? duration * 0.7;
   execFileSync("ffmpeg", ["-y", "-loglevel", "error", "-ss", Math.min(posterAt, duration - 0.2).toFixed(2), "-i", `${target}.mp4`, "-frames:v", "1", "-q:v", "4", `${target}.jpg`]);
-  const cutNote = drop ? ` (${(skip.to - skip.from).toFixed(0)} s of generation cut)` : "";
+  const cutSeconds = cuts.filter((c) => c.to).reduce((sum, c) => sum + c.to - c.from, 0);
+  const cutNote = drop ? ` (${cutSeconds.toFixed(0)} s of waiting cut)` : "";
   process.stdout.write(`✓ ${id}  ${duration.toFixed(1)} s${cutNote} → ${path.relative(process.cwd(), target)}.{webm,mp4,jpg}` + "\n");
 }
 
