@@ -10,6 +10,7 @@ const resolveFromApp = createRequire(path.join(process.cwd(), "package.json")).r
 const ui = path.dirname(resolveFromApp("@krizaka/ui/package.json"));
 const icons = path.dirname(resolveFromApp("@krizaka/icons/package.json"));
 const charts = path.dirname(resolveFromApp("@krizaka/charts/package.json"));
+const intl = path.dirname(resolveFromApp("@krizaka/intl/package.json"));
 
 const createJestConfig = nextJest({
   dir: "./",
@@ -28,6 +29,8 @@ const config = {
     "^@krizaka/charts/(.*)$": `${charts}/dist/$1.js`,
     // @krizaka/icons: the same `import`-only exports.
     "^@krizaka/icons$": `${icons}/dist/index.js`,
+    // @krizaka/intl: the same `import`-only exports.
+    "^@krizaka/intl/(.*)$": `${intl}/dist/$1.js`,
   },
   testPathIgnorePatterns: ["<rootDir>/node_modules/", "<rootDir>/.next/", "<rootDir>/src/__tests__/helpers/", "<rootDir>/e2e/", "<rootDir>/scripts/"],
   collectCoverageFrom: [

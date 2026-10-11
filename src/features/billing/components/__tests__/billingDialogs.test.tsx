@@ -81,12 +81,14 @@ describe("CostConfirmDialog (@krizaka/ui Dialog)", () => {
 describe("TopUpDialog (@krizaka/ui Dialog)", () => {
   it("lists the public, active plans", async () => {
     mockFetchPlans.mockResolvedValue([
-      { planKey: "pro", label: "Pro", isPublic: true, isActive: true, monthlyCreditGrant: 1000, priceCents: 900, currency: "EUR" },
-      { planKey: "hidden", label: "Hidden", isPublic: false, isActive: true, monthlyCreditGrant: 1, priceCents: 1, currency: "EUR" },
+      { planKey: "pro", label: "Pro", isPublic: true, isActive: true, monthlyCreditGrant: 1000, priceCents: 2900, currency: "CAD" },
+      { planKey: "hidden", label: "Hidden", isPublic: false, isActive: true, monthlyCreditGrant: 1, priceCents: 1, currency: "CAD" },
     ]);
     render(<TopUpDialog open onClose={jest.fn()} />);
     expect(screen.getByRole("dialog", { name: t.billing.topUpTitle })).toBeInTheDocument();
     await waitFor(() => expect(screen.getByText("Pro")).toBeInTheDocument());
+    // Canadian dollars, named for an international reader (money.constants.ts).
+    expect(screen.getByText("CA$29.00")).toBeInTheDocument();
     expect(screen.queryByText("Hidden")).not.toBeInTheDocument();
   });
 

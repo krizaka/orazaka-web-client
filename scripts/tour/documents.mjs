@@ -1,6 +1,8 @@
 // The lease Eric checks in the tour — the same invented document `orazaka demo seed --runs` gives the Compliance Check
 // (orazaka-cli, services/demo/demo.documents.ts): no real person, address, company number or lease. Two clauses are
-// deliberately unlawful (a two-month deposit, a ban on visitors) so the check has something real to find.
+// deliberately unlawful (a two-month deposit, a ban on visitors) so the check has something real to find. A lease under
+// French law, in euros — the flat in Lyon that Lumen Atelier (a Montréal studio) rents for its European showroom: the
+// pack's rulesets are French and Belgian (a Québec one is proposed in krizaka/orazaka-packs#7).
 export const DEMO_LEASE = [
   "CONTRAT DE LOCATION — LOGEMENT NON MEUBLÉ (loi n° 89-462 du 6 juillet 1989)",
   "",

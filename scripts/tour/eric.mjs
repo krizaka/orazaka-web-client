@@ -1,6 +1,7 @@
 // What Eric — the demo persona `orazaka demo seed` creates (orazaka-cli) — works on in the product tour.
 //
-// Everything here is invented: Lumen Atelier, its lamps, its figures, its clients. No real person, company or
+// Everything here is invented: Lumen Atelier (a Montréal lighting studio — it sells in Canadian dollars), its lamps,
+// its figures, its clients. No real person, company or
 // brand. Eric pastes his documents into the conversation, so every answer the tour shows is grounded on text that
 // is visible on screen — nothing is claimed that the recording does not show.
 
@@ -11,14 +12,14 @@ export const ERIC = {
 };
 
 const Q3_REPORT = `Lumen Atelier — Q3 report (internal)
-Revenue: €412k (+18% vs Q2). Online shop: 46% of revenue, up from 38%.
+Revenue: CA$412k (+18% vs Q2). Online shop: 46% of revenue, up from 38%.
 Best seller: the Halo table lamp, 1,140 units; the new Dune floor lamp sold 220 units in its first six weeks.
 Gross margin: 54% (down 2 points: ceramic glaze costs rose 9%).
 Returns: 3.1% of orders, mostly shipping damage on floor lamps.
 Team: one new ceramicist hired in August; the kiln upgrade is delayed to January.
 Risks: one supplier for glazes; floor-lamp packaging.`;
 
-const SALES_BY_REGION = `region,q2_revenue_k,q3_revenue_k,orders,avg_basket_eur
+const SALES_BY_REGION = `region,q2_revenue_k,q3_revenue_k,orders,avg_basket_cad
 Quebec,96,118,402,294
 Ontario,71,92,305,301
 France,88,97,356,272
@@ -60,4 +61,4 @@ export const SHOWCASE_VISUAL = "Product photo of the ceramic table lamp, warm or
 
 /** The recorded voice-over: the same lamp, read aloud by the local speech engine. */
 export const RECORDED_VOICE =
-  "Meet Halo, our hand-glazed table lamp. Shaped in Lyon, fired twice, and lit to make an evening feel like home.";
+  "Meet Halo, our hand-glazed table lamp. Shaped in Montréal, fired twice, and lit to make an evening feel like home.";
