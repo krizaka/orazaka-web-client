@@ -57,3 +57,7 @@ export const RECORDED_VISUAL =
 
 /** The home card's visual: the same lamp, for the shop's product page. */
 export const SHOWCASE_VISUAL = "Product photo of the ceramic table lamp, warm orange glow, dark slate plinth, ink-blue background";
+
+/** The recorded voice-over: the same lamp, read aloud by the local speech engine. */
+export const RECORDED_VOICE =
+  "Meet Halo, our hand-glazed table lamp. Shaped in Lyon, fired twice, and lit to make an evening feel like home.";
