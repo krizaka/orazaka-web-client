@@ -42,3 +42,8 @@ scratch/
 
 # product tour output (scripts/record-tour.mjs) — published in krizaka-com, not here
 /tour/
+
+# PR captures go to Bunny Storage (krizaka-com scripts/pr-assets.mjs), never into the repository
+docs/screenshots/
+.github/pr-assets/
+.github/screenshots/
