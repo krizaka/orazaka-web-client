@@ -14,6 +14,15 @@ export interface GalleryDictionary {
   next: string;
   /** "{n}" of "{total}". */
   counter: string;
+  /** The slideshow's accessible name. */
+  carousel: string;
+  /** The pause button while it plays / once paused. */
+  pause: string;
+  play: string;
+  /** A progress segment's name, "{n}". */
+  goTo: string;
+  /** A slide's name, "{n}" of "{total}". */
+  slide: string;
   all: string;
   galleryTitle: string;
   galleryLead: string;
@@ -57,6 +66,11 @@ export const gallery: Record<Locale, GalleryDictionary> = {
     "prev": "Previous image",
     "next": "Next image",
     "counter": "Image {n} of {total}",
+    "carousel": "Prompt to image gallery",
+    "pause": "Pause the gallery",
+    "play": "Play the gallery",
+    "goTo": "Go to image {n}",
+    "slide": "{n} of {total}",
     "all": "See the whole gallery",
     "galleryTitle": "Everything Orazaka made here",
     "galleryLead": "Seventeen images, four art directions. Each one shows what the data records: the prompt that reached the model, the Studio, the model, the seed, the size and the time it took on one Mac. Nothing else is claimed.",
@@ -124,6 +138,11 @@ export const gallery: Record<Locale, GalleryDictionary> = {
     "prev": "Image précédente",
     "next": "Image suivante",
     "counter": "Image {n} sur {total}",
+    "carousel": "Galerie prompt vers image",
+    "pause": "Mettre la galerie en pause",
+    "play": "Relancer la galerie",
+    "goTo": "Aller à l'image {n}",
+    "slide": "{n} sur {total}",
     "all": "Voir toute la galerie",
     "galleryTitle": "Tout ce qu'Orazaka a fait ici",
     "galleryLead": "Dix-sept images, quatre directions artistiques. Chacune montre ce que les données enregistrent : la consigne reçue par le modèle, le Studio, le modèle, la graine, le format et le temps pris sur un Mac. Rien d'autre n'est affirmé.",
