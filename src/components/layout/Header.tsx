@@ -5,14 +5,13 @@ import Link from "next/link";
 import { useAuth } from "@/core/hooks/useAuth";
 import { ThemeToggle } from "@krizaka/ui/theme";
 import { useSidebar } from "@/core/context/SidebarContext";
-import { useTenant } from "@/core/context/TenantContext";
 import { useTranslation } from "@/core/context/LocaleContext";
 import { CheckIcon, ChevronDownIcon, GlobeIcon, MenuIcon } from "@krizaka/icons";
+import { Avatar } from "@krizaka/ui/avatar";
 import { Button, IconButton } from "@krizaka/ui/button";
 import { DropdownMenu } from "@krizaka/ui/dropdown-menu";
 import { NotificationBell } from "./NotificationBell";
 
-import { cn } from "@krizaka/ui/cn";
 
 /**
  * Global Header layout Component — Calm Obsidian 2026.
@@ -25,13 +24,11 @@ import { cn } from "@krizaka/ui/cn";
  * @returns The global top header navbar React element.
  * @see {@link useAuth}
  * @see {@link useSidebar}
- * @see {@link useTenant}
  * @see {@link useTranslation}
  */
 export const Header: React.FC = () => {
   const { user, isAuthenticated } = useAuth();
   const { open } = useSidebar();
-  const { accentClasses } = useTenant();
   const { locale, setLocale, t } = useTranslation();
 
   const [langDropdownOpen, setLangDropdownOpen] = React.useState(false);
@@ -104,15 +101,8 @@ export const Header: React.FC = () => {
             <span className="hidden text-sm font-medium text-fg-secondary sm:inline-block">
               {user.name || user.email || "Admin"}
             </span>
-            <div
-              className={cn(
-                "flex h-7 w-7 items-center justify-center rounded-full",
-                accentClasses.bg,
-                "text-xs font-semibold", accentClasses.textOn
-              )}
-            >
-              {initial}
-            </div>
+            {/* No photo on an account: Orazaka's default picture (a person, one of six tones from the id), the initial while it loads. */}
+            <Avatar size="sm" className="h-7 w-7" defaultAvatar={{ brand: "orazaka", seed: user.id ?? user.email ?? user.name ?? undefined }} fallback={initial} />
           </Link>
         )}
       </div>

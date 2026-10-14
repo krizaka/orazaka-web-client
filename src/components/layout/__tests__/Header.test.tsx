@@ -72,9 +72,16 @@ describe("Header", () => {
     expect(screen.getByText("Oussama")).toBeInTheDocument();
   });
 
-  it("renders user initial avatar", () => {
+  it("renders the user's initial while the default Orazaka picture loads", async () => {
     render(<Header />);
-    expect(screen.getByText("O")).toBeInTheDocument();
+    expect(await screen.findByText("O")).toBeInTheDocument();
+  });
+
+  it("asks for Orazaka's default avatar when the account has no photo", async () => {
+    const { container } = render(<Header />);
+    await screen.findByText("O");
+    // Radix draws the <img> only once loaded; the fallback ring wraps it with the avatar's size marker.
+    expect(container.querySelector('[data-size="sm"]')).not.toBeNull();
   });
 
   it("renders language switcher with locale", () => {
