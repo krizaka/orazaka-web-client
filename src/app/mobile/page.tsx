@@ -4,7 +4,7 @@ import { mobile } from "@/core/context/translations.mobile";
 
 export const metadata: Metadata = { title: mobile.en.meta, description: mobile.en.metaDescription };
 
-/** /mobile — every recording and screenshot of the iOS and Android app. */
+/** /mobile — the four steps of the Orazaka app, each explained. */
 export default function Page() {
   return <MobilePage />;
 }

@@ -1,36 +1,34 @@
 import { translations } from "@/core/context/translations";
-import { CLIPS, SHOTS, clipUrls, shotUrl } from "@/features/landing/utils/mobile";
+import { STEPS, clipUrls } from "@/features/landing/utils/mobile";
 
 const CDN = /^https:\/\/krizaka-assets\.b-cdn\.net\/site\/products\/orazaka\/mobile\/[a-z0-9-]+\.[0-9a-f]{10}\.(webm|mp4|webp)$/;
 
-describe("the mobile recordings", () => {
-  it("point at the CDN under products/orazaka/mobile, with a content hash, in both encodings and a poster", () => {
-    expect(CLIPS.length).toBeGreaterThanOrEqual(4);
-    for (const id of CLIPS) {
+describe("the mobile journey", () => {
+  it("is a few clear steps, in the order a person lives them", () => {
+    expect(STEPS).toEqual(["sign-in", "studio-run", "ask", "jobs"]);
+  });
+
+  it("points every step at the CDN under products/orazaka/mobile, with a content hash, in both encodings and a poster", () => {
+    for (const id of STEPS) {
       const u = clipUrls(id);
       expect([u.webm, u.mp4, u.poster].every((x) => CDN.test(x))).toBe(true);
     }
   });
 
-  it("know every screenshot, iOS and Android", () => {
-    expect(SHOTS.some((s) => s.platform === "ios")).toBe(true);
-    expect(SHOTS.some((s) => s.platform === "android")).toBe(true);
-    for (const s of SHOTS) expect(shotUrl(s.id)).toMatch(CDN);
-  });
-
-  it("refuses a file the manifest does not know", () => {
-    expect(() => shotUrl("nope")).toThrow();
-  });
-
-  it("have words in English and French for every clip and screenshot", () => {
+  it("has a goal, a purpose, an alt and three things to notice for every step, in English and French", () => {
     for (const locale of ["en", "fr"] as const) {
       const m = translations[locale].mobile;
-      for (const id of CLIPS) {
-        expect(m.clips[id].label.trim()).not.toBe("");
-        expect(m.clips[id].caption.trim()).not.toBe("");
+      expect(Object.keys(m.steps).sort()).toEqual([...STEPS].sort());
+      for (const id of STEPS) {
+        const s = m.steps[id];
+        for (const text of [s.goal, s.short, s.purpose, s.alt]) expect(text.trim()).not.toBe("");
+        expect(s.notice).toHaveLength(3);
+        s.notice.forEach((n) => expect(n.trim()).not.toBe(""));
       }
-      for (const s of SHOTS) expect(m.shots[s.id].trim()).not.toBe("");
     }
-    expect(translations.fr.mobile.clips["sign-in"].caption).not.toBe(translations.en.mobile.clips["sign-in"].caption);
+    for (const id of STEPS) {
+      expect(translations.fr.mobile.steps[id].goal).not.toBe(translations.en.mobile.steps[id].goal);
+      expect(translations.fr.mobile.steps[id].purpose).not.toBe(translations.en.mobile.steps[id].purpose);
+    }
   });
 });
