@@ -32,7 +32,7 @@ const FEATURE_IDS = Object.keys(features.en.pages) as (keyof typeof features.en.
 
 /** Every public page, in the order of the sitemap. */
 export function publicPaths(): string[] {
-  return ["/", ...FEATURE_IDS.map((id) => `/features/${id}`), "/mobile", "/gallery", "/docs", ...listDocs().map((d) => `/docs/${d.slug}`), "/contact", "/privacy", "/terms"];
+  return ["/", ...FEATURE_IDS.map((id) => `/features/${id}`), "/mobile", "/gallery", "/docs", ...listDocs().map((d) => `/docs/${d.slug}`), "/privacy", "/terms"];
 }
 
 const ORG = { "@type": "Organization", "@id": ORG_ID, name: "Krizaka", url: KRIZAKA_URL };
@@ -85,7 +85,7 @@ export function llmsText(): string {
 ${pages.join("\n")}
 - [Mobile app](${SITE_URL}/mobile): recordings and screenshots of the iOS and Android app
 - [Gallery](${SITE_URL}/gallery): images made with Orazaka
-- [Contact](${SITE_URL}/contact): talk to the team
+- [Talk to the team](${KRIZAKA_URL}/contact?topic=orazaka): the contact form lives on krizaka.com
 
 ## Documentation
 
