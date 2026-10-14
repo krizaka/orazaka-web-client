@@ -130,7 +130,7 @@ describe("LandingPage while sign-in and sign-up are closed (the default)", () =>
 
   it("shows Sign in in the bar and as a secondary action of the hero", () => {
     renderLanding("en", <LandingPage />, CLOSED);
-    const bar = screen.getByRole("navigation", { name: "Orazaka" });
+    const bar = document.querySelector("header[data-floating]") as HTMLElement;
     expect(within(bar).getByRole("link", { name: translations.en.landing.nav.signIn })).toHaveAttribute("href", "/login");
     const hero = screen.getByRole("heading", { level: 1 }).closest("header") as HTMLElement;
     expect(within(hero).getByRole("link", { name: translations.en.landing.nav.signIn })).toHaveAttribute("href", "/login");
@@ -146,8 +146,10 @@ describe("LandingPage while sign-in and sign-up are closed (the default)", () =>
     renderLanding("en", <LandingPage />, CLOSED);
     expect(document.getElementById("demo")!.querySelectorAll("video").length).toBeGreaterThan(0);
     expect(document.getElementById("packs")!.querySelectorAll("li").length).toBeGreaterThan(0);
-    expect(screen.getByRole("link", { name: translations.en.landing.footer.by })).toHaveAttribute("href", "https://www.krizaka.com");
-    expect(screen.getByTestId("app-version")).toHaveTextContent(translations.en.landing.footer.version);
+    const footer = screen.getByTestId("app-version");
+    expect(footer).toHaveTextContent("A Krizaka product");
+    expect(footer).toHaveTextContent(/v\S+/);
+    expect(within(footer).getAllByRole("link", { name: /^Krizaka$/ })[0]).toHaveAttribute("href", "https://www.krizaka.com");
   });
 
   it("has a Mobile section with the phone recordings, played on demand, and a way to the full page", () => {
@@ -163,5 +165,17 @@ describe("LandingPage while sign-in and sign-up are closed (the default)", () =>
     expect(within(section).getByRole("link", { name: translations.en.mobile.all })).toHaveAttribute("href", "/mobile");
     const bar = screen.getByRole("navigation", { name: "Orazaka" });
     expect(within(bar).getByRole("link", { name: translations.en.landing.nav.mobile })).toHaveAttribute("href", "/mobile");
+  });
+
+  it("wears the family navigation: current = orazaka, the environment badge, one main action, the family last on the phone", () => {
+    renderLanding("en", <LandingPage />, CLOSED);
+    const bar = document.querySelector("header[data-floating]") as HTMLElement;
+    expect(within(bar).getAllByRole("navigation", { name: "Krizaka family" }).length).toBeGreaterThan(0);
+    expect(bar).toHaveTextContent(/dev · v/);
+    expect(within(bar).getByRole("link", { name: translations.en.landing.nav.repo })).toHaveAttribute("href", "https://github.com/krizaka/orazaka-web-client");
+    expect(within(bar).getAllByRole("link", { name: translations.en.landing.nav.talk })[0]).toHaveAttribute("href", "https://www.krizaka.com/contact?topic=orazaka");
+    // four sections of this site in the centre, never a link to another site
+    const centre = within(bar).getByRole("navigation", { name: "Orazaka" });
+    expect(within(centre).getAllByRole("link")).toHaveLength(4);
   });
 });

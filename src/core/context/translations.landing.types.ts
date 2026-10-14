@@ -36,6 +36,8 @@ export interface LandingDictionary {
     openMenu: string;
     closeMenu: string;
     home: string;
+    talk: string;
+    repo: string;
   };
   hero: {
     kicker: string;
@@ -66,7 +68,7 @@ export interface LandingDictionary {
   demo: { eyebrow: string; title: string; lead: string; frame: string };
   packs: { eyebrow: string; title: string; lead: string; studios: string; more: string };
   closed: { title: string; body: string; docs: string; contact: string; home: string; heroPrimary: string; heroSecondary: string; signInBanner: string };
-  footer: { privacy: string; terms: string; contact: string; license: string; by: string; product: string; docs: string; version: string; legal: string; tagline: string };
+  footer: { privacy: string; terms: string; contact: string; license: string; by: string; product: string; docs: string; legal: string };
 }
 
 /** One feature page (/features/<id>). */

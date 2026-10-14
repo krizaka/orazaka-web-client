@@ -1,26 +1,27 @@
 "use client";
 
-import * as React from "react";
 import Link from "next/link";
-import { CloseIcon, MenuIcon } from "@krizaka/icons";
 import { OrazakaLogo } from "@krizaka/ui";
-import { Button, IconButton } from "@krizaka/ui/button";
+import { Button } from "@krizaka/ui/button";
+import { NavBar } from "@krizaka/ui/nav-bar";
+import { familyLabels } from "@krizaka/ui/sites";
 import { ThemeToggle } from "@krizaka/ui/theme";
 import { cn } from "@krizaka/ui/cn";
 import { useTranslation } from "@/core/context/LocaleContext";
 import { useAuthFlags } from "@/core/context/AuthFlagsContext";
 import type { Locale } from "@/core/context/translations.types";
+import { APP_ENV, APP_VERSION } from "@/core/config/version";
 
 const LOCALES: { code: Locale; label: string }[] = [
   { code: "en", label: "EN" },
   { code: "fr", label: "FR" },
 ];
 
-/** Section anchors of the home page, in reading order. */
-export const ANCHORS = ["made", "sovereignty", "platform", "how", "demo", "studios", "packs"] as const;
+const REPO_URL = "https://github.com/krizaka/orazaka-web-client";
+const TALK_URL = "https://www.krizaka.com/contact?topic=orazaka";
 
-/** The anchors the bar drops below the large breakpoint, to keep the bar on one line. */
-const LARGE_ONLY: readonly string[] = ["platform", "studios", "packs"];
+/** Section anchors of the home page, in reading order (the bar keeps the four that matter; the page has them all). */
+export const ANCHORS = ["made", "sovereignty", "platform", "how", "demo", "studios", "packs"] as const;
 
 function Locales({ className }: Readonly<{ className?: string }>) {
   const { t, locale, setLocale } = useTranslation();
@@ -43,99 +44,92 @@ function Locales({ className }: Readonly<{ className?: string }>) {
 }
 
 /**
- * Top bar of the public pages: the mark, the section anchors, language and theme, and the two ways in. Sticky and
- * translucent so the page stays readable under it; on a phone the anchors fold into a menu. `onHome` is false on
- * the feature pages, where the anchors lead back to the home page sections.
+ * The bar of the public pages (NAV-SYS, @krizaka/ui's NavBar). Left: the Orazaka mark, the family switcher and the
+ * DEV · version badge. Centre, this site: How it works · Demo · Mobile · Docs. Right: the repository, the language, the
+ * theme, Sign in and the one action — « Talk to us » while sign-up is closed, « Get started » once it opens. Below md:
+ * one panel, the family as its last group. `onHome` is false on the feature pages, where the anchors lead back to the
+ * home page sections.
  */
 export function LandingNav({ onHome = true }: Readonly<{ onHome?: boolean }>) {
-  const { t } = useTranslation();
+  const { t, locale } = useTranslation();
   const n = t.landing.nav;
   const flags = useAuthFlags();
-  const [open, setOpen] = React.useState(false);
   const href = (id: string) => (onHome ? `#${id}` : `/#${id}`);
+  const labels = familyLabels[locale];
+  const links = [
+    { key: "how", href: href("how"), label: n.how, external: false },
+    { key: "demo", href: href("demo"), label: n.demo, external: false },
+    { key: "mobile", href: "/mobile", label: n.mobile, external: false },
+    { key: "docs", href: "/docs", label: n.docs, external: false },
+  ] as const;
+  const action = flags.signup ? { href: "/register", label: n.getStarted } : { href: TALK_URL, label: n.talk };
 
   return (
-    <header className="sticky top-0 z-40 border-b border-border-subtle bg-surface-0/75 backdrop-blur-xl">
-      <nav className="mx-auto flex h-16 max-w-6xl items-center gap-6 px-4 sm:px-5" aria-label="Orazaka">
-        <Link href="/" aria-label={n.home} className="flex items-center gap-2.5 rounded-md text-fg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
-          <OrazakaLogo size={30} />
-          <span className="font-display text-lg font-bold tracking-tight">Orazaka</span>
-        </Link>
+    <div className="sticky top-0 z-40">
+      <NavBar.Root label="Orazaka" floating={false}>
+        <NavBar.Brand asChild>
+          <Link href="/" aria-label={n.home}>
+            <OrazakaLogo size={26} />
+            <span>Orazaka</span>
+          </Link>
+        </NavBar.Brand>
+        <NavBar.Family current="orazaka" labels={labels} />
+        <NavBar.Badge env={APP_ENV} version={APP_VERSION} />
 
-        <ul className="hidden items-center gap-5 lg:gap-7 md:flex">
-          {ANCHORS.map((id) => (
-            <li key={id} className={LARGE_ONLY.includes(id) ? "hidden lg:block" : undefined}>
-              <a href={href(id)} className="text-sm text-fg-secondary transition-colors hover:text-fg">
-                {n[id]}
-              </a>
-            </li>
+        <NavBar.Items>
+          {links.map((l) => (
+            <NavBar.Link key={l.key} asChild>
+              <a href={l.href}>{l.label}</a>
+            </NavBar.Link>
           ))}
-          <li>
-            <Link href="/mobile" className="text-sm text-fg-secondary transition-colors hover:text-fg">
-              {n.mobile}
-            </Link>
-          </li>
-        </ul>
+        </NavBar.Items>
 
-        <span className="ml-auto flex items-center gap-1.5 sm:gap-2">
-          <Locales className="hidden sm:flex" />
+        <NavBar.Actions className="gap-1">
+          <NavBar.Repo href={REPO_URL} label={n.repo} target="_blank" rel="noopener noreferrer" className="hidden lg:inline-flex" />
+          <Locales className="hidden md:flex" />
           <ThemeToggle
             variant="ghost"
+            className="hidden md:inline-flex"
             label={(mode) => ({ "dark": t.header.themeDark, "light": t.header.themeLight, "system": t.header.themeSystem })[mode]}
           />
-          <Button asChild variant="ghost" size="sm">
+          <Button asChild variant="ghost" size="sm" className="hidden md:inline-flex">
             <Link href="/login">{n.signIn}</Link>
           </Button>
-          <Button asChild variant={flags.signup ? "ghost" : "primary"} size="sm" shape={flags.signup ? undefined : "pill"} className={flags.signup ? "hidden sm:inline-flex" : "hidden kz-sheen sm:inline-flex"}>
-            <Link href="/docs">{n.docs}</Link>
+          <Button asChild variant="primary" size="sm" shape="cut" className="kz-sheen hidden font-bold md:inline-flex">
+            <a href={action.href}>{action.label}</a>
           </Button>
-          {flags.signup && (
-            <Button asChild variant="primary" size="sm" shape="pill" className="kz-sheen">
-              <Link href="/register">{n.getStarted}</Link>
-            </Button>
-          )}
-          <IconButton
-            variant="ghost"
-            onClick={() => setOpen((v) => !v)}
-            aria-expanded={open}
-            aria-controls="landing-menu"
-            label={open ? n.closeMenu : n.openMenu}
-            className="md:hidden"
-          >
-            {open ? <CloseIcon size={20} /> : <MenuIcon size={20} />}
-          </IconButton>
-        </span>
-      </nav>
 
-      {open && (
-        <nav id="landing-menu" aria-label={n.openMenu} className="kz-pop border-t border-border-subtle bg-surface-0/95 px-4 pb-5 pt-2 backdrop-blur-xl md:hidden">
-          <ul className="flex flex-col">
+          <NavBar.Mobile openLabel={n.openMenu} closeLabel={n.closeMenu} className="max-h-[calc(100dvh-5rem)] gap-1 overflow-y-auto overscroll-contain p-3">
             {ANCHORS.map((id) => (
-              <li key={id}>
-                <a href={href(id)} onClick={() => setOpen(false)} className="flex min-h-12 items-center border-b border-border-subtle text-base text-fg">
-                  {n[id]}
-                </a>
-              </li>
+              <NavBar.MobileLink key={id} asChild>
+                <a href={href(id)}>{n[id]}</a>
+              </NavBar.MobileLink>
             ))}
-            <li>
-              <Link href="/mobile" onClick={() => setOpen(false)} className="flex min-h-12 items-center border-b border-border-subtle text-base text-fg">
-                {n.mobile}
-              </Link>
-            </li>
-          </ul>
-          <span className="mt-4 flex items-center justify-between gap-3">
-            <Locales className="flex" />
+            <NavBar.MobileLink asChild>
+              <Link href="/mobile">{n.mobile}</Link>
+            </NavBar.MobileLink>
+            <NavBar.MobileLink asChild>
+              <Link href="/docs">{n.docs}</Link>
+            </NavBar.MobileLink>
+            <span className="mt-2 flex items-center justify-between gap-3 border-t border-border-subtle pt-3">
+              <Locales className="flex" />
+              <ThemeToggle
+                variant="ghost"
+                label={(mode) => ({ "dark": t.header.themeDark, "light": t.header.themeLight, "system": t.header.themeSystem })[mode]}
+              />
+            </span>
             <span className="flex items-center gap-2">
-              <Button asChild variant="ghost" size="sm">
-                <Link href="/docs">{n.docs}</Link>
-              </Button>
-              <Button asChild variant="primary" size="sm" shape="pill">
+              <Button asChild variant="ghost" size="md">
                 <Link href="/login">{n.signIn}</Link>
               </Button>
+              <Button asChild variant="primary" size="md" shape="cut" className="flex-1 font-bold">
+                <a href={action.href}>{action.label}</a>
+              </Button>
             </span>
-          </span>
-        </nav>
-      )}
-    </header>
+            <NavBar.Family current="orazaka" labels={labels} />
+          </NavBar.Mobile>
+        </NavBar.Actions>
+      </NavBar.Root>
+    </div>
   );
 }
