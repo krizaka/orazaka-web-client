@@ -1,5 +1,5 @@
 import type { MetadataRoute } from "next";
-import { publicPaths, SITE_URL } from "@/features/seo/utils/seo";
+import { publicPaths, SITE_URL } from "@/app/_seo/seo";
 
 /** The public pages, dated by the build. The language is chosen in the page (one URL), so there is no hreflang to declare. */
 export default function sitemap(): MetadataRoute.Sitemap {

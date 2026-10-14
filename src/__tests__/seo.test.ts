@@ -3,7 +3,7 @@ import robots from "@/app/robots";
 import sitemap from "@/app/sitemap";
 import { proxy } from "@/proxy";
 import { NextRequest } from "next/server";
-import { CRAWLERS, KRIZAKA_URL, llmsFullText, llmsText, ORG_ID, publicPaths, SITE_URL, siteJsonLd } from "@/features/seo/utils/seo";
+import { CRAWLERS, KRIZAKA_URL, llmsFullText, llmsText, ORG_ID, publicPaths, SITE_URL, siteJsonLd } from "@/app/_seo/seo";
 import { auditLlms, auditRobots, auditSitemap } from "../../scripts/check-seo-family.mjs";
 
 /** MetadataRoute.Robots as the text Next serves. */

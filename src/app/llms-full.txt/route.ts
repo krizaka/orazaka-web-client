@@ -1,4 +1,4 @@
-import { LLMS_HEADERS, llmsFullText } from "@/features/seo/utils/seo";
+import { LLMS_HEADERS, llmsFullText } from "@/app/_seo/seo";
 
 export const dynamic = "force-static";
 
