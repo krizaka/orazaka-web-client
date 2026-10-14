@@ -25,13 +25,12 @@ jest.mock("next-auth/react", () => ({
   signIn: jest.fn(),
 }));
 
-jest.mock("@/core/hooks/useAuth", () => ({
-  useAuth: () => ({
-    isAuthenticated: false,
-    loginWithGithub: mockLoginWithGithub,
-    loginWithGoogle: mockLoginWithGoogle,
-  }),
+const mockUseAuth = jest.fn(() => ({
+  isAuthenticated: false,
+  loginWithGithub: mockLoginWithGithub,
+  loginWithGoogle: mockLoginWithGoogle,
 }));
+jest.mock("@/core/hooks/useAuth", () => ({ useAuth: () => mockUseAuth() }));
 
 jest.mock("@/core/context/LocaleContext", () => ({
   useTranslation: () => ({
@@ -147,10 +146,43 @@ describe("LoginPage", () => {
 });
 
 describe("LoginPage while sign-in is closed (the default)", () => {
-  it("shows the closed notice and no credentials form", () => {
+  const banner = jest.requireActual("@/core/context/translations.landing").landing.en.closed.signInBanner as string;
+  const mockFetch = jest.fn();
+  beforeEach(() => {
+    jest.clearAllMocks();
+    global.fetch = mockFetch as unknown as typeof fetch;
+  });
+
+  it("shows the real sign-in screen under a calm banner, not only a notice", () => {
     render(<LoginPage />);
-    expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent("sign-in is closed on this site");
-    expect(screen.queryByLabelText("Email")).toBeNull();
-    expect(screen.queryByRole("button", { name: /sign in/i })).toBeNull();
+    expect(screen.getByText("Welcome Back")).toBeInTheDocument();
+    expect(screen.getByText("Sign in to your account")).toBeInTheDocument();
+    expect(screen.getByRole("status")).toHaveTextContent(banner);
+    expect(banner).toMatch(/dev services/);
+    expect(screen.getByRole("link", { name: /watch/i })).toHaveAttribute("href", "/#demo");
+  });
+
+  it("disables every field and button of the form", () => {
+    render(<LoginPage />);
+    expect(screen.getByLabelText("Email")).toBeDisabled();
+    expect(screen.getByLabelText("Password")).toBeDisabled();
+    expect(screen.getByRole("button", { name: "Sign In" })).toBeDisabled();
+    expect(screen.getByRole("button", { name: "GitHub" })).toBeDisabled();
+    expect(screen.getByRole("button", { name: "Google" })).toBeDisabled();
+  });
+
+  it("makes no backend call: no session hook, no sign-in, no fetch", () => {
+    render(<LoginPage />);
+    fireEvent.click(screen.getByRole("button", { name: "GitHub" }));
+    fireEvent.submit(document.getElementById("form-login") as HTMLFormElement);
+    expect(mockUseAuth).not.toHaveBeenCalled();
+    expect(mockLoginWithGithub).not.toHaveBeenCalled();
+    expect(mockFetch).not.toHaveBeenCalled();
+  });
+
+  it("has the banner in French too", () => {
+    const fr = jest.requireActual("@/core/context/translations.landing").landing.fr.closed.signInBanner as string;
+    expect(fr.trim()).not.toBe("");
+    expect(fr).not.toBe(banner);
   });
 });

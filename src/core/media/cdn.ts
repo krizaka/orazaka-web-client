@@ -1,0 +1,21 @@
+/**
+ * @file cdn.ts
+ * @description URLs of the media of this site that live on Bunny (never in the repository). A file is
+ * `<cdn>/<root>/<path>.<hash>.<ext>` and a URL never changes content. The hashes are `media.generated.json`
+ * (scripts/sync-media.mjs); `NEXT_PUBLIC_MEDIA_CDN_URL` switches the host (read at build).
+ */
+import data from "./media.generated.json";
+
+export const MEDIA_CDN_URL = (process.env.NEXT_PUBLIC_MEDIA_CDN_URL || "https://krizaka-assets.b-cdn.net").replace(/\/+$/, "");
+
+const FILES: Record<string, string> = data.files;
+
+/** `products/orazaka/mobile/clip-ask.mp4` → `https://…/site/products/orazaka/mobile/clip-ask.<hash>.mp4`; throws on an unknown file. */
+export function mediaUrl(path: string): string {
+  const hash = FILES[path];
+  if (!hash) throw new Error(`${path} is not a known CDN file`);
+  const dot = path.lastIndexOf(".");
+  return `${MEDIA_CDN_URL}/${data.cdnRoot}/${path.slice(0, dot)}.${hash}${path.slice(dot)}`;
+}
+
+export const hasMedia = (path: string): boolean => path in FILES;

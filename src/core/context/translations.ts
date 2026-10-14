@@ -6,6 +6,8 @@
 import { type Locale, type TranslationDictionary } from "./translations.types";
 import { landing } from "./translations.landing";
 import { features } from "./translations.features";
+import { gallery } from "./translations.gallery";
+import { mobile } from "./translations.mobile";
 import { a11y, automation } from "./translations.automation";
 import { showcase } from "./translations.showcase";
 import { insights } from "./translations.insights";
@@ -801,6 +803,8 @@ export const translations: Record<Locale, TranslationDictionary> = {
     },
     landing: landing.en,
     features: features.en,
+    gallery: gallery.en,
+    mobile: mobile.en,
   },
   fr: {
     sidebar: {
@@ -1602,5 +1606,7 @@ export const translations: Record<Locale, TranslationDictionary> = {
     },
     landing: landing.fr,
     features: features.fr,
+    gallery: gallery.fr,
+    mobile: mobile.fr,
   },
 };

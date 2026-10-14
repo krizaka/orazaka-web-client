@@ -30,6 +30,8 @@ export interface LandingDictionary {
     docs: string;
     demo: string;
     packs: string;
+    mobile: string;
+    made: string;
     langLabel: string;
     openMenu: string;
     closeMenu: string;
@@ -63,7 +65,7 @@ export interface LandingDictionary {
   cta: { eyebrow: string; title: string; lead: string; primary: string; secondary: string };
   demo: { eyebrow: string; title: string; lead: string; frame: string };
   packs: { eyebrow: string; title: string; lead: string; studios: string; more: string };
-  closed: { title: string; body: string; docs: string; contact: string; home: string; heroPrimary: string; heroSecondary: string };
+  closed: { title: string; body: string; docs: string; contact: string; home: string; heroPrimary: string; heroSecondary: string; signInBanner: string };
   footer: { privacy: string; terms: string; contact: string; license: string; by: string; product: string; docs: string; version: string; legal: string; tagline: string };
 }
 

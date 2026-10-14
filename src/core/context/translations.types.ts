@@ -5,6 +5,8 @@
 
 import type { FeaturesDictionary, LandingDictionary } from "./translations.landing.types";
 import type { InsightsDictionary } from "./translations.insights";
+import type { GalleryDictionary } from "./translations.gallery";
+import type { MobileDictionary } from "./translations.mobile";
 
 export type Locale = "en" | "fr";
 
@@ -761,6 +763,10 @@ export interface TranslationDictionary {
   /** The public home page (visitors without a session). */
   landing: LandingDictionary;
   features: FeaturesDictionary;
+  /** The "Made here" gallery: the featured section of the home page and /gallery. */
+  gallery: GalleryDictionary;
+  /** The Mobile section of the home page and /mobile. */
+  mobile: MobileDictionary;
 }
 
 /** The automation page (connectors and the jobs awaiting approval). `{name}` is the connector's name. */

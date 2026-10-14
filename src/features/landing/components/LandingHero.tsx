@@ -25,6 +25,7 @@ export function LandingHero() {
   const entries = useEntries();
   const primary = entries.primary(h.primaryCta);
   const secondary = entries.secondary(h.secondaryCta);
+  const watch = entries.watch();
 
   return (
     <SectionBackdrop grid media={<ProductCapture name="dashboard" eager className="landing-hero-capture" />} className="landing-hero border-b border-border-subtle">
@@ -48,6 +49,11 @@ export function LandingHero() {
             <Button asChild size="lg" shape="pill" variant="secondary">
               <Link href={secondary.href}>{secondary.label}</Link>
             </Button>
+            {watch && (
+              <Button asChild size="lg" shape="pill" variant="ghost">
+                <Link href={watch.href}>{watch.label}</Link>
+              </Button>
+            )}
           </nav>
           <ul className="flex flex-wrap gap-x-5 gap-y-2 text-sm text-fg-secondary">
             {h.trust.map((item) => (
