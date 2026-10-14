@@ -21,7 +21,7 @@ beforeAll(() => {
 const renderPage = (locale: Locale) => {
   mockLocale = locale;
   return render(
-    <AuthFlagsProvider flags={{ login: false, signup: false }}>
+    <AuthFlagsProvider flags={{ login: false, signup: false, github: false, google: false }}>
       <ThemeProvider>
         <MobilePage />
       </ThemeProvider>

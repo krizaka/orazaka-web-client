@@ -21,7 +21,7 @@
     "@krizaka/charts": "^0.1.0",
     "@krizaka/icons": "^0.1.0",
     "@krizaka/intl": "^0.1.0",
-    "@krizaka/orazaka-design-system": "^3.0.1",
+    "@krizaka/orazaka-design-system": "^3.1.0",
     "@krizaka/orazaka-shared": "*",
     "@krizaka/tailwind": "^3.10.0",
     "@krizaka/tokens": "^3.10.0",

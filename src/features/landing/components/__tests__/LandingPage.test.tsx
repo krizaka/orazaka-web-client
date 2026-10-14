@@ -32,7 +32,7 @@ beforeAll(() => {
   });
 });
 
-const OPEN: AuthFlags = { login: true, signup: true };
+const OPEN: AuthFlags = { login: true, signup: true, github: false, google: false };
 
 function renderLanding(locale: Locale, page: React.ReactNode = <LandingPage />, flags: AuthFlags = OPEN) {
   mockLocale = locale;
@@ -117,7 +117,7 @@ describe("landing copy", () => {
 });
 
 describe("LandingPage while sign-in and sign-up are closed (the default)", () => {
-  const CLOSED: AuthFlags = { login: false, signup: false };
+  const CLOSED: AuthFlags = { login: false, signup: false, github: false, google: false };
 
   it("hides every sign-up entry point but keeps Sign in visible, leading to /login", () => {
     const { container } = renderLanding("en", <LandingPage />, CLOSED);

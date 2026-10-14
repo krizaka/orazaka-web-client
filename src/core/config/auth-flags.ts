@@ -10,6 +10,10 @@
 export interface AuthFlags {
   login: boolean;
   signup: boolean;
+  /** The GitHub sign-in is offered: its client is configured AND this site accepts new accounts (see {@link providerOffered}). */
+  github: boolean;
+  /** Same for Google. */
+  google: boolean;
 }
 
 /** `true`, `1`, `yes` and `on` (any case) switch a flag on; anything else, or nothing, is off. */
@@ -17,8 +21,21 @@ export function parseFlag(value: string | undefined): boolean {
   return ["true", "1", "yes", "on"].includes((value ?? "").trim().toLowerCase());
 }
 
+/** An OAuth client is configured when both its id and its secret are set. */
+export const githubConfigured = (env: Record<string, string | undefined>): boolean => Boolean(env.GITHUB_ID?.trim() && env.GITHUB_SECRET?.trim());
+export const googleConfigured = (env: Record<string, string | undefined>): boolean => Boolean(env.GOOGLE_CLIENT_ID?.trim() && env.GOOGLE_CLIENT_SECRET?.trim());
+
+/**
+ * A provider button is shown only when its client is configured AND it can sign an existing account in. The gateway's
+ * OAuth endpoint provisions an account on first use, so while sign-up is closed it would create one: no button then
+ * (and `auth-options` does not register the provider either).
+ */
+export const providerOffered = (configured: boolean, signup: boolean): boolean => configured && signup;
+
 export function readAuthFlags(env: Record<string, string | undefined> = process.env): AuthFlags {
-  return { login: parseFlag(env.AUTH_LOGIN_ENABLED), signup: parseFlag(env.AUTH_SIGNUP_ENABLED) };
+  const login = parseFlag(env.AUTH_LOGIN_ENABLED);
+  const signup = parseFlag(env.AUTH_SIGNUP_ENABLED);
+  return { login, signup, github: login && providerOffered(githubConfigured(env), signup), google: login && providerOffered(googleConfigured(env), signup) };
 }
 
 /** Neither way in is open: the site is a showcase and must not reach the backend. */

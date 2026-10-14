@@ -1,6 +1,6 @@
 import * as React from "react";
-import { Input } from "@krizaka/orazaka-design-system";
-import { Button } from "@krizaka/orazaka-design-system";
+import { Button } from "@krizaka/ui/button";
+import { Field, Input, Select } from "@krizaka/ui/field";
 import { useRegister } from "@/features/auth/hooks/useRegister";
 import { useTranslation } from "@/core/context/LocaleContext";
 
@@ -9,17 +9,6 @@ const SUPPORTED_LANGUAGES = [
   { code: "en", label: "English" },
   { code: "fr", label: "Français" },
 ] as const;
-
-// ─── Styles ────────────────────────────────────────────────────────
-const fieldLabelClass =
-  "text-sm font-medium leading-none text-fg-secondary peer-disabled:cursor-not-allowed peer-disabled:opacity-70";
-
-const selectClass =
-  "w-full rounded-xl border border-border-default bg-surface-2 px-3 py-2 text-sm " +
-  "text-fg shadow-sm backdrop-blur-sm transition-all duration-200 " +
-  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-border-subtle " +
-  "focus-visible:border-transparent focus-visible:ring-border-subtle " +
-  "disabled:cursor-not-allowed disabled:opacity-50";
 
 /**
  * Properties required by the {@link RegisterForm} component.
@@ -72,94 +61,34 @@ export function RegisterForm({ onSuccess, onError }: Readonly<RegisterFormProps>
     });
   };
 
+  const field = (id: string, label: string, input: React.ReactNode) => (
+    <Field.Root>
+      <Field.Label htmlFor={id}>{label}</Field.Label>
+      {input}
+    </Field.Root>
+  );
+
   return (
-    <form id="form-register" onSubmit={handleRegister} className="space-y-4">
-      <div className="space-y-2">
-        <label htmlFor="reg-username" className={fieldLabelClass}>
-          {t.auth.usernameLabel} <span className="text-danger">*</span>
-        </label>
-        <Input
-          id="reg-username"
-          type="text"
-          placeholder="your_name"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-          required
-          minLength={3}
-          autoComplete="username"
-        />
-      </div>
-      <div className="space-y-2">
-        <label htmlFor="reg-email" className={fieldLabelClass}>
-          {t.auth.emailLabel} <span className="text-danger">*</span>
-        </label>
-        <Input
-          id="reg-email"
-          type="email"
-          placeholder="you@orazaka.com"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-          autoComplete="email"
-        />
-      </div>
-      <div className="space-y-2">
-        <label htmlFor="reg-password" className={fieldLabelClass}>
-          {t.auth.passwordLabel} <span className="text-danger">*</span>
-        </label>
-        <Input
-          id="reg-password"
-          type="password"
-          placeholder="At least 8 characters"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-          minLength={8}
-          autoComplete="new-password"
-        />
-      </div>
-      <div className="space-y-2">
-        <label htmlFor="reg-confirm-password" className={fieldLabelClass}>
-          {t.auth.confirmPasswordLabel} <span className="text-danger">*</span>
-        </label>
-        <Input
-          id="reg-confirm-password"
-          type="password"
-          placeholder="Repeat your password"
-          value={confirmPassword}
-          onChange={(e) => setConfirmPassword(e.target.value)}
-          required
-          autoComplete="new-password"
-        />
-      </div>
-      <div className="space-y-2">
-        <label htmlFor="reg-language" className={fieldLabelClass}>
-          {t.auth.preferredLanguageLabel}
-        </label>
-        <select
-          id="reg-language"
-          value={language}
-          onChange={(e) => setLanguage(e.target.value)}
-          className={selectClass}
-        >
+    <form id="form-register" onSubmit={handleRegister} className="flex flex-col gap-4">
+      {field("reg-username", t.auth.usernameLabel, <Input id="reg-username" type="text" placeholder="your_name" value={username} onChange={(e) => setUsername(e.target.value)} required minLength={3} autoComplete="username" />)}
+      {field("reg-email", t.auth.emailLabel, <Input id="reg-email" type="email" placeholder="you@orazaka.com" value={email} onChange={(e) => setEmail(e.target.value)} required autoComplete="email" />)}
+      {field("reg-password", t.auth.passwordLabel, <Input id="reg-password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} required minLength={8} autoComplete="new-password" />)}
+      {field("reg-confirm-password", t.auth.confirmPasswordLabel, <Input id="reg-confirm-password" type="password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} required autoComplete="new-password" />)}
+      {field(
+        "reg-language",
+        t.auth.preferredLanguageLabel,
+        <Select id="reg-language" value={language} onChange={(e) => setLanguage(e.target.value)}>
           {SUPPORTED_LANGUAGES.map((lang) => (
             <option key={lang.code} value={lang.code}>
               {lang.label}
             </option>
           ))}
-        </select>
-      </div>
-      <Button
-        id="btn-register-submit"
-        type="submit"
-        className="w-full"
-        disabled={isPending}
-      >
+        </Select>,
+      )}
+      <Button id="btn-register-submit" type="submit" variant="primary" size="lg" shape="cut" shimmer loading={isPending} className="w-full">
         {isPending ? t.auth.creatingAccountBtn : t.auth.createAccountBtn}
       </Button>
-      <p className="text-center text-xs text-fg-secondary">
-        {t.auth.termsNotice}
-      </p>
+      <p className="text-center text-xs text-fg-secondary">{t.auth.termsNotice}</p>
     </form>
   );
 }

@@ -574,8 +574,8 @@ export const translations: Record<Locale, TranslationDictionary> = {
       passwordsDoNotMatch: "Passwords do not match.",
       heroHeadline: "Own your intelligence.",
       heroTagline:
-        "The sovereign AI platform running entirely on your hardware. Zero cloud, zero telemetry, zero compromises.",
-      heroFeature1: "Absolute privacy — your data stays on your machine, always",
+        "The sovereign AI platform that runs on your own hardware, with zero telemetry. This demo runs on our development server.",
+      heroFeature1: "Absolute privacy — your data stays on the machine you run Orazaka on",
       heroFeature2:
         "Unified engine — text, vision, audio, video & code in one runtime",
       heroFeature3:
@@ -1375,8 +1375,8 @@ export const translations: Record<Locale, TranslationDictionary> = {
       passwordsDoNotMatch: "Les mots de passe ne correspondent pas.",
       heroHeadline: "Maîtrisez votre intelligence.",
       heroTagline:
-        "La plateforme d'IA souveraine exécutée entièrement sur votre matériel. Zéro cloud, zéro télémétrie, sans compromis.",
-      heroFeature1: "Confidentialité absolue — vos données restent sur votre machine, toujours",
+        "La plateforme d'IA souveraine qui s'exécute sur votre propre matériel, sans télémétrie. Cette démo tourne sur notre serveur de développement.",
+      heroFeature1: "Confidentialité absolue — vos données restent sur la machine où vous exécutez Orazaka",
       heroFeature2:
         "Moteur unifié — texte, vision, audio, vidéo & code en un seul runtime",
       heroFeature3:
