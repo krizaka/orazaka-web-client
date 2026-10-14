@@ -6,6 +6,7 @@ import { Providers } from "@/core/providers/Providers";
 import { ThemeScript } from "@krizaka/ui/theme";
 
 import { cn } from "@krizaka/ui/cn";
+import { KRIZAKA_URL, SITE_DESCRIPTION, SITE_NAME, SITE_TITLE, SITE_URL, siteJsonLd } from "@/core/config/seo";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -49,9 +50,15 @@ const krizakaMono = JetBrains_Mono({
  * Application global metadata configurations.
  */
 export const metadata: Metadata = {
-  title: "Orazaka — the AI that never leaves home",
-  description:
-    "Sovereign AI workspace by Krizaka: chat, documents, images, video and agents running on your own machines.",
+  metadataBase: new URL(SITE_URL),
+  title: SITE_TITLE,
+  description: SITE_DESCRIPTION,
+  applicationName: SITE_NAME,
+  authors: [{ name: "Krizaka", url: KRIZAKA_URL }],
+  // Every page is canonical to itself; the image is app/opengraph-image.tsx.
+  alternates: { canonical: "./" },
+  openGraph: { type: "website", siteName: SITE_NAME, title: SITE_TITLE, description: SITE_DESCRIPTION, locale: "en_US", alternateLocale: "fr_CA" },
+  twitter: { card: "summary_large_image", title: SITE_TITLE, description: SITE_DESCRIPTION },
   icons: {
     icon: [{ url: "/favicon.svg", type: "image/svg+xml" }],
     shortcut: "/favicon.svg",
@@ -75,6 +82,7 @@ export default function RootLayout({
       <head>
         {/* The organisation's theme mechanism: applies the persisted mode and named theme before the first paint. */}
         <ThemeScript />
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(siteJsonLd()).replace(/</g, "\\u003c") }} />
       </head>
       <body
         className={cn(
