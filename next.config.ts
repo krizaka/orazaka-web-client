@@ -1,6 +1,7 @@
 import type { NextConfig } from "next";
 import fs from "node:fs";
 import path from "node:path";
+import { SECURITY_HEADERS } from "./src/core/config/security-headers";
 import pkg from "./package.json";
 import { formatVersion, resolveSha } from "./src/core/config/app-version";
 
@@ -45,6 +46,10 @@ loadRootEnv();
 const nextConfig: NextConfig = {
   // APP_VERSION (package.json + short sha) is shown in the footer of every deployed site.
   env: { NEXT_PUBLIC_APP_VERSION: process.env.APP_VERSION || formatVersion(pkg.version, resolveSha()) },
+  poweredByHeader: false,
+  async headers() {
+    return [{ source: "/:path*", headers: SECURITY_HEADERS }];
+  },
   // The contact form of this app is a placeholder: the public site sends people to krizaka.com's.
   async redirects() {
     return [{ source: "/contact", destination: "https://www.krizaka.com/contact", permanent: false }];
