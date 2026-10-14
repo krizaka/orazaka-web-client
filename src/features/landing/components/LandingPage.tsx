@@ -11,6 +11,7 @@ import { LandingCompare } from "@/features/landing/components/LandingCompare";
 import { LandingHow } from "@/features/landing/components/LandingHow";
 import { LandingDemo } from "@/features/landing/components/LandingDemo";
 import { LandingPacks } from "@/features/landing/components/LandingPacks";
+import { LandingModels } from "@/features/landing/components/LandingModels";
 import { LandingStudios } from "@/features/landing/components/LandingStudios";
 import { LandingClosing } from "@/features/landing/components/LandingClosing";
 import { LandingFooter } from "@/features/landing/components/LandingFooter";
@@ -40,6 +41,7 @@ export function LandingPage() {
         <LandingMobile />
         <LandingStudios />
         <LandingPacks />
+        <LandingModels />
         <LandingClosing eyebrow={c.eyebrow} title={c.title} lead={c.lead} primary={c.primary} secondary={c.secondary} />
       </main>
       <LandingFooter />

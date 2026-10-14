@@ -6,6 +6,7 @@
  */
 import { listDocs, readDoc } from "@/features/docs/utils/docs";
 import { features } from "@/core/context/translations.features";
+import { MODELS } from "@/features/landing/utils/models";
 
 /** The public origin of this site (dev today; the production origin replaces it here, in one place). */
 export const SITE_URL = "https://dev.orazaka.com";
@@ -32,7 +33,7 @@ const FEATURE_IDS = Object.keys(features.en.pages) as (keyof typeof features.en.
 
 /** Every public page, in the order of the sitemap. */
 export function publicPaths(): string[] {
-  return ["/", ...FEATURE_IDS.map((id) => `/features/${id}`), "/mobile", "/gallery", "/docs", ...listDocs().map((d) => `/docs/${d.slug}`), "/privacy", "/terms"];
+  return ["/", ...FEATURE_IDS.map((id) => `/features/${id}`), "/mobile", "/gallery", "/models", "/docs", ...listDocs().map((d) => `/docs/${d.slug}`), "/privacy", "/terms"];
 }
 
 const ORG = { "@type": "Organization", "@id": ORG_ID, name: "Krizaka", url: KRIZAKA_URL };
@@ -85,6 +86,7 @@ export function llmsText(): string {
 ${pages.join("\n")}
 - [Mobile app](${SITE_URL}/mobile): recordings and screenshots of the iOS and Android app
 - [Gallery](${SITE_URL}/gallery): images made with Orazaka
+- [Models](${SITE_URL}/models): the ${MODELS.length} models Orazaka supports — what each does, where it runs, its licence and context window
 - [Talk to the team](${KRIZAKA_URL}/contact?topic=orazaka): the contact form lives on krizaka.com
 
 ## Documentation

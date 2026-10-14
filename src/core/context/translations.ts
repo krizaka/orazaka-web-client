@@ -11,6 +11,7 @@ import { mobile } from "./translations.mobile";
 import { a11y, automation } from "./translations.automation";
 import { showcase } from "./translations.showcase";
 import { insights } from "./translations.insights";
+import { models } from "./translations.models";
 import { THEME_MODE } from "@/core/constants/http.constants";
 export type { Locale, TranslationDictionary };
 
@@ -790,6 +791,7 @@ export const translations: Record<Locale, TranslationDictionary> = {
     a11y: a11y.en,
     showcase: showcase.en,
     insights: insights.en,
+    models: models.en,
     commandPalette: {
       label: "Command palette",
       placeholder: "Search a page…",
@@ -1593,6 +1595,7 @@ export const translations: Record<Locale, TranslationDictionary> = {
     a11y: a11y.fr,
     showcase: showcase.fr,
     insights: insights.fr,
+    models: models.fr,
     commandPalette: {
       label: "Palette de commandes",
       placeholder: "Chercher une page…",

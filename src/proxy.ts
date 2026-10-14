@@ -30,6 +30,7 @@ const PUBLIC_PREFIXES = [
   "/docs",
   "/mobile",
   "/gallery",
+  "/models",
   // What search engines and AI assistants read (src/app/robots.ts, sitemap.ts, llms*.txt, opengraph-image.tsx).
   "/robots.txt",
   "/sitemap.xml",
