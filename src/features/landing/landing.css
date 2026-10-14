@@ -44,8 +44,9 @@
 
 /* ── Product captures (our own screenshots) ──────────────── */
 /* Two captures per view, one per theme: the page shows the one of its theme. */
+.landing-capture-dark, .landing-capture-light { display: contents; }
 .landing-capture-light { display: none; }
-html.light .landing-capture-light { display: block; }
+html.light .landing-capture-light { display: contents; }
 html.light .landing-capture-dark { display: none; }
 
 /* The hero's depth of field: its media layer is stronger than a plain section's (SectionBackdrop draws it at 50 %). */

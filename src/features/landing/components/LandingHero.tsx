@@ -28,7 +28,7 @@ export function LandingHero() {
   const watch = entries.watch();
 
   return (
-    <SectionBackdrop grid media={<ProductCapture name="dashboard" eager className="landing-hero-capture" />} className="landing-hero border-b border-border-subtle">
+    <SectionBackdrop grid media={<ProductCapture name="studios" eager hiddenBelow={1024} sizes="(min-width: 1024px) 980px, 1px" className="landing-hero-capture" />} className="landing-hero border-b border-border-subtle">
       <article className="mx-auto grid max-w-6xl items-center gap-12 px-4 pb-16 pt-14 sm:px-5 lg:grid-cols-[1.08fr_1fr] lg:gap-16 lg:pb-20 lg:pt-24">
         <header className="space-y-7">
           <p className="inline-flex items-center gap-2 rounded-full border border-border-default bg-surface-1/70 px-3 py-1.5 font-mono text-xs font-semibold uppercase tracking-[0.14em] text-fg-secondary backdrop-blur">

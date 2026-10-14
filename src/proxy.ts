@@ -23,7 +23,6 @@ const PUBLIC_PREFIXES = [
   "/_next/",      // Next.js internals (static, image, RSC payloads, HMR)
   "/favicon",
   "/logo.svg",
-  "/media/",      // The public product captures of the home and feature pages (public/media)
   "/privacy",
   "/terms",
   "/contact",
