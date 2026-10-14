@@ -12,10 +12,10 @@ export default function OpengraphImage() {
       <div tw="flex flex-col justify-center w-full h-full p-20 text-white bg-[#0c0a09]">
         <div tw="flex text-8xl font-black">
           {SITE_NAME.toUpperCase()}
-          <span tw="text-orange-400">.</span>
+          <span tw="text-[#fb923c]">.</span>
         </div>
         <div tw="mt-6 text-4xl font-semibold leading-tight">{SITE_DESCRIPTION}</div>
-        <div tw="mt-auto text-2xl text-zinc-400">dev.orazaka.com · A Krizaka product</div>
+        <div tw="mt-auto text-2xl text-[#a1a1aa]">dev.orazaka.com · A Krizaka product</div>
       </div>
     ),
     size,
