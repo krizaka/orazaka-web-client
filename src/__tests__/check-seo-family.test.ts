@@ -5,7 +5,7 @@ import { auditRobots, auditSitemap, auditLlms, auditHtml, auditHeaders, AI_CRAWL
 
 const HOST = "https://dev.example.com";
 const robots = AI_CRAWLERS.map((b) => `User-Agent: ${b}\nAllow: /\n`).join("\n") + `\nSitemap: ${HOST}/sitemap.xml\n`;
-const page = ({ canonical = `${HOST}/`, ld, robotsMeta = "index, follow", image = "https://dev.example.com/og.png" } = {}) => `<html><head><title>Example</title>
+const page = ({ canonical = `${HOST}/`, ld, robotsMeta = "index, follow", image = "https://dev.example.com/og.png" }: { canonical?: string; ld?: string; robotsMeta?: string; image?: string } = {}) => `<html><head><title>Example</title>
 <meta name="description" content="A description long enough to be useful to a search engine and its readers."/>
 <link rel="canonical" href="${canonical}"/><meta name="robots" content="${robotsMeta}"/>
 <meta property="og:title" content="Example"/><meta property="og:description" content="d"/>${image ? `<meta property="og:image" content="${image}"/>` : ""}<meta name="twitter:card" content="summary_large_image"/>

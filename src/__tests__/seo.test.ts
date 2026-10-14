@@ -9,7 +9,7 @@ import { auditLlms, auditRobots, auditSitemap } from "../../scripts/check-seo-fa
 
 /** MetadataRoute.Robots as the text Next serves. */
 function robotsText(r: ReturnType<typeof robots>): string {
-  const rules = ([] as NonNullable<ReturnType<typeof robots>["rules"]>[number][]).concat(r.rules);
+  const rules = Array.isArray(r.rules) ? r.rules : [r.rules];
   const groups = rules.map((rule) => [`User-Agent: ${rule.userAgent}`, `Allow: ${rule.allow}`, ...([] as string[]).concat(rule.disallow ?? []).map((d) => `Disallow: ${d}`)].join("\n"));
   return `${groups.join("\n\n")}\n\nSitemap: ${r.sitemap}\n`;
 }
