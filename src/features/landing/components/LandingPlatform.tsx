@@ -36,7 +36,7 @@ export function LandingPlatform() {
             <span className="h-2.5 w-2.5 rounded-full bg-accent/70" />
             <span className="ml-3 h-5 w-48 rounded-md bg-surface-3" />
           </header>
-          <section className="relative h-64 overflow-hidden sm:h-80 lg:h-[26rem]">
+          <section className="landing-capture-frame relative h-64 overflow-hidden sm:h-80 lg:h-[26rem]">
             <ProductCapture name="studios" alt={p.captureAlt} sizes="(min-width: 1152px) 1152px, 100vw" className="landing-card-capture h-auto w-full" />
           </section>
         </figure>

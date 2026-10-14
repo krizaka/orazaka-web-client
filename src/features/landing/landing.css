@@ -71,15 +71,9 @@ html.light .landing-hero > .kz-backdrop-media { opacity: 0.6; }
   .landing-hero-capture { display: none !important; }
 }
 
-/* A capture inside a card: sharp at the top, blurred and fading into the card below (depth of field). */
-.landing-card-capture {
-  mask-image: linear-gradient(to bottom, #000 0%, transparent 92%);
-  filter: blur(1.5px) saturate(1.1);
-  transition: filter 0.6s var(--kz-ease), transform 0.6s var(--kz-ease);
-}
-@media (hover: hover) {
-  .group:hover .landing-card-capture { filter: blur(0) saturate(1.15); transform: translateY(-4px); }
-}
+/* A capture inside a card: crisp, fading into the card only along its bottom edge (never blurred). */
+.landing-card-capture { display: block; }
+.landing-capture-frame { mask-image: linear-gradient(to bottom, #000 84%, transparent 100%); }
 
 /* The terminal of "How it works": a caret that blinks slowly. */
 @keyframes landing-caret { 50% { opacity: 0; } }
@@ -87,6 +81,4 @@ html.light .landing-hero > .kz-backdrop-media { opacity: 0.6; }
 
 @media (prefers-reduced-motion: reduce) {
   .iso-led, .iso-core, .iso-float, .iso-float-late, .iso-float-later, .iso-flow, .iso-beam, .landing-caret { animation: none; }
-  .landing-card-capture { transition: none; }
-  .group:hover .landing-card-capture { transform: none; }
 }
