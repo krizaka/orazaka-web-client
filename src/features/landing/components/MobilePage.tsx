@@ -6,8 +6,8 @@ import { useTranslation } from "@/core/context/LocaleContext";
 import { LandingNav } from "@/features/landing/components/LandingNav";
 import { LandingFooter } from "@/features/landing/components/LandingFooter";
 import { SectionHeading } from "@/features/landing/components/SectionHeading";
-import { PhoneClip } from "@/features/mobile/components/PhoneClip";
-import { CLIPS, SHOTS, shotUrl } from "@/features/mobile/mobile";
+import { PhoneClip } from "@/features/landing/components/PhoneClip";
+import { CLIPS, SHOTS, shotUrl } from "@/features/landing/utils/mobile";
 import "@/features/landing/landing.css";
 
 /** /mobile — every recording and screenshot of the iOS and Android app, with what each one shows and where it was recorded. */

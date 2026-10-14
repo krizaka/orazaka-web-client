@@ -2,9 +2,9 @@
  * @file translations.gallery.ts
  * @description Copy of the "Made here" gallery (the featured prompt-to-image section of the home page, /gallery and
  * its credits), en and fr. Image alts and style names come from krizaka.com's former gallery. The data (prompts,
- * seeds, sizes, times) is in features/gallery/gallery.ts — this file holds words only.
+ * seeds, sizes, times) is in features/landing/utils/gallery.ts — this file holds words only.
  */
-import type { Locale } from "./translations.types";
+type Locale = "en" | "fr";
 
 export interface GalleryDictionary {
   eyebrow: string;

@@ -6,8 +6,8 @@ import { Button } from "@krizaka/ui/button";
 import { SectionBackdrop } from "@krizaka/ui/section-backdrop";
 import { useTranslation } from "@/core/context/LocaleContext";
 import { SectionHeading } from "@/features/landing/components/SectionHeading";
-import { PhoneClip } from "@/features/mobile/components/PhoneClip";
-import { CLIPS } from "@/features/mobile/mobile";
+import { PhoneClip } from "@/features/landing/components/PhoneClip";
+import { CLIPS } from "@/features/landing/utils/mobile";
 
 /**
  * The Orazaka app on a phone: its four recordings in phone frames (a swipeable row on a phone, four columns on a

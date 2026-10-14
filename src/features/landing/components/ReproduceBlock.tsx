@@ -1,8 +1,8 @@
 "use client";
 
 import { useTranslation } from "@/core/context/LocaleContext";
-import { reproduceCommand, type GalleryItem } from "@/features/gallery/gallery";
-import { CopyButton } from "@/features/gallery/components/CopyButton";
+import { reproduceCommand, type GalleryItem } from "@/features/landing/utils/gallery";
+import { CopyButton } from "@/features/landing/components/CopyButton";
 
 /**
  * "Reproduce it": the Orazaka CLI commands that make this image again — same model, same Studio, same subject, size and

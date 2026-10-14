@@ -4,7 +4,7 @@
  * Orazaka iOS and Android app, en and fr. What is said is what the recording shows (recorded on the iOS 27 simulator
  * and the Android 16 emulator against the local stack, signed in as Eric, the demo persona).
  */
-import type { Locale } from "./translations.types";
+type Locale = "en" | "fr";
 
 export interface MobileDictionary {
   eyebrow: string;

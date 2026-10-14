@@ -3,9 +3,9 @@ import { fireEvent, render, screen, within } from "@testing-library/react";
 import { ThemeProvider } from "@krizaka/ui/theme";
 import { translations, type Locale } from "@/core/context/translations";
 import { AuthFlagsProvider } from "@/core/context/AuthFlagsContext";
-import { GalleryFeatured } from "@/features/gallery/components/GalleryFeatured";
-import { GalleryPage } from "@/features/gallery/components/GalleryPage";
-import { GALLERY, reproduceCommand } from "@/features/gallery/gallery";
+import { GalleryFeatured } from "@/features/landing/components/GalleryFeatured";
+import { GalleryPage } from "@/features/landing/components/GalleryPage";
+import { GALLERY, reproduceCommand } from "@/features/landing/utils/gallery";
 
 let mockLocale: Locale = "en";
 jest.mock("@/core/context/LocaleContext", () => ({

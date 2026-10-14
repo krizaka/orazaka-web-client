@@ -6,12 +6,12 @@ import { cn } from "@krizaka/ui/cn";
 import { SectionBackdrop } from "@krizaka/ui/section-backdrop";
 import { useTranslation } from "@/core/context/LocaleContext";
 import { fill } from "@/core/context/fill";
-import { GALLERY, STYLES, gallerySrc, type GalleryStyle } from "@/features/gallery/gallery";
+import { GALLERY, STYLES, gallerySrc, type GalleryStyle } from "@/features/landing/utils/gallery";
 import { LandingFooter } from "@/features/landing/components/LandingFooter";
 import { LandingNav } from "@/features/landing/components/LandingNav";
-import { CopyButton } from "@/features/gallery/components/CopyButton";
-import { ItemFacts } from "@/features/gallery/components/ItemFacts";
-import { ReproduceBlock } from "@/features/gallery/components/ReproduceBlock";
+import { CopyButton } from "@/features/landing/components/CopyButton";
+import { ItemFacts } from "@/features/landing/components/ItemFacts";
+import { ReproduceBlock } from "@/features/landing/components/ReproduceBlock";
 import "@/features/landing/landing.css";
 
 const chip = "inline-flex min-h-11 items-center rounded-full border px-4 text-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring";

@@ -3,7 +3,7 @@
 import { useTranslation } from "@/core/context/LocaleContext";
 import { LandingNav } from "@/features/landing/components/LandingNav";
 import { LandingHero } from "@/features/landing/components/LandingHero";
-import { GalleryFeatured } from "@/features/gallery/components/GalleryFeatured";
+import { GalleryFeatured } from "@/features/landing/components/GalleryFeatured";
 import { LandingMobile } from "@/features/landing/components/LandingMobile";
 import { LandingSovereignty } from "@/features/landing/components/LandingSovereignty";
 import { LandingPlatform } from "@/features/landing/components/LandingPlatform";

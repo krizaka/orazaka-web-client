@@ -2,7 +2,7 @@
 
 import { useTranslation } from "@/core/context/LocaleContext";
 import { fill } from "@/core/context/fill";
-import { GALLERY_MODEL, type GalleryItem } from "@/features/gallery/gallery";
+import { GALLERY_MODEL, type GalleryItem } from "@/features/landing/utils/gallery";
 
 /** What the data records about an image — and nothing else: the Studio, the model, the seed, the size, the time on one Mac. */
 export function ItemFacts({ item }: Readonly<{ item: GalleryItem }>) {

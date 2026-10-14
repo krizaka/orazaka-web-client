@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
-import { GalleryPage } from "@/features/gallery/components/GalleryPage";
-import { STYLES, type GalleryStyle } from "@/features/gallery/gallery";
+import { GalleryPage } from "@/features/landing/components/GalleryPage";
+import { STYLES, type GalleryStyle } from "@/features/landing/utils/gallery";
 import { gallery } from "@/core/context/translations.gallery";
 
 export const metadata: Metadata = { title: gallery.en.meta, description: gallery.en.metaDescription };

@@ -8,12 +8,12 @@ import { Button, IconButton } from "@krizaka/ui/button";
 import { SectionBackdrop } from "@krizaka/ui/section-backdrop";
 import { useTranslation } from "@/core/context/LocaleContext";
 import { fill } from "@/core/context/fill";
-import { GALLERY, gallerySrc } from "@/features/gallery/gallery";
+import { GALLERY, gallerySrc } from "@/features/landing/utils/gallery";
 import { SectionHeading } from "@/features/landing/components/SectionHeading";
-import { CopyButton } from "@/features/gallery/components/CopyButton";
-import { ItemFacts } from "@/features/gallery/components/ItemFacts";
-import { ReproduceBlock } from "@/features/gallery/components/ReproduceBlock";
-import { TypedPrompt } from "@/features/gallery/components/TypedPrompt";
+import { CopyButton } from "@/features/landing/components/CopyButton";
+import { ItemFacts } from "@/features/landing/components/ItemFacts";
+import { ReproduceBlock } from "@/features/landing/components/ReproduceBlock";
+import { TypedPrompt } from "@/features/landing/components/TypedPrompt";
 
 /**
  * "Prompt → image", high on the home page: one large image with its exact prompt typed beside it, previous / next

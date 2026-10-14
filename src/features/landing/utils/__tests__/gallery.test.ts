@@ -1,6 +1,6 @@
 import { translations } from "@/core/context/translations";
 import { hasMedia } from "@/core/media/cdn";
-import { GALLERY, GALLERY_MODEL, STYLES, gallerySrc, reproduceCommand, subjectOf } from "@/features/gallery/gallery";
+import { GALLERY, GALLERY_MODEL, STYLES, gallerySrc, reproduceCommand, subjectOf } from "@/features/landing/utils/gallery";
 
 describe("the Made here gallery data", () => {
   it("records for every image its prompt, seed, model, size, time and Studio", () => {
