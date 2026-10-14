@@ -9,11 +9,11 @@
 import * as React from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { Suspense } from "react";
-import { Button, Icon } from "@krizaka/orazaka-design-system";
-import { Input } from "@krizaka/orazaka-design-system";
+import { Button } from "@krizaka/ui/button";
+import { Field, Input } from "@krizaka/ui/field";
+import { AuthScreen } from "@/features/auth/components/AuthScreen";
 import { useTranslation } from "@/core/context/LocaleContext";
 import { useVerifyEmail } from "@/features/auth/hooks/useVerifyEmail";
-import { Card } from "@krizaka/ui/card";
 import { AuthGate } from "@/features/auth/components/AuthGate";
 
 function VerifyPageContent() {
@@ -41,116 +41,35 @@ function VerifyPageContent() {
     }
   };
 
+  const heading = {
+    loading: { title: t.verify.loadingMessage, description: undefined },
+    success: { title: t.verify.successTitle, description: t.verify.successDescription },
+    error: { title: t.verify.errorTitle, description: errorMsg },
+    idle: { title: t.verify.idleTitle, description: t.verify.idleDescription },
+  }[status];
+
   return (
-    <div className="w-full max-w-md">
-      {status === "loading" && (
-        <Card.Root>
-          <Card.Body
-            padding="lg"
-            className="flex flex-col items-center justify-center pt-12 pb-12 space-y-4">
-            <Icon name="loader" className="w-12 h-12 animate-spin text-success" />
-            <p className="text-fg-secondary font-medium">
-              {t.verify.loadingMessage}
-            </p>
-          </Card.Body>
-        </Card.Root>
-      )}
+    <AuthScreen title={heading.title} description={heading.description}>
+      {status === "loading" && <Button type="button" variant="secondary" size="lg" shape="cut" loading disabled className="w-full">{t.verify.loadingMessage}</Button>}
 
       {status === "success" && (
-        <Card.Root className="border-success/25 bg-success/20 shadow-2xl backdrop-blur-xl">
-          <Card.Body padding="lg" className="gap-1.5 text-center">
-            <Icon name="checkCircle" className="w-12 h-12 text-success mx-auto mb-4" />
-            <Card.Title className="line-clamp-none group-hover:text-success text-2xl font-bold tracking-tight text-success">
-              {t.verify.successTitle}
-            </Card.Title>
-            <Card.Description className="line-clamp-none text-sm text-fg-secondary">
-              {t.verify.successDescription}
-            </Card.Description>
-          </Card.Body>
-          <Card.Footer className="px-6 pb-6 text-sm">
-            <Button
-              onClick={() => router.push("/login")}
-              className="w-full bg-success hover:bg-success text-on-accent flex items-center justify-center space-x-2"
-            >
-              <span>{t.verify.goToLogin}</span>
-              <Icon name="arrowRight" className="w-4 h-4" />
-            </Button>
-          </Card.Footer>
-        </Card.Root>
+        <Button type="button" variant="primary" size="lg" shape="cut" shimmer onClick={() => router.push("/login")} className="w-full">
+          {t.verify.goToLogin}
+        </Button>
       )}
 
-      {status === "error" && (
-        <Card.Root className="border-danger/25 bg-danger/20 shadow-2xl backdrop-blur-xl">
-          <Card.Body padding="lg" className="gap-1.5 text-center">
-            <Icon name="error" className="w-12 h-12 text-danger mx-auto mb-4" />
-            <Card.Title className="line-clamp-none group-hover:text-danger text-2xl font-bold tracking-tight text-danger">
-              {t.verify.errorTitle}
-            </Card.Title>
-            <Card.Description className="line-clamp-none text-sm text-fg-secondary">
-              {errorMsg}
-            </Card.Description>
-          </Card.Body>
-          <Card.Body padding="lg" className="block pt-0">
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div className="space-y-2">
-                <label className="text-sm font-medium text-fg-secondary">
-                  {t.verify.enterTokenManually}
-                </label>
-                <Input
-                  type="text"
-                  value={token}
-                  onChange={(e) => setToken(e.target.value)}
-                  placeholder={t.verify.tokenPlaceholder}
-                  className="w-full bg-surface-1/50 backdrop-blur-sm"
-                />
-              </div>
-              <Button
-                type="submit"
-                className="w-full bg-surface-2 text-fg hover:bg-surface-3"
-              >
-                {t.verify.retryVerification}
-              </Button>
-            </form>
-          </Card.Body>
-        </Card.Root>
+      {(status === "error" || status === "idle") && (
+        <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+          <Field.Root>
+            <Field.Label htmlFor="verify-token">{status === "error" ? t.verify.enterTokenManually : t.verify.tokenLabel}</Field.Label>
+            <Input id="verify-token" type="text" value={token} onChange={(e) => setToken(e.target.value)} placeholder={t.verify.tokenPlaceholder} autoComplete="one-time-code" required invalid={status === "error"} />
+          </Field.Root>
+          <Button type="submit" variant="primary" size="lg" shape="cut" shimmer className="w-full">
+            {status === "error" ? t.verify.retryVerification : t.verify.activateAccount}
+          </Button>
+        </form>
       )}
-
-      {status === "idle" && (
-        <Card.Root>
-          <Card.Body padding="lg" className="gap-1.5 text-center">
-            <Card.Title className="line-clamp-none group-hover:text-fg text-2xl font-bold tracking-tight text-fg">
-              {t.verify.idleTitle}
-            </Card.Title>
-            <Card.Description className="line-clamp-none text-sm text-fg-secondary">
-              {t.verify.idleDescription}
-            </Card.Description>
-          </Card.Body>
-          <Card.Body padding="lg" className="block pt-0">
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div className="space-y-2">
-                <label className="text-sm font-medium text-fg-secondary">
-                  {t.verify.tokenLabel}
-                </label>
-                <Input
-                  type="text"
-                  value={token}
-                  onChange={(e) => setToken(e.target.value)}
-                  placeholder={t.verify.tokenPlaceholder}
-                  className="w-full bg-surface-1/50 backdrop-blur-sm"
-                  required
-                />
-              </div>
-              <Button
-                type="submit"
-                className="w-full bg-success hover:bg-success text-on-accent"
-              >
-                {t.verify.activateAccount}
-              </Button>
-            </form>
-          </Card.Body>
-        </Card.Root>
-      )}
-    </div>
+    </AuthScreen>
   );
 }
 
@@ -161,16 +80,8 @@ function VerifyPageContent() {
  */
 function VerifyPageSuspended() {
   return (
-    <Suspense
-      fallback={
-        <div className="flex min-h-screen items-center justify-center bg-surface-0">
-          <Icon name="loader" className="w-8 h-8 animate-spin text-success" />
-        </div>
-      }
-    >
-      <main className="flex min-h-screen flex-col items-center justify-center p-6 bg-gradient-to-tr from-surface-0 via-surface-1 to-surface-0 transition-colors duration-300">
-        <VerifyPageContent />
-      </main>
+    <Suspense fallback={null}>
+      <VerifyPageContent />
     </Suspense>
   );
 }

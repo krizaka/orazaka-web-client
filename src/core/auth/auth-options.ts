@@ -13,6 +13,14 @@ import type { NextAuthOptions } from "next-auth";
 import GithubProvider from "next-auth/providers/github";
 import GoogleProvider from "next-auth/providers/google";
 import CredentialsProvider from "next-auth/providers/credentials";
+import { githubConfigured, googleConfigured, providerOffered, parseFlag } from "@/core/config/auth-flags";
+
+const signup = parseFlag(process.env.AUTH_SIGNUP_ENABLED);
+/** OAuth providers exist only when configured and when this site accepts new accounts (the gateway provisions on first sign-in). */
+const oauthProviders = [
+  ...(providerOffered(githubConfigured(process.env), signup) ? [GithubProvider({ clientId: process.env.GITHUB_ID as string, clientSecret: process.env.GITHUB_SECRET as string })] : []),
+  ...(providerOffered(googleConfigured(process.env), signup) ? [GoogleProvider({ clientId: process.env.GOOGLE_CLIENT_ID as string, clientSecret: process.env.GOOGLE_CLIENT_SECRET as string })] : []),
+];
 
 /**
  * NextAuth options defining authentication providers, custom callbacks, pages routing,
@@ -20,14 +28,7 @@ import CredentialsProvider from "next-auth/providers/credentials";
  */
 export const authOptions: NextAuthOptions = {
   providers: [
-    GithubProvider({
-      clientId: process.env.GITHUB_ID || "",
-      clientSecret: process.env.GITHUB_SECRET || "",
-    }),
-    GoogleProvider({
-      clientId: process.env.GOOGLE_CLIENT_ID || "",
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET || "",
-    }),
+    ...oauthProviders,
     CredentialsProvider({
       name: "Gateway",
       credentials: {

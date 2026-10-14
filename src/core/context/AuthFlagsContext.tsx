@@ -3,7 +3,7 @@
 import { createContext, useContext, type ReactNode } from "react";
 import type { AuthFlags } from "@/core/config/auth-flags";
 
-const CLOSED: AuthFlags = { login: false, signup: false };
+const CLOSED: AuthFlags = { login: false, signup: false, github: false, google: false };
 const AuthFlagsContext = createContext<AuthFlags>(CLOSED);
 
 /** Hands the server-read flags (AUTH_LOGIN_ENABLED, AUTH_SIGNUP_ENABLED) to the client tree. */

@@ -14,7 +14,7 @@ const Form = jest.fn(() => <p>the form</p>);
 function renderGate(flag: "login" | "signup", flags: { login: boolean; signup: boolean }, locale: Locale = "en") {
   mockLocale = locale;
   return render(
-    <AuthFlagsProvider flags={flags}>
+    <AuthFlagsProvider flags={{ ...flags, github: false, google: false }}>
       <AuthGate flag={flag}>
         <Form />
       </AuthGate>

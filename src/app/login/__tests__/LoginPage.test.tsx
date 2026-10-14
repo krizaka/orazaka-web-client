@@ -4,8 +4,12 @@ import { render, screen, fireEvent } from "@testing-library/react";
 import type { ReactNode } from "react";
 import LoginPage from "@/app/login/page";
 import { AuthFlagsProvider } from "@/core/context/AuthFlagsContext";
+import type { AuthFlags } from "@/core/config/auth-flags";
 
-const open = (ui: ReactNode) => <AuthFlagsProvider flags={{ login: true, signup: true }}>{ui}</AuthFlagsProvider>;
+const withFlags = (flags: Partial<AuthFlags>) => (ui: ReactNode) => (
+  <AuthFlagsProvider flags={{ login: true, signup: true, github: true, google: true, ...flags }}>{ui}</AuthFlagsProvider>
+);
+const open = withFlags({});
 
 const mockPush = jest.fn();
 const mockLoginWithGithub = jest.fn();
@@ -35,7 +39,7 @@ jest.mock("@/core/hooks/useAuth", () => ({ useAuth: () => mockUseAuth() }));
 jest.mock("@/core/context/LocaleContext", () => ({
   useTranslation: () => ({
     t: {
-      landing: { closed: jest.requireActual("@/core/context/translations.landing").landing.en.closed },
+      landing: { closed: jest.requireActual("@/core/context/translations.landing").landing.en.closed, footer: { license: "Apache-2.0", by: "A Krizaka product" } },
       a11y: jest.requireActual("@/core/context/translations.automation").a11y.en,
       auth: {
         loginTitle: "Welcome Back",
@@ -50,31 +54,21 @@ jest.mock("@/core/context/LocaleContext", () => ({
         forgotPasswordLink: "Forgot password?",
         invalidCredentials: "Invalid credentials",
         unexpectedError: "Unexpected error",
+        heroHeadline: "Own your intelligence.",
+        heroTagline: "Runs on your own hardware.",
+        heroFeature1: "Absolute privacy — data",
+        heroFeature2: "Unified engine — one runtime",
+        heroFeature3: "Infinite reach — MCP",
+        legalPrivacy: "Privacy",
+        legalTerms: "Terms",
+        legalContact: "Contact",
+        langSwitchLabel: "Language",
       },
     },
     locale: "en",
+    setLocale: jest.fn(),
   }),
 }));
-
-jest.mock("@/features/auth/components/AuthLayout", () => ({
-  AuthLayout: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
-}));
-
-jest.mock("@krizaka/orazaka-design-system", () => ({
-  ...jest.requireActual("@krizaka/orazaka-design-system"),
-  Card: ({ children, ...props }: { children: React.ReactNode }) => <div {...props}>{children}</div>,
-  CardContent: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
-  CardDescription: ({ children }: { children: React.ReactNode }) => <p>{children}</p>,
-  CardFooter: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
-  CardHeader: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
-  CardTitle: ({ children }: { children: React.ReactNode }) => <h2>{children}</h2>,
-  Input: (props: React.InputHTMLAttributes<HTMLInputElement>) => <input {...props} />,
-  Button: ({ children, ...props }: { children: React.ReactNode } & React.ButtonHTMLAttributes<HTMLButtonElement>) => (
-    <button {...props}>{children}</button>
-  ),
-}));
-
-
 
 describe("LoginPage", () => {
   afterEach(() => jest.clearAllMocks());
@@ -100,6 +94,29 @@ describe("LoginPage", () => {
     render(open(<LoginPage />));
     expect(screen.getByText("GitHub")).toBeInTheDocument();
     expect(screen.getByText("Google")).toBeInTheDocument();
+  });
+
+  it("hides the Register way and the OAuth buttons while sign-up is closed", () => {
+    render(withFlags({ signup: false, github: false, google: false })(<LoginPage />));
+    expect(screen.queryByText("Register")).not.toBeInTheDocument();
+    expect(screen.queryByText("GitHub")).not.toBeInTheDocument();
+    expect(screen.queryByText("Google")).not.toBeInTheDocument();
+    expect(screen.queryByText("or continue with")).not.toBeInTheDocument();
+    expect(screen.getByLabelText("Email")).toBeInTheDocument();
+  });
+
+  it("shows only the providers that are offered", () => {
+    render(withFlags({ google: false })(<LoginPage />));
+    expect(screen.getByText("GitHub")).toBeInTheDocument();
+    expect(screen.queryByText("Google")).not.toBeInTheDocument();
+  });
+
+  it("is built on the entry template with the animated Orazaka mark in its brand panel", () => {
+    const { container } = render(open(<LoginPage />));
+    expect(container.querySelector(".brand-orazaka")).toBeInTheDocument();
+    expect(screen.getByText("Own your intelligence.")).toBeInTheDocument();
+    expect(container.querySelector("main")).toBeInTheDocument();
+    expect(container.querySelector("[class*=login-]")).toBeNull();
   });
 
   it("renders register link", () => {
@@ -167,13 +184,12 @@ describe("LoginPage while sign-in is closed (the default)", () => {
     expect(screen.getByLabelText("Email")).toBeDisabled();
     expect(screen.getByLabelText("Password")).toBeDisabled();
     expect(screen.getByRole("button", { name: "Sign In" })).toBeDisabled();
-    expect(screen.getByRole("button", { name: "GitHub" })).toBeDisabled();
-    expect(screen.getByRole("button", { name: "Google" })).toBeDisabled();
+    expect(screen.queryByRole("button", { name: "GitHub" })).not.toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "Google" })).not.toBeInTheDocument();
   });
 
   it("makes no backend call: no session hook, no sign-in, no fetch", () => {
     render(<LoginPage />);
-    fireEvent.click(screen.getByRole("button", { name: "GitHub" }));
     fireEvent.submit(document.getElementById("form-login") as HTMLFormElement);
     expect(mockUseAuth).not.toHaveBeenCalled();
     expect(mockLoginWithGithub).not.toHaveBeenCalled();

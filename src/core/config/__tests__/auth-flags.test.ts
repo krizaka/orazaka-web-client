@@ -1,15 +1,25 @@
-import { authClosed, isBackendPath, parseFlag, readAuthFlags } from "@/core/config/auth-flags";
+import { githubConfigured, googleConfigured, providerOffered, authClosed, isBackendPath, parseFlag, readAuthFlags } from "@/core/config/auth-flags";
 
 describe("auth flags", () => {
   it("are off by default", () => {
-    expect(readAuthFlags({})).toEqual({ login: false, signup: false });
+    expect(readAuthFlags({})).toMatchObject({ login: false, signup: false });
     expect(authClosed(readAuthFlags({}))).toBe(true);
   });
 
   it("read AUTH_LOGIN_ENABLED and AUTH_SIGNUP_ENABLED independently", () => {
-    expect(readAuthFlags({ AUTH_LOGIN_ENABLED: "true" })).toEqual({ login: true, signup: false });
-    expect(readAuthFlags({ AUTH_SIGNUP_ENABLED: "1" })).toEqual({ login: false, signup: true });
+    expect(readAuthFlags({ AUTH_LOGIN_ENABLED: "true" })).toMatchObject({ login: true, signup: false });
+    expect(readAuthFlags({ AUTH_SIGNUP_ENABLED: "1" })).toMatchObject({ login: false, signup: true });
     expect(authClosed(readAuthFlags({ AUTH_LOGIN_ENABLED: "true" }))).toBe(false);
+  });
+
+  it("offer an OAuth provider only when it is configured AND sign-up is open (the gateway provisions on first sign-in)", () => {
+    const env = { AUTH_LOGIN_ENABLED: "true", GITHUB_ID: "id", GITHUB_SECRET: "secret", GOOGLE_CLIENT_ID: "id" };
+    expect(readAuthFlags({ ...env, AUTH_SIGNUP_ENABLED: "true" })).toMatchObject({ github: true, google: false });
+    expect(readAuthFlags(env)).toMatchObject({ github: false, google: false });
+    expect(readAuthFlags({ GITHUB_ID: "id", GITHUB_SECRET: "s", AUTH_SIGNUP_ENABLED: "true" })).toMatchObject({ github: false });
+    expect(githubConfigured({ GITHUB_ID: "id" })).toBe(false);
+    expect(googleConfigured({ GOOGLE_CLIENT_ID: "a", GOOGLE_CLIENT_SECRET: " " })).toBe(false);
+    expect(providerOffered(true, false)).toBe(false);
   });
 
   it("only accept explicit truthy words", () => {

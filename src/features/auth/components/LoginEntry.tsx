@@ -4,6 +4,7 @@ import * as React from "react";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { Alert } from "@krizaka/ui/alert";
 import { useAuthFlags } from "@/core/context/AuthFlagsContext";
 import { useTranslation } from "@/core/context/LocaleContext";
 import { useAuth } from "@/core/hooks/useAuth";
@@ -16,17 +17,12 @@ export function LoginForm() {
   const { t } = useTranslation();
   const [error, setError] = React.useState("");
   const [isLoading, setIsLoading] = React.useState(false);
-  const [shakeError, setShakeError] = React.useState(false);
 
   React.useEffect(() => {
     if (isAuthenticated) router.push("/");
   }, [isAuthenticated, router]);
 
-  const fail = (message: string) => {
-    setError(message);
-    setShakeError(true);
-    setTimeout(() => setShakeError(false), 500);
-  };
+  const fail = (message: string) => setError(message);
 
   const handleLogin = async (email: string, password: string) => {
     setIsLoading(true);
@@ -42,7 +38,7 @@ export function LoginForm() {
     }
   };
 
-  return <LoginCard error={error} shakeError={shakeError} isLoading={isLoading} onSubmit={handleLogin} onGithub={loginWithGithub} onGoogle={loginWithGoogle} />;
+  return <LoginCard error={error} isLoading={isLoading} onSubmit={handleLogin} onGithub={loginWithGithub} onGoogle={loginWithGoogle} />;
 }
 
 /**
@@ -56,12 +52,12 @@ export function LoginPreview() {
     <LoginCard
       preview
       notice={
-        <div role="status" className="flex flex-col gap-2 rounded-lg border border-border-default bg-surface-2/70 px-3 py-3 text-sm text-fg-secondary">
-          <p>{c.signInBanner}</p>
-          <Link href="/#demo" className="font-medium text-fg underline underline-offset-2 hover:text-accent">
+        <Alert tone="info" role="status">
+          {c.signInBanner}{" "}
+          <Link href="/#demo" className="font-medium underline underline-offset-4">
             {c.heroSecondary}
           </Link>
-        </div>
+        </Alert>
       }
     />
   );
