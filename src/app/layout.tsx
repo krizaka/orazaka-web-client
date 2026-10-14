@@ -83,6 +83,10 @@ export default function RootLayout({
       <head>
         {/* The organisation's theme mechanism: applies the persisted mode and named theme before the first paint. */}
         <ThemeScript />
+        {/* Without JavaScript nothing rises into view: no [data-reveal] block may stay invisible. */}
+        <noscript>
+          <style>{"[data-reveal]{opacity:1!important;transform:none!important;filter:none!important}"}</style>
+        </noscript>
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(siteJsonLd()).replace(/</g, "\\u003c") }} />
       </head>
       <body
