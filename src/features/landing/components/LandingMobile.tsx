@@ -20,7 +20,7 @@ export function LandingMobile() {
     <SectionBackdrop id="mobile" className="border-t border-border-subtle">
       <article className="mx-auto max-w-6xl space-y-12 px-4 py-20 sm:px-5 lg:py-28">
         <SectionHeading eyebrow={m.eyebrow} title={m.title} lead={m.lead} />
-        <ul className="-mx-4 flex snap-x snap-mandatory gap-5 overflow-x-auto px-4 pb-2 sm:mx-0 sm:px-0 lg:grid lg:grid-cols-4 lg:overflow-visible">
+        <ul tabIndex={0} aria-label={m.clipsTitle} className="-mx-4 flex snap-x snap-mandatory gap-5 overflow-x-auto px-4 pb-2 sm:mx-0 sm:px-0 lg:grid lg:grid-cols-4 lg:overflow-visible focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent">
           {CLIPS.map((id) => (
             <li key={id} data-reveal className="w-[70vw] max-w-[15rem] shrink-0 snap-center sm:w-[15rem] lg:w-auto lg:max-w-none">
               <PhoneClip id={id} label={m.clips[id].label} caption={m.clips[id].caption} />
