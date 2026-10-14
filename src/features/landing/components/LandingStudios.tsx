@@ -27,7 +27,7 @@ export function LandingStudios() {
       id="studios"
       direction="up"
       dome={false}
-      media={<ProductCapture name="packs" className="h-full w-full object-cover object-top" />}
+      media={<ProductCapture name="studios" className="h-full w-full object-cover object-top" />}
       className="scroll-mt-16"
     >
       <article className="mx-auto max-w-6xl space-y-12 px-4 py-20 sm:px-5 lg:py-28">
