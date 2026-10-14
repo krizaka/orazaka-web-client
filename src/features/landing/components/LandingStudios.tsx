@@ -3,6 +3,8 @@
 import type { ComponentType } from "react";
 import Link from "next/link";
 import { ForwardIcon, ImageIcon, KnowledgeIcon, SearchIcon, VideoIcon, type IconProps } from "@krizaka/icons";
+import { CardGrid } from "@krizaka/ui/card-grid";
+import { LinkCard } from "@krizaka/ui/link-card";
 import { Button } from "@krizaka/ui/button";
 import { SectionBackdrop } from "@krizaka/ui/section-backdrop";
 import { useTranslation } from "@/core/context/LocaleContext";
@@ -12,6 +14,9 @@ import { SectionHeading } from "@/features/landing/components/SectionHeading";
 
 /** Icons of the studio examples, in the order of the copy. */
 const ICONS: ComponentType<IconProps>[] = [KnowledgeIcon, VideoIcon, SearchIcon, ImageIcon];
+
+/** The real place behind each example: the demo, the "Made here" gallery, the packs' documentation. */
+const HREFS = ["/#demo", "/gallery", "/docs/packs", "/docs/packs"] as const;
 
 /**
  * The Studios — ready-made workflows that turn the engine into business results — over the real catalogue,
@@ -32,22 +37,25 @@ export function LandingStudios() {
     >
       <article className="mx-auto max-w-6xl space-y-12 px-4 py-20 sm:px-5 lg:py-28">
         <SectionHeading eyebrow={st.eyebrow} title={st.title} lead={st.lead} />
-        <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <CardGrid columns={4} reveal>
           {st.items.map((item, i) => {
             const Icon = ICONS[i];
             return (
-              <li
+              <LinkCard
                 key={item.title}
-                data-reveal
-                className="kz-spotlight kz-lift flex flex-col gap-3 rounded-2xl border border-border-default bg-surface-1/85 p-6 backdrop-blur-md"
-              >
-                <Icon size={24} className="relative text-fg-accent" nodeColor="var(--kz-accent)" />
-                <h3 className="relative font-semibold text-fg">{item.title}</h3>
-                <p className="relative text-sm leading-relaxed text-fg-secondary">{item.body}</p>
-              </li>
+                href={HREFS[i]}
+                linkAs={Link}
+                layout="stack"
+                footerAlign="bottom"
+                icon={<Icon size={24} nodeColor="var(--kz-accent)" />}
+                title={item.title}
+                titleAs="h3"
+                description={item.body}
+                cta={st.ctas[i]}
+              />
             );
           })}
-        </ul>
+        </CardGrid>
         <Button asChild variant="secondary" size="lg" shape="pill">
           <Link href={primary.href}>
             {primary.label}

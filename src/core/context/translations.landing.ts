@@ -92,6 +92,7 @@ export const landing: Record<Locale, LandingDictionary> = {
         { title: "Automation", body: "Connect your business tools and let approved jobs run on their own." },
         { title: "Packs", body: "Add a trade's Studios in one click — installed, priced and governed." },
       ],
+      ctas: ["See it run", "Read the guide", "How it is built", "Explore the Studios", "How jobs run", "Browse the packs"],
       captureAlt: "The Studios catalogue of the Orazaka workspace",
     },
     compare: {
@@ -145,6 +146,7 @@ export const landing: Record<Locale, LandingDictionary> = {
         { title: "Prospecting", body: "Research accounts and draft outreach from your own data." },
         { title: "Trades showcase", body: "Turn job-site photos into a portfolio that sells." },
       ],
+      ctas: ["Watch it run", "See what was made", "Browse the packs", "Browse the packs"],
       cta: "Explore the Studios",
     },
     cta: {
@@ -166,6 +168,7 @@ export const landing: Record<Locale, LandingDictionary> = {
       lead: "A pack brings the Studios of a trade — each one a governed sequence of steps with its price in credits. Install one, run it on your own hardware.",
       studios: "{count} Studios",
       more: "All the packs are described in the documentation.",
+      cta: "Read about this pack",
     },
     closed: {
       title: "Orazaka is in development — sign-in is closed on this site",
@@ -271,6 +274,7 @@ export const landing: Record<Locale, LandingDictionary> = {
         { title: "Automatisation", body: "Branchez vos outils métier et laissez tourner les tâches approuvées." },
         { title: "Packs", body: "Ajoutez les Studios d'un métier en un clic — installés, tarifés et gouvernés." },
       ],
+      ctas: ["Le voir tourner", "Lire le guide", "Comment c'est construit", "Explorer les Studios", "Comment les tâches tournent", "Parcourir les packs"],
       captureAlt: "Le catalogue des Studios de l’espace Orazaka",
     },
     compare: {
@@ -324,6 +328,7 @@ export const landing: Record<Locale, LandingDictionary> = {
         { title: "Prospection", body: "Analysez des comptes et rédigez vos approches à partir de vos données." },
         { title: "Vitrine artisan", body: "Vos photos de chantier deviennent une vitrine qui vend." },
       ],
+      ctas: ["Le voir tourner", "Voir ce qui a été créé", "Parcourir les packs", "Parcourir les packs"],
       cta: "Découvrir les Studios",
     },
     cta: {
@@ -345,6 +350,7 @@ export const landing: Record<Locale, LandingDictionary> = {
       lead: "Un pack apporte les Studios d'un métier — chacun une suite d'étapes gouvernée, avec son prix en crédits. Installez-en un, lancez-le sur votre propre matériel.",
       studios: "{count} Studios",
       more: "Tous les packs sont décrits dans la documentation.",
+      cta: "Lire sur ce pack",
     },
     closed: {
       title: "Orazaka est en développement — la connexion est fermée sur ce site",

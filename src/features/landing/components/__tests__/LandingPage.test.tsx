@@ -136,6 +136,25 @@ describe("LandingPage while sign-in and sign-up are closed (the default)", () =>
     expect(within(hero).getByRole("link", { name: translations.en.landing.nav.signIn })).toHaveAttribute("href", "/login");
   });
 
+  it("makes every capability, Studio and pack card one link to a real place", () => {
+    renderLanding("en", <LandingPage />, CLOSED);
+    const en = translations.en.landing;
+    const platform = document.getElementById("platform")!;
+    const wanted = ["/#demo", "/docs/tools", "/docs/architecture", "/#studios", "/docs/jobs", "/docs/packs"];
+    en.platform.items.forEach((item, i) => {
+      const link = within(platform).getByRole("link", { name: new RegExp(`^${item.title}`) });
+      expect(link).toHaveAttribute("href", wanted[i]);
+      expect(link).toHaveTextContent(en.platform.ctas[i]);
+    });
+    const studios = document.getElementById("studios")!;
+    en.studios.items.forEach((item, i) => {
+      expect(within(studios).getByRole("link", { name: new RegExp(`^${item.title}`) })).toHaveTextContent(en.studios.ctas[i]);
+    });
+    expect(within(studios).getAllByRole("link").map((a) => a.getAttribute("href"))).toEqual(expect.arrayContaining(["/#demo", "/gallery", "/docs/packs"]));
+    // no card of the home is a dead end: not a bare <li> without a link
+    expect(platform.querySelectorAll("li").length).toBe(0);
+  });
+
   it("offers the documentation and the demo too", () => {
     renderLanding("en", <LandingPage />, CLOSED);
     expect(screen.getAllByRole("link", { name: translations.en.landing.closed.heroPrimary })[0]).toHaveAttribute("href", "/docs");
@@ -145,7 +164,7 @@ describe("LandingPage while sign-in and sign-up are closed (the default)", () =>
   it("shows the recordings and the packs, and the Krizaka signature with the version", () => {
     renderLanding("en", <LandingPage />, CLOSED);
     expect(document.getElementById("demo")!.querySelectorAll("video").length).toBeGreaterThan(0);
-    expect(document.getElementById("packs")!.querySelectorAll("li").length).toBeGreaterThan(0);
+    expect(document.getElementById("packs")!.querySelectorAll("a[href='/docs/packs']").length).toBeGreaterThan(0);
     const footer = screen.getByTestId("app-version");
     expect(footer).toHaveTextContent("A Krizaka product");
     expect(footer).toHaveTextContent(/v\S+/);
