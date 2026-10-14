@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter, JetBrains_Mono, Outfit } from "next/font/google";
 import "./globals.css";
+import "@krizaka/ui/blocks.css";
 import { readAuthFlags } from "@/core/config/auth-flags";
 import { Providers } from "@/core/providers/Providers";
 import { ThemeScript } from "@krizaka/ui/theme";

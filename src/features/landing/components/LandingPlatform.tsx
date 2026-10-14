@@ -2,6 +2,9 @@
 
 import type { ComponentType } from "react";
 import { AgentIcon, AutomationIcon, ChatIcon, KnowledgeIcon, PackIcon, StudioIcon, type IconProps } from "@krizaka/icons";
+import Link from "next/link";
+import { CardGrid } from "@krizaka/ui/card-grid";
+import { LinkCard } from "@krizaka/ui/link-card";
 import { SectionBackdrop } from "@krizaka/ui/section-backdrop";
 import { useTranslation } from "@/core/context/LocaleContext";
 import { ProductCapture } from "@/features/landing/components/ProductCapture";
@@ -9,6 +12,9 @@ import { SectionHeading } from "@/features/landing/components/SectionHeading";
 
 /** Icons of the six capabilities, in the order of the copy. */
 const ICONS: ComponentType<IconProps>[] = [ChatIcon, AgentIcon, KnowledgeIcon, StudioIcon, AutomationIcon, PackIcon];
+
+/** Where each capability leads: the demo chapter, a guide, the Studios, the packs — always a real place. */
+const HREFS = ["/#demo", "/docs/tools", "/docs/architecture", "/#studios", "/docs/jobs", "/docs/packs"] as const;
 
 /**
  * The platform: the real workspace in a window (sharp at the top, fading into the page — depth of field), then the
@@ -35,24 +41,25 @@ export function LandingPlatform() {
           </section>
         </figure>
 
-        <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <CardGrid columns={3} reveal>
           {p.items.map((item, i) => {
             const Icon = ICONS[i];
             return (
-              <li
+              <LinkCard
                 key={item.title}
-                data-reveal
-                className="kz-spotlight kz-lift flex flex-col gap-3 rounded-2xl border border-border-subtle bg-surface-1/80 p-6 backdrop-blur-sm"
-              >
-                <span className="relative grid h-11 w-11 place-items-center rounded-xl border border-accent/25 bg-accent-soft text-fg-accent">
-                  <Icon size={22} nodeColor="var(--kz-accent)" />
-                </span>
-                <h3 className="relative text-lg font-semibold text-fg">{item.title}</h3>
-                <p className="relative text-sm leading-relaxed text-fg-secondary">{item.body}</p>
-              </li>
+                href={HREFS[i]}
+                linkAs={Link}
+                layout="stack"
+                footerAlign="bottom"
+                icon={<Icon size={22} nodeColor="var(--kz-accent)" />}
+                title={item.title}
+                titleAs="h3"
+                description={item.body}
+                cta={p.ctas[i]}
+              />
             );
           })}
-        </ul>
+        </CardGrid>
       </article>
     </SectionBackdrop>
   );
