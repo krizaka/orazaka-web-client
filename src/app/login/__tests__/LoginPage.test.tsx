@@ -1,7 +1,11 @@
 /* eslint-disable react/display-name */
 import "@testing-library/jest-dom";
 import { render, screen, fireEvent } from "@testing-library/react";
+import type { ReactNode } from "react";
 import LoginPage from "@/app/login/page";
+import { AuthFlagsProvider } from "@/core/context/AuthFlagsContext";
+
+const open = (ui: ReactNode) => <AuthFlagsProvider flags={{ login: true, signup: true }}>{ui}</AuthFlagsProvider>;
 
 const mockPush = jest.fn();
 const mockLoginWithGithub = jest.fn();
@@ -32,6 +36,7 @@ jest.mock("@/core/hooks/useAuth", () => ({
 jest.mock("@/core/context/LocaleContext", () => ({
   useTranslation: () => ({
     t: {
+      landing: { closed: jest.requireActual("@/core/context/translations.landing").landing.en.closed },
       a11y: jest.requireActual("@/core/context/translations.automation").a11y.en,
       auth: {
         loginTitle: "Welcome Back",
@@ -76,67 +81,76 @@ describe("LoginPage", () => {
   afterEach(() => jest.clearAllMocks());
 
   it("renders title and subtitle", () => {
-    render(<LoginPage />);
+    render(open(<LoginPage />));
     expect(screen.getByText("Welcome Back")).toBeInTheDocument();
     expect(screen.getByText("Sign in to your account")).toBeInTheDocument();
   });
 
   it("renders email and password fields", () => {
-    render(<LoginPage />);
+    render(open(<LoginPage />));
     expect(screen.getByLabelText("Email")).toBeInTheDocument();
     expect(screen.getByLabelText("Password")).toBeInTheDocument();
   });
 
   it("renders sign in button", () => {
-    render(<LoginPage />);
+    render(open(<LoginPage />));
     expect(screen.getByText("Sign In")).toBeInTheDocument();
   });
 
   it("renders OAuth buttons", () => {
-    render(<LoginPage />);
+    render(open(<LoginPage />));
     expect(screen.getByText("GitHub")).toBeInTheDocument();
     expect(screen.getByText("Google")).toBeInTheDocument();
   });
 
   it("renders register link", () => {
-    render(<LoginPage />);
+    render(open(<LoginPage />));
     expect(screen.getByText("Register")).toBeInTheDocument();
     expect(screen.getByText("Register").closest("a")).toHaveAttribute("href", "/register");
   });
 
   it("renders forgot password link", () => {
-    render(<LoginPage />);
+    render(open(<LoginPage />));
     expect(screen.getByText("Forgot password?")).toBeInTheDocument();
   });
 
   it("renders divider text", () => {
-    render(<LoginPage />);
+    render(open(<LoginPage />));
     expect(screen.getByText("or continue with")).toBeInTheDocument();
   });
 
   it("calls loginWithGithub", () => {
-    render(<LoginPage />);
+    render(open(<LoginPage />));
     fireEvent.click(screen.getByText("GitHub"));
     expect(mockLoginWithGithub).toHaveBeenCalled();
   });
 
   it("calls loginWithGoogle", () => {
-    render(<LoginPage />);
+    render(open(<LoginPage />));
     fireEvent.click(screen.getByText("Google"));
     expect(mockLoginWithGoogle).toHaveBeenCalled();
   });
 
   it("allows email input", () => {
-    render(<LoginPage />);
+    render(open(<LoginPage />));
     const emailInput = screen.getByLabelText("Email") as HTMLInputElement;
     fireEvent.change(emailInput, { target: { value: "test@orazaka.com" } });
     expect(emailInput.value).toBe("test@orazaka.com");
   });
 
   it("allows password input", () => {
-    render(<LoginPage />);
+    render(open(<LoginPage />));
     const passInput = screen.getByLabelText("Password") as HTMLInputElement;
     fireEvent.change(passInput, { target: { value: "secret123" } });
     expect(passInput.value).toBe("secret123");
+  });
+});
+
+describe("LoginPage while sign-in is closed (the default)", () => {
+  it("shows the closed notice and no credentials form", () => {
+    render(<LoginPage />);
+    expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent("sign-in is closed on this site");
+    expect(screen.queryByLabelText("Email")).toBeNull();
+    expect(screen.queryByRole("button", { name: /sign in/i })).toBeNull();
   });
 });

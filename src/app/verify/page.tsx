@@ -14,6 +14,7 @@ import { Input } from "@krizaka/orazaka-design-system";
 import { useTranslation } from "@/core/context/LocaleContext";
 import { useVerifyEmail } from "@/features/auth/hooks/useVerifyEmail";
 import { Card } from "@krizaka/ui/card";
+import { AuthGate } from "@/features/auth/components/AuthGate";
 
 function VerifyPageContent() {
   const searchParams = useSearchParams();
@@ -158,7 +159,7 @@ function VerifyPageContent() {
  *
  * @returns The Suspense wrapped account verification page.
  */
-export default function VerifyPage() {
+function VerifyPageSuspended() {
   return (
     <Suspense
       fallback={
@@ -171,5 +172,14 @@ export default function VerifyPage() {
         <VerifyPageContent />
       </main>
     </Suspense>
+  );
+}
+
+/** The page is closed behind AUTH_LOGIN_ENABLED (default false): a calm notice, nothing mounts, no backend call. */
+export default function VerifyPage() {
+  return (
+    <AuthGate flag="login">
+      <VerifyPageSuspended />
+    </AuthGate>
   );
 }

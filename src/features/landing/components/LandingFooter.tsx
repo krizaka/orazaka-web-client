@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { KrizakaLogo, OrazakaLogo } from "@krizaka/ui";
 import { useTranslation } from "@/core/context/LocaleContext";
+import { APP_VERSION } from "@/core/config/version";
 import { FEATURE_IDS } from "@/features/landing/components/features";
 
 /** The footer of the public pages: the mark and its promise, the feature pages, the legal pages, the Krizaka signature. */
@@ -30,6 +31,11 @@ export function LandingFooter() {
                 </Link>
               </li>
             ))}
+            <li>
+              <Link href="/docs" className="text-fg-secondary transition-colors hover:text-fg">
+                {f.docs}
+              </Link>
+            </li>
           </ul>
         </nav>
         <nav aria-label={f.legal} className="space-y-3">
@@ -48,6 +54,9 @@ export function LandingFooter() {
             {f.by}
           </a>
           <span>{f.license}</span>
+          <span className="ml-auto font-mono text-xs" data-testid="app-version">
+            {f.version} {APP_VERSION}
+          </span>
         </p>
       </section>
     </footer>

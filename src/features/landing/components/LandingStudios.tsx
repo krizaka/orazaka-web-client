@@ -6,6 +6,7 @@ import { ForwardIcon, ImageIcon, KnowledgeIcon, SearchIcon, VideoIcon, type Icon
 import { Button } from "@krizaka/ui/button";
 import { SectionBackdrop } from "@krizaka/ui/section-backdrop";
 import { useTranslation } from "@/core/context/LocaleContext";
+import { useEntries } from "@/features/landing/components/useEntries";
 import { ProductCapture } from "@/features/landing/components/ProductCapture";
 import { SectionHeading } from "@/features/landing/components/SectionHeading";
 
@@ -19,6 +20,7 @@ const ICONS: ComponentType<IconProps>[] = [KnowledgeIcon, VideoIcon, SearchIcon,
 export function LandingStudios() {
   const { t } = useTranslation();
   const st = t.landing.studios;
+  const primary = useEntries().primary(st.cta);
 
   return (
     <SectionBackdrop
@@ -47,8 +49,8 @@ export function LandingStudios() {
           })}
         </ul>
         <Button asChild variant="secondary" size="lg" shape="pill">
-          <Link href="/register">
-            {st.cta}
+          <Link href={primary.href}>
+            {primary.label}
             <ForwardIcon size={18} />
           </Link>
         </Button>

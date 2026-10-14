@@ -6,6 +6,7 @@ import { Button } from "@krizaka/ui/button";
 import { SectionBackdrop } from "@krizaka/ui/section-backdrop";
 import { useTranslation } from "@/core/context/LocaleContext";
 import { IsoScene } from "@/features/landing/iso/IsoScene";
+import { useEntries } from "@/features/landing/components/useEntries";
 import { LandingNav } from "@/features/landing/components/LandingNav";
 import { LandingClosing } from "@/features/landing/components/LandingClosing";
 import { LandingFooter } from "@/features/landing/components/LandingFooter";
@@ -22,6 +23,7 @@ export function FeaturePage({ id }: Readonly<{ id: FeatureId }>) {
   const { t } = useTranslation();
   const f = t.features;
   const page = f.pages[id];
+  const primary = useEntries().primary(f.ctaPrimary);
 
   return (
     <>
@@ -39,8 +41,8 @@ export function FeaturePage({ id }: Readonly<{ id: FeatureId }>) {
               <p className="max-w-xl text-lg leading-relaxed text-pretty text-fg-secondary">{page.lead}</p>
               <nav className="flex flex-wrap gap-3" aria-label={f.ctaPrimary}>
                 <Button asChild variant="primary" size="lg" shape="pill" className="kz-sheen">
-                  <Link href="/register">
-                    {f.ctaPrimary}
+                  <Link href={primary.href}>
+                    {primary.label}
                     <ForwardIcon size={18} />
                   </Link>
                 </Button>

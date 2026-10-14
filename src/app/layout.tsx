@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter, JetBrains_Mono, Outfit } from "next/font/google";
 import "./globals.css";
+import { readAuthFlags } from "@/core/config/auth-flags";
 import { Providers } from "@/core/providers/Providers";
 import { ThemeScript } from "@krizaka/ui/theme";
 
@@ -85,7 +86,7 @@ export default function RootLayout({
           "antialiased transition-colors duration-200"
         )}
       >
-        <Providers>{children}</Providers>
+        <Providers authFlags={readAuthFlags()}>{children}</Providers>
       </body>
     </html>
   );

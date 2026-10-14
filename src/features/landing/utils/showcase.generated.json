@@ -1,0 +1,203 @@
+{
+  "cdnRoot": "site",
+  "clips": [
+    {
+      "id": "creations",
+      "hash": {
+        "webm": "ec9ba5633a",
+        "mp4": "fb4019205f",
+        "jpg": "e0e8ccf053"
+      },
+      "text": {
+        "en": {
+          "label": "Made on your machine",
+          "caption": "A product photo lands as the image Studio finishes (the minute of generation is cut), then the gallery of what Eric made on the same Mac, a voice-over playing."
+        },
+        "fr": {
+          "label": "Fait sur votre machine",
+          "caption": "Une photo produit apparaît quand le Studio image termine (la minute de génération est coupée), puis la galerie de ce qu'Eric a produit sur le même Mac, une voix off en lecture."
+        }
+      }
+    },
+    {
+      "id": "studios",
+      "hash": {
+        "webm": "d6cc696349",
+        "mp4": "3c66455b20",
+        "jpg": "44f32815f5"
+      },
+      "text": {
+        "en": {
+          "label": "Studios",
+          "caption": "The catalogue by trade — legal, sales, real estate, media — and a Studio's page: what it does, what a run costs, installed in one click."
+        },
+        "fr": {
+          "label": "Studios",
+          "caption": "Le catalogue par métier — juridique, vente, immobilier, média — et la page d'un Studio : ce qu'il fait, ce que coûte une exécution, installé en un clic."
+        }
+      }
+    },
+    {
+      "id": "documents",
+      "hash": {
+        "webm": "2ca8ad4dd7",
+        "mp4": "9ea93dc3df",
+        "jpg": "878c0eb4ef"
+      },
+      "text": {
+        "en": {
+          "label": "Document checks",
+          "caption": "A lease checked against French law: two unlawful clauses found, each with the passage and the article. Then a supplier's PDF examined for signs of tampering."
+        },
+        "fr": {
+          "label": "Contrôle de documents",
+          "caption": "Un bail contrôlé contre le droit français : deux clauses illicites trouvées, chacune avec son extrait et son article. Puis le PDF d'un fournisseur examiné pour ses retouches."
+        }
+      }
+    },
+    {
+      "id": "voice",
+      "hash": {
+        "webm": "bdf059ae5c",
+        "mp4": "ec353c7fd4",
+        "jpg": "792cbcbde7"
+      },
+      "text": {
+        "en": {
+          "label": "Voice-over",
+          "caption": "A line typed, read aloud by the local speech engine: the waveform of the real file, playing."
+        },
+        "fr": {
+          "label": "Voix off",
+          "caption": "Une phrase tapée, lue par le moteur vocal local : la forme d'onde du vrai fichier, en lecture."
+        }
+      }
+    },
+    {
+      "id": "notifications",
+      "hash": {
+        "webm": "7c9bffe11d",
+        "mp4": "43d4295215",
+        "jpg": "9a308c9fdd"
+      },
+      "text": {
+        "en": {
+          "label": "Jobs & notifications",
+          "caption": "The bell lists what ran — thumbnails of what it made — and opens the result."
+        },
+        "fr": {
+          "label": "Tâches & notifications",
+          "caption": "La cloche liste ce qui a tourné — avec la vignette de ce qui a été produit — et ouvre le résultat."
+        }
+      }
+    },
+    {
+      "id": "chat",
+      "hash": {
+        "webm": "2aaa2224e2",
+        "mp4": "0f76d11759",
+        "jpg": "444aab331b"
+      },
+      "text": {
+        "en": {
+          "label": "From your documents",
+          "caption": "Eric pastes the returns policy under his question; the local model answers from it, streamed — nothing leaves the network."
+        },
+        "fr": {
+          "label": "Depuis vos documents",
+          "caption": "Eric colle la politique de retour sous sa question ; le modèle local répond à partir d'elle, en streaming — rien ne quitte le réseau."
+        }
+      }
+    },
+    {
+      "id": "packs",
+      "hash": {
+        "webm": "bd1dcad312",
+        "mp4": "92ae959c2a",
+        "jpg": "1c01347b5c"
+      },
+      "text": {
+        "en": {
+          "label": "Packs",
+          "caption": "What his plan includes and what a pack adds: Document Verification, Outbound Prospecting, Wellbeing — each Studio named, each price shown."
+        },
+        "fr": {
+          "label": "Packs",
+          "caption": "Ce que son offre inclut et ce qu'un pack ajoute : Vérification de documents, Prospection Outbound, Bien-être — chaque Studio nommé, chaque prix affiché."
+        }
+      }
+    }
+  ],
+  "packs": [
+    {
+      "key": "realestate-studio",
+      "studios": 1,
+      "text": {
+        "en": {
+          "label": "Real-Estate Studio",
+          "tagline": "Your listings become Reels ready to publish."
+        },
+        "fr": {
+          "label": "Studio Immobilier",
+          "tagline": "Vos biens deviennent des Reels prêts à publier."
+        }
+      }
+    },
+    {
+      "key": "orazaka-media",
+      "studios": 10,
+      "text": {
+        "en": {
+          "label": "Media Studios",
+          "tagline": "Generate, listen, describe — without leaving a run."
+        },
+        "fr": {
+          "label": "Studios média",
+          "tagline": "Générer, écouter, décrire — sans quitter un run."
+        }
+      }
+    },
+    {
+      "key": "outbound-prospection",
+      "studios": 3,
+      "text": {
+        "en": {
+          "label": "Outbound Prospecting",
+          "tagline": "From a prospect list to a sequence that ships."
+        },
+        "fr": {
+          "label": "Prospection Outbound",
+          "tagline": "De la liste de prospects à la séquence envoyée."
+        }
+      }
+    },
+    {
+      "key": "bien-etre",
+      "studios": 4,
+      "text": {
+        "en": {
+          "label": "Wellbeing",
+          "tagline": "Put into words what you live through, and bring it to your sessions."
+        },
+        "fr": {
+          "label": "Bien-être",
+          "tagline": "Mettre en mots ce que vous vivez, et l'apporter à vos séances."
+        }
+      }
+    },
+    {
+      "key": "document-validation",
+      "studios": 2,
+      "text": {
+        "en": {
+          "label": "Document Verification",
+          "tagline": "Check a contract against the rules, and a PDF for signs of tampering."
+        },
+        "fr": {
+          "label": "Vérification de documents",
+          "tagline": "Un contrat contrôlé contre les règles, un PDF examiné pour ses retouches."
+        }
+      }
+    }
+  ]
+}

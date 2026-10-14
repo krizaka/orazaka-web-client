@@ -3,6 +3,8 @@ import "@testing-library/jest-dom";
 import { render, screen, within } from "@testing-library/react";
 import { ThemeProvider } from "@krizaka/ui/theme";
 import { translations, type Locale } from "@/core/context/translations";
+import { AuthFlagsProvider } from "@/core/context/AuthFlagsContext";
+import type { AuthFlags } from "@/core/config/auth-flags";
 import { LandingPage } from "@/features/landing/components/LandingPage";
 import { FeaturePage } from "@/features/landing/components/FeaturePage";
 import { FEATURE_IDS } from "@/features/landing/components/features";
@@ -30,9 +32,15 @@ beforeAll(() => {
   });
 });
 
-function renderLanding(locale: Locale, page: React.ReactNode = <LandingPage />) {
+const OPEN: AuthFlags = { login: true, signup: true };
+
+function renderLanding(locale: Locale, page: React.ReactNode = <LandingPage />, flags: AuthFlags = OPEN) {
   mockLocale = locale;
-  return render(<ThemeProvider>{page}</ThemeProvider>);
+  return render(
+    <AuthFlagsProvider flags={flags}>
+      <ThemeProvider>{page}</ThemeProvider>
+    </AuthFlagsProvider>,
+  );
 }
 
 /** The full promise of a heading made of a lead and an accented end. */
@@ -56,7 +64,7 @@ describe("LandingPage", () => {
 
   it("has an anchor target for every entry of the navigation", () => {
     renderLanding("en");
-    for (const id of ["sovereignty", "platform", "how", "studios"]) expect(document.getElementById(id)).not.toBeNull();
+    for (const id of ["sovereignty", "platform", "how", "demo", "studios", "packs"]) expect(document.getElementById(id)).not.toBeNull();
   });
 
   it("compares the same questions for a cloud assistant and for Orazaka", () => {
@@ -105,5 +113,32 @@ describe("landing copy", () => {
       expect(strings(translations[locale].landing).filter((s) => s.trim() === "")).toEqual([]);
       expect(strings(translations[locale].features).filter((s) => s.trim() === "")).toEqual([]);
     }
+  });
+});
+
+describe("LandingPage while sign-in and sign-up are closed (the default)", () => {
+  const CLOSED: AuthFlags = { login: false, signup: false };
+
+  it("hides every sign-in and sign-up entry point", () => {
+    const { container } = renderLanding("en", <LandingPage />, CLOSED);
+    const hrefs = [...container.querySelectorAll("a")].map((a) => a.getAttribute("href"));
+    expect(hrefs).not.toContain("/login");
+    expect(hrefs).not.toContain("/register");
+    expect(screen.queryByRole("link", { name: /Sign in/ })).toBeNull();
+    expect(screen.queryByRole("link", { name: /Get started|Create your workspace/ })).toBeNull();
+  });
+
+  it("offers the documentation and the demo instead", () => {
+    renderLanding("en", <LandingPage />, CLOSED);
+    expect(screen.getAllByRole("link", { name: translations.en.landing.closed.heroPrimary })[0]).toHaveAttribute("href", "/docs");
+    expect(screen.getAllByRole("link", { name: translations.en.landing.closed.heroSecondary })[0]).toHaveAttribute("href", "/#demo");
+  });
+
+  it("shows the recordings and the packs, and the Krizaka signature with the version", () => {
+    renderLanding("en", <LandingPage />, CLOSED);
+    expect(document.getElementById("demo")!.querySelectorAll("video").length).toBeGreaterThan(0);
+    expect(document.getElementById("packs")!.querySelectorAll("li").length).toBeGreaterThan(0);
+    expect(screen.getByRole("link", { name: translations.en.landing.footer.by })).toHaveAttribute("href", "https://www.krizaka.com");
+    expect(screen.getByTestId("app-version")).toHaveTextContent(translations.en.landing.footer.version);
   });
 });

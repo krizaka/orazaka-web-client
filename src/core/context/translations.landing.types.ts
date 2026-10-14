@@ -27,6 +27,9 @@ export interface LandingDictionary {
     studios: string;
     signIn: string;
     getStarted: string;
+    docs: string;
+    demo: string;
+    packs: string;
     langLabel: string;
     openMenu: string;
     closeMenu: string;
@@ -58,7 +61,10 @@ export interface LandingDictionary {
   how: { eyebrow: string; title: string; lead: string; terminal: string; steps: (LandingItem & { command: string })[] };
   studios: { eyebrow: string; title: string; lead: string; items: LandingItem[]; cta: string };
   cta: { eyebrow: string; title: string; lead: string; primary: string; secondary: string };
-  footer: { privacy: string; terms: string; contact: string; license: string; by: string; product: string; legal: string; tagline: string };
+  demo: { eyebrow: string; title: string; lead: string; frame: string };
+  packs: { eyebrow: string; title: string; lead: string; studios: string; more: string };
+  closed: { title: string; body: string; docs: string; contact: string; home: string; heroPrimary: string; heroSecondary: string };
+  footer: { privacy: string; terms: string; contact: string; license: string; by: string; product: string; docs: string; version: string; legal: string; tagline: string };
 }
 
 /** One feature page (/features/<id>). */
