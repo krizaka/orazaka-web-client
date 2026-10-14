@@ -21,3 +21,10 @@
 4. The change ships with its tests — a unit test for logic, a render test for a component, an end-to-end test for a
    route or a flow; a fix starts with a failing test that reproduces the bug. CI runs them and must be green; no test =
    not done (workspace [`AGENTS.md` §9](https://github.com/krizaka/orazaka/blob/main/AGENTS.md#9-testing)).
+
+## Search engines & AI assistants (Krizaka family contract)
+
+The contract is defined once, in krizaka-com `AGENTS.md` §2.4, and checked here by `scripts/check-seo-family.mjs` (a copy of
+the same dependency-free file in every site's repository — keep the copies identical; its unit test sits beside it).
+
+dev.orazaka.com is **indexed** (`src/core/config/seo.ts`: origin, crawlers, JSON-LD, `llms.txt`/`llms-full.txt` rendered from the synced docs; `src/app/robots.ts`, `sitemap.ts`, `opengraph-image.tsx`). The language is chosen in the page (one URL per page), so there is no hreflang. The sign-in proxy (`src/proxy.ts`) must keep those files public. Tests: `src/__tests__/seo.test.ts`.
