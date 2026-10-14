@@ -6,7 +6,7 @@ import { Providers } from "@/core/providers/Providers";
 import { ThemeScript } from "@krizaka/ui/theme";
 
 import { cn } from "@krizaka/ui/cn";
-import { KRIZAKA_URL, SITE_DESCRIPTION, SITE_NAME, SITE_TITLE, SITE_URL, siteJsonLd } from "@/core/config/seo";
+import { KRIZAKA_URL, SITE_DESCRIPTION, SITE_NAME, SITE_TITLE, SITE_URL, siteJsonLd } from "@/features/seo/utils/seo";
 
 const inter = Inter({
   variable: "--font-inter",

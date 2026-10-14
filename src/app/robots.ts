@@ -1,5 +1,5 @@
 import type { MetadataRoute } from "next";
-import { CRAWLERS, PRIVATE_PATHS, SITE_URL } from "@/core/config/seo";
+import { CRAWLERS, PRIVATE_PATHS, SITE_URL } from "@/features/seo/utils/seo";
 
 export default function robots(): MetadataRoute.Robots {
   return {

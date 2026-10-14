@@ -1,5 +1,5 @@
 import { ImageResponse } from "next/og";
-import { SITE_NAME, SITE_DESCRIPTION } from "@/core/config/seo";
+import { SITE_NAME, SITE_DESCRIPTION } from "@/features/seo/utils/seo";
 
 export const alt = "Orazaka — the AI that never leaves home";
 export const size = { width: 1200, height: 630 };
