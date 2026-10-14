@@ -12,7 +12,7 @@ export function MobileStep({ id, index, reverse }: Readonly<{ id: StepId; index:
   const titleId = `mobile-step-${id}`;
   return (
     <li>
-      <article aria-labelledby={titleId} className="grid items-center gap-8 md:grid-cols-[15rem_1fr] md:gap-14">
+      <article aria-labelledby={titleId} className={`grid items-center gap-8 md:gap-14 ${reverse ? "md:grid-cols-[1fr_15rem]" : "md:grid-cols-[15rem_1fr]"}`}>
         <div className={reverse ? "md:order-2" : undefined}>
           <PhoneClip id={id} label={s.goal} alt={s.alt} />
         </div>
