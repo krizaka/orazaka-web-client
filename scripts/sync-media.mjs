@@ -23,4 +23,4 @@ const AREAS = ["products/orazaka/mobile/", "products/orazaka/gallery/"];
 const files = Object.fromEntries(Object.entries(manifest.files).filter(([k]) => AREAS.some((a) => k.startsWith(a))).sort(([a], [b]) => a.localeCompare(b)));
 if (!Object.keys(files).length) throw new Error("no Orazaka media in the manifest");
 fs.writeFileSync(path.join(root, "src/core/media/media.generated.json"), `${JSON.stringify({ cdnRoot: manifest.root, files }, null, 2)}\n`);
-console.log(`${Object.keys(files).length} media recorded`);
+process.stdout.write(`${Object.keys(files).length} media recorded\n`);
