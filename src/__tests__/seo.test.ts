@@ -27,6 +27,7 @@ describe("search engines and AI assistants (the Krizaka family contract)", () =>
     expect(auditSitemap(xml, { host: SITE_URL, minUrls: 10 })).toEqual([]);
     expect(entries.map((e) => e.url)).toContain(`${SITE_URL}/features/unified-engine`);
     expect(publicPaths()).toContain("/docs/architecture");
+    expect(publicPaths()).toEqual(expect.arrayContaining(["/mobile", "/gallery"]));
   });
 
   it("llms.txt and llms-full.txt follow llmstxt.org, name this host and link the family", () => {
