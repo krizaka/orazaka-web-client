@@ -11,6 +11,7 @@
 
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
+import { authClosed, isBackendPath, readAuthFlags } from "@/core/config/auth-flags";
 
 /**
  * Route prefixes that do NOT require authentication.
@@ -27,6 +28,7 @@ const PUBLIC_PREFIXES = [
   "/terms",
   "/contact",
   "/features",
+  "/docs",
 ];
 
 /**
@@ -40,6 +42,11 @@ function isPublicPath(pathname: string): boolean {
 
 export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
+
+  // Both entry points closed (AUTH_LOGIN_ENABLED / AUTH_SIGNUP_ENABLED false): nothing is proxied to the backend.
+  if (authClosed(readAuthFlags()) && isBackendPath(pathname)) {
+    return NextResponse.json({ error: "Orazaka is in development — sign-in is closed on this site" }, { status: 404 });
+  }
 
   // Allow public routes, API routes, and static assets through
   if (isPublicPath(pathname)) {
@@ -61,9 +68,9 @@ export function proxy(request: NextRequest) {
 
 export const config = {
   /**
-   * Only run the proxy on page routes — exclude all static assets and internals.
+   * Run on pages and on the BFF routes (a closed site answers 404 there) — exclude static assets and internals.
    */
   matcher: [
-    "/((?!_next/static|_next/image|_next/data|favicon|api/).*)",
+    "/((?!_next/static|_next/image|_next/data|favicon).*)",
   ],
 };

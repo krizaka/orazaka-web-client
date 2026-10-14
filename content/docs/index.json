@@ -1,0 +1,209 @@
+[
+  {
+    "slug": "api_reference",
+    "title": "API Reference",
+    "category": "api",
+    "order": 1,
+    "audience": "developer",
+    "intro": "The HTTP/GraphQL surface for integrating Orazaka into your product. For developers building against the engine.",
+    "file": "api_reference.md"
+  },
+  {
+    "slug": "interface_contracts",
+    "title": "Interface Contracts",
+    "category": "api",
+    "order": 3,
+    "audience": "developer",
+    "intro": "Inbound and outbound ports per module, extracted from the code — the contract surface between layers. For developers wiring adapters against the hexagonal core.",
+    "file": "interface_contracts.md"
+  },
+  {
+    "slug": "worker_protocol",
+    "title": "Worker Protocol",
+    "category": "api",
+    "order": 4,
+    "audience": "developer",
+    "intro": "The AMQP contract a worker speaks to join the platform — bindings, envelopes, progress and failure semantics. For developers writing a native or polyglot worker.",
+    "file": "worker_protocol.md"
+  },
+  {
+    "slug": "architecture",
+    "title": "Architecture Overview",
+    "category": "architecture",
+    "order": 1,
+    "audience": "developer",
+    "intro": "How Orazaka is built: a Ports & Adapters (hexagonal) engine, every module in its ring. The map and the messaging topology below are drawn from the same generated model as the tables that follow — select a module to see what it depends on.",
+    "file": "architecture.md"
+  },
+  {
+    "slug": "core",
+    "title": "Core Engine & Pipeline",
+    "category": "architecture",
+    "order": 2,
+    "audience": "developer",
+    "intro": "The orchestration core and the request pipeline that every interaction flows through. For developers who want to understand how a prompt becomes a validated answer.",
+    "file": "core.md"
+  },
+  {
+    "slug": "repositories",
+    "title": "Repositories",
+    "category": "architecture",
+    "order": 2,
+    "audience": "developer",
+    "intro": "Orazaka is one GitHub repository per component — users, notifications, billing, the AI engine, the UI kit… This map, generated from the workspace manifest, shows what each repository holds and what it depends on, so you can reuse only what your application needs.",
+    "file": "repositories.md"
+  },
+  {
+    "slug": "models",
+    "title": "Supported AI Models",
+    "category": "architecture",
+    "order": 3,
+    "audience": "decision-maker",
+    "intro": "The models Orazaka has been tested with — local (Ollama) and optional hosted providers. Useful when deciding what you can run entirely on your own infrastructure.",
+    "file": "models.md"
+  },
+  {
+    "slug": "business",
+    "title": "Business Layer",
+    "category": "architecture",
+    "order": 3,
+    "audience": "developer",
+    "intro": "Where a request becomes business: the Intention, the use-cases that serve it, the dispatcher that checks who may run what, and where each piece lives (ports & adapters). Generated from orazaka-business.",
+    "file": "business.md"
+  },
+  {
+    "slug": "interceptors",
+    "title": "Interceptor Registry",
+    "category": "architecture",
+    "order": 4,
+    "audience": "developer",
+    "intro": "Every cross-cutting interceptor in the cognitive pipeline and its DB-driven order — generated from the code. For developers reasoning about how a request is enriched, routed and validated.",
+    "file": "interceptors.md"
+  },
+  {
+    "slug": "packs",
+    "title": "Packs & Studios",
+    "category": "core-features",
+    "order": 1,
+    "audience": "decision-maker",
+    "intro": "The business offers Orazaka installs without code: each pack, who it serves, its Studios and what they do — then how to install one and how to write your own. Generated from the orazaka-packs repository.",
+    "file": "packs.md"
+  },
+  {
+    "slug": "auth",
+    "title": "Authentication",
+    "category": "core-features",
+    "order": 2,
+    "audience": "developer",
+    "intro": "How identity, sessions and access control work in Orazaka. For developers securing a deployment.",
+    "file": "auth.md"
+  },
+  {
+    "slug": "business_implementation",
+    "title": "Business Implementation Playbook",
+    "category": "core-features",
+    "order": 4,
+    "audience": "decision-maker",
+    "intro": "A practical playbook for turning Orazaka capabilities into outcomes for a business — what to deploy, in what order, and what it delivers. Written for decision-makers, not just engineers.",
+    "file": "business_implementation.md"
+  },
+  {
+    "slug": "use_cases",
+    "title": "Use-Cases (technical)",
+    "category": "core-features",
+    "order": 5,
+    "audience": "developer",
+    "intro": "The technical entry points of the engine (App-Factory use-cases), generated from the Java code. Not the business offers: those are the packs and their Studios — see Packs & Studios.",
+    "file": "use_cases.md"
+  },
+  {
+    "slug": "tools",
+    "title": "Tools & MCP",
+    "category": "core-features",
+    "order": 6,
+    "audience": "developer",
+    "intro": "What a model may call during a turn: the registered tools, when they are attached, the tool cache, the MCP servers (platform and per user) and the sandbox that isolates tools which write. Generated from orazaka-tools.",
+    "file": "tools.md"
+  },
+  {
+    "slug": "jobs",
+    "title": "Jobs, Schedules & Automation",
+    "category": "core-features",
+    "order": 7,
+    "audience": "developer",
+    "intro": "Everything that runs without a user waiting: the job plane and its executors, every scheduled task of the platform, the automation connectors and the CLI agent. Generated from the code.",
+    "file": "jobs.md"
+  },
+  {
+    "slug": "101",
+    "title": "Getting Started",
+    "category": "getting-started",
+    "order": 1,
+    "audience": "developer",
+    "intro": "Stand up Orazaka locally and run your first request in minutes. This onboarding guide is for developers evaluating the engine or wiring it into an application.",
+    "file": "101.md"
+  },
+  {
+    "slug": "cli",
+    "title": "CLI",
+    "category": "getting-started",
+    "order": 2,
+    "audience": "developer",
+    "intro": "One tool for the whole platform: npx orazaka install, start, dev and you are running — then test, build these docs, install packs, seed the demo. Every command, subcommand and option, generated from the CLI's code.",
+    "file": "cli.md"
+  },
+  {
+    "slug": "mobile",
+    "title": "Mobile App",
+    "category": "getting-started",
+    "order": 3,
+    "audience": "developer",
+    "intro": "The Orazaka app for iOS and Android as it runs today, on the iOS simulator and the Android emulator against the local stack: sign-in, Studios, streamed chat, jobs — how to run it, its tests, and which screens do not read the server yet.",
+    "file": "mobile.md"
+  },
+  {
+    "slug": "governance",
+    "title": "Governance Rules",
+    "category": "guidelines",
+    "order": 7,
+    "audience": "developer",
+    "intro": "Every architecture rule enforced at build time and the test suites that enforce it — generated from the governance kit. For contributors who want to know what the build will refuse.",
+    "file": "governance.md"
+  },
+  {
+    "slug": "adrs",
+    "title": "ADR Ledger",
+    "category": "guidelines",
+    "order": 8,
+    "audience": "developer",
+    "intro": "The Architecture Decision Records cited across the codebase — generated from the source. For developers who want the rationale behind the engine's structure.",
+    "file": "adrs.md"
+  },
+  {
+    "slug": "glossary",
+    "title": "Glossary",
+    "category": "guidelines",
+    "order": 9,
+    "audience": "decision-maker",
+    "intro": "Plain-language definitions of the terms used across these docs. A quick reference for anyone evaluating Orazaka.",
+    "file": "glossary.md"
+  },
+  {
+    "slug": "licensing",
+    "title": "Licensing",
+    "category": "guidelines",
+    "order": 10,
+    "audience": "decision-maker",
+    "intro": "What the Apache-2.0 license covers across the Orazaka repositories, and what that means for your deployment.",
+    "file": "licensing.md"
+  },
+  {
+    "slug": "admin",
+    "title": "Administration",
+    "category": "operations",
+    "order": 1,
+    "audience": "decision-maker",
+    "intro": "What an administrator controls — models, the interceptor pipeline, capabilities, MCP servers, plans, prices, wallets, Studios — from the SecOps console or the API, and how that surface is secured. Generated from the code.",
+    "file": "admin.md"
+  }
+]

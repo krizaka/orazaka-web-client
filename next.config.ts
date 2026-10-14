@@ -1,6 +1,8 @@
 import type { NextConfig } from "next";
 import fs from "node:fs";
 import path from "node:path";
+import pkg from "./package.json";
+import { formatVersion, resolveSha } from "./src/core/config/app-version";
 
 /**
  * Load the monorepo-root `.env` (the single source of truth — see AGENTS.md) into
@@ -41,6 +43,12 @@ function loadRootEnv(): void {
 loadRootEnv();
 
 const nextConfig: NextConfig = {
+  // APP_VERSION (package.json + short sha) is shown in the footer of every deployed site.
+  env: { NEXT_PUBLIC_APP_VERSION: process.env.APP_VERSION || formatVersion(pkg.version, resolveSha()) },
+  // The contact form of this app is a placeholder: the public site sends people to krizaka.com's.
+  async redirects() {
+    return [{ source: "/contact", destination: "https://www.krizaka.com/contact", permanent: false }];
+  },
   // `next dev` would otherwise append its own block to AGENTS.md on every start; this repository's
   // AGENTS.md only scopes the workspace contract and must not drift (AGENTS.md §13).
   agentRules: false,

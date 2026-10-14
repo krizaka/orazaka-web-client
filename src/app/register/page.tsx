@@ -9,12 +9,13 @@ import { RegisterForm } from "@/features/auth/components/RegisterForm";
 import { useTranslation } from "@/core/context/LocaleContext";
 import { AuthLayout } from "@/features/auth/components/AuthLayout";
 import { Card } from "@krizaka/ui/card";
+import { AuthGate } from "@/features/auth/components/AuthGate";
 
 /**
  * RegisterPage — split layout with marketing hero (left) and registration form (right).
  * Matches the Login page's premium Calm Obsidian 2028 design.
  */
-export default function RegisterPage() {
+function RegisterPageContent() {
   const router = useRouter();
   const { isAuthenticated, loginWithGithub, loginWithGoogle } = useAuth();
   const { t } = useTranslation();
@@ -126,5 +127,14 @@ export default function RegisterPage() {
         </Card.Footer>
       </Card.Root>
     </AuthLayout>
+  );
+}
+
+/** The page is closed behind AUTH_SIGNUP_ENABLED (default false): a calm notice, nothing mounts, no backend call. */
+export default function RegisterPage() {
+  return (
+    <AuthGate flag="signup">
+      <RegisterPageContent />
+    </AuthGate>
   );
 }

@@ -7,6 +7,7 @@ import { ChatShowcase } from "@krizaka/orazaka-design-system";
 import { Button } from "@krizaka/ui/button";
 import { SectionBackdrop } from "@krizaka/ui/section-backdrop";
 import { useTranslation } from "@/core/context/LocaleContext";
+import { useEntries } from "@/features/landing/components/useEntries";
 import { ProductCapture } from "@/features/landing/components/ProductCapture";
 
 /** Icons of the four proofs, in the order of the copy. */
@@ -21,6 +22,9 @@ export function LandingHero() {
   const { t, locale } = useTranslation();
   const h = t.landing.hero;
   const chat = t.landing.chat;
+  const entries = useEntries();
+  const primary = entries.primary(h.primaryCta);
+  const secondary = entries.secondary(h.secondaryCta);
 
   return (
     <SectionBackdrop grid media={<ProductCapture name="dashboard" eager className="landing-hero-capture" />} className="landing-hero border-b border-border-subtle">
@@ -36,13 +40,13 @@ export function LandingHero() {
           <p className="max-w-xl text-lg leading-relaxed text-pretty text-fg-secondary">{h.lead}</p>
           <nav className="flex flex-wrap gap-3" aria-label={h.primaryCta}>
             <Button asChild variant="primary" size="lg" shape="pill" className="kz-sheen">
-              <Link href="/register">
-                {h.primaryCta}
+              <Link href={primary.href}>
+                {primary.label}
                 <ForwardIcon size={18} />
               </Link>
             </Button>
             <Button asChild size="lg" shape="pill" variant="secondary">
-              <Link href="/login">{h.secondaryCta}</Link>
+              <Link href={secondary.href}>{secondary.label}</Link>
             </Button>
           </nav>
           <ul className="flex flex-wrap gap-x-5 gap-y-2 text-sm text-fg-secondary">

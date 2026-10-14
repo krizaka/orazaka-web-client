@@ -107,3 +107,15 @@ in the workspace is normative; the local [AGENTS.md](AGENTS.md) only scopes it t
 ## License
 
 Apache License 2.0 — see [LICENSE](LICENSE) and [NOTICE](NOTICE).
+
+## Public development site (dev.orazaka.com)
+
+The same app runs as a read-only public site: no sign-in, no sign-up, no call to the backend.
+
+| Variable | Default | Effect |
+| --- | --- | --- |
+| `AUTH_LOGIN_ENABLED` | `false` | Sign-in, forgot-password and verify show "Orazaka is in development — sign-in is closed on this site"; the BFF routes (`/api/v1`, `/api/auth`, `/api/chat`, `/uploads`) answer 404 while both flags are off. |
+| `AUTH_SIGNUP_ENABLED` | `false` | Same for `/register`; the entry points are hidden from the landing. |
+| `APP_VERSION` | `package.json` version + short sha | Shown in the footer (`NEXT_PUBLIC_APP_VERSION`, set at build). |
+
+No edge URL is needed to build or run it. The documentation (`/docs`) is generated: `node scripts/sync-docs.mjs <orazaka-content/docs> <krizaka-com/lib/docs-manifest.ts>`; the demo recordings and packs of the home page: `node scripts/sync-showcase.mjs <krizaka-com checkout>` — never hand-edit `content/docs` or `showcase.generated.json`. Media stay on Bunny.

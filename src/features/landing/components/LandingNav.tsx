@@ -8,6 +8,7 @@ import { Button, IconButton } from "@krizaka/ui/button";
 import { ThemeToggle } from "@krizaka/ui/theme";
 import { cn } from "@krizaka/ui/cn";
 import { useTranslation } from "@/core/context/LocaleContext";
+import { useAuthFlags } from "@/core/context/AuthFlagsContext";
 import type { Locale } from "@/core/context/translations.types";
 
 const LOCALES: { code: Locale; label: string }[] = [
@@ -16,7 +17,7 @@ const LOCALES: { code: Locale; label: string }[] = [
 ];
 
 /** Section anchors of the home page, in reading order. */
-export const ANCHORS = ["sovereignty", "platform", "how", "studios"] as const;
+export const ANCHORS = ["sovereignty", "platform", "how", "demo", "studios", "packs"] as const;
 
 function Locales({ className }: Readonly<{ className?: string }>) {
   const { t, locale, setLocale } = useTranslation();
@@ -46,6 +47,7 @@ function Locales({ className }: Readonly<{ className?: string }>) {
 export function LandingNav({ onHome = true }: Readonly<{ onHome?: boolean }>) {
   const { t } = useTranslation();
   const n = t.landing.nav;
+  const flags = useAuthFlags();
   const [open, setOpen] = React.useState(false);
   const href = (id: string) => (onHome ? `#${id}` : `/#${id}`);
 
@@ -73,12 +75,19 @@ export function LandingNav({ onHome = true }: Readonly<{ onHome?: boolean }>) {
             variant="ghost"
             label={(mode) => ({ "dark": t.header.themeDark, "light": t.header.themeLight, "system": t.header.themeSystem })[mode]}
           />
-          <Button asChild variant="ghost" size="sm" className="hidden sm:inline-flex">
-            <Link href="/login">{n.signIn}</Link>
+          <Button asChild variant={flags.login ? "ghost" : "primary"} size="sm" shape={flags.login ? undefined : "pill"} className={flags.login ? "hidden sm:inline-flex" : "kz-sheen"}>
+            <Link href="/docs">{n.docs}</Link>
           </Button>
-          <Button asChild variant="primary" size="sm" shape="pill" className="kz-sheen">
-            <Link href="/register">{n.getStarted}</Link>
-          </Button>
+          {flags.login && (
+            <Button asChild variant="ghost" size="sm" className="hidden sm:inline-flex">
+              <Link href="/login">{n.signIn}</Link>
+            </Button>
+          )}
+          {flags.signup && (
+            <Button asChild variant="primary" size="sm" shape="pill" className="kz-sheen">
+              <Link href="/register">{n.getStarted}</Link>
+            </Button>
+          )}
           <IconButton
             variant="ghost"
             onClick={() => setOpen((v) => !v)}
@@ -106,7 +115,7 @@ export function LandingNav({ onHome = true }: Readonly<{ onHome?: boolean }>) {
           <span className="mt-4 flex items-center justify-between gap-3">
             <Locales className="flex" />
             <Button asChild variant="secondary" size="sm" shape="pill">
-              <Link href="/login">{n.signIn}</Link>
+              {flags.login ? <Link href="/login">{n.signIn}</Link> : <Link href="/docs">{n.docs}</Link>}
             </Button>
           </span>
         </nav>

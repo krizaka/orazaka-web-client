@@ -10,12 +10,13 @@ import { useRouter } from "next/navigation";
 import { AuthLayout } from "@/features/auth/components/AuthLayout";
 
 import { Card } from "@krizaka/ui/card";
+import { AuthGate } from "@/features/auth/components/AuthGate";
 
 /**
  * ForgotPasswordPage — split layout with marketing hero (left) and
  * email reset form (right). Calls POST /api/v1/auth/forgot.
  */
-export default function ForgotPasswordPage() {
+function ForgotPasswordPageContent() {
   const router = useRouter();
   const { isAuthenticated } = useAuth();
   const { t } = useTranslation();
@@ -139,5 +140,14 @@ export default function ForgotPasswordPage() {
         </Card.Footer>
       </Card.Root>
     </AuthLayout>
+  );
+}
+
+/** The page is closed behind AUTH_LOGIN_ENABLED (default false): a calm notice, nothing mounts, no backend call. */
+export default function ForgotPasswordPage() {
+  return (
+    <AuthGate flag="login">
+      <ForgotPasswordPageContent />
+    </AuthGate>
   );
 }
