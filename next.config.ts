@@ -45,7 +45,12 @@ loadRootEnv();
 
 const nextConfig: NextConfig = {
   // APP_VERSION (package.json + short sha) is shown in the footer of every deployed site.
-  env: { NEXT_PUBLIC_APP_VERSION: process.env.APP_VERSION || formatVersion(pkg.version, resolveSha()) },
+  // NEXT_PUBLIC_APP_ENV names the environment in the bar's badge: this repository deploys dev.orazaka.com only until a
+  // production site exists, hence the default.
+  env: {
+    NEXT_PUBLIC_APP_VERSION: process.env.APP_VERSION || formatVersion(pkg.version, resolveSha()),
+    NEXT_PUBLIC_APP_ENV: process.env.NEXT_PUBLIC_APP_ENV?.trim().toLowerCase() || "dev",
+  },
   poweredByHeader: false,
   async headers() {
     return [{ source: "/:path*", headers: SECURITY_HEADERS }];
@@ -59,7 +64,7 @@ const nextConfig: NextConfig = {
   agentRules: false,
   // @krizaka/ui: the primitives the design system re-exports since 2.0 (ES modules) — listed so next/jest
   // transforms them like the design system itself.
-  transpilePackages: ["@krizaka/orazaka-design-system", "@krizaka/orazaka-shared", "@krizaka/ui", "@krizaka/icons", "@krizaka/intl"],
+  transpilePackages: ["@krizaka/orazaka-design-system", "@krizaka/orazaka-shared", "@krizaka/ui", "@krizaka/tokens", "@krizaka/icons", "@krizaka/intl"],
   turbopack: {
     root: path.resolve(__dirname, ".."),
   },

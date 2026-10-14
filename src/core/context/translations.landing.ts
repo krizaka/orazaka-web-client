@@ -26,6 +26,8 @@ export const landing: Record<Locale, LandingDictionary> = {
       openMenu: "Open the menu",
       closeMenu: "Close the menu",
       home: "Orazaka home",
+      talk: "Talk to us",
+      repo: "Orazaka web client on GitHub",
     },
     hero: {
       kicker: "Sovereign AI platform",
@@ -183,9 +185,7 @@ export const landing: Record<Locale, LandingDictionary> = {
       by: "A Krizaka product",
       product: "Product",
       docs: "Documentation",
-      version: "Version",
       legal: "Legal",
-      tagline: "Sovereign AI for teams that keep their data at home.",
     },
   },
   fr: {
@@ -205,6 +205,8 @@ export const landing: Record<Locale, LandingDictionary> = {
       openMenu: "Ouvrir le menu",
       closeMenu: "Fermer le menu",
       home: "Accueil Orazaka",
+      talk: "Nous écrire",
+      repo: "Client web Orazaka sur GitHub",
     },
     hero: {
       kicker: "Plateforme d'IA souveraine",
@@ -362,9 +364,7 @@ export const landing: Record<Locale, LandingDictionary> = {
       by: "Un produit Krizaka",
       product: "Produit",
       docs: "Documentation",
-      version: "Version",
       legal: "Légal",
-      tagline: "L'IA souveraine des équipes qui gardent leurs données chez elles.",
     },
   },
 };
