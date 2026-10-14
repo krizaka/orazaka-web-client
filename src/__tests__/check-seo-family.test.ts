@@ -1,5 +1,6 @@
 /** @jest-environment node */
 import assert from "node:assert/strict";
+// eslint-disable-next-line no-restricted-imports -- the shared family guard lives in scripts/, outside src/
 import { auditRobots, auditSitemap, auditLlms, auditHtml, auditHeaders, AI_CRAWLERS, ORG_ID } from "../../scripts/check-seo-family.mjs";
 
 const HOST = "https://dev.example.com";

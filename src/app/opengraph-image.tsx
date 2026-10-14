@@ -9,25 +9,13 @@ export const contentType = "image/png";
 export default function OpengraphImage() {
   return new ImageResponse(
     (
-      <div
-        style={{
-          width: "100%",
-          height: "100%",
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "center",
-          padding: "80px",
-          background: "radial-gradient(circle at 80% 20%, #b45309 0%, #0c0a09 55%), #0c0a09",
-          color: "#fafafa",
-          fontFamily: "sans-serif",
-        }}
-      >
-        <div style={{ display: "flex", fontSize: 104, fontWeight: 900, letterSpacing: -2 }}>
+      <div tw="flex flex-col justify-center w-full h-full p-20 text-white bg-[#0c0a09]">
+        <div tw="flex text-8xl font-black">
           {SITE_NAME.toUpperCase()}
-          <span style={{ color: "#fb923c" }}>.</span>
+          <span tw="text-orange-400">.</span>
         </div>
-        <div style={{ marginTop: 24, fontSize: 40, fontWeight: 600, maxWidth: 960, lineHeight: 1.25 }}>{SITE_DESCRIPTION}</div>
-        <div style={{ marginTop: "auto", fontSize: 24, color: "#a1a1aa" }}>dev.orazaka.com · A Krizaka product</div>
+        <div tw="mt-6 text-4xl font-semibold leading-tight">{SITE_DESCRIPTION}</div>
+        <div tw="mt-auto text-2xl text-zinc-400">dev.orazaka.com · A Krizaka product</div>
       </div>
     ),
     size,

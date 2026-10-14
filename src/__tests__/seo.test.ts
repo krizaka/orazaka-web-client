@@ -4,6 +4,7 @@ import sitemap from "@/app/sitemap";
 import { proxy } from "@/proxy";
 import { NextRequest } from "next/server";
 import { CRAWLERS, KRIZAKA_URL, llmsFullText, llmsText, ORG_ID, publicPaths, SITE_URL, siteJsonLd } from "@/app/_seo/seo";
+// eslint-disable-next-line no-restricted-imports -- the shared family guard lives in scripts/, outside src/
 import { auditLlms, auditRobots, auditSitemap } from "../../scripts/check-seo-family.mjs";
 
 /** MetadataRoute.Robots as the text Next serves. */
