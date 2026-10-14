@@ -29,21 +29,53 @@ const wrap = (ui: React.ReactNode, locale: Locale = "en") => {
   );
 };
 
-describe("GalleryFeatured (the home page's prompt to image)", () => {
+describe("GalleryFeatured (the home page's prompt to image, a slideshow)", () => {
+  const slide = (container: HTMLElement, i: number) => container.querySelectorAll<HTMLElement>('[aria-roledescription="slide"]')[i];
+
   it("shows one image with its exact prompt, the facts and the command, and steps through the series", () => {
     const { container } = wrap(<GalleryFeatured />);
     expect(container.querySelector("section#made, #made")).not.toBeNull();
     const first = GALLERY[0];
-    expect(screen.getAllByText(first.prompt).length).toBeGreaterThan(0);
-    expect(screen.getByAltText(translations.en.gallery.items[first.id])).toBeInTheDocument();
-    expect(screen.getByText(first.seed)).toBeInTheDocument();
-    expect(screen.getByText(first.studio)).toBeInTheDocument();
-    expect(container.querySelector("pre code")!.textContent).toBe(reproduceCommand(first));
+    const active = slide(container, 0);
+    expect(within(active).getAllByText(first.prompt).length).toBeGreaterThan(0);
+    expect(within(active).getByAltText(translations.en.gallery.items[first.id])).toBeInTheDocument();
+    expect(within(active).getByText(first.seed)).toBeInTheDocument();
+    expect(within(active).getByText(first.studio)).toBeInTheDocument();
+    expect(active.querySelector("pre code")!.textContent).toBe(reproduceCommand(first));
     fireEvent.click(screen.getByRole("button", { name: translations.en.gallery.next }));
-    expect(screen.getAllByText(GALLERY[1].prompt).length).toBeGreaterThan(0);
+    expect(slide(container, 1)).toHaveAttribute("data-active");
+    expect(within(slide(container, 1)).getAllByText(GALLERY[1].prompt).length).toBeGreaterThan(0);
     fireEvent.click(screen.getByRole("button", { name: translations.en.gallery.prev }));
     fireEvent.click(screen.getByRole("button", { name: translations.en.gallery.prev }));
-    expect(screen.getAllByText(GALLERY[GALLERY.length - 1].prompt).length).toBeGreaterThan(0);
+    expect(slide(container, GALLERY.length - 1)).toHaveAttribute("data-active");
+  });
+
+  it("is a named carousel with a counter, one clickable segment per image, and no pause button under reduced motion", () => {
+    const { container } = wrap(<GalleryFeatured />);
+    const g = translations.en.gallery;
+    expect(screen.getByRole("region", { name: g.carousel })).toHaveAttribute("aria-roledescription", "carousel");
+    expect(screen.getByText(`Image 1 of ${GALLERY.length}`)).toBeInTheDocument();
+    expect(screen.getAllByRole("button", { name: /^Go to image / })).toHaveLength(GALLERY.length);
+    fireEvent.click(screen.getByRole("button", { name: "Go to image 3" }));
+    expect(screen.getByText(`Image 3 of ${GALLERY.length}`)).toBeInTheDocument();
+    expect(slide(container, 2)).toHaveAttribute("data-active");
+    // The tests run with reduced motion: nothing moves by itself, so there is nothing to pause.
+    expect(screen.queryByRole("button", { name: g.pause })).toBeNull();
+  });
+
+  it("has a pause button and a bar that fills when motion is allowed, and speaks French", () => {
+    const original = window.matchMedia;
+    Object.defineProperty(window, "matchMedia", { writable: true, value: (query: string) => ({ matches: false, media: query, addEventListener: () => {}, removeEventListener: () => {} }) });
+    try {
+      const { container } = wrap(<GalleryFeatured />, "fr");
+      expect(screen.getByRole("button", { name: translations.fr.gallery.pause })).toBeInTheDocument();
+      expect(container.querySelector("[data-segment-fill]")).not.toBeNull();
+      fireEvent.click(screen.getByRole("button", { name: translations.fr.gallery.pause }));
+      expect(screen.getByRole("button", { name: translations.fr.gallery.play })).toBeInTheDocument();
+      expect(screen.getByText(`Image 1 sur ${GALLERY.length}`)).toBeInTheDocument();
+    } finally {
+      Object.defineProperty(window, "matchMedia", { writable: true, value: original });
+    }
   });
 
   it("links to the whole gallery and copies the prompt", async () => {
