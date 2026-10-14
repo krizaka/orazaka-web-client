@@ -3,12 +3,9 @@
 import { EyeIcon, EyeOffIcon } from "@krizaka/icons";
 import { IconButton } from "@krizaka/ui/button";
 import * as React from "react";
-import { signIn } from "next-auth/react";
-import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Input } from "@krizaka/orazaka-design-system";
 import { Button } from "@krizaka/orazaka-design-system";
-import { useAuth } from "@/core/hooks/useAuth";
 import { useTranslation } from "@/core/context/LocaleContext";
 import { AuthLayout } from "@/features/auth/components/AuthLayout";
 
@@ -19,52 +16,34 @@ import { cn } from "@krizaka/ui/cn";
 const fieldLabelClass =
   "text-sm font-medium leading-none text-fg-secondary peer-disabled:cursor-not-allowed peer-disabled:opacity-70";
 
-// ─── Component ─────────────────────────────────────────────────────────────
-/**
- * LoginPage — split layout with marketing hero (left) and credentials form (right).
- */
-export function LoginForm() {
-  const router = useRouter();
-  const { isAuthenticated, loginWithGithub, loginWithGoogle } = useAuth();
-  const { t } = useTranslation();
+// ─── Components ────────────────────────────────────────────────────────────
+interface LoginCardProps {
+  /** Closed site: the real screen, every field and button disabled, nothing wired to the backend. */
+  preview?: boolean;
+  /** A calm banner above the form (the preview's). */
+  notice?: React.ReactNode;
+  error?: string;
+  shakeError?: boolean;
+  isLoading?: boolean;
+  onSubmit?: (email: string, password: string) => void;
+  onGithub?: () => void;
+  onGoogle?: () => void;
+}
 
+/**
+ * The sign-in screen itself — split layout with marketing hero (left) and credentials form (right). Pure view: the
+ * connected `LoginForm` wires it to next-auth, `LoginPreview` shows it disabled while sign-in is closed.
+ */
+export function LoginCard({ preview = false, notice, error = "", shakeError = false, isLoading = false, onSubmit, onGithub, onGoogle }: Readonly<LoginCardProps>) {
+  const { t } = useTranslation();
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
-  const [error, setError] = React.useState("");
-  const [isLoading, setIsLoading] = React.useState(false);
-  const [shakeError, setShakeError] = React.useState(false);
   const [showPassword, setShowPassword] = React.useState(false);
+  const off = preview;
 
-  React.useEffect(() => {
-    if (isAuthenticated) router.push("/");
-  }, [isAuthenticated, router]);
-
-  const handleLogin = async (e: React.SubmitEvent<HTMLFormElement>) => {
+  const handleLogin = (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setIsLoading(true);
-    setError("");
-
-    try {
-      const res = await signIn("credentials", {
-        email,
-        password,
-        redirect: false,
-      });
-
-      if (res?.error) {
-        setError(t.auth.invalidCredentials);
-        setShakeError(true);
-        setTimeout(() => setShakeError(false), 500);
-      } else if (res?.ok) {
-        router.push("/");
-      }
-    } catch {
-      setError(t.auth.unexpectedError);
-      setShakeError(true);
-      setTimeout(() => setShakeError(false), 500);
-    } finally {
-      setIsLoading(false);
-    }
+    if (!off) onSubmit?.(email, password);
   };
 
   return (
@@ -82,6 +61,7 @@ export function LoginForm() {
         </Card.Body>
 
         <Card.Body padding="lg" className="block pt-0 space-y-4">
+          {notice}
           {error && (
             <div
               role="alert"
@@ -103,6 +83,7 @@ export function LoginForm() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
+                disabled={off}
                 autoComplete="email"
               />
             </div>
@@ -118,6 +99,7 @@ export function LoginForm() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
+                  disabled={off}
                   autoComplete="current-password"
                   className="pr-10"
                 />
@@ -128,6 +110,7 @@ export function LoginForm() {
                   className="absolute right-0 top-1/2 -translate-y-1/2"
                   label={showPassword ? t.a11y.hidePassword : t.a11y.showPassword}
                   tabIndex={-1}
+                  disabled={off}
                 >
                   {showPassword ? <EyeOffIcon size={16} /> : <EyeIcon size={16} />}
                 </IconButton>
@@ -145,9 +128,9 @@ export function LoginForm() {
               id="btn-login-submit"
               type="submit"
               className="w-full gap-2"
-              disabled={isLoading}
+              disabled={off || isLoading}
             >
-              {isLoading && (
+              {isLoading && !off && (
                 <svg
                   className="h-4 w-4 animate-spin-slow"
                   viewBox="0 0 24 24"
@@ -191,7 +174,8 @@ export function LoginForm() {
             <Button
               id="btn-github"
               variant="outline"
-              onClick={loginWithGithub}
+              onClick={onGithub}
+              disabled={off}
               className="gap-2"
             >
               <svg
@@ -206,7 +190,8 @@ export function LoginForm() {
             <Button
               id="btn-google"
               variant="outline"
-              onClick={loginWithGoogle}
+              onClick={onGoogle}
+              disabled={off}
               className="gap-2"
             >
               <svg className="h-4 w-4" viewBox="0 0 24 24">

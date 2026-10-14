@@ -119,16 +119,24 @@ describe("landing copy", () => {
 describe("LandingPage while sign-in and sign-up are closed (the default)", () => {
   const CLOSED: AuthFlags = { login: false, signup: false };
 
-  it("hides every sign-in and sign-up entry point", () => {
+  it("hides every sign-up entry point but keeps Sign in visible, leading to /login", () => {
     const { container } = renderLanding("en", <LandingPage />, CLOSED);
     const hrefs = [...container.querySelectorAll("a")].map((a) => a.getAttribute("href"));
-    expect(hrefs).not.toContain("/login");
     expect(hrefs).not.toContain("/register");
-    expect(screen.queryByRole("link", { name: /Sign in/ })).toBeNull();
     expect(screen.queryByRole("link", { name: /Get started|Create your workspace/ })).toBeNull();
+    const signIn = screen.getAllByRole("link", { name: translations.en.landing.nav.signIn });
+    signIn.forEach((a) => expect(a).toHaveAttribute("href", "/login"));
   });
 
-  it("offers the documentation and the demo instead", () => {
+  it("shows Sign in in the bar and as a secondary action of the hero", () => {
+    renderLanding("en", <LandingPage />, CLOSED);
+    const bar = screen.getByRole("navigation", { name: "Orazaka" });
+    expect(within(bar).getByRole("link", { name: translations.en.landing.nav.signIn })).toHaveAttribute("href", "/login");
+    const hero = screen.getByRole("heading", { level: 1 }).closest("header") as HTMLElement;
+    expect(within(hero).getByRole("link", { name: translations.en.landing.nav.signIn })).toHaveAttribute("href", "/login");
+  });
+
+  it("offers the documentation and the demo too", () => {
     renderLanding("en", <LandingPage />, CLOSED);
     expect(screen.getAllByRole("link", { name: translations.en.landing.closed.heroPrimary })[0]).toHaveAttribute("href", "/docs");
     expect(screen.getAllByRole("link", { name: translations.en.landing.closed.heroSecondary })[0]).toHaveAttribute("href", "/#demo");
@@ -140,5 +148,20 @@ describe("LandingPage while sign-in and sign-up are closed (the default)", () =>
     expect(document.getElementById("packs")!.querySelectorAll("li").length).toBeGreaterThan(0);
     expect(screen.getByRole("link", { name: translations.en.landing.footer.by })).toHaveAttribute("href", "https://www.krizaka.com");
     expect(screen.getByTestId("app-version")).toHaveTextContent(translations.en.landing.footer.version);
+  });
+
+  it("has a Mobile section with the phone recordings, played on demand, and a way to the full page", () => {
+    renderLanding("en", <LandingPage />, CLOSED);
+    const section = document.getElementById("mobile") as HTMLElement;
+    const videos = section.querySelectorAll("video");
+    expect(videos.length).toBe(4);
+    videos.forEach((v) => {
+      expect(v.getAttribute("preload")).toBe("none");
+      expect(v.hasAttribute("autoplay")).toBe(false);
+      expect(v.getAttribute("poster")).toMatch(/products\/orazaka\/mobile\/.*\.webp$/);
+    });
+    expect(within(section).getByRole("link", { name: translations.en.mobile.all })).toHaveAttribute("href", "/mobile");
+    const bar = screen.getByRole("navigation", { name: "Orazaka" });
+    expect(within(bar).getByRole("link", { name: translations.en.landing.nav.mobile })).toHaveAttribute("href", "/mobile");
   });
 });

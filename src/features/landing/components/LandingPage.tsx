@@ -3,6 +3,8 @@
 import { useTranslation } from "@/core/context/LocaleContext";
 import { LandingNav } from "@/features/landing/components/LandingNav";
 import { LandingHero } from "@/features/landing/components/LandingHero";
+import { GalleryFeatured } from "@/features/landing/components/GalleryFeatured";
+import { LandingMobile } from "@/features/landing/components/LandingMobile";
 import { LandingSovereignty } from "@/features/landing/components/LandingSovereignty";
 import { LandingPlatform } from "@/features/landing/components/LandingPlatform";
 import { LandingCompare } from "@/features/landing/components/LandingCompare";
@@ -29,11 +31,13 @@ export function LandingPage() {
       <LandingNav />
       <main className="min-h-screen bg-surface-0 text-fg">
         <LandingHero />
+        <GalleryFeatured />
         <LandingSovereignty />
         <LandingPlatform />
         <LandingCompare />
         <LandingHow />
         <LandingDemo />
+        <LandingMobile />
         <LandingStudios />
         <LandingPacks />
         <LandingClosing eyebrow={c.eyebrow} title={c.title} lead={c.lead} primary={c.primary} secondary={c.secondary} />

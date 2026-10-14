@@ -17,7 +17,10 @@ const LOCALES: { code: Locale; label: string }[] = [
 ];
 
 /** Section anchors of the home page, in reading order. */
-export const ANCHORS = ["sovereignty", "platform", "how", "demo", "studios", "packs"] as const;
+export const ANCHORS = ["made", "sovereignty", "platform", "how", "demo", "studios", "packs"] as const;
+
+/** The anchors the bar drops below the large breakpoint, to keep the bar on one line. */
+const LARGE_ONLY: readonly string[] = ["platform", "studios", "packs"];
 
 function Locales({ className }: Readonly<{ className?: string }>) {
   const { t, locale, setLocale } = useTranslation();
@@ -59,14 +62,19 @@ export function LandingNav({ onHome = true }: Readonly<{ onHome?: boolean }>) {
           <span className="font-display text-lg font-bold tracking-tight">Orazaka</span>
         </Link>
 
-        <ul className="hidden items-center gap-7 md:flex">
+        <ul className="hidden items-center gap-5 lg:gap-7 md:flex">
           {ANCHORS.map((id) => (
-            <li key={id}>
+            <li key={id} className={LARGE_ONLY.includes(id) ? "hidden lg:block" : undefined}>
               <a href={href(id)} className="text-sm text-fg-secondary transition-colors hover:text-fg">
                 {n[id]}
               </a>
             </li>
           ))}
+          <li>
+            <Link href="/mobile" className="text-sm text-fg-secondary transition-colors hover:text-fg">
+              {n.mobile}
+            </Link>
+          </li>
         </ul>
 
         <span className="ml-auto flex items-center gap-1.5 sm:gap-2">
@@ -75,14 +83,12 @@ export function LandingNav({ onHome = true }: Readonly<{ onHome?: boolean }>) {
             variant="ghost"
             label={(mode) => ({ "dark": t.header.themeDark, "light": t.header.themeLight, "system": t.header.themeSystem })[mode]}
           />
-          <Button asChild variant={flags.login ? "ghost" : "primary"} size="sm" shape={flags.login ? undefined : "pill"} className={flags.login ? "hidden sm:inline-flex" : "kz-sheen"}>
+          <Button asChild variant="ghost" size="sm">
+            <Link href="/login">{n.signIn}</Link>
+          </Button>
+          <Button asChild variant={flags.signup ? "ghost" : "primary"} size="sm" shape={flags.signup ? undefined : "pill"} className={flags.signup ? "hidden sm:inline-flex" : "hidden kz-sheen sm:inline-flex"}>
             <Link href="/docs">{n.docs}</Link>
           </Button>
-          {flags.login && (
-            <Button asChild variant="ghost" size="sm" className="hidden sm:inline-flex">
-              <Link href="/login">{n.signIn}</Link>
-            </Button>
-          )}
           {flags.signup && (
             <Button asChild variant="primary" size="sm" shape="pill" className="kz-sheen">
               <Link href="/register">{n.getStarted}</Link>
@@ -111,12 +117,22 @@ export function LandingNav({ onHome = true }: Readonly<{ onHome?: boolean }>) {
                 </a>
               </li>
             ))}
+            <li>
+              <Link href="/mobile" onClick={() => setOpen(false)} className="flex min-h-12 items-center border-b border-border-subtle text-base text-fg">
+                {n.mobile}
+              </Link>
+            </li>
           </ul>
           <span className="mt-4 flex items-center justify-between gap-3">
             <Locales className="flex" />
-            <Button asChild variant="secondary" size="sm" shape="pill">
-              {flags.login ? <Link href="/login">{n.signIn}</Link> : <Link href="/docs">{n.docs}</Link>}
-            </Button>
+            <span className="flex items-center gap-2">
+              <Button asChild variant="ghost" size="sm">
+                <Link href="/docs">{n.docs}</Link>
+              </Button>
+              <Button asChild variant="primary" size="sm" shape="pill">
+                <Link href="/login">{n.signIn}</Link>
+              </Button>
+            </span>
           </span>
         </nav>
       )}

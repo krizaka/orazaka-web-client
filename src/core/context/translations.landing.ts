@@ -20,6 +20,8 @@ export const landing: Record<Locale, LandingDictionary> = {
       docs: "Documentation",
       demo: "Demo",
       packs: "Packs",
+      mobile: "Mobile",
+      made: "Made here",
       langLabel: "Language",
       openMenu: "Open the menu",
       closeMenu: "Close the menu",
@@ -171,6 +173,7 @@ export const landing: Record<Locale, LandingDictionary> = {
       home: "Back to the home page",
       heroPrimary: "Read the documentation",
       heroSecondary: "Watch it run",
+      signInBanner: "Sign-in opens when Orazaka's dev services run — watch the demo meanwhile.",
     },
     footer: {
       privacy: "Privacy",
@@ -196,6 +199,8 @@ export const landing: Record<Locale, LandingDictionary> = {
       docs: "Documentation",
       demo: "Démo",
       packs: "Packs",
+      mobile: "Mobile",
+      made: "Fait ici",
       langLabel: "Langue",
       openMenu: "Ouvrir le menu",
       closeMenu: "Fermer le menu",
@@ -347,6 +352,7 @@ export const landing: Record<Locale, LandingDictionary> = {
       home: "Retour à l'accueil",
       heroPrimary: "Lire la documentation",
       heroSecondary: "Le voir tourner",
+      signInBanner: "La connexion s'ouvre quand les services de développement d'Orazaka tournent — regardez la démo en attendant.",
     },
     footer: {
       privacy: "Confidentialité",

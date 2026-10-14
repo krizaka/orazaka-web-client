@@ -1,11 +1,9 @@
-import { AuthGate } from "@/features/auth/components/AuthGate";
-import { LoginForm } from "@/features/auth/components/LoginForm";
+import { LoginEntry } from "@/features/auth/components/LoginEntry";
 
-/** The page is closed behind AUTH_LOGIN_ENABLED (default false): a calm notice, nothing mounts, no backend call. */
+/**
+ * `/login` — the app's real sign-in screen. While `AUTH_LOGIN_ENABLED` is off (default) it is shown disabled under a
+ * calm banner and nothing calls the backend; when on, the sign-in works as it always did.
+ */
 export default function LoginPage() {
-  return (
-    <AuthGate flag="login">
-      <LoginForm />
-    </AuthGate>
-  );
+  return <LoginEntry />;
 }

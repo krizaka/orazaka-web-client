@@ -29,6 +29,8 @@ const PUBLIC_PREFIXES = [
   "/contact",
   "/features",
   "/docs",
+  "/mobile",
+  "/gallery",
 ];
 
 /**
