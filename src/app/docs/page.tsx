@@ -24,6 +24,10 @@ export default function DocsHubPage() {
               Generated from the code of the Orazaka repositories: module map, request pipeline, packs and Studios, the API, administration and the CLI.
             </p>
           </header>
+          <Link href="/models" className="flex flex-col gap-2 rounded-2xl border border-border-default bg-surface-1/85 p-5 transition-colors hover:border-border-strong">
+            <span className="font-semibold text-fg">Supported models</span>
+            <span className="text-sm leading-relaxed text-fg-secondary">Every model Orazaka supports: what it does, where it runs — on your hardware or at an optional provider — its licence and context window.</span>
+          </Link>
           {groups.map((g) => (
             <section key={g.category} aria-labelledby={`cat-${g.category}`} className="space-y-4">
               <h2 id={`cat-${g.category}`} className="font-mono text-xs font-semibold uppercase tracking-[0.14em] text-fg-secondary">

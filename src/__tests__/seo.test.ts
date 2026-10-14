@@ -28,12 +28,14 @@ describe("search engines and AI assistants (the Krizaka family contract)", () =>
     expect(auditSitemap(xml, { host: SITE_URL, minUrls: 10 })).toEqual([]);
     expect(entries.map((e) => e.url)).toContain(`${SITE_URL}/features/unified-engine`);
     expect(publicPaths()).toContain("/docs/architecture");
-    expect(publicPaths()).toEqual(expect.arrayContaining(["/mobile", "/gallery"]));
+    expect(publicPaths()).toEqual(expect.arrayContaining(["/mobile", "/gallery", "/models"]));
+    expect(entries.map((e) => e.url)).toContain(`${SITE_URL}/models`);
   });
 
   it("llms.txt and llms-full.txt follow llmstxt.org, name this host and link the family", () => {
     expect(auditLlms(llmsText(), { host: SITE_URL })).toEqual([]);
     expect(auditLlms(llmsFullText(), { host: SITE_URL, full: true })).toEqual([]);
+    expect(llmsText()).toContain(`[Models](${SITE_URL}/models)`);
     expect(llmsFullText().length).toBeGreaterThan(llmsText().length * 5);
   });
 
@@ -44,7 +46,7 @@ describe("search engines and AI assistants (the Krizaka family contract)", () =>
     expect(graph.find((n) => n["@type"] === "SoftwareApplication")).toMatchObject({ applicationCategory: "BusinessApplication" });
   });
 
-  it.each(["/robots.txt", "/sitemap.xml", "/llms.txt", "/llms-full.txt", "/opengraph-image"])("the sign-in proxy lets crawlers read %s", (path) => {
+  it.each(["/robots.txt", "/sitemap.xml", "/llms.txt", "/llms-full.txt", "/opengraph-image", "/models"])("the sign-in proxy lets crawlers read %s", (path) => {
     const res = proxy(new NextRequest(`${SITE_URL}${path}`));
     expect(res.headers.get("x-middleware-next")).toBe("1");
   });

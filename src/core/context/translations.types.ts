@@ -5,6 +5,7 @@
 
 import type { FeaturesDictionary, LandingDictionary } from "./translations.landing.types";
 import type { InsightsDictionary } from "./translations.insights";
+import type { ModelsDictionary } from "./translations.models.types";
 import type { GalleryDictionary } from "./translations.gallery";
 import type { MobileDictionary } from "./translations.mobile";
 
@@ -748,6 +749,7 @@ export interface TranslationDictionary {
   showcase: ShowcaseDictionary;
   /** Charts, credits, the live job queue and the waits. */
   insights: InsightsDictionary;
+  models: ModelsDictionary;
   /** The ⌘K palette: its words (the entries reuse the sidebar's). */
   commandPalette: {
     label: string;

@@ -12,6 +12,7 @@ const icons = path.dirname(resolveFromApp("@krizaka/icons/package.json"));
 const charts = path.dirname(resolveFromApp("@krizaka/charts/package.json"));
 const intl = path.dirname(resolveFromApp("@krizaka/intl/package.json"));
 const tokens = path.dirname(resolveFromApp("@krizaka/tokens/package.json"));
+const pacer = path.dirname(resolveFromApp("@krizaka/pacer/package.json"));
 
 const createJestConfig = nextJest({
   dir: "./",
@@ -34,6 +35,8 @@ const config = {
     "^@krizaka/intl/(.*)$": `${intl}/dist/$1.js`,
     // @krizaka/tokens (a dependency of @krizaka/ui 3.x's chunks): the same `import`-only exports.
     "^@krizaka/tokens/(.*)$": `${tokens}/dist/$1.js`,
+    // @krizaka/pacer (a dependency of @krizaka/ui's DataTable): the same `import`-only exports.
+    "^@krizaka/pacer/(.*)$": `${pacer}/dist/$1.js`,
   },
   testPathIgnorePatterns: ["<rootDir>/node_modules/", "<rootDir>/.next/", "<rootDir>/src/__tests__/helpers/", "<rootDir>/e2e/", "<rootDir>/scripts/"],
   collectCoverageFrom: [

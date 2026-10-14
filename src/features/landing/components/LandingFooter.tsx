@@ -46,6 +46,9 @@ export function LandingFooter() {
           </SiteFooter.Link>
         ))}
         <SiteFooter.Link asChild>
+          <Link href="/models">{t.models.nav}</Link>
+        </SiteFooter.Link>
+        <SiteFooter.Link asChild>
           <Link href="/docs">{f.docs}</Link>
         </SiteFooter.Link>
       </SiteFooter.Column>

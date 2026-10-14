@@ -64,7 +64,7 @@ const nextConfig: NextConfig = {
   agentRules: false,
   // @krizaka/ui: the primitives the design system re-exports since 2.0 (ES modules) — listed so next/jest
   // transforms them like the design system itself.
-  transpilePackages: ["@krizaka/orazaka-design-system", "@krizaka/orazaka-shared", "@krizaka/ui", "@krizaka/tokens", "@krizaka/icons", "@krizaka/intl"],
+  transpilePackages: ["@krizaka/orazaka-design-system", "@krizaka/orazaka-shared", "@krizaka/ui", "@krizaka/tokens", "@krizaka/icons", "@krizaka/intl", "@krizaka/pacer", "@tanstack/pacer", "@tanstack/react-table", "@tanstack/table-core", "@tanstack/react-virtual", "@tanstack/virtual-core", "@tanstack/store", "@tanstack/react-store"],
   turbopack: {
     root: path.resolve(__dirname, ".."),
   },
