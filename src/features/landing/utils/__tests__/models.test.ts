@@ -1,6 +1,6 @@
 import { capabilitiesOf, featured, filterModels, filtersHref, MODELS, providerCount, readFilters, type ModelEntry } from "@/features/landing/utils/models";
 
-const CAPS = ["chat", "reasoning", "vision", "code", "embeddings", "image", "video", "speech-to-text", "text-to-speech"];
+const CAPS = ["chat", "reasoning", "vision", "code", "embeddings", "image", "video", "speech-to-text", "text-to-speech", "music", "video-to-audio"];
 
 describe("the registry the site shows (models.generated.json)", () => {
   it("is not empty and every model carries what the page prints", () => {

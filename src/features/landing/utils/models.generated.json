@@ -61,6 +61,26 @@
       "lastVerified": "2026-10-15"
     },
     {
+      "id": "acestep-v15-xl-turbo",
+      "name": "ACE-Step 1.5 XL turbo (music bed)",
+      "vendor": "ACE Studio · StepFun",
+      "family": "ACE-Step 1.5",
+      "capabilities": [
+        "music"
+      ],
+      "runsOn": "local",
+      "runtime": "worker-media · Metal, CUDA",
+      "openWeights": true,
+      "licence": {
+        "name": "MIT",
+        "url": "https://huggingface.co/ACE-Step/acestep-v15-xl-turbo-diffusers"
+      },
+      "commercialUse": "yes",
+      "contextWindow": null,
+      "status": "default",
+      "lastVerified": null
+    },
+    {
       "id": "piper-en-medium-ljspeech",
       "name": "Piper LJSpeech (en)",
       "vendor": "Rhasspy",
@@ -177,6 +197,26 @@
       },
       "commercialUse": "conditions",
       "contextWindow": 16384,
+      "status": "available",
+      "lastVerified": null
+    },
+    {
+      "id": "mmaudio-large-44k-v2",
+      "name": "MMAudio large 44k v2 (foley) — non-commercial",
+      "vendor": "Sony · Hkchengrex (UIUC)",
+      "family": "MMAudio",
+      "capabilities": [
+        "video-to-audio"
+      ],
+      "runsOn": "local",
+      "runtime": "worker-media · Metal, CUDA",
+      "openWeights": true,
+      "licence": {
+        "name": "CC-BY-NC-4.0",
+        "url": "https://github.com/hkchengrex/MMAudio#licenses"
+      },
+      "commercialUse": "no",
+      "contextWindow": null,
       "status": "available",
       "lastVerified": null
     },

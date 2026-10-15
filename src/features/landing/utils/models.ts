@@ -6,7 +6,7 @@
  */
 import data from "./models.generated.json";
 
-export type Capability = "chat" | "reasoning" | "vision" | "code" | "embeddings" | "image" | "video" | "speech-to-text" | "text-to-speech";
+export type Capability = "chat" | "reasoning" | "vision" | "code" | "embeddings" | "image" | "video" | "speech-to-text" | "text-to-speech" | "music" | "video-to-audio";
 export type RunsOn = "local" | "provider";
 export type ModelStatus = "default" | "available" | "planned";
 
@@ -31,7 +31,7 @@ export interface ModelEntry {
 export const MODELS = data.models as ModelEntry[];
 
 /** The capabilities that appear in the registry, in the order the filters show them. */
-const CAPABILITY_ORDER: Capability[] = ["chat", "reasoning", "vision", "code", "embeddings", "image", "video", "speech-to-text", "text-to-speech"];
+const CAPABILITY_ORDER: Capability[] = ["chat", "reasoning", "vision", "code", "embeddings", "image", "video", "speech-to-text", "text-to-speech", "music", "video-to-audio"];
 export const capabilitiesOf = (models: readonly ModelEntry[]): Capability[] => CAPABILITY_ORDER.filter((c) => models.some((m) => m.capabilities.includes(c)));
 
 export interface Filters {
