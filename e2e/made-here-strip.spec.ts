@@ -12,8 +12,10 @@ test("every slide has the same height and the media share one frame size", async
   await slides.first().scrollIntoViewIfNeeded();
   const heights: number[] = [];
   for (let i = 0; i < count; i++) {
-    const strip = slides.nth(i).locator("ol").first();
+    const strip = page.locator('#made [aria-roledescription="slide"][data-active] ol').first();
+    await expect(strip).toBeVisible();
     heights.push((await strip.boundingBox())!.height);
+    await page.getByRole("button", { name: "Next image" }).click();
   }
   // The tallest and the shortest differ by a rounding error at most.
   expect(Math.max(...heights) - Math.min(...heights)).toBeLessThan(4);
