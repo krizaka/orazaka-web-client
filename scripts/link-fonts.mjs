@@ -29,5 +29,5 @@ if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.me
   const here = path.dirname(fileURLToPath(import.meta.url));
   const packageDir = path.dirname(createRequire(import.meta.url).resolve("@krizaka/fonts/package.json"));
   const written = linkFonts(packageDir, path.join(here, "..", "src", "app", "_fonts"));
-  console.log(`fonts: ${written.length} faces of @krizaka/fonts in src/app/_fonts`);
+  console.error(`fonts: ${written.length} faces of @krizaka/fonts in src/app/_fonts`);
 }
