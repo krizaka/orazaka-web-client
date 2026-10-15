@@ -6,6 +6,7 @@ import Link from "next/link";
 import { ForwardIcon } from "@krizaka/icons";
 import { Button } from "@krizaka/ui/button";
 import { ClipPlayer, RunFacts } from "@krizaka/orazaka-design-system";
+import { cn } from "@krizaka/ui/cn";
 import { Tabs } from "@krizaka/ui/tabs";
 import { SectionBackdrop } from "@krizaka/ui/section-backdrop";
 import { Showcase, type ShowcaseLabels } from "@krizaka/ui/showcase";
@@ -78,20 +79,23 @@ function Slide({ item, active }: Readonly<{ item: FeaturedItem; active: boolean 
   const { t } = useTranslation();
   const g = t.gallery;
   const { clip, image } = item;
+  // The tab is the item's own state; the media on the left follow it: the side that is chosen is the large one (both stay mounted, so the clip keeps playing).
+  const [tab, setTab] = React.useState<"video" | "image">("video");
+  const imageFirst = tab === "image" && image !== undefined;
   return (
-    <div className="grid grid-cols-[minmax(0,1fr)] items-start gap-8 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)] lg:gap-12">
-      <div className="space-y-4">
-        <figure className="overflow-hidden rounded-2xl border border-border-default bg-surface-2">
+    <div className="grid grid-cols-[minmax(0,1fr)] items-start gap-8 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)] lg:gap-12" data-tab={tab}>
+      <div className="flex flex-col gap-4">
+        <figure className={cn("overflow-hidden rounded-2xl border border-border-default bg-surface-2", imageFirst ? "order-2 w-2/5 min-w-44" : "order-1 w-full")}>
           <ClipPlayer sources={clipFiles(clip)} title={g.clips[clip.id]} labels={clipLabels(g, clip)} />
         </figure>
         {image && (
-          <figure className="w-2/5 min-w-44 overflow-hidden rounded-2xl border border-border-default bg-surface-2">
+          <figure className={cn("overflow-hidden rounded-2xl border border-border-default bg-surface-2", imageFirst ? "order-1 w-full max-w-lg" : "order-2 w-2/5 min-w-44")}>
             <Image
               src={gallerySrc(image.id)}
               alt={g.items[image.id]}
               width={image.width}
               height={image.height}
-              sizes="(max-width: 1024px) 40vw, 220px"
+              sizes="(max-width: 1024px) 80vw, 480px"
               loading="lazy"
               unoptimized
               className="block h-auto w-full"
@@ -100,7 +104,7 @@ function Slide({ item, active }: Readonly<{ item: FeaturedItem; active: boolean 
         )}
       </div>
       {image ? (
-        <Tabs.Root defaultValue="video" variant="segmented" className="space-y-5">
+        <Tabs.Root value={tab} onValueChange={(next) => setTab(next as "video" | "image")} variant="segmented" className="space-y-5">
           <Tabs.List aria-label={g.stepsLabel}>
             <Tabs.Trigger value="video">{g.videoStep}</Tabs.Trigger>
             <Tabs.Trigger value="image">{g.imageStep}</Tabs.Trigger>

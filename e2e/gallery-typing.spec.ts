@@ -49,8 +49,12 @@ test("the Image tab shows the image prompt and its facts and hides the video one
   const imagePrompt = slide.getByRole("heading", { name: /image prompt/i });
   await expect(videoPrompt).toBeVisible();
   await expect(imagePrompt).toBeHidden();
+  const videoFrame = slide.locator("[data-clip-player]").first();
+  const videoWidth = (await videoFrame.boundingBox())!.width;
   await imageTab.click();
   await expect(imagePrompt).toBeVisible();
+  // The media follow the tab: the image becomes the large one, the clip the small one (and keeps playing).
+  await expect.poll(async () => (await videoFrame.boundingBox())!.width).toBeLessThan(videoWidth * 0.7);
   await expect(slide.getByText("art-golden-hour").first()).toBeVisible();
   await expect(videoPrompt).toBeHidden();
   await expect(slide.getByText(/Orazaka run/)).toBeHidden();
