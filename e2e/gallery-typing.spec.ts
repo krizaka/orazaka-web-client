@@ -36,3 +36,68 @@ test("under reduced motion the whole prompt is there at once", async ({ page }) 
   const reserve = page.locator("#made [data-typed-prompt] [data-typed-reserve]").first();
   await expect(visible).toHaveText((await reserve.textContent())!.trim());
 });
+
+/** The Video · Image switch of "Prompt → image → video" really switches (it once showed both panels at once). */
+test("the Image tab shows the image prompt and its facts and hides the video ones; arrows move between tabs; state is per item", async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await page.goto("/");
+  const slide = page.locator('#made [aria-roledescription="slide"][data-active]').first();
+  await slide.scrollIntoViewIfNeeded();
+  const videoTab = slide.getByRole("tab", { name: "Video" });
+  const imageTab = slide.getByRole("tab", { name: "Image" });
+  const videoPrompt = slide.getByRole("heading", { name: /video prompt/i });
+  const imagePrompt = slide.getByRole("heading", { name: /image prompt/i });
+  await expect(videoPrompt).toBeVisible();
+  await expect(imagePrompt).toBeHidden();
+  await imageTab.click();
+  await expect(imagePrompt).toBeVisible();
+  await expect(slide.getByText("art-golden-hour").first()).toBeVisible();
+  await expect(videoPrompt).toBeHidden();
+  await expect(slide.getByText(/Orazaka run/)).toBeHidden();
+  // Keyboard: arrows move the selection of the segmented control.
+  await imageTab.focus();
+  await page.keyboard.press("ArrowLeft");
+  await expect(videoTab).toHaveAttribute("aria-selected", "true");
+  await expect(videoPrompt).toBeVisible();
+  await page.keyboard.press("ArrowRight");
+  await expect(imageTab).toHaveAttribute("aria-selected", "true");
+  // State per item: the next item starts on its video.
+  await page.getByRole("button", { name: "Next image" }).click();
+  const next = page.locator('#made [aria-roledescription="slide"][data-active]').first();
+  await expect(next.getByRole("heading", { name: /video prompt/i })).toBeVisible();
+});
+
+/** The clip is plainly a clip: a badge, it plays by itself in view, it has controls, and it opens larger. */
+test("the video says it is a video, plays in view, has play/pause and sound, and opens larger", async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: "no-preference" });
+  await page.goto("/");
+  const slide = page.locator('#made [aria-roledescription="slide"][data-active]').first();
+  await slide.scrollIntoViewIfNeeded();
+  const frame = slide.locator("[data-loop-video]").first();
+  await expect(frame.locator("[data-video-badge]")).toContainText(/Video · 5 s/);
+  const video = frame.locator("video");
+  await expect.poll(() => video.evaluate((v: HTMLVideoElement) => !v.paused && v.readyState >= 2)).toBe(true);
+  expect(await video.evaluate((v: HTMLVideoElement) => v.muted && v.loop)).toBe(true);
+  await frame.hover();
+  await frame.getByRole("button", { name: "Pause the video" }).click();
+  await expect.poll(() => video.evaluate((v: HTMLVideoElement) => v.paused)).toBe(true);
+  await frame.getByRole("button", { name: "Play the video" }).click();
+  await frame.getByRole("button", { name: "Turn the sound on" }).click();
+  expect(await video.evaluate((v: HTMLVideoElement) => v.muted)).toBe(false);
+  await frame.getByRole("button", { name: "Open the video larger" }).click({ position: { x: 20, y: 200 } });
+  const dialog = page.getByRole("dialog");
+  await expect(dialog).toBeVisible();
+  await expect(dialog.locator("video")).toHaveAttribute("controls", "");
+  await page.keyboard.press("Escape");
+  await expect(dialog).toBeHidden();
+});
+
+test("under reduced motion the clip shows its poster and a play button, and does not play by itself", async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await page.goto("/");
+  const frame = page.locator("#made [data-loop-video]").first();
+  await frame.scrollIntoViewIfNeeded();
+  await page.waitForTimeout(1500);
+  expect(await frame.locator("video").evaluate((v: HTMLVideoElement) => v.paused)).toBe(true);
+  await expect(frame.getByRole("button", { name: "Play the video" }).first()).toBeVisible();
+});

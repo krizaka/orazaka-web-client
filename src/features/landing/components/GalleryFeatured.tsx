@@ -17,6 +17,7 @@ import { CopyButton } from "@/features/landing/components/CopyButton";
 import { ItemFacts } from "@/features/landing/components/ItemFacts";
 import { ReproduceBlock } from "@/features/landing/components/ReproduceBlock";
 import { LoopVideo } from "@/features/landing/components/LoopVideo";
+import { videoLabels } from "@/features/landing/components/videoLabels";
 import { ClipFacts } from "@/features/landing/components/ClipFacts";
 import { TypedPrompt } from "@/features/landing/components/TypedPrompt";
 
@@ -82,7 +83,7 @@ function Slide({ item, active }: Readonly<{ item: FeaturedItem; active: boolean 
     <div className="grid grid-cols-[minmax(0,1fr)] items-start gap-8 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)] lg:gap-12">
       <div className="space-y-4">
         <figure className="overflow-hidden rounded-2xl border border-border-default bg-surface-2">
-          <LoopVideo sources={clipFiles(clip)} label={g.clips[clip.id]} width={clip.width} height={clip.height} className="block" />
+          <LoopVideo sources={clipFiles(clip)} title={g.clips[clip.id]} labels={videoLabels(g, clip.duration)} />
         </figure>
         {image && (
           <figure className="w-2/5 min-w-44 overflow-hidden rounded-2xl border border-border-default bg-surface-2">
@@ -105,10 +106,10 @@ function Slide({ item, active }: Readonly<{ item: FeaturedItem; active: boolean 
             <Tabs.Trigger value="video">{g.videoStep}</Tabs.Trigger>
             <Tabs.Trigger value="image">{g.imageStep}</Tabs.Trigger>
           </Tabs.List>
-          <Tabs.Content value="video" forceMount>
+          <Tabs.Content value="video">
             <VideoPanel clip={clip} active={active} />
           </Tabs.Content>
-          <Tabs.Content value="image" forceMount>
+          <Tabs.Content value="image">
             <ImagePanel image={image} />
           </Tabs.Content>
         </Tabs.Root>
