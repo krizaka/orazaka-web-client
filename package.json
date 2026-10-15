@@ -3,17 +3,21 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
+    "postinstall": "node scripts/link-fonts.mjs",
+    "predev": "node scripts/link-fonts.mjs",
     "dev": "next dev",
+    "prebuild": "node scripts/link-fonts.mjs",
     "build": "depcruise src --config .dependency-cruiser.cjs && next build",
     "start": "next start",
     "lint": "eslint && krizaka-ratchet",
     "format": "prettier --write \"src/**/*.{ts,tsx,json,md}\"",
-    "validate": "depcruise src --config .dependency-cruiser.cjs && npm run lint && npm run test:codemods && npm run test:coverage",
+    "validate": "depcruise src --config .dependency-cruiser.cjs && npm run lint && npm run test:codemods && npm run test:scripts && npm run test:coverage",
     "test": "jest",
     "test:coverage": "jest --coverage --runInBand",
     "test:e2e": "npx playwright test",
     "test:e2e:ci": "npx playwright test --reporter=github",
     "test:codemods": "node --test scripts/codemods/*.test.mjs",
+    "test:scripts": "node --test scripts/*.test.mjs",
     "record:tour": "node scripts/record-tour.mjs"
   },
   "dependencies": {
