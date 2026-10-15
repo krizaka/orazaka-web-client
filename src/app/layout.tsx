@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter, JetBrains_Mono, Outfit } from "next/font/google";
+import localFont from "next/font/local";
 import "./globals.css";
 import "@krizaka/ui/blocks.css";
 import { readAuthFlags } from "@/core/config/auth-flags";
@@ -9,42 +9,53 @@ import { ThemeScript } from "@krizaka/ui/theme";
 import { cn } from "@krizaka/ui/cn";
 import { KRIZAKA_URL, SITE_DESCRIPTION, SITE_NAME, SITE_TITLE, SITE_URL, siteJsonLd } from "@/app/_seo/seo";
 
-const inter = Inter({
+/*
+ * The typefaces are the files of @krizaka/fonts (SIL OFL 1.1), loaded by next/font/local: preloaded, fingerprinted and
+ * served from the same origin — never fetched from Google at build. The CSS variables are the ones the app already uses.
+ * The arguments must be literals, relative to this file.
+ */
+const inter = localFont({
+  src: "../../../node_modules/@krizaka/fonts/files/web/inter-latin-wght.woff2",
+  weight: "300 700",
   variable: "--font-inter",
-  subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700"],
+  display: "swap",
 });
 
-const jetbrainsMono = JetBrains_Mono({
+const jetbrainsMono = localFont({
+  src: "../../../node_modules/@krizaka/fonts/files/web/jetbrains-mono-latin-wght.woff2",
+  weight: "400 600",
   variable: "--font-jetbrains-mono",
-  subsets: ["latin"],
-  weight: ["400", "500", "600"],
+  display: "swap",
 });
 
-const outfit = Outfit({
+/** Outfit's role (headings) is taken by Plus Jakarta Sans, the display face of @krizaka/fonts. */
+const outfit = localFont({
+  src: "../../../node_modules/@krizaka/fonts/files/web/plus-jakarta-sans-latin-wght.woff2",
+  weight: "500 800",
   variable: "--font-outfit",
-  subsets: ["latin"],
-  weight: ["500", "600", "700", "800"],
+  display: "swap",
 });
 
 /**
- * Krizaka Display — mapped to Outfit until custom .woff2 is provisioned.
- * CSS variable --font-krizaka-display resolves to Outfit's variable font.
+ * Krizaka Display: the display face of @krizaka/fonts (Plus Jakarta Sans).
+ * CSS variable --font-krizaka-display resolves to it.
  */
-const krizakaDisplay = Outfit({
+const krizakaDisplay = localFont({
+  src: "../../../node_modules/@krizaka/fonts/files/web/plus-jakarta-sans-latin-wght.woff2",
+  weight: "500 800",
   variable: "--font-krizaka-display",
-  subsets: ["latin"],
-  weight: ["500", "600", "700", "800"],
+  display: "swap",
 });
 
 /**
- * Krizaka Mono — mapped to JetBrains Mono until custom .woff2 is provisioned.
- * CSS variable --font-krizaka-mono resolves to JetBrains Mono's variable font.
+ * Krizaka Mono: the mono face of @krizaka/fonts (JetBrains Mono).
+ * CSS variable --font-krizaka-mono resolves to it.
  */
-const krizakaMono = JetBrains_Mono({
+const krizakaMono = localFont({
+  src: "../../../node_modules/@krizaka/fonts/files/web/jetbrains-mono-latin-wght.woff2",
+  weight: "400 600",
   variable: "--font-krizaka-mono",
-  subsets: ["latin"],
-  weight: ["400", "500", "600"],
+  display: "swap",
 });
 
 /**

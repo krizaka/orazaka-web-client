@@ -95,6 +95,11 @@ const eslintConfig = defineConfig([
                 "Relative imports from parent directories are strictly banned in Orazaka. You must leverage the absolute path alias '@/*' (pointing to './src/*') to maintain clean module boundaries and refactoring flexibility.",
             },
             {
+              group: ["next/font/google", "next/font/google/*"],
+              message:
+                "Google Fonts are banned in Orazaka: next/font/google fetches the faces from the network at build. The typefaces are the files of @krizaka/fonts, loaded with next/font/local (see the root layout).",
+            },
+            {
               group: ["lucide-react", "lucide-react/*"],
               message:
                 "Direct icon-library imports are banned in Orazaka. Use the centralized polymorphic <Icon name=\"...\" /> registry exported from '@krizaka/orazaka-design-system'; add a new entry to the registry (orazaka-design-system/src/icon.tsx) if an icon is missing.",
