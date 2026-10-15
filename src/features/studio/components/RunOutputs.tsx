@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { CheckIcon, CopyIcon, DownloadIcon } from "@krizaka/icons";
 import { Button } from "@krizaka/ui/button";
 import { Card } from "@krizaka/ui/card";
@@ -51,6 +51,8 @@ interface RunOutputRowProps {
 function RunOutputRow({ artefact, index, wide }: Readonly<RunOutputRowProps>) {
   const { t } = useTranslation();
   const [copied, setCopied] = useState(false);
+  // The run row outlives its file (storage can be reset by a deploy): a media that 404s is said so.
+  const [gone, setGone] = useState(false);
   const media = (artefact.type === "IMAGE" || artefact.type === "VIDEO" || artefact.type === "AUDIO") && artefact.value !== "";
   const report = artefact.type === "TEXT" ? asReport(artefact.value) : null;
 
@@ -67,12 +69,12 @@ function RunOutputRow({ artefact, index, wide }: Readonly<RunOutputRowProps>) {
           <ReportFindings report={report} />
         </Card.Body>
       )}
-      <ArtefactMedia artefact={artefact} />
+      <ArtefactMedia artefact={artefact} gone={gone} onGone={() => setGone(true)} />
       <Card.Body className="gap-2">
         <header className="flex items-center gap-3">
           <span className="text-xs font-semibold uppercase tracking-wider text-fg-muted">{artefact.label}</span>
           <span className="ml-auto flex items-center gap-1.5">
-            {media && (
+            {media && !gone && (
               <Button asChild variant="secondary" size="sm">
                 <a href={artefact.value} download>
                   <DownloadIcon size={14} />
@@ -100,7 +102,27 @@ function RunOutputRow({ artefact, index, wide }: Readonly<RunOutputRowProps>) {
  * The value is the public URL the executor published, so it is used as-is; a root-relative
  * path is resolved against the current origin the same way the jobs dashboard does it.
  */
-function ArtefactMedia({ artefact }: Readonly<RunOutputRowProps>) {
+function ArtefactMedia({ artefact, gone, onGone }: Readonly<RunOutputRowProps & { gone: boolean; onGone: () => void }>) {
+  const { t } = useTranslation();
+  const image = useRef<HTMLImageElement>(null);
+
+  // An error that fired before hydration never reaches onError: look at the element once mounted.
+  useEffect(() => {
+    const element = image.current;
+    if (element?.complete && element.naturalWidth === 0) {
+      onGone();
+    }
+  }, [onGone]);
+
+  if (gone) {
+    return (
+      <div role="status" className="flex flex-col gap-1 bg-media px-6 py-10 text-center">
+        <p className="text-sm font-semibold text-fg">{t.studio.resultGone}</p>
+        <p className="mx-auto max-w-prose text-[13px] leading-relaxed text-fg-muted">{t.studio.resultGoneBody}</p>
+      </div>
+    );
+  }
+
   if (artefact.type === "TEXT" || artefact.value === "") {
     return null;
   }
@@ -116,6 +138,7 @@ function ArtefactMedia({ artefact }: Readonly<RunOutputRowProps>) {
         src={source}
         controls
         playsInline
+        onError={onGone}
         className="aspect-video w-full bg-media object-contain"
       >
         <track kind="captions" />
@@ -133,7 +156,9 @@ function ArtefactMedia({ artefact }: Readonly<RunOutputRowProps>) {
     /* eslint-disable-next-line @next/next/no-img-element -- a run artefact is a runtime URL,
        so there is no build-time source for next/image to optimise. */
     <img
+      ref={image}
       src={source}
+      onError={onGone}
       alt={artefact.label}
       className="max-h-[520px] w-full bg-media object-contain"
     />
