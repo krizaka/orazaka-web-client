@@ -15,6 +15,12 @@ export interface Clip {
   id: string;
   label: string;
   caption: string;
+  /** Where each output was made, in a sentence (local Mac, cloud, which model). */
+  origin: string;
+  /** The length of the clip, in seconds. */
+  duration: number;
+  /** What to notice, each note beginning at its second of the clip. */
+  notes: { at: number; text: string }[];
   webm: string;
   mp4: string;
   poster: string;
@@ -36,6 +42,9 @@ export function clipsFor(locale: Locale): Clip[] {
     id: c.id,
     label: c.text[locale].label,
     caption: c.text[locale].caption,
+    origin: c.text[locale].origin,
+    duration: c.duration,
+    notes: c.text[locale].notes,
     webm: url(c.id, "webm", c.hash.webm),
     mp4: url(c.id, "mp4", c.hash.mp4),
     poster: url(c.id, "jpg", c.hash.jpg),

@@ -4,7 +4,7 @@
  *
  *   node scripts/sync-showcase.mjs <path to a krizaka-com checkout>
  *
- * Everything is read, never typed: the recordings' words from krizaka.com's messages (site.orazakaDemo.tour), their
+ * Everything is read, never typed: the recordings' words from scripts/showcase-words.json, their
  * hashes from `lib/cdn-manifest.json` (the media live on Bunny, never here), the packs from the generated
  * `app/data/architecture.json` (a pack with status DRAFT is never shown). Never hand-edit the output.
  */
@@ -21,20 +21,22 @@ if (!site) {
 const read = (p) => JSON.parse(fs.readFileSync(path.join(site, p), "utf8"));
 const manifest = read("lib/cdn-manifest.json");
 const arch = read("app/data/architecture.json");
-const messages = { en: read("messages/en.json"), fr: read("messages/fr.json") };
 
-const TOUR = ["creations", "studios", "documents", "voice", "notifications", "chat", "packs"];
-const clips = TOUR.map((id) => {
+// The words are this app's own (scripts/showcase-words.json): krizaka.com no longer carries the Orazaka tour.
+const words = JSON.parse(fs.readFileSync(path.join(root, "scripts/showcase-words.json"), "utf8"));
+const clips = words.clips.map((c) => {
   const hash = (ext) => {
-    const h = manifest.files[`products/orazaka/tour/${id}.${ext}`];
-    if (!h) throw new Error(`products/orazaka/tour/${id}.${ext} is not in the CDN manifest`);
+    const h = manifest.files[`products/orazaka/tour/${c.id}.${ext}`];
+    if (!h) throw new Error(`products/orazaka/tour/${c.id}.${ext} is not in the CDN manifest`);
     return h;
   };
-  const words = (l) => messages[l].site.orazakaDemo.tour[id];
+  const text = (l) => ({ label: c[l].label, caption: c[l].caption, origin: c[l].origin });
+  const notes = (l) => c.notes.map((n) => ({ at: n.at, text: n[l] }));
   return {
-    id,
+    id: c.id,
+    duration: c.duration,
     hash: { webm: hash("webm"), mp4: hash("mp4"), jpg: hash("jpg") },
-    text: { en: { label: words("en").label, caption: words("en").caption }, fr: { label: words("fr").label, caption: words("fr").caption } },
+    text: { en: { ...text("en"), notes: notes("en") }, fr: { ...text("fr"), notes: notes("fr") } },
   };
 });
 

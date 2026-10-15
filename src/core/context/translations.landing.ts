@@ -172,8 +172,10 @@ export const landing: Record<Locale, LandingDictionary> = {
     demo: {
       eyebrow: "Demo · recorded on the real application",
       title: "A day of work on one machine.",
-      lead: "Meet Eric, head of sales at a small lamp studio: product photos and voice-overs, a lease checked against the law, Studios for repeat work, answers from his own documents. Every clip below is the real application, recorded on one Mac.",
+      lead: "Meet Eric, head of sales at a small lamp studio: a product photo, a clip, a voice-over, a lease checked against the law, the Studios, answers from his own documents. Every clip is the real application, on one machine, plus hosted models when you choose them — and each one says where its output was made.",
       frame: "orazaka · eric's workspace",
+      notice: "What to notice",
+      origin: "Where it was made",
     },
     packs: {
       eyebrow: "Packs",
@@ -368,8 +370,10 @@ export const landing: Record<Locale, LandingDictionary> = {
     demo: {
       eyebrow: "Démo · enregistrée sur l'application réelle",
       title: "Une journée de travail sur une seule machine.",
-      lead: "Voici Eric, responsable des ventes d'un petit atelier de luminaires : photos produit et voix off, un bail contrôlé contre la loi, des Studios pour le travail répétitif, des réponses tirées de ses propres documents. Chaque extrait ci-dessous est l'application réelle, enregistrée sur un seul Mac.",
+      lead: "Voici Eric, responsable des ventes d'un petit atelier de luminaires : une photo produit, un clip, une voix off, un bail contrôlé contre la loi, les Studios, des réponses tirées de ses propres documents. Chaque extrait est l'application réelle, sur une seule machine, plus des modèles hébergés quand vous les choisissez — et chacun dit où sa production a été faite.",
       frame: "orazaka · espace d'Eric",
+      notice: "À remarquer",
+      origin: "Où c'est fait",
     },
     packs: {
       eyebrow: "Packs",
