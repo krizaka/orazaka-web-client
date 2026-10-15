@@ -718,6 +718,8 @@ export interface TranslationDictionary {
     runOutputs: string;
     runFailed: string;
     runSucceeded: string;
+    resultGone: string;
+    resultGoneBody: string;
     runCancelled: string;
     runRunning: string;
     runAwaitingInput: string;
