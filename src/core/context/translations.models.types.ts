@@ -13,7 +13,7 @@ export interface ModelsDictionary {
   where: { local: string; provider: string; localLong: string; providerLong: string };
   status: { default: string; available: string; planned: string };
   columns: { model: string; vendor: string; does: string; runs: string; licence: string; context: string; status: string; verified: string };
-  licence: { open: string; proprietary: string };
+  licence: { open: string; proprietary: string; commercial: string; conditions: string; nonCommercial: string };
   context: { tokens: string; none: string };
   verified: { never: string };
   count: string;

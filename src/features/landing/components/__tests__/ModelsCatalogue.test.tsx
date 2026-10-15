@@ -63,6 +63,15 @@ describe("/models", () => {
     expect(within(row).getByText(m.licence.name)).toBeInTheDocument();
   });
 
+  it("flags a non-commercial licence with a visible chip, and only there", () => {
+    renderPage("en");
+    const nc = MODELS.filter((m) => m.commercialUse === "no");
+    expect(nc.length).toBeGreaterThan(0);
+    expect(screen.getAllByText(translations.en.models.licence.nonCommercial)).toHaveLength(nc.length);
+    const ok = MODELS.find((m) => m.commercialUse === "yes")!;
+    expect(within(screen.getByText(ok.id).closest("tr") as HTMLElement).queryByText(translations.en.models.licence.nonCommercial)).toBeNull();
+  });
+
   it("is in French when the language is", () => {
     renderPage("fr");
     expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent(translations.fr.models.hero.title);

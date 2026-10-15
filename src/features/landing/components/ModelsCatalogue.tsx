@@ -62,7 +62,14 @@ export function ModelsCatalogue({ models = MODELS }: Readonly<{ models?: readonl
             ) : (
               <span>{r.licence.name}</span>
             )}
-            <span className="text-xs text-fg-tertiary">{r.openWeights ? m.licence.open : m.licence.proprietary}</span>
+            <span className="flex flex-wrap items-center gap-1 text-xs text-fg-tertiary">
+              {r.commercialUse === "no" && (
+                <Badge tone="warning" size="sm">
+                  {m.licence.nonCommercial}
+                </Badge>
+              )}
+              <span>{`${r.openWeights ? m.licence.open : m.licence.proprietary}${r.commercialUse === "no" ? "" : ` · ${r.commercialUse === "yes" ? m.licence.commercial : m.licence.conditions}`}`}</span>
+            </span>
           </span>
         ),
       },

@@ -20,6 +20,8 @@ export interface ModelEntry {
   runtime: string;
   openWeights: boolean;
   licence: { name: string; url: string | null };
+  /** Can a firm that sells use it: yes · conditions (a community licence, share-alike, use restrictions) · no (non-commercial). */
+  commercialUse: "yes" | "conditions" | "no";
   contextWindow: number | null;
   status: ModelStatus;
   lastVerified: string | null;

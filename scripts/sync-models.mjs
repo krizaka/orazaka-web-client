@@ -36,6 +36,7 @@ const models = arch.models.map((m) => ({
   runtime: m.runtime,
   openWeights: m.openWeights,
   licence: m.licence,
+  commercialUse: m.commercialUse,
   contextWindow: m.contextWindow,
   status: m.status,
   lastVerified: m.lastVerified,
@@ -44,6 +45,14 @@ const out = path.join(root, "src", "features", "landing", "utils", "models.gener
 fs.mkdirSync(path.dirname(out), { recursive: true });
 fs.writeFileSync(out, `${JSON.stringify({ models }, null, 2)}\n`);
 
-const md = fs.readFileSync(path.join(generated, "MODELS.md"), "utf8").replace(/^---\n[\s\S]*?\n---\n/, "").trimStart();
+// The public page of the catalogue says what the public list says: the sections about the models kept out of it
+// (the unfiltered ones, which an operator may serve) stay in the workspace docs.
+const KEPT_OUT = ["Unfiltered models, your rules", "In the catalogue, not published"];
+const withoutKeptOut = (text) =>
+  text
+    .split(/^(?=## )/m)
+    .filter((block) => !KEPT_OUT.some((title) => block.startsWith(`## ${title}`)))
+    .join("");
+const md = withoutKeptOut(fs.readFileSync(path.join(generated, "MODELS.md"), "utf8").replace(/^---\n[\s\S]*?\n---\n/, "").trimStart());
 fs.writeFileSync(path.join(root, "content", "docs", "models.md"), md);
 process.stdout.write(`${models.length} models → src/features/landing/utils/models.generated.json, content/docs/models.md\n`);
