@@ -5,7 +5,7 @@ import { translations, type Locale } from "@/core/context/translations";
 import { AuthFlagsProvider } from "@/core/context/AuthFlagsContext";
 import { GalleryFeatured } from "@/features/landing/components/GalleryFeatured";
 import { GalleryPage } from "@/features/landing/components/GalleryPage";
-import { GALLERY, reproduceParts } from "@/features/landing/utils/gallery";
+import { GALLERY } from "@/features/landing/utils/gallery";
 import { COMPARE_IMAGES } from "@/features/landing/utils/model-compare";
 import { CLIPS, FEATURED, clipReproduceParts } from "@/features/landing/utils/gallery-clips";
 
