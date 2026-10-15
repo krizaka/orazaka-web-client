@@ -1,0 +1,116 @@
+{
+  "$comment": "The words of the demo recordings of the home page (LandingDemo), written here: the label, the caption, where the output was made (`origin`) and what to notice, each note at the second of the clip where it begins (the page shows the note of the moment). The hashes come from krizaka.com's CDN manifest (scripts/sync-showcase.mjs).",
+  "clips": [
+    {
+      "id": "creations",
+      "duration": 13.2,
+      "en": {
+        "label": "A product photo",
+        "caption": "Eric types the brief for the Halo lamp into the image Studio; the run finishes and the photo lands (the 20 s of generation are cut).",
+        "origin": "Made on one Mac: FLUX.2 [klein], free. Recorded on a local Orazaka install."
+      },
+      "fr": {
+        "label": "Une photo produit",
+        "caption": "Eric tape la description de la lampe Halo dans le Studio image ; l'exécution se termine et la photo apparaît (les 20 s de génération sont coupées).",
+        "origin": "Faite sur un seul Mac : FLUX.2 [klein], gratuit. Enregistré sur une installation locale d'Orazaka."
+      },
+      "notes": [
+        { "at": 0, "en": "The brief is plain words: subject, light, style.", "fr": "La description est en mots simples : sujet, lumière, style." },
+        { "at": 4.2, "en": "The wait is cut; the photo lands with its run.", "fr": "L'attente est coupée ; la photo arrive avec son exécution." },
+        { "at": 8, "en": "Nothing left the machine: the model ran on this Mac.", "fr": "Rien n'a quitté la machine : le modèle a tourné sur ce Mac." }
+      ]
+    },
+    {
+      "id": "video",
+      "duration": 9.4,
+      "en": {
+        "label": "A 5-second clip",
+        "caption": "The same lamp as a 5-second clip, from Orazaka's video Studio. The run took 139 s (not in the recording); here is its finished result, playing.",
+        "origin": "Made in the cloud: Wan 2.2 A14B on DigitalOcean serverless inference, routed by Orazaka. $0.60. Recorded on dev.orazaka.com."
+      },
+      "fr": {
+        "label": "Un clip de 5 secondes",
+        "caption": "La même lampe en clip de 5 secondes, depuis le Studio vidéo d'Orazaka. L'exécution a pris 139 s (hors enregistrement) ; voici son résultat terminé, en lecture.",
+        "origin": "Fait dans le cloud : Wan 2.2 A14B sur l'inférence serverless de DigitalOcean, routé par Orazaka. 0,60 $. Enregistré sur dev.orazaka.com."
+      },
+      "notes": [
+        { "at": 0, "en": "A finished run: the result is the clip, kept with its run.", "fr": "Une exécution terminée : le résultat est le clip, gardé avec son exécution." },
+        { "at": 3.5, "en": "It plays here. It came from a model in the cloud, not from this Mac, and says so.", "fr": "Il se lit ici. Il vient d'un modèle dans le cloud, pas de ce Mac, et le dit." }
+      ]
+    },
+    {
+      "id": "voice",
+      "duration": 13.1,
+      "en": {
+        "label": "A voice-over",
+        "caption": "A line typed, read aloud by the Mac's speech engine: the waveform of the real file, playing (the recording itself is silent).",
+        "origin": "Made on one Mac: Piper, local. Recorded on a local Orazaka install."
+      },
+      "fr": {
+        "label": "Une voix off",
+        "caption": "Une phrase tapée, lue par le moteur vocal du Mac : la forme d'onde du vrai fichier, en lecture (l'enregistrement lui-même est muet).",
+        "origin": "Faite sur un seul Mac : Piper, local. Enregistré sur une installation locale d'Orazaka."
+      },
+      "notes": [
+        { "at": 0, "en": "Typed, then run: a speech Studio like the others.", "fr": "Tapé puis lancé : un Studio de voix comme les autres." },
+        { "at": 5, "en": "The waveform is drawn from the file the run produced.", "fr": "La forme d'onde est tracée depuis le fichier produit par l'exécution." }
+      ]
+    },
+    {
+      "id": "documents",
+      "duration": 17.3,
+      "en": {
+        "label": "Document checks",
+        "caption": "A lease checked against French law: two clauses fail, each with the passage and the article, eight pass. Then a supplier's PDF examined (the wait is cut).",
+        "origin": "Checked on one Mac: the pack's rules and a local model. Recorded on a local Orazaka install."
+      },
+      "fr": {
+        "label": "Contrôle de documents",
+        "caption": "Un bail contrôlé contre le droit français : deux clauses échouent, chacune avec son extrait et son article, huit passent. Puis le PDF d'un fournisseur examiné (l'attente est coupée).",
+        "origin": "Contrôlé sur un seul Mac : les règles du pack et un modèle local. Enregistré sur une installation locale d'Orazaka."
+      },
+      "notes": [
+        { "at": 0, "en": "The lease is pasted; the jurisdiction is chosen.", "fr": "Le bail est collé ; la juridiction est choisie." },
+        { "at": 3.5, "en": "Two failures first, each quoting the clause and citing the article.", "fr": "Les deux échecs d'abord, chacun citant la clause et l'article." },
+        { "at": 11.5, "en": "A supplier's PDF: facts about the file, never a verdict on the person.", "fr": "Le PDF d'un fournisseur : des faits sur le fichier, jamais un verdict sur la personne." }
+      ]
+    },
+    {
+      "id": "studios",
+      "duration": 15.8,
+      "en": {
+        "label": "The Studio catalogue",
+        "caption": "The catalogue by trade, then a Studio's page: what it does, what a run costs, its form.",
+        "origin": "The real catalogue of a local Orazaka install."
+      },
+      "fr": {
+        "label": "Le catalogue de Studios",
+        "caption": "Le catalogue par métier, puis la page d'un Studio : ce qu'il fait, ce que coûte une exécution, son formulaire.",
+        "origin": "Le vrai catalogue d'une installation locale d'Orazaka."
+      },
+      "notes": [
+        { "at": 0, "en": "Each card says what it does and what it costs.", "fr": "Chaque carte dit ce qu'elle fait et ce qu'elle coûte." },
+        { "at": 3.8, "en": "Filtered by trade: legal.", "fr": "Filtré par métier : juridique." },
+        { "at": 9, "en": "A Studio's page: the price per run, then the form.", "fr": "La page d'un Studio : le prix par exécution, puis le formulaire." }
+      ]
+    },
+    {
+      "id": "chat",
+      "duration": 12,
+      "en": {
+        "label": "Answers from your documents",
+        "caption": "Eric pastes the returns policy under his question; a model on this Mac answers from it, streamed.",
+        "origin": "Answered on one Mac: a local model (Ollama). Recorded on a local Orazaka install."
+      },
+      "fr": {
+        "label": "Des réponses depuis vos documents",
+        "caption": "Eric colle la politique de retour sous sa question ; un modèle sur ce Mac répond à partir d'elle, en streaming.",
+        "origin": "Répondu sur un seul Mac : un modèle local (Ollama). Enregistré sur une installation locale d'Orazaka."
+      },
+      "notes": [
+        { "at": 0, "en": "The question, and the policy pasted under it.", "fr": "La question, et la politique collée dessous." },
+        { "at": 5, "en": "The answer streams in, grounded on the pasted text.", "fr": "La réponse arrive au fil de l'eau, ancrée sur le texte collé." }
+      ]
+    }
+  ]
+}

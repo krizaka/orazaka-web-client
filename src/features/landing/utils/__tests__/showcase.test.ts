@@ -23,3 +23,34 @@ describe("landing showcase", () => {
     expect(keys.length).toBe(data.packs.length);
   });
 });
+
+describe("the day of work", () => {
+  it("is the story in order — photo, clip, voice-over, lease check, catalogue, answers — and each clip says where it was made", () => {
+    const clips = clipsFor("en");
+    expect(clips.map((c) => c.id)).toEqual(["creations", "video", "voice", "documents", "studios", "chat"]);
+    for (const l of ["en", "fr"] as const) {
+      for (const c of clipsFor(l)) {
+        expect(c.origin.length).toBeGreaterThan(10);
+        expect(c.notes.length).toBeGreaterThan(0);
+      }
+    }
+  });
+
+  it("is honest about the cloud: the clip names its model, its provider and what it cost", () => {
+    const video = clipsFor("en").find((c) => c.id === "video")!;
+    expect(video.origin).toMatch(/cloud/i);
+    expect(video.origin).toMatch(/Wan 2\.2/);
+    expect(video.origin).toMatch(/DigitalOcean/);
+    expect(video.origin).toMatch(/\$0\.60/);
+    for (const id of ["creations", "voice"]) expect(clipsFor("en").find((c) => c.id === id)!.origin).toMatch(/on one Mac/);
+  });
+
+  it("has notes in order, the first at 0, all inside the clip", () => {
+    for (const c of clipsFor("en")) {
+      expect(c.notes[0].at).toBe(0);
+      const ats = c.notes.map((n) => n.at);
+      expect([...ats].sort((a, b) => a - b)).toEqual(ats);
+      expect(ats[ats.length - 1]).toBeLessThan(c.duration);
+    }
+  });
+});

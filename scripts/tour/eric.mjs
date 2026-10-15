@@ -54,7 +54,7 @@ export const RECORDED_DOCUMENT = RETURNS_POLICY;
 
 /** The recorded visual: a product shot for the shop, generated on this machine. */
 export const RECORDED_VISUAL =
-  "Product photo of a sculpted ceramic table lamp with a warm orange glow, on a dark slate plinth, soft rim light, deep ink-blue background, minimal studio setting";
+  "Product photograph of the Halo table lamp: a hand-glazed terracotta ceramic base with a natural linen shade, softly lit on a pale oak desk at dusk, window light, shallow depth of field, editorial catalogue style, no text";
 
 /** The home card's visual: the same lamp, for the shop's product page. */
 export const SHOWCASE_VISUAL = "Product photo of the ceramic table lamp, warm orange glow, dark slate plinth, ink-blue background";
@@ -62,3 +62,7 @@ export const SHOWCASE_VISUAL = "Product photo of the ceramic table lamp, warm or
 /** The recorded voice-over: the same lamp, read aloud by the local speech engine. */
 export const RECORDED_VOICE =
   "Meet Halo, our hand-glazed table lamp. Shaped in Montréal, fired twice, and lit to make an evening feel like home.";
+
+/** The recorded clip: the same lamp, five seconds, a model in the cloud (Wan 2.2 A14B through Orazaka). */
+export const RECORDED_VIDEO =
+  "Slow cinematic push-in on a hand-glazed terracotta ceramic table lamp with a linen shade on a pale oak desk at dusk; the lamp glows warmer, golden light spreads across the wood grain, dust motes drift in the window light, shallow depth of field, editorial product film";

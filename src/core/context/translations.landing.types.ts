@@ -71,7 +71,7 @@ export interface LandingDictionary {
   how: { eyebrow: string; title: string; lead: string; terminal: string; steps: (LandingItem & { command: string })[] };
   studios: { eyebrow: string; title: string; lead: string; items: LandingItem[]; ctas: string[]; cta: string };
   cta: { eyebrow: string; title: string; lead: string; primary: string; secondary: string };
-  demo: { eyebrow: string; title: string; lead: string; frame: string };
+  demo: { eyebrow: string; title: string; lead: string; frame: string; notice: string; origin: string };
   packs: { eyebrow: string; title: string; lead: string; studios: string; more: string; cta: string };
   closed: { title: string; body: string; docs: string; contact: string; home: string; heroPrimary: string; heroSecondary: string; signInBanner: string };
   footer: { devNotice: string; privacy: string; terms: string; contact: string; license: string; by: string; product: string; docs: string; legal: string };

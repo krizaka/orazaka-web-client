@@ -55,6 +55,7 @@ export const CLIP_MODEL = {
 
 /** What each run recorded, by the media path of its file (no extension). */
 const RECORDS: Record<string, ClipRecord> = {
+
   "products/orazaka/gallery-video/tea-pour": {
     id: "tea-pour",
     imageId: "tea-pour",
@@ -69,7 +70,19 @@ const RECORDS: Record<string, ClipRecord> = {
     costUsd: 0.60,
     runId: "25948442-7c68-4e66-94d6-39cd8b96438d",
   },
-  "products/orazaka/gallery-video/assistant": {
+  "products/orazaka/video/old-port": {
+    featured: true,
+    id: "old-port",
+    prompt: "Smooth cinematic drone glide forward over the Old Port of Montréal at blue hour, the cobblestone quay and the Clock Tower lit in warm lights against a deep blue sky, the St. Lawrence river reflecting the city, a few people strolling, soft haze, single continuous shot, no cuts. No text, no lettering, no logos.",
+    seed: "20261015",
+    width: 832,
+    height: 480,
+    fps: 16,
+    duration: 5.06,
+    seconds: 135,
+    costUsd: 0.60,
+    runId: "bd30798f-12fb-4d5b-95ed-cfe0414f37ee",
+  },  "products/orazaka/gallery-video/assistant": {
     id: "assistant",
     featured: true,
     prompt: "A genius engineer's workshop at night, a floating holographic interface of orange light blooms in mid-air and organises blueprints of a machine, sparks from a welding arm in the background, reflections on brushed metal, volumetric haze, cinematic sci-fi, no person's face. No text, no lettering, no logos.",
@@ -143,7 +156,6 @@ const RECORDS: Record<string, ClipRecord> = {
     runId: "733c6e0b-51e8-446e-9fe1-7309f5711f84",
   },
   "products/yororis/video/microphone": {
-    featured: true,
     id: "yororis-microphone",
     prompt: "Close-up of a vintage ribbon microphone in a quiet sand-coloured room, sage-green curtains moving gently in a breeze, sunlight particles drifting, a faint sound-wave ripple across a glass of water beside it, serene, cinematic, shallow depth of field. No text, no lettering, no logos.",
     seed: "20261011",
