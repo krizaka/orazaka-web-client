@@ -19,7 +19,7 @@ export interface ModelsDictionary {
   count: string;
   countOne: string;
   empty: string;
-  table: { caption: string; filters: string; clear: string; sortBy: string };
+  table: { caption: string; filters: string; clear: string; sortBy: string; showMore: string };
   docs: { title: string; lead: string; catalogue: string; catalogueLead: string; routing: string; routingLead: string; cta: string };
   home: { eyebrow: string; title: string; lead: string; more: string; providers: string; cta: string };
 }

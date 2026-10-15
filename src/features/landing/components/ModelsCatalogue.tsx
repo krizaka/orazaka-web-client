@@ -31,26 +31,56 @@ export function ModelsCatalogue({ models = MODELS }: Readonly<{ models?: readonl
   const capabilities = capabilitiesOf(models);
   const toggleCapability = (c: Capability): Capability[] => (filters.capabilities.includes(c) ? filters.capabilities.filter((x) => x !== c) : [...filters.capabilities, c]);
 
+  // Priorities (DataTable): the model, what it does, where it runs and its status stay in the row; the maker, licence,
+  // context window and verification date leave it, in that order, as the table narrows — into the row's detail.
   const columns = useMemo<DataTableColumn<ModelEntry>[]>(
     () => [
+      { id: "name", header: m.columns.model, type: "title", sortable: true, subtitle: (r) => r.id },
+      { id: "does", header: m.columns.does, type: "badge", minWidth: 128, value: (r) => r.capabilities.join(", "), cell: (r) => <CapabilityBadges capabilities={r.capabilities} /> },
       {
-        id: "name",
-        header: m.columns.model,
+        id: "runs",
+        header: m.columns.runs,
+        type: "badge",
         sortable: true,
-        card: "title",
+        value: (r) => r.runsOn,
         cell: (r) => (
-          <span className="flex flex-col">
-            <span className="font-semibold text-fg">{r.name}</span>
-            <code className="font-mono text-xs text-fg-tertiary">{r.id}</code>
+          <span className="flex flex-col items-start gap-0.5">
+            <WhereBadge runsOn={r.runsOn} />
+            <span className="text-xs text-fg-tertiary">{r.runtime}</span>
           </span>
         ),
       },
-      { id: "vendor", header: m.columns.vendor, sortable: true, value: (r) => r.vendor, cell: (r) => <span>{r.vendor}<span className="block text-xs text-fg-tertiary">{r.family}</span></span> },
-      { id: "does", header: m.columns.does, value: (r) => r.capabilities.join(", "), cell: (r) => <CapabilityBadges capabilities={r.capabilities} /> },
-      { id: "runs", header: m.columns.runs, sortable: true, value: (r) => r.runsOn, cell: (r) => <span className="flex flex-col gap-1"><WhereBadge runsOn={r.runsOn} /><span className="text-xs text-fg-tertiary">{r.runtime}</span></span> },
+      {
+        id: "status",
+        header: m.columns.status,
+        type: "status",
+        sortable: true,
+        value: (r) => r.status,
+        cell: (r) => (
+          <Badge tone={r.status === "default" ? "success" : r.status === "planned" ? "warning" : "neutral"} size="sm">
+            {m.status[r.status]}
+          </Badge>
+        ),
+      },
+      {
+        id: "vendor",
+        header: m.columns.vendor,
+        type: "text",
+        priority: 3,
+        sortable: true,
+        value: (r) => r.vendor,
+        cell: (r) => (
+          <span className="block">
+            {r.vendor}
+            <span className="block text-xs text-fg-tertiary">{r.family}</span>
+          </span>
+        ),
+      },
       {
         id: "licence",
         header: m.columns.licence,
+        type: "text",
+        priority: 4,
         sortable: true,
         value: (r) => r.licence.name,
         cell: (r) => (
@@ -76,33 +106,29 @@ export function ModelsCatalogue({ models = MODELS }: Readonly<{ models?: readonl
       {
         id: "context",
         header: m.columns.context,
+        type: "number",
+        priority: 5,
         sortable: true,
-        align: "end",
         value: (r) => r.contextWindow ?? 0,
         cell: (r) => (r.contextWindow ? m.context.tokens.replace("{count}", formatCount(r.contextWindow, locale)) : m.context.none),
       },
       {
-        id: "status",
-        header: m.columns.status,
+        id: "verified",
+        header: m.columns.verified,
+        type: "date",
+        priority: 5,
         sortable: true,
-        value: (r) => r.status,
-        cell: (r) => (
-          <span className="flex flex-col items-start gap-1">
-            <Badge tone={r.status === "default" ? "success" : r.status === "planned" ? "warning" : "neutral"} size="sm">
-              {m.status[r.status]}
-            </Badge>
-            <span className="text-xs text-fg-tertiary">{r.lastVerified ? `${m.columns.verified} ${r.lastVerified}` : m.verified.never}</span>
-          </span>
-        ),
+        value: (r) => r.lastVerified ?? "",
+        cell: (r) => r.lastVerified ?? m.verified.never,
       },
     ],
     [m, locale],
   );
 
   const chips = (
-    <div className="flex flex-col gap-6">
-      <div className="flex flex-wrap gap-2 lg:flex-col lg:items-start" role="group" aria-label={m.filters.capability}>
-        <p className="kz-label w-full">{m.filters.capability}</p>
+    <div className="flex flex-wrap gap-x-10 gap-y-4 xl:flex-col xl:gap-6">
+      <div className="flex flex-wrap items-center gap-2 xl:flex-col xl:items-start" role="group" aria-label={m.filters.capability}>
+        <p className="kz-label xl:w-full">{m.filters.capability}</p>
         <ChipLink asChild selected={filters.capabilities.length === 0}>
           <Link href={filtersHref({ ...filters, capabilities: [] })} scroll={false} replace>{m.filters.all}</Link>
         </ChipLink>
@@ -112,8 +138,8 @@ export function ModelsCatalogue({ models = MODELS }: Readonly<{ models?: readonl
           </ChipLink>
         ))}
       </div>
-      <div className="flex flex-wrap gap-2 lg:flex-col lg:items-start" role="group" aria-label={m.filters.where}>
-        <p className="kz-label w-full">{m.filters.where}</p>
+      <div className="flex flex-wrap items-center gap-2 xl:flex-col xl:items-start" role="group" aria-label={m.filters.where}>
+        <p className="kz-label xl:w-full">{m.filters.where}</p>
         <ChipLink asChild selected={filters.runsOn === null}>
           <Link href={filtersHref({ ...filters, runsOn: null })} scroll={false} replace>{m.filters.all}</Link>
         </ChipLink>
@@ -135,6 +161,7 @@ export function ModelsCatalogue({ models = MODELS }: Readonly<{ models?: readonl
       filters={chips}
       count={rows.length === 1 ? m.countOne : m.count.replace("{count}", String(rows.length))}
       linkAs={Link}
+      railFrom="wide"
     >
       <aside aria-label={m.sovereign.title} className="mb-6 grid gap-4 rounded-2xl border border-border-default bg-surface-1/85 p-5 md:grid-cols-2">
         <div className="space-y-2 border-l-2 border-accent pl-4">
@@ -154,7 +181,7 @@ export function ModelsCatalogue({ models = MODELS }: Readonly<{ models?: readonl
         rowLabel={(r) => r.name}
         density="compact"
         empty={<p className="p-6 text-center text-fg-secondary">{m.empty}</p>}
-        labels={{ empty: m.empty, results: (n) => (n === 1 ? m.countOne : m.count.replace("{count}", String(n))) }}
+        labels={{ empty: m.empty, showMore: (name) => m.table.showMore.replace("{name}", name), results: (n) => (n === 1 ? m.countOne : m.count.replace("{count}", String(n))) }}
       />
       <section aria-labelledby="models-docs" className="mt-12 space-y-4">
         <div className="space-y-1">

@@ -72,6 +72,14 @@ describe("/models", () => {
     expect(within(screen.getByText(ok.id).closest("tr") as HTMLElement).queryByText(translations.en.models.licence.nonCommercial)).toBeNull();
   });
 
+  it("keeps Model, Capability, Runs where and Status in the row and moves the rest into the row's detail", () => {
+    renderPage("en");
+    const c = translations.en.models.columns;
+    for (const name of [c.model, c.does, c.runs, c.status]) expect(screen.getByRole("columnheader", { name: new RegExp(name) }).className).not.toContain("hidden!");
+    for (const name of [c.vendor, c.licence, c.context, c.verified]) expect(screen.getByRole("columnheader", { name: new RegExp(name) }).className).toContain("hidden!");
+    expect(screen.getAllByRole("button", { name: /Show more about/ }).length).toBe(MODELS.length);
+  });
+
   it("is in French when the language is", () => {
     renderPage("fr");
     expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent(translations.fr.models.hero.title);

@@ -46,7 +46,7 @@ export const models: Record<Locale, ModelsDictionary> = {
     count: "{count} models",
     countOne: "1 model",
     empty: "No model matches these filters.",
-    table: { caption: "Models Orazaka supports", filters: "Filter the models", clear: "Clear filters", sortBy: "Sort by {column}" },
+    table: { caption: "Models Orazaka supports", filters: "Filter the models", clear: "Clear filters", sortBy: "Sort by {column}", showMore: "Show more about {name}" },
     docs: {
       title: "Go deeper",
       lead: "The catalogue is generated from the code; the routing is data an administrator edits.",
@@ -102,7 +102,7 @@ export const models: Record<Locale, ModelsDictionary> = {
     count: "{count} modèles",
     countOne: "1 modèle",
     empty: "Aucun modèle ne correspond à ces filtres.",
-    table: { caption: "Modèles pris en charge par Orazaka", filters: "Filtrer les modèles", clear: "Effacer les filtres", sortBy: "Trier par {column}" },
+    table: { caption: "Modèles pris en charge par Orazaka", filters: "Filtrer les modèles", clear: "Effacer les filtres", sortBy: "Trier par {column}", showMore: "Voir plus sur {name}" },
     docs: {
       title: "Aller plus loin",
       lead: "Le catalogue est généré depuis le code ; le routage est une donnée qu'un administrateur édite.",
