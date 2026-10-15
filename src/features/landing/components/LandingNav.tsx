@@ -4,7 +4,6 @@ import Link from "next/link";
 import { OrazakaLogo } from "@krizaka/ui";
 import { Button } from "@krizaka/ui/button";
 import { NavBar } from "@krizaka/ui/nav-bar";
-import { familyLabels } from "@krizaka/ui/sites";
 import { ThemeToggle } from "@krizaka/ui/theme";
 import { cn } from "@krizaka/ui/cn";
 import { useTranslation } from "@/core/context/LocaleContext";
@@ -51,11 +50,10 @@ function Locales({ className }: Readonly<{ className?: string }>) {
  * home page sections.
  */
 export function LandingNav({ onHome = true }: Readonly<{ onHome?: boolean }>) {
-  const { t, locale } = useTranslation();
+  const { t } = useTranslation();
   const n = t.landing.nav;
   const flags = useAuthFlags();
   const href = (id: string) => (onHome ? `#${id}` : `/#${id}`);
-  const labels = familyLabels[locale];
   const links = [
     { key: "how", href: href("how"), label: n.how, external: false },
     { key: "demo", href: href("demo"), label: n.demo, external: false },
@@ -73,7 +71,6 @@ export function LandingNav({ onHome = true }: Readonly<{ onHome?: boolean }>) {
             <span>Orazaka</span>
           </Link>
         </NavBar.Brand>
-        <NavBar.Family current="orazaka" labels={labels} />
         <NavBar.Badge env={APP_ENV} version={APP_VERSION} />
 
         <NavBar.Items>
@@ -126,8 +123,7 @@ export function LandingNav({ onHome = true }: Readonly<{ onHome?: boolean }>) {
                 <a href={action.href}>{action.label}</a>
               </Button>
             </span>
-            <NavBar.Family current="orazaka" labels={labels} />
-          </NavBar.Mobile>
+              </NavBar.Mobile>
         </NavBar.Actions>
       </NavBar.Root>
     </div>
