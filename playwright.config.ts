@@ -17,7 +17,7 @@ export default defineConfig({
   timeout: 30_000,
 
   use: {
-    baseURL: "http://localhost:3000",
+    baseURL: process.env.E2E_BASE_URL ?? "http://localhost:3000",
     trace: "on-first-retry",
     screenshot: "only-on-failure",
   },
@@ -27,9 +27,17 @@ export default defineConfig({
       name: "chromium",
       use: { ...devices["Desktop Chrome"] },
     },
+    // The live smoke also runs in the other two engines (Safari's and Firefox's), where the bugs a visitor meets hide.
+    ...(process.env.E2E_BASE_URL
+      ? [
+          { name: "webkit", use: { ...devices["Desktop Safari"] } },
+          { name: "firefox", use: { ...devices["Desktop Firefox"] } },
+        ]
+      : []),
   ],
 
-  webServer: {
+  // E2E_BASE_URL points the suite at a deployed site (the live smoke): nothing is started then.
+  webServer: process.env.E2E_BASE_URL ? undefined : {
     command: "npm run dev",
     url: "http://localhost:3000",
     reuseExistingServer: !process.env.CI,
