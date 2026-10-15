@@ -5,6 +5,7 @@ import sitemap from "@/app/sitemap";
 import { CLOSED_ROBOTS, indexable, NOINDEX_HEADER } from "@/core/config/indexing";
 import { proxy } from "@/proxy";
 import { landing } from "@/core/context/translations.landing";
+// eslint-disable-next-line no-restricted-imports -- the shared family guard lives in scripts/, outside src/
 import { auditRobots } from "../../scripts/check-seo-family.mjs";
 
 const withFlag = <T,>(value: string | undefined, run: () => T): T => {
