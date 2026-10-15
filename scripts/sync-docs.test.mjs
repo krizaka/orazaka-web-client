@@ -57,3 +57,12 @@ test("sync writes the pages, the index, the model slice and the source map from 
   assert.equal(JSON.parse(fs.readFileSync(path.join(out, "sources.json"), "utf8"))["docs/CORE.md"], "core");
   assert.ok(fs.readFileSync(path.join(out, "core.md"), "utf8").startsWith("# core"));
 });
+
+test("the published content has no link to an internal document and no <https://…> autolink", () => {
+  const dir = path.join(path.dirname(new URL(import.meta.url).pathname), "..", "content", "docs");
+  for (const f of fs.readdirSync(dir).filter((x) => x.endsWith(".md"))) {
+    const md = fs.readFileSync(path.join(dir, f), "utf8");
+    assert.ok(!/DELIVERY\.md|BILLING_ARCHITECTURE|PRODUCTION_READINESS_AUDIT|ARCHITECTURE_ASSESSMENT/.test(md), `${f} links an internal document`);
+    assert.ok(!/<https?:\/\//.test(md), `${f} has a literal autolink`);
+  }
+});
