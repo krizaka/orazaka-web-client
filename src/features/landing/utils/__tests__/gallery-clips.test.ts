@@ -27,8 +27,8 @@ describe("the videos of Made here", () => {
     for (const id of ["maroc", "grenoble", "arcade"]) expect(CLIPS.find((clip) => clip.id === id)?.seconds).toBeUndefined();
   });
 
-  it("features six on the home page — tea-pour (with the image it continues), the assistant and the four best — in that order", () => {
-    expect(FEATURED.map((item) => item.clip.id)).toEqual(["tea-pour", "assistant", "montreal", "grenoble", "yasakia-montreal-dawn", "yororis-microphone"]);
+  it("features six on the home page — tea-pour (with the image it continues), the Old Port, the assistant and the three best — in that order", () => {
+    expect(FEATURED.map((item) => item.clip.id)).toEqual(["tea-pour", "old-port", "assistant", "montreal", "grenoble", "yasakia-montreal-dawn"]);
     expect(FEATURED[0].image?.id).toBe("tea-pour");
     for (const item of FEATURED.slice(1)) expect(item.image).toBeUndefined();
   });
