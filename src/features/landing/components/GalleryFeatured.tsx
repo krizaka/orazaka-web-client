@@ -7,7 +7,6 @@ import { ForwardIcon } from "@krizaka/icons";
 import { Button } from "@krizaka/ui/button";
 import { ClipPlayer, RunFacts } from "@krizaka/orazaka-design-system";
 import { cn } from "@krizaka/ui/cn";
-import { Tabs } from "@krizaka/ui/tabs";
 import { SectionBackdrop } from "@krizaka/ui/section-backdrop";
 import { Showcase, type ShowcaseLabels } from "@krizaka/ui/showcase";
 import { useTranslation } from "@/core/context/LocaleContext";
@@ -71,58 +70,89 @@ export function GalleryFeatured() {
 }
 
 /**
- * One slide: the media on the left — the video in its final frame, then the image it continues at its own aspect (no bands),
- * the prompts in two tabs (Video · Image) so an item fits about one screen — and on the right the two prompts, what each run recorded and the commands
- * that reproduce them. The video prompt types in over its final size (no layout shift).
+ * One slide, readable in five seconds: three steps side by side (stacked on a phone) — ① the prompt, two lines with a
+ * "More", ② the image (FLUX.2, on one Mac) and ③ the video (Wan 2.2, in the cloud), the two media the same size, each
+ * step with a chip that says where and at what cost it was made. The full facts and "Reproduce it" are a "Details"
+ * disclosure per step. The video is its own run from a similar prompt — it is not made from the image, and says so.
  */
 function Slide({ item, active }: Readonly<{ item: FeaturedItem; active: boolean }>) {
   const { t } = useTranslation();
   const g = t.gallery;
   const { clip, image } = item;
-  // The tab is the item's own state; the media on the left follow it: the side that is chosen is the large one (both stay mounted, so the clip keeps playing).
-  const [tab, setTab] = React.useState<"video" | "image">("video");
-  const imageFirst = tab === "image" && image !== undefined;
+  const prompt = image?.prompt ?? clip.prompt;
   return (
-    <div className="grid grid-cols-[minmax(0,1fr)] items-start gap-8 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)] lg:gap-12" data-tab={tab}>
-      <div className="flex flex-col gap-4">
-        <figure className={cn("overflow-hidden rounded-2xl border border-border-default bg-surface-2", imageFirst ? "order-2 w-2/5 min-w-44" : "order-1 w-full")}>
-          <ClipPlayer sources={clipFiles(clip)} title={g.clips[clip.id]} labels={clipLabels(g, clip)} />
-        </figure>
+    <div className="space-y-4" data-steps={image ? 3 : 2}>
+      <ol className={cn("grid grid-cols-[minmax(0,1fr)] items-start gap-4 lg:gap-3", image ? "lg:grid-cols-[minmax(0,0.8fr)_auto_minmax(0,1fr)_auto_minmax(0,1fr)]" : "lg:grid-cols-[minmax(0,0.8fr)_auto_minmax(0,1.4fr)]")}>
+        <Step n={1} title={g.stepPrompt}>
+          <PromptClamp text={prompt} />
+          <CopyButton text={prompt} label={g.copy} done={g.copied} failed={g.copyFailed} />
+        </Step>
+        <Arrow />
         {image && (
-          <figure className={cn("overflow-hidden rounded-2xl border border-border-default bg-surface-2", imageFirst ? "order-1 w-full max-w-lg" : "order-2 w-2/5 min-w-44")}>
-            <Image
-              src={gallerySrc(image.id)}
-              alt={g.items[image.id]}
-              width={image.width}
-              height={image.height}
-              sizes="(max-width: 1024px) 80vw, 480px"
-              loading="lazy"
-              unoptimized
-              className="block h-auto w-full"
-            />
-          </figure>
+          <>
+            <Step n={2} title={g.stepImage} chip={fill(g.imageChip, { seconds: image.seconds })}>
+              <figure className="aspect-video overflow-hidden rounded-xl border border-border-default bg-surface-2">
+                <Image src={gallerySrc(image.id)} alt={g.items[image.id]} width={image.width} height={image.height} sizes="(max-width: 1024px) 90vw, 360px" loading="lazy" unoptimized className="block h-full w-full object-contain" />
+              </figure>
+              <Details label={g.details}>
+                <ImagePanel image={image} />
+              </Details>
+            </Step>
+            <Arrow />
+          </>
         )}
-      </div>
-      {image ? (
-        <Tabs.Root value={tab} onValueChange={(next) => setTab(next as "video" | "image")} variant="segmented" className="space-y-5">
-          <Tabs.List aria-label={g.stepsLabel}>
-            <Tabs.Trigger value="video">{g.videoStep}</Tabs.Trigger>
-            <Tabs.Trigger value="image">{g.imageStep}</Tabs.Trigger>
-          </Tabs.List>
-          <Tabs.Content value="video">
+        <Step n={image ? 3 : 2} title={g.stepVideo} chip={fill(clip.seconds === undefined ? g.videoChipNoTime : g.videoChip, { seconds: clip.seconds ?? 0, cost: clip.costUsd.toFixed(2) })}>
+          <figure className="overflow-hidden rounded-xl border border-border-default bg-surface-2">
+            <ClipPlayer sources={clipFiles(clip)} title={g.clips[clip.id]} labels={clipLabels(g, clip)} />
+          </figure>
+          <Details label={g.details}>
             <VideoPanel clip={clip} active={active} />
-          </Tabs.Content>
-          <Tabs.Content value="image">
-            <ImagePanel image={image} />
-          </Tabs.Content>
-        </Tabs.Root>
-      ) : (
-        <div className="space-y-5">
-          <VideoPanel clip={clip} active={active} />
-          <p className="border-t border-border-subtle pt-4 text-sm text-fg-secondary">{g.noImage}</p>
-        </div>
-      )}
+          </Details>
+        </Step>
+      </ol>
+      <p className="text-sm text-fg-secondary">{image ? g.notFromImage : g.noImage}</p>
     </div>
+  );
+}
+
+/** One step of the strip: its number and name, a chip saying where it was made, then its content. */
+function Step({ n, title, chip, children }: Readonly<{ n: number; title: string; chip?: string; children: React.ReactNode }>) {
+  return (
+    <li className="min-w-0 space-y-3">
+      <div className="flex flex-wrap items-center gap-2">
+        <span className="font-mono text-xs font-semibold uppercase tracking-[0.14em] text-fg-accent">{`${String(n)} · ${title}`}</span>
+        {chip && <span className="rounded-full border border-border-default bg-surface-2 px-2.5 py-0.5 font-mono text-[11px] text-fg-secondary">{chip}</span>}
+      </div>
+      {children}
+    </li>
+  );
+}
+
+function Arrow() {
+  return <li aria-hidden="true" className="hidden self-center pt-8 text-fg-muted lg:block"><ForwardIcon size={20} /></li>;
+}
+
+/** The prompt, two lines; "More" opens it whole. */
+function PromptClamp({ text }: Readonly<{ text: string }>) {
+  const { t } = useTranslation();
+  const [open, setOpen] = React.useState(false);
+  return (
+    <div className="space-y-1">
+      <blockquote lang="en" className={cn("text-sm leading-relaxed text-fg-secondary", !open && "line-clamp-2")}>{text}</blockquote>
+      <button type="button" aria-expanded={open} onClick={() => setOpen(!open)} className="text-xs font-medium text-fg-accent underline-offset-2 hover:underline">
+        {open ? t.gallery.less : t.gallery.more}
+      </button>
+    </div>
+  );
+}
+
+/** "Details": the facts of the run and its command, folded (a native disclosure). */
+function Details({ label, children }: Readonly<{ label: string; children: React.ReactNode }>) {
+  return (
+    <details className="group rounded-xl border border-border-subtle px-3 py-2">
+      <summary className="cursor-pointer text-sm font-medium text-fg-secondary">{label}</summary>
+      <div className="pt-3">{children}</div>
+    </details>
   );
 }
 
