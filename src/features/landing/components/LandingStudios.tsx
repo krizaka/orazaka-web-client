@@ -15,8 +15,8 @@ import { SectionHeading } from "@/features/landing/components/SectionHeading";
 /** Icons of the studio examples, in the order of the copy. */
 const ICONS: ComponentType<IconProps>[] = [KnowledgeIcon, VideoIcon, SearchIcon, ImageIcon];
 
-/** The real place behind each example: the demo, the "Made here" gallery, the packs' documentation. */
-const HREFS = ["/#demo", "/gallery", "/docs/packs", "/docs/packs"] as const;
+/** The real place behind each example: its own recording, the "Made here" gallery, its pack in the documentation. */
+const HREFS = ["/#demo-documents", "/gallery", "/docs/packs#outbound-prospecting", "/docs/packs#trade-showcase"] as const;
 
 /**
  * The Studios — ready-made workflows that turn the engine into business results — over the real catalogue,

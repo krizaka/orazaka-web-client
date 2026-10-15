@@ -20,7 +20,7 @@ export function LandingDemo() {
         <SectionHeading eyebrow={d.eyebrow} title={d.title} lead={d.lead} />
         <ul className="grid gap-6 md:grid-cols-2">
           {clips.map((c) => (
-            <li key={c.id} data-reveal className="flex flex-col gap-3 rounded-2xl border border-border-default bg-surface-1/85 p-4 backdrop-blur-md">
+            <li key={c.id} id={`demo-${c.id}`} data-reveal className="scroll-mt-20 flex flex-col gap-3 rounded-2xl border border-border-default bg-surface-1/85 p-4 backdrop-blur-md">
               <figure className="space-y-3">
                 <video controls playsInline preload="none" poster={c.poster} aria-label={c.label} className="aspect-[16/10] w-full rounded-xl border border-border-subtle bg-surface-2 object-cover">
                   <source src={c.webm} type="video/webm" />

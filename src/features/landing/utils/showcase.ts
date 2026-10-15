@@ -25,6 +25,8 @@ export interface Pack {
   label: string;
   tagline: string;
   studios: number;
+  /** The heading of this pack in `/docs/packs` (the English label, slugged) — the card leads to its own section. */
+  anchor: string;
 }
 
 const url = (id: string, ext: Ext, hash: string) => `${MEDIA_CDN_URL}/${data.cdnRoot}/products/orazaka/tour/${id}.${hash}.${ext}`;
@@ -40,6 +42,14 @@ export function clipsFor(locale: Locale): Clip[] {
   }));
 }
 
+const slug = (label: string) => label.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
+
 export function packsFor(locale: Locale): Pack[] {
-  return data.packs.map((p) => ({ key: p.key, label: p.text[locale].label, tagline: p.text[locale].tagline, studios: p.studios }));
+  return data.packs.map((p) => ({
+    key: p.key,
+    label: p.text[locale].label,
+    tagline: p.text[locale].tagline,
+    studios: p.studios,
+    anchor: slug(p.text.en.label),
+  }));
 }
