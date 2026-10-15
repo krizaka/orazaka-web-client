@@ -2,12 +2,10 @@
 
 > 🤖 **Generated from code** by `scripts/generate-docs.mjs` — do not hand-edit. Run `orazaka docs build` to refresh.
 
-
 **Access** is read from each service's `SecurityConfig`, most-specific matcher first — the same
 order Spring Security applies. `SERVICE` is the machine-to-machine authority required on
 `/internal/v1/**` (ADR-035); `public` means no credential at all, and **⚠ no rule** means
 no matcher covers the path — the service has no security on it whatsoever.
-
 
 ## conversation-service
 
@@ -23,6 +21,7 @@ no matcher covers the path — the service has no security on it whatsoever.
 | GET | `/api/v1/chat/stream/{conversationId}` | ADMIN + USER | ChatController | Streams chat via SSE using GET. |
 | POST | `/api/v1/chat/stream/{conversationId}` | ADMIN + USER | ChatController | Streams chat via SSE using POST (supporting file reference mappings). |
 | POST | `/api/v1/code` | authenticated | CodeController | Streams code generation via SSE using POST. |
+| POST | `/api/v1/embeddings` | ADMIN + USER | EmbeddingController |  |
 | GET | `/api/v1/features` | ADMIN + USER | FeatureController | What this deployment can currently run: every enabled capability with its live degraded-mode state. |
 | PUT | `/api/v1/features/{featureKey}` | ADMIN | FeatureController | Admin: toggles an existing capability's enabled state. |
 | GET | `/api/v1/features/all` | ADMIN | FeatureController | Admin: all capabilities (enabled or not) from the database. |
@@ -77,6 +76,7 @@ no matcher covers the path — the service has no security on it whatsoever.
 | DELETE | `/internal/v1/capabilities/{featureKey}` | SERVICE | CapabilityController | Removes one capability. |
 | PUT | `/internal/v1/capabilities/{featureKey}` | SERVICE | CapabilityController | Registers or replaces one capability a pack contributes. |
 | GET | `/internal/v1/capabilities/{featureKey}/route` | SERVICE | CapabilityController | Resolves where one capability's work is executed. |
+| PUT | `/internal/v1/jobs/{jobId}/output/{filename}` | SERVICE | JobOutputController | Stores one output file of a job, sealed, and answers the URL it is served under. |
 | POST | `/internal/v1/workers` | SERVICE | WorkerController | Registers a worker, or refreshes what is known about it. |
 | POST | `/internal/v1/workers/{workerName}/heartbeat` | SERVICE | WorkerController | Records a heartbeat from an already-registered worker. |
 

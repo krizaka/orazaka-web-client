@@ -57,14 +57,23 @@ const nextConfig: NextConfig = {
   },
   // The contact form of this app is a placeholder: the public site sends people to krizaka.com's.
   async redirects() {
-    return [{ source: "/contact", destination: "https://www.krizaka.com/contact", permanent: false }];
+    return [
+      { source: "/contact", destination: "https://www.krizaka.com/contact", permanent: false },
+      // The mobile guide is a section of the documentation; the docs' pages were renamed (slugs without underscores).
+      { source: "/mobile", destination: "/docs/mobile", permanent: true },
+      { source: "/docs/api_reference", destination: "/docs/api", permanent: true },
+      { source: "/docs/interface_contracts", destination: "/docs/interface-contracts", permanent: true },
+      { source: "/docs/worker_protocol", destination: "/docs/worker-protocol", permanent: true },
+      { source: "/docs/business_implementation", destination: "/docs/business-playbook", permanent: true },
+      { source: "/docs/use_cases", destination: "/docs/use-cases", permanent: true },
+    ];
   },
   // `next dev` would otherwise append its own block to AGENTS.md on every start; this repository's
   // AGENTS.md only scopes the workspace contract and must not drift (AGENTS.md §13).
   agentRules: false,
   // @krizaka/ui: the primitives the design system re-exports since 2.0 (ES modules) — listed so next/jest
   // transforms them like the design system itself.
-  transpilePackages: ["@krizaka/orazaka-design-system", "@krizaka/orazaka-shared", "@krizaka/ui", "@krizaka/tokens", "@krizaka/icons", "@krizaka/intl", "@krizaka/pacer", "@tanstack/pacer", "@tanstack/react-table", "@tanstack/table-core", "@tanstack/react-virtual", "@tanstack/virtual-core", "@tanstack/store", "@tanstack/react-store"],
+  transpilePackages: ["@krizaka/orazaka-design-system", "@krizaka/orazaka-shared", "@krizaka/ui", "@krizaka/tokens", "@krizaka/icons", "@krizaka/intl", "@krizaka/pacer", "@tanstack/pacer", "@tanstack/react-table", "@tanstack/table-core", "@tanstack/react-virtual", "@tanstack/virtual-core", "@tanstack/store", "@tanstack/react-store", "@tanstack/markdown", "@tanstack/highlight"],
   turbopack: {
     root: path.resolve(__dirname, ".."),
   },

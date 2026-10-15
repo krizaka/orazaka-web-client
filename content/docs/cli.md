@@ -17,6 +17,12 @@ npx orazaka start     # Docker infrastructure (PostgreSQL + pgvector, Redis, Rab
 npx orazaka dev       # the whole stack: services, web, admin, mobile
 ```
 
+```cli-replay
+npx orazaka install --yes
+npx orazaka start
+npx orazaka dev
+```
+
 `orazaka` on npm is the short name of the canonical package `@krizaka/orazaka-cli` — both run the same CLI:
 
 ```bash
@@ -26,6 +32,41 @@ npm install -g @krizaka/orazaka-cli   # then: orazaka <command>
 
 `install --check-only` only reports what is missing. `start`, `dev`, `test` and `docs` run inside
 a workspace and say how to get one when there is none.
+
+## What happens
+
+What each command of the quick start does, in order — the phases it announces, the processes it launches:
+
+```cli-journey
+orazaka install — Setup wizard — verify tools, install dependencies, and configure deployment topology
+  1. Tool Verification
+  2. Install Missing Tools via Homebrew
+  · Workspace (no Orazaka workspace here)
+  3. Media Worker Python Environment
+  4. Deployment Topology Configuration
+orazaka start — Start Orazaka infrastructure — dev mode (Docker middleware + AI engines) or full mode (also Router + UI)
+  1. Docker Services (Postgres, Redis, RabbitMQ)
+  2. AI Engine (Ollama)
+  3. Image Generation (LocalAI)
+  3b. Image Generation (stable-diffusion.cpp)
+  4. Media Generation Worker
+  5a. Starting Router (Spring Boot) (--mode full)
+  5b. Starting Next.js UI (--mode full)
+orazaka dev — Launch the full Orazaka application stack in parallel (9 services + Web, Admin, Mobile)
+  EDGE :8088
+  ROUTER :8080
+  IDENTITY :8083
+  AUTOMATION :8082
+  KNOWLEDGE :8084
+  JOB :8090
+  BILLING :8095
+  STUDIO :8096
+  NOTIFICATIONS :8097
+  WEB-CLIENT :3000
+  WEB-ADMIN :3001
+  MOBILE :8081
+  worker.yaml (Python workers, no HTTP port)
+```
 
 ## Local dev workflow
 
@@ -47,6 +88,10 @@ hands-off boot. Tear everything down with `orazaka stop`. On a local stack,
 > complementary, not alternatives.
 
 ## Commands
+
+```cli-commands
+32 commands, 24 subcommands — every one in the table below.
+```
 
 | Command | Description |
 |:---|:---|
@@ -88,6 +133,8 @@ hands-off boot. Tear everything down with `orazaka stop`. On a local stack,
 | `orazaka profile` | Display authenticated user profile information |
 | `orazaka recover` | Diagnose and recover from common issues |
 | `orazaka register [username] [email]` | Register a new user account |
+| `orazaka release` | Release bundles — check a release manifest and an offline bundle before installing it |
+| `orazaka release verify <manifest>` | Check a release manifest, and with --dir the artefacts of an offline bundle against it |
 | `orazaka reset [token]` | Reset account password using a valid reset token |
 | `orazaka settings` | Manage user settings and preferences |
 | `orazaka settings get` | Get all settings and preferences |
@@ -307,6 +354,17 @@ Register a new user account
 | `[username]` | Desired username |
 | `[email]` | Account email address |
 | `-l, --language <lang>` | BCP 47 language tag (e.g. en, ja) |
+
+### `orazaka release verify <manifest>`
+
+Check a release manifest, and with --dir the artefacts of an offline bundle against it
+
+| Argument / option | Description |
+|:---|:---|
+| `<manifest>` | Path to the release manifest (orazaka-release.json) |
+| `--dir <path>` | Offline bundle directory whose artefacts are checked (size and SHA-256) |
+| `--target <target>` | Only the artefacts of one target: mac-arm64, linux-amd64 or linux-arm64 |
+| `--json` | Print the result as JSON |
 
 ### `orazaka reset [token]`
 

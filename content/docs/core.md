@@ -8,6 +8,11 @@
 
 `orazaka-core` is the central orchestration library. It is strictly stateless, web-agnostic, database-agnostic, and security-context-agnostic. It wraps Spring AI (`2.0`, ADR-030) under a single entry facade: `AiClient`.
 
+```architecture
+product: orazaka
+focus: orazaka-core
+mode: build
+```
 
 Select a module to see what it depends on and what depends on it: every arrow points toward the core, never away from it.
 
@@ -45,6 +50,9 @@ If `orazaka.security.disable-ai=true`, any interceptor returning `isAiDependent(
 
 A turn goes through the core chain first — in the order of the code, never bypassable — then through the configured interceptors in their database order (`pipeline_interceptor_config`). The chain below is read from both; [Interceptor Registry](INTERCEPTORS.md) lists every row with its class.
 
+```pipeline
+product: orazaka
+```
 
 ---
 

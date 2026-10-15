@@ -8,6 +8,7 @@ import { landing } from "./translations.landing";
 import { features } from "./translations.features";
 import { gallery } from "./translations.gallery";
 import { mobile } from "./translations.mobile";
+import { docs } from "./translations.docs";
 import { a11y, automation } from "./translations.automation";
 import { showcase } from "./translations.showcase";
 import { insights } from "./translations.insights";
@@ -807,6 +808,7 @@ export const translations: Record<Locale, TranslationDictionary> = {
     features: features.en,
     gallery: gallery.en,
     mobile: mobile.en,
+    docs: docs.en,
   },
   fr: {
     sidebar: {
@@ -1611,5 +1613,6 @@ export const translations: Record<Locale, TranslationDictionary> = {
     features: features.fr,
     gallery: gallery.fr,
     mobile: mobile.fr,
+    docs: docs.fr,
   },
 };

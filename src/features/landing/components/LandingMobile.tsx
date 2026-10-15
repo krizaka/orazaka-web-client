@@ -6,12 +6,12 @@ import { Button } from "@krizaka/ui/button";
 import { SectionBackdrop } from "@krizaka/ui/section-backdrop";
 import { useTranslation } from "@/core/context/LocaleContext";
 import { SectionHeading } from "@/features/landing/components/SectionHeading";
-import { PhoneClip } from "@/features/landing/components/PhoneClip";
-import { STEPS } from "@/features/landing/utils/mobile";
+import { PhoneClip } from "@/core/mobile/PhoneClip";
+import { STEPS } from "@/core/mobile/mobile";
 
 /**
  * The Orazaka app on a phone: its four steps in phone frames (a swipeable row on a phone, four columns on a
- * desktop), then the way to the explained journey at /mobile. Played on demand, never by themselves.
+ * desktop), then the way to the explained journey at /docs/mobile. Played on demand, never by themselves.
  */
 export function LandingMobile() {
   const { t } = useTranslation();
@@ -29,7 +29,7 @@ export function LandingMobile() {
         </ul>
         <p className="flex flex-wrap items-center gap-x-6 gap-y-3 text-sm text-fg-secondary">
           <Button asChild variant="secondary" size="md" shape="pill">
-            <Link href="/mobile">
+            <Link href="/docs/mobile">
               {m.all}
               <ForwardIcon size={16} />
             </Link>

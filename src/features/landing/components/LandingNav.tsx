@@ -57,7 +57,7 @@ export function LandingNav({ onHome = true }: Readonly<{ onHome?: boolean }>) {
   const links = [
     { key: "how", href: href("how"), label: n.how, external: false },
     { key: "demo", href: href("demo"), label: n.demo, external: false },
-    { key: "mobile", href: "/mobile", label: n.mobile, external: false },
+    { key: "mobile", href: "/docs/mobile", label: n.mobile, external: false },
     { key: "docs", href: "/docs", label: n.docs, external: false },
   ] as const;
   const action = flags.signup ? { href: "/register", label: n.getStarted } : { href: TALK_URL, label: n.talk };
@@ -103,7 +103,7 @@ export function LandingNav({ onHome = true }: Readonly<{ onHome?: boolean }>) {
               </NavBar.MobileLink>
             ))}
             <NavBar.MobileLink asChild>
-              <Link href="/mobile">{n.mobile}</Link>
+              <Link href="/docs/mobile">{n.mobile}</Link>
             </NavBar.MobileLink>
             <NavBar.MobileLink asChild>
               <Link href="/docs">{n.docs}</Link>

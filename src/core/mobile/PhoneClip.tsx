@@ -1,7 +1,7 @@
 "use client";
 
-import type { ClipId } from "@/features/landing/utils/mobile";
-import { clipUrls } from "@/features/landing/utils/mobile";
+import type { ClipId } from "@/core/mobile/mobile";
+import { clipUrls } from "@/core/mobile/mobile";
 
 /**
  * One recording of the app in a phone: a 9:16-ish frame around the clip, played in place on demand. Nothing loads
