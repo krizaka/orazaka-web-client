@@ -74,7 +74,7 @@ export interface LandingDictionary {
   demo: { eyebrow: string; title: string; lead: string; frame: string };
   packs: { eyebrow: string; title: string; lead: string; studios: string; more: string; cta: string };
   closed: { title: string; body: string; docs: string; contact: string; home: string; heroPrimary: string; heroSecondary: string; signInBanner: string };
-  footer: { privacy: string; terms: string; contact: string; license: string; by: string; product: string; docs: string; legal: string };
+  footer: { devNotice: string; privacy: string; terms: string; contact: string; license: string; by: string; product: string; docs: string; legal: string };
 }
 
 /** One feature page (/features/<id>). */

@@ -194,6 +194,7 @@ export const landing: Record<Locale, LandingDictionary> = {
       signInBanner: "Sign-in opens when Orazaka's dev services run — watch the demo meanwhile.",
     },
     footer: {
+      devNotice: "Development environment — access by invitation",
       privacy: "Privacy",
       terms: "Terms",
       contact: "Contact",
@@ -389,6 +390,7 @@ export const landing: Record<Locale, LandingDictionary> = {
       signInBanner: "La connexion s'ouvre quand les services de développement d'Orazaka tournent — regardez la démo en attendant.",
     },
     footer: {
+      devNotice: "Environnement de développement — accès sur invitation",
       privacy: "Confidentialité",
       terms: "Conditions",
       contact: "Contact",

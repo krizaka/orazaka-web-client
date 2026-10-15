@@ -3,6 +3,8 @@ import localFont from "next/font/local";
 import "./globals.css";
 import "@krizaka/ui/blocks.css";
 import { readAuthFlags } from "@/core/config/auth-flags";
+import { indexable } from "@/core/config/indexing";
+import { DevEnvironmentNotice } from "@/components/DevEnvironmentNotice";
 import { Providers } from "@/core/providers/Providers";
 import { ThemeScript } from "@krizaka/ui/theme";
 
@@ -63,6 +65,8 @@ const krizakaMono = localFont({
  * Application global metadata configurations.
  */
 export const metadata: Metadata = {
+  // Not indexed (dev, preview): the page says so too — the header and robots.txt say it already (core/config/indexing.ts).
+  ...(indexable() ? {} : { robots: { index: false, follow: false, noarchive: true } }),
   metadataBase: new URL(SITE_URL),
   title: SITE_TITLE,
   description: SITE_DESCRIPTION,
@@ -111,7 +115,10 @@ export default function RootLayout({
           "antialiased transition-colors duration-200"
         )}
       >
-        <Providers authFlags={readAuthFlags()}>{children}</Providers>
+        <Providers authFlags={readAuthFlags()}>
+          {children}
+          <DevEnvironmentNotice show={!indexable()} />
+        </Providers>
       </body>
     </html>
   );

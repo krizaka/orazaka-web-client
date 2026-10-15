@@ -12,6 +12,7 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { authClosed, isBackendPath, readAuthFlags } from "@/core/config/auth-flags";
+import { indexable, NOINDEX_HEADER } from "@/core/config/indexing";
 
 /**
  * Route prefixes that do NOT require authentication.
@@ -48,7 +49,7 @@ function isPublicPath(pathname: string): boolean {
   return pathname === "/" || PUBLIC_PREFIXES.some((prefix) => pathname.startsWith(prefix));
 }
 
-export function proxy(request: NextRequest) {
+function route(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   // Both entry points closed (AUTH_LOGIN_ENABLED / AUTH_SIGNUP_ENABLED false): nothing is proxied to the backend.
@@ -72,6 +73,13 @@ export function proxy(request: NextRequest) {
   }
 
   return NextResponse.next();
+}
+
+/** Every response of a deployment closed to search engines (APP_SEARCH_INDEXING=off) says noindex — pages, redirects, the BFF. */
+export function proxy(request: NextRequest) {
+  const response = route(request);
+  if (!indexable()) response.headers.set("x-robots-tag", NOINDEX_HEADER);
+  return response;
 }
 
 export const config = {
