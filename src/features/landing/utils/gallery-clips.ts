@@ -83,6 +83,7 @@ const RECORDS: Record<string, ClipRecord> = {
     runId: "53ca1083-cdc5-47d3-a923-5092016db13b",
   },
   "products/orazaka/video/montreal": {
+    featured: true,
     id: "montreal",
     prompt: "Winter night in Montréal, slow tracking shot along a snowy street of the Plateau with outside spiral staircases, warm windows glowing, snowflakes in streetlight, steam from a vent, cinematic 35mm, shallow depth of field. No text, no lettering, no logos.",
     seed: "20261011",
@@ -106,6 +107,7 @@ const RECORDS: Record<string, ClipRecord> = {
     runId: "bfaae551-3c58-4d18-b93b-f16911acf4e5",
   },
   "products/orazaka/video/grenoble": {
+    featured: true,
     id: "grenoble",
     prompt: "Dawn over Grenoble, the spherical cable-car cabins of the Bastille gliding up above the city, snow-capped Alps glowing pink behind, mist in the valley, aerial cinematic. No text, no lettering, no logos.",
     seed: "20261011",
@@ -128,6 +130,7 @@ const RECORDS: Record<string, ClipRecord> = {
     runId: "0494384e-c8d0-473a-9a9e-b91f5f1b1946",
   },
   "products/yasakia/video/montreal-dawn": {
+    featured: true,
     id: "yasakia-montreal-dawn",
     prompt: "Aerial drone shot at dawn gliding over Old Montréal rooftops toward the St. Lawrence river, low fog, emerald and turquoise reflections on the water, first light hitting the domes, slow and smooth, epic, cinematic color grade. No text, no lettering, no logos.",
     seed: "20261011",
@@ -140,6 +143,7 @@ const RECORDS: Record<string, ClipRecord> = {
     runId: "733c6e0b-51e8-446e-9fe1-7309f5711f84",
   },
   "products/yororis/video/microphone": {
+    featured: true,
     id: "yororis-microphone",
     prompt: "Close-up of a vintage ribbon microphone in a quiet sand-coloured room, sage-green curtains moving gently in a breeze, sunlight particles drifting, a faint sound-wave ripple across a glass of water beside it, serene, cinematic, shallow depth of field. No text, no lettering, no logos.",
     seed: "20261011",

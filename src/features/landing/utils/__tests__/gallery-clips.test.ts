@@ -27,11 +27,10 @@ describe("the videos of Made here", () => {
     for (const id of ["maroc", "grenoble", "arcade"]) expect(CLIPS.find((clip) => clip.id === id)?.seconds).toBeUndefined();
   });
 
-  it("features tea-pour and the assistant on the home page, with the image tea-pour continues", () => {
-    expect(FEATURED.map((item) => item.clip.id)).toEqual(["tea-pour", "assistant"]);
+  it("features six on the home page — tea-pour (with the image it continues), the assistant and the four best — in that order", () => {
+    expect(FEATURED.map((item) => item.clip.id)).toEqual(["tea-pour", "assistant", "montreal", "grenoble", "yasakia-montreal-dawn", "yororis-microphone"]);
     expect(FEATURED[0].image?.id).toBe("tea-pour");
-    expect(FEATURED[1].image).toBeUndefined();
-    expect(CLIPS.slice(0, 2).map((c) => c.id)).toEqual(["tea-pour", "assistant"]);
+    for (const item of FEATURED.slice(1)) expect(item.image).toBeUndefined();
   });
 
   it("knows every file of every clip on the CDN, with a content hash", () => {

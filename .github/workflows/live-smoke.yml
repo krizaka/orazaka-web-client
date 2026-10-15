@@ -27,10 +27,12 @@ jobs:
           node-version: 22
       - name: Wait for the deployed build to carry this commit
         run: |
-          short="${GITHUB_SHA::7}"
-          for i in $(seq 1 60); do
-            if curl -fsS "$E2E_BASE_URL/" | grep -q "$short"; then echo "deployed: $short"; exit 0; fi
-            echo "waiting for $short ($i/60)"; sleep 30
+          short="${GITHUB_SHA::7}"; ok=0
+          for i in $(seq 1 180); do
+            # five answers in a row carry the sha: a rolling deploy serves old and new instances side by side
+            if curl -fsS "$E2E_BASE_URL/" | grep -q "$short"; then ok=$((ok+1)); else ok=0; fi
+            if [ "$ok" -ge 5 ]; then echo "deployed: $short"; exit 0; fi
+            echo "waiting for $short ($i/180, $ok in a row)"; sleep 10
           done
           echo "the site never showed $short" >&2; exit 1
       - run: npm install --legacy-peer-deps --no-audit --no-fund
