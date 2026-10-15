@@ -38,4 +38,4 @@ execFileSync("ffmpeg", [...trim, "-c:v", "libvpx-vp9", "-b:v", "0", "-crf", "42"
 execFileSync("ffmpeg", [...trim, "-c:v", "libx264", "-crf", "28", "-preset", "slow", "-pix_fmt", "yuv420p", "-movflags", "+faststart", `${out}.mp4`]);
 execFileSync("ffmpeg", ["-y", "-loglevel", "error", "-ss", "5", "-i", `${out}.mp4`, "-frames:v", "1", "-q:v", "4", `${out}.jpg`]);
 await b.close();
-console.log("ok");
+process.stdout.write("ok\n");
