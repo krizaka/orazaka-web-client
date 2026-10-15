@@ -4,6 +4,7 @@ import { useId, type ReactNode } from "react";
 import { CodeBlock } from "@krizaka/ui/code-block";
 import { useTranslation } from "@/core/context/LocaleContext";
 import type { DocsDiagramLabels } from "@/core/context/translations.docs";
+import { PackIndexView, PackView } from "@/features/docs/components/PackCatalogue";
 import type { DiagramData } from "@/features/docs/utils/diagram-data";
 
 const mono = "font-mono text-[0.85em] text-fg";
@@ -29,6 +30,10 @@ export function DiagramView({ data }: Readonly<{ data: DiagramData }>) {
       return <CodeBlock code={data.code} language="bash" file={l.terminal} copyLabel={t.docs.copy} copiedLabel={t.docs.copied} className="my-5" />;
     case "cli-journey":
       return <CliJourney data={data} l={l} />;
+    case "pack-index":
+      return <PackIndexView items={data.items} />;
+    case "pack":
+      return <PackView pack={data.pack} />;
     case "cli-commands":
       return <p className="my-4 text-sm text-fg-secondary">{data.text}</p>;
   }
