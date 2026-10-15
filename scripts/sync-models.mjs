@@ -48,11 +48,15 @@ fs.writeFileSync(out, `${JSON.stringify({ models }, null, 2)}\n`);
 // The public page of the catalogue says what the public list says: the sections about the models kept out of it
 // (the unfiltered ones, which an operator may serve) stay in the workspace docs.
 const KEPT_OUT = ["Unfiltered models, your rules", "In the catalogue, not published"];
-const withoutKeptOut = (text) =>
-  text
-    .split(/^(?=## )/m)
-    .filter((block) => !KEPT_OUT.some((title) => block.startsWith(`## ${title}`)))
-    .join("");
+// A sentence of a kept-out section that the public page still needs (the link to the Measured runs page) stays.
+const STAYS = [/^How fast and at what price[^\n]*$/m];
+const withoutKeptOut = (text) => {
+  const blocks = text.split(/^(?=## )/m);
+  const kept = blocks.filter((block) => !KEPT_OUT.some((title) => block.startsWith(`## ${title}`)));
+  const dropped = blocks.filter((block) => KEPT_OUT.some((title) => block.startsWith(`## ${title}`)));
+  const stays = dropped.flatMap((block) => STAYS.map((re) => block.match(re)?.[0]).filter(Boolean));
+  return kept.join("") + (stays.length ? `\n${stays.join("\n\n")}\n` : "");
+};
 const md = withoutKeptOut(fs.readFileSync(path.join(generated, "MODELS.md"), "utf8").replace(/^---\n[\s\S]*?\n---\n/, "").trimStart());
 fs.writeFileSync(path.join(root, "content", "docs", "models.md"), md);
 process.stdout.write(`${models.length} models → src/features/landing/utils/models.generated.json, content/docs/models.md\n`);
