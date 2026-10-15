@@ -21,7 +21,7 @@ import { mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { setHours, setMinutes, startOfDay } from "date-fns";
-import { ERIC, PREPARED, RECORDED_DOCUMENT, RECORDED_QUESTION, RECORDED_VISUAL, RECORDED_VOICE, SHOWCASE_VISUAL } from "./tour/eric.mjs";
+import { ERIC, PREPARED, RECORDED_DOCUMENT, RECORDED_QUESTION, RECORDED_VIDEO, RECORDED_VISUAL, RECORDED_VOICE, SHOWCASE_VISUAL } from "./tour/eric.mjs";
 import { DEMO_LEASE } from "./tour/documents.mjs";
 
 const BASE = (process.env.ORAZAKA_URL || "http://localhost:3000").replace(/\/$/, "");
@@ -31,7 +31,8 @@ const PASSWORD = process.env.TOUR_PASSWORD || process.env.DEMO_PASSWORD || ERIC.
 const ARGS = process.argv.slice(2);
 const PREPARE = ARGS.includes("prepare");
 const ONLY = ARGS.filter((a) => a !== "prepare");
-const VIEWPORT = { width: 1440, height: 900 };
+// A 16:10 window small enough that the interface reads in a clip (no micro-text), drawn at 2× for sharpness.
+const VIEWPORT = { width: 1120, height: 700 };
 // The home-page card plays at a third of a screen: its clip is filmed in a smaller window, so the same interface
 // fills the frame at a size that reads there (no micro-text). Same 16:10, upscaled to 1280×800 like the others.
 const CLOSE_UP = { width: 960, height: 600 };
@@ -62,7 +63,9 @@ const pause = (page, ms) => page.waitForTimeout(ms);
 async function context(state, record, viewport = VIEWPORT) {
   const ctx = await browser.newContext({
     viewport,
-    colorScheme: "dark",
+    // Retina: the page is drawn at 2× and the screencast is scaled to the window (Playwright records at the window's size, 25 fps).
+    deviceScaleFactor: 2,
+    colorScheme: process.env.TOUR_THEME === "light" ? "light" : "dark",
     storageState: state,
     recordVideo: record ? { dir: raw, size: viewport } : undefined,
   });
@@ -70,7 +73,7 @@ async function context(state, record, viewport = VIEWPORT) {
   await ctx.addInitScript(() => {
     try {
       if (!sessionStorage.getItem("tour-init")) {
-        localStorage.setItem("kz-theme", "dark");
+        localStorage.setItem("kz-theme", window.__TOUR_THEME || "dark");
         localStorage.setItem("orazaka_language", "en");
         sessionStorage.setItem("tour-init", "1");
       }
@@ -218,18 +221,48 @@ const CLIPS = {
     };
   },
 
+  // The photo, as Eric makes it: the prompt typed into the Studio (sped up), the run, the wait cut, the image landing.
   async creations(page, cut) {
-    const run = await api("POST", "/api/v1/studios/image-generation/runs", { inputs: { prompt: RECORDED_VISUAL } });
-    await page.goto(`${BASE}/studios/runs/${run.id}`, { waitUntil: "load" });
-    await settle(page, 200);
+    await page.goto(`${BASE}/studios/image-generation`, { waitUntil: "load" });
+    await settle(page);
     return async () => {
-      await pause(page, 1200);
+      await pause(page, 900);
+      const field = page.locator("#studio-run-prompt");
+      await field.scrollIntoViewIfNeeded();
+      await field.click();
+      await field.pressSequentially(RECORDED_VISUAL, { delay: 6 });
+      await pause(page, 500);
+      await page.getByRole("button", { name: /^Run$/ }).click();
+      await page.waitForURL(/\/studios\/runs\//, { timeout: 30_000 });
+      await settle(page, 500);
       await awaitRun(page, cut);
-      await pause(page, 3500);
-      await gallery(page, cut);
+      await pause(page, 4200);
+      await glide(page, 420, 1600);
+      await pause(page, 2200);
+    };
+  },
+
+  // The clip: the same lamp for five seconds, by a model in the cloud that Orazaka routes to; the wait is cut.
+  async video(page, cut) {
+    await page.goto(`${BASE}/studios/video-generation`, { waitUntil: "load" });
+    await settle(page);
+    return async () => {
+      await pause(page, 900);
+      const field = page.locator("#studio-run-prompt");
+      await field.scrollIntoViewIfNeeded();
+      await field.click();
+      await field.pressSequentially(RECORDED_VIDEO, { delay: 5 });
+      await page.locator("#studio-run-model").selectOption("wan2-2-t2v-a14b").catch(() => {});
+      await page.locator("#studio-run-aspect").selectOption("16:9").catch(() => {});
+      await pause(page, 700);
+      await page.getByRole("button", { name: /^Run$/ }).click();
+      await page.waitForURL(/\/studios\/runs\//, { timeout: 30_000 });
+      await settle(page, 500);
+      await awaitRun(page, cut);
+      await pause(page, 600);
+      const play = page.getByRole("button", { name: /^Play/ }).first();
+      if (await play.count()) await play.click().catch(() => {});
       await pause(page, 7000);
-      await glide(page, 420, 1800);
-      await pause(page, 2400);
     };
   },
 
@@ -289,7 +322,7 @@ const CLIPS = {
       const field = page.locator("#studio-run-text");
       await field.scrollIntoViewIfNeeded();
       await field.click();
-      await field.pressSequentially(RECORDED_VOICE, { delay: 16 });
+      await field.pressSequentially(RECORDED_VOICE, { delay: 7 });
       await pause(page, 600);
       await page.getByRole("button", { name: /^Run$/ }).click();
       await page.waitForURL(/\/studios\/runs\//, { timeout: 30_000 });
@@ -333,7 +366,7 @@ const CLIPS = {
       await pause(page, 1400);
       const box = page.locator("textarea").first();
       await box.click();
-      await box.pressSequentially(RECORDED_QUESTION, { delay: 24 });
+      await box.pressSequentially(RECORDED_QUESTION, { delay: 9 });
       await page.keyboard.insertText(`\n\n${RECORDED_DOCUMENT}`); // the policy, pasted
       await pause(page, 900);
       await page.getByRole("button", { name: /^Send/ }).click();
@@ -376,7 +409,7 @@ async function record(id, state) {
   const target = path.join(OUT, id);
   const spans = cuts.filter((c) => c.to).map((c) => `between(t,${(c.from - start).toFixed(2)},${(c.to - start).toFixed(2)})`);
   const drop = spans.length ? `select='not(${spans.join("+")})',setpts=N/FRAME_RATE/TB,` : "";
-  const trim = ["-y", "-loglevel", "error", "-ss", start.toFixed(2), "-i", source, "-vf", `fps=25,${drop}scale=1280:800:flags=lanczos`, "-an"];
+  const trim = ["-y", "-loglevel", "error", "-ss", start.toFixed(2), "-i", source, "-vf", `fps=25,${drop}scale=1440:900:flags=lanczos`, "-an"];
   execFileSync("ffmpeg", [...trim, "-c:v", "libvpx-vp9", "-b:v", "0", "-crf", "42", "-row-mt", "1", "-deadline", "good", "-cpu-used", "2", `${target}.webm`]);
   execFileSync("ffmpeg", [...trim, "-c:v", "libx264", "-crf", "28", "-preset", "slow", "-pix_fmt", "yuv420p", "-movflags", "+faststart", `${target}.mp4`]);
   const duration = Number(
