@@ -1,34 +1,45 @@
 import { translations } from "@/core/context/translations";
-import { hasMedia } from "@/core/media/cdn";
+import { hasMedia, mediaPaths } from "@/core/media/cdn";
 import { GALLERY } from "@/features/landing/utils/gallery";
 import { CLIPS, CLIP_MODEL, FEATURED, clipFiles, clipOf, clipReproduceParts } from "@/features/landing/utils/gallery-clips";
 
-describe("the videos of Prompt → image → video", () => {
-  it("records, for every clip, what its Orazaka run recorded", () => {
-    expect(CLIPS.length).toBeGreaterThanOrEqual(2);
+describe("the videos of Made here", () => {
+  it("lists every clip the media manifest publishes — no hand list — each with the record of its run", () => {
+    const published = mediaPaths("products/").filter((path) => /^products\/[a-z]+\/(gallery-video|video)\/[a-z0-9-]+\.mp4$/.test(path));
+    expect(published.length).toBeGreaterThanOrEqual(10);
+    expect(CLIPS.map((clip) => `${clip.stem}.mp4`).sort()).toEqual(published);
     for (const clip of CLIPS) {
       expect(clip.runId).toMatch(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/);
       expect(clip.seed).toMatch(/^\d+$/);
       expect(clip.prompt.length).toBeGreaterThan(80);
-      expect(clip.width * clip.height).toBeGreaterThan(0);
       // The provider's measured shape: 832x480, 16:9, 16 fps, 81 frames.
       expect([clip.width, clip.height, clip.aspect, clip.fps]).toEqual([832, 480, "16:9", 16]);
       expect(clip.duration).toBeCloseTo(5.06, 1);
-      expect(clip.seconds).toBeGreaterThan(0);
       expect(clip.costUsd).toBe(0.6);
+      if (clip.seconds !== undefined) expect(clip.seconds).toBeGreaterThan(0);
       if (clip.imageId) expect(GALLERY.some((item) => item.id === clip.imageId)).toBe(true);
     }
     expect(new Set(CLIPS.map((c) => c.id)).size).toBe(CLIPS.length);
     expect(CLIP_MODEL.key).toBe("wan2-2-t2v-a14b");
-    expect(FEATURED.map((item) => item.clip.id)).toEqual(CLIPS.map((c) => c.id));
+  });
+
+  it("does not show a time that includes a worker restart", () => {
+    for (const id of ["maroc", "grenoble", "arcade"]) expect(CLIPS.find((clip) => clip.id === id)?.seconds).toBeUndefined();
+  });
+
+  it("features tea-pour and the assistant on the home page, with the image tea-pour continues", () => {
+    expect(FEATURED.map((item) => item.clip.id)).toEqual(["tea-pour", "assistant"]);
+    expect(FEATURED[0].image?.id).toBe("tea-pour");
+    expect(FEATURED[1].image).toBeUndefined();
+    expect(CLIPS.slice(0, 2).map((c) => c.id)).toEqual(["tea-pour", "assistant"]);
   });
 
   it("knows every file of every clip on the CDN, with a content hash", () => {
     for (const clip of CLIPS) {
-      for (const ext of ["mp4", "webm"]) expect(hasMedia(`products/orazaka/gallery-video/${clip.id}.${ext}`)).toBe(true);
-      expect(hasMedia(`products/orazaka/gallery-video/${clip.id}-poster.webp`)).toBe(true);
+      for (const ext of ["mp4", "webm"]) expect(hasMedia(`${clip.stem}.${ext}`)).toBe(true);
+      expect(hasMedia(`${clip.stem}-poster.webp`)).toBe(true);
       const files = clipFiles(clip);
-      expect(files.mp4).toMatch(/^https:\/\/krizaka-assets\.b-cdn\.net\/site\/products\/orazaka\/gallery-video\/[a-z-]+\.[0-9a-f]{10}\.mp4$/);
+      expect(files.mp4).toMatch(/^https:\/\/krizaka-assets\.b-cdn\.net\/site\/products\/[a-z]+\/(gallery-video|video)\/[a-z0-9-]+\.[0-9a-f]{10}\.mp4$/);
       expect(files.poster).toMatch(/-poster\.[0-9a-f]{10}\.webp$/);
     }
   });

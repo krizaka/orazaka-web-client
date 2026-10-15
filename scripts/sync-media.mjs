@@ -19,12 +19,14 @@ if (!site) {
   process.exit(1);
 }
 const manifest = JSON.parse(fs.readFileSync(path.join(site, "lib/cdn-manifest.json"), "utf8"));
+/** Every product's clips: products/<product>/{gallery-video,video}/<clip>.{mp4,webm}, <clip>-poster.webp. */
+const VIDEO = /^products\/[a-z]+\/(?:gallery-video|video)\//;
 const AREAS = ["products/orazaka/mobile/", "products/orazaka/gallery/", "products/orazaka/gallery-video/", "products/orazaka/video/", "products/orazaka/home/"];
 // The site no longer carries Orazaka media in its manifest once they are mirrored elsewhere: merge over what this
 // site already records instead of replacing it, so a sync of one new capture never forgets the others.
 const out = path.join(root, "src/core/media/media.generated.json");
 const known = fs.existsSync(out) ? JSON.parse(fs.readFileSync(out, "utf8")).files : {};
-const fresh = Object.fromEntries(Object.entries(manifest.files).filter(([k]) => AREAS.some((a) => k.startsWith(a))));
+const fresh = Object.fromEntries(Object.entries(manifest.files).filter(([k]) => AREAS.some((a) => k.startsWith(a)) || VIDEO.test(k)));
 const files = Object.fromEntries(Object.entries({ ...known, ...fresh }).sort(([a], [b]) => a.localeCompare(b)));
 if (!Object.keys(files).length) throw new Error("no Orazaka media in the manifest");
 fs.writeFileSync(out, `${JSON.stringify({ cdnRoot: manifest.root, files }, null, 2)}\n`);
