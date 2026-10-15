@@ -1,0 +1,31 @@
+import assert from "node:assert/strict";
+import { test } from "node:test";
+import { SUBJECTS, records } from "./sync-i2v.mjs";
+
+const run = (id, aspect, over = {}) => ({
+  id, aspect, status: "SUCCEEDED", model: "wan2.2-ti2v-5b", prompt: "p", runId: "11111111-1111-1111-1111-111111111111",
+  runSeconds: 1106, gpuRateUsdPerHour: 0.76, gpuCostUsd: 0.2335,
+  reported: { width: 1280, height: 704, frames: 121, fps: 24, seed: "2718", durationSeconds: 5.04, gpu: "NVIDIA RTX 4000 Ada Generation" },
+  ...over,
+});
+
+test("only an accepted 16:9 clip that succeeded is published, with what its run reported", () => {
+  const rows = records(
+    [run("mini-bagels-16x9", "16:9"), run("mini-bagels-9x16", "9:16"), run("mini-souk-16x9", "16:9"), run("tea-pour-16x9", "16:9", { status: "FAILED" })],
+    { "mini-bagels-16x9": { accepted: true }, "mini-bagels-9x16": { accepted: true }, "mini-souk-16x9": { accepted: false, note: "warped" } },
+  );
+  assert.equal(rows.length, 1); // 9:16 is for Shorts, a warped one is rejected, a failed one never was
+  const [{ stem, record }] = rows;
+  assert.equal(stem, "products/orazaka/gallery-video/bagels-i2v");
+  assert.deepEqual([record.id, record.imageId, record.model, record.fromImage, record.seed, record.width, record.height, record.fps, record.duration, record.seconds, record.costUsd],
+    ["bagels-i2v", "mini-bagels", "wan2.2-ti2v-5b", true, "2718", 1280, 704, 24, 5.04, 1106, 0.23]);
+});
+
+test("a clip nobody reviewed is not published, and a run that did not report its frame is an error", () => {
+  assert.deepEqual(records([run("mini-souk-16x9", "16:9")], {}), []);
+  assert.throws(() => records([run("mini-souk-16x9", "16:9", { reported: {} })], { "mini-souk-16x9": { accepted: true } }), /did not report its frame/);
+});
+
+test("every subject has its own gallery image and file stem", () => {
+  assert.equal(new Set(Object.values(SUBJECTS).map((s) => s.stem)).size, Object.keys(SUBJECTS).length);
+});

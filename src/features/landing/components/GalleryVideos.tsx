@@ -46,7 +46,7 @@ function ClipCard({ clip }: Readonly<{ clip: GalleryClip }>) {
       prompt={clip.prompt}
       facts={clipFacts(g, clip)}
       reproduce={clipReproduceParts(clip)[0].code}
-      reproduceLead={g.videoReproduceLead}
+      reproduceLead={clip.fromImage ? g.videoReproduceLeadImage : g.videoReproduceLead}
       labels={clipLabels(g, clip)}
     />
   );

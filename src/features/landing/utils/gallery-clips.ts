@@ -8,13 +8,25 @@
  * Words: `t.gallery`.
  */
 import { hasMedia, mediaPaths, mediaUrl } from "@/core/media/cdn";
+import i2v from "@/features/landing/utils/gallery-i2v.json";
 import { GALLERY, type GalleryItem, type ReproducePart } from "@/features/landing/utils/gallery";
+
+/** The models a clip can be made by. */
+export type ClipModelKey = "wan2-2-t2v-a14b" | "wan2.2-ti2v-5b";
 
 /** What a run recorded about a clip. */
 export interface ClipRecord {
+  /** The model that made it; Wan 2.2 A14B (serverless, from text) when absent. */
+  model?: ClipModelKey;
+  /** The clip starts from the photo `imageId` (image to video): the run was given that photo, cut to the frame around its subject. */
+  fromImage?: true;
+  /** The GPU a droplet made it on; set with `fromImage` (its time is billed by the hour, not by the clip). */
+  gpu?: string;
+  /** The hourly rate the clip's cost was computed with (USD), when it is GPU time rather than a provider's price. */
+  gpuRateUsdPerHour?: number;
   /** The key of its caption in `t.gallery.clips` (the file stem, prefixed by the product when it is not Orazaka's). */
   id: string;
-  /** The gallery image this clip continues (same scene), when there is one. */
+  /** The gallery image this clip continues (same scene), or — with `fromImage` — starts from. */
   imageId?: string;
   /** Shown first, on the home page. */
   featured?: true;
@@ -53,8 +65,27 @@ export const CLIP_MODEL = {
   provider: "DigitalOcean serverless inference",
 } as const;
 
+/** Every model a clip can name, with who runs it. The image-to-video model runs on a GPU droplet of dev, by the hour. */
+export const CLIP_MODELS: Record<ClipModelKey, { key: ClipModelKey; name: string; licence: string; provider: string }> = {
+  "wan2-2-t2v-a14b": CLIP_MODEL,
+  "wan2.2-ti2v-5b": {
+    key: "wan2.2-ti2v-5b",
+    name: "Wan 2.2 TI2V 5B",
+    licence: "Apache-2.0",
+    provider: "a DigitalOcean GPU by the hour (NVIDIA RTX 4000 Ada, 20 GB)",
+  },
+};
+
+/** The model of a clip (Wan 2.2 A14B unless its record names another). */
+export const clipModel = (clip: Pick<ClipRecord, "model">) => CLIP_MODELS[clip.model ?? "wan2-2-t2v-a14b"];
+
+/** The image-to-video runs, exported from the batch (`scripts/gpu-i2v-run.mjs` of krizaka/orazaka) — data, never typed. */
+const I2V_RECORDS: Record<string, ClipRecord> = Object.fromEntries(
+  (i2v as { stem: string; record: ClipRecord }[]).map(({ stem, record }) => [stem, record]),
+);
+
 /** What each run recorded, by the media path of its file (no extension). */
-const RECORDS: Record<string, ClipRecord> = {
+const HAND_RECORDS: Record<string, ClipRecord> = {
 
   "products/orazaka/gallery-video/tea-pour": {
     id: "tea-pour",
@@ -193,6 +224,9 @@ const RECORDS: Record<string, ClipRecord> = {
   },
 };
 
+// The clips made from a photo come first: they are the whole path, prompt → image → video.
+const RECORDS: Record<string, ClipRecord> = { ...I2V_RECORDS, ...HAND_RECORDS };
+
 const CLIP_FILE = /^products\/([a-z]+)\/(gallery-video|video)\/([a-z0-9-]+)\.mp4$/;
 
 /** The published clips, from the manifest: featured ones first (the order of `RECORDS`), then the rest in path order. */
@@ -235,10 +269,16 @@ export const clipFiles = (clip: GalleryClip) => ({
 });
 
 /** The clip that continues an image, if any. */
-export const clipOf = (imageId: string): GalleryClip | undefined => CLIPS.find((clip) => clip.imageId === imageId);
+export const clipOf = (imageId: string): GalleryClip | undefined =>
+  CLIPS.find((clip) => clip.imageId === imageId && clip.fromImage) ?? CLIPS.find((clip) => clip.imageId === imageId);
 
-/** The command that makes the clip again: same prompt, model, frame, duration and seed, through the CLI. */
+/** The command that makes the clip again: same prompt, model, frame, duration and seed, through the CLI — or, from a photo, through the Studio's own inputs. */
 export function clipReproduceParts(clip: GalleryClip): ReproducePart[] {
+  if (clip.fromImage) {
+    // The CLI's `orazaka video` has no --image yet: the run is the Studio's, with the photo's asset id as its `image` input.
+    const inputs = { prompt: clip.prompt, durationSeconds: Math.round(clip.duration), aspect: clip.aspect, seed: clip.seed, model: clip.model, image: "<the id of your upload of the photo>" };
+    return [{ language: "json", file: "inputs.json", code: JSON.stringify(inputs, null, 2) }];
+  }
   const quoted = `"${clip.prompt.replace(/(["\\$`])/g, "\\$1")}"`;
   return [
     {

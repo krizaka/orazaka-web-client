@@ -1,7 +1,7 @@
 import { translations } from "@/core/context/translations";
 import { hasMedia, mediaPaths } from "@/core/media/cdn";
 import { GALLERY } from "@/features/landing/utils/gallery";
-import { CLIPS, CLIP_MODEL, FEATURED, clipFiles, clipOf, clipReproduceParts } from "@/features/landing/utils/gallery-clips";
+import { CLIPS, CLIP_MODEL, FEATURED, clipFiles, clipModel, clipOf, clipReproduceParts } from "@/features/landing/utils/gallery-clips";
 
 describe("the videos of Made here", () => {
   it("lists every clip the media manifest publishes — no hand list — each with the record of its run", () => {
@@ -12,25 +12,45 @@ describe("the videos of Made here", () => {
       expect(clip.runId).toMatch(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/);
       expect(clip.seed).toMatch(/^\d+$/);
       expect(clip.prompt.length).toBeGreaterThan(80);
-      // The provider's measured shape: 832x480, 16:9, 16 fps, 81 frames.
-      expect([clip.width, clip.height, clip.aspect, clip.fps]).toEqual([832, 480, "16:9", 16]);
-      expect(clip.duration).toBeCloseTo(5.06, 1);
-      expect(clip.costUsd).toBe(0.6);
+      expect(clip.aspect).toBe("16:9");
+      if (clip.fromImage) {
+        // Image to video on a GPU droplet: Wan 2.2 TI2V 5B at a size it was trained at (or the next one down on 20 GB), 24 fps, 5 s; the cost is GPU time.
+        expect(clip.model).toBe("wan2.2-ti2v-5b");
+        expect([[1280, 704], [960, 544], [832, 480]]).toContainEqual([clip.width, clip.height]);
+        expect([clip.fps, clip.duration]).toEqual([24, 5.04]);
+        expect(clip.gpu).toMatch(/RTX 4000 Ada/);
+        expect(clip.gpuRateUsdPerHour).toBe(0.76);
+        expect(clip.imageId).toBeTruthy();
+        expect(clip.seconds).toBeGreaterThan(0);
+        // cost = wall seconds x the hourly rate (the data says how it was computed)
+        expect(clip.costUsd).toBeCloseTo(((clip.seconds ?? 0) / 3600) * 0.76, 1);
+      } else {
+        // The provider's measured shape: 832x480, 16:9, 16 fps, 81 frames.
+        expect([clip.width, clip.height, clip.fps]).toEqual([832, 480, 16]);
+        expect(clip.duration).toBeCloseTo(5.06, 1);
+        expect(clip.costUsd).toBe(0.6);
+      }
       if (clip.seconds !== undefined) expect(clip.seconds).toBeGreaterThan(0);
       if (clip.imageId) expect(GALLERY.some((item) => item.id === clip.imageId)).toBe(true);
     }
     expect(new Set(CLIPS.map((c) => c.id)).size).toBe(CLIPS.length);
     expect(CLIP_MODEL.key).toBe("wan2-2-t2v-a14b");
+    expect(clipModel({ model: "wan2.2-ti2v-5b" }).name).toBe("Wan 2.2 TI2V 5B");
+    expect(clipModel({}).name).toBe("Wan 2.2 A14B");
   });
 
   it("does not show a time that includes a worker restart", () => {
     for (const id of ["maroc", "grenoble", "arcade"]) expect(CLIPS.find((clip) => clip.id === id)?.seconds).toBeUndefined();
   });
 
-  it("features six on the home page — tea-pour (with the image it continues), the Old Port, the assistant and the three best — in that order", () => {
-    expect(FEATURED.map((item) => item.clip.id)).toEqual(["tea-pour", "old-port", "assistant", "montreal", "grenoble", "yasakia-montreal-dawn"]);
-    expect(FEATURED[0].image?.id).toBe("tea-pour");
-    for (const item of FEATURED.slice(1)) expect(item.image).toBeUndefined();
+  it("features the clips made from a photo first (each with the image it starts from), then the Old Port, the assistant and the best of the rest", () => {
+    const ids = FEATURED.map((item) => item.clip.id);
+    const fromImage = FEATURED.filter((item) => item.clip.fromImage);
+    expect(fromImage.length).toBeGreaterThanOrEqual(1);
+    expect(ids.slice(0, fromImage.length)).toEqual(fromImage.map((item) => item.clip.id)); // the whole path comes first
+    for (const item of fromImage) expect(item.image?.id).toBe(item.clip.imageId);
+    expect(ids.slice(fromImage.length)).toEqual(["tea-pour", "old-port", "assistant", "montreal", "grenoble", "yasakia-montreal-dawn"]);
+    expect(FEATURED.find((item) => item.clip.id === "tea-pour")?.image?.id).toBe("tea-pour");
   });
 
   it("knows every file of every clip on the CDN, with a content hash", () => {
@@ -49,18 +69,29 @@ describe("the videos of Made here", () => {
   });
 
   it("links a clip to the image it continues", () => {
-    expect(clipOf("tea-pour")?.id).toBe("tea-pour");
+    // tea-pour has two clips: the text-to-video one and the image-to-video one; the one made FROM the image is the one it continues.
+    expect(clipOf("tea-pour")?.fromImage).toBe(true);
     expect(clipOf("mtl-ruelle")).toBeUndefined();
   });
 
   it("reproduces a clip with the real orazaka-cli syntax: same prompt, model, frame, seed and length", () => {
-    const clip = CLIPS[0];
+    const clip = CLIPS.find((c) => c.id === "tea-pour") ?? CLIPS[0];
     const [part] = clipReproduceParts(clip);
     expect(part.language).toBe("bash");
     expect(part.code).toContain("orazaka video \"");
     expect(part.code).toContain("--model wan2-2-t2v-a14b --aspect 16:9 --seed 20261011 --duration 5");
     // The prompt reaches the shell as one word: its quotes, backslashes, dollars and backticks are escaped.
     expect(clipReproduceParts({ ...clip, prompt: 'a "b" $c `d` \\e' })[0].code).toContain('"a \\"b\\" \\$c \\`d\\` \\\\e"');
+  });
+
+  it("reproduces an image-to-video clip with the Studio's own inputs (the CLI has no --image yet): its photo is an upload, never a path", () => {
+    const clip = CLIPS.find((c) => c.fromImage);
+    expect(clip).toBeDefined();
+    const [part] = clipReproduceParts(clip as NonNullable<typeof clip>);
+    expect(part.language).toBe("json");
+    const inputs = JSON.parse(part.code);
+    expect(inputs).toMatchObject({ model: "wan2.2-ti2v-5b", aspect: "16:9", seed: (clip as NonNullable<typeof clip>).seed, durationSeconds: 5 });
+    expect(inputs.image).toMatch(/^<.*upload.*>$/);
   });
 
   it("names no copyrighted character, brand or logo in a prompt", () => {
