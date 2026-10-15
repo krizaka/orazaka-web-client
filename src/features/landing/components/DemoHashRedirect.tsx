@@ -14,8 +14,14 @@ export function demoRedirect(hash: string): string | null {
  */
 export function DemoHashRedirect() {
   React.useEffect(() => {
-    const to = demoRedirect(window.location.hash);
-    if (to) window.location.replace(to);
+    // On arrival, and when the hash changes without a reload (a link clicked on the page itself).
+    const go = () => {
+      const to = demoRedirect(window.location.hash);
+      if (to) window.location.replace(to);
+    };
+    go();
+    window.addEventListener("hashchange", go);
+    return () => window.removeEventListener("hashchange", go);
   }, []);
   return null;
 }
