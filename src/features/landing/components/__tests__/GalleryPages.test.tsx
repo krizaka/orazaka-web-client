@@ -67,6 +67,19 @@ describe("GalleryFeatured (the home page's prompt → image → video, a slidesh
     expect(slide(container, FEATURED.length - 1)).toHaveAttribute("data-active");
   });
 
+  it("keeps an item to about one screen: the video and the image prompts are two tabs, the video first", () => {
+    const { container } = wrap(<GalleryFeatured />);
+    const active = slide(container, 0);
+    const tabs = within(active).getAllByRole("tab");
+    expect(tabs.map((tab) => tab.textContent)).toEqual([g.videoStep, g.imageStep]);
+    expect(tabs[0]).toHaveAttribute("aria-selected", "true");
+    const [videoPanel, imagePanel] = within(active).getAllByRole("tabpanel", { hidden: true });
+    expect(videoPanel).toHaveAttribute("data-state", "active");
+    expect(imagePanel).toHaveAttribute("data-state", "inactive");
+    // The image is shown at its own aspect: no band around it.
+    expect(active.querySelector("figure img")!.className).toContain("h-auto");
+  });
+
   it("says so when a clip has no image: its prompt is its own", () => {
     const { container } = wrap(<GalleryFeatured />);
     const lone = FEATURED.findIndex((item) => !item.image);

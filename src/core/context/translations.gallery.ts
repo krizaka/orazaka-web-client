@@ -58,6 +58,8 @@ export interface GalleryDictionary {
   items: Record<string, string>;
   /** The accessible name of every clip, by id. */
   clips: Record<string, string>;
+  /** The name of the Video · Image tabs. */
+  stepsLabel: string;
   imageStep: string;
   videoStep: string;
   imagePromptHeading: string;
@@ -132,6 +134,7 @@ export const gallery: Record<Locale, GalleryDictionary> = {
     "promptLabel": "Prompt",
     "seedLabel": "seed",
     "local": "Generated locally in {seconds} s on a Mac — nothing left the machine.",
+    "stepsLabel": "What to show: the video or the image",
     "imageStep": "Image",
     "videoStep": "Video",
     "imagePromptHeading": "Image prompt",
@@ -228,6 +231,7 @@ export const gallery: Record<Locale, GalleryDictionary> = {
     "promptLabel": "Consigne",
     "seedLabel": "graine",
     "local": "Générée localement en {seconds} s sur un Mac — rien n'a quitté la machine.",
+    "stepsLabel": "Quoi montrer : la vidéo ou l'image",
     "imageStep": "Image",
     "videoStep": "Vidéo",
     "imagePromptHeading": "Consigne de l'image",
