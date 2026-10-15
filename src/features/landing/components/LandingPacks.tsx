@@ -24,7 +24,7 @@ export function LandingPacks() {
           {packs.map((pack) => (
             <LinkCard
               key={pack.key}
-              href="/docs/packs"
+              href={`/docs/packs#${pack.anchor}`}
               linkAs={Link}
               footerAlign="bottom"
               title={pack.label}

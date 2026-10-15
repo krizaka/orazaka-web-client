@@ -1,11 +1,12 @@
 import type * as React from "react";
 import "@testing-library/jest-dom";
-import { render, screen, within } from "@testing-library/react";
+import { fireEvent, render, screen, within } from "@testing-library/react";
 import { ThemeProvider } from "@krizaka/ui/theme";
 import { translations, type Locale } from "@/core/context/translations";
 import { AuthFlagsProvider } from "@/core/context/AuthFlagsContext";
 import type { AuthFlags } from "@/core/config/auth-flags";
 import { LandingPage } from "@/features/landing/components/LandingPage";
+import { navActive } from "@/features/landing/components/LandingNav";
 import { FeaturePage } from "@/features/landing/components/FeaturePage";
 import { FEATURE_IDS } from "@/features/landing/components/features";
 
@@ -140,7 +141,7 @@ describe("LandingPage while sign-in and sign-up are closed (the default)", () =>
     renderLanding("en", <LandingPage />, CLOSED);
     const en = translations.en.landing;
     const platform = document.getElementById("platform")!;
-    const wanted = ["/#demo", "/docs/tools", "/docs/architecture", "/#studios", "/docs/jobs", "/docs/packs"];
+    const wanted = ["/#demo-chat", "/docs/tools", "/docs/architecture", "/#studios", "/docs/jobs", "/docs/packs"];
     en.platform.items.forEach((item, i) => {
       const link = within(platform).getByRole("link", { name: new RegExp(`^${item.title}`) });
       expect(link).toHaveAttribute("href", wanted[i]);
@@ -150,7 +151,7 @@ describe("LandingPage while sign-in and sign-up are closed (the default)", () =>
     en.studios.items.forEach((item, i) => {
       expect(within(studios).getByRole("link", { name: new RegExp(`^${item.title}`) })).toHaveTextContent(en.studios.ctas[i]);
     });
-    expect(within(studios).getAllByRole("link").map((a) => a.getAttribute("href"))).toEqual(expect.arrayContaining(["/#demo", "/gallery", "/docs/packs"]));
+    expect(within(studios).getAllByRole("link").map((a) => a.getAttribute("href"))).toEqual(expect.arrayContaining(["/#demo-documents", "/gallery", "/docs/packs#outbound-prospecting", "/docs/packs#trade-showcase"]));
     // no card of the home is a dead end: not a bare <li> without a link
     expect(platform.querySelectorAll("li").length).toBe(0);
   });
@@ -164,7 +165,7 @@ describe("LandingPage while sign-in and sign-up are closed (the default)", () =>
   it("shows the recordings and the packs, and the Krizaka signature with the version", () => {
     renderLanding("en", <LandingPage />, CLOSED);
     expect(document.getElementById("demo")!.querySelectorAll("video").length).toBeGreaterThan(0);
-    expect(document.getElementById("packs")!.querySelectorAll("a[href='/docs/packs']").length).toBeGreaterThan(0);
+    expect(document.getElementById("packs")!.querySelectorAll("a[href^='/docs/packs#']").length).toBeGreaterThan(0);
     const footer = screen.getByTestId("app-version");
     expect(footer).toHaveTextContent("A Krizaka product");
     expect(footer).toHaveTextContent(/v\S+/);
@@ -194,8 +195,48 @@ describe("LandingPage while sign-in and sign-up are closed (the default)", () =>
     expect(bar).toHaveTextContent(/dev · v/);
     expect(within(bar).getByRole("link", { name: translations.en.landing.nav.repo })).toHaveAttribute("href", "https://github.com/krizaka/orazaka-web-client");
     expect(within(bar).getAllByRole("link", { name: translations.en.landing.nav.talk })[0]).toHaveAttribute("href", "https://www.krizaka.com/contact?topic=orazaka");
-    // four sections of this site in the centre, never a link to another site
+    // Demo · Mobile · Documentation beside the Product menu, never a link to another site
     const centre = within(bar).getByRole("navigation", { name: "Orazaka" });
-    expect(within(centre).getAllByRole("link")).toHaveLength(4);
+    const top = within(centre).getAllByRole("link").map((a) => a.getAttribute("href"));
+    expect(top).toEqual(["#demo", "/docs/mobile", "/docs"]);
+    expect(within(centre).getByRole("button", { name: translations.en.landing.nav.product })).toBeInTheDocument();
+  });
+});
+
+describe("the bar reaches every public destination", () => {
+  const CLOSED: AuthFlags = { login: false, signup: false, github: false, google: false };
+  const nav = translations.en.landing.nav;
+
+  it("lists them all in the mobile panel, once, with no dead entry", () => {
+    renderLanding("en", <LandingPage />, CLOSED);
+    fireEvent.click(screen.getByRole("button", { name: nav.openMenu }));
+    const bar = document.querySelector("header[data-floating]") as HTMLElement;
+    const panels = [...bar.querySelectorAll("nav")];
+    const mobile = panels.find((n) => n.textContent?.includes(nav.product) && n.querySelector("a[href='/models']") && n.querySelector("a[href='/login']"));
+    expect(mobile).toBeTruthy();
+    const hrefs = [...(mobile as HTMLElement).querySelectorAll("a")].map((a) => a.getAttribute("href"));
+    expect(hrefs).toEqual(expect.arrayContaining(["#how", "#studios", "#packs", "/models", "/gallery", "#demo", "/docs/mobile", "/docs"]));
+    expect(new Set(hrefs).size).toBe(hrefs.length);
+  });
+
+  it("has an anchor target in the page for every anchor of the bar, and a label in both languages", () => {
+    renderLanding("fr", <LandingPage />, CLOSED);
+    for (const id of ["how", "studios", "packs", "demo"]) expect(document.getElementById(id)).not.toBeNull();
+    for (const k of ["product", "models", "made", "how", "studios", "packs", "demo", "mobile", "docs"] as const) {
+      expect(translations.fr.landing.nav[k]).toBeTruthy();
+      expect(nav[k]).toBeTruthy();
+    }
+    for (const k of Object.keys(nav.menu) as (keyof typeof nav.menu)[]) expect(translations.fr.landing.nav.menu[k]).not.toBe(nav.menu[k]);
+  });
+});
+
+describe("navActive", () => {
+  it("lights the current page of the bar", () => {
+    expect(navActive("/models")).toMatchObject({ models: true, made: false, docs: false });
+    expect(navActive("/gallery")).toMatchObject({ made: true });
+    expect(navActive("/docs/mobile")).toMatchObject({ mobile: true, docs: false });
+    expect(navActive("/docs/packs")).toMatchObject({ docs: true, mobile: false });
+    expect(navActive("/features/absolute-privacy")).toMatchObject({ features: true });
+    expect(navActive(null)).toMatchObject({ models: false, docs: false });
   });
 });
