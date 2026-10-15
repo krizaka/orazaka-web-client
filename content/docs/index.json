@@ -84,6 +84,18 @@
     "file": "models.md"
   },
   {
+    "slug": "measured-runs",
+    "journey": "use",
+    "group": null,
+    "order": 5,
+    "title": "Measured runs",
+    "intro": "Time, cost and every parameter of the video and image runs Orazaka made — per model and provider, read from the run records, with the failures and their causes.",
+    "audience": "everyone",
+    "source": "docs/_generated/MEASURED_RUNS.md",
+    "generated": true,
+    "file": "measured-runs.md"
+  },
+  {
     "slug": "admin",
     "journey": "run",
     "group": null,
