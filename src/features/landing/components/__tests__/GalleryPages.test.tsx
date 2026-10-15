@@ -50,15 +50,19 @@ describe("GalleryFeatured (the home page's prompt → image → video, a slidesh
     expect(within(active).getByText(/Wan 2\.2 A14B/)).toBeInTheDocument();
     expect(within(active).getByText(/DigitalOcean serverless inference/)).toBeInTheDocument();
     expect(within(active).getByText(/routed by Orazaka/)).toBeInTheDocument();
-    // The image it continues, with its own prompt, facts and commands.
+    // The video panel is the open one: its command is the only "Reproduce it" shown.
+    expect(Array.from(active.querySelectorAll("pre code")).map((c) => c.textContent)).toEqual(clipReproduceParts(first.clip).map((part) => part.code));
+    expect(active.querySelectorAll('pre code [class*="th-"]').length).toBeGreaterThan(0);
+    // The image it continues is the other tab (the source image stays in view beside the video): its prompt, facts and commands.
     const image = first.image!;
     expect(within(active).getByAltText(g.items[image.id])).toBeInTheDocument();
+    expect(within(active).queryByText(image.prompt)).toBeNull();
+    fireEvent.mouseDown(within(active).getByRole("tab", { name: g.imageStep }), { button: 0 });
     expect(within(active).getAllByText(image.prompt).length).toBeGreaterThan(0);
     expect(within(active).getByText(image.studio)).toBeInTheDocument();
-    // "Reproduce it" is @krizaka/ui CodeBlocks (highlighted, with their copy button): the video command, then the model, the JSON inputs and the run of the image.
-    const blocks = Array.from(active.querySelectorAll("pre code")).map((c) => c.textContent);
-    expect(blocks).toEqual([...clipReproduceParts(first.clip), ...reproduceParts(image)].map((part) => part.code));
-    expect(active.querySelectorAll('pre code [class*="th-"]').length).toBeGreaterThan(0);
+    expect(within(active).queryByText(first.clip.prompt)).toBeNull();
+    // "Reproduce it" is @krizaka/ui CodeBlocks (highlighted, with their copy button): the model, the JSON inputs and the run of the image.
+    expect(Array.from(active.querySelectorAll("pre code")).map((c) => c.textContent)).toEqual(reproduceParts(image).map((part) => part.code));
     fireEvent.click(screen.getByRole("button", { name: g.next }));
     expect(slide(container, 1)).toHaveAttribute("data-active");
     expect(within(slide(container, 1)).getAllByText(FEATURED[1].clip.prompt).length).toBeGreaterThan(0);
@@ -73,9 +77,12 @@ describe("GalleryFeatured (the home page's prompt → image → video, a slidesh
     const tabs = within(active).getAllByRole("tab");
     expect(tabs.map((tab) => tab.textContent)).toEqual([g.videoStep, g.imageStep]);
     expect(tabs[0]).toHaveAttribute("aria-selected", "true");
-    const [videoPanel, imagePanel] = within(active).getAllByRole("tabpanel", { hidden: true });
-    expect(videoPanel).toHaveAttribute("data-state", "active");
-    expect(imagePanel).toHaveAttribute("data-state", "inactive");
+    // One panel at a time: the open one is the video's; the image's is not in the page until its tab is chosen.
+    expect(within(active).getAllByRole("tabpanel")).toHaveLength(1);
+    expect(within(active).getByRole("tabpanel")).toHaveAttribute("data-state", "active");
+    fireEvent.mouseDown(tabs[1], { button: 0 });
+    expect(tabs[1]).toHaveAttribute("aria-selected", "true");
+    expect(within(active).getAllByRole("tabpanel")).toHaveLength(1);
     // The image is shown at its own aspect: no band around it.
     expect(active.querySelector("figure img")!.className).toContain("h-auto");
   });

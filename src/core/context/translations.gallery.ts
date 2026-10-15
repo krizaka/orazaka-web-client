@@ -58,6 +58,15 @@ export interface GalleryDictionary {
   items: Record<string, string>;
   /** The accessible name of every clip, by id. */
   clips: Record<string, string>;
+  /** "Video · {seconds} s": the badge that says a clip is a video. */
+  videoBadge: string;
+  videoPlay: string;
+  videoPause: string;
+  videoMute: string;
+  videoUnmute: string;
+  /** The whole frame of a clip opens it larger. */
+  videoEnlarge: string;
+  videoClose: string;
   /** The name of the Video · Image tabs. */
   stepsLabel: string;
   imageStep: string;
@@ -134,6 +143,13 @@ export const gallery: Record<Locale, GalleryDictionary> = {
     "promptLabel": "Prompt",
     "seedLabel": "seed",
     "local": "Generated locally in {seconds} s on a Mac — nothing left the machine.",
+    "videoBadge": "Video · {seconds} s",
+    "videoPlay": "Play the video",
+    "videoPause": "Pause the video",
+    "videoMute": "Mute the video",
+    "videoUnmute": "Turn the sound on",
+    "videoEnlarge": "Open the video larger",
+    "videoClose": "Close the video",
     "stepsLabel": "What to show: the video or the image",
     "imageStep": "Image",
     "videoStep": "Video",
@@ -231,6 +247,13 @@ export const gallery: Record<Locale, GalleryDictionary> = {
     "promptLabel": "Consigne",
     "seedLabel": "graine",
     "local": "Générée localement en {seconds} s sur un Mac — rien n'a quitté la machine.",
+    "videoBadge": "Vidéo · {seconds} s",
+    "videoPlay": "Lancer la vidéo",
+    "videoPause": "Mettre la vidéo en pause",
+    "videoMute": "Couper le son",
+    "videoUnmute": "Activer le son",
+    "videoEnlarge": "Ouvrir la vidéo en grand",
+    "videoClose": "Fermer la vidéo",
     "stepsLabel": "Quoi montrer : la vidéo ou l'image",
     "imageStep": "Image",
     "videoStep": "Vidéo",
