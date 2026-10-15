@@ -8,22 +8,6 @@ Orazaka supports **28 models**: **20 run on your own hardware** (Ollama, LocalAI
 
 Every figure below is read from `orazaka_models` (the table the routing reads): the vendor, licence and context window are those of each model's own card; `last verified` is the date of the last passing sovereign smoke that named the model, empty until one is recorded.
 
-## Unfiltered models, your rules
-
-The catalogue carries open-weight chat models without a vendor's refusal layer — fine-tuned without refusals or
-abliterated (the refusal direction removed from the weights). They answer legitimate professional work plainly: a
-security team reading a malicious command, a nurse asking for a dose limit, a reporter on a fraud scheme, a novelist
-writing a dark scene. None of them is a default; the operator chooses to serve one.
-
-They are not the policy. The policy is the operator's: a pack declares the domain it refuses (`scopeGuard`) and the
-crisis text it answers (`safety`); the engine enforces both first in the pipeline, before any model runs and even when
-the AI kill-switch is pulled, and every turn is accounted for. "Uncensored" means not over-refusing legitimate work —
-it never covers content sexualising minors, explicit sexual content, real persons, weapons or bio-chemical procedures,
-working malware, or anything that enables serious harm. Unfiltered is not infallible either: serve the largest model
-the machine holds for clinical, legal or security work, and keep a professional in the loop.
-
-How fast and at what price they really run — time, cost and every parameter of the runs Orazaka measured — is on the [Measured runs](MEASURED_RUNS.md) page.
-
 ## On your hardware
 
 | Model | Vendor · family | Does | Runs | Licence | Context | Status | Last verified |
@@ -62,6 +46,5 @@ How fast and at what price they really run — time, cost and every parameter of
 | `wan2-2-t2v-a14b` — Wan 2.2 T2V A14B (serverless) | Alibaba (Wan-AI) · Wan 2.2 | Video | DigitalOcean serverless inference | [Apache-2.0](https://huggingface.co/Wan-AI/Wan2.2-T2V-A14B) | — | available | — |
 | `bge-m3` — BGE-M3 | BAAI · BGE-M3 | Embeddings | DigitalOcean serverless inference | [MIT](https://huggingface.co/BAAI/bge-m3/blob/main/LICENSE) | 8,192 | planned | — |
 
-## In the catalogue, not published
 
-13 rows are aliases, runtime variants or test fixtures of the models above (`status = 'internal'`): `dolphin-llama3:8b`, `huihui_ai/qwen2.5-abliterate:7b`, `mdq100/Gemma3-Instruct-Abliterated:27b`, `tinyllama:latest`, `tts-1`, `apple-coreml-video-pipeline`, `ByteDance/AnimateDiff-Lightning`, `mlx-animatediff-lightning`, `mlx-stable-diffusion-video`, `stable-video-diffusion-img2vid-xt-mps-fp32`, `bakllava:latest`, `llama3.2-vision:latest`, `llava:v1.6`.
+How fast and at what price they really run — time, cost and every parameter of the runs Orazaka measured — is on the [Measured runs](MEASURED_RUNS.md) page.
