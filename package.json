@@ -19,6 +19,7 @@
   "dependencies": {
     "@dagrejs/dagre": "^3.0.0",
     "@krizaka/charts": "^0.1.0",
+    "@krizaka/fonts": "^0.2.1",
     "@krizaka/icons": "^0.1.0",
     "@krizaka/intl": "^0.1.0",
     "@krizaka/orazaka-design-system": "^3.1.0",
