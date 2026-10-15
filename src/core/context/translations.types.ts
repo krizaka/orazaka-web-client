@@ -8,6 +8,7 @@ import type { InsightsDictionary } from "./translations.insights";
 import type { ModelsDictionary } from "./translations.models.types";
 import type { GalleryDictionary } from "./translations.gallery";
 import type { MobileDictionary } from "./translations.mobile";
+import type { DocsDictionary } from "./translations.docs";
 
 export type Locale = "en" | "fr";
 
@@ -769,6 +770,8 @@ export interface TranslationDictionary {
   gallery: GalleryDictionary;
   /** The Mobile section of the home page and /mobile. */
   mobile: MobileDictionary;
+  /** The documentation: hub, sidebar, article chrome, the text version of the schemas. */
+  docs: DocsDictionary;
 }
 
 /** The automation page (connectors and the jobs awaiting approval). `{name}` is the connector's name. */

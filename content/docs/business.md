@@ -9,6 +9,17 @@ use-case's RBAC policy against the actor's authorities and runs it. A use-case c
 ports (`AiClient`, the Studio run API…) and holds no model logic — that stays in `orazaka-core` and the
 interceptor pipeline.
 
+```sequence
+participant client: Client · CLI · agent
+participant conversation: @orazaka-conversation-service
+participant business: @orazaka-business
+participant core: @orazaka-core
+client -> conversation: POST /api/v1/intent (IntentController)
+conversation -> business: an immutable Intention
+business -> business: UseCaseDispatcher resolves the UseCase by capability (UseCaseRegistry)
+business -> business: the use-case's RBAC policy, checked against the actor's authorities
+business -> core: the use-case runs through an inbound port (AiClient, the Studio run API…)
+```
 
 > **Use-cases are not packs.** A use-case is a technical entry point of the engine, written in Java. The
 > business offers customers install — Studios, grouped in packs — are data: see [Packs & Studios](PACKS.md).

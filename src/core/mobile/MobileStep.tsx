@@ -1,8 +1,8 @@
 "use client";
 
 import { cn } from "@krizaka/ui/cn";
-import { PhoneClip } from "@/features/landing/components/PhoneClip";
-import type { StepId } from "@/features/landing/utils/mobile";
+import { PhoneClip } from "@/core/mobile/PhoneClip";
+import type { StepId } from "@/core/mobile/mobile";
 import { useTranslation } from "@/core/context/LocaleContext";
 
 /** One step of the journey: the phone with its recording, then what the person comes to do, what the screen does, what to notice. */

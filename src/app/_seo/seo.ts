@@ -4,7 +4,13 @@
  * origin, the crawlers the whole family welcomes, the JSON-LD that leads back to the Krizaka Organization, and
  * llms.txt / llms-full.txt (llmstxt.org). Structure only — the product words are the landing's own messages.
  */
-import { listDocs, readDoc } from "@/features/docs/utils/docs";
+import { listPages, plainText, readDoc } from "@/features/docs/utils/docs";
+
+/** A page's words for `llms-full.txt`: its markdown, the schema blocks as their source text. */
+function plainDoc(slug: string): string | undefined {
+  const doc = readDoc(slug);
+  return doc ? plainText(doc.body).trim() : undefined;
+}
 import { features } from "@/core/context/translations.features";
 import { MODELS } from "@/features/landing/utils/models";
 
@@ -33,7 +39,7 @@ const FEATURE_IDS = Object.keys(features.en.pages) as (keyof typeof features.en.
 
 /** Every public page, in the order of the sitemap. */
 export function publicPaths(): string[] {
-  return ["/", ...FEATURE_IDS.map((id) => `/features/${id}`), "/mobile", "/gallery", "/models", "/docs", ...listDocs().map((d) => `/docs/${d.slug}`), "/privacy", "/terms"];
+  return ["/", ...FEATURE_IDS.map((id) => `/features/${id}`), "/gallery", "/models", "/docs", ...listPages().map((d) => `/docs/${d.slug}`), "/privacy", "/terms"];
 }
 
 const ORG = { "@type": "Organization", "@id": ORG_ID, name: "Krizaka", url: KRIZAKA_URL };
@@ -67,7 +73,7 @@ const familySection = () => `## Publisher\n\n- [Krizaka](${KRIZAKA_URL}): the co
 
 export function llmsText(): string {
   const pages = FEATURE_IDS.map((id) => `- [${features.en.pages[id].name}](${SITE_URL}/features/${id}): ${features.en.pages[id].lead}`);
-  const docs = listDocs().map((d) => `- [${d.title}](${SITE_URL}/docs/${d.slug}): ${d.intro}`);
+  const docs = listPages().map((d) => `- [${d.title}](${SITE_URL}/docs/${d.slug}): ${d.intro}`);
   return `# ${SITE_NAME}
 
 > ${SITE_DESCRIPTION} A product of Krizaka (Montréal), open source under Apache-2.0. Sign-in is closed on this development site.
@@ -76,7 +82,7 @@ export function llmsText(): string {
 
 - [Home](${SITE_URL}/): what Orazaka is
 ${pages.join("\n")}
-- [Mobile app](${SITE_URL}/mobile): recordings and screenshots of the iOS and Android app
+- [Mobile app](${SITE_URL}/docs/mobile): recordings and screenshots of the iOS and Android app
 - [Gallery](${SITE_URL}/gallery): images made with Orazaka
 - [Models](${SITE_URL}/models): the ${MODELS.length} models Orazaka supports — what each does, where it runs, its licence and context window
 - [Talk to the team](${KRIZAKA_URL}/contact?topic=orazaka): the contact form lives on krizaka.com
@@ -95,7 +101,7 @@ ${familySection()}`;
 }
 
 export function llmsFullText(): string {
-  const docs = listDocs().map((d) => `\n---\n\n# ${d.title}\n\nURL: ${SITE_URL}/docs/${d.slug}\n\n${readDoc(d.slug)?.body.trim() ?? d.intro}\n`);
+  const docs = listPages().map((d) => `\n---\n\n# ${d.title}\n\nURL: ${SITE_URL}/docs/${d.slug}\n\n${plainDoc(d.slug) ?? d.intro}\n`);
   return `${llmsText().replace(/\n## Publisher[\s\S]*$/, "")}\n## Documentation (full text)\n${docs.join("")}\n---\n\n${familySection()}`;
 }
 

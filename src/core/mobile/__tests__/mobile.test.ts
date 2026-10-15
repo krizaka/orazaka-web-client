@@ -1,5 +1,5 @@
 import { translations } from "@/core/context/translations";
-import { STEPS, clipUrls } from "@/features/landing/utils/mobile";
+import { STEPS, clipUrls } from "@/core/mobile/mobile";
 
 const CDN = /^https:\/\/krizaka-assets\.b-cdn\.net\/site\/products\/orazaka\/mobile\/[a-z0-9-]+\.[0-9a-f]{10}\.(webm|mp4|webp)$/;
 

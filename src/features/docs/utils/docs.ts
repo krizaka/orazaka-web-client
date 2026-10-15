@@ -1,60 +1,169 @@
 /**
  * @file docs.ts
- * @description Reads the documentation published on this site: `content/docs/index.json` and its markdown, both
- * written by `scripts/sync-docs.mjs` from Orazaka's generated docs (never hand-edited).
+ * @description Reads the documentation published on this site: `content/docs/index.json` and its markdown, written by
+ * `scripts/sync-docs.mjs` from the Orazaka repository (never hand-edited). Pages are organised by reader journey —
+ * Get started → Use it → Run it → Build on it → Mobile — and each has a previous and a next page in that order.
  */
 import fs from "node:fs";
 import path from "node:path";
+import { JOURNEY_IDS, REPO, type DocEntry, type GroupId, type JourneyId, type NavItem, type SearchEntry } from "@/features/docs/utils/docs-shared";
+import { parseSource, type BlockNode, type InlineNode } from "@krizaka/ui/markdown";
 
-export interface DocEntry {
-  slug: string;
-  title: string;
-  category: string;
-  order: number;
-  audience: string;
-  intro: string;
-  file: string;
+export { JOURNEY_IDS, REPO, editUrl, pageHref, searchDocs } from "@/features/docs/utils/docs-shared";
+export type { DocEntry, GroupId, JourneyId, NavItem, SearchEntry } from "@/features/docs/utils/docs-shared";
+const DIR = path.join(process.cwd(), "content", "docs");
+const read = <T>(name: string): T => JSON.parse(fs.readFileSync(path.join(DIR, name), "utf8")) as T;
+
+/** Every page of the documentation, in reading order: by journey, then group (integrate before internals), then order. */
+export function listPages(): DocEntry[] {
+  const groupRank = (g: GroupId | null) => (g === "internals" ? 1 : 0);
+  return read<DocEntry[]>("index.json").sort(
+    (a, b) => JOURNEY_IDS.indexOf(a.journey) - JOURNEY_IDS.indexOf(b.journey) || groupRank(a.group) - groupRank(b.group) || a.order - b.order,
+  );
 }
 
-const DIR = path.join(process.cwd(), "content", "docs");
-
-export const CATEGORY_LABELS: Record<string, string> = {
-  "getting-started": "Getting started",
-  architecture: "Architecture",
-  "core-features": "Core features",
-  api: "API & contracts",
-  operations: "Operations",
-  guidelines: "Guidelines",
-};
-
+/** The pages that are a synced markdown file. */
 export function listDocs(): DocEntry[] {
-  return JSON.parse(fs.readFileSync(path.join(DIR, "index.json"), "utf8")) as DocEntry[];
+  return listPages().filter((d) => d.file);
+}
+
+export function findPage(slug: string): DocEntry | null {
+  return listPages().find((d) => d.slug === slug) ?? null;
 }
 
 export function readDoc(slug: string): { entry: DocEntry; body: string } | null {
   const entry = listDocs().find((d) => d.slug === slug);
-  if (!entry) return null;
-  return { entry, body: fs.readFileSync(path.join(DIR, entry.file), "utf8") };
+  return entry ? { entry, body: fs.readFileSync(path.join(DIR, entry.file!), "utf8") } : null;
 }
 
-/** Groups the published docs by category, in reading order. */
-export function groupDocs(docs: DocEntry[]): { category: string; label: string; docs: DocEntry[] }[] {
-  const order = Object.keys(CATEGORY_LABELS);
-  const groups = new Map<string, DocEntry[]>();
-  for (const d of docs) groups.set(d.category, [...(groups.get(d.category) ?? []), d]);
-  return [...groups.entries()]
-    .sort(([a], [b]) => order.indexOf(a) - order.indexOf(b))
-    .map(([category, list]) => ({ category, label: CATEGORY_LABELS[category] ?? category, docs: [...list].sort((a, b) => a.order - b.order) }));
+export function pagesOf(journey: JourneyId): DocEntry[] {
+  return listPages().filter((d) => d.journey === journey);
+}
+
+/** The page before and the page after, in reading order across the whole documentation. */
+export function neighbours(slug: string): { previous: DocEntry | null; next: DocEntry | null } {
+  const pages = listPages();
+  const i = pages.findIndex((d) => d.slug === slug);
+  return { previous: i > 0 ? pages[i - 1] : null, next: i >= 0 && i < pages.length - 1 ? pages[i + 1] : null };
+}
+
+// ── Links ────────────────────────────────────────────────────────────────────────────────────────
+
+const SCHEME = /^([a-z][a-z0-9+.-]*:|#|\/)/i;
+
+/** Resolves `href`, written in the source file `from` (a path of the Orazaka repository), to its place on this site. */
+export function resolveLink(href: string, from: string, sources: Readonly<Record<string, string>>): { href: string; internal: boolean } | null {
+  if (SCHEME.test(href)) return { href, internal: !/^[a-z][a-z0-9+.-]*:/i.test(href) };
+  const [rawPath, fragment] = href.split("#");
+  const target = path.posix.normalize(path.posix.join(path.posix.dirname(from), rawPath));
+  if (target.startsWith("..")) return null;
+  const hit = Object.entries(sources).find(([src]) => src.toLowerCase() === target.toLowerCase());
+  if (hit) return { href: `/docs/${hit[1]}${fragment ? `#${fragment}` : ""}`, internal: true };
+  return { href: `${REPO}/blob/main/${target}${fragment ? `#${fragment}` : ""}`, internal: false };
 }
 
 /**
- * Where a link of a doc leads: a published doc (`/docs/<slug>`), an external or in-page link as is, anything else
- * (a repository path that is not published here) null — rendered as plain text, never a dead link.
+ * The markdown of a page ready to render: links to other docs lead to their page here, links to anything else to GitHub
+ * (never a dead link), a link out of the repository is plain text, relative images come from the repository, and GitHub's
+ * `> [!NOTE]` callouts read as a bold lead-in. Fenced code is left alone.
  */
-export function resolveDocLink(href: string, published: ReadonlySet<string>): string | null {
-  if (/^(https?:|mailto:|#)/.test(href)) return href;
-  const m = /^(?:\.{1,2}\/)*(?:docs\/)?\/?([A-Za-z0-9_]+)\.md(#.*)?$/.exec(href) ?? /^\/docs\/([a-z0-9_]+)(#.*)?$/.exec(href);
-  if (!m) return null;
-  const slug = m[1].toLowerCase();
-  return published.has(slug) ? `/docs/${slug}${m[2] ?? ""}` : null;
+export function prepareBody(body: string, from: string | null, sources: Readonly<Record<string, string>>): string {
+  const origin = from ?? "README.md";
+  let fence = false;
+  const out = body.split("\n").map((line) => {
+    if (/^ {0,3}(```|~~~)/.test(line)) fence = !fence;
+    if (fence || /^ {0,3}(```|~~~)/.test(line)) return line;
+    return line
+      .replace(/(!?)\[([^\]]*)\]\(([^)\s]+)((?:\s+"[^"]*")?)\)/g, (m, bang: string, text: string, href: string, title: string) => {
+        if (bang) {
+          if (/^[a-z][a-z0-9+.-]*:/i.test(href)) return m;
+          const target = path.posix.normalize(path.posix.join(path.posix.dirname(origin), href));
+          return `![${text}](https://raw.githubusercontent.com/krizaka/orazaka/main/${target})`;
+        }
+        const r = resolveLink(href, origin, sources);
+        return r ? `[${text}](${r.href}${title})` : text;
+      })
+      .replace(/^(\s*>\s*)\[!(NOTE|TIP|IMPORTANT|WARNING|CAUTION)\]\s*$/i, (_m, lead: string, kind: string) => `${lead}**${kind[0]}${kind.slice(1).toLowerCase()}.**`);
+  });
+  return out.join("\n").replace(/^(\s*>\s*\*\*[A-Za-z]+\.\*\*)\n\s*>\s*/gm, "$1 ");
+}
+
+export function sourcesMap(): Record<string, string> {
+  return read<Record<string, string>>("sources.json");
+}
+
+// ── Segments: markdown and diagram fences ────────────────────────────────────────────────────────
+
+export const DIAGRAM_LANGS = ["architecture", "pipeline", "sequence", "states", "cli-replay", "cli-journey", "cli-commands"] as const;
+export type DiagramLang = (typeof DIAGRAM_LANGS)[number];
+export type Segment = { kind: "markdown"; text: string } | { kind: "diagram"; lang: DiagramLang; source: string };
+
+/** Splits a page into its markdown and its schema blocks (the fenced `architecture`, `pipeline`, `sequence`, `states`, `cli-*`). */
+export function splitSegments(body: string): Segment[] {
+  const segments: Segment[] = [];
+  let text: string[] = [];
+  let diagram: { lang: DiagramLang; lines: string[] } | null = null;
+  let fence: string | null = null;
+  const flush = () => {
+    const t = text.join("\n");
+    if (t.trim()) segments.push({ kind: "markdown", text: t });
+    text = [];
+  };
+  for (const line of body.split("\n")) {
+    const open = /^ {0,3}(```|~~~)\s*([\w-]*)/.exec(line);
+    if (diagram) {
+      if (/^ {0,3}```\s*$/.test(line)) {
+        segments.push({ kind: "diagram", lang: diagram.lang, source: diagram.lines.join("\n") });
+        diagram = null;
+      } else diagram.lines.push(line);
+    } else if (fence) {
+      text.push(line);
+      if (line.trim().startsWith(fence)) fence = null;
+    } else if (open && (DIAGRAM_LANGS as readonly string[]).includes(open[2]) && open[1] === "```") {
+      flush();
+      diagram = { lang: open[2] as DiagramLang, lines: [] };
+    } else {
+      if (open) fence = open[1];
+      text.push(line);
+    }
+  }
+  flush();
+  return segments;
+}
+
+// ── Contents ─────────────────────────────────────────────────────────────────────────────────────
+
+const plain = (nodes: readonly InlineNode[]): string =>
+  nodes.map((n) => ("value" in n && typeof n.value === "string" ? n.value : "children" in n ? plain(n.children as InlineNode[]) : "")).join("");
+
+/** The `##` headings of the markdown segments: the id `Markdown` gives each, and its words. */
+export function tocOf(segments: readonly Segment[]): { id: string; label: string }[] {
+  const items: { id: string; label: string }[] = [];
+  for (const s of segments) {
+    if (s.kind !== "markdown") continue;
+    for (const b of parseSource(s.text, { headingIds: true }) as BlockNode[]) {
+      if (b.type === "heading" && b.depth === 2 && b.id) items.push({ id: b.id, label: plain(b.children as InlineNode[]).replace(/^\d+[.)]\s+/, "") });
+    }
+  }
+  return items;
+}
+
+/** What `llms-full.txt` and the search read: the page's words, the schema blocks as their source text. */
+export function plainText(body: string): string {
+  return splitSegments(body)
+    .map((s) => (s.kind === "markdown" ? s.text : `(${s.lang})\n${s.source}`))
+    .join("\n\n");
+}
+
+export function searchIndex(): SearchEntry[] {
+  return listPages().map((d) => {
+    const doc = readDoc(d.slug);
+    const headings = doc ? tocOf(splitSegments(doc.body)) : [];
+    return { slug: d.slug, title: d.title, intro: d.intro, journey: d.journey, headings };
+  });
+}
+
+
+export function navItems(): NavItem[] {
+  return listPages().map(({ slug, title, journey, group }) => ({ slug, title, journey, group }));
 }

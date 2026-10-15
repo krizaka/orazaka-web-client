@@ -182,9 +182,9 @@ describe("LandingPage while sign-in and sign-up are closed (the default)", () =>
       expect(v.hasAttribute("autoplay")).toBe(false);
       expect(v.getAttribute("poster")).toMatch(/products\/orazaka\/mobile\/.*\.webp$/);
     });
-    expect(within(section).getByRole("link", { name: translations.en.mobile.all })).toHaveAttribute("href", "/mobile");
+    expect(within(section).getByRole("link", { name: translations.en.mobile.all })).toHaveAttribute("href", "/docs/mobile");
     const bar = screen.getByRole("navigation", { name: "Orazaka" });
-    expect(within(bar).getByRole("link", { name: translations.en.landing.nav.mobile })).toHaveAttribute("href", "/mobile");
+    expect(within(bar).getByRole("link", { name: translations.en.landing.nav.mobile })).toHaveAttribute("href", "/docs/mobile");
   });
 
   it("wears its own navigation: the environment badge, one main action, no family switcher (a deployed product is independent)", () => {

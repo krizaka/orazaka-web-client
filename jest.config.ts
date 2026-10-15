@@ -1,6 +1,7 @@
 import type { Config } from "jest";
 import nextJest from "next/jest.js";
 import { createRequire } from "node:module";
+import fs from "node:fs";
 import path from "node:path";
 
 // @krizaka/ui as this app resolves it (it may be nested under the app while the workspace root holds the version
@@ -12,6 +13,16 @@ const icons = path.dirname(resolveFromApp("@krizaka/icons/package.json"));
 const charts = path.dirname(resolveFromApp("@krizaka/charts/package.json"));
 const intl = path.dirname(resolveFromApp("@krizaka/intl/package.json"));
 const tokens = path.dirname(resolveFromApp("@krizaka/tokens/package.json"));
+/** A package whose `exports` carry the `import` condition only: its folder, looked up from the app and from @krizaka/ui. */
+function findPackage(name: string): string {
+  for (let dir = ui; dir !== path.dirname(dir); dir = path.dirname(dir)) {
+    const candidate = path.join(dir, "node_modules", name);
+    if (fs.existsSync(path.join(candidate, "package.json"))) return candidate;
+  }
+  return path.join(process.cwd(), "node_modules", name);
+}
+const markdown = findPackage("@tanstack/markdown");
+const highlight = findPackage("@tanstack/highlight");
 const pacer = path.dirname(resolveFromApp("@krizaka/pacer/package.json"));
 
 const createJestConfig = nextJest({
@@ -37,6 +48,9 @@ const config = {
     "^@krizaka/tokens/(.*)$": `${tokens}/dist/$1.js`,
     // @krizaka/pacer (a dependency of @krizaka/ui's DataTable): the same `import`-only exports.
     "^@krizaka/pacer/(.*)$": `${pacer}/dist/$1.js`,
+    // @tanstack/markdown and @tanstack/highlight (under @krizaka/ui's Markdown and CodeBlock): the same `import`-only exports.
+    "^@tanstack/markdown/(.*)$": `${markdown}/dist/$1.js`,
+    "^@tanstack/highlight/(.*)$": `${highlight}/dist/$1.js`,
   },
   testPathIgnorePatterns: ["<rootDir>/node_modules/", "<rootDir>/.next/", "<rootDir>/src/__tests__/helpers/", "<rootDir>/e2e/", "<rootDir>/scripts/"],
   collectCoverageFrom: [

@@ -117,7 +117,7 @@ The same app runs as a read-only public site: no sign-in, no sign-up, no call to
 | `AUTH_SIGNUP_ENABLED` | `false` | Same for `/register`; the entry points are hidden from the landing. |
 | `APP_VERSION` | `package.json` version + short sha | Shown in the footer (`NEXT_PUBLIC_APP_VERSION`, set at build). |
 
-No edge URL is needed to build or run it. The documentation (`/docs`) is generated: `node scripts/sync-docs.mjs <orazaka-content/docs> <krizaka-com/lib/docs-manifest.ts>`; the demo recordings and packs of the home page: `node scripts/sync-showcase.mjs <krizaka-com checkout>` — never hand-edit `content/docs` or `showcase.generated.json`. Media stay on Bunny.
+No edge URL is needed to build or run it. The documentation (`/docs`) is generated: `node scripts/sync-docs.mjs <orazaka checkout>` (what is published, in which journey and order: `scripts/docs-manifest.mjs`; a wrong or unclear page is fixed in the Orazaka repository, then re-synced); the demo recordings and packs of the home page: `node scripts/sync-showcase.mjs <krizaka-com checkout>` — never hand-edit `content/docs` or `showcase.generated.json`. Media stay on Bunny.
 
 ---
 
