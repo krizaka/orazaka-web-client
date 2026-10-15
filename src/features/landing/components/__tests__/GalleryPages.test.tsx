@@ -6,6 +6,7 @@ import { AuthFlagsProvider } from "@/core/context/AuthFlagsContext";
 import { GalleryFeatured } from "@/features/landing/components/GalleryFeatured";
 import { GalleryPage } from "@/features/landing/components/GalleryPage";
 import { GALLERY, reproduceParts } from "@/features/landing/utils/gallery";
+import { COMPARE_IMAGES } from "@/features/landing/utils/model-compare";
 import { CLIPS, FEATURED, clipReproduceParts } from "@/features/landing/utils/gallery-clips";
 
 let mockLocale: Locale = "en";
@@ -189,7 +190,8 @@ describe("GalleryPage", () => {
   it("lists every image with its prompt, copy button and reproduce block, then the credits", () => {
     const { container } = wrap(<GalleryPage />);
     expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent(translations.en.gallery.galleryTitle);
-    expect(container.querySelectorAll("figure img").length).toBe(GALLERY.length);
+    // The images of the gallery, and the comparison's (a section of its own, above them).
+    expect(container.querySelectorAll("figure img").length).toBe(GALLERY.length + COMPARE_IMAGES.length);
     expect(screen.getAllByRole("button", { name: translations.en.gallery.copy }).length).toBe(GALLERY.length);
     // The videos come first (one command each), then the images (the model, the inputs, the run).
     expect(container.querySelectorAll("pre code").length).toBe(CLIPS.length + GALLERY.length * 3);

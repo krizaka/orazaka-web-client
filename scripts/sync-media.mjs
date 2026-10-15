@@ -20,7 +20,7 @@ if (!site) {
 }
 const manifest = JSON.parse(fs.readFileSync(path.join(site, "lib/cdn-manifest.json"), "utf8"));
 /** Every product's clips: products/<product>/{gallery-video,video}/<clip>.{mp4,webm}, <clip>-poster.webp. */
-const VIDEO = /^products\/[a-z]+\/(?:gallery-video|video)\//;
+const VIDEO = /^products\/[a-z]+\/(?:gallery-video|video)\/|^products\/orazaka\/compare\//;
 const AREAS = ["products/orazaka/mobile/", "products/orazaka/gallery/", "products/orazaka/gallery-video/", "products/orazaka/video/", "products/orazaka/home/"];
 // The site no longer carries Orazaka media in its manifest once they are mirrored elsewhere: merge over what this
 // site already records instead of replacing it, so a sync of one new capture never forgets the others.

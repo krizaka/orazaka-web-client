@@ -28,7 +28,7 @@
     "@krizaka/fonts": "^0.2.1",
     "@krizaka/icons": "^0.1.0",
     "@krizaka/intl": "^0.1.0",
-    "@krizaka/orazaka-design-system": "^3.3.0",
+    "@krizaka/orazaka-design-system": "^3.3.1",
     "@krizaka/orazaka-shared": "*",
     "@krizaka/tailwind": "^3.11.0",
     "@krizaka/tokens": "^3.14.0",

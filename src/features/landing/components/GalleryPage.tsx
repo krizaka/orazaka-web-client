@@ -7,6 +7,7 @@ import { SectionBackdrop } from "@krizaka/ui/section-backdrop";
 import { useTranslation } from "@/core/context/LocaleContext";
 import { fill } from "@/core/context/fill";
 import { GALLERY, STYLES, gallerySrc, type GalleryStyle } from "@/features/landing/utils/gallery";
+import { GalleryCompare } from "@/features/landing/components/GalleryCompare";
 import { GalleryVideos } from "@/features/landing/components/GalleryVideos";
 import { CLIPS } from "@/features/landing/utils/gallery-clips";
 import { LandingFooter } from "@/features/landing/components/LandingFooter";
@@ -23,12 +24,13 @@ const chip = "inline-flex min-h-11 items-center rounded-full border px-4 text-sm
  * item: the image, the Studio, model, seed, size and time on one Mac, the exact prompt with a copy button and the
  * command that reproduces it; then the credits.
  */
-export function GalleryPage({ only, kind }: Readonly<{ only?: GalleryStyle; kind?: "videos" | "images" }>) {
+export function GalleryPage({ only, kind }: Readonly<{ only?: GalleryStyle; kind?: "videos" | "images" | "compare" }>) {
   const { t } = useTranslation();
   const g = t.gallery;
   const items = only ? GALLERY.filter((x) => x.style === only) : GALLERY;
-  const showVideos = !only && kind !== "images";
-  const showImages = kind !== "videos";
+  const showVideos = !only && (kind === undefined || kind === "videos");
+  const showCompare = !only && (kind === undefined || kind === "compare");
+  const showImages = kind === undefined || kind === "images";
   const link = (active: boolean) => cn(chip, active ? "border-accent bg-accent-soft text-fg" : "border-border-default text-fg-secondary hover:text-fg");
 
   return (
@@ -52,6 +54,9 @@ export function GalleryPage({ only, kind }: Readonly<{ only?: GalleryStyle; kind
             <Link href="/gallery?kind=videos" aria-current={kind === "videos" ? "page" : undefined} className={link(kind === "videos")}>
               {g.filterVideos}
             </Link>
+            <Link href="/gallery?kind=compare" aria-current={kind === "compare" ? "page" : undefined} className={link(kind === "compare")}>
+              {g.filterCompare}
+            </Link>
             <Link href="/gallery?kind=images" aria-current={kind === "images" && !only ? "page" : undefined} className={link(kind === "images" && !only)}>
               {g.filterImages}
             </Link>
@@ -66,6 +71,7 @@ export function GalleryPage({ only, kind }: Readonly<{ only?: GalleryStyle; kind
           </nav>
 
           {showVideos && <GalleryVideos />}
+          {showCompare && <GalleryCompare />}
 
           {showImages && (
           <ul className="columns-1 gap-5 sm:columns-2 lg:columns-3">
