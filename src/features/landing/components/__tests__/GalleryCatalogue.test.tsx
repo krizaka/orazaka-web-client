@@ -88,7 +88,7 @@ describe("GalleryPage — the whole Made here catalogue", () => {
         expect(within(card).getByText(image.runId)).toBeInTheDocument();
       }
       for (const model of COMPARE_MODELS.filter((item) => !imagesOf(inspiration.id).some((image) => image.model.id === item.id))) {
-        expect(within(card).getByText(new RegExp(`^${model.name.replace(/[[\]().+]/g, "\\$&")}: its run did not finish`))).toBeInTheDocument();
+        expect(within(card).getByText((content) => content.startsWith(`${model.name}: its run did not finish`))).toBeInTheDocument();
       }
     }
     // Honest labels: the local models say nothing left the Mac, the hosted one says DigitalOcean and its price.
