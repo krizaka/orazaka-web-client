@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { AiIcon, ImageIcon, PackIcon, PlayIcon, StudioIcon } from "@krizaka/icons";
+import { AiIcon, DownloadIcon, ImageIcon, PackIcon, PlayIcon, ServerIcon, StudioIcon } from "@krizaka/icons";
 import { OrazakaLogo } from "@krizaka/ui";
 import { Button } from "@krizaka/ui/button";
 import { NavBar } from "@krizaka/ui/nav-bar";
@@ -12,6 +12,7 @@ import { useTranslation } from "@/core/context/LocaleContext";
 import { useAuthFlags } from "@/core/context/AuthFlagsContext";
 import type { Locale } from "@/core/context/translations.types";
 import { APP_ENV, APP_VERSION } from "@/core/config/version";
+import { SHIPPED_ROUTES } from "@/features/landing/utils/nav-routes";
 
 const LOCALES: { code: Locale; label: string }[] = [
   { code: "en", label: "EN" },
@@ -27,6 +28,8 @@ const PRODUCT_ENTRIES = [
   { id: "studios", anchor: "studios", Icon: StudioIcon },
   { id: "packs", anchor: "packs", Icon: PackIcon },
   { id: "models", path: "/models", Icon: AiIcon },
+  { id: "run", path: "/infrastructure", Icon: ServerIcon, shipped: SHIPPED_ROUTES.infrastructure },
+  { id: "desktop", path: "/desktop", Icon: DownloadIcon },
   { id: "made", path: "/gallery", Icon: ImageIcon },
 ] as const;
 
@@ -35,6 +38,8 @@ export function navActive(pathname: string | null | undefined) {
   const p = pathname ?? "";
   return {
     models: p === "/models" || p.startsWith("/models/"),
+    run: p === "/infrastructure" || p.startsWith("/infrastructure/"),
+    desktop: p === "/desktop",
     made: p === "/gallery" || p.startsWith("/gallery/"),
     features: p.startsWith("/features/"),
     mobile: p === "/docs/mobile",
@@ -76,13 +81,13 @@ export function LandingNav({ onHome = true }: Readonly<{ onHome?: boolean }>) {
   const flags = useAuthFlags();
   const href = (id: string) => (onHome ? `#${id}` : `/#${id}`);
   const active = navActive(usePathname());
-  const entries = PRODUCT_ENTRIES.map((e) => ({
+  const entries = PRODUCT_ENTRIES.filter((e) => !("shipped" in e) || e.shipped).map((e) => ({
     id: e.id,
     Icon: e.Icon,
     href: "anchor" in e ? href(e.anchor) : e.path,
-    label: e.id === "models" ? n.models : n[e.id],
+    label: n[e.id],
     description: n.menu[e.id],
-    active: e.id === "models" ? active.models : e.id === "made" ? active.made : false,
+    active: e.id === "models" || e.id === "run" || e.id === "desktop" || e.id === "made" ? active[e.id] : false,
   }));
   const links = [
     { key: "demo", href: href("demo"), label: n.demo, active: false },
@@ -103,7 +108,7 @@ export function LandingNav({ onHome = true }: Readonly<{ onHome?: boolean }>) {
         <NavBar.Badge env={APP_ENV} version={APP_VERSION} />
 
         <NavBar.Items>
-          <NavBar.Menu value="product" label={n.product} active={active.models || active.made || active.features} columns={1}>
+          <NavBar.Menu value="product" label={n.product} active={active.models || active.run || active.desktop || active.made || active.features} columns={1}>
             {entries.map((e) => (
               <NavBar.MenuLink key={e.id} asChild title={e.label} description={e.description} icon={<e.Icon size={18} />} active={e.active}>
                 <Link href={e.href} />

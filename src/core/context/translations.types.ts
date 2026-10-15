@@ -8,6 +8,7 @@ import type { InsightsDictionary } from "./translations.insights";
 import type { ModelsDictionary } from "./translations.models.types";
 import type { GalleryDictionary } from "./translations.gallery";
 import type { MobileDictionary } from "./translations.mobile";
+import type { DesktopDictionary } from "./translations.desktop";
 import type { DocsDictionary } from "./translations.docs";
 
 export type Locale = "en" | "fr";
@@ -770,6 +771,8 @@ export interface TranslationDictionary {
   gallery: GalleryDictionary;
   /** The Mobile section of the home page and /mobile. */
   mobile: MobileDictionary;
+  /** /desktop (Orazaka for Mac) and the home page's "On your Mac" band. */
+  desktop: DesktopDictionary;
   /** The documentation: hub, sidebar, article chrome, the text version of the schemas. */
   docs: DocsDictionary;
 }

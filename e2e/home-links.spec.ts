@@ -37,10 +37,20 @@ for (const locale of ["en", "fr"] as const) {
       await expect(page).toHaveURL(/\/docs\/packs#trade-showcase$/, { timeout: 30_000 });
     });
 
+    test("the Mac band leads to /desktop, which offers the build or, failing GitHub, the releases page", async ({ page }) => {
+      await page.goto("/");
+      await page.locator("#mac a[href='/desktop']").click();
+      await expect(page).toHaveURL(/\/desktop$/, { timeout: 30_000 });
+      const download = page.locator("a[href$='.dmg']");
+      const releases = page.locator("a[href='https://github.com/krizaka/orazaka/releases']");
+      expect((await download.count()) + (await releases.count())).toBeGreaterThan(0);
+      await expect(page.getByRole("note")).toBeVisible();
+    });
+
     test("the Product menu reaches Models, Gallery, Studios and Packs", async ({ page }) => {
       await page.goto("/");
       await page.getByRole("navigation", { name: "Orazaka" }).getByRole("button").first().click();
-      for (const h of ["a[href='/models']", "a[href='/gallery']", "a[href$='#studios']", "a[href$='#packs']", "a[href$='#how']"]) {
+      for (const h of ["a[href='/models']", "a[href='/desktop']", "a[href='/gallery']", "a[href$='#studios']", "a[href$='#packs']", "a[href$='#how']"]) {
         await expect(page.locator(`[data-radix-navigation-menu-viewport] ${h}, [role=menu] ${h}, header ${h}`).first()).toBeVisible();
       }
     });

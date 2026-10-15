@@ -5,6 +5,7 @@ import { LandingNav } from "@/features/landing/components/LandingNav";
 import { LandingHero } from "@/features/landing/components/LandingHero";
 import { GalleryFeatured } from "@/features/landing/components/GalleryFeatured";
 import { LandingMobile } from "@/features/landing/components/LandingMobile";
+import { LandingMac } from "@/features/landing/components/LandingMac";
 import { LandingSovereignty } from "@/features/landing/components/LandingSovereignty";
 import { LandingPlatform } from "@/features/landing/components/LandingPlatform";
 import { LandingCompare } from "@/features/landing/components/LandingCompare";
@@ -39,6 +40,7 @@ export function LandingPage() {
         <LandingHow />
         <LandingDemo />
         <LandingMobile />
+        <LandingMac />
         <LandingStudios />
         <LandingPacks />
         <LandingModels />

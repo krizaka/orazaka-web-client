@@ -39,7 +39,7 @@ const FEATURE_IDS = Object.keys(features.en.pages) as (keyof typeof features.en.
 
 /** Every public page, in the order of the sitemap. */
 export function publicPaths(): string[] {
-  return ["/", ...FEATURE_IDS.map((id) => `/features/${id}`), "/gallery", "/models", "/docs", ...listPages().map((d) => `/docs/${d.slug}`), "/privacy", "/terms"];
+  return ["/", ...FEATURE_IDS.map((id) => `/features/${id}`), "/gallery", "/models", "/desktop", "/docs", ...listPages().map((d) => `/docs/${d.slug}`), "/privacy", "/terms"];
 }
 
 const ORG = { "@type": "Organization", "@id": ORG_ID, name: "Krizaka", url: KRIZAKA_URL };
@@ -57,7 +57,7 @@ export function siteJsonLd() {
         url: `${SITE_URL}/`,
         description: SITE_DESCRIPTION,
         applicationCategory: "BusinessApplication",
-        operatingSystem: "Linux, macOS, Windows",
+        operatingSystem: "Linux, macOS",
         isAccessibleForFree: true,
         license: "https://www.apache.org/licenses/LICENSE-2.0",
         codeRepository: REPO_URL,
@@ -83,6 +83,7 @@ export function llmsText(): string {
 - [Home](${SITE_URL}/): what Orazaka is
 ${pages.join("\n")}
 - [Mobile app](${SITE_URL}/docs/mobile): recordings and screenshots of the iOS and Android app
+- [Orazaka for Mac](${SITE_URL}/desktop): the Orazaka Desktop test build for Apple Silicon — what it does today, requirements, download
 - [Gallery](${SITE_URL}/gallery): images made with Orazaka
 - [Models](${SITE_URL}/models): the ${MODELS.length} models Orazaka supports — what each does, where it runs, its licence and context window
 - [Talk to the team](${KRIZAKA_URL}/contact?topic=orazaka): the contact form lives on krizaka.com

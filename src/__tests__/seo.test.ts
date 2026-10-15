@@ -28,7 +28,7 @@ describe("search engines and AI assistants (the Krizaka family contract)", () =>
     expect(auditSitemap(xml, { host: SITE_URL, minUrls: 10 })).toEqual([]);
     expect(entries.map((e) => e.url)).toContain(`${SITE_URL}/features/unified-engine`);
     expect(publicPaths()).toContain("/docs/architecture");
-    expect(publicPaths()).toEqual(expect.arrayContaining(["/docs/mobile", "/gallery", "/models"]));
+    expect(publicPaths()).toEqual(expect.arrayContaining(["/docs/mobile", "/gallery", "/models", "/desktop"]));
     expect(entries.map((e) => e.url)).toContain(`${SITE_URL}/models`);
   });
 
@@ -49,5 +49,9 @@ describe("search engines and AI assistants (the Krizaka family contract)", () =>
   it.each(["/robots.txt", "/sitemap.xml", "/llms.txt", "/llms-full.txt", "/opengraph-image", "/models"])("the sign-in proxy lets crawlers read %s", (path) => {
     const res = proxy(new NextRequest(`${SITE_URL}${path}`));
     expect(res.headers.get("x-middleware-next")).toBe("1");
+  });
+
+  it("claims no Windows build: the product runs on macOS and Linux", () => {
+    expect(JSON.stringify(siteJsonLd())).not.toMatch(/windows/i);
   });
 });
