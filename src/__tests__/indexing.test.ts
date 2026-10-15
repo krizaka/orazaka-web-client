@@ -29,7 +29,7 @@ describe("APP_SEARCH_INDEXING — one flag closes the deployment to search engin
   it("off: noindex on every response — pages, login, the BFF (404 or not), robots", () => {
     withFlag("off", () => {
       for (const path of ["/", "/docs", "/login", "/dashboard", "/api/v1/profile", "/api/auth/session", "/robots.txt"]) {
-        expect(ask(path).headers.get("x-robots-tag"), path).toBe(NOINDEX_HEADER);
+        expect(`${path} ${ask(path).headers.get("x-robots-tag")}`).toBe(`${path} ${NOINDEX_HEADER}`);
       }
     });
   });
