@@ -14,7 +14,7 @@ import { SectionHeading } from "@/features/landing/components/SectionHeading";
 const ICONS: ComponentType<IconProps>[] = [ChatIcon, AgentIcon, KnowledgeIcon, StudioIcon, AutomationIcon, PackIcon];
 
 /** Where each capability leads: the demo chapter, a guide, the Studios, the packs — always a real place. */
-const HREFS = ["/#demo-chat", "/docs/tools", "/docs/architecture", "/#studios", "/docs/jobs", "/docs/packs"] as const;
+const HREFS = ["/gallery#demo-chat", "/docs/tools", "/docs/architecture", "/#studios", "/docs/jobs", "/docs/packs"] as const;
 
 /**
  * The platform: the real workspace in a window (sharp at the top, fading into the page — depth of field), then the

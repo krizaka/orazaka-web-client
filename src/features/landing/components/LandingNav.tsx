@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { AiIcon, DownloadIcon, ImageIcon, PackIcon, PlayIcon, ServerIcon, StudioIcon } from "@krizaka/icons";
+import { AiIcon, DownloadIcon, PackIcon, PlayIcon, ServerIcon, StudioIcon } from "@krizaka/icons";
 import { OrazakaLogo } from "@krizaka/ui";
 import { Button } from "@krizaka/ui/button";
 import { NavBar } from "@krizaka/ui/nav-bar";
@@ -30,7 +30,6 @@ const PRODUCT_ENTRIES = [
   { id: "models", path: "/models", Icon: AiIcon },
   { id: "run", path: "/infrastructure", Icon: ServerIcon, shipped: SHIPPED_ROUTES.infrastructure },
   { id: "desktop", path: "/desktop", Icon: DownloadIcon },
-  { id: "made", path: "/gallery", Icon: ImageIcon },
 ] as const;
 
 /** Where the visitor is, as the bar shows it: the menu entry, the current top-level link, or neither (on the home). */
@@ -40,7 +39,7 @@ export function navActive(pathname: string | null | undefined) {
     models: p === "/models" || p.startsWith("/models/"),
     run: p === "/infrastructure" || p.startsWith("/infrastructure/"),
     desktop: p === "/desktop",
-    made: p === "/gallery" || p.startsWith("/gallery/"),
+    demo: p === "/gallery" || p.startsWith("/gallery/"),
     features: p.startsWith("/features/"),
     mobile: p === "/docs/mobile",
     docs: (p === "/docs" || p.startsWith("/docs/")) && p !== "/docs/mobile",
@@ -87,10 +86,10 @@ export function LandingNav({ onHome = true }: Readonly<{ onHome?: boolean }>) {
     href: "anchor" in e ? href(e.anchor) : e.path,
     label: n[e.id],
     description: n.menu[e.id],
-    active: e.id === "models" || e.id === "run" || e.id === "desktop" || e.id === "made" ? active[e.id] : false,
+    active: e.id === "models" || e.id === "run" || e.id === "desktop" ? active[e.id] : false,
   }));
   const links = [
-    { key: "demo", href: href("demo"), label: n.demo, active: false },
+    { key: "demo", href: "/gallery", label: n.demo, active: active.demo },
     { key: "mobile", href: "/docs/mobile", label: n.mobile, active: active.mobile },
     { key: "docs", href: "/docs", label: n.docs, active: active.docs },
   ] as const;
@@ -108,7 +107,7 @@ export function LandingNav({ onHome = true }: Readonly<{ onHome?: boolean }>) {
         <NavBar.Badge env={APP_ENV} version={APP_VERSION} />
 
         <NavBar.Items>
-          <NavBar.Menu value="product" label={n.product} active={active.models || active.run || active.desktop || active.made || active.features} columns={1}>
+          <NavBar.Menu value="product" label={n.product} active={active.models || active.run || active.desktop || active.features} columns={1}>
             {entries.map((e) => (
               <NavBar.MenuLink key={e.id} asChild title={e.label} description={e.description} icon={<e.Icon size={18} />} active={e.active}>
                 <Link href={e.href} />

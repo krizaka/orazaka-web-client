@@ -140,7 +140,7 @@ describe("LandingPage while sign-in and sign-up are closed (the default)", () =>
     renderLanding("en", <LandingPage />, CLOSED);
     const en = translations.en.landing;
     const platform = document.getElementById("platform")!;
-    const wanted = ["/#demo-chat", "/docs/tools", "/docs/architecture", "/#studios", "/docs/jobs", "/docs/packs"];
+    const wanted = ["/gallery#demo-chat", "/docs/tools", "/docs/architecture", "/#studios", "/docs/jobs", "/docs/packs"];
     en.platform.items.forEach((item, i) => {
       const link = within(platform).getByRole("link", { name: new RegExp(`^${item.title}`) });
       expect(link).toHaveAttribute("href", wanted[i]);
@@ -150,7 +150,7 @@ describe("LandingPage while sign-in and sign-up are closed (the default)", () =>
     en.studios.items.forEach((item, i) => {
       expect(within(studios).getByRole("link", { name: new RegExp(`^${item.title}`) })).toHaveTextContent(en.studios.ctas[i]);
     });
-    expect(within(studios).getAllByRole("link").map((a) => a.getAttribute("href"))).toEqual(expect.arrayContaining(["/#demo-documents", "/gallery", "/docs/packs#outbound-prospecting", "/docs/packs#trade-showcase"]));
+    expect(within(studios).getAllByRole("link").map((a) => a.getAttribute("href"))).toEqual(expect.arrayContaining(["/gallery#demo-documents", "/gallery", "/docs/packs#outbound-prospecting", "/docs/packs#trade-showcase"]));
     // no card of the home is a dead end: not a bare <li> without a link
     expect(platform.querySelectorAll("li").length).toBe(0);
   });
@@ -158,12 +158,15 @@ describe("LandingPage while sign-in and sign-up are closed (the default)", () =>
   it("offers the documentation and the demo too", () => {
     renderLanding("en", <LandingPage />, CLOSED);
     expect(screen.getAllByRole("link", { name: translations.en.landing.closed.heroPrimary })[0]).toHaveAttribute("href", "/docs");
-    expect(screen.getAllByRole("link", { name: translations.en.landing.closed.heroSecondary })[0]).toHaveAttribute("href", "/#demo");
+    expect(screen.getAllByRole("link", { name: translations.en.landing.closed.heroSecondary })[0]).toHaveAttribute("href", "/gallery");
   });
 
   it("shows the recordings and the packs, and the Krizaka signature with the version", () => {
     renderLanding("en", <LandingPage />, CLOSED);
-    expect(document.getElementById("demo")!.querySelectorAll("video").length).toBeGreaterThan(0);
+    // The demo is /gallery now: the home keeps a teaser (Made here, anchor #demo) with its clips and a way to the demo.
+    expect(document.getElementById("demo")).not.toBeNull();
+    expect(document.getElementById("made")!.querySelectorAll("video").length).toBeGreaterThan(0);
+    expect(within(document.getElementById("made")!).getByRole("link", { name: translations.en.gallery.seeDemo })).toHaveAttribute("href", "/gallery");
     expect(document.getElementById("packs")!.querySelectorAll("a[href^='/docs/packs#']").length).toBeGreaterThan(0);
     const footer = screen.getByTestId("app-version");
     expect(footer).toHaveTextContent("A Krizaka product");
@@ -197,7 +200,7 @@ describe("LandingPage while sign-in and sign-up are closed (the default)", () =>
     // Demo · Mobile · Documentation beside the Product menu, never a link to another site
     const centre = within(bar).getByRole("navigation", { name: "Orazaka" });
     const top = within(centre).getAllByRole("link").map((a) => a.getAttribute("href"));
-    expect(top).toEqual(["#demo", "/docs/mobile", "/docs"]);
+    expect(top).toEqual(["/gallery", "/docs/mobile", "/docs"]);
     expect(within(centre).getByRole("button", { name: translations.en.landing.nav.product })).toBeInTheDocument();
   });
 });

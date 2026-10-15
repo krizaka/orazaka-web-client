@@ -30,7 +30,7 @@ for (const locale of ["en", "fr"] as const) {
 
     test("each Studio card leads to its own recording or pack, scrolled into view", async ({ page }) => {
       await page.goto("/");
-      await page.locator("#studios a[href='/#demo-documents']").click();
+      await page.locator("#studios a[href='/gallery#demo-documents']").click();
       await expect(page.locator("#demo-documents")).toBeInViewport({ timeout: 15_000 });
       await page.goto("/");
       await page.locator("#studios a[href='/docs/packs#trade-showcase']").click();

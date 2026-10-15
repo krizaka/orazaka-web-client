@@ -10,7 +10,7 @@ import { LandingSovereignty } from "@/features/landing/components/LandingSoverei
 import { LandingPlatform } from "@/features/landing/components/LandingPlatform";
 import { LandingCompare } from "@/features/landing/components/LandingCompare";
 import { LandingHow } from "@/features/landing/components/LandingHow";
-import { LandingDemo } from "@/features/landing/components/LandingDemo";
+import { DemoHashRedirect } from "@/features/landing/components/DemoHashRedirect";
 import { LandingPacks } from "@/features/landing/components/LandingPacks";
 import { LandingModels } from "@/features/landing/components/LandingModels";
 import { LandingStudios } from "@/features/landing/components/LandingStudios";
@@ -31,6 +31,7 @@ export function LandingPage() {
   return (
     <>
       <LandingNav />
+      <DemoHashRedirect />
       <main className="min-h-screen bg-surface-0 text-fg">
         <LandingHero />
         <GalleryFeatured />
@@ -38,7 +39,6 @@ export function LandingPage() {
         <LandingPlatform />
         <LandingCompare />
         <LandingHow />
-        <LandingDemo />
         <LandingMobile />
         <LandingMac />
         <LandingStudios />

@@ -8,6 +8,7 @@ import { useTranslation } from "@/core/context/LocaleContext";
 import { fill } from "@/core/context/fill";
 import { GALLERY, STYLES, gallerySrc, type GalleryStyle } from "@/features/landing/utils/gallery";
 import { GalleryCompare } from "@/features/landing/components/GalleryCompare";
+import { LandingDemo } from "@/features/landing/components/LandingDemo";
 import { GalleryVideos } from "@/features/landing/components/GalleryVideos";
 import { CLIPS } from "@/features/landing/utils/gallery-clips";
 import { LandingFooter } from "@/features/landing/components/LandingFooter";
@@ -24,13 +25,15 @@ const chip = "inline-flex min-h-11 items-center rounded-full border px-4 text-sm
  * item: the image, the Studio, model, seed, size and time on one Mac, the exact prompt with a copy button and the
  * command that reproduces it; then the credits.
  */
-export function GalleryPage({ only, kind }: Readonly<{ only?: GalleryStyle; kind?: "videos" | "images" | "compare" }>) {
+export function GalleryPage({ only, kind }: Readonly<{ only?: GalleryStyle; kind?: "videos" | "images" | "compare" | "documents" | "day" }>) {
   const { t } = useTranslation();
   const g = t.gallery;
   const items = only ? GALLERY.filter((x) => x.style === only) : GALLERY;
   const showVideos = !only && (kind === undefined || kind === "videos");
   const showCompare = !only && (kind === undefined || kind === "compare");
   const showImages = kind === undefined || kind === "images";
+  const showDocuments = !only && (kind === undefined || kind === "documents");
+  const showDay = !only && (kind === undefined || kind === "day");
   const link = (active: boolean) => cn(chip, active ? "border-accent bg-accent-soft text-fg" : "border-border-default text-fg-secondary hover:text-fg");
 
   return (
@@ -59,6 +62,12 @@ export function GalleryPage({ only, kind }: Readonly<{ only?: GalleryStyle; kind
             </Link>
             <Link href="/gallery?kind=images" aria-current={kind === "images" && !only ? "page" : undefined} className={link(kind === "images" && !only)}>
               {g.filterImages}
+            </Link>
+            <Link href="/gallery?kind=documents" aria-current={kind === "documents" ? "page" : undefined} className={link(kind === "documents")}>
+              {g.filterDocuments}
+            </Link>
+            <Link href="/gallery?kind=day" aria-current={kind === "day" ? "page" : undefined} className={link(kind === "day")}>
+              {g.filterDay}
             </Link>
             {STYLES.map((s) => (
               <Link key={s} href={`/gallery?style=${s}`} aria-current={only === s ? "page" : undefined} className={link(only === s)}>
@@ -109,6 +118,19 @@ export function GalleryPage({ only, kind }: Readonly<{ only?: GalleryStyle; kind
             </ul>
           )}
         </section>
+
+        {showDocuments && (
+          <section id="documents" aria-labelledby="documents-title" className="mx-auto max-w-6xl space-y-3 border-t border-border-subtle px-4 py-12 sm:px-5">
+            <h2 id="documents-title" className="font-display text-2xl font-bold tracking-tight">{g.documentsTitle}</h2>
+            <p className="max-w-2xl text-sm leading-relaxed text-fg-secondary">{g.documentsBody}</p>
+            <p>
+              <a href="https://github.com/krizaka/orazaka-web-client/issues/75" target="_blank" rel="noopener noreferrer" className="text-sm font-medium text-fg-accent underline underline-offset-4">
+                {g.documentsLink}
+              </a>
+            </p>
+          </section>
+        )}
+        {showDay && <LandingDemo />}
 
         <section id="credits" aria-labelledby="credits-title" className="mx-auto max-w-6xl space-y-4 border-t border-border-subtle px-4 py-12 sm:px-5">
           <h2 id="credits-title" className="font-display text-2xl font-bold tracking-tight">{g.creditsTitle}</h2>
