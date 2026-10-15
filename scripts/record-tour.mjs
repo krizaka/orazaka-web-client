@@ -323,6 +323,8 @@ const CLIPS = {
       await field.scrollIntoViewIfNeeded();
       await field.click();
       await field.pressSequentially(RECORDED_VOICE, { delay: 7 });
+      // The speech engine of this Mac (Piper through LocalAI): its voice, named, so the run does not depend on a catalogue default.
+      await page.locator("#studio-run-model").fill("tts-1");
       await pause(page, 600);
       await page.getByRole("button", { name: /^Run$/ }).click();
       await page.waitForURL(/\/studios\/runs\//, { timeout: 30_000 });
