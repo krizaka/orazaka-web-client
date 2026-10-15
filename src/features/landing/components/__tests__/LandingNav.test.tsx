@@ -42,7 +42,7 @@ describe("the bar reaches every public destination", () => {
     const mobile = panels.find((n) => n.textContent?.includes(nav.product) && n.querySelector("a[href='/models']") && n.querySelector("a[href='/login']"));
     expect(mobile).toBeTruthy();
     const hrefs = [...(mobile as HTMLElement).querySelectorAll("a")].map((a) => a.getAttribute("href"));
-    expect(hrefs).toEqual(expect.arrayContaining(["#how", "#studios", "#packs", "/models", "/desktop", "/gallery", "#demo", "/docs/mobile", "/docs"]));
+    expect(hrefs).toEqual(expect.arrayContaining(["#how", "#studios", "#packs", "/models", "/desktop", "/gallery", "/docs/mobile", "/docs"]));
     expect(new Set(hrefs).size).toBe(hrefs.length);
     // « Run it » is reserved in the nav data but its page does not exist yet: no dead link
     expect(hrefs).not.toContain("/infrastructure");
@@ -59,7 +59,7 @@ describe("the bar reaches every public destination", () => {
   it("has an anchor target in the page for every anchor of the bar, and a label in both languages", () => {
     renderLanding("fr", <LandingPage />, CLOSED);
     for (const id of ["how", "studios", "packs", "demo"]) expect(document.getElementById(id)).not.toBeNull();
-    for (const k of ["product", "models", "run", "desktop", "made", "how", "studios", "packs", "demo", "mobile", "docs"] as const) {
+    for (const k of ["product", "models", "run", "desktop", "how", "studios", "packs", "demo", "mobile", "docs"] as const) {
       expect(translations.fr.landing.nav[k]).toBeTruthy();
       expect(nav[k]).toBeTruthy();
     }
@@ -69,8 +69,8 @@ describe("the bar reaches every public destination", () => {
 
 describe("navActive", () => {
   it("lights the current page of the bar", () => {
-    expect(navActive("/models")).toMatchObject({ models: true, made: false, docs: false });
-    expect(navActive("/gallery")).toMatchObject({ made: true });
+    expect(navActive("/models")).toMatchObject({ models: true, demo: false, docs: false });
+    expect(navActive("/gallery")).toMatchObject({ demo: true });
     expect(navActive("/docs/mobile")).toMatchObject({ mobile: true, docs: false });
     expect(navActive("/docs/packs")).toMatchObject({ docs: true, mobile: false });
     expect(navActive("/features/absolute-privacy")).toMatchObject({ features: true });

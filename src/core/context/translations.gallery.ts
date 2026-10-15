@@ -24,6 +24,13 @@ export interface GalleryDictionary {
   /** A slide's name, "{n}" of "{total}". */
   slide: string;
   all: string;
+  /** The home teaser's button: the demo is /gallery. */
+  seeDemo: string;
+  filterDocuments: string;
+  filterDay: string;
+  documentsTitle: string;
+  documentsBody: string;
+  documentsLink: string;
   galleryTitle: string;
   galleryLead: string;
   filterLabel: string;
@@ -153,7 +160,13 @@ export const gallery: Record<Locale, GalleryDictionary> = {
     "goTo": "Go to image {n}",
     "slide": "{n} of {total}",
     "all": "See the whole gallery",
-    "galleryTitle": "Everything Orazaka made here",
+    "seeDemo": "See the demo",
+    "filterDocuments": "Documents",
+    "filterDay": "A day of work",
+    "documentsTitle": "Documents",
+    "documentsBody": "Document checks (a lease against the law, a supplier's PDF) will be here as interactive replays you can step through. They are not built yet, so nothing is shown in their place; the real recordings of these checks are in A day of work.",
+    "documentsLink": "Follow the interactive replays",
+    "galleryTitle": "The demo: what Orazaka makes here",
     "galleryLead": "Seventeen images, four art directions. Each one shows what the data records: the prompt that reached the model, the Studio, the model, the seed, the size and the time it took on one Mac. Nothing else is claimed.",
     "filterLabel": "Filter by style",
     "filterAll": "All styles",
@@ -303,7 +316,13 @@ export const gallery: Record<Locale, GalleryDictionary> = {
     "goTo": "Aller à l'image {n}",
     "slide": "{n} sur {total}",
     "all": "Voir toute la galerie",
-    "galleryTitle": "Tout ce qu'Orazaka a fait ici",
+    "seeDemo": "Voir la démo",
+    "filterDocuments": "Documents",
+    "filterDay": "Une journée de travail",
+    "documentsTitle": "Documents",
+    "documentsBody": "Les contrôles de documents (un bail face à la loi, le PDF d'un fournisseur) seront ici en rediffusions interactives où l'on avance pas à pas. Elles ne sont pas encore construites : rien n'est montré à leur place ; les vrais enregistrements de ces contrôles sont dans Une journée de travail.",
+    "documentsLink": "Suivre les rediffusions interactives",
+    "galleryTitle": "La démo : ce qu'Orazaka fait ici",
     "galleryLead": "Dix-sept images, quatre directions artistiques. Chacune montre ce que les données enregistrent : la consigne reçue par le modèle, le Studio, le modèle, la graine, le format et le temps pris sur un Mac. Rien d'autre n'est affirmé.",
     "filterLabel": "Filtrer par style",
     "filterAll": "Tous les styles",

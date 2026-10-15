@@ -22,6 +22,6 @@ export function useEntries() {
     primary: (label: string): Entry => (flags.signup ? { href: "/register", label } : { href: "/docs", label: closed.heroPrimary }),
     secondary: (label: string, href = "/login"): Entry => ({ href, label }),
     /** The demo — offered beside the way in while sign-in is closed. */
-    watch: (): Entry | null => (flags.login ? null : { href: "/#demo", label: closed.heroSecondary }),
+    watch: (): Entry | null => (flags.login ? null : { href: "/gallery", label: closed.heroSecondary }),
   };
 }

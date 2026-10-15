@@ -46,6 +46,8 @@ export function GalleryFeatured() {
 
   return (
     <SectionBackdrop id="made" className="border-t border-border-subtle">
+      {/* The old #demo anchor of the home page: the demo is /gallery now, this teaser is where a #demo link lands. */}
+      <span id="demo" className="block scroll-mt-20" />
       <article className="mx-auto max-w-6xl space-y-10 px-4 py-20 sm:px-5 lg:py-24">
         <SectionHeading eyebrow={g.eyebrow} title={g.featuredTitle} lead={g.featuredLead} />
         <Showcase
@@ -60,7 +62,7 @@ export function GalleryFeatured() {
         <p>
           <Button asChild variant="secondary" size="md" shape="pill">
             <Link href="/gallery">
-              {g.all}
+              {g.seeDemo}
               <ForwardIcon size={16} />
             </Link>
           </Button>

@@ -54,7 +54,7 @@ export function LoginPreview() {
       notice={
         <Alert tone="info" role="status">
           {c.signInBanner}{" "}
-          <Link href="/#demo" className="font-medium underline underline-offset-4">
+          <Link href="/gallery" className="font-medium underline underline-offset-4">
             {c.heroSecondary}
           </Link>
         </Alert>

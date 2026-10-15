@@ -116,7 +116,7 @@ describe("GalleryFeatured (the home page's prompt → image → video, a slidesh
     const writeText = jest.fn().mockResolvedValue(undefined);
     Object.assign(navigator, { clipboard: { writeText } });
     const { container } = wrap(<GalleryFeatured />);
-    expect(screen.getByRole("link", { name: g.all })).toHaveAttribute("href", "/gallery");
+    expect(screen.getByRole("link", { name: g.seeDemo })).toHaveAttribute("href", "/gallery");
     fireEvent.click(within(slide(container, 0)).getByRole("button", { name: g.more }));
     fireEvent.click(screen.getByRole("button", { name: g.copy }));
     expect(writeText).toHaveBeenCalledWith(FEATURED[0].image?.prompt ?? FEATURED[0].clip.prompt);

@@ -32,7 +32,7 @@ const wrap = (ui: React.ReactNode, locale: Locale = "en") => {
 
 describe("GalleryPage — the whole Made here catalogue", () => {
   it("is the whole catalogue: a Videos section with every published clip (the kit's VideoResult), a Videos · Images filter", () => {
-    const { container } = wrap(<GalleryPage />);
+    wrap(<GalleryPage />);
     const g = translations.en.gallery;
     const videos = document.getElementById("videos") as HTMLElement;
     expect(within(videos).getByRole("heading", { level: 2, name: g.videosTitle })).toBeInTheDocument();
@@ -44,7 +44,7 @@ describe("GalleryPage — the whole Made here catalogue", () => {
     }
     expect(within(videos).getAllByText(/Wan 2\.2 A14B/).length).toBeGreaterThan(0);
     // Each has its badge, and the clip that continues an image has the Video · Image switch.
-    expect(container.querySelectorAll("[data-clip-badge]").length).toBe(CLIPS.length);
+    expect(videos.querySelectorAll("[data-clip-badge]").length).toBe(CLIPS.length);
     expect(within(videos).getAllByRole("tab", { name: g.imageStep })).toHaveLength(CLIPS.filter((c) => c.imageId).length);
     const nav = screen.getByRole("navigation", { name: g.filterLabel });
     expect(within(nav).getByRole("link", { name: g.filterVideos })).toHaveAttribute("href", "/gallery?kind=videos");
@@ -109,5 +109,33 @@ describe("GalleryPage — the whole Made here catalogue", () => {
     const order = ["videos", "compare", "credits"].map((id) => document.getElementById(id)!);
     expect(order[0].compareDocumentPosition(order[1]) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
     expect(order[1].compareDocumentPosition(order[2]) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+  });
+});
+
+describe("/gallery is Orazaka's demo", () => {
+  const g = translations.en.gallery;
+
+  it("has A day of work (the real app recordings in the kit's player) and an honest Documents placeholder, each with its filter", () => {
+    const { container } = wrap(<GalleryPage />);
+    expect(screen.getByRole("link", { name: g.filterDay })).toHaveAttribute("href", "/gallery?kind=day");
+    expect(screen.getByRole("link", { name: g.filterDocuments })).toHaveAttribute("href", "/gallery?kind=documents");
+    // The day's clips keep their old anchors (#demo-<clip>), so an old link lands on its clip.
+    for (const id of ["creations", "video", "voice", "documents", "studios", "chat"]) expect(container.querySelector(`#demo-${id}`)).not.toBeNull();
+    // Documents: a placeholder that says so and links the issue — no fake recording in its place.
+    const documents = container.querySelector<HTMLElement>("#documents")!;
+    expect(within(documents).getByText(g.documentsBody)).toBeInTheDocument();
+    expect(within(documents).getByRole("link", { name: g.documentsLink })).toHaveAttribute("href", "https://github.com/krizaka/orazaka-web-client/issues/75");
+    expect(documents.querySelector("video")).toBeNull();
+  });
+
+  it("lists one kind at a time: ?kind=day shows only the day, ?kind=documents only the placeholder", () => {
+    const day = wrap(<GalleryPage kind="day" />);
+    expect(day.container.querySelector("#demo-chat")).not.toBeNull();
+    expect(day.container.querySelector("#documents")).toBeNull();
+    expect(day.container.querySelector("#videos")).toBeNull();
+    day.unmount();
+    const documents = wrap(<GalleryPage kind="documents" />);
+    expect(documents.container.querySelector("#documents")).not.toBeNull();
+    expect(documents.container.querySelector("#demo-chat")).toBeNull();
   });
 });

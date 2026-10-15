@@ -31,13 +31,12 @@ export interface LandingDictionary {
     demo: string;
     packs: string;
     mobile: string;
-    made: string;
     product: string;
     models: string;
     run: string;
     desktop: string;
     /** One line under each entry of the Product menu. */
-    menu: { how: string; studios: string; packs: string; models: string; run: string; desktop: string; made: string };
+    menu: { how: string; studios: string; packs: string; models: string; run: string; desktop: string };
     langLabel: string;
     openMenu: string;
     closeMenu: string;
