@@ -92,6 +92,7 @@ describe("GalleryPage — the whole Made here catalogue", () => {
       }
     }
     // Honest labels: the local models say nothing left the Mac, the hosted one says DigitalOcean and its price.
+    expect(within(compare).getByRole("link", { name: g.compareMeasured })).toHaveAttribute("href", "/docs/measured-runs");
     expect(within(compare).getAllByText(g.compareOnMac).length).toBeGreaterThan(0);
     expect(within(compare).getAllByText(g.compareOnDo).length).toBeGreaterThan(0);
     expect(within(compare).getAllByText("$0.08 an image").length).toBeGreaterThan(0);

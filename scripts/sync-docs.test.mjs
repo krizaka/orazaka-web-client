@@ -66,3 +66,16 @@ test("the published content has no link to an internal document and no <https://
     assert.ok(!/<https?:\/\//.test(md), `${f} has a literal autolink`);
   }
 });
+
+test("the Measured runs page is published beside Supported models, from the generated source, and the models page links to it", () => {
+  const entry = DOCS.find((d) => d.slug === "measured-runs");
+  assert.equal(entry.source, "docs/_generated/MEASURED_RUNS.md");
+  assert.equal(entry.journey, DOCS.find((d) => d.slug === "models").journey);
+  assert.equal(entry.generated, true);
+  const dir = path.join(path.dirname(new URL(import.meta.url).pathname), "..", "content", "docs");
+  const page = fs.readFileSync(path.join(dir, "measured-runs.md"), "utf8");
+  for (const text of ["Measured runs", "## Per model", "## Parameters", "## Failures, timeouts and limits", "## What it cost", "measured again when the setup changes"]) assert.ok(page.includes(text), `missing: ${text}`);
+  // The link is written against the source file; sources.json resolves it to the page at render time.
+  assert.match(fs.readFileSync(path.join(dir, "models.md"), "utf8"), /\(MEASURED_RUNS\.md\)/);
+  assert.equal(JSON.parse(fs.readFileSync(path.join(dir, "sources.json"), "utf8"))["docs/_generated/MEASURED_RUNS.md"], "measured-runs");
+});

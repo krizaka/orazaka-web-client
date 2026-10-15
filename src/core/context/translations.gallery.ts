@@ -92,6 +92,8 @@ export interface GalleryDictionary {
   /** "{cost}" US dollars an image. */
   compareImageCost: string;
   compareSeedIgnored: string;
+  /** The link from the comparison to the generated docs page that holds every measurement. */
+  compareMeasured: string;
   /** "{model}": a model whose run did not finish on this prompt (said, never hidden). */
   compareMissing: string;
   /** The name of the Video · Image tabs. */
@@ -202,6 +204,7 @@ export const gallery: Record<Locale, GalleryDictionary> = {
     "compareNoCost": "None — your own machine",
     "compareImageCost": "${cost} an image",
     "compareSeedIgnored": "not honoured by the provider",
+    "compareMeasured": "Time, price and every parameter of these runs: Measured runs (docs)",
     "compareMissing": "{model}: its run did not finish on this prompt (the image client gave up waiting for the Mac), so there is no image to show.",
     "stepsLabel": "What to show: the video or the image",
     "imageStep": "Image",
@@ -340,6 +343,7 @@ export const gallery: Record<Locale, GalleryDictionary> = {
     "compareNoCost": "Aucun — votre propre machine",
     "compareImageCost": "{cost} $ l'image",
     "compareSeedIgnored": "ignorée par le fournisseur",
+    "compareMeasured": "Temps, prix et chaque paramètre de ces exécutions : Measured runs (docs, en anglais)",
     "compareMissing": "{model} : son exécution n'a pas abouti sur cette consigne (le client d'images a renoncé à attendre le Mac), il n'y a donc pas d'image à montrer.",
     "stepsLabel": "Quoi montrer : la vidéo ou l'image",
     "imageStep": "Image",

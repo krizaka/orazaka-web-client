@@ -6,6 +6,7 @@
   "docs/BUSINESS_IMPLEMENTATION.md": "business-playbook",
   "docs/_generated/JOBS.md": "jobs",
   "docs/_generated/MODELS.md": "models",
+  "docs/_generated/MEASURED_RUNS.md": "measured-runs",
   "docs/_generated/ADMIN.md": "admin",
   "docs/AUTH.md": "auth",
   "SECURITY.md": "security",

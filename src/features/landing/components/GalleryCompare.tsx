@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { RunFacts, type RunFact } from "@krizaka/orazaka-design-system";
 import { useTranslation } from "@/core/context/LocaleContext";
 import { fill } from "@/core/context/fill";
@@ -36,6 +37,9 @@ export function GalleryCompare() {
       <div className="space-y-2">
         <h2 id="compare-title" className="font-display text-2xl font-bold tracking-tight">{g.compareTitle}</h2>
         <p className="max-w-3xl text-sm leading-relaxed text-fg-secondary">{g.compareLead}</p>
+        <p className="text-sm">
+          <Link href="/docs/measured-runs" className="font-medium text-fg-accent underline-offset-4 hover:underline">{g.compareMeasured}</Link>
+        </p>
       </div>
       <ul className="space-y-10">
         {COMPARE_INSPIRATIONS.filter((inspiration) => imagesOf(inspiration.id).length > 0).map((inspiration) => (
