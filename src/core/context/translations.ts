@@ -8,6 +8,7 @@ import { landing } from "./translations.landing";
 import { features } from "./translations.features";
 import { gallery } from "./translations.gallery";
 import { mobile } from "./translations.mobile";
+import { desktop } from "./translations.desktop";
 import { docs } from "./translations.docs";
 import { a11y, automation } from "./translations.automation";
 import { showcase } from "./translations.showcase";
@@ -808,6 +809,7 @@ export const translations: Record<Locale, TranslationDictionary> = {
     features: features.en,
     gallery: gallery.en,
     mobile: mobile.en,
+    desktop: desktop.en,
     docs: docs.en,
   },
   fr: {
@@ -1613,6 +1615,7 @@ export const translations: Record<Locale, TranslationDictionary> = {
     features: features.fr,
     gallery: gallery.fr,
     mobile: mobile.fr,
+    desktop: desktop.fr,
     docs: docs.fr,
   },
 };

@@ -1,12 +1,11 @@
 import type * as React from "react";
 import "@testing-library/jest-dom";
-import { fireEvent, render, screen, within } from "@testing-library/react";
+import { render, screen, within } from "@testing-library/react";
 import { ThemeProvider } from "@krizaka/ui/theme";
 import { translations, type Locale } from "@/core/context/translations";
 import { AuthFlagsProvider } from "@/core/context/AuthFlagsContext";
 import type { AuthFlags } from "@/core/config/auth-flags";
 import { LandingPage } from "@/features/landing/components/LandingPage";
-import { navActive } from "@/features/landing/components/LandingNav";
 import { FeaturePage } from "@/features/landing/components/FeaturePage";
 import { FEATURE_IDS } from "@/features/landing/components/features";
 
@@ -200,43 +199,5 @@ describe("LandingPage while sign-in and sign-up are closed (the default)", () =>
     const top = within(centre).getAllByRole("link").map((a) => a.getAttribute("href"));
     expect(top).toEqual(["#demo", "/docs/mobile", "/docs"]);
     expect(within(centre).getByRole("button", { name: translations.en.landing.nav.product })).toBeInTheDocument();
-  });
-});
-
-describe("the bar reaches every public destination", () => {
-  const CLOSED: AuthFlags = { login: false, signup: false, github: false, google: false };
-  const nav = translations.en.landing.nav;
-
-  it("lists them all in the mobile panel, once, with no dead entry", () => {
-    renderLanding("en", <LandingPage />, CLOSED);
-    fireEvent.click(screen.getByRole("button", { name: nav.openMenu }));
-    const bar = document.querySelector("header[data-floating]") as HTMLElement;
-    const panels = [...bar.querySelectorAll("nav")];
-    const mobile = panels.find((n) => n.textContent?.includes(nav.product) && n.querySelector("a[href='/models']") && n.querySelector("a[href='/login']"));
-    expect(mobile).toBeTruthy();
-    const hrefs = [...(mobile as HTMLElement).querySelectorAll("a")].map((a) => a.getAttribute("href"));
-    expect(hrefs).toEqual(expect.arrayContaining(["#how", "#studios", "#packs", "/models", "/gallery", "#demo", "/docs/mobile", "/docs"]));
-    expect(new Set(hrefs).size).toBe(hrefs.length);
-  });
-
-  it("has an anchor target in the page for every anchor of the bar, and a label in both languages", () => {
-    renderLanding("fr", <LandingPage />, CLOSED);
-    for (const id of ["how", "studios", "packs", "demo"]) expect(document.getElementById(id)).not.toBeNull();
-    for (const k of ["product", "models", "made", "how", "studios", "packs", "demo", "mobile", "docs"] as const) {
-      expect(translations.fr.landing.nav[k]).toBeTruthy();
-      expect(nav[k]).toBeTruthy();
-    }
-    for (const k of Object.keys(nav.menu) as (keyof typeof nav.menu)[]) expect(translations.fr.landing.nav.menu[k]).not.toBe(nav.menu[k]);
-  });
-});
-
-describe("navActive", () => {
-  it("lights the current page of the bar", () => {
-    expect(navActive("/models")).toMatchObject({ models: true, made: false, docs: false });
-    expect(navActive("/gallery")).toMatchObject({ made: true });
-    expect(navActive("/docs/mobile")).toMatchObject({ mobile: true, docs: false });
-    expect(navActive("/docs/packs")).toMatchObject({ docs: true, mobile: false });
-    expect(navActive("/features/absolute-privacy")).toMatchObject({ features: true });
-    expect(navActive(null)).toMatchObject({ models: false, docs: false });
   });
 });

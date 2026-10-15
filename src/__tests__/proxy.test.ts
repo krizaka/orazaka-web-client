@@ -1,6 +1,7 @@
 /** @jest-environment node */
 import { NextRequest } from "next/server";
 import { proxy } from "@/proxy";
+import { publicPaths } from "@/app/_seo/seo";
 
 const call = (path: string, env: Record<string, string> = {}) => {
   const before = { ...process.env };
@@ -21,6 +22,10 @@ describe("proxy with the entry points closed (default)", () => {
 
   it.each(["/", "/docs", "/docs/core", "/features/privacy", "/login", "/register"])("lets %s through", (path) => {
     expect(call(path).headers.get("x-middleware-next")).toBe("1");
+  });
+
+  it("lets every page of the sitemap through — a public page never lands on the login wall", () => {
+    for (const path of publicPaths()) expect(`${path} ${String(call(path).headers.get("x-middleware-next"))}`).toBe(`${path} 1`);
   });
 
   it("sends a protected page to /login (the closed notice)", () => {
