@@ -15,14 +15,14 @@ import { KRIZAKA_URL, SITE_DESCRIPTION, SITE_NAME, SITE_TITLE, SITE_URL, siteJso
  * The arguments must be literals, relative to this file.
  */
 const inter = localFont({
-  src: "../../node_modules/@krizaka/fonts/files/web/inter-latin-wght.woff2",
+  src: "../../../node_modules/@krizaka/fonts/files/web/inter-latin-wght.woff2",
   weight: "300 700",
   variable: "--font-inter",
   display: "swap",
 });
 
 const jetbrainsMono = localFont({
-  src: "../../node_modules/@krizaka/fonts/files/web/jetbrains-mono-latin-wght.woff2",
+  src: "../../../node_modules/@krizaka/fonts/files/web/jetbrains-mono-latin-wght.woff2",
   weight: "400 600",
   variable: "--font-jetbrains-mono",
   display: "swap",
@@ -30,7 +30,7 @@ const jetbrainsMono = localFont({
 
 /** Outfit's role (headings) is taken by Plus Jakarta Sans, the display face of @krizaka/fonts. */
 const outfit = localFont({
-  src: "../../node_modules/@krizaka/fonts/files/web/plus-jakarta-sans-latin-wght.woff2",
+  src: "../../../node_modules/@krizaka/fonts/files/web/plus-jakarta-sans-latin-wght.woff2",
   weight: "500 800",
   variable: "--font-outfit",
   display: "swap",
@@ -41,7 +41,7 @@ const outfit = localFont({
  * CSS variable --font-krizaka-display resolves to it.
  */
 const krizakaDisplay = localFont({
-  src: "../../node_modules/@krizaka/fonts/files/web/plus-jakarta-sans-latin-wght.woff2",
+  src: "../../../node_modules/@krizaka/fonts/files/web/plus-jakarta-sans-latin-wght.woff2",
   weight: "500 800",
   variable: "--font-krizaka-display",
   display: "swap",
@@ -52,7 +52,7 @@ const krizakaDisplay = localFont({
  * CSS variable --font-krizaka-mono resolves to it.
  */
 const krizakaMono = localFont({
-  src: "../../node_modules/@krizaka/fonts/files/web/jetbrains-mono-latin-wght.woff2",
+  src: "../../../node_modules/@krizaka/fonts/files/web/jetbrains-mono-latin-wght.woff2",
   weight: "400 600",
   variable: "--font-krizaka-mono",
   display: "swap",
