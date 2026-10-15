@@ -79,6 +79,21 @@ export interface GalleryDictionary {
   runHeading: string;
   /** The download button of a clip. */
   videoDownload: string;
+  /** "Compare models": the title, the lead, the filter, the title of each inspiration, the image alt ("{model}", "{title}") and the honest "where". */
+  compareTitle: string;
+  compareLead: string;
+  filterCompare: string;
+  compareTitles: Record<string, string>;
+  compareAlt: string;
+  compareWhere: string;
+  compareOnMac: string;
+  compareOnDo: string;
+  compareNoCost: string;
+  /** "{cost}" US dollars an image. */
+  compareImageCost: string;
+  compareSeedIgnored: string;
+  /** "{model}": a model whose run did not finish on this prompt (said, never hidden). */
+  compareMissing: string;
   /** The name of the Video · Image tabs. */
   stepsLabel: string;
   imageStep: string;
@@ -169,6 +184,25 @@ export const gallery: Record<Locale, GalleryDictionary> = {
     "countVideos": "{count} videos",
     "runHeading": "The run",
     "videoDownload": "Download the clip",
+    "compareTitle": "Compare models",
+    "compareLead": "One prompt per inspiration, the same for every model: each image is an Orazaka run of the image-generation Studio. The local models ran on one Mac (Metal) and nothing left the machine; Stable Diffusion 3.5 Large is hosted by DigitalOcean's serverless inference and routed by Orazaka, at $0.08 an image.",
+    "filterCompare": "Compare models",
+    "compareTitles": {
+      "montreal-winter": "A winter night in Montréal",
+      "moroccan-riad": "A Moroccan riad",
+      "alps-dawn": "The Alps at dawn",
+      "neon-arcade": "A neon arcade",
+      "server-room": "A sovereign server room",
+      "notary-desk": "A Québec notary's desk"
+    },
+    "compareAlt": "{title}, by {model}",
+    "compareWhere": "Ran on",
+    "compareOnMac": "One Mac (Metal) — nothing left the machine",
+    "compareOnDo": "DigitalOcean serverless inference",
+    "compareNoCost": "None — your own machine",
+    "compareImageCost": "${cost} an image",
+    "compareSeedIgnored": "not honoured by the provider",
+    "compareMissing": "{model}: its run did not finish on this prompt (the image client gave up waiting for the Mac), so there is no image to show.",
     "stepsLabel": "What to show: the video or the image",
     "imageStep": "Image",
     "videoStep": "Video",
@@ -288,6 +322,25 @@ export const gallery: Record<Locale, GalleryDictionary> = {
     "countVideos": "{count} vidéos",
     "runHeading": "L'exécution",
     "videoDownload": "Télécharger la vidéo",
+    "compareTitle": "Comparer les modèles",
+    "compareLead": "Une consigne par inspiration, la même pour chaque modèle : chaque image est une exécution Orazaka du Studio de génération d'images. Les modèles locaux ont tourné sur un seul Mac (Metal) et rien n'a quitté la machine ; Stable Diffusion 3.5 Large est hébergé par l'inférence serverless de DigitalOcean et routé par Orazaka, à 0,08 $ l'image.",
+    "filterCompare": "Comparer les modèles",
+    "compareTitles": {
+      "montreal-winter": "Une nuit d'hiver à Montréal",
+      "moroccan-riad": "Un riad marocain",
+      "alps-dawn": "Les Alpes à l'aube",
+      "neon-arcade": "Une salle d'arcade au néon",
+      "server-room": "Une salle de serveurs souveraine",
+      "notary-desk": "Le bureau d'un notaire québécois"
+    },
+    "compareAlt": "{title}, par {model}",
+    "compareWhere": "Exécuté sur",
+    "compareOnMac": "Un seul Mac (Metal) — rien n'a quitté la machine",
+    "compareOnDo": "Inférence serverless de DigitalOcean",
+    "compareNoCost": "Aucun — votre propre machine",
+    "compareImageCost": "{cost} $ l'image",
+    "compareSeedIgnored": "ignorée par le fournisseur",
+    "compareMissing": "{model} : son exécution n'a pas abouti sur cette consigne (le client d'images a renoncé à attendre le Mac), il n'y a donc pas d'image à montrer.",
     "stepsLabel": "Quoi montrer : la vidéo ou l'image",
     "imageStep": "Image",
     "videoStep": "Vidéo",

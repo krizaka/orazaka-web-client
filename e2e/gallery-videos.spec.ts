@@ -33,3 +33,18 @@ test("a clip is a full-width 16:9 card on a phone, with no sideways scroll", asy
   expect(box.width / box.height).toBeCloseTo(26 / 15, 1);
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
 });
+
+test("Compare models: one prompt, every model's image side by side with where it ran and its run id; one column on a phone", async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await page.goto("/gallery?kind=compare");
+  const compare = page.locator("#compare");
+  await expect(compare.getByRole("heading", { level: 2, name: "Compare models" })).toBeVisible();
+  const card = compare.locator("#compare-alps-dawn");
+  await card.scrollIntoViewIfNeeded();
+  await expect(card.getByRole("img")).toHaveCount(3);
+  await expect(card.getByText("DigitalOcean serverless inference")).toBeVisible();
+  await expect(card.getByText("One Mac (Metal) — nothing left the machine").first()).toBeVisible();
+  await expect(card.getByText("$0.08 an image")).toBeVisible();
+  await page.setViewportSize({ width: 390, height: 844 });
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
+});

@@ -6,6 +6,7 @@ import { AuthFlagsProvider } from "@/core/context/AuthFlagsContext";
 import { GalleryPage } from "@/features/landing/components/GalleryPage";
 import { GALLERY } from "@/features/landing/utils/gallery";
 import { CLIPS } from "@/features/landing/utils/gallery-clips";
+import { COMPARE_IMAGES, COMPARE_INSPIRATIONS, COMPARE_MODELS, imagesOf } from "@/features/landing/utils/model-compare";
 
 let mockLocale: Locale = "en";
 jest.mock("@/core/context/LocaleContext", () => ({
@@ -70,5 +71,42 @@ describe("GalleryPage — the whole Made here catalogue", () => {
     expect(within(videos).getByRole("heading", { level: 2, name: fr.videosTitle })).toBeInTheDocument();
     expect(within(videos).getAllByText(fr.runHeading).length).toBe(CLIPS.length);
     expect(videos.querySelector("video")).toHaveAttribute("aria-label", fr.clips[CLIPS[0].id]);
+  });
+
+  it("compares models: one prompt per inspiration, each model's image with where it ran, its time, its cost and its run id; a missing run is said", () => {
+    const { container } = wrap(<GalleryPage kind="compare" />);
+    const g = translations.en.gallery;
+    const compare = document.getElementById("compare") as HTMLElement;
+    expect(within(compare).getByRole("heading", { level: 2, name: g.compareTitle })).toBeInTheDocument();
+    expect(document.getElementById("videos")).toBeNull();
+    expect(container.querySelectorAll("#compare figure img").length).toBe(COMPARE_IMAGES.length);
+    for (const inspiration of COMPARE_INSPIRATIONS.filter((item) => imagesOf(item.id).length > 0)) {
+      const card = document.getElementById(`compare-${inspiration.id}`) as HTMLElement;
+      expect(within(card).getByText(inspiration.prompt)).toBeInTheDocument();
+      for (const image of imagesOf(inspiration.id)) {
+        expect(within(card).getByAltText(`${g.compareTitles[inspiration.id]}, by ${image.model.name}`)).toBeInTheDocument();
+        expect(within(card).getByText(image.runId)).toBeInTheDocument();
+      }
+      for (const model of COMPARE_MODELS.filter((item) => !imagesOf(inspiration.id).some((image) => image.model.id === item.id))) {
+        expect(within(card).getByText(new RegExp(`^${model.name.replace(/[[\]().+]/g, "\\$&")}: its run did not finish`))).toBeInTheDocument();
+      }
+    }
+    // Honest labels: the local models say nothing left the Mac, the hosted one says DigitalOcean and its price.
+    expect(within(compare).getAllByText(g.compareOnMac).length).toBeGreaterThan(0);
+    expect(within(compare).getAllByText(g.compareOnDo).length).toBeGreaterThan(0);
+    expect(within(compare).getAllByText("$0.08 an image").length).toBeGreaterThan(0);
+    expect(within(compare).getAllByText(g.compareSeedIgnored).length).toBeGreaterThan(0);
+    expect(within(screen.getByRole("navigation", { name: g.filterLabel })).getByRole("link", { name: g.filterCompare })).toHaveAttribute("href", "/gallery?kind=compare");
+  });
+
+  it("shows the comparison in French and between the videos and the images on the whole catalogue", () => {
+    wrap(<GalleryPage />, "fr");
+    const fr = translations.fr.gallery;
+    const compare = document.getElementById("compare") as HTMLElement;
+    expect(within(compare).getByRole("heading", { level: 2, name: fr.compareTitle })).toBeInTheDocument();
+    expect(within(compare).getAllByText(fr.compareOnMac).length).toBeGreaterThan(0);
+    const order = ["videos", "compare", "credits"].map((id) => document.getElementById(id)!);
+    expect(order[0].compareDocumentPosition(order[1]) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+    expect(order[1].compareDocumentPosition(order[2]) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
   });
 });
