@@ -23,7 +23,6 @@ Next.js (App Router) client of the Orazaka platform with its mandatory BFF.
 <!-- /krizaka-header -->
 
 <p align="center">
-  <a href="https://www.krizaka.com/en/products/orazaka/demos"><img src="https://raw.githubusercontent.com/krizaka/.github/main/profile/assets/orazaka-tour.gif" alt="This web client, signed in as Eric: a customer's return request answered from his own returns policy, then a product photo generated locally" width="760"></a>
   <br><sub>Recorded on this application: Eric answers a customer from his own returns policy, then generates the product photo — everything ran on one Mac. <a href="https://www.krizaka.com/en/products/orazaka/demos">More demos</a></sub>
 </p>
 
@@ -119,3 +118,7 @@ The same app runs as a read-only public site: no sign-in, no sign-up, no call to
 | `APP_VERSION` | `package.json` version + short sha | Shown in the footer (`NEXT_PUBLIC_APP_VERSION`, set at build). |
 
 No edge URL is needed to build or run it. The documentation (`/docs`) is generated: `node scripts/sync-docs.mjs <orazaka-content/docs> <krizaka-com/lib/docs-manifest.ts>`; the demo recordings and packs of the home page: `node scripts/sync-showcase.mjs <krizaka-com checkout>` — never hand-edit `content/docs` or `showcase.generated.json`. Media stay on Bunny.
+
+---
+
+<sub>A Krizaka product · [krizaka.com](https://www.krizaka.com) · Apache-2.0</sub>
