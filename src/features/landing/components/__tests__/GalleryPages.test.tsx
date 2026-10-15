@@ -35,76 +35,52 @@ describe("GalleryFeatured (the home page's prompt → image → video, a slidesh
   const slide = (container: HTMLElement, i: number) => container.querySelectorAll<HTMLElement>('[aria-roledescription="slide"]')[i];
   const g = translations.en.gallery;
 
-  it("shows the video with its prompt and what the run recorded, the image it continues with its prompt, and the commands", () => {
+  it("is a three-step strip: the prompt, the image (FLUX.2, one Mac, free), the video (Wan 2.2, cloud, price) — and says the video is not made from the image", () => {
     const { container } = wrap(<GalleryFeatured />);
     expect(container.querySelector("#made")).not.toBeNull();
+    expect(screen.getByRole("heading", { level: 2 })).toHaveTextContent("One scene, two models");
     const first = FEATURED[0];
+    const image = first.image!;
     const active = slide(container, 0);
-    // The video: muted loop with its poster, its prompt, and the facts of its Orazaka run.
+    const steps = within(active).getAllByRole("listitem").filter((li) => li.textContent?.match(/^\d · /));
+    expect(steps.map((s) => s.textContent?.slice(0, 3))).toEqual(["1 ·", "2 ·", "3 ·"]);
+    // No Video · Image toggle any more: both media are in view.
+    expect(within(active).queryByRole("tab")).toBeNull();
+    expect(within(active).getByAltText(g.items[image.id])).toBeInTheDocument();
     const video = active.querySelector("video")!;
     expect(video.muted).toBe(true);
     expect(video.loop).toBe(true);
     expect(video).toHaveAttribute("aria-label", g.clips[first.id]);
-    expect(within(active).getAllByText(first.clip.prompt).length).toBeGreaterThan(0);
-    expect(within(active).getByText(first.clip.runId)).toBeInTheDocument();
-    expect(within(active).getAllByText(first.clip.seed).length).toBeGreaterThan(0);
-    expect(within(active).getByText(/Wan 2\.2 A14B/)).toBeInTheDocument();
-    expect(within(active).getByText(/DigitalOcean serverless inference/)).toBeInTheDocument();
-    expect(within(active).getByText(/routed by Orazaka/)).toBeInTheDocument();
-    // The video panel is the open one: its command is the only "Reproduce it" shown.
-    expect(Array.from(active.querySelectorAll("pre code")).map((c) => c.textContent)).toEqual(clipReproduceParts(first.clip).map((part) => part.code));
-    expect(active.querySelectorAll('pre code [class*="th-"]').length).toBeGreaterThan(0);
-    // The image it continues is the other tab (the source image stays in view beside the video): its prompt, facts and commands.
-    const image = first.image!;
-    expect(within(active).getByAltText(g.items[image.id])).toBeInTheDocument();
-    expect(within(active).queryByText(image.prompt)).toBeNull();
-    fireEvent.mouseDown(within(active).getByRole("tab", { name: g.imageStep }), { button: 0 });
-    expect(within(active).getAllByText(image.prompt).length).toBeGreaterThan(0);
-    expect(within(active).getByText(image.studio)).toBeInTheDocument();
-    expect(within(active).queryByText(first.clip.prompt)).toBeNull();
-    // "Reproduce it" is @krizaka/ui CodeBlocks (highlighted, with their copy button): the model, the JSON inputs and the run of the image.
-    expect(Array.from(active.querySelectorAll("pre code")).map((c) => c.textContent)).toEqual(reproduceParts(image).map((part) => part.code));
+    // The chips say where each was made.
+    expect(within(active).getByText(`FLUX.2 · on one Mac · ${String(image.seconds)} s · free`)).toBeInTheDocument();
+    expect(within(active).getByText(/^Wan 2\.2 · DigitalOcean · .*\$/)).toBeInTheDocument();
+    expect(within(active).getByText(g.notFromImage)).toBeInTheDocument();
+    // The prompt is two lines, "More" opens it.
+    const more = within(active).getByRole("button", { name: g.more });
+    expect(more).toHaveAttribute("aria-expanded", "false");
+    fireEvent.click(more);
+    expect(within(active).getByRole("button", { name: g.less })).toHaveAttribute("aria-expanded", "true");
+  });
+
+  it("folds the facts and \"Reproduce it\" into a Details disclosure per step", () => {
+    const { container } = wrap(<GalleryFeatured />);
+    const first = FEATURED[0];
+    const active = slide(container, 0);
+    const details = Array.from(active.querySelectorAll("details"));
+    expect(details).toHaveLength(2);
+    expect(details.every((d) => !d.open)).toBe(true);
+    const text = details.map((d) => d.textContent).join(" ");
+    expect(text).toContain(first.clip.runId);
+    expect(text).toContain(first.clip.seed);
+    expect(text).toMatch(/Wan 2\.2 A14B/);
+    expect(text).toMatch(/routed by Orazaka/);
+    expect(text).toContain(first.image!.studio);
+    expect(Array.from(active.querySelectorAll("pre code")).map((c) => c.textContent)).toEqual([...reproduceParts(first.image!), ...clipReproduceParts(first.clip)].map((part) => part.code));
     fireEvent.click(screen.getByRole("button", { name: g.next }));
     expect(slide(container, 1)).toHaveAttribute("data-active");
-    expect(within(slide(container, 1)).getAllByText(FEATURED[1].clip.prompt).length).toBeGreaterThan(0);
     fireEvent.click(screen.getByRole("button", { name: g.prev }));
     fireEvent.click(screen.getByRole("button", { name: g.prev }));
     expect(slide(container, FEATURED.length - 1)).toHaveAttribute("data-active");
-  });
-
-  it("keeps an item to about one screen: the video and the image prompts are two tabs, the video first", () => {
-    const { container } = wrap(<GalleryFeatured />);
-    const active = slide(container, 0);
-    const tabs = within(active).getAllByRole("tab");
-    expect(tabs.map((tab) => tab.textContent)).toEqual([g.videoStep, g.imageStep]);
-    expect(tabs[0]).toHaveAttribute("aria-selected", "true");
-    // One panel at a time: the open one is the video's; the image's is not in the page until its tab is chosen.
-    expect(within(active).getAllByRole("tabpanel")).toHaveLength(1);
-    expect(within(active).getByRole("tabpanel")).toHaveAttribute("data-state", "active");
-    fireEvent.mouseDown(tabs[1], { button: 0 });
-    expect(tabs[1]).toHaveAttribute("aria-selected", "true");
-    expect(within(active).getAllByRole("tabpanel")).toHaveLength(1);
-    // The image is shown at its own aspect: no band around it.
-    expect(active.querySelector("figure img")!.className).toContain("h-auto");
-  });
-
-  it("makes the media follow the tab: the chosen side is the large one, and the clip stays mounted", () => {
-    const { container } = wrap(<GalleryFeatured />);
-    const active = slide(container, 0);
-    const root = active.querySelector<HTMLElement>("[data-tab]")!;
-    const [videoFigure, imageFigure] = Array.from(root.querySelectorAll<HTMLElement>("figure"));
-    const player = root.querySelector("video");
-    expect(root).toHaveAttribute("data-tab", "video");
-    expect(videoFigure.className).toContain("w-full");
-    expect(imageFigure.className).toContain("w-2/5");
-    fireEvent.mouseDown(within(active).getByRole("tab", { name: g.imageStep }), { button: 0 });
-    expect(root).toHaveAttribute("data-tab", "image");
-    expect(imageFigure.className).toContain("order-1");
-    expect(imageFigure.className).toContain("w-full");
-    expect(videoFigure.className).toContain("w-2/5");
-    expect(root.querySelector("video")).toBe(player); // not remounted: it keeps playing
-    fireEvent.mouseDown(within(active).getByRole("tab", { name: g.videoStep }), { button: 0 });
-    expect(root).toHaveAttribute("data-tab", "video");
   });
 
   it("says so when a clip has no image: its prompt is its own", () => {
@@ -143,7 +119,7 @@ describe("GalleryFeatured (the home page's prompt → image → video, a slidesh
     Object.assign(navigator, { clipboard: { writeText } });
     const { container } = wrap(<GalleryFeatured />);
     expect(screen.getByRole("link", { name: g.all })).toHaveAttribute("href", "/gallery");
-    fireEvent.click(within(slide(container, 0)).getAllByRole("button", { name: g.copy })[0]);
+    fireEvent.click(within(slide(container, 0)).getAllByRole("button", { name: g.copy }).at(-1)!);
     expect(writeText).toHaveBeenCalledWith(FEATURED[0].clip.prompt);
     expect(await screen.findByText(g.copied)).toBeInTheDocument();
   });
