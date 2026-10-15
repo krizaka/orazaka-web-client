@@ -95,3 +95,10 @@ describe("the home page's Models section", () => {
     expect(section).toHaveTextContent(/optional models served by a provider/);
   });
 });
+
+describe("the public catalogue never mentions the unfiltered models", () => {
+  it.each(["en", "fr"] as const)("in %s", (locale) => {
+    const text = JSON.stringify(translations[locale].models).toLowerCase();
+    for (const word of ["unfiltered", "non filtr", "abliterat", "uncensored"]) expect(text).not.toContain(word);
+  });
+});
