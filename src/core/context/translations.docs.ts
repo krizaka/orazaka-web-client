@@ -37,6 +37,37 @@ export interface DocsDiagramLabels {
   moduleMap: string;
 }
 
+/** The chrome of the pack catalogue drawn on /docs/packs (the packs' own words are data, in English like the page). */
+export interface DocsPackLabels {
+  findLabel: string;
+  tier: string;
+  category: string;
+  all: string;
+  found: string;
+  none: string;
+  studios: string;
+  studiosOne: string;
+  open: string;
+  facts: string;
+  tierFact: string;
+  regulatoryFact: string;
+  workerFact: string;
+  rulesets: string;
+  jurisdiction: string;
+  ruleset: string;
+  rules: string;
+  versions: string;
+  asks: string;
+  steps: string;
+  credits: string;
+  more: string;
+  less: string;
+  guard: string;
+  consent: string;
+  safety: string;
+  noInputs: string;
+}
+
 export interface DocsDictionary {
   meta: string;
   metaDescription: string;
@@ -71,6 +102,7 @@ export interface DocsDictionary {
   copy: string;
   copied: string;
   diagrams: DocsDiagramLabels;
+  packs: DocsPackLabels;
 }
 
 export const docs: Record<Locale, DocsDictionary> = {
@@ -113,6 +145,35 @@ export const docs: Record<Locale, DocsDictionary> = {
     audience: { everyone: "For everyone", operator: "For operators", developer: "For developers", "decision-maker": "For decision-makers" },
     copy: "Copy",
     copied: "Copied",
+    packs: {
+      findLabel: "Find a pack",
+      tier: "Tier",
+      category: "Category",
+      all: "All",
+      found: "{count} of {total} packs",
+      none: "No pack matches these filters.",
+      studios: "{count} Studios",
+      studiosOne: "1 Studio",
+      open: "Open the pack",
+      facts: "About this pack",
+      tierFact: "Tier",
+      regulatoryFact: "Regulatory class",
+      workerFact: "Own worker",
+      rulesets: "Rulesets",
+      jurisdiction: "Jurisdiction",
+      ruleset: "Ruleset",
+      rules: "Rules",
+      versions: "Versions",
+      asks: "Asks for",
+      steps: "Steps",
+      credits: "Credits held",
+      more: "More",
+      less: "Less",
+      guard: "A scope guard refuses anything outside this pack's domain.",
+      consent: "Versioned consent is asked before install.",
+      safety: "A fixed, reviewed crisis response is built in.",
+      noInputs: "No input — it starts from the run.",
+    },
     diagrams: {
       sequence: "Sequence — text version",
       pipeline: "Interceptor pipeline — text version",
@@ -177,6 +238,35 @@ export const docs: Record<Locale, DocsDictionary> = {
     audience: { everyone: "Pour tous", operator: "Pour les exploitants", developer: "Pour les développeurs", "decision-maker": "Pour les décideurs" },
     copy: "Copier",
     copied: "Copié",
+    packs: {
+      findLabel: "Trouver un pack",
+      tier: "Niveau",
+      category: "Catégorie",
+      all: "Tous",
+      found: "{count} packs sur {total}",
+      none: "Aucun pack ne correspond à ces filtres.",
+      studios: "{count} Studios",
+      studiosOne: "1 Studio",
+      open: "Ouvrir le pack",
+      facts: "À propos de ce pack",
+      tierFact: "Niveau",
+      regulatoryFact: "Classe réglementaire",
+      workerFact: "Worker dédié",
+      rulesets: "Jeux de règles",
+      jurisdiction: "Juridiction",
+      ruleset: "Jeu de règles",
+      rules: "Règles",
+      versions: "Versions",
+      asks: "Demande",
+      steps: "Étapes",
+      credits: "Crédits bloqués",
+      more: "Plus",
+      less: "Moins",
+      guard: "Un garde-fou de périmètre refuse tout ce qui sort du domaine de ce pack.",
+      consent: "Un consentement versionné est demandé avant l'installation.",
+      safety: "Une réponse de crise fixe et relue est intégrée.",
+      noInputs: "Aucune entrée — il démarre depuis le lancement.",
+    },
     diagrams: {
       sequence: "Séquence — version texte",
       pipeline: "Pipeline d'intercepteurs — version texte",

@@ -94,7 +94,7 @@ export function sourcesMap(): Record<string, string> {
 
 // ── Segments: markdown and diagram fences ────────────────────────────────────────────────────────
 
-export const DIAGRAM_LANGS = ["architecture", "pipeline", "sequence", "states", "cli-replay", "cli-journey", "cli-commands"] as const;
+export const DIAGRAM_LANGS = ["architecture", "pipeline", "sequence", "states", "cli-replay", "cli-journey", "cli-commands", "pack-index", "pack"] as const;
 export type DiagramLang = (typeof DIAGRAM_LANGS)[number];
 export type Segment = { kind: "markdown"; text: string } | { kind: "diagram"; lang: DiagramLang; source: string };
 
@@ -136,15 +136,23 @@ export function splitSegments(body: string): Segment[] {
 const plain = (nodes: readonly InlineNode[]): string =>
   nodes.map((n) => ("value" in n && typeof n.value === "string" ? n.value : "children" in n ? plain(n.children as InlineNode[]) : "")).join("");
 
-/** The `##` headings of the markdown segments: the id `Markdown` gives each, and its words. */
+/**
+ * The `##` headings of the markdown segments — the id `Markdown` gives each, and its words — plus a pack's `###`
+ * heading (the one right before its `pack` block), so the contents list one entry per pack.
+ */
 export function tocOf(segments: readonly Segment[]): { id: string; label: string }[] {
   const items: { id: string; label: string }[] = [];
-  for (const s of segments) {
-    if (s.kind !== "markdown") continue;
-    for (const b of parseSource(s.text, { headingIds: true }) as BlockNode[]) {
-      if (b.type === "heading" && b.depth === 2 && b.id) items.push({ id: b.id, label: plain(b.children as InlineNode[]).replace(/^\d+[.)]\s+/, "") });
-    }
-  }
+  segments.forEach((s, i) => {
+    if (s.kind !== "markdown") return;
+    const next = segments[i + 1];
+    const packHeading = next?.kind === "diagram" && next.lang === "pack";
+    const blocks = parseSource(s.text, { headingIds: true }) as BlockNode[];
+    blocks.forEach((b, j) => {
+      if (b.type !== "heading" || !b.id) return;
+      const wanted = b.depth === 2 || (packHeading && b.depth === 3 && j === blocks.length - 1);
+      if (wanted) items.push({ id: b.id, label: plain(b.children as InlineNode[]).replace(/^\d+[.)]\s+/, "") });
+    });
+  });
   return items;
 }
 

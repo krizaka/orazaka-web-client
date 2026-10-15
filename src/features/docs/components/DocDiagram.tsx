@@ -1,6 +1,7 @@
 import type { DiagramLang } from "@/features/docs/utils/docs";
 import type { DiagramData } from "@/features/docs/utils/diagram-data";
 import { dependenciesOf, flowsOf, loadModel, parseArchitecture, parseSequence, parseStates, type DocsModel } from "@/features/docs/utils/diagrams";
+import { parsePack, parsePackIndex } from "@/features/docs/utils/packs";
 import { DiagramView } from "@/features/docs/components/DiagramView";
 
 /** Parses a schema block against the generated model (a block that cannot be right fails the build) and hands its text version to the view. */
@@ -40,6 +41,10 @@ export function diagramData(lang: DiagramLang, source: string, model: DocsModel)
       return { kind: "cli-replay", code: source.trim() };
     case "cli-journey":
       return { kind: "cli-journey", alias: model.cli.alias, journey: model.cli.journey };
+    case "pack-index":
+      return { kind: "pack-index", items: parsePackIndex(source) };
+    case "pack":
+      return { kind: "pack", pack: parsePack(source) };
     case "cli-commands":
       return { kind: "cli-commands", text: source.trim() };
   }
