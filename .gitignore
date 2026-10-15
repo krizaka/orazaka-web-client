@@ -48,3 +48,6 @@ docs/screenshots/
 .github/pr-assets/
 .github/screenshots/
 package-lock.json
+
+# the faces of @krizaka/fonts, copied for next/font/local by scripts/link-fonts.mjs
+src/app/_fonts/
