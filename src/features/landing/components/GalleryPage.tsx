@@ -7,6 +7,8 @@ import { SectionBackdrop } from "@krizaka/ui/section-backdrop";
 import { useTranslation } from "@/core/context/LocaleContext";
 import { fill } from "@/core/context/fill";
 import { GALLERY, STYLES, gallerySrc, type GalleryStyle } from "@/features/landing/utils/gallery";
+import { clipFiles, clipOf } from "@/features/landing/utils/gallery-clips";
+import { LoopVideo } from "@/features/landing/components/LoopVideo";
 import { LandingFooter } from "@/features/landing/components/LandingFooter";
 import { LandingNav } from "@/features/landing/components/LandingNav";
 import { CopyButton } from "@/features/landing/components/CopyButton";
@@ -67,6 +69,15 @@ export function GalleryPage({ only }: Readonly<{ only?: GalleryStyle }>) {
                     unoptimized
                     className="block h-auto w-full bg-surface-2"
                   />
+                  {clipOf(item.id) && (
+                    <LoopVideo
+                      sources={clipFiles(clipOf(item.id)!)}
+                      label={g.clips[clipOf(item.id)!.id]}
+                      width={clipOf(item.id)!.width}
+                      height={clipOf(item.id)!.height}
+                      className="block border-t border-border-subtle bg-surface-2"
+                    />
+                  )}
                   <figcaption className="space-y-3 p-4">
                     <span className="block text-sm font-semibold text-fg">{g.styles[item.style]}</span>
                     <ItemFacts item={item} />

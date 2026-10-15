@@ -19,7 +19,7 @@ if (!site) {
   process.exit(1);
 }
 const manifest = JSON.parse(fs.readFileSync(path.join(site, "lib/cdn-manifest.json"), "utf8"));
-const AREAS = ["products/orazaka/mobile/", "products/orazaka/gallery/", "products/orazaka/home/"];
+const AREAS = ["products/orazaka/mobile/", "products/orazaka/gallery/", "products/orazaka/gallery-video/", "products/orazaka/video/", "products/orazaka/home/"];
 const files = Object.fromEntries(Object.entries(manifest.files).filter(([k]) => AREAS.some((a) => k.startsWith(a))).sort(([a], [b]) => a.localeCompare(b)));
 if (!Object.keys(files).length) throw new Error("no Orazaka media in the manifest");
 fs.writeFileSync(path.join(root, "src/core/media/media.generated.json"), `${JSON.stringify({ cdnRoot: manifest.root, files }, null, 2)}\n`);
