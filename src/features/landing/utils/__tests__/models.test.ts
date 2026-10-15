@@ -22,6 +22,13 @@ describe("the registry the site shows (models.generated.json)", () => {
     expect(MODELS.map((m) => m.status as string)).not.toContain("internal");
   });
 
+  it("never makes a non-commercial model a default — we sell to firms", () => {
+    for (const m of MODELS) {
+      expect(["yes", "conditions", "no"]).toContain(m.commercialUse);
+      if (m.status === "default") expect(m.commercialUse).not.toBe("no");
+    }
+  });
+
   it("claims no verification the data does not hold", () => {
     for (const m of MODELS) if (m.lastVerified !== null) expect(m.lastVerified).toMatch(/^\d{4}-\d{2}-\d{2}$/);
   });
@@ -29,7 +36,7 @@ describe("the registry the site shows (models.generated.json)", () => {
 
 const sample = (over: Partial<ModelEntry>): ModelEntry => ({
   id: "x", name: "X", vendor: "V", family: "F", capabilities: ["chat"], runsOn: "local", runtime: "Ollama", openWeights: true,
-  licence: { name: "Apache-2.0", url: null }, contextWindow: 1000, status: "available", lastVerified: null, ...over,
+  licence: { name: "Apache-2.0", url: null }, commercialUse: "yes", contextWindow: 1000, status: "available", lastVerified: null, ...over,
 });
 
 describe("filters", () => {
