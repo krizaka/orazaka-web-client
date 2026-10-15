@@ -1,6 +1,12 @@
 {
   "cdnRoot": "site",
   "files": {
+    "products/orazaka/gallery-video/assistant-poster.webp": "fc37abd8c7",
+    "products/orazaka/gallery-video/assistant.mp4": "8b571af009",
+    "products/orazaka/gallery-video/assistant.webm": "7311e0410e",
+    "products/orazaka/gallery-video/tea-pour-poster.webp": "8a062e63c2",
+    "products/orazaka/gallery-video/tea-pour.mp4": "c4138c8ce9",
+    "products/orazaka/gallery-video/tea-pour.webm": "b33e468733",
     "products/orazaka/gallery/desert-camp.webp": "78c6c0d26c",
     "products/orazaka/gallery/mini-bagels.webp": "ec4b9988eb",
     "products/orazaka/gallery/mini-ironing.webp": "d3f24ed41f",
@@ -46,6 +52,18 @@
     "products/orazaka/mobile/clip-studio-run.webm": "51e62b7538",
     "products/orazaka/mobile/promo.jpg": "69a9c3f49f",
     "products/orazaka/mobile/promo.mp4": "8b3ab4669d",
-    "products/orazaka/mobile/promo.webm": "d51f411424"
+    "products/orazaka/mobile/promo.webm": "d51f411424",
+    "products/orazaka/video/arcade-poster.webp": "13293319e4",
+    "products/orazaka/video/arcade.mp4": "501c2999aa",
+    "products/orazaka/video/arcade.webm": "478ea9e336",
+    "products/orazaka/video/grenoble-poster.webp": "e06265752d",
+    "products/orazaka/video/grenoble.mp4": "ce33afd99a",
+    "products/orazaka/video/grenoble.webm": "98aa9c2e75",
+    "products/orazaka/video/maroc-poster.webp": "05a5b7aedf",
+    "products/orazaka/video/maroc.mp4": "464cb267b3",
+    "products/orazaka/video/maroc.webm": "5e6e9299c7",
+    "products/orazaka/video/montreal-poster.webp": "a4a1ba348c",
+    "products/orazaka/video/montreal.mp4": "d2a009e45f",
+    "products/orazaka/video/montreal.webm": "63ca165e5b"
   }
 }

@@ -243,18 +243,32 @@ export function subjectOf(item: GalleryItem): string {
   return item.prompt.slice(0, at).replace(/\.\s*$/, "").trim();
 }
 
+/** One part of a reproduction: what it is written in, the file it is (or "Terminal"), and the text as it is copied. */
+export interface ReproducePart {
+  language: "bash" | "json";
+  file: string;
+  code: string;
+}
+
 /**
- * The commands that make the image again on an Orazaka install: the same model, then the same Studio with the same
- * subject, size and seed (`orazaka studio run --studio <key>`, `--inputs-file` for prose — orazaka-cli).
+ * The commands that make the image again on an Orazaka install, in the parts the page highlights each in its language:
+ * the model, the Studio's inputs (JSON), then the run — same model, same Studio, same subject, size and seed
+ * (`orazaka studio run --studio <key>`, `--inputs-file` for prose — orazaka-cli).
  */
-export function reproduceCommand(item: GalleryItem): string {
-  const subject = JSON.stringify({ subject: subjectOf(item) }, null, 2);
+export function reproduceParts(item: GalleryItem): ReproducePart[] {
   return [
-    `orazaka models image use ${GALLERY_MODEL.key}`,
-    `cat > inputs.json <<'JSON'`,
-    subject,
-    `JSON`,
-    `orazaka studio run --studio ${item.studio} --inputs-file inputs.json \\`,
-    `  --inputs size=${item.width}x${item.height},seed=${item.seed}`,
-  ].join("\n");
+    { language: "bash", file: "Terminal", code: `orazaka models image use ${GALLERY_MODEL.key}` },
+    { language: "json", file: "inputs.json", code: JSON.stringify({ subject: subjectOf(item) }, null, 2) },
+    {
+      language: "bash",
+      file: "Terminal",
+      code: `orazaka studio run --studio ${item.studio} --inputs-file inputs.json \\\n  --inputs size=${item.width}x${item.height},seed=${item.seed}`,
+    },
+  ];
+}
+
+/** The same, as one script: the heredoc writes `inputs.json` where the parts show it as a file. */
+export function reproduceCommand(item: GalleryItem): string {
+  const [model, inputs, run] = reproduceParts(item);
+  return [model.code, `cat > inputs.json <<'JSON'`, inputs.code, `JSON`, run.code].join("\n");
 }

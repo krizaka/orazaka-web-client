@@ -5,15 +5,19 @@ import Image from "next/image";
 import Link from "next/link";
 import { ForwardIcon } from "@krizaka/icons";
 import { Button } from "@krizaka/ui/button";
+import { Tabs } from "@krizaka/ui/tabs";
 import { SectionBackdrop } from "@krizaka/ui/section-backdrop";
 import { Showcase, type ShowcaseLabels } from "@krizaka/ui/showcase";
 import { useTranslation } from "@/core/context/LocaleContext";
 import { fill } from "@/core/context/fill";
-import { GALLERY, gallerySrc, type GalleryItem } from "@/features/landing/utils/gallery";
+import { gallerySrc, reproduceParts, type GalleryItem } from "@/features/landing/utils/gallery";
+import { FEATURED, clipFiles, clipReproduceParts, type FeaturedItem, type GalleryClip } from "@/features/landing/utils/gallery-clips";
 import { SectionHeading } from "@/features/landing/components/SectionHeading";
 import { CopyButton } from "@/features/landing/components/CopyButton";
 import { ItemFacts } from "@/features/landing/components/ItemFacts";
 import { ReproduceBlock } from "@/features/landing/components/ReproduceBlock";
+import { LoopVideo } from "@/features/landing/components/LoopVideo";
+import { ClipFacts } from "@/features/landing/components/ClipFacts";
 import { TypedPrompt } from "@/features/landing/components/TypedPrompt";
 
 /**
@@ -46,9 +50,9 @@ export function GalleryFeatured() {
         <Showcase
           label={g.carousel}
           labels={labels}
-          items={GALLERY}
+          items={FEATURED}
           getId={(item) => item.id}
-          getTitle={(item) => g.styles[item.style]}
+          getTitle={(item) => g.clips[item.id]}
           interval={7000}
           renderItem={(item, { active }) => <Slide item={item} active={active} />}
         />
@@ -65,31 +69,86 @@ export function GalleryFeatured() {
   );
 }
 
-/** One slide: the image on the left (a fixed frame, so the section never changes height), the prompt, facts and command on the right. */
-function Slide({ item, active }: Readonly<{ item: GalleryItem; active: boolean }>) {
+/**
+ * One slide: the media on the left — the video in its final frame, then the image it continues at its own aspect (no bands),
+ * the prompts in two tabs (Video · Image) so an item fits about one screen — and on the right the two prompts, what each run recorded and the commands
+ * that reproduce them. The video prompt types in over its final size (no layout shift).
+ */
+function Slide({ item, active }: Readonly<{ item: FeaturedItem; active: boolean }>) {
   const { t } = useTranslation();
   const g = t.gallery;
+  const { clip, image } = item;
   return (
-    <div className="grid grid-cols-[minmax(0,1fr)] items-start gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.05fr)] lg:gap-12">
-      <figure className="flex h-[22rem] items-center justify-center overflow-hidden rounded-2xl border border-border-default bg-surface-2 sm:h-[32rem]">
-        <Image
-          src={gallerySrc(item.id)}
-          alt={g.items[item.id]}
-          width={item.width}
-          height={item.height}
-          sizes="(max-width: 1024px) 100vw, 520px"
-          loading="lazy"
-          unoptimized
-          className="h-full w-full min-w-0 object-contain"
-        />
-      </figure>
-      <div className="space-y-5">
-        <h3 className="font-mono text-xs font-semibold uppercase tracking-[0.14em] text-fg-accent">{g.promptHeading}</h3>
-        <TypedPrompt text={item.prompt} active={active} />
-        <CopyButton text={item.prompt} label={g.copy} done={g.copied} failed={g.copyFailed} />
-        <ItemFacts item={item} />
-        <ReproduceBlock item={item} />
+    <div className="grid grid-cols-[minmax(0,1fr)] items-start gap-8 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)] lg:gap-12">
+      <div className="space-y-4">
+        <figure className="overflow-hidden rounded-2xl border border-border-default bg-surface-2">
+          <LoopVideo sources={clipFiles(clip)} label={g.clips[clip.id]} width={clip.width} height={clip.height} className="block" />
+        </figure>
+        {image && (
+          <figure className="w-2/5 min-w-44 overflow-hidden rounded-2xl border border-border-default bg-surface-2">
+            <Image
+              src={gallerySrc(image.id)}
+              alt={g.items[image.id]}
+              width={image.width}
+              height={image.height}
+              sizes="(max-width: 1024px) 40vw, 220px"
+              loading="lazy"
+              unoptimized
+              className="block h-auto w-full"
+            />
+          </figure>
+        )}
       </div>
+      {image ? (
+        <Tabs.Root defaultValue="video" variant="segmented" className="space-y-5">
+          <Tabs.List aria-label={g.stepsLabel}>
+            <Tabs.Trigger value="video">{g.videoStep}</Tabs.Trigger>
+            <Tabs.Trigger value="image">{g.imageStep}</Tabs.Trigger>
+          </Tabs.List>
+          <Tabs.Content value="video" forceMount>
+            <VideoPanel clip={clip} active={active} />
+          </Tabs.Content>
+          <Tabs.Content value="image" forceMount>
+            <ImagePanel image={image} />
+          </Tabs.Content>
+        </Tabs.Root>
+      ) : (
+        <div className="space-y-5">
+          <VideoPanel clip={clip} active={active} />
+          <p className="border-t border-border-subtle pt-4 text-sm text-fg-secondary">{g.noImage}</p>
+        </div>
+      )}
     </div>
   );
 }
+
+/** The video's side of an item: its prompt (typed over its final size), the facts of its run, the command. */
+function VideoPanel({ clip, active }: Readonly<{ clip: GalleryClip; active: boolean }>) {
+  const { t } = useTranslation();
+  const g = t.gallery;
+  return (
+    <section aria-label={g.videoStep} className="space-y-3">
+      <h3 className="font-mono text-xs font-semibold uppercase tracking-[0.14em] text-fg-accent">{g.videoPromptHeading}</h3>
+      <TypedPrompt text={clip.prompt} active={active} />
+      <CopyButton text={clip.prompt} label={g.copy} done={g.copied} failed={g.copyFailed} />
+      <ClipFacts clip={clip} />
+      <ReproduceBlock parts={clipReproduceParts(clip)} lead={g.videoReproduceLead} />
+    </section>
+  );
+}
+
+/** The image's side: its prompt, what the data records about it, the commands that make it again. */
+function ImagePanel({ image }: Readonly<{ image: GalleryItem }>) {
+  const { t } = useTranslation();
+  const g = t.gallery;
+  return (
+    <section aria-label={g.imageStep} className="space-y-3">
+      <h3 className="font-mono text-xs font-semibold uppercase tracking-[0.14em] text-fg-accent">{g.imagePromptHeading}</h3>
+      <blockquote lang="en" className="text-sm leading-relaxed text-fg-secondary">{image.prompt}</blockquote>
+      <CopyButton text={image.prompt} label={g.copy} done={g.copied} failed={g.copyFailed} />
+      <ItemFacts item={image} />
+      <ReproduceBlock parts={reproduceParts(image)} />
+    </section>
+  );
+}
+
