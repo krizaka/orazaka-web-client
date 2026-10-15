@@ -62,16 +62,8 @@ export function siteJsonLd() {
   };
 }
 
-const FAMILY = [
-  ["Krizaka", KRIZAKA_URL, "the company, an open-source software studio in Montréal"],
-  ["Orochia", "https://dev.orochia.com", "an open-source video platform"],
-  ["Yasakia", "https://dev.yasakia.com", "a mobile dating app where you talk first"],
-  ["Yororis", "https://dev.yororis.com", "a listening space with a face and a voice"],
-  ["Krizaka UI", "https://ui.krizaka.com", "the design system, web and native"],
-  ["Krizaka Java", "https://java.krizaka.com", "the Spring Boot building blocks"],
-] as const;
-
-const familySection = () => `## The Krizaka family\n\n${FAMILY.map(([name, url, line]) => `- [${name}](${url}): ${line}`).join("\n")}\n- [GitHub](https://github.com/krizaka): every repository, public\n\nSitemap: ${SITE_URL}/sitemap.xml\n`;
+// A deployed product is independent: llms.txt names its publisher and nothing else of the family — no other product.
+const familySection = () => `## Publisher\n\n- [Krizaka](${KRIZAKA_URL}): the company that publishes Orazaka, an open-source software studio in Montréal\n\nSitemap: ${SITE_URL}/sitemap.xml\n`;
 
 export function llmsText(): string {
   const pages = FEATURE_IDS.map((id) => `- [${features.en.pages[id].name}](${SITE_URL}/features/${id}): ${features.en.pages[id].lead}`);
@@ -104,7 +96,7 @@ ${familySection()}`;
 
 export function llmsFullText(): string {
   const docs = listDocs().map((d) => `\n---\n\n# ${d.title}\n\nURL: ${SITE_URL}/docs/${d.slug}\n\n${readDoc(d.slug)?.body.trim() ?? d.intro}\n`);
-  return `${llmsText().replace(/\n## The Krizaka family[\s\S]*$/, "")}\n## Documentation (full text)\n${docs.join("")}\n---\n\n${familySection()}`;
+  return `${llmsText().replace(/\n## Publisher[\s\S]*$/, "")}\n## Documentation (full text)\n${docs.join("")}\n---\n\n${familySection()}`;
 }
 
 export const LLMS_HEADERS = { "Content-Type": "text/plain; charset=utf-8", "Cache-Control": "public, max-age=3600" };

@@ -168,7 +168,8 @@ describe("LandingPage while sign-in and sign-up are closed (the default)", () =>
     const footer = screen.getByTestId("app-version");
     expect(footer).toHaveTextContent("A Krizaka product");
     expect(footer).toHaveTextContent(/v\S+/);
-    expect(within(footer).getAllByRole("link", { name: /^Krizaka$/ })[0]).toHaveAttribute("href", "https://www.krizaka.com");
+    expect(within(footer).getByRole("link", { name: /A Krizaka product/ })).toHaveAttribute("href", "https://www.krizaka.com");
+    expect(within(footer).queryByRole("navigation", { name: "Krizaka family" })).toBeNull();
   });
 
   it("has a Mobile section with the phone recordings, played on demand, and a way to the full page", () => {
@@ -186,10 +187,10 @@ describe("LandingPage while sign-in and sign-up are closed (the default)", () =>
     expect(within(bar).getByRole("link", { name: translations.en.landing.nav.mobile })).toHaveAttribute("href", "/mobile");
   });
 
-  it("wears the family navigation: current = orazaka, the environment badge, one main action, the family last on the phone", () => {
+  it("wears its own navigation: the environment badge, one main action, no family switcher (a deployed product is independent)", () => {
     renderLanding("en", <LandingPage />, CLOSED);
     const bar = document.querySelector("header[data-floating]") as HTMLElement;
-    expect(within(bar).getAllByRole("navigation", { name: "Krizaka family" }).length).toBeGreaterThan(0);
+    expect(screen.queryByRole("navigation", { name: "Krizaka family" })).toBeNull();
     expect(bar).toHaveTextContent(/dev · v/);
     expect(within(bar).getByRole("link", { name: translations.en.landing.nav.repo })).toHaveAttribute("href", "https://github.com/krizaka/orazaka-web-client");
     expect(within(bar).getAllByRole("link", { name: translations.en.landing.nav.talk })[0]).toHaveAttribute("href", "https://www.krizaka.com/contact?topic=orazaka");

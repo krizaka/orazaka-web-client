@@ -9,7 +9,7 @@ import { FEATURE_IDS } from "@/features/landing/components/features";
 
 /**
  * The footer of the public pages (NAV-SYS) is @krizaka/ui's SiteFooter: Orazaka's own column (the feature pages, the
- * documentation), the Krizaka family in columns, « A Krizaka product », DEV · the version, Montréal. The legal pages
+ * documentation), no family columns (a deployed product is independent), the publisher line « A Krizaka product », DEV · the version, Montréal. The legal pages
  * and the licence end the signature line.
  */
 export function LandingFooter() {
@@ -19,6 +19,7 @@ export function LandingFooter() {
   return (
     <SiteFooter
       current="orazaka"
+      family={false}
       labels={familyLabels[locale]}
       aria-label={f.product}
       version={APP_VERSION}

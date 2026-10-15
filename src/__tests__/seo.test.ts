@@ -32,7 +32,7 @@ describe("search engines and AI assistants (the Krizaka family contract)", () =>
     expect(entries.map((e) => e.url)).toContain(`${SITE_URL}/models`);
   });
 
-  it("llms.txt and llms-full.txt follow llmstxt.org, name this host and link the family", () => {
+  it("llms.txt and llms-full.txt follow llmstxt.org, name this host and link the publisher", () => {
     expect(auditLlms(llmsText(), { host: SITE_URL })).toEqual([]);
     expect(auditLlms(llmsFullText(), { host: SITE_URL, full: true })).toEqual([]);
     expect(llmsText()).toContain(`[Models](${SITE_URL}/models)`);
