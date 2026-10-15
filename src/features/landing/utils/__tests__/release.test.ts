@@ -1,4 +1,4 @@
-import { parseSha256, pickDesktopRelease, type GithubRelease } from "@/features/desktop/utils/release";
+import { parseSha256, pickDesktopRelease, type GithubRelease } from "@/features/landing/utils/release";
 
 const rel = (tag: string, at: string, over: Partial<GithubRelease> = {}): GithubRelease => ({
   tag_name: tag,

@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
-import { DesktopPage } from "@/features/desktop/components/DesktopPage";
-import { loadDesktopRelease } from "@/features/desktop/utils/release";
+import { DesktopPage } from "@/features/landing/components/DesktopPage";
+import { loadDesktopRelease } from "@/features/landing/utils/release";
 import { translations } from "@/core/context/translations";
 
 const m = translations.en.desktop.meta;

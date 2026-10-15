@@ -10,8 +10,8 @@ import { LandingNav } from "@/features/landing/components/LandingNav";
 import { LandingFooter } from "@/features/landing/components/LandingFooter";
 import { CopyButton } from "@/features/landing/components/CopyButton";
 import { SectionHeading } from "@/features/landing/components/SectionHeading";
-import { DesktopCapture } from "@/features/desktop/components/DesktopCapture";
-import { RELEASES_URL, type DesktopRelease } from "@/features/desktop/utils/release";
+import { DesktopCapture } from "@/features/landing/components/DesktopCapture";
+import { RELEASES_URL, type DesktopRelease } from "@/features/landing/utils/release";
 import "@/features/landing/landing.css";
 
 export type DesktopDownload = (DesktopRelease & { sha256: string | null }) | null;

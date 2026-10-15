@@ -6,7 +6,7 @@ import { Button } from "@krizaka/ui/button";
 import { SectionBackdrop } from "@krizaka/ui/section-backdrop";
 import { useTranslation } from "@/core/context/LocaleContext";
 import { SectionHeading } from "@/features/landing/components/SectionHeading";
-import { DesktopCapture } from "@/features/desktop/components/DesktopCapture";
+import { DesktopCapture } from "@/features/landing/components/DesktopCapture";
 
 /** "On your Mac": a compact band with the real control panel of Orazaka Desktop and the way to /desktop. */
 export function LandingMac() {

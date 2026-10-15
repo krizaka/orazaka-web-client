@@ -3,8 +3,8 @@ import { render, screen, within } from "@testing-library/react";
 import { ThemeProvider } from "@krizaka/ui/theme";
 import { translations, type Locale } from "@/core/context/translations";
 import { AuthFlagsProvider } from "@/core/context/AuthFlagsContext";
-import { DesktopPage } from "@/features/desktop/components/DesktopPage";
-import { RELEASES_URL } from "@/features/desktop/utils/release";
+import { DesktopPage } from "@/features/landing/components/DesktopPage";
+import { RELEASES_URL } from "@/features/landing/utils/release";
 
 let mockLocale: Locale = "en";
 jest.mock("@/core/context/LocaleContext", () => ({
