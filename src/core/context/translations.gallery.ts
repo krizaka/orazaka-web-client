@@ -67,6 +67,18 @@ export interface GalleryDictionary {
   /** The whole frame of a clip opens it larger. */
   videoEnlarge: string;
   videoClose: string;
+  /** The filter that lists only the images / only the videos of /gallery. */
+  filterImages: string;
+  filterVideos: string;
+  /** The title and lead of the Videos section of /gallery. */
+  videosTitle: string;
+  videosLead: string;
+  /** "{count}" videos. */
+  countVideos: string;
+  /** The heading of the facts of a run. */
+  runHeading: string;
+  /** The download button of a clip. */
+  videoDownload: string;
   /** The name of the Video · Image tabs. */
   stepsLabel: string;
   imageStep: string;
@@ -150,6 +162,13 @@ export const gallery: Record<Locale, GalleryDictionary> = {
     "videoUnmute": "Turn the sound on",
     "videoEnlarge": "Open the video larger",
     "videoClose": "Close the video",
+    "filterImages": "Images",
+    "filterVideos": "Videos",
+    "videosTitle": "Videos",
+    "videosLead": "Every video is an Orazaka run — the video Studio of orazaka-media — made by Wan 2.2 A14B on DigitalOcean's serverless inference and routed by Orazaka. Each shows its exact prompt and what the run recorded, and the command that makes it again.",
+    "countVideos": "{count} videos",
+    "runHeading": "The run",
+    "videoDownload": "Download the clip",
     "stepsLabel": "What to show: the video or the image",
     "imageStep": "Image",
     "videoStep": "Video",
@@ -173,7 +192,15 @@ export const gallery: Record<Locale, GalleryDictionary> = {
     "videoNote": "Each video is an Orazaka run — the video Studio of orazaka-media — made by Wan 2.2 A14B on DigitalOcean's serverless inference and routed by Orazaka. The images are generated on one Mac.",
     "clips": {
       "tea-pour": "Slow-motion video: mint tea pours from a silver teapot into an engraved glass in a Berber tent, steam curling through a shaft of golden light",
-      "assistant": "Video: in a night workshop a holographic interface of orange light unfolds blueprints of a machine, welding sparks in the background"
+      "assistant": "Video: in a night workshop a holographic interface of orange light unfolds blueprints of a machine, welding sparks in the background",
+      "montreal": "Winter night in Montréal: a slow tracking shot along a snowy street of the Plateau, spiral staircases, warm windows, snow in the streetlight",
+      "maroc": "Golden hour over the blue alleys of Chefchaouen, then into a riad courtyard with a zellige fountain — a cross-dissolve joins the two shots",
+      "grenoble": "Dawn over Grenoble: cable-car cabins gliding above the city, the snow-capped Alps glowing pink behind",
+      "arcade": "A 1990s arcade at night: hands on a joystick and buttons, neon magenta and cyan, coloured smoke",
+      "yasakia-montreal-dawn": "Dawn over Old Montréal: an aerial glide toward the St. Lawrence, low fog, emerald and turquoise reflections on the water",
+      "yororis-microphone": "A vintage ribbon microphone in a quiet sand-coloured room, sage-green curtains moving in the breeze, light particles drifting",
+      "orochia-studio-night": "A creator's studio at night seen from behind a cinema camera, violet and magenta light, haze and ring-light bokeh",
+      "yomizaka-contracts": "Contracts on a walnut desk at blue hour, a line of warm light sweeping the pages, a coffee steaming, snow falling outside"
     },
     "styles": {
       "golden": "Golden-hour editorial",
@@ -254,6 +281,13 @@ export const gallery: Record<Locale, GalleryDictionary> = {
     "videoUnmute": "Activer le son",
     "videoEnlarge": "Ouvrir la vidéo en grand",
     "videoClose": "Fermer la vidéo",
+    "filterImages": "Images",
+    "filterVideos": "Vidéos",
+    "videosTitle": "Vidéos",
+    "videosLead": "Chaque vidéo est une exécution Orazaka — le Studio vidéo d'orazaka-media — réalisée par Wan 2.2 A14B sur l'inférence serverless de DigitalOcean et routée par Orazaka. Chacune montre sa consigne exacte, ce que l'exécution a enregistré, et la commande qui la refait.",
+    "countVideos": "{count} vidéos",
+    "runHeading": "L'exécution",
+    "videoDownload": "Télécharger la vidéo",
     "stepsLabel": "Quoi montrer : la vidéo ou l'image",
     "imageStep": "Image",
     "videoStep": "Vidéo",
@@ -277,7 +311,15 @@ export const gallery: Record<Locale, GalleryDictionary> = {
     "videoNote": "Chaque vidéo est une exécution Orazaka — le Studio vidéo d'orazaka-media — réalisée par Wan 2.2 A14B sur l'inférence serverless de DigitalOcean et routée par Orazaka. Les images sont générées sur un seul Mac.",
     "clips": {
       "tea-pour": "Vidéo au ralenti : du thé à la menthe coule d'une théière en argent dans un verre gravé, sous une tente berbère, la vapeur dans un rayon de lumière dorée",
-      "assistant": "Vidéo : dans un atelier de nuit, une interface holographique de lumière orange déploie les plans d'une machine, des étincelles de soudure au fond"
+      "assistant": "Vidéo : dans un atelier de nuit, une interface holographique de lumière orange déploie les plans d'une machine, des étincelles de soudure au fond",
+      "montreal": "Nuit d'hiver à Montréal : un lent travelling dans une rue enneigée du Plateau, escaliers en colimaçon, fenêtres chaudes, neige dans la lumière des lampadaires",
+      "maroc": "Heure dorée sur les ruelles bleues de Chefchaouen, puis dans la cour d'un riad avec sa fontaine en zellige — un fondu enchaîné relie les deux plans",
+      "grenoble": "L'aube sur Grenoble : des cabines de téléphérique glissent au-dessus de la ville, les Alpes enneigées rosées derrière",
+      "arcade": "Une salle d'arcade des années 90 la nuit : des mains sur un joystick et des boutons, néons magenta et cyan, fumée colorée",
+      "yasakia-montreal-dawn": "L'aube sur le Vieux-Montréal : un vol plané vers le Saint-Laurent, brume basse, reflets émeraude et turquoise sur l'eau",
+      "yororis-microphone": "Un micro à ruban d'époque dans une pièce calme couleur sable, des rideaux vert sauge qui bougent dans la brise, des particules de lumière",
+      "orochia-studio-night": "Un studio de créateur la nuit, vu de derrière une caméra de cinéma, lumière violette et magenta, brume et bokeh d'anneau lumineux",
+      "yomizaka-contracts": "Des contrats sur un bureau en noyer à l'heure bleue, un trait de lumière chaude balaie les pages, un café fume, la neige tombe dehors"
     },
     "styles": {
       "golden": "Éditorial lumière dorée",

@@ -73,8 +73,8 @@ test("the video says it is a video, plays in view, has play/pause and sound, and
   await page.goto("/");
   const slide = page.locator('#made [aria-roledescription="slide"][data-active]').first();
   await slide.scrollIntoViewIfNeeded();
-  const frame = slide.locator("[data-loop-video]").first();
-  await expect(frame.locator("[data-video-badge]")).toContainText(/Video · 5 s/);
+  const frame = slide.locator("[data-clip-player]").first();
+  await expect(frame.locator("[data-clip-badge]")).toContainText(/Video · 5 s/);
   const video = frame.locator("video");
   await expect.poll(() => video.evaluate((v: HTMLVideoElement) => !v.paused && v.readyState >= 2)).toBe(true);
   expect(await video.evaluate((v: HTMLVideoElement) => v.muted && v.loop)).toBe(true);
@@ -95,7 +95,7 @@ test("the video says it is a video, plays in view, has play/pause and sound, and
 test("under reduced motion the clip shows its poster and a play button, and does not play by itself", async ({ page }) => {
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.goto("/");
-  const frame = page.locator("#made [data-loop-video]").first();
+  const frame = page.locator("#made [data-clip-player]").first();
   await frame.scrollIntoViewIfNeeded();
   await page.waitForTimeout(1500);
   expect(await frame.locator("video").evaluate((v: HTMLVideoElement) => v.paused)).toBe(true);

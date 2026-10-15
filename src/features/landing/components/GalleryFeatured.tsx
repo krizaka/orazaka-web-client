@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { ForwardIcon } from "@krizaka/icons";
 import { Button } from "@krizaka/ui/button";
+import { ClipPlayer, RunFacts } from "@krizaka/orazaka-design-system";
 import { Tabs } from "@krizaka/ui/tabs";
 import { SectionBackdrop } from "@krizaka/ui/section-backdrop";
 import { Showcase, type ShowcaseLabels } from "@krizaka/ui/showcase";
@@ -16,9 +17,7 @@ import { SectionHeading } from "@/features/landing/components/SectionHeading";
 import { CopyButton } from "@/features/landing/components/CopyButton";
 import { ItemFacts } from "@/features/landing/components/ItemFacts";
 import { ReproduceBlock } from "@/features/landing/components/ReproduceBlock";
-import { LoopVideo } from "@/features/landing/components/LoopVideo";
-import { videoLabels } from "@/features/landing/components/videoLabels";
-import { ClipFacts } from "@/features/landing/components/ClipFacts";
+import { clipFacts, clipLabels } from "@/features/landing/components/clipUi";
 import { TypedPrompt } from "@/features/landing/components/TypedPrompt";
 
 /**
@@ -83,7 +82,7 @@ function Slide({ item, active }: Readonly<{ item: FeaturedItem; active: boolean 
     <div className="grid grid-cols-[minmax(0,1fr)] items-start gap-8 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)] lg:gap-12">
       <div className="space-y-4">
         <figure className="overflow-hidden rounded-2xl border border-border-default bg-surface-2">
-          <LoopVideo sources={clipFiles(clip)} title={g.clips[clip.id]} labels={videoLabels(g, clip.duration)} />
+          <ClipPlayer sources={clipFiles(clip)} title={g.clips[clip.id]} labels={clipLabels(g, clip)} />
         </figure>
         {image && (
           <figure className="w-2/5 min-w-44 overflow-hidden rounded-2xl border border-border-default bg-surface-2">
@@ -132,14 +131,14 @@ function VideoPanel({ clip, active }: Readonly<{ clip: GalleryClip; active: bool
       <h3 className="font-mono text-xs font-semibold uppercase tracking-[0.14em] text-fg-accent">{g.videoPromptHeading}</h3>
       <TypedPrompt text={clip.prompt} active={active} />
       <CopyButton text={clip.prompt} label={g.copy} done={g.copied} failed={g.copyFailed} />
-      <ClipFacts clip={clip} />
+      <RunFacts facts={clipFacts(g, clip)} />
       <ReproduceBlock parts={clipReproduceParts(clip)} lead={g.videoReproduceLead} />
     </section>
   );
 }
 
 /** The image's side: its prompt, what the data records about it, the commands that make it again. */
-function ImagePanel({ image }: Readonly<{ image: GalleryItem }>) {
+export function ImagePanel({ image }: Readonly<{ image: GalleryItem }>) {
   const { t } = useTranslation();
   const g = t.gallery;
   return (
