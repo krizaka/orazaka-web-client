@@ -6,25 +6,19 @@ import { expect, test } from "@playwright/test";
  */
 test.skip(!process.env.E2E_BASE_URL, "live smoke: set E2E_BASE_URL to a deployed site");
 
-test("live: the Image tab of Made here switches the item, and the media follow it", async ({ page }) => {
+test("live: Made here is a three-step strip whose height never changes, with the chips under the media", async ({ page }) => {
   await page.goto("/", { waitUntil: "networkidle" });
   const slide = page.locator('#made [aria-roledescription="slide"][data-active]').first();
   await slide.scrollIntoViewIfNeeded();
-  await expect(slide.getByRole("heading", { name: /video prompt/i })).toBeVisible();
-  await expect(slide.getByRole("heading", { name: /image prompt/i })).toBeHidden();
-  const videoWidth = (await slide.locator("[data-clip-player]").first().boundingBox())!.width;
-  await slide.getByRole("tab", { name: "Image" }).click();
-  await expect(slide.getByRole("tab", { name: "Image" })).toHaveAttribute("aria-selected", "true");
-  await expect(slide.getByRole("heading", { name: /image prompt/i })).toBeVisible();
-  await expect(slide.getByText("art-golden-hour").first()).toBeVisible();
-  await expect(slide.getByRole("heading", { name: /video prompt/i })).toBeHidden();
-  // The image is now the large one and the clip the small one.
-  await expect.poll(async () => (await slide.locator("[data-clip-player]").first().boundingBox())!.width).toBeLessThan(videoWidth * 0.7);
-  // It stays selected while the slideshow would have moved on (it holds for the pointer; the state is the item's own).
-  await page.waitForTimeout(8000);
-  await expect(slide.getByRole("tab", { name: "Image" })).toHaveAttribute("aria-selected", "true");
-  await slide.getByRole("tab", { name: "Video" }).click();
-  await expect(slide.getByRole("heading", { name: /video prompt/i })).toBeVisible();
+  await expect(slide.getByText(/FLUX\.2 · on one Mac/)).toBeVisible();
+  await expect(slide.getByText(/Wan 2\.2 · DigitalOcean/)).toBeVisible();
+  const height = async () => (await slide.boundingBox())!.height;
+  const before = await height();
+  await slide.getByRole("button", { name: "Details" }).last().click();
+  await expect(page.getByRole("dialog").or(page.locator("[data-radix-popper-content-wrapper]"))).toBeVisible();
+  expect(await height()).toBeCloseTo(before, 0);
+  await page.keyboard.press("Escape");
+  expect(await height()).toBeCloseTo(before, 0);
 });
 
 test("live: the clip plays by itself in view, muted, and /gallery lists the videos", async ({ page }) => {
