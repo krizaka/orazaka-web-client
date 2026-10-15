@@ -3,10 +3,11 @@
 import * as React from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { ForwardIcon } from "@krizaka/icons";
+import { ForwardIcon, InfoIcon } from "@krizaka/icons";
+import { Dialog } from "@krizaka/ui/dialog";
+import { Popover } from "@krizaka/ui/popover";
 import { Button } from "@krizaka/ui/button";
 import { ClipPlayer, RunFacts } from "@krizaka/orazaka-design-system";
-import { cn } from "@krizaka/ui/cn";
 import { SectionBackdrop } from "@krizaka/ui/section-backdrop";
 import { Showcase, type ShowcaseLabels } from "@krizaka/ui/showcase";
 import { useTranslation } from "@/core/context/LocaleContext";
@@ -70,10 +71,11 @@ export function GalleryFeatured() {
 }
 
 /**
- * One slide, readable in five seconds: three steps side by side (stacked on a phone) — ① the prompt, two lines with a
- * "More", ② the image (FLUX.2, on one Mac) and ③ the video (Wan 2.2, in the cloud), the two media the same size, each
- * step with a chip that says where and at what cost it was made. The full facts and "Reproduce it" are a "Details"
- * disclosure per step. The video is its own run from a similar prompt — it is not made from the image, and says so.
+ * One slide, readable in five seconds: three steps side by side (stacked on a phone) — ① the prompt, two lines, ② the
+ * image (FLUX.2, on one Mac) and ③ the video (Wan 2.2, in the cloud), both media in the same 16:9 frame, a chip under
+ * each saying where and at what cost it was made. The full prompt, the facts and "Reproduce it" open in a popover (a
+ * dialog on a phone) anchored to the step: the strip never changes height, and every slide has the same structure, so
+ * the carousel keeps one height. The video is its own run from a similar prompt — it is not made from the image.
  */
 function Slide({ item, active }: Readonly<{ item: FeaturedItem; active: boolean }>) {
   const { t } = useTranslation();
@@ -81,78 +83,127 @@ function Slide({ item, active }: Readonly<{ item: FeaturedItem; active: boolean 
   const { clip, image } = item;
   const prompt = image?.prompt ?? clip.prompt;
   return (
-    <div className="space-y-4" data-steps={image ? 3 : 2}>
-      <ol className={cn("grid grid-cols-[minmax(0,1fr)] items-start gap-4 lg:gap-3", image ? "lg:grid-cols-[minmax(0,0.8fr)_auto_minmax(0,1fr)_auto_minmax(0,1fr)]" : "lg:grid-cols-[minmax(0,0.8fr)_auto_minmax(0,1.4fr)]")}>
+    <div className="space-y-4" data-steps={3}>
+      <ol className="grid grid-cols-[minmax(0,1fr)] items-start gap-6 lg:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)_auto_minmax(0,1fr)] lg:gap-3">
         <Step n={1} title={g.stepPrompt}>
-          <PromptClamp text={prompt} />
-          <CopyButton text={prompt} label={g.copy} done={g.copied} failed={g.copyFailed} />
+          <div className="flex aspect-video flex-col justify-between gap-2 overflow-hidden rounded-xl border border-border-default bg-surface-2 p-4">
+            <blockquote lang="en" className="line-clamp-5 text-sm leading-relaxed text-fg-secondary">{prompt}</blockquote>
+            <div className="flex items-center gap-2">
+              <Disclosure label={g.more} title={g.stepPrompt}>
+                <blockquote lang="en" className="text-sm leading-relaxed text-fg-secondary">{prompt}</blockquote>
+                <CopyButton text={prompt} label={g.copy} done={g.copied} failed={g.copyFailed} />
+              </Disclosure>
+            </div>
+          </div>
         </Step>
         <Arrow />
-        {image && (
-          <>
-            <Step n={2} title={g.stepImage} chip={fill(g.imageChip, { seconds: image.seconds })}>
-              <figure className="aspect-video overflow-hidden rounded-xl border border-border-default bg-surface-2">
-                <Image src={gallerySrc(image.id)} alt={g.items[image.id]} width={image.width} height={image.height} sizes="(max-width: 1024px) 90vw, 360px" loading="lazy" unoptimized className="block h-full w-full object-contain" />
-              </figure>
-              <Details label={g.details}>
+        <Step n={2} title={g.stepImage}>
+          {image ? (
+            <>
+              <Frame>
+                <Image src={gallerySrc(image.id)} alt="" aria-hidden width={image.width} height={image.height} sizes="360px" loading="lazy" unoptimized className="absolute inset-0 h-full w-full scale-125 object-cover opacity-70 blur-2xl" />
+                <Image src={gallerySrc(image.id)} alt={g.items[image.id]} width={image.width} height={image.height} sizes="(max-width: 1024px) 90vw, 360px" loading="lazy" unoptimized className="relative block h-full w-full object-contain" />
+              </Frame>
+              <Chip>{fill(g.imageChip, { seconds: image.seconds })}</Chip>
+              <Disclosure label={g.details} title={g.imageStep}>
                 <ImagePanel image={image} />
-              </Details>
-            </Step>
-            <Arrow />
-          </>
-        )}
-        <Step n={image ? 3 : 2} title={g.stepVideo} chip={fill(clip.seconds === undefined ? g.videoChipNoTime : g.videoChip, { seconds: clip.seconds ?? 0, cost: clip.costUsd.toFixed(2) })}>
-          <figure className="overflow-hidden rounded-xl border border-border-default bg-surface-2">
-            <ClipPlayer sources={clipFiles(clip)} title={g.clips[clip.id]} labels={clipLabels(g, clip)} />
+              </Disclosure>
+            </>
+          ) : (
+            <>
+              <Frame><p className="relative flex h-full items-center justify-center p-4 text-center text-sm text-fg-secondary">{g.noImage}</p></Frame>
+              <Chip>{" "}</Chip>
+            </>
+          )}
+        </Step>
+        <Arrow />
+        <Step n={3} title={g.stepVideo}>
+          <figure className="aspect-video overflow-hidden rounded-xl border border-border-default bg-surface-2 [&_video]:h-full [&_video]:w-full [&_video]:object-cover">
+            <ClipPlayer sources={clipFiles(clip)} title={g.clips[clip.id]} labels={clipLabels(g, clip)} className="h-full" />
           </figure>
-          <Details label={g.details}>
+          <Chip>{fill(clip.seconds === undefined ? g.videoChipNoTime : g.videoChip, { seconds: clip.seconds ?? 0, cost: clip.costUsd.toFixed(2) })}</Chip>
+          <Disclosure label={g.details} title={g.videoStep}>
             <VideoPanel clip={clip} active={active} />
-          </Details>
+          </Disclosure>
         </Step>
       </ol>
-      <p className="text-sm text-fg-secondary">{image ? g.notFromImage : g.noImage}</p>
+      <p className="min-h-12 text-sm text-fg-secondary">{image ? g.notFromImage : ""}</p>
     </div>
   );
 }
 
-/** One step of the strip: its number and name, a chip saying where it was made, then its content. */
-function Step({ n, title, chip, children }: Readonly<{ n: number; title: string; chip?: string; children: React.ReactNode }>) {
+/** One step of the strip: its number and name, then its content. */
+function Step({ n, title, children }: Readonly<{ n: number; title: string; children: React.ReactNode }>) {
   return (
-    <li className="min-w-0 space-y-3">
-      <div className="flex flex-wrap items-center gap-2">
-        <span className="font-mono text-xs font-semibold uppercase tracking-[0.14em] text-fg-accent">{`${String(n)} · ${title}`}</span>
-        {chip && <span className="rounded-full border border-border-default bg-surface-2 px-2.5 py-0.5 font-mono text-[11px] text-fg-secondary">{chip}</span>}
-      </div>
+    <li className="min-w-0 space-y-2">
+      <span className="block font-mono text-xs font-semibold uppercase tracking-[0.14em] text-fg-accent">{`${String(n)} · ${title}`}</span>
       {children}
     </li>
   );
 }
 
+/** The one frame both media share: 16:9, rounded, whatever the shape of what it holds. */
+function Frame({ children }: Readonly<{ children: React.ReactNode }>) {
+  return <figure className="relative aspect-video overflow-hidden rounded-xl border border-border-default bg-surface-2">{children}</figure>;
+}
+
+/** Where it was made, how long it took, what it cost — visibly under the medium. */
+function Chip({ children }: Readonly<{ children: React.ReactNode }>) {
+  return <p className="min-h-6 font-mono text-[11px] leading-tight text-fg-secondary">{children}</p>;
+}
+
 function Arrow() {
-  return <li aria-hidden="true" className="hidden self-center pt-8 text-fg-muted lg:block"><ForwardIcon size={20} /></li>;
+  return <li aria-hidden="true" className="hidden self-center text-fg-muted lg:block"><ForwardIcon size={20} /></li>;
 }
 
-/** The prompt, two lines; "More" opens it whole. */
-function PromptClamp({ text }: Readonly<{ text: string }>) {
+/** Whether the viewport is wide enough for a popover; below it, a dialog (a popover on a phone is a sliver). */
+function useWide() {
+  const [wide, setWide] = React.useState(true);
+  React.useEffect(() => {
+    const query = window.matchMedia?.("(min-width: 1024px)");
+    if (!query) return;
+    const read = () => setWide(query.matches);
+    read();
+    query.addEventListener?.("change", read);
+    return () => query.removeEventListener?.("change", read);
+  }, []);
+  return wide;
+}
+
+/**
+ * "Details" / "More": a kit ghost button (its focus ring, no browser outline) that opens its content over the page —
+ * a popover anchored to the step, a dialog on a phone. Nothing is added to the strip, so its height never changes.
+ */
+function Disclosure({ label, title, children }: Readonly<{ label: string; title: string; children: React.ReactNode }>) {
   const { t } = useTranslation();
-  const [open, setOpen] = React.useState(false);
-  return (
-    <div className="space-y-1">
-      <blockquote lang="en" className={cn("text-sm leading-relaxed text-fg-secondary", !open && "line-clamp-2")}>{text}</blockquote>
-      <button type="button" aria-expanded={open} onClick={() => setOpen(!open)} className="text-xs font-medium text-fg-accent underline-offset-2 hover:underline">
-        {open ? t.gallery.less : t.gallery.more}
-      </button>
-    </div>
+  const wide = useWide();
+  const trigger = (
+    <Button type="button" variant="ghost" size="sm" className="-ml-2">
+      <InfoIcon size={14} />
+      {label}
+    </Button>
   );
-}
-
-/** "Details": the facts of the run and its command, folded (a native disclosure). */
-function Details({ label, children }: Readonly<{ label: string; children: React.ReactNode }>) {
+  if (wide) {
+    return (
+      <Popover.Root>
+        <Popover.Trigger asChild>{trigger}</Popover.Trigger>
+        <Popover.Content align="start" className="max-h-[70vh] w-[min(92vw,34rem)] space-y-3 overflow-auto p-4">
+          <p className="font-mono text-xs font-semibold uppercase tracking-[0.14em] text-fg-accent">{title}</p>
+          {children}
+        </Popover.Content>
+      </Popover.Root>
+    );
+  }
   return (
-    <details className="group rounded-xl border border-border-subtle px-3 py-2">
-      <summary className="cursor-pointer text-sm font-medium text-fg-secondary">{label}</summary>
-      <div className="pt-3">{children}</div>
-    </details>
+    <Dialog.Root>
+      <Dialog.Trigger asChild>{trigger}</Dialog.Trigger>
+      <Dialog.Content closeLabel={t.gallery.videoClose} className="max-h-[85vh] overflow-auto">
+        <Dialog.Header>
+          <Dialog.Title>{title}</Dialog.Title>
+        </Dialog.Header>
+        <div className="space-y-3">{children}</div>
+      </Dialog.Content>
+    </Dialog.Root>
   );
 }
 
