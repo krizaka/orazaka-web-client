@@ -168,7 +168,8 @@ describe("LandingPage while sign-in and sign-up are closed (the default)", () =>
     const footer = screen.getByTestId("app-version");
     expect(footer).toHaveTextContent("A Krizaka product");
     expect(footer).toHaveTextContent(/v\S+/);
-    expect(within(footer).getAllByRole("link", { name: /^Krizaka$/ })[0]).toHaveAttribute("href", "https://www.krizaka.com");
+    expect(within(footer).getByRole("link", { name: /A Krizaka product/ })).toHaveAttribute("href", "https://www.krizaka.com");
+    expect(within(footer).queryByRole("navigation", { name: "Krizaka family" })).toBeNull();
   });
 
   it("has a Mobile section with the phone recordings, played on demand, and a way to the full page", () => {
