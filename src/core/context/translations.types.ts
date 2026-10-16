@@ -715,6 +715,31 @@ export interface TranslationDictionary {
     runHistory: string;
     runEmpty: string;
     runSteps: string;
+    /** A file input of a Studio (an image to start from, a video, a recording): a picker, never an asset id. */
+    asset: {
+      imageTitle: string;
+      imageBrowse: string;
+      imageHint: string;
+      videoTitle: string;
+      videoBrowse: string;
+      videoHint: string;
+      audioTitle: string;
+      audioBrowse: string;
+      audioHint: string;
+      tooLarge: string;
+      wrongType: string;
+      uploadFailed: string;
+      list: string;
+      remove: string;
+      retry: string;
+      cancel: string;
+      uploading: string;
+      done: string;
+      error: string;
+      required: string;
+    };
+    /** The title (and help) of the inputs the packs share, read in the caller's language; `<studio>/<key>` wins over `<key>`. */
+    inputs: Record<string, { title: string; description?: string }>;
     runOutputs: string;
     runFailed: string;
     runSucceeded: string;

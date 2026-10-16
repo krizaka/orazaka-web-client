@@ -14,6 +14,30 @@ export interface InputField {
   description: string | null;
   /** A long text (`maxLength` over 500): a text area rather than a line. */
   multiline: boolean;
+  /** What file the field takes, when it takes an uploaded one (a picker, never a typed asset id). */
+  assetKind: AssetKind | null;
+}
+
+export type AssetKind = "image" | "video" | "audio";
+
+/**
+ * The kind of file an input takes: `format: "asset:image|video|audio"` (orazaka-packs#30), or the older
+ * `format: "asset-id"` read with its `contentMediaType` (`image/*`). A blueprint published before the pack
+ * declared anything still has `image` as its starting image: that key alone is read as an image.
+ */
+export function assetKindOf(key: string, spec: { format?: string; contentMediaType?: string; type?: string }): AssetKind | null {
+  if (spec.type && spec.type !== "string") {
+    return null;
+  }
+  const declared = /^asset:(image|video|audio)$/.exec(spec.format ?? "");
+  if (declared) {
+    return declared[1] as AssetKind;
+  }
+  const media = /^(image|video|audio)\//.exec(spec.contentMediaType ?? "");
+  if (spec.format === "asset-id" && media) {
+    return media[1] as AssetKind;
+  }
+  return !spec.format && key === "image" ? "image" : null;
 }
 
 /**
@@ -47,6 +71,8 @@ export function useInputSchema(inputSchema: string | null): InputField[] {
           maxItems?: number;
           maxLength?: number;
           description?: string;
+          format?: string;
+          contentMediaType?: string;
         };
         let type: InputField["type"] = "string";
         if (Array.isArray(spec.enum)) {
@@ -54,6 +80,7 @@ export function useInputSchema(inputSchema: string | null): InputField[] {
         } else if (spec.type === "array") {
           type = "array";
         }
+        const assetKind = type === "string" ? assetKindOf(key, spec) : null;
         return {
           key,
           title: spec.title ?? key,
@@ -62,7 +89,8 @@ export function useInputSchema(inputSchema: string | null): InputField[] {
           required: required.has(key),
           maxItems: typeof spec.maxItems === "number" ? spec.maxItems : null,
           description: spec.description ?? null,
-          multiline: type === "string" && typeof spec.maxLength === "number" && spec.maxLength > 500,
+          assetKind,
+          multiline: type === "string" && !assetKind && typeof spec.maxLength === "number" && spec.maxLength > 500,
         };
       });
     } catch {

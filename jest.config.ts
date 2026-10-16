@@ -43,6 +43,7 @@ const config = {
     // @krizaka/icons: the same `import`-only exports.
     "^@krizaka/icons$": `${icons}/dist/index.js`,
     // @krizaka/intl: the same `import`-only exports.
+    "^@krizaka/intl$": `${intl}/dist/index.js`,
     "^@krizaka/intl/(.*)$": `${intl}/dist/$1.js`,
     // @krizaka/tokens (a dependency of @krizaka/ui 3.x's chunks): the same `import`-only exports.
     "^@krizaka/tokens/(.*)$": `${tokens}/dist/$1.js`,

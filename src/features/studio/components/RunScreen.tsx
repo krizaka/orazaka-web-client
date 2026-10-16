@@ -6,7 +6,6 @@ import { BackIcon } from "@krizaka/icons";
 import { Button } from "@krizaka/ui/button";
 import { Card } from "@krizaka/ui/card";
 import { Mascot, type MascotMood } from "@krizaka/ui/mascots";
-import { Progress } from "@krizaka/ui/progress";
 import { isTerminalRun, type RunStatus } from "@krizaka/orazaka-shared";
 import { birdFor } from "@/components/mascot/birdFor";
 import { fill } from "@/core/context/fill";
@@ -99,14 +98,10 @@ export function RunScreen({ runId }: Readonly<RunScreenProps>) {
               {studio?.label ?? run.studioKey} · {run.blueprintVersion} · {format(new Date(run.startedAt), "dd MMM yyyy HH:mm")}
             </span>
             {run.errorMessage && <p role="alert" className="text-xs text-fg-danger">{run.errorMessage}</p>}
-            {!isTerminalRun(run.status) && total > 0 && (
-              <Progress
-                className="mt-1 max-w-md"
-                label={t.studio.runSteps}
-                value={done}
-                max={total}
-                valueText={fill(t.showcase.studio.stepsProgress, { done, total })}
-              />
+            {!isTerminalRun(run.status) && total > 1 && (
+              <span className="font-mono text-[11px] text-fg-muted">
+                {fill(t.showcase.studio.stepsProgress, { done, total })}
+              </span>
             )}
           </div>
           {!isTerminalRun(run.status) && (

@@ -1,12 +1,15 @@
 "use client";
 
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { Button } from "@krizaka/ui/button";
 import { Field, Input, Select, Textarea } from "@krizaka/ui/field";
 import { useTranslation } from "@/core/context/LocaleContext";
+import { AssetInput } from "@/features/studio/components/AssetInput";
 import { useInputSchema, type InputField } from "@/features/studio/hooks/useInputSchema";
 
 interface RunFormProps {
+  /** The Studio's key: a shared input key ("voice") reads differently from one Studio to another. */
+  studioKey?: string;
   inputSchema: string | null;
   estimatedCredits: number;
   isSubmitting: boolean;
@@ -21,6 +24,7 @@ interface RunFormProps {
  * landed must not be able to pay twice for finding out.
  */
 export function RunForm({
+  studioKey,
   inputSchema,
   estimatedCredits,
   isSubmitting,
@@ -29,6 +33,11 @@ export function RunForm({
   const { t } = useTranslation();
   const fields = useInputSchema(inputSchema);
   const [values, setValues] = useState<Record<string, string>>({});
+  const [uploading, setUploading] = useState<Record<string, boolean>>({});
+  const setBusy = useCallback((key: string, busy: boolean) => {
+    setUploading((current) => (current[key] === busy || (!busy && !current[key]) ? current : { ...current, [key]: busy }));
+  }, []);
+  const isUploading = Object.values(uploading).some(Boolean);
 
   const submit = () => {
     const payload: Record<string, unknown> = {};
@@ -55,9 +64,10 @@ export function RunForm({
         {fields.map((field) => (
           <RunInput
             key={field.key}
-            field={field}
+            field={localized(field, t.studio.inputs, studioKey)}
             value={values[field.key] ?? ""}
             disabled={isSubmitting}
+            onBusyChange={(busy) => setBusy(field.key, busy)}
             onChange={(value) => setValues((current) => ({ ...current, [field.key]: value }))}
           />
         ))}
@@ -67,7 +77,7 @@ export function RunForm({
         <span className="text-xs text-fg-muted">
           {t.studio.estimatedCost}: <span className="font-semibold text-fg">{estimatedCredits}</span> {t.studio.creditsPerRun}
         </span>
-        <Button variant="primary" size="md" onClick={submit} disabled={missingRequired} loading={isSubmitting}>
+        <Button variant="primary" size="md" onClick={submit} disabled={missingRequired || isUploading} loading={isSubmitting}>
           {t.studio.runNow}
         </Button>
       </div>
@@ -80,10 +90,17 @@ interface RunInputProps {
   value: string;
   disabled: boolean;
   onChange: (value: string) => void;
+  onBusyChange: (busy: boolean) => void;
+}
+
+/** A field in the caller's language: the title and help of the inputs the packs share are messages, not the blueprint's French. */
+function localized(field: InputField, inputs: Record<string, { title: string; description?: string }>, studioKey?: string): InputField {
+  const words = (studioKey ? inputs[`${studioKey}/${field.key}`] : undefined) ?? inputs[field.key];
+  return words ? { ...field, title: words.title, description: words.description ?? field.description } : field;
 }
 
 /** One generated field, on the @krizaka/ui field (label, control, hint). */
-function RunInput({ field, value, disabled, onChange }: Readonly<RunInputProps>) {
+function RunInput({ field, value, disabled, onChange, onBusyChange }: Readonly<RunInputProps>) {
   const inputId = `studio-run-${field.key}`;
   const hintId = field.description ? `${inputId}-hint` : undefined;
   const control = { id: inputId, value, disabled, "aria-describedby": hintId };
@@ -94,7 +111,18 @@ function RunInput({ field, value, disabled, onChange }: Readonly<RunInputProps>)
         {field.title}
         {field.required ? " *" : ""}
       </Field.Label>
-      {field.type === "enum" && field.options ? (
+      {field.assetKind ? (
+        <AssetInput
+          id={inputId}
+          kind={field.assetKind}
+          value={value}
+          disabled={disabled}
+          onChange={onChange}
+          onBusyChange={onBusyChange}
+          describedBy={hintId}
+          label={field.title}
+        />
+      ) : field.type === "enum" && field.options ? (
         <Select {...control} onChange={(event) => onChange(event.target.value)}>
           <option value="" />
           {field.options.map((option) => (
