@@ -43,12 +43,6 @@ export function WelcomeHero({ t, onPrompt }: Readonly<WelcomeHeroProps>) {
         {t.chat.startConversationDesc}
       </p>
 
-      {/* Sovereignty chip — threads the shared "on-prem, zero egress" motif */}
-      <span className="mt-4 inline-flex items-center gap-2 rounded-full border border-border-subtle bg-surface-1 px-3 py-1.5 text-xs font-medium text-fg-secondary">
-        <Icon name="shield" className="h-3.5 w-3.5 text-accent" />
-        {t.chat.localBadge}
-      </span>
-
       {/* Actionable prompt cards */}
       <div className="mt-8 grid w-full grid-cols-1 gap-3 stagger-children sm:grid-cols-3">
         {cards.map(({ label, icon }) => (

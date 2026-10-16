@@ -1,12 +1,14 @@
 import type * as React from "react";
 import type { ComposerStudio } from "@krizaka/orazaka-shared";
 import type { ComposerRunOptions as Options } from "@/features/chat-session/utils/startComposerRun";
+import type { ChatRouting } from "@/features/chat-session/utils/routing";
 import type { TranslationDictionary } from "@/core/context/LocaleContext";
 
 export interface ChatInputBarProps {
   input: string;
   onInputChange: (value: string) => void;
-  onSubmit: (e: React.SubmitEvent<HTMLFormElement>) => void;
+  /** Sends the draft (Enter or the round button). */
+  onSend: () => void;
   isSending: boolean;
   isGenerating: boolean;
   isUploadingAttachment: boolean;
@@ -23,7 +25,9 @@ export interface ChatInputBarProps {
   composerStudios: ComposerStudio[];
   fileInputRef: React.RefObject<HTMLInputElement | null>;
   onFileChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  /** Where the last answer ran (from the stream), or null when the engine has not said. */
+  routing: ChatRouting | null;
   t: TranslationDictionary;
-  /** Controls Framer Motion layout mode: true = centered, false = bottom-docked */
+  /** true = centered under the welcome cards (same width), false = docked under the conversation */
   isCentered?: boolean;
 }

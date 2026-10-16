@@ -26,3 +26,10 @@ html.light video[data-appearance="dark"],
 html:not(.light) video[data-appearance="light"] {
   display: none;
 }
+
+/* The chat composer is the kit's pill: it draws its focus ring once, on the pill (focus-within). The design system's
+   input glow (`input:focus, textarea:focus`, !important) would add a second border on the field inside. */
+[data-composer-field]:focus {
+  box-shadow: none !important;
+  border-color: transparent !important;
+}

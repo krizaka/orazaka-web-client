@@ -20,20 +20,25 @@ jest.mock("@/features/chat-session/components/CapabilityOptions", () => ({
 const defaultT = {
   a11y: { attachFile: "Attach File" },
   chat: {
-    typeMessage: "Type a message...",
+    typeMessage: "Ask your private AI…",
     typing: "Typing...",
+    modeChat: "Chat",
+    clear: "Clear",
+    localBadge: "Runs locally · nothing leaves your network",
+    statusRoutedTo: "Routed to {provider}",
+    statusCredits: "~{credits} credits",
+    composerBusy: "Answering…",
     send: "Send",
     sending: "Sending...",
     uploadingFile: "Uploading...",
     addCapability: "Add Capability",
-    cmdEnterHint: "⌘ Enter",
   },
 } as never;
 
 const baseProps = {
   input: "",
   onInputChange: jest.fn(),
-  onSubmit: jest.fn(),
+  onSend: jest.fn(),
   isSending: false,
   isGenerating: false,
   isUploadingAttachment: false,
@@ -50,101 +55,99 @@ const baseProps = {
   composerStudios: [],
   fileInputRef: { current: null },
   onFileChange: jest.fn(),
+  routing: null,
   t: defaultT,
 };
+
+const PLACEHOLDER = "Ask your private AI…";
+const studio = {
+  studioKey: "image-generation",
+  label: "Text Generation",
+  iconKey: "chat",
+  version: "1.0.0",
+  capabilityKey: "orazaka.core.media.image",
+  inputKey: "prompt",
+  inputKind: "TEXT",
+  promptKey: "prompt",
+  available: true,
+  lockedReason: "NONE",
+} as never;
 
 describe("ChatInputBar", () => {
   afterEach(() => jest.clearAllMocks());
 
-  it("renders textarea placeholder", () => {
+  it("is one pill: the mode chip, attach, the field and the round send share one container", () => {
     render(<ChatInputBar {...baseProps} />);
-    expect(screen.getByPlaceholderText("Type a message...")).toBeInTheDocument();
+    const field = screen.getByPlaceholderText(PLACEHOLDER);
+    const pill = field.parentElement!;
+    expect(pill).toContainElement(screen.getByLabelText("Add Capability"));
+    expect(pill).toContainElement(screen.getByLabelText("Attach File"));
+    expect(pill).toContainElement(screen.getByRole("button", { name: "Send" }));
+    // no second border on the field itself
+    expect(field.className).toContain("border-0");
   });
 
-  it("renders send button", () => {
-    render(<ChatInputBar {...baseProps} />);
-    expect(screen.getByText("Send")).toBeInTheDocument();
+  it("disables the send when empty and enables it with text", () => {
+    const { rerender } = render(<ChatInputBar {...baseProps} />);
+    expect(screen.getByRole("button", { name: "Send" })).toBeDisabled();
+    rerender(<ChatInputBar {...baseProps} input="hello" />);
+    expect(screen.getByRole("button", { name: "Send" })).not.toBeDisabled();
   });
 
-  it("submit is disabled when input is empty", () => {
-    render(<ChatInputBar {...baseProps} />);
-    const submitBtn = screen.getByText("Send").closest("button")!;
-    expect(submitBtn).toBeDisabled();
-  });
-
-  it("submit is enabled when input has text", () => {
+  it("sends with Enter, not with Shift+Enter", () => {
     render(<ChatInputBar {...baseProps} input="hello" />);
-    const submitBtn = screen.getByText("Send").closest("button")!;
-    expect(submitBtn).not.toBeDisabled();
+    const field = screen.getByPlaceholderText(PLACEHOLDER);
+    fireEvent.keyDown(field, { key: "Enter", shiftKey: true });
+    expect(baseProps.onSend).not.toHaveBeenCalled();
+    fireEvent.keyDown(field, { key: "Enter" });
+    expect(baseProps.onSend).toHaveBeenCalledTimes(1);
   });
 
-  it("calls onInputChange on textarea change", () => {
+  it("calls onInputChange on change", () => {
     render(<ChatInputBar {...baseProps} />);
-    const textarea = screen.getByPlaceholderText("Type a message...");
-    fireEvent.change(textarea, { target: { value: "test" } });
+    fireEvent.change(screen.getByPlaceholderText(PLACEHOLDER), { target: { value: "test" } });
     expect(baseProps.onInputChange).toHaveBeenCalledWith("test");
   });
 
-  it("shows typing text when generating", () => {
-    render(<ChatInputBar {...baseProps} isGenerating={true} />);
-    expect(screen.getByPlaceholderText("Typing...")).toBeInTheDocument();
+  it("while answering the box does not change: same placeholder, send held, chip locked, status says so", () => {
+    const { rerender } = render(<ChatInputBar {...baseProps} input="hello" />);
+    const before = screen.getByPlaceholderText(PLACEHOLDER).parentElement!.className;
+    rerender(<ChatInputBar {...baseProps} input="hello" isGenerating />);
+    expect(screen.getByPlaceholderText(PLACEHOLDER).parentElement!.className).toBe(before);
+    expect(screen.getByRole("button", { name: "Send" })).toBeDisabled();
+    expect(screen.getByLabelText("Add Capability")).toBeDisabled();
+    fireEvent.keyDown(screen.getByPlaceholderText(PLACEHOLDER), { key: "Enter" });
+    expect(baseProps.onSend).not.toHaveBeenCalled();
+    expect(screen.getByRole("status")).toHaveTextContent("Answering…");
   });
 
-  it("shows sending text when sending", () => {
-    render(<ChatInputBar {...baseProps} isSending={true} />);
-    expect(screen.getByText("Sending...")).toBeInTheDocument();
+  it("claims 'runs locally' only when the last routing was local, and shows the estimate", () => {
+    const { rerender } = render(<ChatInputBar {...baseProps} />);
+    expect(screen.getByRole("status")).toBeEmptyDOMElement();
+    rerender(<ChatInputBar {...baseProps} routing={{ provider: "ollama", local: true, estimatedCredits: 30 }} />);
+    expect(screen.getByRole("status")).toHaveTextContent("Runs locally · nothing leaves your network");
+    expect(screen.getByRole("status")).toHaveTextContent("~30 credits");
+    rerender(<ChatInputBar {...baseProps} routing={{ provider: "openai", local: false }} />);
+    expect(screen.getByRole("status")).not.toHaveTextContent("Runs locally");
+    expect(screen.getByRole("status")).toHaveTextContent("Routed to openai");
   });
 
-  it("shows the staged Studio's label when one is selected", () => {
-    render(
-      <ChatInputBar
-        {...baseProps}
-        selectedStudio={
-          {
-            studioKey: "image-generation",
-            label: "Text Generation",
-            iconKey: "chat",
-            version: "1.0.0",
-            capabilityKey: "orazaka.core.media.image",
-            inputKey: "prompt",
-            inputKind: "TEXT",
-            promptKey: "prompt",
-            available: true,
-            lockedReason: "NONE",
-          } as never
-        }
-      />,
-    );
+  it("shows the staged Studio's label when one is selected, and can send without text", () => {
+    render(<ChatInputBar {...baseProps} selectedStudio={studio} />);
     expect(screen.getByText(/Text Generation/)).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Send" })).not.toBeDisabled();
   });
 
-  it("shows attachment indicator", () => {
-    render(
-      <ChatInputBar
-        {...baseProps}
-        attachment={{ assetId: "a1", name: "doc.pdf" }}
-      />,
-    );
+  it("shows attachment and uploading indicators", () => {
+    const { rerender } = render(<ChatInputBar {...baseProps} attachment={{ assetId: "a1", name: "doc.pdf" }} />);
     expect(screen.getByText(/doc.pdf/)).toBeInTheDocument();
-  });
-
-  it("shows uploading indicator", () => {
-    render(<ChatInputBar {...baseProps} isUploadingAttachment={true} />);
+    rerender(<ChatInputBar {...baseProps} isUploadingAttachment />);
     expect(screen.getByText("Uploading...")).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Send" })).toBeDisabled();
   });
 
   it("renders ContextPlusMenu", () => {
     render(<ChatInputBar {...baseProps} />);
     expect(screen.getByTestId("context-plus-menu")).toBeInTheDocument();
-  });
-
-  it("renders attach file button", () => {
-    render(<ChatInputBar {...baseProps} />);
-    expect(screen.getByLabelText("Attach File")).toBeInTheDocument();
-  });
-
-  it("renders keyboard hint", () => {
-    render(<ChatInputBar {...baseProps} />);
-    expect(screen.getByText("⌘ Enter")).toBeInTheDocument();
   });
 });

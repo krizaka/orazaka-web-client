@@ -1,21 +1,25 @@
-/* eslint-disable no-restricted-syntax */
 "use client";
 
 import React from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { Button, Icon, IconButton } from "@krizaka/orazaka-design-system";
-import { ChevronDownIcon, CloseIcon } from "@krizaka/icons";
+import { Icon, IconButton, Button } from "@krizaka/orazaka-design-system";
+import { ChevronDownIcon, CloseIcon, ShieldIcon } from "@krizaka/icons";
+import { MessageComposer } from "@krizaka/ui/chat";
 import { cn } from "@krizaka/ui/cn";
 import { ContextPlusMenu } from "./ContextPlusMenu";
 import { ChatIndicators } from "./ChatIndicators";
 import { CapabilityOptions } from "./CapabilityOptions";
 import { resolveModelCategory } from "@/core/constants/capability.constants";
+import { routingStatus } from "@/features/chat-session/utils/routing";
 import type { ChatInputBarProps } from "@/features/chat-session/components/chatInputBar.types";
+
+// Attributes for the kit's field and send button (the e2e and the unit tests find them by these ids).
+const INPUT_ATTRS: Record<string, string> = { "data-testid": "chat-input", "data-composer-field": "", autoComplete: "off" };
+const SEND_ATTRS: Record<string, string> = { "data-testid": "chat-submit" };
 
 export const ChatInputBar: React.FC<ChatInputBarProps> = ({
   input,
   onInputChange,
-  onSubmit,
+  onSend,
   isSending,
   isGenerating,
   isUploadingAttachment,
@@ -32,193 +36,130 @@ export const ChatInputBar: React.FC<ChatInputBarProps> = ({
   composerStudios,
   fileInputRef,
   onFileChange,
+  routing,
   t,
   isCentered = false,
 }) => {
-  /* ── Input Blocking Invariant ─────────────────────────────
-   * When the agent is actively thinking/streaming, the entire
-   * input surface is locked: textarea, attach, plus-menu,
-   * and submit button. Matches Gemini's interaction model.
-   * ───────────────────────────────────────────────────────── */
+  // While the agent answers, the send is held — the field, its chip and its box stay exactly where they are.
   const isAgentBusy = isSending || isGenerating;
 
   /** Analysis capabilities require a staged asset before they can run. */
-  const needsAttachment =
-    !!selectedStudio && selectedStudio.inputKind === "ASSET";
-  const showOptions =
-    !!selectedStudio && resolveModelCategory(selectedStudio.capabilityKey) !== null;
+  const needsAttachment = !!selectedStudio && selectedStudio.inputKind === "ASSET";
+  const showOptions = !!selectedStudio && resolveModelCategory(selectedStudio.capabilityKey) !== null;
 
-  const isSubmitDisabled =
-    isAgentBusy ||
-    isUploadingAttachment ||
-    (needsAttachment && !attachment) ||
-    (!input.trim() && !attachment && !selectedStudio);
+  const canSend =
+    !isUploadingAttachment &&
+    !(needsAttachment && !attachment) &&
+    (!!input.trim() || !!attachment || !!selectedStudio);
+
+  // The status line says only what is true: local only when the last routing was local, plus the estimate.
+  const status = routingStatus(routing);
+  const statusParts: React.ReactNode[] = [];
+  if (isAgentBusy) {
+    statusParts.push(<span key="busy">{t.chat.composerBusy}</span>);
+  } else {
+    if (status.localOnly) {
+      statusParts.push(
+        <span key="local" className="inline-flex items-center gap-1.5">
+          <ShieldIcon size={14} className="text-success" />
+          {t.chat.localBadge}
+        </span>,
+      );
+    } else if (status.routedTo) {
+      statusParts.push(<span key="routed">{t.chat.statusRoutedTo.replace("{provider}", status.routedTo)}</span>);
+    }
+    if (status.credits !== null) {
+      statusParts.push(<span key="credits">{t.chat.statusCredits.replace("{credits}", String(status.credits))}</span>);
+    }
+  }
 
   return (
-    <AnimatePresence mode="wait">
-      <motion.form
-        key="chat-input-form"
-        layoutId="chat-input-bar"
-        onSubmit={onSubmit}
-        className={cn(
-          "w-full bg-transparent flex flex-col items-center relative z-25",
-          isCentered
-            ? "px-6 py-0 flex-1 justify-center"
-            : "px-4 pb-5 md:pb-7 pt-0"
-        )}
-        layout
-        transition={{
-          layout: { type: "spring", stiffness: 300, damping: 30, mass: 0.8 },
-        }}
-      >
-        <motion.section
-          layoutId="chat-input-card"
-          className={cn(
-            "glass-card w-full shadow-xl p-3 flex flex-col gap-2 transition-[border-color,box-shadow] duration-300 focus-within:border-accent focus-within:shadow-(--orazaka-accent-glow)",
-            isCentered ? "max-w-2xl" : "max-w-3xl"
-          )}
-          layout
-        >
-          <ChatIndicators
+    <section
+      data-testid="chat-composer"
+      className={cn(
+        "relative z-25 flex w-full flex-col items-center bg-transparent",
+        isCentered ? "mt-6" : "px-4 pb-4 pt-0 md:pb-6",
+      )}
+    >
+      <article className={cn("flex w-full flex-col gap-2", isCentered ? "max-w-2xl px-6" : "max-w-3xl")}>
+        <ChatIndicators
+          attachment={attachment}
+          isUploadingAttachment={isUploadingAttachment}
+          onClearAttachment={onClearAttachment}
+          t={t}
+        />
+
+        {showOptions && selectedStudio && (
+          <CapabilityOptions
+            studio={selectedStudio}
+            options={selectedOptions}
+            onChange={onOptionsChange}
             attachment={attachment}
-            isUploadingAttachment={isUploadingAttachment}
-            onClearAttachment={onClearAttachment}
+            onAttach={() => fileInputRef.current?.click()}
             t={t}
           />
+        )}
 
-          {showOptions && selectedStudio && (
-            <CapabilityOptions
-              studio={selectedStudio}
-              options={selectedOptions}
-              onChange={onOptionsChange}
-              attachment={attachment}
-              onAttach={() => fileInputRef.current?.click()}
-              t={t}
-            />
-          )}
-
-          <section className="flex gap-3 items-end relative">
-            <ContextPlusMenu
-              isOpen={isPlusMenuOpen}
-              onClose={onClosePlusMenu}
-              onExecuteNode={onExecuteNode}
-              studios={composerStudios}
-              t={t}
-            />
-            {/* Visible capability/mode selector (Gemini-style): shows the active mode — Chat by
-                default, or the staged generation capability — opens the capability menu, and
-                clears back to Chat via the inline ✕. */}
-            <div className="mb-0.5 flex flex-shrink-0 items-center gap-0.5">
-              <Button
-                variant="outline"
-                size="sm"
-                shape="pill"
-                onClick={onTogglePlusMenu}
-                disabled={isAgentBusy}
-                aria-label={t.chat.addCapability}
-                aria-expanded={isPlusMenuOpen}
-                className={cn("gap-1.5 pl-2.5 pr-2 font-medium", selectedStudio && "border-accent bg-accent-soft text-fg-accent")}
-              >
-                <Icon name="spark" size={15} />
-                <span className="max-w-[120px] truncate">{selectedStudio ? selectedStudio.label : t.chat.modeChat}</span>
-                <ChevronDownIcon size={14} className={cn("transition-transform duration-200", isPlusMenuOpen && "rotate-180")} />
-              </Button>
-              {selectedStudio && (
-                <IconButton variant="ghost" size="sm" shape="pill" className="w-8 px-0" onClick={onClearStudio} disabled={isAgentBusy} label={t.chat.clear}>
-                  <CloseIcon size={13} />
-                </IconButton>
-              )}
-            </div>
-
-            <input
-              type="file"
-              ref={fileInputRef}
-              className="hidden"
-              onChange={onFileChange}
-            />
-
-            <section className="flex-1 relative flex items-end">
-              <IconButton
-                variant="ghost"
-                onClick={() => fileInputRef.current?.click()}
-                disabled={isAgentBusy}
-                className="absolute bottom-1.5 left-1.5 z-10"
-                label={t.a11y.attachFile}
-              >
-                <Icon name="attach" size={20} />
-              </IconButton>
-              <textarea
-                data-testid="chat-input"
-                value={input}
-                onChange={(e) => onInputChange(e.target.value)}
-                onKeyDown={(e) => {
-                  if ((e.metaKey || e.ctrlKey) && e.key === "Enter") {
-                    e.preventDefault();
-                    if (!isSubmitDisabled) {
-                      const form = e.currentTarget.closest("form");
-                      form?.requestSubmit();
-                    }
-                  }
-                }}
-                disabled={isAgentBusy}
-                placeholder={isAgentBusy ? t.chat.typing : t.chat.typeMessage}
-                rows={1}
-                className={cn(
-                  "w-full pl-10 pr-24 py-3 bg-transparent border-0 text-fg placeholder:text-fg-muted focus:outline-none focus:ring-0 resize-none overflow-hidden text-sm leading-relaxed transition-opacity duration-200",
-                  isAgentBusy ? "opacity-50 cursor-not-allowed" : ""
-                )}
-                style={{
-                  minHeight: "44px",
-                  maxHeight: "140px",
-                  height: "auto",
-                }}
-                ref={(el) => {
-                  if (el) {
-                    el.style.height = "auto";
-                    el.style.height = `${Math.min(el.scrollHeight, 140)}px`;
-                    el.style.overflow = el.scrollHeight > 140 ? "auto" : "hidden";
-                  }
-                }}
-                autoComplete="off"
-              />
-              <section className="absolute right-2 bottom-1.5 flex items-center gap-2">
-                <span className="text-[10px] text-fg-muted hidden sm:inline-block select-none">
-                  {t.chat.cmdEnterHint}
-                </span>
+        <section className="relative">
+          <ContextPlusMenu
+            isOpen={isPlusMenuOpen}
+            onClose={onClosePlusMenu}
+            onExecuteNode={onExecuteNode}
+            studios={composerStudios}
+            t={t}
+          />
+          <input type="file" ref={fileInputRef} className="hidden" onChange={onFileChange} />
+          <MessageComposer
+            variant="pill"
+            value={input}
+            onValueChange={onInputChange}
+            onSend={onSend}
+            busy={isAgentBusy}
+            canSend={canSend}
+            placeholder={t.chat.typeMessage}
+            sendLabel={t.chat.send}
+            maxLength={20000}
+            inputProps={INPUT_ATTRS}
+            sendProps={SEND_ATTRS}
+            leading={
+              <>
                 <Button
-                  type="submit"
-                  disabled={isSubmitDisabled}
-                  data-testid="chat-submit"
-                  className="px-4 py-1.5 h-8 text-xs font-semibold group transition-transform duration-150 active:scale-95 motion-reduce:transition-none motion-reduce:active:scale-100"
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  shape="pill"
+                  onClick={onTogglePlusMenu}
+                  disabled={isAgentBusy}
+                  aria-label={t.chat.addCapability}
+                  aria-expanded={isPlusMenuOpen}
+                  className={cn("h-8 gap-1.5 pl-2.5 pr-2 font-medium", selectedStudio && "bg-accent-soft text-fg-accent")}
                 >
-                  {(() => {
-                    if (isSending) return t.chat.sending;
-                    if (isGenerating) return t.chat.typing;
-                    return (
-                    <span className="flex items-center gap-1.5">
-                      {t.chat.send}
-                      <svg
-                        className="w-3.5 h-3.5 transition-transform duration-200 group-hover:translate-x-0.5"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                        strokeWidth={2.5}
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"
-                        />
-                      </svg>
-                    </span>
-                    );
-                  })()}
+                  <Icon name="spark" size={15} />
+                  {/* On a phone the chip is its icon and chevron: the field keeps the room to write. */}
+                  <span className="hidden max-w-[96px] truncate sm:inline">{selectedStudio ? selectedStudio.label : t.chat.modeChat}</span>
+                  <ChevronDownIcon size={14} className={cn("transition-transform duration-200", isPlusMenuOpen && "rotate-180")} />
                 </Button>
-              </section>
-            </section>
-          </section>
-        </motion.section>
-      </motion.form>
-    </AnimatePresence>
+                {selectedStudio && (
+                  <IconButton variant="ghost" size="sm" shape="pill" onClick={onClearStudio} disabled={isAgentBusy} label={t.chat.clear}>
+                    <CloseIcon size={13} />
+                  </IconButton>
+                )}
+                <IconButton
+                  variant="ghost"
+                  size="sm"
+                  shape="pill"
+                  onClick={() => fileInputRef.current?.click()}
+                  disabled={isAgentBusy}
+                  label={t.a11y.attachFile}
+                >
+                  <Icon name="attach" size={18} />
+                </IconButton>
+              </>
+            }
+            status={statusParts.length ? statusParts.flatMap((p, i) => (i ? [<span key={`sep-${i}`} aria-hidden>·</span>, p] : [p])) : undefined}
+          />
+        </section>
+      </article>
+    </section>
   );
 };
