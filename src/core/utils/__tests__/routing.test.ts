@@ -1,4 +1,4 @@
-import { parseRouting, routingStatus } from "@/features/chat-session/utils/routing";
+import { parseRouting, routingStatus } from "@/core/utils/routing";
 
 describe("parseRouting", () => {
   it("accepts a complete event and rounds the credits", () => {

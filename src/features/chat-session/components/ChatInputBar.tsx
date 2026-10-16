@@ -9,7 +9,7 @@ import { ContextPlusMenu } from "./ContextPlusMenu";
 import { ChatIndicators } from "./ChatIndicators";
 import { CapabilityOptions } from "./CapabilityOptions";
 import { resolveModelCategory } from "@/core/constants/capability.constants";
-import { routingStatus } from "@/features/chat-session/utils/routing";
+import { routingStatus } from "@/core/utils/routing";
 import type { ChatInputBarProps } from "@/features/chat-session/components/chatInputBar.types";
 
 // Attributes for the kit's field and send button (the e2e and the unit tests find them by these ids).

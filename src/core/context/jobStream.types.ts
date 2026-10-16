@@ -1,4 +1,4 @@
-import type { ChatRouting } from "@/features/chat-session/utils/routing";
+import type { ChatRouting } from "@/core/utils/routing";
 import type { Job } from "@/core/types/jobs.types";
 import type { ChatPipelineSchema } from "@/core/types/pipeline.types";
 

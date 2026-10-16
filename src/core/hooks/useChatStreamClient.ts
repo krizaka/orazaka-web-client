@@ -4,7 +4,7 @@ import { useRef, useCallback, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import type { ChatMessage } from "@/core/types/chat.types";
 import { useAuth } from "@/core/hooks/useAuth";
-import { parseRouting, type ChatRouting } from "@/features/chat-session/utils/routing";
+import { parseRouting, type ChatRouting } from "@/core/utils/routing";
 import {
   isPipelineSchema,
   type ChatPipelineSchema,

@@ -1,7 +1,7 @@
 import type * as React from "react";
 import type { ComposerStudio } from "@krizaka/orazaka-shared";
 import type { ComposerRunOptions as Options } from "@/features/chat-session/utils/startComposerRun";
-import type { ChatRouting } from "@/features/chat-session/utils/routing";
+import type { ChatRouting } from "@/core/utils/routing";
 import type { TranslationDictionary } from "@/core/context/LocaleContext";
 
 export interface ChatInputBarProps {
