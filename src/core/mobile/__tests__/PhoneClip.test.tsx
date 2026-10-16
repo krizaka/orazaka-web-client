@@ -1,3 +1,5 @@
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
 import { render, screen } from "@testing-library/react";
 import { PhoneClip } from "@/core/mobile/PhoneClip";
 
@@ -12,9 +14,8 @@ describe("PhoneClip", () => {
       expect(video.getAttribute("poster")).toMatch(/^https:\/\/.*clip-ask-(dark|light)-poster\.[0-9a-f]{10}\.webp$/);
       expect(Array.from(video.querySelectorAll("source")).map((s) => s.getAttribute("type"))).toEqual(["video/webm", "video/mp4"]);
     }
-    // The light recording is hidden under the dark page and shown under html.light.
-    expect(container.querySelector('video[data-appearance="light"]')?.className).toContain("[html.light_&]:block");
-    expect(container.querySelector('video[data-appearance="dark"]')?.className).toContain("[html.light_&]:hidden");
+    // Which one is shown is the stylesheet's job (html.light hides the dark recording): the rule is in globals.css.
+    expect(readFileSync(join(process.cwd(), "src/app/globals.css"), "utf8")).toMatch(/html\.light video\[data-appearance="dark"\]/);
     expect(screen.getAllByLabelText(/Ask\. A request is typed/)).toHaveLength(2);
   });
 

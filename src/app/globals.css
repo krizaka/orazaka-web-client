@@ -20,3 +20,9 @@
 @import "tailwindcss";
 @import "@krizaka/ui/tailwind.css";
 @import "@krizaka/orazaka-design-system/theme.css";
+
+/* Phone recordings — the app was recorded in dark and in light (PhoneClip): the one that matches the page is shown. */
+html.light video[data-appearance="dark"],
+html:not(.light) video[data-appearance="light"] {
+  display: none;
+}
