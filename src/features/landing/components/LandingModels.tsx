@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { ForwardIcon } from "@krizaka/icons";
-import { Button } from "@krizaka/ui/button";
+import { ActionBar } from "@krizaka/ui/action-bar";
 import { CardGrid } from "@krizaka/ui/card-grid";
 import { LinkCard } from "@krizaka/ui/link-card";
 import { SectionBackdrop } from "@krizaka/ui/section-backdrop";
@@ -38,12 +38,7 @@ export function LandingModels() {
           ))}
         </CardGrid>
         {optional > 0 && <p className="mt-2 max-w-2xl text-sm leading-relaxed text-fg-secondary">{h.providers.replace("{count}", String(optional))}</p>}
-        <Button asChild variant="secondary" size="lg" shape="pill">
-          <Link href="/models">
-            {h.more}
-            <ForwardIcon size={18} />
-          </Link>
-        </Button>
+        <ActionBar actions={[{ href: "/models", label: h.more, icon: <ForwardIcon size={18} /> }]} size="sm" linkAs={Link} label={h.more} />
       </article>
     </SectionBackdrop>
   );

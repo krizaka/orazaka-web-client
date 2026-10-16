@@ -4,7 +4,7 @@ import Link from "next/link";
 import { ForwardIcon } from "@krizaka/icons";
 import { CardGrid } from "@krizaka/ui/card-grid";
 import { LinkCard } from "@krizaka/ui/link-card";
-import { Button } from "@krizaka/ui/button";
+import { ActionBar } from "@krizaka/ui/action-bar";
 import { SectionBackdrop } from "@krizaka/ui/section-backdrop";
 import { useTranslation } from "@/core/context/LocaleContext";
 import { packsFor } from "@/features/landing/utils/showcase";
@@ -35,12 +35,7 @@ export function LandingPacks() {
             />
           ))}
         </CardGrid>
-        <Button asChild variant="secondary" size="lg" shape="pill">
-          <Link href="/docs/packs">
-            {p.more}
-            <ForwardIcon size={18} />
-          </Link>
-        </Button>
+        <ActionBar actions={[{ href: "/docs/packs", label: p.more, icon: <ForwardIcon size={18} /> }]} size="sm" linkAs={Link} label={p.more} />
       </article>
     </SectionBackdrop>
   );
