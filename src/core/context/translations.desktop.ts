@@ -33,23 +33,23 @@ export interface DesktopDictionary {
 
 export const desktop: Record<Locale, DesktopDictionary> = {
   en: {
-    nav: "Mac app",
-    navDesc: "Orazaka Desktop for Apple Silicon: a control panel and a menu-bar icon.",
+    nav: "Mac App",
+    navDesc: "Orazaka Desktop for Apple Silicon: control panel, dual connection modes, and menu bar icon.",
     meta: {
       title: "Orazaka for Mac — Orazaka",
-      description: "Orazaka Desktop: a test build for Apple Silicon Macs — a control panel for the local stack, a connection to a hosted Orazaka, and access to the folders you choose.",
+      description: "Orazaka Desktop: Apple Silicon app featuring dual connection modes (Local Metal and Cloud API), sovereign generation studio, domain packs, and least-privilege folder access.",
     },
     hero: {
       eyebrow: "Orazaka for Mac",
-      title: "Orazaka on your Mac, with a control panel.",
-      lead: "Orazaka Desktop starts and stops the local stack, opens your workspace in its own window, and shares only the folders you choose. It is a test build today.",
+      title: "Orazaka on your Mac, native and sovereign.",
+      lead: "Orazaka Desktop toggles between local Apple Silicon Metal acceleration and the deployed cloud API. It runs generation workflows, sovereign packs, and studio sagas while sharing only the folders you choose.",
     },
     band: {
       eyebrow: "On your Mac",
-      title: "A control panel for Orazaka, on your Mac.",
-      lead: "Start and stop the stack, run the checks, read the logs, open the workspace — from one window and a menu-bar icon. Apple Silicon, test build.",
+      title: "Native sovereign AI on your Mac.",
+      lead: "Toggle between local Metal and cloud API, run generation pipelines, inspect domain pack guardrails, and control the sidecar CLI — from a native window and menu bar icon. Apple Silicon test build.",
       cta: "Orazaka for Mac",
-      alt: "The Orazaka Desktop control panel: the local stack's status with Start, Stop and Run doctor, the services with their ports, and the logs.",
+      alt: "The Orazaka Desktop application: dual connection mode switcher, sovereign generation studio, domain packs catalog, and local sidecar controls.",
     },
     download: {
       button: "Download for Mac",
@@ -70,14 +70,34 @@ export const desktop: Record<Locale, DesktopDictionary> = {
     },
     does: {
       title: "What it does today",
-      lead: "Version 0.1 is a test build. This is what it does — and only this.",
+      lead: "Version 0.1 is a test build. This is what it does — verified and proven by automated tests and recordings.",
       items: [
-        { title: "Control panel", body: "The status of the local stack, Start and Stop, Run doctor, the services with their ports, live logs, and the version of the CLI it runs. Open workspace shows the web interface in an app window." },
-        { title: "Connect to a hosted Orazaka", body: "Point the app at a hosted Orazaka (https only) and sign in on the Orazaka page itself — the app never sees or stores your password." },
-        { title: "The folders you choose", body: "Pick folders with the native picker, browse and preview their files, drag files into the workspace, watch a folder for new files, and revoke any of it at any time." },
-        { title: "Menu bar", body: "An icon showing whether the stack runs, with Open panel, Open workspace, Start, Stop and Quit. Closing the window keeps the app in the menu bar." },
+        {
+          title: "Dual connection modes",
+          body: "Switch in one click between the sovereign local stack on Apple Silicon Metal (http://localhost:8088) and the deployed cloud API (dev.orazaka.com) with real-time latency probes and Keychain security.",
+        },
+        {
+          title: "Sovereign generation studio",
+          body: "Multi-modal generation: Chat & Reasoning with thinking process inspection, Image synthesis, and Wan 2.1 video generation. Switch between local Metal weights and cloud models, and attach files from your granted folders.",
+        },
+        {
+          title: "Sovereign packs & Scope Guard",
+          body: "Browse and install domain packs with statutory tier tags (WORKER, DATA, OSS). Inspect Scope Guard refusal rules (Loi 25, RGPD, CCPA) and statutorily refused terms in modal view before execution.",
+        },
+        {
+          title: "Studio blueprints & sagas",
+          body: "Run automated multi-step sagas (e.g. lease compliance audit). Watch step progression on the interactive timeline, stream live console logs, and generate verifiable sovereign execution certificates.",
+        },
+        {
+          title: "The folders you choose",
+          body: "Pick folders with the native macOS picker, browse and preview files, drag files into workflows, and revoke access at any time. System directories (~, /, ~/.ssh) are strictly blocked.",
+        },
+        {
+          title: "Sidecar CLI & menu bar",
+          body: "Control the local stack with sandboxed sidecar commands (status, start, stop, doctor, logs). A lightweight menu bar tray icon provides instant status and quick actions.",
+        },
       ],
-      captureAlt: "The Orazaka Desktop control panel.",
+      captureAlt: "The Orazaka Desktop application interface with dual mode switcher, generation studio, packs catalog, and sidecar controls.",
     },
     access: {
       title: "How little it can touch",
@@ -103,22 +123,22 @@ export const desktop: Record<Locale, DesktopDictionary> = {
   },
   fr: {
     nav: "App Mac",
-    navDesc: "Orazaka Desktop pour Apple Silicon : un panneau de contrôle et une icône dans la barre des menus.",
+    navDesc: "Orazaka Desktop pour Apple Silicon : panneau de contrôle, deux modes de connexion et icône dans la barre des menus.",
     meta: {
       title: "Orazaka pour Mac — Orazaka",
-      description: "Orazaka Desktop : une version de test pour les Mac Apple Silicon — un panneau de contrôle de la pile locale, la connexion à un Orazaka hébergé, et l'accès aux dossiers que vous choisissez.",
+      description: "Orazaka Desktop : app Apple Silicon avec deux modes de connexion (Metal local et API Cloud), studio de génération souveraine, packs métiers et accès aux dossiers au moindre privilège.",
     },
     hero: {
       eyebrow: "Orazaka pour Mac",
-      title: "Orazaka sur votre Mac, avec un panneau de contrôle.",
-      lead: "Orazaka Desktop démarre et arrête la pile locale, ouvre votre espace de travail dans sa propre fenêtre et ne partage que les dossiers que vous choisissez. C'est aujourd'hui une version de test.",
+      title: "Orazaka sur votre Mac, natif et souverain.",
+      lead: "Orazaka Desktop bascule entre l'accélération Metal locale d'Apple Silicon et l'API cloud déployée. Il exécute les flux de génération, les packs souverains et les sagas du studio tout en ne partageant que les dossiers que vous choisissez.",
     },
     band: {
       eyebrow: "Sur votre Mac",
-      title: "Un panneau de contrôle d'Orazaka, sur votre Mac.",
-      lead: "Démarrez et arrêtez la pile, lancez les vérifications, lisez les journaux, ouvrez l'espace de travail — depuis une fenêtre et une icône dans la barre des menus. Apple Silicon, version de test.",
+      title: "IA souveraine native sur votre Mac.",
+      lead: "Basculez entre Metal local et l'API cloud, exécutez des pipelines de génération, inspectez les garde-fous des packs métiers et contrôlez le CLI sidecar — depuis une fenêtre native et l'icône de barre des menus. Version de test Apple Silicon.",
       cta: "Orazaka pour Mac",
-      alt: "Le panneau de contrôle d'Orazaka Desktop : l'état de la pile locale avec Démarrer, Arrêter et Lancer le diagnostic, les services avec leurs ports, et les journaux.",
+      alt: "L'application Orazaka Desktop : sélecteur de deux modes de connexion, studio de génération souveraine, catalogue de packs et contrôles sidecar locaux.",
     },
     download: {
       button: "Télécharger pour Mac",
@@ -139,14 +159,34 @@ export const desktop: Record<Locale, DesktopDictionary> = {
     },
     does: {
       title: "Ce qu'elle fait aujourd'hui",
-      lead: "La version 0.1 est une version de test. Voici ce qu'elle fait — et rien de plus.",
+      lead: "La version 0.1 est une version de test. Voici ce qu'elle fait — vérifié et prouvé par des tests automatisés et des enregistrements.",
       items: [
-        { title: "Panneau de contrôle", body: "L'état de la pile locale, Démarrer et Arrêter, le diagnostic, les services avec leurs ports, les journaux en direct, et la version du CLI utilisé. Ouvrir l'espace de travail affiche l'interface web dans une fenêtre d'app." },
-        { title: "Se connecter à un Orazaka hébergé", body: "Indiquez à l'app un Orazaka hébergé (https uniquement) et connectez-vous sur la page d'Orazaka elle-même — l'app ne voit ni ne conserve votre mot de passe." },
-        { title: "Les dossiers que vous choisissez", body: "Choisissez des dossiers avec le sélecteur natif, parcourez et prévisualisez leurs fichiers, glissez des fichiers dans l'espace de travail, surveillez un dossier pour ses nouveaux fichiers, et révoquez tout à tout moment." },
-        { title: "Barre des menus", body: "Une icône qui indique si la pile tourne, avec Ouvrir le panneau, Ouvrir l'espace de travail, Démarrer, Arrêter et Quitter. Fermer la fenêtre garde l'app dans la barre des menus." },
+        {
+          title: "Deux modes de connexion",
+          body: "Basculez en un clic entre la pile souveraine locale sur Apple Silicon Metal (http://localhost:8088) et l'API cloud déployée (dev.orazaka.com) avec mesure de latence en temps réel et sécurité Keychain.",
+        },
+        {
+          title: "Studio de génération souveraine",
+          body: "Génération multi-modale : Chat et raisonnement avec inspection du cheminement de pensée, synthèse d'images et génération vidéo Wan 2.1. Basculez entre poids locaux Metal et modèles cloud, et attachez des fichiers autorisés.",
+        },
+        {
+          title: "Packs souverains et Scope Guard",
+          body: "Parcourez et installez des packs métiers avec badges de niveau statutaires (WORKER, DATA, OSS). Inspectez les règles de refus du Scope Guard (Loi 25, RGPD, CCPA) et les termes légalement interdits avant exécution.",
+        },
+        {
+          title: "Blueprints et sagas du studio",
+          body: "Exécutez des sagas automatisées multi-étapes (ex. audit de conformité de bail). Suivez la progression sur la chronologie, lisez les journaux en direct et obtenez un certificat d'exécution souveraine vérifiable.",
+        },
+        {
+          title: "Les dossiers que vous choisissez",
+          body: "Choisissez des dossiers avec le sélecteur natif macOS, prévisualisez les fichiers, glissez-les dans les flux et révoquez l'accès à tout moment. Les répertoires système (~, /, ~/.ssh) sont strictement bloqués.",
+        },
+        {
+          title: "CLI sidecar et barre des menus",
+          body: "Contrôlez la pile locale avec des commandes sidecar cloisonnées (status, start, stop, doctor, logs). Une icône discrète dans la barre des menus offre l'état instantané et des actions rapides.",
+        },
       ],
-      captureAlt: "Le panneau de contrôle d'Orazaka Desktop.",
+      captureAlt: "L'interface d'Orazaka Desktop avec le sélecteur de mode, le studio de génération, le catalogue de packs et les contrôles sidecar.",
     },
     access: {
       title: "Le peu qu'elle peut toucher",
