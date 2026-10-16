@@ -4,6 +4,7 @@ import { useRef, useCallback, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import type { ChatMessage } from "@/core/types/chat.types";
 import { useAuth } from "@/core/hooks/useAuth";
+import { parseRouting, type ChatRouting } from "@/core/utils/routing";
 import {
   isPipelineSchema,
   type ChatPipelineSchema,
@@ -19,6 +20,7 @@ async function readChatStream(
   onAccumulated: (content: string) => void,
   onPipeline: (schema: ChatPipelineSchema) => void,
   onStage: (interceptorId: string) => void,
+  onRouting: (routing: ChatRouting) => void,
 ) {
   const decoder = new TextDecoder();
   let buffer = "";
@@ -56,6 +58,17 @@ async function readChatStream(
             if (isPipelineSchema(schema)) onPipeline(schema);
           } catch {
             // ignore malformed schema payloads
+          }
+          continue;
+        }
+
+        // The engine says where the answer was computed (provider, local or not, credit estimate).
+        if (currentEvent === "routing") {
+          try {
+            const routing = parseRouting(JSON.parse(raw));
+            if (routing) onRouting(routing);
+          } catch {
+            // ignore malformed routing payloads
           }
           continue;
         }
@@ -196,6 +209,8 @@ export function useChatStreamClient() {
   );
   // Interceptor ids that have finished, in completion order (live progress).
   const [chatStageProgress, setChatStageProgress] = useState<string[]>([]);
+  // Where the last answer ran — kept until the next one says otherwise, so the status line never blinks.
+  const [chatRouting, setChatRouting] = useState<ChatRouting | null>(null);
   const chatAbortControllerRef = useRef<AbortController | null>(null);
   const queryClient = useQueryClient();
   const { user } = useAuth();
@@ -255,6 +270,7 @@ export function useChatStreamClient() {
             setChatStageProgress((prev) =>
               prev.includes(interceptorId) ? prev : [...prev, interceptorId],
             ),
+          setChatRouting,
         );
       } catch (err) {
         handleStreamError(
@@ -280,6 +296,7 @@ export function useChatStreamClient() {
     isChatStreaming,
     chatPipeline,
     chatStageProgress,
+    chatRouting,
     startChatStream,
     stopChatStream,
   };

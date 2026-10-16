@@ -1,3 +1,4 @@
+import type { ChatRouting } from "@/core/utils/routing";
 import type { Job } from "@/core/types/jobs.types";
 import type { ChatPipelineSchema } from "@/core/types/pipeline.types";
 
@@ -21,6 +22,8 @@ export interface JobStreamContextType {
   isChatStreaming: boolean;
   chatPipeline: ChatPipelineSchema | null;
   chatStageProgress: string[];
+  /** The routing of the last answer (from the stream's `routing` event), or null when the engine has not said. */
+  chatRouting: ChatRouting | null;
   startChatStream: (
     conversationId: string,
     prompt: string,

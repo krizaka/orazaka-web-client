@@ -146,12 +146,10 @@ export function useChatActions({ activeConversationId }: UseChatActionsProps) {
 
   const handleSend = useCallback(
     (
-      e: React.SubmitEvent<HTMLFormElement>,
       sendMessage: (msg: string) => void,
       isSending: boolean,
       isGenerating: boolean,
     ) => {
-      e.preventDefault();
       const trimmed = chatInput.trim();
       if (
         (!trimmed && !attachment && !selectedStudio) ||

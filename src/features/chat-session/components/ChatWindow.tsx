@@ -31,6 +31,7 @@ export const ChatWindow: React.FC<{ initialConversationId: string }> = ({
     startChatStream,
     chatPipeline,
     chatStageProgress,
+    chatRouting,
   } = useJobStream();
 
   useEffect(() => {
@@ -141,6 +142,7 @@ export const ChatWindow: React.FC<{ initialConversationId: string }> = ({
     fileInputRef,
     onFileChange: (e: React.ChangeEvent<HTMLInputElement>) =>
       handleFileChange(e, t),
+    routing: chatRouting,
     t,
   };
 
@@ -219,28 +221,23 @@ export const ChatWindow: React.FC<{ initialConversationId: string }> = ({
 
             <ChatInputBar
               {...composerSharedProps}
-              onSubmit={(e) =>
-                handleSend(e, sendMessage, isSending, isGenerating)
-              }
+              onSend={() => handleSend(sendMessage, isSending, isGenerating)}
               isCentered={false}
             />
           </>
         ) : (
           <>
-            {/* No conversation yet: the welcome (greeting and starter prompts), then the composer. */}
+            {/* No conversation yet: the welcome (greeting and starter prompts), and the composer right under the cards. */}
             <section className="flex flex-1 flex-col items-center justify-center px-4">
               {/* Selecting a welcome card creates the thread and sends immediately. */}
               <WelcomeHero t={t} onPrompt={(label) => handleFirstSend(label)} />
-            </section>
 
-            <ChatInputBar
-              {...composerSharedProps}
-              onSubmit={(e) => {
-                e.preventDefault();
-                handleFirstSend(chatInput, runStagedIn);
-              }}
-              isCentered={isInputCentered}
-            />
+              <ChatInputBar
+                {...composerSharedProps}
+                onSend={() => handleFirstSend(chatInput, runStagedIn)}
+                isCentered={isInputCentered}
+              />
+            </section>
           </>
         )}
       </section>

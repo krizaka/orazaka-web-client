@@ -123,7 +123,9 @@ export interface TranslationDictionary {
     suggestionCode: string;
     suggestionAsk: string;
     newMessages: string;
-    cmdEnterHint: string;
+    statusRoutedTo: string;
+    statusCredits: string;
+    composerBusy: string;
     copyMessage: string;
     copiedMessage: string;
     deleteConfirm: string;
