@@ -20,6 +20,8 @@ export interface ClipRecord {
   model?: ClipModelKey;
   /** The clip starts from the photo `imageId` (image to video): the run was given that photo, cut to the frame around its subject. */
   fromImage?: true;
+  /** A 10 s clip is two runs (the second starts from the first one's last frame, cross-faded over 4 frames): the second run's id. */
+  linkedRunId?: string;
   /** The GPU a droplet made it on; set with `fromImage` (its time is billed by the hour, not by the clip). */
   gpu?: string;
   /** The hourly rate the clip's cost was computed with (USD), when it is GPU time rather than a provider's price. */

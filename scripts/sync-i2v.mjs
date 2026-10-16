@@ -26,9 +26,13 @@ export const SUBJECTS = {
   "mini-skating": { image: "mini-skating", stem: "skating-i2v" },
 };
 
+/** Frames of the cross-fade between the two halves of a 10 s clip. */
+export const LINK_FRAMES = 4;
+
 /** The published records of a batch: accepted 16:9 clips, each with exactly what its run reported. */
 export function records(batch, review, featured = 3) {
   const out = [];
+  const byId = new Map(batch.map((c) => [c.id, c]));
   for (const clip of batch) {
     const subject = clip.id.replace(/-(16x9|9x16)$/, "");
     const known = SUBJECTS[subject];
@@ -57,6 +61,31 @@ export function records(batch, review, featured = 3) {
         runId: clip.runId,
       },
     });
+    // A 10 s version: the clip, then a second run that starts from its last frame (same seed), cross-faded over 4 frames.
+    const second = byId.get(`${clip.id}-b`);
+    if (second?.status === "SUCCEEDED" && review[second.id]?.accepted === true) {
+      out.push({
+        stem: `products/orazaka/gallery-video/${known.stem}-10s`,
+        record: {
+          id: `${known.stem}-10s`,
+          imageId: known.image,
+          model: clip.model,
+          fromImage: true,
+          gpu: r.gpu,
+          gpuRateUsdPerHour: clip.gpuRateUsdPerHour,
+          prompt: clip.prompt,
+          seed: String(r.seed),
+          width: r.width,
+          height: r.height,
+          fps: r.fps,
+          duration: Math.round(((r.frames * 2 - LINK_FRAMES) / r.fps) * 100) / 100, // 238 frames at 24 fps
+          seconds: clip.runSeconds + second.runSeconds,
+          costUsd: Math.round((clip.gpuCostUsd + second.gpuCostUsd) * 100) / 100,
+          runId: clip.runId,
+          linkedRunId: second.runId,
+        },
+      });
+    }
   }
   return out;
 }

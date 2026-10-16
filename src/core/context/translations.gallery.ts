@@ -119,6 +119,9 @@ export interface GalleryDictionary {
   /** What the video starts from, as a run fact: the label and the value. */
   videoFrom: string;
   videoFromImage: string;
+  /** A 10 s clip: two linked runs. */
+  videoLinked: string;
+  videoLinkedText: string;
   /** The run fact for a clip whose cost is GPU time, and its value. */
   clipCostGpu: string;
   costGpu: string;
@@ -255,6 +258,8 @@ export const gallery: Record<Locale, GalleryDictionary> = {
     "videoChipGpu": "Wan 2.2 TI2V 5B · a GPU · {seconds} min · ${cost}",
     "videoFrom": "Starts from",
     "videoFromImage": "the image of the step before (cut to the frame around its subject)",
+    "videoLinked": "10 s, two linked runs",
+    "videoLinkedText": "the second 5 s run starts from the last frame of the first (same seed and prompt), cross-faded over 4 frames",
     "clipCostGpu": "GPU time",
     "costGpu": "${cost} of GPU time (${rate} an hour)",
     "fromImage": "The video is made from the image: the run was given this photo and animates it — prompt, image, video, all three Orazaka runs.",
@@ -424,6 +429,8 @@ export const gallery: Record<Locale, GalleryDictionary> = {
     "videoChipGpu": "Wan 2.2 TI2V 5B · un GPU · {seconds} min · {cost} $",
     "videoFrom": "Part de",
     "videoFromImage": "l'image de l'étape précédente (recadrée au format autour du sujet)",
+    "videoLinked": "10 s, deux exécutions liées",
+    "videoLinkedText": "la seconde exécution de 5 s part de la dernière image de la première (même graine, même consigne), en fondu enchaîné sur 4 images",
     "clipCostGpu": "Temps de GPU",
     "costGpu": "{cost} $ de temps de GPU ({rate} $ l'heure)",
     "fromImage": "La vidéo est faite à partir de l'image : l'exécution a reçu cette photo et l'anime — consigne, image, vidéo, trois exécutions Orazaka.",

@@ -29,3 +29,18 @@ test("a clip nobody reviewed is not published, and a run that did not report its
 test("every subject has its own gallery image and file stem", () => {
   assert.equal(new Set(Object.values(SUBJECTS).map((s) => s.stem)).size, Object.keys(SUBJECTS).length);
 });
+
+test("a 10 s version is published when its second run was accepted: two linked runs, summed time and cost, a 4-frame cross-fade", () => {
+  const rows = records(
+    [run("tea-pour-16x9", "16:9"), run("tea-pour-16x9-b", "16:9", { runId: "22222222-2222-2222-2222-222222222222" })],
+    { "tea-pour-16x9": { accepted: true }, "tea-pour-16x9-b": { accepted: true } },
+  );
+  assert.deepEqual(rows.map((r) => r.record.id), ["tea-pour-i2v", "tea-pour-i2v-10s"]);
+  const ten = rows[1].record;
+  assert.equal(ten.duration, 9.92);
+  assert.equal(ten.seconds, 2212);
+  assert.equal(ten.linkedRunId, "22222222-2222-2222-2222-222222222222");
+  assert.equal(ten.featured, undefined);
+  // without the second run's review there is no 10 s clip
+  assert.equal(records([run("tea-pour-16x9", "16:9"), run("tea-pour-16x9-b", "16:9")], { "tea-pour-16x9": { accepted: true } }).length, 1);
+});
