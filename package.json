@@ -9,7 +9,7 @@
     "prebuild": "node scripts/link-fonts.mjs",
     "build": "depcruise src --config .dependency-cruiser.cjs && next build",
     "start": "next start",
-    "lint": "eslint && krizaka-ratchet",
+    "lint": "eslint && krizaka-ratchet && ast-grep test --skip-snapshot-tests && node scripts/sg-ratchet.mjs && node --test scripts/sg-ratchet.test.mjs",
     "format": "prettier --write \"src/**/*.{ts,tsx,json,md}\"",
     "validate": "depcruise src --config .dependency-cruiser.cjs && npm run lint && npm run test:codemods && npm run test:deps && npm run check:deploy-build && npm run test:scripts && npm run test:coverage",
     "test": "jest",
@@ -20,7 +20,11 @@
     "test:scripts": "node --test scripts/*.test.mjs",
     "record:tour": "node scripts/record-tour.mjs",
     "test:deps": "node --test scripts/krizaka-deps.test.mjs",
-    "check:deploy-build": "AUTH_LOGIN_ENABLED=true AUTH_SIGNUP_ENABLED=true NODE_ENV=production ROUTER_URL=http://core:8088 NEXTAUTH_URL=https://dev.orazaka.com NEXTAUTH_SECRET=ci-build-only APP_COMMIT=ci next build"
+    "check:deploy-build": "AUTH_LOGIN_ENABLED=true AUTH_SIGNUP_ENABLED=true NODE_ENV=production ROUTER_URL=http://core:8088 NEXTAUTH_URL=https://dev.orazaka.com NEXTAUTH_SECRET=ci-build-only APP_COMMIT=ci next build",
+    "lint:sg": "node scripts/sg-ratchet.mjs",
+    "lint:sg:test": "ast-grep test --skip-snapshot-tests",
+    "sg:ratchet:update": "node scripts/sg-ratchet.mjs --update",
+    "sg:fix": "node scripts/sg-fix.mjs"
   },
   "dependencies": {
     "@dagrejs/dagre": "^3.0.0",
@@ -46,6 +50,7 @@
     "tailwind-merge": "^3.3.1"
   },
   "devDependencies": {
+    "@ast-grep/cli": "0.51.0",
     "@krizaka/config": "^0.1.0",
     "@playwright/test": "^1.50.0",
     "@tailwindcss/postcss": "^4",

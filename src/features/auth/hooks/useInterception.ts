@@ -7,6 +7,7 @@
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { InterceptionApi } from "@/services/interception.api";
 import type { SchemaDescriptor } from "@/services/interception.api";
+import { minutesToMilliseconds } from "date-fns";
 
 /**
  * Hook providing cached access to an interception form schema.
@@ -18,7 +19,7 @@ export function useInterceptionSchema(schemaId: string) {
   const query = useQuery<SchemaDescriptor>({
     queryKey: ["interception-schema", schemaId],
     queryFn: () => InterceptionApi.fetchSchema(schemaId),
-    staleTime: 5 * 60 * 1000,
+    staleTime: minutesToMilliseconds(5),
   });
 
   return {
