@@ -38,7 +38,7 @@ describe("GalleryFeatured (the home page's prompt → image → video, a slidesh
   it("is a three-step strip: the prompt, the image (FLUX.2, one Mac, free), the video (Wan 2.2, cloud, price) — chips visible under each medium", () => {
     const { container } = wrap(<GalleryFeatured />);
     expect(container.querySelector("#made")).not.toBeNull();
-    expect(screen.getByRole("heading", { level: 2 })).toHaveTextContent("One scene, two models");
+    expect(screen.getByRole("heading", { level: 2 })).toHaveTextContent("One scene, three runs");
     const first = FEATURED[0];
     const image = first.image!;
     const active = slide(container, 0);
@@ -52,8 +52,11 @@ describe("GalleryFeatured (the home page's prompt → image → video, a slidesh
     expect(video).toHaveAttribute("aria-label", g.clips[first.id]);
     // The chips sit in the step, right under the medium they describe.
     expect(steps[1]).toHaveTextContent(`FLUX.2 · on one Mac · ${String(image.seconds)} s · free`);
-    expect(steps[2]).toHaveTextContent(/Wan 2\.2 · DigitalOcean · .*\$/);
-    expect(within(active).getByText(g.notFromImage)).toBeInTheDocument();
+    // The first slides are the clips made FROM their image on a GPU worker: GPU minutes and GPU time under the video, and the strip says it is made from the image.
+    expect(first.clip.fromImage).toBe(true);
+    expect(steps[2]).toHaveTextContent(/Wan 2\.2 TI2V 5B · a GPU · \d+ min · \$/);
+    expect(within(active).getByText(g.fromImage)).toBeInTheDocument();
+    expect(within(active).queryByText(g.notFromImage)).toBeNull();
   });
 
   it("opens the facts and \"Reproduce it\" over the page (a popover), never inside the strip — its height cannot change", () => {
@@ -70,8 +73,9 @@ describe("GalleryFeatured (the home page's prompt → image → video, a slidesh
     expect(strip.querySelectorAll("*").length).toBe(before); // nothing was added to the strip
     expect(open).toHaveTextContent(first.clip.runId);
     expect(open).toHaveTextContent(first.clip.seed);
-    expect(open).toHaveTextContent(/Wan 2\.2 A14B/);
+    expect(open).toHaveTextContent(/Wan 2\.2 TI2V 5B/);
     expect(open).toHaveTextContent(/routed by Orazaka/);
+    expect(open).toHaveTextContent(g.videoFromImage);
     expect(Array.from(open.querySelectorAll("pre code")).map((c) => c.textContent)).toEqual(clipReproduceParts(first.clip).map((part) => part.code));
     fireEvent.keyDown(open, { key: "Escape" });
     fireEvent.click(screen.getByRole("button", { name: g.next }));
@@ -79,6 +83,15 @@ describe("GalleryFeatured (the home page's prompt → image → video, a slidesh
     fireEvent.click(screen.getByRole("button", { name: g.prev }));
     fireEvent.click(screen.getByRole("button", { name: g.prev }));
     expect(slide(container, FEATURED.length - 1)).toHaveAttribute("data-active");
+  });
+
+  it("a clip that is NOT made from its image says so (the tea-pour text-to-video one, by Wan 2.2 A14B, serverless)", () => {
+    const { container } = wrap(<GalleryFeatured />);
+    const own = FEATURED.findIndex((item) => item.image && !item.clip.fromImage);
+    expect(own).toBeGreaterThanOrEqual(0);
+    const active = slide(container, own);
+    expect(within(active).getByText(g.notFromImage)).toBeInTheDocument();
+    expect(within(active).queryByText(g.fromImage)).toBeNull();
   });
 
   it("says so when a clip has no image: its prompt is its own", () => {
