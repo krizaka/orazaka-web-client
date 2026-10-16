@@ -17,8 +17,8 @@ test("only an accepted 16:9 clip that succeeded is published, with what its run 
   assert.equal(rows.length, 1); // 9:16 is for Shorts, a warped one is rejected, a failed one never was
   const [{ stem, record }] = rows;
   assert.equal(stem, "products/orazaka/gallery-video/bagels-i2v");
-  assert.deepEqual([record.id, record.imageId, record.model, record.fromImage, record.seed, record.width, record.height, record.fps, record.duration, record.seconds, record.costUsd],
-    ["bagels-i2v", "mini-bagels", "wan2.2-ti2v-5b", true, "2718", 1280, 704, 24, 5.04, 1106, 0.23]);
+  assert.deepEqual([record.id, record.imageId, record.model, record.fromImage, record.seed, record.width, record.height, record.fps, record.duration, record.seconds, record.costUsd, record.featured],
+    ["bagels-i2v", "mini-bagels", "wan2.2-ti2v-5b", true, "2718", 1280, 704, 24, 5.04, 1106, 0.23, true]);
 });
 
 test("a clip nobody reviewed is not published, and a run that did not report its frame is an error", () => {

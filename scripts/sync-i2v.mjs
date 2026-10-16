@@ -30,7 +30,9 @@ export const SUBJECTS = {
 export const LINK_FRAMES = 4;
 
 /** The published records of a batch: accepted 16:9 clips, each with exactly what its run reported. */
-export function records(batch, review, featured = 3) {
+export const FEATURED = ["bagels-i2v", "souk-i2v", "tea-pour-i2v"];
+
+export function records(batch, review) {
   const out = [];
   const byId = new Map(batch.map((c) => [c.id, c]));
   for (const clip of batch) {
@@ -45,7 +47,7 @@ export function records(batch, review, featured = 3) {
       record: {
         id: known.stem,
         imageId: known.image,
-        ...(out.length < featured ? { featured: true } : {}),
+        ...(FEATURED.includes(known.stem) ? { featured: true } : {}),
         model: clip.model,
         fromImage: true,
         gpu: r.gpu,
