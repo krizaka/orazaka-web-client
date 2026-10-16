@@ -12,7 +12,7 @@ import i2v from "@/features/landing/utils/gallery-i2v.json";
 import { GALLERY, type GalleryItem, type ReproducePart } from "@/features/landing/utils/gallery";
 
 /** The models a clip can be made by. */
-export type ClipModelKey = "wan2-2-t2v-a14b" | "wan2.2-ti2v-5b";
+export type ClipModelKey = "wan2-2-t2v-a14b" | "wan2.2-ti2v-5b" | "wan2.2-t2v-a14b";
 
 /** What a run recorded about a clip. */
 export interface ClipRecord {
@@ -74,7 +74,13 @@ export const CLIP_MODELS: Record<ClipModelKey, { key: ClipModelKey; name: string
     key: "wan2.2-ti2v-5b",
     name: "Wan 2.2 TI2V 5B",
     licence: "Apache-2.0",
-    provider: "a DigitalOcean GPU by the hour (NVIDIA RTX 4000 Ada, 20 GB)",
+    provider: "a GPU worker of Orazaka's dev, by the hour",
+  },
+  "wan2.2-t2v-a14b": {
+    key: "wan2.2-t2v-a14b",
+    name: "Wan 2.2 A14B, 720p",
+    licence: "Apache-2.0",
+    provider: "a GPU worker of Orazaka's dev, by the hour (80 GB)",
   },
 };
 
@@ -286,7 +292,7 @@ export function clipReproduceParts(clip: GalleryClip): ReproducePart[] {
     {
       language: "bash",
       file: "Terminal",
-      code: `orazaka video ${quoted} \\\n  --model ${CLIP_MODEL.key} --aspect ${clip.aspect} --seed ${clip.seed} --duration ${Math.round(clip.duration)}`,
+      code: `orazaka video ${quoted} \\\n  --model ${clip.model ?? CLIP_MODEL.key} --aspect ${clip.aspect} --seed ${clip.seed} --duration ${Math.round(clip.duration)}`,
     },
   ];
 }

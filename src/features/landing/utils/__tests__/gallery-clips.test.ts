@@ -17,13 +17,17 @@ describe("the videos of Made here", () => {
         // Image to video on a GPU droplet: Wan 2.2 TI2V 5B at a size it was trained at (or the next one down on 20 GB), 24 fps, 5 s; the cost is GPU time.
         expect(clip.model).toBe("wan2.2-ti2v-5b");
         expect([[1280, 704], [960, 544], [832, 480]]).toContainEqual([clip.width, clip.height]);
-        expect([clip.fps, clip.duration]).toEqual([24, 5.04]);
-        expect(clip.gpu).toMatch(/RTX 4000 Ada/);
-        expect(clip.gpuRateUsdPerHour).toBe(0.76);
+        expect(clip.fps).toBe(24);
+        // 5 s (121 frames), or 10 s as two linked runs cross-faded over 4 frames (238 frames).
+        expect(clip.linkedRunId ? clip.duration : 5.04).toBe(clip.linkedRunId ? 9.92 : clip.duration);
+        if (!clip.linkedRunId) expect(clip.duration).toBe(5.04);
+        else expect(clip.linkedRunId).toMatch(/^[0-9a-f]{8}-/);
+        expect(clip.gpu).toMatch(/RTX 4000 Ada|H100/);
+        expect(clip.gpuRateUsdPerHour).toBeGreaterThan(0);
         expect(clip.imageId).toBeTruthy();
         expect(clip.seconds).toBeGreaterThan(0);
         // cost = wall seconds x the hourly rate (the data says how it was computed)
-        expect(clip.costUsd).toBeCloseTo(((clip.seconds ?? 0) / 3600) * 0.76, 1);
+        expect(clip.costUsd).toBeCloseTo(((clip.seconds ?? 0) / 3600) * (clip.gpuRateUsdPerHour ?? 0), 1);
       } else {
         // The provider's measured shape: 832x480, 16:9, 16 fps, 81 frames.
         expect([clip.width, clip.height, clip.fps]).toEqual([832, 480, 16]);

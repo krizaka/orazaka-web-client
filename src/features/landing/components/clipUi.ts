@@ -27,7 +27,7 @@ export function clipFacts(g: GalleryDictionary, clip: GalleryClip): RunFact[] {
   const model = clipModel(clip);
   const facts: RunFact[] = [
     { label: g.videoModel, value: `${model.name} (${model.licence})` },
-    { label: g.videoProvider, value: model.provider },
+    { label: g.videoProvider, value: clip.gpu ? `${model.provider} — ${clip.gpu}` : model.provider },
     ...(clip.fromImage ? [{ label: g.videoFrom, value: g.videoFromImage }] : []),
     { label: g.runBy, value: `Orazaka — ${g.routedBy}` },
     { label: g.runId, value: clip.linkedRunId ? `${clip.runId} + ${clip.linkedRunId}` : clip.runId },
