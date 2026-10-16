@@ -43,6 +43,9 @@ const MOOD: Record<RunStatus, MascotMood> = {
  * act on the run, not on a node — and a cancel offered next to a step invites the
  * user to think they are cancelling only that step.
  */
+// A step that no longer runs (done, or skipped by a condition) counts as progress.
+const FINISHED_STEP_STATUSES: readonly string[] = ["SUCCEEDED", "SKIPPED"];
+
 export function RunScreen({ runId }: Readonly<RunScreenProps>) {
   const { t } = useTranslation();
   const { run, isLoading, hasError, reload } = useStudioRun(runId);
@@ -71,7 +74,7 @@ export function RunScreen({ runId }: Readonly<RunScreenProps>) {
     FAILED: t.showcase.studio.runFailedBody,
     COMPENSATING: t.showcase.studio.runFailedBody,
   };
-  const done = run.steps.filter((step) => step.status === "SUCCEEDED" || step.status === "SKIPPED").length;
+  const done = run.steps.filter((step) => FINISHED_STEP_STATUSES.includes(step.status)).length;
   const total = run.steps.length;
 
   const act = async (action: () => Promise<void>) => {
