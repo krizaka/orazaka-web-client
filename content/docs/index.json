@@ -144,6 +144,18 @@
     "file": "licensing.md"
   },
   {
+    "slug": "content-policy",
+    "journey": "run",
+    "group": null,
+    "order": 5,
+    "title": "Content policy — you decide",
+    "intro": "Orazaka does not censor: the operator configures what an installation refuses or routes. Permissive by default; minors_risk is always refused.",
+    "audience": "operator",
+    "source": "docs/CONTENT_POLICY.md",
+    "generated": false,
+    "file": "content-policy.md"
+  },
+  {
     "slug": "api",
     "journey": "build",
     "group": "integrate",

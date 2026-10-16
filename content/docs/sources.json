@@ -25,5 +25,6 @@
   "docs/_generated/REPOSITORIES.md": "repositories",
   "docs/_generated/GOVERNANCE.md": "governance",
   "docs/_generated/ADRS.md": "adrs",
-  "docs/MOBILE.md": "mobile-guide"
+  "docs/MOBILE.md": "mobile-guide",
+  "docs/CONTENT_POLICY.md": "content-policy"
 }
