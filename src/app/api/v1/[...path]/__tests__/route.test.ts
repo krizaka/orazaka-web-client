@@ -1,5 +1,5 @@
 /** @jest-environment node */
-import { DELETE, POST } from "../route";
+import { DELETE, POST } from "@/app/api/v1/[...path]/route";
 
 jest.mock("next-auth/next", () => ({ getServerSession: jest.fn().mockResolvedValue({ user: { id: "u1" } }) }));
 jest.mock("@/core/auth/auth-options", () => ({ authOptions: {} }));
