@@ -178,8 +178,10 @@ describe("LandingPage while sign-in and sign-up are closed (the default)", () =>
   it("has a Mobile section with the phone recordings, played on demand, and a way to the full page", () => {
     renderLanding("en", <LandingPage />, CLOSED);
     const section = document.getElementById("mobile") as HTMLElement;
+    // Four steps, each recorded in dark and in light: the one that matches the page's theme is shown.
     const videos = section.querySelectorAll("video");
-    expect(videos.length).toBe(4);
+    expect(videos.length).toBe(8);
+    expect(section.querySelectorAll('video[data-appearance="dark"]').length).toBe(4);
     videos.forEach((v) => {
       expect(v.getAttribute("preload")).toBe("none");
       expect(v.hasAttribute("autoplay")).toBe(false);
