@@ -62,6 +62,12 @@ async function proxyRequest(req: Request, segments: string[], method: string) {
 
     const contentType = response.headers.get("content-type") || "";
 
+    // 204/205/304 carry no body, and a Response refuses one: relaying "" with these statuses threw
+    // "Invalid response status code 204" and turned every approve / uninstall into a 500.
+    if ([204, 205, 304].includes(response.status)) {
+      return new NextResponse(null, { status: response.status });
+    }
+
     // Server-Sent Events (e.g. /api/v1/jobs/stream): pipe the body straight
     // through. Buffering a long-lived stream with .text() never resolves, so the
     // browser EventSource (useJobSSE) would never receive job-status/-progress
