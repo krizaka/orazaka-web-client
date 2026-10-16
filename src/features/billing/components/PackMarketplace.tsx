@@ -35,7 +35,7 @@ import { Button } from "@krizaka/ui/button";
  */
 export function PackMarketplace({ studios }: Readonly<{ studios: ReadonlyMap<string, { label: string; iconKey: string }> }>) {
   const { t, locale } = useTranslation();
-  const { packs, categories, ownedKeys, isLoading, error, pendingKey, reload, subscribe, remove } =
+  const { packs, categories, ownedKeys, holdingsUnavailable, isLoading, error, pendingKey, reload, subscribe, remove } =
     usePacks(locale, t.packs.loadError);
 
   const included = packs.filter((pack) => pack.access === "INCLUDED");
@@ -55,6 +55,10 @@ export function PackMarketplace({ studios }: Readonly<{ studios: ReadonlyMap<str
             {t.packs.retry}
           </Button>
         </div>
+      )}
+
+      {holdingsUnavailable && !error && (
+        <p role="status" className="max-w-2xl text-[13px] text-fg-muted">{t.packs.holdingsUnavailable}</p>
       )}
 
       {included.length > 0 && (

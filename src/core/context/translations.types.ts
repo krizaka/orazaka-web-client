@@ -742,6 +742,7 @@ export interface TranslationDictionary {
     free: string;
     /** Shown when billing could not be reached — never "free", which would be a price. */
     priceUnavailable: string;
+    holdingsUnavailable: string;
     /** The TOOLKIT band (ADR-061): capability an entitled actor has, never installed. */
     includedTitle: string;
     includedSubtitle: string;

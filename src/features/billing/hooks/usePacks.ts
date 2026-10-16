@@ -9,6 +9,8 @@ interface PacksState {
   packs: PackSummary[];
   categories: PackCategory[];
   ownedKeys: Set<string>;
+  /** Billing did not answer: the shelves are shown, what the user holds is not known. */
+  holdingsUnavailable: boolean;
   isLoading: boolean;
   error: string | null;
   pendingKey: string | null;
@@ -41,6 +43,7 @@ export function usePacks(locale: string, errorMessage: string): PacksState {
   const [packs, setPacks] = useState<PackSummary[]>([]);
   const [categories, setCategories] = useState<PackCategory[]>([]);
   const [held, setHeld] = useState<PackSubscription[]>([]);
+  const [holdingsUnavailable, setHoldingsUnavailable] = useState(false);
   const [isLoading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [pendingKey, setPendingKey] = useState<string | null>(null);
@@ -49,14 +52,21 @@ export function usePacks(locale: string, errorMessage: string): PacksState {
     setLoading(true);
     setError(null);
     try {
+      // The catalogue is the Studio service's; what the user holds is billing's, and billing is not deployed
+      // everywhere (dev sells nothing). A billing outage must not blank the shelves: the catalogue still tells
+      // what each pack is and costs, only the "owned" overlay is unknown.
       const [catalogue, shelves, mine] = await Promise.all([
         StudioApi.fetchPacks(null, locale),
         StudioApi.fetchPackCategories(locale),
-        BillingApi.fetchMyPacks(),
+        BillingApi.fetchMyPacks().then(
+          (held) => ({ held }),
+          () => null,
+        ),
       ]);
       setPacks(catalogue);
       setCategories(shelves);
-      setHeld(mine);
+      setHeld(mine?.held ?? []);
+      setHoldingsUnavailable(mine === null);
     } catch {
       setError(errorMessage);
     } finally {
@@ -97,6 +107,7 @@ export function usePacks(locale: string, errorMessage: string): PacksState {
     packs,
     categories,
     ownedKeys,
+    holdingsUnavailable,
     isLoading,
     error,
     pendingKey,
