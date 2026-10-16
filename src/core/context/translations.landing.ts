@@ -59,6 +59,7 @@ export const landing: Record<Locale, LandingDictionary> = {
         routed: "Routed locally",
         privacy: "0 bytes left your network",
         placeholder: "Ask your private AI…",
+        send: "Send",
       },
       question: "Summarise our client contract and flag the renewal date.",
       answer:
@@ -255,6 +256,7 @@ export const landing: Record<Locale, LandingDictionary> = {
         routed: "Routé localement",
         privacy: "0 octet n'a quitté votre réseau",
         placeholder: "Demandez à votre IA privée…",
+        send: "Envoyer",
       },
       question: "Résume notre contrat client et signale la date de renouvellement.",
       answer:

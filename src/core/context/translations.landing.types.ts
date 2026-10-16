@@ -12,7 +12,7 @@ export interface LandingItem {
 
 /** The scripted conversation of the sovereign chat (ChatShowcase). */
 export interface ChatDemoCopy {
-  labels: { agent: string; status: string; model: string; routed: string; privacy: string; placeholder: string };
+  labels: { agent: string; status: string; model: string; routed: string; privacy: string; placeholder: string; send?: string };
   question: string;
   answer: string;
   pipeline: string[];
