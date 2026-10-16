@@ -3,6 +3,7 @@
 import { Button } from "@krizaka/ui/button";
 import { DescriptionList } from "@krizaka/ui/description-list";
 import { CheckIcon, CopyIcon } from "@krizaka/icons";
+import { JOB_STATUS } from "@/core/constants/http.constants";
 import { useTranslation } from "@/core/context/LocaleContext";
 import { MODEL_NAMES } from "./modelNames";
 import { type FactSection, jobFacts, promptOf } from "@/features/jobs/utils/jobFacts";
@@ -30,7 +31,7 @@ export function JobDetail({ job, copiedId, onCopy }: Readonly<{ job: Job; copied
           <p className="m-0 text-sm text-fg">{prompt}</p>
         </section>
       )}
-      {job.status === "FAILED" && job.errorMessage && (
+      {job.status === JOB_STATUS.FAILED && job.errorMessage && (
         <section aria-label={d.sections.error} className="flex flex-col gap-2 rounded-lg border border-danger/30 bg-danger/10 p-3">
           <div className="flex items-center justify-between gap-2">
             <h4 className="text-xs font-semibold uppercase tracking-wide text-danger">{d.sections.error}</h4>

@@ -7,6 +7,7 @@
  * key the worker emits has one.
  */
 
+import { JOB_STATUS } from "@/core/constants/http.constants";
 import type { FactId } from "@/core/types/jobFacts.types";
 import type { Job } from "@/core/types/jobs.types";
 
@@ -102,12 +103,12 @@ export function formatDuration(ms: number): string {
 const seconds = (s: number) => (s < 600 ? `${s.toFixed(1)} s` : formatDuration(s * 1000));
 const memory = (mb: number) => (mb >= 1024 ? `${(mb / 1024).toFixed(1)} GB` : `${Math.round(mb)} MB`);
 
-/** The wall time of a job, queue and run: creation to last update (to now while it runs). */
-export function wallTimeMs(job: Pick<Job, "status" | "createdAt" | "updatedAt">, now: number = Date.now()): number | null {
+/** The wall time of a job, queue and run: creation to last update. While it runs it is `now` (the caller's clock) when given, else unknown. */
+export function wallTimeMs(job: Pick<Job, "status" | "createdAt" | "updatedAt">, now?: number): number | null {
   const start = Date.parse(job.createdAt);
   if (Number.isNaN(start)) return null;
-  const running = job.status === "PENDING" || job.status === "PROCESSING";
-  const end = running ? now : Date.parse(job.updatedAt);
+  const running = job.status === JOB_STATUS.PENDING || job.status === JOB_STATUS.PROCESSING;
+  const end = running ? now ?? Number.NaN : Date.parse(job.updatedAt);
   return Number.isNaN(end) ? null : Math.max(0, end - start);
 }
 
@@ -176,7 +177,7 @@ export function jobFacts(job: Pick<Job, "payload" | "result" | "status" | "creat
 
   const inference = num(get("inference"));
   const total = wallTimeMs(job, now);
-  const finished = job.status === "COMPLETED" || job.status === "FAILED";
+  const finished = job.status === JOB_STATUS.COMPLETED || job.status === JOB_STATUS.FAILED;
   const waiting = finished && inference !== null && total !== null ? total - inference * 1000 : null;
   push("queued", waiting !== null && waiting >= 1000 ? formatDuration(waiting) : null);
   push("inference", inference === null ? null : seconds(inference));

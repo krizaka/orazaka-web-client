@@ -17,7 +17,8 @@ describe("wall time", () => {
     expect(formatDuration(768)).toBe("768 ms");
     expect(formatDuration(12_400)).toBe("12.4 s");
   });
-  it("runs to now while the job runs", () => {
+  it("is unknown while the job runs unless the caller gives its clock", () => {
+    expect(wallTimeMs(job({ status: "PROCESSING" }))).toBeNull();
     expect(wallTimeMs(job({ status: "PROCESSING" }), Date.parse("2026-10-16T10:00:30Z"))).toBe(30_000);
   });
 });
