@@ -29,6 +29,13 @@ export const SUBJECTS = {
 /** Frames of the cross-fade between the two halves of a 10 s clip. */
 export const LINK_FRAMES = 4;
 
+/** The 720p hero clips (text to video, Wan 2.2 A14B on an 80 GB GPU): the subject → its file stem under `products/orazaka/video/`. */
+export const HEROES = {
+  "old-port": { stem: "old-port", featured: true },
+  "marrakech-lanterns": { stem: "marrakech-lanterns", featured: true },
+  chefchaouen: { stem: "chefchaouen" },
+};
+
 /** The published records of a batch: accepted 16:9 clips, each with exactly what its run reported. */
 export const FEATURED = ["bagels-i2v", "souk-i2v", "tea-pour-i2v"];
 
@@ -92,6 +99,38 @@ export function records(batch, review) {
   return out;
 }
 
+/** The published hero records: accepted 16:9 text-to-video clips, with exactly what their run reported. */
+export function heroRecords(batch, review) {
+  const out = [];
+  for (const clip of batch) {
+    const subject = clip.id.replace(/-(16x9|9x16)$/, "");
+    const known = HEROES[subject];
+    if (!known || clip.aspect !== "16:9" || clip.status !== "SUCCEEDED" || review[clip.id]?.accepted !== true) continue;
+    const r = clip.reported;
+    if (!r.width || !r.height || !r.frames || !r.fps) throw new Error(`${clip.id}: the run did not report its frame`);
+    out.push({
+      stem: `products/orazaka/video/${known.stem}`,
+      record: {
+        id: known.stem,
+        ...(known.featured ? { featured: true } : {}),
+        model: clip.model,
+        gpu: r.gpu,
+        gpuRateUsdPerHour: clip.gpuRateUsdPerHour,
+        prompt: clip.prompt,
+        seed: String(r.seed),
+        width: r.width,
+        height: r.height,
+        fps: r.fps,
+        duration: r.durationSeconds,
+        seconds: clip.runSeconds,
+        costUsd: Math.round(clip.gpuCostUsd * 100) / 100,
+        runId: clip.runId,
+      },
+    });
+  }
+  return out;
+}
+
 function main() {
   const dir = process.argv[2];
   if (!dir) {
@@ -100,7 +139,9 @@ function main() {
   }
   const batch = fs.readdirSync(path.join(dir, "out")).filter((f) => f.endsWith(".json")).sort().map((f) => JSON.parse(fs.readFileSync(path.join(dir, "out", f), "utf8")));
   const review = JSON.parse(fs.readFileSync(path.join(dir, "review.json"), "utf8"));
-  const rows = records(batch, review);
+  const heroDir = path.join(dir, "out-hero");
+  const heroes = fs.existsSync(heroDir) ? fs.readdirSync(heroDir).filter((f) => f.endsWith(".json")).sort().map((f) => JSON.parse(fs.readFileSync(path.join(heroDir, f), "utf8"))) : [];
+  const rows = [...records(batch, review), ...heroRecords(heroes, review)];
   fs.writeFileSync(OUT, `${JSON.stringify(rows, null, 2)}\n`);
   process.stdout.write(`${rows.length} image-to-video clip(s) recorded\n`);
 }

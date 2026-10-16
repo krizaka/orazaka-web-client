@@ -29,10 +29,17 @@ describe("the videos of Made here", () => {
         // cost = wall seconds x the hourly rate (the data says how it was computed)
         expect(clip.costUsd).toBeCloseTo(((clip.seconds ?? 0) / 3600) * (clip.gpuRateUsdPerHour ?? 0), 1);
       } else {
-        // The provider's measured shape: 832x480, 16:9, 16 fps, 81 frames.
-        expect([clip.width, clip.height, clip.fps]).toEqual([832, 480, 16]);
-        expect(clip.duration).toBeCloseTo(5.06, 1);
-        expect(clip.costUsd).toBe(0.6);
+        if (clip.model === "wan2.2-t2v-a14b") {
+          // The 720p A14B on our own 80 GB GPU: 1280x720, 16 fps, 81 frames, cost = GPU time.
+          expect([clip.width, clip.height, clip.fps]).toEqual([1280, 720, 16]);
+          expect(clip.gpuRateUsdPerHour).toBeGreaterThan(0);
+          expect(clip.costUsd).toBeCloseTo(((clip.seconds ?? 0) / 3600) * (clip.gpuRateUsdPerHour ?? 0), 1);
+        } else {
+          // The provider's measured shape: 832x480, 16:9, 16 fps, 81 frames.
+          expect([clip.width, clip.height, clip.fps]).toEqual([832, 480, 16]);
+          expect(clip.duration).toBeCloseTo(5.06, 1);
+          expect(clip.costUsd).toBe(0.6);
+        }
       }
       if (clip.seconds !== undefined) expect(clip.seconds).toBeGreaterThan(0);
       if (clip.imageId) expect(GALLERY.some((item) => item.id === clip.imageId)).toBe(true);
@@ -53,7 +60,10 @@ describe("the videos of Made here", () => {
     expect(fromImage.length).toBeGreaterThanOrEqual(1);
     expect(ids.slice(0, fromImage.length)).toEqual(fromImage.map((item) => item.clip.id)); // the whole path comes first
     for (const item of fromImage) expect(item.image?.id).toBe(item.clip.imageId);
-    expect(ids.slice(fromImage.length)).toEqual(["tea-pour", "old-port", "assistant", "montreal", "grenoble", "yasakia-montreal-dawn"]);
+    // then the 720p heroes (text to video on our GPU), tea-pour (text to video, serverless), the assistant and the best of the rest
+    const heroes = FEATURED.filter((item) => item.clip.model === "wan2.2-t2v-a14b").map((item) => item.clip.id);
+    expect(heroes).toContain("old-port");
+    expect(ids.filter((id) => !fromImage.some((i) => i.clip.id === id) && !heroes.includes(id))).toEqual(["tea-pour", "assistant", "montreal", "grenoble", "yasakia-montreal-dawn"]);
     expect(FEATURED.find((item) => item.clip.id === "tea-pour")?.image?.id).toBe("tea-pour");
   });
 

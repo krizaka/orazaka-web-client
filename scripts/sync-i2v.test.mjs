@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
-import { SUBJECTS, records } from "./sync-i2v.mjs";
+import { HEROES, SUBJECTS, heroRecords, records } from "./sync-i2v.mjs";
 
 const run = (id, aspect, over = {}) => ({
   id, aspect, status: "SUCCEEDED", model: "wan2.2-ti2v-5b", prompt: "p", runId: "11111111-1111-1111-1111-111111111111",
@@ -43,4 +43,14 @@ test("a 10 s version is published when its second run was accepted: two linked r
   assert.equal(ten.featured, undefined);
   // without the second run's review there is no 10 s clip
   assert.equal(records([run("tea-pour-16x9", "16:9"), run("tea-pour-16x9-b", "16:9")], { "tea-pour-16x9": { accepted: true } }).length, 1);
+});
+
+test("a 720p hero is published from its reviewed 16:9 run: text to video, its own GPU and rate, no image", () => {
+  const hero = (id, aspect) => ({ ...run(id, aspect, { model: "wan2.2-t2v-a14b", gpuRateUsdPerHour: 3.99, gpuCostUsd: 1.3843, runSeconds: 1249 }), reported: { width: 1280, height: 720, frames: 81, fps: 16, seed: "20261011", durationSeconds: 5.06, gpu: "NVIDIA H100 80GB HBM3" } });
+  const rows = heroRecords([hero("old-port-16x9", "16:9"), hero("old-port-9x16", "9:16"), hero("chefchaouen-16x9", "16:9")], { "old-port-16x9": { accepted: true }, "old-port-9x16": { accepted: true } });
+  assert.equal(rows.length, 1); // the 9:16 is for Shorts, the unreviewed one is not published
+  assert.equal(rows[0].stem, "products/orazaka/video/old-port");
+  assert.deepEqual([rows[0].record.model, rows[0].record.width, rows[0].record.height, rows[0].record.fps, rows[0].record.fromImage, rows[0].record.imageId, rows[0].record.featured, rows[0].record.costUsd],
+    ["wan2.2-t2v-a14b", 1280, 720, 16, undefined, undefined, true, 1.38]);
+  assert.equal(new Set(Object.values(HEROES).map((h) => h.stem)).size, Object.keys(HEROES).length);
 });

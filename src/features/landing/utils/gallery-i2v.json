@@ -184,5 +184,61 @@
       "runId": "e16fe14e-c9a7-4722-8db9-47c12458846b",
       "linkedRunId": "26d23a20-9be4-4fa4-b8cb-15a97f00e4f7"
     }
+  },
+  {
+    "stem": "products/orazaka/video/chefchaouen",
+    "record": {
+      "id": "chefchaouen",
+      "model": "wan2.2-t2v-a14b",
+      "gpu": "NVIDIA H100 80GB HBM3",
+      "gpuRateUsdPerHour": 3.99,
+      "prompt": "One single continuous shot walking slowly down a narrow blue-washed lane of Chefchaouen at golden morning light: walls in layered shades of blue, potted plants on steps and in niches, a worn wooden door, a cat dozing on a doorstep, soft sunlight raking across the stone stairs, gentle camera glide forward at eye level, no cuts. Cinematic colour grade, photographic realism. No text, no lettering, no logos, no readable signs, no recognisable faces.",
+      "seed": "20261013",
+      "width": 1280,
+      "height": 720,
+      "fps": 16,
+      "duration": 5.06,
+      "seconds": 1119,
+      "costUsd": 1.24,
+      "runId": "c07f1b91-126c-4961-aa4d-be31d93a8673"
+    }
+  },
+  {
+    "stem": "products/orazaka/video/marrakech-lanterns",
+    "record": {
+      "id": "marrakech-lanterns",
+      "featured": true,
+      "model": "wan2.2-t2v-a14b",
+      "gpu": "NVIDIA H100 80GB HBM3",
+      "gpuRateUsdPerHour": 3.99,
+      "prompt": "Slow continuous camera glide across a Marrakech rooftop terrace at dusk: rows of pierced-brass lanterns glowing amber and swaying gently in the warm breeze, low cushions and a carved wooden table with a copper teapot and small glasses, the red-ochre medina roofs and minarets fading into a violet sky behind, the first stars appearing, a few swallows crossing the sky. One single continuous shot, steady dolly forward, cinematic colour grade, shallow depth of field, photographic realism. No text, no lettering, no logos, no readable signs, no recognisable faces.",
+      "seed": "20261012",
+      "width": 1280,
+      "height": 720,
+      "fps": 16,
+      "duration": 5.06,
+      "seconds": 1112,
+      "costUsd": 1.23,
+      "runId": "19b23f13-0833-46fc-9646-2ec3b2ff9a30"
+    }
+  },
+  {
+    "stem": "products/orazaka/video/old-port",
+    "record": {
+      "id": "old-port",
+      "featured": true,
+      "model": "wan2.2-t2v-a14b",
+      "gpu": "NVIDIA H100 80GB HBM3",
+      "gpuRateUsdPerHour": 3.99,
+      "prompt": "A slow continuous aerial drone glide forward over the Old Port of Montréal at blue hour: calm water mirroring the warm lights of the cobblestone quays, the old stone warehouses and the clock tower in soft dusk, a few small boats at their moorings, the downtown towers glowing in the distance, deep blue sky with the last orange glow on the horizon, gentle mist over the St. Lawrence River. One single continuous shot, steady camera, cinematic colour grade, 35mm anamorphic, photographic realism. No text, no lettering, no logos, no readable signs, no recognisable faces.",
+      "seed": "20261011",
+      "width": 1280,
+      "height": 720,
+      "fps": 16,
+      "duration": 5.06,
+      "seconds": 1249,
+      "costUsd": 1.38,
+      "runId": "701bb231-6626-48f3-992d-71bdffa37643"
+    }
   }
 ]
