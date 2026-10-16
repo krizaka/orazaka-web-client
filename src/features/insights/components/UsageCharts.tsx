@@ -2,8 +2,9 @@
 
 import * as React from "react";
 import { BarChart } from "@krizaka/charts/bar";
-import { Card } from "@krizaka/ui/card";
+import { ChartCard } from "@krizaka/charts/card";
 import type { Run } from "@krizaka/orazaka-shared";
+import { fill } from "@/core/context/fill";
 import { useTranslation } from "@/core/context/LocaleContext";
 import { runsByStudio, timeToResultByKind } from "@/core/jobs/jobInsights";
 import type { Job } from "@/core/types/jobs.types";
@@ -16,7 +17,7 @@ interface StudiosUsedChartProps {
   error?: boolean;
 }
 
-/** The Studios the person ran, most used first: horizontal bars, the failed runs in the danger colour. */
+/** The Studios the person ran, most used first: horizontal bars, the failed runs in a muted red. */
 export function StudiosUsedChart({ runs, studioLabel, loading, error }: Readonly<StudiosUsedChartProps>) {
   const { t } = useTranslation();
   const w = t.insights;
@@ -24,29 +25,26 @@ export function StudiosUsedChart({ runs, studioLabel, loading, error }: Readonly
     () => runsByStudio(runs).slice(0, 8).map((s) => ({ ...s, ok: s.runs - s.failed, studio: studioLabel(s.studioKey) })),
     [runs, studioLabel],
   );
+  const top = studios[0];
   return (
-    <Card.Root>
-      <Card.Body padding="lg">
-        <BarChart
-          title={w.studiosUsed}
-          description={w.studiosUsedDesc}
-          data={studios}
-          x="studio"
-          xLabel={w.studioHeader}
-          series={[
-            { key: "ok", label: w.completed, color: "accent" },
-            { key: "failed", label: w.failed, color: "danger" },
-          ]}
-          format="integer"
-          stacked
-          horizontal
-          height={Math.max(180, studios.length * 40)}
-          loading={loading}
-          error={error}
-          empty={w.noStudioRun}
-        />
-      </Card.Body>
-    </Card.Root>
+    <ChartCard title={w.studiosUsed} insight={top ? fill(w.usage.studioInsight, { studio: top.studio, runs: top.runs }) : w.noStudioRun} description={w.studiosUsedDesc}>
+      <BarChart
+        data={studios}
+        x="studio"
+        xLabel={w.studioHeader}
+        series={[
+          { key: "ok", label: w.completed, color: "accent" },
+          { key: "failed", label: w.failed, color: "danger" },
+        ]}
+        format="integer"
+        stacked
+        horizontal
+        height={Math.max(180, studios.length * 40)}
+        loading={loading}
+        error={error}
+        empty={w.noStudioRun}
+      />
+    </ChartCard>
   );
 }
 
@@ -61,24 +59,21 @@ export function TimeToResultChart({ jobs, loading, error }: Readonly<TimeToResul
   const { t } = useTranslation();
   const w = t.insights;
   const timing = React.useMemo(() => timeToResultByKind(jobs).map((k) => ({ ...k, label: w.kinds[k.kind] })), [jobs, w]);
+  const slowest = timing[0];
   return (
-    <Card.Root>
-      <Card.Body padding="lg">
-        <BarChart
-          title={w.timeToResult}
-          description={w.timeToResultDesc}
-          data={timing}
-          x="label"
-          xLabel={w.kindHeader}
-          y="seconds"
-          yLabel={w.secondsHeader}
-          format={{ style: "unit", unit: "second" }}
-          horizontal
-          height={Math.max(180, timing.length * 48)}
-          loading={loading}
-          error={error}
-        />
-      </Card.Body>
-    </Card.Root>
+    <ChartCard title={w.timeToResult} insight={slowest ? fill(w.usage.timeInsight, { kind: slowest.label, seconds: slowest.seconds }) : w.usage.timeInsightNone} description={w.timeToResultDesc}>
+      <BarChart
+        data={timing}
+        x="label"
+        xLabel={w.kindHeader}
+        y="seconds"
+        yLabel={w.secondsHeader}
+        format={{ style: "unit", unit: "second" }}
+        horizontal
+        height={Math.max(180, timing.length * 48)}
+        loading={loading}
+        error={error}
+      />
+    </ChartCard>
   );
 }

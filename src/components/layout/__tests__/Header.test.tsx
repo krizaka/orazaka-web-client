@@ -37,6 +37,8 @@ jest.mock("@/core/context/LocaleContext", () => ({
     setLocale: mockSetLocale,
     t: {
       settings: { english: "English", french: "French" },
+      sidebar: { dashboard: "Dashboard" },
+      dashboard: { sovereignBadge: "Local · sovereign" },
       header: { profile: "Profile", settings: "Settings", logout: "Logout", themeDark: "Dark theme", themeLight: "Light theme", themeSystem: "System theme", openSidebar: "Open Sidebar", changeLanguage: "Change Language", closeLanguageMenu: "Close language menu" },
       notifications: {
         title: "Notifications",
@@ -66,6 +68,12 @@ jest.mock("@/components/layout/NotificationBell", () => ({
 
 describe("Header", () => {
   afterEach(() => jest.clearAllMocks());
+
+  it("names the app next to its mark, with the sovereign status as a chip", () => {
+    render(<Header />);
+    expect(screen.getByRole("link", { name: "Dashboard" })).toHaveTextContent("Orazaka");
+    expect(screen.getByText("Local · sovereign")).toBeInTheDocument();
+  });
 
   it("renders user name", () => {
     render(<Header />);

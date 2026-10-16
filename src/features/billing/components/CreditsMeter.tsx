@@ -34,6 +34,8 @@ export function CreditsMeter({ wallet, available, plan, loading, href }: Readonl
   const w = t.insights.credits;
   const numberLocale = INTL_LOCALES[locale];
   const grant = plan?.monthlyCreditGrant ?? 0;
+  /** Nothing granted, bought or held: a clear next step instead of a zero. */
+  const noCredits = !loading && available <= 0 && (!wallet || wallet.balanceGranted + wallet.balancePurchased + wallet.held <= 0);
 
   const body = (
     <section className="flex flex-col gap-5 p-6">
@@ -42,6 +44,13 @@ export function CreditsMeter({ wallet, available, plan, loading, href }: Readonl
           <span className="text-xs font-semibold uppercase tracking-wider text-fg-muted">{w.available}</span>
           {loading ? (
             <Skeleton className="h-10 w-40" />
+          ) : noCredits ? (
+            <span className="flex flex-col gap-1">
+              <span className="font-display text-2xl font-bold tracking-tight text-fg">{t.insights.usage.noCredits}</span>
+              <Link href="/packs" className="text-sm font-medium text-fg-accent underline-offset-4 hover:underline">
+                {t.insights.usage.noCreditsAction}
+              </Link>
+            </span>
           ) : (
             <NumberTicker value={available} locale={numberLocale} trigger="change" announce align="start" className="font-display text-4xl font-bold tracking-tight text-fg" />
           )}

@@ -7,7 +7,9 @@ import { ThemeToggle } from "@krizaka/ui/theme";
 import { useSidebar } from "@/core/context/SidebarContext";
 import { useTranslation } from "@/core/context/LocaleContext";
 import { CheckIcon, ChevronDownIcon, GlobeIcon, MenuIcon } from "@krizaka/icons";
+import { OrazakaLogo } from "@krizaka/ui";
 import { Avatar } from "@krizaka/ui/avatar";
+import { Badge } from "@krizaka/ui/badge";
 import { Button, IconButton } from "@krizaka/ui/button";
 import { DropdownMenu } from "@krizaka/ui/dropdown-menu";
 import { NotificationBell } from "./NotificationBell";
@@ -47,7 +49,15 @@ export const Header: React.FC = () => {
           <MenuIcon size={20} />
         </IconButton>
       </div>
-      <div className="flex-1" /> {/* Spacer */}
+      {/* The app's mark and its name: the rail only carries the icon. */}
+      <Link href="/" aria-label={t.sidebar.dashboard} className="flex items-center gap-2 rounded-lg p-1 transition-opacity hover:opacity-80">
+        <OrazakaLogo size={22} />
+        <span className="font-display text-sm font-bold tracking-tight text-fg">Orazaka</span>
+      </Link>
+      <Badge tone="success" dot className="ml-3 hidden sm:inline-flex">
+        {t.dashboard.sovereignBadge}
+      </Badge>
+      <div className="flex-1" />
       <div className="flex items-center gap-2">
         <DropdownMenu.Root
           open={langDropdownOpen}
