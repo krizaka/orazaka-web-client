@@ -30,6 +30,41 @@ export interface InsightsDictionary {
   studioHeader: string;
   runsHeader: string;
   noStudioRun: string;
+  usage: {
+    period: string;
+    /** `{days}` */
+    periodOption: string;
+    kpiJobs: string;
+    kpiSuccess: string;
+    kpiTime: string;
+    kpiRuns: string;
+    kpiSuccessHint: string;
+    kpiTimeHint: string;
+    /** `{days}` */
+    kpiPeriodHint: string;
+    /** `{jobs}` `{change}` */
+    jobsInsight: string;
+    /** `{jobs}` */
+    jobsInsightFlat: string;
+    jobsInsightNone: string;
+    /** `{kind}` `{count}` */
+    kindInsight: string;
+    kindInsightNone: string;
+    /** `{studio}` `{runs}` */
+    studioInsight: string;
+    /** `{kind}` `{seconds}` */
+    timeInsight: string;
+    timeInsightNone: string;
+    source: string;
+    export: string;
+    exportCsv: string;
+    exportJson: string;
+    exportFile: string;
+    noCredits: string;
+    noCreditsAction: string;
+    recent: string;
+    seeAll: string;
+  };
   credits: {
     nav: string;
     title: string;
@@ -94,6 +129,34 @@ export const insights: Record<"en" | "fr", InsightsDictionary> = {
     studioHeader: "Studio",
     runsHeader: "Runs",
     noStudioRun: "No Studio has run yet.",
+    usage: {
+      period: "Period",
+      periodOption: "{days} days",
+      kpiJobs: "Jobs",
+      kpiSuccess: "Success rate",
+      kpiTime: "Median time to a result",
+      kpiRuns: "Studio runs",
+      kpiSuccessHint: "completed of finished",
+      kpiTimeHint: "request to result",
+      kpiPeriodHint: "last {days} days",
+      jobsInsight: "{jobs} jobs · {change} vs the period before",
+      jobsInsightFlat: "{jobs} jobs · same as the period before",
+      jobsInsightNone: "No job in this period yet",
+      kindInsight: "Mostly {kind} — {count} jobs",
+      kindInsightNone: "Nothing made in this period",
+      studioInsight: "{studio} ran {runs} times",
+      timeInsight: "{kind} takes {seconds} s at the median",
+      timeInsightNone: "No finished job to time yet",
+      source: "Read from your own jobs and Studio runs — nothing estimated.",
+      export: "Export",
+      exportCsv: "Download CSV",
+      exportJson: "Download JSON",
+      exportFile: "orazaka-usage-{days}d",
+      noCredits: "No credits yet",
+      noCreditsAction: "Get credits",
+      recent: "Latest creations",
+      seeAll: "See all",
+    },
     credits: {
       nav: "Credits",
       title: "Credits & usage",
@@ -130,6 +193,18 @@ export const insights: Record<"en" | "fr", InsightsDictionary> = {
     charts: {
       showData: "Show data",
       hideData: "Hide data",
+      actions: "Chart actions",
+      viewTable: "View as table",
+      downloadCsv: "Download CSV",
+      downloadPng: "Download PNG",
+      downloadSvg: "Download SVG",
+      copyData: "Copy data",
+      copied: "Data copied",
+      close: "Close",
+      tableRows: "{count} rows",
+      toggleSeries: "Show or hide {label}",
+      sparse: "{count} of {total} days have data.",
+      trendVsPrevious: "{change} vs the period before",
       tableCaption: "{title} — data",
       loading: "Loading chart…",
       empty: "No data for this period yet.",
@@ -173,6 +248,34 @@ export const insights: Record<"en" | "fr", InsightsDictionary> = {
     studioHeader: "Studio",
     runsHeader: "Exécutions",
     noStudioRun: "Aucun Studio n'a encore tourné.",
+    usage: {
+      period: "Période",
+      periodOption: "{days} jours",
+      kpiJobs: "Tâches",
+      kpiSuccess: "Taux de réussite",
+      kpiTime: "Délai médian jusqu'au résultat",
+      kpiRuns: "Exécutions de Studios",
+      kpiSuccessHint: "terminées sur finies",
+      kpiTimeHint: "de la demande au résultat",
+      kpiPeriodHint: "{days} derniers jours",
+      jobsInsight: "{jobs} tâches · {change} par rapport à la période d'avant",
+      jobsInsightFlat: "{jobs} tâches · comme la période d'avant",
+      jobsInsightNone: "Aucune tâche sur cette période",
+      kindInsight: "Surtout {kind} — {count} tâches",
+      kindInsightNone: "Rien de créé sur cette période",
+      studioInsight: "{studio} a tourné {runs} fois",
+      timeInsight: "{kind} : {seconds} s à la médiane",
+      timeInsightNone: "Aucune tâche terminée à chronométrer",
+      source: "Lu dans vos propres tâches et exécutions de Studios — rien d'estimé.",
+      export: "Exporter",
+      exportCsv: "Télécharger le CSV",
+      exportJson: "Télécharger le JSON",
+      exportFile: "orazaka-usage-{days}j",
+      noCredits: "Pas encore de crédits",
+      noCreditsAction: "Obtenir des crédits",
+      recent: "Dernières créations",
+      seeAll: "Tout voir",
+    },
     credits: {
       nav: "Crédits",
       title: "Crédits et usage",
@@ -209,6 +312,18 @@ export const insights: Record<"en" | "fr", InsightsDictionary> = {
     charts: {
       showData: "Voir les données",
       hideData: "Masquer les données",
+      actions: "Actions du graphique",
+      viewTable: "Voir en tableau",
+      downloadCsv: "Télécharger le CSV",
+      downloadPng: "Télécharger le PNG",
+      downloadSvg: "Télécharger le SVG",
+      copyData: "Copier les données",
+      copied: "Données copiées",
+      close: "Fermer",
+      tableRows: "{count} lignes",
+      toggleSeries: "Afficher ou masquer {label}",
+      sparse: "{count} jours sur {total} ont des données.",
+      trendVsPrevious: "{change} par rapport à la période d'avant",
       tableCaption: "{title} — données",
       loading: "Chargement du graphique…",
       empty: "Pas encore de données pour cette période.",

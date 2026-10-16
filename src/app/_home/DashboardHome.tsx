@@ -12,25 +12,27 @@ import { Header } from "@/components/layout/Header";
 import { useTranslation } from "@/core/context/LocaleContext";
 import { useChatStream } from "@/features/chat-session/hooks/useChatStream";
 import { useWallet } from "@/features/billing/hooks/useWallet";
-import { useInstallations } from "@/features/studio/hooks/useInstallations";
 import { InterceptorPipeline } from "@/features/dashboard/components/InterceptorPipeline";
-import { WorkspaceSummary } from "@/features/dashboard/components/WorkspaceSummary";
-import { QuickActions } from "@/features/dashboard/components/QuickActions";
 import { RecentSessions } from "@/features/dashboard/components/RecentSessions";
 import { JobsGallery } from "@/app/dashboard/jobs/JobsGallery";
 import { CreditsMeter } from "@/features/billing/components/CreditsMeter";
 import { usePlan } from "@/features/billing/hooks/usePlan";
 import { ActivityCharts } from "@/features/insights/components/ActivityCharts";
+import { UsageExport } from "@/features/insights/components/UsageControls";
+import { UsageKpis } from "@/features/insights/components/UsageKpis";
+import { systemNow } from "@/core/jobs/systemClock";
+import { usageRows, usageSummary } from "@/core/jobs/usageStats";
 import { StudiosUsedChart } from "@/features/insights/components/UsageCharts";
 import { useInsights } from "@/features/insights/hooks/useInsights";
 import { useStudios } from "@/features/studio/hooks/useStudios";
 import { jobMediaUrl } from "@/core/jobs/jobMedia";
-import { ChatIcon, ImageIcon, StudioIcon } from "@krizaka/icons";
+import { ChatIcon } from "@krizaka/icons";
 import { Button } from "@krizaka/ui/button";
 import Link from "next/link";
-import { INTL_LOCALES } from "@/core/constants/locale.constants";
 
 const DATE_LOCALES = { fr, en: enUS } as const;
+/** The dashboard reads the last two weeks of the person's own work. */
+const DASHBOARD_DAYS = 14;
 
 /**
  * The signed-in home: greeting, the interceptor pipeline (admins), the workspace's real figures, the credits and
@@ -43,10 +45,12 @@ export function DashboardHome() {
   const { locale, t } = useTranslation();
   const { threads } = useChatStream("dashboard");
   const { wallet, available, isLoading: walletLoading } = useWallet();
-  const { installations } = useInstallations();
+  const days = DASHBOARD_DAYS;
   const { jobs, runs, isLoading: insightsLoading, hasError } = useInsights(isAuthenticated);
   const { plan } = usePlan(isAuthenticated);
   const { studios } = useStudios(null);
+  const summary = React.useMemo(() => usageSummary(jobs, runs, days, systemNow()), [jobs, runs, days]);
+  const period = React.useMemo(() => usageRows(jobs, runs, days, systemNow()), [jobs, runs, days]);
   const studioLabel = React.useCallback((key: string) => studios.find((s) => s.studioKey === key)?.label ?? key, [studios]);
 
   React.useEffect(() => {
@@ -95,7 +99,7 @@ export function DashboardHome() {
 
         <main className="flex-1 overflow-auto p-6 scrollbar-thin ambient-grid">
           <article className="mx-auto max-w-6xl space-y-6 stagger-children">
-            <header className="flex items-baseline justify-between">
+            <header className="flex flex-wrap items-center justify-between gap-3">
               <section className="space-y-1">
                 <h2 className="fluid-2xl font-bold tracking-tight text-fg flex items-center gap-2">
                   <Icon name={greetingIcon} className="h-6 w-6 text-accent" />
@@ -105,35 +109,30 @@ export function DashboardHome() {
                 </h2>
                 <p className="text-fg-secondary fluid-sm">{t.dashboard.overview}</p>
               </section>
-              <span className="hidden lg:inline-flex items-center gap-1.5 rounded-full border border-border-subtle bg-surface-1 px-2.5 py-1 text-[11px] font-medium text-fg-secondary">
-                <span className="h-1.5 w-1.5 rounded-full bg-success motion-safe:animate-pulse" />
-                {t.dashboard.sovereignBadge}
-              </span>
+              <Button variant="primary" size="md" shape="cut" onClick={handleStartNewChat}>
+                <ChatIcon size={16} />
+                {t.dashboard.startNewChat}
+              </Button>
             </header>
 
             {user?.role === "admin" && <InterceptorPipeline />}
 
-            <WorkspaceSummary
-              figures={{
-                conversations: threads?.length ?? 0,
-                credits: wallet ? available : null,
-                studios: installations.length,
-              }}
-              locale={INTL_LOCALES[locale]}
-              labels={t.dashboard}
-            />
+            <UsageKpis summary={summary} days={days} loading={insightsLoading} />
 
-            <ActivityCharts jobs={jobs} loading={insightsLoading} error={hasError} />
+            <ActivityCharts summary={summary} jobs={period.jobs} days={days} loading={insightsLoading} error={hasError} />
 
             <section className="grid gap-4 lg:grid-cols-2">
-              <CreditsMeter wallet={wallet} available={available} plan={plan} loading={walletLoading} href="/billing" />
-              <StudiosUsedChart runs={runs} studioLabel={studioLabel} loading={insightsLoading} error={hasError} />
+              <span className="flex flex-col gap-2">
+                <CreditsMeter wallet={wallet} available={available} plan={plan} loading={walletLoading} href="/billing" />
+                <span className="flex justify-end"><UsageExport jobs={jobs} runs={runs} days={days} /></span>
+              </span>
+              <StudiosUsedChart runs={period.runs} studioLabel={studioLabel} loading={insightsLoading} error={hasError} />
             </section>
 
             {jobs.some((job) => jobMediaUrl(job)) && (
               <section className="flex flex-col gap-3">
                 <header className="flex items-center justify-between px-1">
-                  <h3 className="text-xs font-semibold uppercase tracking-wider text-fg-muted">{t.showcase.dashboard.latestCreations}</h3>
+                  <h3 className="text-xs font-semibold uppercase tracking-wider text-fg-muted">{t.insights.usage.recent}</h3>
                   <Button asChild variant="ghost" size="sm">
                     <Link href="/dashboard/jobs">{t.showcase.dashboard.seeAll}</Link>
                   </Button>
@@ -142,15 +141,7 @@ export function DashboardHome() {
               </section>
             )}
 
-            <section className="grid gap-6 md:grid-cols-3">
-              <QuickActions
-                title={t.dashboard.quickActions}
-                actions={[
-                  { icon: ChatIcon, label: t.dashboard.startNewChat, desc: t.dashboard.startNewChatDesc, onClick: handleStartNewChat },
-                  { icon: StudioIcon, label: t.showcase.dashboard.studios, desc: t.showcase.dashboard.studiosDesc, onClick: () => router.push("/studios") },
-                  { icon: ImageIcon, label: t.showcase.dashboard.creations, desc: t.showcase.dashboard.creationsDesc, onClick: () => router.push("/dashboard/jobs") },
-                ]}
-              />
+            <section className="grid gap-6">
               <RecentSessions
                 recentThreads={recentThreads}
                 onStartNewChat={handleStartNewChat}

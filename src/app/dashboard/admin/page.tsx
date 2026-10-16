@@ -9,13 +9,12 @@ import { useTranslation } from "@/core/context/LocaleContext";
 import type { CatalogModel } from "./CategoryCard";
 import { CategoryCard } from "./CategoryCard";
 import { ModelDialog } from "./ModelDialog";
-import { MetricsGrid } from "@/features/dashboard/components/MetricsGrid";
+import { Stat, StatGrid } from "@krizaka/ui/stat";
 import { PipelineConfigCard } from "./PipelineConfigCard";
 import { ValidationPipelineCard } from "./ValidationPipelineCard";
 import { AdminToolbar } from "./AdminToolbar";
 import { FeatureToggleCard } from "./FeatureToggleCard";
 import { useThreadManagement } from "@/features/chat-session/hooks/useThreadManagement";
-import { useTenant } from "@/core/context/TenantContext";
 import { useAdminModels } from "./useAdminModels";
 import {
   CATEGORIES,
@@ -27,7 +26,6 @@ export default function AdminDashboardPage() {
   const { isAuthenticated, isLoading, user } = useAuth();
   const { t } = useTranslation();
   const { threads } = useThreadManagement();
-  const { accentClasses } = useTenant();
   const userId = user?.id || user?.email || "anonymous";
 
   const {
@@ -194,11 +192,11 @@ export default function AdminDashboardPage() {
               t={t}
             />
 
-            <MetricsGrid
-              metrics={metrics}
-              accentClasses={accentClasses}
-              t={t}
-            />
+            <StatGrid minWidth={13}>
+              <Stat label={t.dashboard.activeSessions} value={metrics.activeSessions.toLocaleString()} hint={t.dashboard.runningParallel} />
+              <Stat label={t.dashboard.tokensUsed} value={metrics.tokensUsed.toLocaleString()} hint={t.dashboard.estimatedCumulative} />
+              <Stat label={t.dashboard.memoryNodes} value={metrics.memoryNodes.toLocaleString()} hint={t.dashboard.contextSaved} />
+            </StatGrid>
 
             <PipelineConfigCard fetchWithAuth={fetchWithAuth} />
 

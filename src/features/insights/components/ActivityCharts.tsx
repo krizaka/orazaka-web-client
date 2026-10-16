@@ -2,78 +2,76 @@
 
 import * as React from "react";
 import { BarChart } from "@krizaka/charts/bar";
+import { ChartCard } from "@krizaka/charts/card";
 import { DonutChart } from "@krizaka/charts/pie";
-import { Card } from "@krizaka/ui/card";
 import { fill } from "@/core/context/fill";
+import { INTL_LOCALES } from "@/core/constants/locale.constants";
 import { useTranslation } from "@/core/context/LocaleContext";
-import { activityByDay, jobsByKind } from "@/core/jobs/jobInsights";
+import { jobsByKind } from "@/core/jobs/jobInsights";
+import { changeOf, formatChange, type UsageSummary } from "@/core/jobs/usageStats";
 import type { Job } from "@/core/types/jobs.types";
 
 interface ActivityChartsProps {
-  /** The person's recent jobs (newest first, as the API returns them). */
+  summary: UsageSummary;
+  /** The jobs of the period (the donut's data). */
   jobs: readonly Job[];
-  /** The jobs are on their way: each chart shows its own skeleton. */
+  /** The length of the period, in days. */
+  days: number;
   loading?: boolean;
-  /** They could not be read. */
   error?: boolean;
-  /** How many days the bars cover. */
-  days?: number;
 }
 
 /**
- * Two charts of the person's own work: the jobs of each day by outcome (stacked bars — the failures stand out in the
- * danger colour), and what they made by kind (a donut, the total in its hole). Each carries its data table and a
- * written summary (@krizaka/charts), so the figures are readable without the drawing.
+ * Two ChartCards of the person's own work: the jobs of each day by outcome (stacked bars zoomed on the days that have
+ * data; a failure is a muted red, never a block of alarm), and what they made by kind (a donut whose legend filters).
+ * Each states what it shows in one line, and carries its actions menu (table, CSV, PNG, SVG, copy).
  */
-export function ActivityCharts({ jobs, loading, error, days = 14 }: Readonly<ActivityChartsProps>) {
-  const { t } = useTranslation();
+export function ActivityCharts({ summary, jobs, days, loading, error }: Readonly<ActivityChartsProps>) {
+  const { locale, t } = useTranslation();
   const w = t.insights;
-  const perDay = React.useMemo(() => activityByDay(jobs, days), [jobs, days]);
+  const tag = INTL_LOCALES[locale];
   const kinds = React.useMemo(() => jobsByKind(jobs).map((k) => ({ ...k, label: w.kinds[k.kind] })), [jobs, w]);
-  const empty = !loading && jobs.length === 0;
+  const { current, previous } = summary;
+  const change = formatChange(changeOf(current.jobs, previous.jobs), tag);
+  const perDayInsight =
+    current.jobs === 0 ? w.usage.jobsInsightNone : change ? fill(w.usage.jobsInsight, { jobs: current.jobs, change }) : fill(w.usage.jobsInsightFlat, { jobs: current.jobs });
+  const top = kinds[0];
 
   return (
     <section className="grid gap-4 lg:grid-cols-[1.6fr_1fr]">
-      <Card.Root>
-        <Card.Body padding="lg">
-          <BarChart
-            title={w.jobsPerDay}
-            description={fill(w.jobsPerDayDesc, { days })}
-            data={empty ? [] : perDay}
-            x="day"
-            xFormat="day"
-            xLabel={w.day}
-            series={[
-              { key: "completed", label: w.completed, color: "accent" },
-              { key: "failed", label: w.failed, color: "danger" },
-              { key: "running", label: w.running, color: "neutral" },
-            ]}
-            format="integer"
-            stacked
-            height={220}
-            loading={loading}
-            error={error}
-          />
-        </Card.Body>
-      </Card.Root>
-      <Card.Root>
-        <Card.Body padding="lg">
-          <DonutChart
-            title={w.byKind}
-            description={w.byKindDesc}
-            data={kinds}
-            label="label"
-            value="count"
-            labelHeader={w.kindHeader}
-            valueHeader={w.jobsHeader}
-            centerLabel={w.jobsCenter}
-            format="integer"
-            height={220}
-            loading={loading}
-            error={error}
-          />
-        </Card.Body>
-      </Card.Root>
+      <ChartCard title={w.jobsPerDay} insight={perDayInsight} description={fill(w.jobsPerDayDesc, { days })} footer={w.usage.source}>
+        <BarChart
+          data={current.jobs === 0 ? [] : summary.perDay}
+          x="day"
+          xFormat="day"
+          xLabel={w.day}
+          series={[
+            { key: "completed", label: w.completed, color: "accent" },
+            { key: "failed", label: w.failed, color: "danger" },
+            { key: "running", label: w.running, color: "neutral" },
+          ]}
+          format="integer"
+          stacked
+          autoRange
+          height={220}
+          loading={loading}
+          error={error}
+        />
+      </ChartCard>
+      <ChartCard title={w.byKind} insight={top ? fill(w.usage.kindInsight, { kind: top.label.toLowerCase(), count: top.count }) : w.usage.kindInsightNone} description={w.byKindDesc}>
+        <DonutChart
+          data={kinds}
+          label="label"
+          value="count"
+          labelHeader={w.kindHeader}
+          valueHeader={w.jobsHeader}
+          centerLabel={w.jobsCenter}
+          format="integer"
+          height={220}
+          loading={loading}
+          error={error}
+        />
+      </ChartCard>
     </section>
   );
 }
