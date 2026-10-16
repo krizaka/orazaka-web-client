@@ -15,7 +15,6 @@ import { Badge } from "@krizaka/ui/badge";
 import { JobsTable } from "./JobsTable";
 import { JobsKpiSummary } from "./JobsKpiSummary";
 import { JobModal } from "./JobModal";
-import { JobsFilterBar } from "./JobsFilterBar";
 import { JobsGallery } from "./JobsGallery";
 import { JobsRunningBanner } from "./JobsRunningBanner";
 import { JobsEmpty } from "./JobsEmpty";
@@ -23,17 +22,6 @@ import { Suspense } from "react";
 import { getSession } from "next-auth/react";
 import { JOB_STATUS } from "@/core/constants/http.constants";
 
-
-const FEATURE_DISPLAY_MAP: Record<string, string> = {
-  video: "video",
-  image: "image",
-  speech: "speech",
-};
-
-const getFeatureDisplayName = (key: string): string => {
-  const match = Object.keys(FEATURE_DISPLAY_MAP).find((k) => key.includes(k));
-  return match ? FEATURE_DISPLAY_MAP[match] : "text";
-};
 
 function JobsDashboardContent() {
   const router = useRouter();
@@ -49,7 +37,6 @@ function JobsDashboardContent() {
 
   const {
     jobs: pageJobs,
-    totalPages,
     totalElements,
     isLoading: loading,
     refresh: refreshJobsQuery,
@@ -57,11 +44,6 @@ function JobsDashboardContent() {
 
   // The gallery reads further back than one page of the table: the last media generated, whatever ran since.
   const { jobs: recentJobs } = useJobs(0, 60, isAuthenticated);
-
-  const [searchQuery, setSearchQuery] = React.useState("");
-  const [activeTab, setActiveTab] = React.useState<
-    "all" | "active" | "completed" | "failed"
-  >("all");
 
   const [selectedJob, setSelectedJob] = React.useState<Job | null>(null);
   const [modalType, setModalType] = React.useState<"payload" | "result" | null>(
@@ -88,23 +70,6 @@ function JobsDashboardContent() {
     setCopiedId(id);
     setTimeout(() => setCopiedId(null), 2000);
   };
-
-  const filteredJobs = React.useMemo(() => {
-    const query = searchQuery.toLowerCase();
-    return pageData.filter((job) => {
-      const display = getFeatureDisplayName(job.featureKey);
-      const match =
-        job.featureKey.toLowerCase().includes(query) ||
-        display.toLowerCase().includes(query) ||
-        job.id.toLowerCase().includes(query);
-      if (!match) return false;
-      if (activeTab === "active")
-        return job.status === JOB_STATUS.PENDING || job.status === JOB_STATUS.PROCESSING;
-      if (activeTab === "completed") return job.status === JOB_STATUS.COMPLETED;
-      if (activeTab === "failed") return job.status === JOB_STATUS.FAILED;
-      return true;
-    });
-  }, [pageData, searchQuery, activeTab]);
 
   const handleRefresh = async () => {
     await refreshJobs();
@@ -190,23 +155,13 @@ function JobsDashboardContent() {
               <>
                 <JobsGallery jobs={recentJobs} onOpen={(job) => handleOpenModal(job, "result")} />
 
-            {/* Filters panel */}
-            <JobsFilterBar
-              activeTab={activeTab}
-              onTabChange={setActiveTab}
-              searchQuery={searchQuery}
-              onSearchChange={setSearchQuery}
-              t={t}
-            />
-
             {/* AI Consumption KPIs */}
-            <JobsKpiSummary jobs={filteredJobs} />
+            <JobsKpiSummary jobs={pageData} />
 
             {/* Jobs Table */}
             <JobsTable
-              jobs={filteredJobs}
+              jobs={pageData}
               loading={loading}
-              totalPages={totalPages}
               totalElements={totalElements}
               currentPage={currentPage}
               pageSize={pageSize}

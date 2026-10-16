@@ -1,21 +1,29 @@
 "use client";
 
 import * as React from "react";
-import { Job } from "@/core/types/jobs.types";
-import { useTranslation } from "@/core/context/LocaleContext";
-import { JobRow } from "./JobRow";
-import { JobKpiBar } from "./JobKpiBar";
-import { Loader } from "@krizaka/ui/loader";
-import { Pagination } from "@krizaka/ui/pagination";
+import { formatDistanceToNow } from "date-fns";
+import { enUS, fr } from "date-fns/locale";
+import { CheckIcon, CopyIcon, DownloadIcon, EyeIcon, TrashIcon } from "@krizaka/icons";
+import { Badge } from "@krizaka/ui/badge";
+import { IconButton } from "@krizaka/ui/button";
+import { DataTable, DataTableFilters, type DataTableColumn } from "@krizaka/ui/data-table";
 import { fill } from "@/core/context/fill";
+import { useTranslation } from "@/core/context/LocaleContext";
+import { jobLabel, jobMediaUrl } from "@/core/jobs/jobMedia";
+import { JOB_STATUS } from "@/core/constants/http.constants";
+import { formatDuration, jobFacts, modelOf, promptOf, studioOf, wallTimeMs, whereRan } from "@/features/jobs/utils/jobFacts";
+import type { Job, JobStatus } from "@/core/types/jobs.types";
+import { JobDetail } from "./JobDetail";
+import { JobThumb } from "./JobThumb";
 
 const PAGE_SIZES = [10, 20, 50] as const;
+const TONE: Record<JobStatus, "neutral" | "accent" | "success" | "danger"> = { PENDING: "neutral", PROCESSING: "accent", COMPLETED: "success", FAILED: "danger" };
 
 export interface JobsTableProps {
   jobs: Job[];
   loading: boolean;
-  totalPages: number;
   totalElements: number;
+  /** From 0. */
   currentPage: number;
   pageSize: number;
   onPageChange: (page: number) => void;
@@ -23,109 +31,149 @@ export interface JobsTableProps {
   onOpenModal: (job: Job, type: "payload" | "result") => void;
   copiedId: string | null;
   onCopy: (text: string, id: string) => void;
+  /** Deletes a task and its result (orazaka-web-client#86). The action shows only when the page provides it. */
+  onDelete?: (job: Job) => void;
 }
 
-export const JobsTable: React.FC<JobsTableProps> = ({
-  jobs,
-  loading,
-  totalPages,
-  totalElements,
-  currentPage,
-  pageSize,
-  onPageChange,
-  onPageSizeChange,
-  onOpenModal,
-  copiedId,
-  onCopy,
-}) => {
-  const { t } = useTranslation();
-  const [expandedErrorJobId, setExpandedErrorJobId] = React.useState<
-    string | null
-  >(null);
+/**
+ * The tasks, one line each, on the kit's responsive DataTable (cards on a phone): a preview, the task and its Studio, the
+ * model (always a name), where it ran, the status, the real wall time, and what leaves the row as the table narrows goes to
+ * its detail — grouped facts in words and units. Filters (search, status, model, where), sort, and the page the server sent.
+ */
+export function JobsTable({ jobs, loading, totalElements, currentPage, pageSize, onPageChange, onPageSizeChange, onOpenModal, copiedId, onCopy, onDelete }: Readonly<JobsTableProps>) {
+  const { t, locale } = useTranslation();
+  const d = t.jobsTable;
+  const dateLocale = locale === "fr" ? fr : enUS;
+  const hasCredits = jobs.some((j) => jobFacts(j).some((f) => f.id === "credits"));
 
-  const toggleExpandError = (jobId: string) => {
-    setExpandedErrorJobId((prev) => (prev === jobId ? null : jobId));
-  };
+  const columns = React.useMemo<DataTableColumn<Job>[]>(() => {
+    const model = (j: Job) => modelOf(j) ?? d.modelAuto;
+    const where = (j: Job) => whereRan(j) ?? d.whereUnknown;
+    return [
+      { id: "preview", header: d.columns.preview, priority: 1, hideable: false, width: 84, cell: (j) => <JobThumb job={j} label={jobLabel(t, j)} /> },
+      {
+        id: "task",
+        header: d.columns.task,
+        type: "title",
+        filter: "text",
+        sortable: true,
+        // What the search looks into: the kind, the id, the prompt and the model.
+        value: (j) => [jobLabel(t, j), j.id, promptOf(j) ?? "", model(j)].join(" "),
+        cell: (j) => jobLabel(t, j),
+        subtitle: (j) => studioOf(j) ?? j.id.slice(0, 8),
+      },
+      { id: "model", header: d.columns.model, priority: 2, filter: "facet", sortable: true, type: "text", nowrap: true, value: model, cell: (j) => <span className="font-medium">{model(j)}</span> },
+      { id: "where", header: d.columns.where, priority: 3, filter: "facet", sortable: true, type: "text", nowrap: true, value: where },
+      {
+        id: "status",
+        header: d.columns.status,
+        type: "status",
+        filter: "facet",
+        sortable: true,
+        value: (j) => d.status[j.status],
+        cell: (j) => (
+          <Badge tone={TONE[j.status]} size="sm" dot={j.status === JOB_STATUS.PROCESSING}>
+            {d.status[j.status]}
+          </Badge>
+        ),
+      },
+      {
+        id: "time",
+        header: d.columns.time,
+        priority: 2,
+        type: "number",
+        align: "end",
+        sortable: true,
+        value: (j) => wallTimeMs(j),
+        cell: (j) => (j.status === JOB_STATUS.PENDING || j.status === JOB_STATUS.PROCESSING ? d.running : formatDuration(wallTimeMs(j) ?? 0)),
+      },
+      {
+        id: "credits",
+        header: d.columns.credits,
+        priority: 4,
+        type: "number",
+        align: "end",
+        value: (j) => Number(jobFacts(j).find((f) => f.id === "credits")?.value ?? NaN) || null,
+      },
+      {
+        id: "created",
+        header: d.columns.created,
+        priority: 3,
+        type: "date",
+        sortable: true,
+        value: (j) => new Date(j.createdAt),
+        cell: (j) => <time dateTime={j.createdAt} title={j.createdAt}>{formatDistanceToNow(new Date(j.createdAt), { addSuffix: true, locale: dateLocale })}</time>,
+      },
+      {
+        id: "actions",
+        header: d.columns.actions,
+        headerHidden: true,
+        align: "end",
+        hideable: false,
+        card: "hidden",
+        cell: (j) => {
+          const url = jobMediaUrl(j);
+          return (
+            <span className="inline-flex items-center gap-0.5">
+              <IconButton variant="ghost" size="sm" label={j.status === JOB_STATUS.COMPLETED ? d.actions.open : d.actions.payload} onClick={() => onOpenModal(j, j.status === JOB_STATUS.COMPLETED ? "result" : "payload")}>
+                <EyeIcon size={15} />
+              </IconButton>
+              {url && (
+                <IconButton variant="ghost" size="sm" label={d.actions.download} asChild>
+                  <a href={url} download>
+                    <DownloadIcon size={15} />
+                  </a>
+                </IconButton>
+              )}
+              <IconButton variant="ghost" size="sm" label={copiedId === j.id ? d.actions.copied : d.actions.copyId} onClick={() => onCopy(j.id, j.id)}>
+                {copiedId === j.id ? <CheckIcon size={15} /> : <CopyIcon size={15} />}
+              </IconButton>
+              {onDelete && (
+                <IconButton variant="ghost" size="sm" label={d.actions.delete} onClick={() => onDelete(j)}>
+                  <TrashIcon size={15} />
+                </IconButton>
+              )}
+            </span>
+          );
+        },
+      },
+    ];
+  }, [d, t, dateLocale, copiedId, onOpenModal, onCopy, onDelete]);
 
   return (
-    <article className="glass-card rounded-2xl shadow-md overflow-hidden">
-      <div className="overflow-x-auto">
-        <table className="w-full text-left border-collapse">
-          <thead>
-            <tr className="border-b border-border-subtle/60 bg-surface-1/40 text-xs font-bold text-fg-secondary">
-              <th className="p-4">{t.jobs?.colId || "Job ID"}</th>
-              <th className="p-4">{t.jobs?.colType || "Task Type"}</th>
-              <th className="p-4">{t.playground?.model || "Model"}</th>
-              <th className="p-4">{t.jobs?.colStatus || "Status"}</th>
-              <th className="p-4">{t.jobs?.colCreated || "Created At"}</th>
-              <th className="p-4">{t.jobs?.colDuration || "Duration"}</th>
-              <th className="p-4 text-right">
-                {t.jobs?.colActions || "Actions"}
-              </th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-border-subtle/40 text-sm">
-            {(() => {
-              if (loading && jobs.length === 0) return (
-                <tr>
-                  <td
-                    colSpan={7}
-                    className="text-center py-24 text-fg-muted"
-                  >
-                    <Loader variant="block" label={t.jobs.loading} delay={0} />
-                  </td>
-                </tr>
-              );
-              if (jobs.length === 0) return (
-                <tr>
-                  <td
-                    colSpan={7}
-                    className="text-center py-20 text-fg-muted"
-                  >
-                    {t.jobs?.noJobs || "No background tasks found in history."}
-                  </td>
-                </tr>
-              );
-              return jobs.map((job) => (
-                <React.Fragment key={job.id}>
-                  <JobRow
-                    job={job}
-                    copiedId={copiedId}
-                    onCopy={onCopy}
-                    isExpandedError={expandedErrorJobId === job.id}
-                    onToggleExpandError={() => toggleExpandError(job.id)}
-                    onOpenModal={onOpenModal}
-                  />
-                  <JobKpiBar job={job} />
-                </React.Fragment>
-              ));
-            })()}
-          </tbody>
-        </table>
-      </div>
-
-      {totalPages > 1 && (
-        <footer className="border-t border-border-subtle/60 bg-surface-1/40 p-4">
-          <Pagination
-            page={currentPage + 1}
-            pageCount={totalPages}
-            onPageChange={(page) => onPageChange(page - 1)}
-            pageSize={pageSize}
-            pageSizeOptions={PAGE_SIZES}
-            onPageSizeChange={onPageSizeChange}
-            disabled={loading}
-            status={`${t.jobs.paginationShowing} ${currentPage * pageSize + 1}–${Math.min((currentPage + 1) * pageSize, totalElements)} ${t.jobs.paginationOf} ${totalElements} ${t.jobs.paginationTasks}`}
-            labels={{
-              nav: t.insights.pagination.nav,
-              previous: t.jobs.previous,
-              next: t.jobs.next,
-              page: (page) => fill(t.insights.pagination.page, { page }),
-              compact: (page, count) => fill(t.insights.pagination.compact, { page, count }),
-              pageSize: t.insights.pagination.pageSize,
-            }}
-          />
-        </footer>
-      )}
-    </article>
+    <DataTable
+      caption={d.caption}
+      rows={jobs}
+      columns={columns}
+      getRowId={(j) => j.id}
+      rowLabel={(j) => jobLabel(t, j)}
+      loading={loading && jobs.length === 0}
+      columnVisibility={{ credits: hasCredits }}
+      defaultSort={{ column: "created", direction: "descending" }}
+      renderDetail={(j) => <JobDetail job={j} copiedId={copiedId} onCopy={onCopy} />}
+      toolbar={<DataTableFilters />}
+      manual={{ pagination: true }}
+      rowCount={totalElements}
+      page={currentPage + 1}
+      onPageChange={(p) => onPageChange(p - 1)}
+      pageSize={pageSize}
+      pageSizeOptions={PAGE_SIZES}
+      onPageSizeChange={onPageSizeChange}
+      empty={<p className="p-6 text-center text-fg-secondary">{d.empty}</p>}
+      labels={{
+        loading: d.loading,
+        empty: d.empty,
+        details: d.details,
+        expandRow: (name) => fill(d.expandRow, { name }),
+        showMore: (name) => fill(d.showMore, { name }),
+        results: (n) => (n === 1 ? d.resultsOne : fill(d.results, { n })),
+        filters: d.filters,
+        clearFilters: d.clearFilters,
+        removeFilter: (label) => fill(d.removeFilter, { label }),
+        activeFilter: (header, value) => fill(d.activeFilter, { header, value }),
+        search: (header) => fill(d.search, { header }),
+        pagination: { nav: t.insights.pagination.nav, previous: t.jobs.previous, next: t.jobs.next, page: (page) => fill(t.insights.pagination.page, { page }), compact: (page, pageCount) => fill(t.insights.pagination.compact, { page, count: pageCount }), pageSize: t.insights.pagination.pageSize },
+      }}
+    />
   );
-};
+}
