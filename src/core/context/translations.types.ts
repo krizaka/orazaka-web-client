@@ -5,7 +5,7 @@
 
 import type { FeaturesDictionary, LandingDictionary } from "./translations.landing.types";
 import type { InsightsDictionary } from "./translations.insights";
-import type { JobsTableDictionary } from "./translations.jobsTable";
+import type { JobsTableDictionary } from "./translations.jobsTable.types";
 import type { ModelsDictionary } from "./translations.models.types";
 import type { GalleryDictionary } from "./translations.gallery";
 import type { MobileDictionary } from "./translations.mobile";
