@@ -1,0 +1,244 @@
+[
+  {
+    "stem": "products/orazaka/gallery-video/bagels-i2v",
+    "record": {
+      "id": "bagels-i2v",
+      "imageId": "mini-bagels",
+      "featured": true,
+      "model": "wan2.2-ti2v-5b",
+      "fromImage": true,
+      "gpu": "NVIDIA RTX 4000 Ada Generation",
+      "gpuRateUsdPerHour": 0.76,
+      "prompt": "A tiny Montreal bagel bakery in miniature. The wood-fired oven glow flickers gently, flour dust drifts slowly through the air, the baker figurine slides a sesame bagel along the counter with a small slow movement, the second baker shifts his weight slightly. Very slow gentle push-in. Handcrafted tilt-shift miniature diorama, extremely shallow depth of field, warm soft light, stable composition, figurines keep their shape, subtle natural motion, one continuous shot, no cut.",
+      "seed": "2718",
+      "width": 1280,
+      "height": 704,
+      "fps": 24,
+      "duration": 5.04,
+      "seconds": 1106,
+      "costUsd": 0.23,
+      "runId": "ac377877-5d7c-46fc-b42b-9ec57827bdb1"
+    }
+  },
+  {
+    "stem": "products/orazaka/gallery-video/grandmothers-tea-i2v",
+    "record": {
+      "id": "grandmothers-tea-i2v",
+      "imageId": "mini-ironing",
+      "model": "wan2.2-ti2v-5b",
+      "fromImage": true,
+      "gpu": "NVIDIA H100 80GB HBM3",
+      "gpuRateUsdPerHour": 3.99,
+      "prompt": "Two grandmother figurines on a patterned Berber rug. One slowly slides a small brass iron across the white linen tablecloth, the other lifts a tiny glass of mint tea and sips with a gentle movement, soft window light shifts slightly. Very slow gentle push-in. Handcrafted tilt-shift miniature diorama, extremely shallow depth of field, warm soft light, stable composition, figurines keep their shape, subtle natural motion, one continuous shot, no cut. Motion stays small and subtle, figures keep facing the same direction and keep their shape.",
+      "seed": "21",
+      "width": 1280,
+      "height": 704,
+      "fps": 24,
+      "duration": 5.04,
+      "seconds": 174,
+      "costUsd": 0.19,
+      "runId": "da6cdf6c-5506-403c-8fad-ac43b1aac618"
+    }
+  },
+  {
+    "stem": "products/orazaka/gallery-video/grandmothers-tea-i2v-10s",
+    "record": {
+      "id": "grandmothers-tea-i2v-10s",
+      "imageId": "mini-ironing",
+      "model": "wan2.2-ti2v-5b",
+      "fromImage": true,
+      "gpu": "NVIDIA H100 80GB HBM3",
+      "gpuRateUsdPerHour": 3.99,
+      "prompt": "Two grandmother figurines on a patterned Berber rug. One slowly slides a small brass iron across the white linen tablecloth, the other lifts a tiny glass of mint tea and sips with a gentle movement, soft window light shifts slightly. Very slow gentle push-in. Handcrafted tilt-shift miniature diorama, extremely shallow depth of field, warm soft light, stable composition, figurines keep their shape, subtle natural motion, one continuous shot, no cut. Motion stays small and subtle, figures keep facing the same direction and keep their shape.",
+      "seed": "21",
+      "width": 1280,
+      "height": 704,
+      "fps": 24,
+      "duration": 9.92,
+      "seconds": 344,
+      "costUsd": 0.38,
+      "runId": "da6cdf6c-5506-403c-8fad-ac43b1aac618",
+      "linkedRunId": "7d1f284b-7cd4-4eac-965f-1050989c0f26"
+    }
+  },
+  {
+    "stem": "products/orazaka/gallery-video/picnic-i2v",
+    "record": {
+      "id": "picnic-i2v",
+      "imageId": "mini-picnic",
+      "model": "wan2.2-ti2v-5b",
+      "fromImage": true,
+      "gpu": "NVIDIA H100 80GB HBM3",
+      "gpuRateUsdPerHour": 3.99,
+      "prompt": "A family picnic in a tiny olive grove in miniature: the grandfather figurine turns a page and gestures gently while telling a story, the children lean in slightly, olive leaves flutter in a light breeze, soft sun light shifts. Very slow gentle push-in. Handcrafted tilt-shift miniature diorama, extremely shallow depth of field, warm soft light, stable composition, figurines keep their shape, subtle natural motion, one continuous shot, no cut. Motion stays small and subtle, figures keep facing the same direction and keep their shape.",
+      "seed": "808",
+      "width": 1280,
+      "height": 704,
+      "fps": 24,
+      "duration": 5.04,
+      "seconds": 175,
+      "costUsd": 0.19,
+      "runId": "26cdfd99-49c8-4303-a015-cd814d3cd60e"
+    }
+  },
+  {
+    "stem": "products/orazaka/gallery-video/skating-i2v",
+    "record": {
+      "id": "skating-i2v",
+      "imageId": "mini-skating",
+      "model": "wan2.2-ti2v-5b",
+      "fromImage": true,
+      "gpu": "NVIDIA H100 80GB HBM3",
+      "gpuRateUsdPerHour": 3.99,
+      "prompt": "A tiny winter park in miniature: the skater figurines glide slowly over the frozen pond, snow flakes drift down softly, the cabin window glows warmly and the string lights twinkle. Very slow gentle sideways glide. Handcrafted tilt-shift miniature diorama, extremely shallow depth of field, warm soft light, stable composition, figurines keep their shape, subtle natural motion, one continuous shot, no cut. Motion stays small and subtle, figures keep facing the same direction and keep their shape.",
+      "seed": "1643",
+      "width": 1280,
+      "height": 704,
+      "fps": 24,
+      "duration": 5.04,
+      "seconds": 189,
+      "costUsd": 0.21,
+      "runId": "556ee03d-377e-44da-9d03-7106f238dd88"
+    }
+  },
+  {
+    "stem": "products/orazaka/gallery-video/souk-i2v",
+    "record": {
+      "id": "souk-i2v",
+      "imageId": "mini-souk",
+      "featured": true,
+      "model": "wan2.2-ti2v-5b",
+      "fromImage": true,
+      "gpu": "NVIDIA H100 80GB HBM3",
+      "gpuRateUsdPerHour": 3.99,
+      "prompt": "A tiny Moroccan spice alley in miniature. Pierced-brass lanterns sway very slightly and cast moving golden light across the spice pyramids, a figurine merchant makes a small gesture, dust motes drift. Very slow gentle sideways glide along the alley. Handcrafted tilt-shift miniature diorama, extremely shallow depth of field, warm soft light, stable composition, figurines keep their shape, subtle natural motion, one continuous shot, no cut. Motion stays small and subtle, figures keep facing the same direction and keep their shape.",
+      "seed": "1212",
+      "width": 1280,
+      "height": 704,
+      "fps": 24,
+      "duration": 5.04,
+      "seconds": 177,
+      "costUsd": 0.2,
+      "runId": "734f56a9-c26d-41b8-bf30-6a4c5b100e9d"
+    }
+  },
+  {
+    "stem": "products/orazaka/gallery-video/souk-i2v-10s",
+    "record": {
+      "id": "souk-i2v-10s",
+      "imageId": "mini-souk",
+      "model": "wan2.2-ti2v-5b",
+      "fromImage": true,
+      "gpu": "NVIDIA H100 80GB HBM3",
+      "gpuRateUsdPerHour": 3.99,
+      "prompt": "A tiny Moroccan spice alley in miniature. Pierced-brass lanterns sway very slightly and cast moving golden light across the spice pyramids, a figurine merchant makes a small gesture, dust motes drift. Very slow gentle sideways glide along the alley. Handcrafted tilt-shift miniature diorama, extremely shallow depth of field, warm soft light, stable composition, figurines keep their shape, subtle natural motion, one continuous shot, no cut. Motion stays small and subtle, figures keep facing the same direction and keep their shape.",
+      "seed": "1212",
+      "width": 1280,
+      "height": 704,
+      "fps": 24,
+      "duration": 9.92,
+      "seconds": 451,
+      "costUsd": 0.5,
+      "runId": "734f56a9-c26d-41b8-bf30-6a4c5b100e9d",
+      "linkedRunId": "0569e281-e375-4ac5-9241-0468df9a3253"
+    }
+  },
+  {
+    "stem": "products/orazaka/gallery-video/tea-pour-i2v",
+    "record": {
+      "id": "tea-pour-i2v",
+      "imageId": "tea-pour",
+      "featured": true,
+      "model": "wan2.2-ti2v-5b",
+      "fromImage": true,
+      "gpu": "NVIDIA H100 80GB HBM3",
+      "gpuRateUsdPerHour": 3.99,
+      "prompt": "Cinematic close shot inside a Berber tent: the man slowly pours a thin amber stream of mint tea from the silver teapot into the small engraved glass, steam rises softly, warm golden light, dust motes float in the air. Subtle slow push-in, natural motion, photographic realism. Handcrafted tilt-shift miniature diorama, extremely shallow depth of field, warm soft light, stable composition, figurines keep their shape, subtle natural motion, one continuous shot, no cut. Motion stays small and subtle, figures keep facing the same direction and keep their shape.",
+      "seed": "20261011",
+      "width": 1280,
+      "height": 704,
+      "fps": 24,
+      "duration": 5.04,
+      "seconds": 177,
+      "costUsd": 0.2,
+      "runId": "e16fe14e-c9a7-4722-8db9-47c12458846b"
+    }
+  },
+  {
+    "stem": "products/orazaka/gallery-video/tea-pour-i2v-10s",
+    "record": {
+      "id": "tea-pour-i2v-10s",
+      "imageId": "tea-pour",
+      "model": "wan2.2-ti2v-5b",
+      "fromImage": true,
+      "gpu": "NVIDIA H100 80GB HBM3",
+      "gpuRateUsdPerHour": 3.99,
+      "prompt": "Cinematic close shot inside a Berber tent: the man slowly pours a thin amber stream of mint tea from the silver teapot into the small engraved glass, steam rises softly, warm golden light, dust motes float in the air. Subtle slow push-in, natural motion, photographic realism. Handcrafted tilt-shift miniature diorama, extremely shallow depth of field, warm soft light, stable composition, figurines keep their shape, subtle natural motion, one continuous shot, no cut. Motion stays small and subtle, figures keep facing the same direction and keep their shape.",
+      "seed": "20261011",
+      "width": 1280,
+      "height": 704,
+      "fps": 24,
+      "duration": 9.92,
+      "seconds": 352,
+      "costUsd": 0.39,
+      "runId": "e16fe14e-c9a7-4722-8db9-47c12458846b",
+      "linkedRunId": "26d23a20-9be4-4fa4-b8cb-15a97f00e4f7"
+    }
+  },
+  {
+    "stem": "products/orazaka/video/chefchaouen",
+    "record": {
+      "id": "chefchaouen",
+      "model": "wan2.2-t2v-a14b",
+      "gpu": "NVIDIA H100 80GB HBM3",
+      "gpuRateUsdPerHour": 3.99,
+      "prompt": "One single continuous shot walking slowly down a narrow blue-washed lane of Chefchaouen at golden morning light: walls in layered shades of blue, potted plants on steps and in niches, a worn wooden door, a cat dozing on a doorstep, soft sunlight raking across the stone stairs, gentle camera glide forward at eye level, no cuts. Cinematic colour grade, photographic realism. No text, no lettering, no logos, no readable signs, no recognisable faces.",
+      "seed": "20261013",
+      "width": 1280,
+      "height": 720,
+      "fps": 16,
+      "duration": 5.06,
+      "seconds": 1119,
+      "costUsd": 1.24,
+      "runId": "c07f1b91-126c-4961-aa4d-be31d93a8673"
+    }
+  },
+  {
+    "stem": "products/orazaka/video/marrakech-lanterns",
+    "record": {
+      "id": "marrakech-lanterns",
+      "featured": true,
+      "model": "wan2.2-t2v-a14b",
+      "gpu": "NVIDIA H100 80GB HBM3",
+      "gpuRateUsdPerHour": 3.99,
+      "prompt": "Slow continuous camera glide across a Marrakech rooftop terrace at dusk: rows of pierced-brass lanterns glowing amber and swaying gently in the warm breeze, low cushions and a carved wooden table with a copper teapot and small glasses, the red-ochre medina roofs and minarets fading into a violet sky behind, the first stars appearing, a few swallows crossing the sky. One single continuous shot, steady dolly forward, cinematic colour grade, shallow depth of field, photographic realism. No text, no lettering, no logos, no readable signs, no recognisable faces.",
+      "seed": "20261012",
+      "width": 1280,
+      "height": 720,
+      "fps": 16,
+      "duration": 5.06,
+      "seconds": 1112,
+      "costUsd": 1.23,
+      "runId": "19b23f13-0833-46fc-9646-2ec3b2ff9a30"
+    }
+  },
+  {
+    "stem": "products/orazaka/video/old-port",
+    "record": {
+      "id": "old-port",
+      "featured": true,
+      "model": "wan2.2-t2v-a14b",
+      "gpu": "NVIDIA H100 80GB HBM3",
+      "gpuRateUsdPerHour": 3.99,
+      "prompt": "A slow continuous aerial drone glide forward over the Old Port of Montréal at blue hour: calm water mirroring the warm lights of the cobblestone quays, the old stone warehouses and the clock tower in soft dusk, a few small boats at their moorings, the downtown towers glowing in the distance, deep blue sky with the last orange glow on the horizon, gentle mist over the St. Lawrence River. One single continuous shot, steady camera, cinematic colour grade, 35mm anamorphic, photographic realism. No text, no lettering, no logos, no readable signs, no recognisable faces.",
+      "seed": "20261011",
+      "width": 1280,
+      "height": 720,
+      "fps": 16,
+      "duration": 5.06,
+      "seconds": 1249,
+      "costUsd": 1.38,
+      "runId": "701bb231-6626-48f3-992d-71bdffa37643"
+    }
+  }
+]

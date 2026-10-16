@@ -11,6 +11,7 @@ import { ClipPlayer, RunFacts } from "@krizaka/orazaka-design-system";
 import { SectionBackdrop } from "@krizaka/ui/section-backdrop";
 import { Showcase, type ShowcaseLabels } from "@krizaka/ui/showcase";
 import { useTranslation } from "@/core/context/LocaleContext";
+import type { GalleryDictionary } from "@/core/context/translations.gallery";
 import { fill } from "@/core/context/fill";
 import { gallerySrc, reproduceParts, type GalleryItem } from "@/features/landing/utils/gallery";
 import { FEATURED, clipFiles, clipReproduceParts, type FeaturedItem, type GalleryClip } from "@/features/landing/utils/gallery-clips";
@@ -77,7 +78,7 @@ export function GalleryFeatured() {
  * image (FLUX.2, on one Mac) and ③ the video (Wan 2.2, in the cloud), both media in the same 16:9 frame, a chip under
  * each saying where and at what cost it was made. The full prompt, the facts and "Reproduce it" open in a popover (a
  * dialog on a phone) anchored to the step: the strip never changes height, and every slide has the same structure, so
- * the carousel keeps one height. The video is its own run from a similar prompt — it is not made from the image.
+ * the carousel keeps one height. An image-to-video clip is made FROM that image (the run was given it); the others are their own run from a similar prompt and say so.
  */
 function Slide({ item, active }: Readonly<{ item: FeaturedItem; active: boolean }>) {
   const { t } = useTranslation();
@@ -123,15 +124,22 @@ function Slide({ item, active }: Readonly<{ item: FeaturedItem; active: boolean 
           <figure className="aspect-video overflow-hidden rounded-xl border border-border-default bg-surface-2 [&_video]:h-full [&_video]:w-full [&_video]:object-cover">
             <ClipPlayer sources={clipFiles(clip)} title={g.clips[clip.id]} labels={clipLabels(g, clip)} className="h-full" />
           </figure>
-          <Chip>{fill(clip.seconds === undefined ? g.videoChipNoTime : g.videoChip, { seconds: clip.seconds ?? 0, cost: clip.costUsd.toFixed(2) })}</Chip>
+          <Chip>{videoChip(g, clip)}</Chip>
           <Disclosure label={g.details} title={g.videoStep}>
             <VideoPanel clip={clip} active={active} />
           </Disclosure>
         </Step>
       </ol>
-      <p className="min-h-12 text-sm text-fg-secondary">{image ? g.notFromImage : ""}</p>
+      <p className="min-h-12 text-sm text-fg-secondary">{image ? (clip.fromImage ? g.fromImage : g.notFromImage) : ""}</p>
     </div>
   );
+}
+
+/** Under the video: who made it, how long it took, what it cost — a GPU's time for an image-to-video clip, a provider's price for the others. */
+function videoChip(g: GalleryDictionary, clip: GalleryClip): string {
+  const cost = clip.costUsd.toFixed(2);
+  if (clip.fromImage) return fill(g.videoChipGpu, { seconds: Math.round((clip.seconds ?? 0) / 60), cost });
+  return fill(clip.seconds === undefined ? g.videoChipNoTime : g.videoChip, { seconds: clip.seconds ?? 0, cost });
 }
 
 /** One step of the strip: its number and name, then its content. */
@@ -219,7 +227,7 @@ function VideoPanel({ clip, active }: Readonly<{ clip: GalleryClip; active: bool
       <TypedPrompt text={clip.prompt} active={active} />
       <CopyButton text={clip.prompt} label={g.copy} done={g.copied} failed={g.copyFailed} />
       <RunFacts facts={clipFacts(g, clip)} />
-      <ReproduceBlock parts={clipReproduceParts(clip)} lead={g.videoReproduceLead} />
+      <ReproduceBlock parts={clipReproduceParts(clip)} lead={clip.fromImage ? g.videoReproduceLeadImage : g.videoReproduceLead} />
     </section>
   );
 }
