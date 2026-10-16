@@ -93,7 +93,7 @@ export function AssetInput({ id, kind, value, disabled, onChange, onBusyChange, 
   const refuse = (rejections: FileRejection[]) => {
     const first = rejections[0];
     if (!first) return;
-    const message = first.reason === "size" ? t.studio.asset.tooLarge : t.studio.asset.wrongType;
+    const message = first.reason.startsWith("size") ? t.studio.asset.tooLarge : t.studio.asset.wrongType;
     setRefusal(fill(message, { name: first.file.name }));
   };
 

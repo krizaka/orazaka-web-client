@@ -10,7 +10,7 @@ import { LandingNav } from "@/features/landing/components/LandingNav";
 import { LandingFooter } from "@/features/landing/components/LandingFooter";
 import { CopyButton } from "@/features/landing/components/CopyButton";
 import { SectionHeading } from "@/features/landing/components/SectionHeading";
-import { DesktopCapture } from "@/features/landing/components/DesktopCapture";
+import { DesktopShowcase } from "@/features/landing/components/DesktopShowcase";
 import { RELEASES_URL, type DesktopRelease } from "@/features/landing/utils/release";
 import "@/features/landing/landing.css";
 
@@ -94,9 +94,7 @@ export function DesktopPage({ release }: Readonly<{ release: DesktopDownload }>)
         <SectionBackdrop className="border-b border-border-subtle">
           <article className="mx-auto max-w-6xl space-y-12 px-4 py-20 sm:px-5 lg:py-28">
             <SectionHeading eyebrow={d.hero.eyebrow} title={d.does.title} lead={d.does.lead} />
-            <figure data-reveal className="overflow-hidden rounded-2xl border border-border-default bg-surface-1 shadow-lg">
-              <DesktopCapture alt={d.does.captureAlt} sizes="(min-width: 1152px) 1152px, 100vw" className="h-auto w-full" />
-            </figure>
+            <DesktopShowcase />
             <ul className="grid gap-5 md:grid-cols-2">
               {d.does.items.map((item) => (
                 <li key={item.title} data-reveal className="space-y-2 rounded-2xl border border-border-default bg-surface-1/85 p-5">
