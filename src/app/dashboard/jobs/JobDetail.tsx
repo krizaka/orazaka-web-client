@@ -4,6 +4,7 @@ import { Button } from "@krizaka/ui/button";
 import { DescriptionList } from "@krizaka/ui/description-list";
 import { CheckIcon, CopyIcon } from "@krizaka/icons";
 import { useTranslation } from "@/core/context/LocaleContext";
+import { MODEL_NAMES } from "./modelNames";
 import { type FactSection, jobFacts, promptOf } from "@/features/jobs/utils/jobFacts";
 import type { Job } from "@/core/types/jobs.types";
 
@@ -16,7 +17,7 @@ const ORDER: FactSection[] = ["output", "generation", "hardware", "timing", "oth
 export function JobDetail({ job, copiedId, onCopy }: Readonly<{ job: Job; copiedId: string | null; onCopy: (text: string, id: string) => void }>) {
   const { t } = useTranslation();
   const d = t.jobsTable;
-  const facts = jobFacts(job);
+  const facts = jobFacts(job, { modelNames: MODEL_NAMES });
   const prompt = promptOf(job);
   const sections = ORDER.map((section) => ({ section, items: facts.filter((f) => f.section === section) })).filter((s) => s.items.length > 0);
   const errorId = `err-${job.id}`;

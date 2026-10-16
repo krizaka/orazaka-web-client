@@ -14,6 +14,7 @@ import { JOB_STATUS } from "@/core/constants/http.constants";
 import { formatDuration, jobFacts, modelOf, promptOf, studioOf, wallTimeMs, whereRan } from "@/features/jobs/utils/jobFacts";
 import type { Job, JobStatus } from "@/core/types/jobs.types";
 import { JobDetail } from "./JobDetail";
+import { MODEL_NAMES } from "./modelNames";
 import { JobThumb } from "./JobThumb";
 
 const PAGE_SIZES = [10, 20, 50] as const;
@@ -47,7 +48,7 @@ export function JobsTable({ jobs, loading, totalElements, currentPage, pageSize,
   const hasCredits = jobs.some((j) => jobFacts(j).some((f) => f.id === "credits"));
 
   const columns = React.useMemo<DataTableColumn<Job>[]>(() => {
-    const model = (j: Job) => modelOf(j) ?? d.modelAuto;
+    const model = (j: Job) => modelOf(j, MODEL_NAMES) ?? d.modelAuto;
     const where = (j: Job) => whereRan(j) ?? d.whereUnknown;
     return [
       { id: "preview", header: d.columns.preview, priority: 1, hideable: false, width: 84, cell: (j) => <JobThumb job={j} label={jobLabel(t, j)} /> },

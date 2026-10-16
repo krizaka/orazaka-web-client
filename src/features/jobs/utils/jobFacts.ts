@@ -7,18 +7,12 @@
  * key the worker emits has one.
  */
 
-import { MODELS } from "@/features/landing/utils/models";
+import type { FactId } from "@/core/types/jobFacts.types";
 import type { Job } from "@/core/types/jobs.types";
 
-export type FactSection = "output" | "generation" | "hardware" | "timing" | "other";
+export type { FactId };
 
-/** The facts that have a label of their own. */
-export type FactId =
-  | "format" | "resolution" | "aspect" | "frames" | "fps" | "clipLength" | "images" | "voice" | "keyframes"
-  | "model" | "provider" | "seed" | "steps"
-  | "gpu" | "vram" | "peakRam"
-  | "inference" | "gpuTime" | "apiCall" | "queued" | "total"
-  | "credits";
+export type FactSection = "output" | "generation" | "hardware" | "timing" | "other";
 
 export const FACT_SECTION: Record<FactId, FactSection> = {
   format: "output", resolution: "output", aspect: "output", frames: "output", fps: "output", clipLength: "output", images: "output", voice: "output", keyframes: "output",
@@ -126,7 +120,13 @@ const humanise = (key: string) => {
 const NOT_FACTS = new Set(["prompt", "text", "input", "url", "assetid", "jobid", "negativeprompt", "studio", "studiokey", "success", "type"]);
 
 /** The facts of a job, in reading order, each in its section. */
-export function jobFacts(job: Pick<Job, "payload" | "result" | "status" | "createdAt" | "updatedAt">, now?: number): JobFact[] {
+export interface JobFactsOptions {
+  now?: number;
+  /** The registry's display names, by normalised model id or name (see `modelOf`). */
+  modelNames?: ReadonlyMap<string, string>;
+}
+
+export function jobFacts(job: Pick<Job, "payload" | "result" | "status" | "createdAt" | "updatedAt">, { now, modelNames }: JobFactsOptions = {}): JobFact[] {
   const m = merged(job);
   const get = (id: string) => {
     for (const [k, v] of m) if (KEY_TO_FACT[k] === id) return v.value;
@@ -156,7 +156,7 @@ export function jobFacts(job: Pick<Job, "payload" | "result" | "status" | "creat
   const keyframes = num(get("keyframes"));
   push("keyframes", keyframes === null ? null : String(keyframes));
 
-  const model = modelOf(job);
+  const model = modelOf(job, modelNames);
   push("model", model);
   const provider = get("provider");
   push("provider", provider === undefined ? null : providerName(String(provider)));
@@ -228,16 +228,12 @@ export function whereRan(job: Pick<Job, "payload" | "result">): string | null {
   return providerLabel;
 }
 
-const modelNames = () => new Map(MODELS.flatMap((e) => [[normaliseKey(e.id), e.name] as const, [normaliseKey(e.name), e.name] as const]));
-let names: Map<string, string> | null = null;
-
-/** The model of a job as a name ("Wan 2.2 TI2V 5B"): the registry's, else what the job says. Null when it says nothing. */
-export function modelOf(job: Pick<Job, "payload" | "result">): string | null {
+/** The model of a job as a name ("Wan 2.2 TI2V 5B"): the registry's when `names` knows it, else what the job says. Null when it says nothing. */
+export function modelOf(job: Pick<Job, "payload" | "result">, names?: ReadonlyMap<string, string>): string | null {
   const m = merged(job);
   const raw = [...m].find(([k]) => KEY_TO_FACT[k] === "model")?.[1].value;
   if (raw === undefined || String(raw).trim() === "") return null;
-  names ??= modelNames();
-  return names.get(normaliseKey(String(raw))) ?? String(raw);
+  return names?.get(normaliseKey(String(raw))) ?? String(raw);
 }
 
 /** The prompt a job was given, for its detail and its search. */

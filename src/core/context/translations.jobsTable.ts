@@ -5,7 +5,7 @@
  */
 
 import type { Locale } from "./translations.types";
-import type { FactId } from "@/features/jobs/utils/jobFacts";
+import type { FactId } from "@/core/types/jobFacts.types";
 
 export interface JobsTableDictionary {
   caption: string;
