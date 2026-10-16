@@ -53,6 +53,7 @@ export function StudioRunPanel({ studio, installation }: Readonly<StudioRunPanel
       <Card.Body padding="lg" className="gap-4">
       <h2 className="text-base font-semibold text-fg">{t.studio.runTitle}</h2>
       <RunForm
+        studioKey={studio.studioKey}
         inputSchema={studio.inputSchema}
         estimatedCredits={studio.estimatedCredits}
         isSubmitting={isSubmitting}
