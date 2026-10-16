@@ -5,11 +5,13 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { createRequire } from "node:module";
+import { pathToFileURL } from "node:url";
 
 const root = new URL("../", import.meta.url);
 const read = (path) => JSON.parse(readFileSync(new URL(path, root), "utf8"));
 const appPackage = read("package.json");
-const uiPackageUrl = new URL("node_modules/@krizaka/ui/package.json", root);
+// Resolved as the app resolves it: nested under the app, or hoisted to the workspace root.
+const uiPackageUrl = pathToFileURL(createRequire(new URL("package.json", root)).resolve("@krizaka/ui/package.json"));
 const uiPackage = JSON.parse(readFileSync(uiPackageUrl, "utf8"));
 
 /** The three numbers of a caret range's floor ("^3.14.0" -> [3, 14, 0]). */
