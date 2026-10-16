@@ -89,6 +89,7 @@ describe("GalleryFeatured (the home page's prompt → image → video, a slidesh
     const { container } = wrap(<GalleryFeatured />);
     const own = FEATURED.findIndex((item) => item.image && !item.clip.fromImage);
     expect(own).toBeGreaterThanOrEqual(0);
+    for (let i = 0; i < own; i++) fireEvent.click(screen.getByRole("button", { name: g.next })); // the slideshow renders the slides around the active one
     const active = slide(container, own);
     expect(within(active).getByText(g.notFromImage)).toBeInTheDocument();
     expect(within(active).queryByText(g.fromImage)).toBeNull();
@@ -98,6 +99,7 @@ describe("GalleryFeatured (the home page's prompt → image → video, a slidesh
     const { container } = wrap(<GalleryFeatured />);
     const lone = FEATURED.findIndex((item) => !item.image);
     expect(lone).toBeGreaterThanOrEqual(0);
+    for (let i = 0; i < lone; i++) fireEvent.click(screen.getByRole("button", { name: g.next }));
     expect(within(slide(container, lone)).getByText(g.noImage)).toBeInTheDocument();
   });
 
@@ -172,7 +174,7 @@ describe("GalleryFeatured (the home page's prompt → image → video, a slidesh
     expect(img.getAttribute("loading")).toBe("lazy");
     expect(img.getAttribute("src")).toMatch(/^https:\/\/krizaka-assets\.b-cdn\.net\/site\/products\/orazaka\/gallery\//);
     const source = container.querySelector("video source")!;
-    expect(source.getAttribute("src")).toMatch(/^https:\/\/krizaka-assets\.b-cdn\.net\/site\/products\/orazaka\/gallery-video\/[a-z-]+\.[0-9a-f]{10}\.(webm|mp4)$/);
+    expect(source.getAttribute("src")).toMatch(/^https:\/\/krizaka-assets\.b-cdn\.net\/site\/products\/orazaka\/gallery-video\/[a-z0-9-]+\.[0-9a-f]{10}\.(webm|mp4)$/);
   });
 });
 
