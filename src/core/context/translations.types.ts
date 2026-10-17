@@ -11,6 +11,7 @@ import type { ModelsDictionary } from "./translations.models.types";
 import type { GalleryDictionary } from "./translations.gallery";
 import type { MobileDictionary } from "./translations.mobile";
 import type { DesktopDictionary } from "./translations.desktop";
+import type { ChangelogDictionary } from "./translations.changelog";
 import type { DocsDictionary } from "./translations.docs";
 
 export type Locale = "en" | "fr";
@@ -836,6 +837,8 @@ export interface TranslationDictionary {
   mobile: MobileDictionary;
   /** /desktop (Orazaka for Mac) and the home page's "On your Mac" band. */
   desktop: DesktopDictionary;
+  /** /changelog: the releases of the product, read from GitHub. */
+  changelog: ChangelogDictionary;
   /** The documentation: hub, sidebar, article chrome, the text version of the schemas. */
   docs: DocsDictionary;
 }

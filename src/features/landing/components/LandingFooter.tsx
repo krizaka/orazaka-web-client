@@ -5,6 +5,7 @@ import { SiteFooter } from "@krizaka/ui/site-footer";
 import { familyLabels } from "@krizaka/ui/sites";
 import { LocaleSwitch } from "@/components/LocaleSwitch";
 import { useTranslation } from "@/core/context/LocaleContext";
+import { fill } from "@/core/context/fill";
 import { APP_ENV, APP_VERSION } from "@/core/config/version";
 import { FEATURE_IDS } from "@/features/landing/components/features";
 import { NAV_DOCS, NAV_GROUPS, NavGroupId, entryHref } from "@/features/landing/utils/site-nav";
@@ -25,12 +26,16 @@ export function LandingFooter({ withLanguage = false }: Readonly<{ withLanguage?
       family={false}
       labels={familyLabels[locale]}
       aria-label={f.product}
-      version={APP_VERSION}
-      env={APP_ENV === "production" ? undefined : APP_ENV}
       data-testid="app-version"
+      env={APP_ENV === "production" ? undefined : APP_ENV}
       legal={
         <>
           <span>{f.license}</span>
+          <SiteFooter.Link asChild>
+            <Link href={`/changelog#${APP_VERSION}`}>
+              {fill(t.changelog.footerVersion, { version: APP_VERSION })}
+            </Link>
+          </SiteFooter.Link>
           <SiteFooter.Link asChild>
             <Link href="/privacy">{f.privacy}</Link>
           </SiteFooter.Link>

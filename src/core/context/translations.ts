@@ -9,6 +9,7 @@ import { features } from "./translations.features";
 import { gallery } from "./translations.gallery";
 import { mobile } from "./translations.mobile";
 import { desktop } from "./translations.desktop";
+import { changelog } from "./translations.changelog";
 import { docs } from "./translations.docs";
 import { a11y, automation } from "./translations.automation";
 import { showcase } from "./translations.showcase";
@@ -916,6 +917,7 @@ export const translations: Record<Locale, TranslationDictionary> = {
     gallery: gallery.en,
     mobile: mobile.en,
     desktop: desktop.en,
+    changelog: changelog.en,
     docs: docs.en,
   },
   fr: {
@@ -1826,6 +1828,7 @@ export const translations: Record<Locale, TranslationDictionary> = {
     gallery: gallery.fr,
     mobile: mobile.fr,
     desktop: desktop.fr,
+    changelog: changelog.fr,
     docs: docs.fr,
   },
 };

@@ -40,7 +40,7 @@ const FEATURE_IDS = Object.keys(features.en.pages) as (keyof typeof features.en.
 
 /** Every public page, in the order of the sitemap. */
 export function publicPaths(): string[] {
-  return ["/", ...FEATURE_IDS.map((id) => `/features/${id}`), "/gallery", "/models", "/desktop", "/docs", ...listPages().map((d) => `/docs/${d.slug}`), "/privacy", "/terms"];
+  return ["/", ...FEATURE_IDS.map((id) => `/features/${id}`), "/gallery", "/models", "/desktop", "/changelog", "/docs", ...listPages().map((d) => `/docs/${d.slug}`), "/privacy", "/terms"];
 }
 
 const ORG = { "@type": "Organization", "@id": ORG_ID, name: "Krizaka", url: KRIZAKA_URL };
