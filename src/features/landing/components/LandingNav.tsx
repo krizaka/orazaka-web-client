@@ -6,41 +6,15 @@ import { OrazakaLogo } from "@krizaka/ui";
 import { Button } from "@krizaka/ui/button";
 import { NavBar } from "@krizaka/ui/nav-bar";
 import { ThemeToggle } from "@krizaka/ui/theme";
-import { cn } from "@krizaka/ui/cn";
+import { useLanguageSwitch } from "@/components/LocaleSwitch";
 import { useTranslation } from "@/core/context/LocaleContext";
 import { useAuthFlags } from "@/core/context/AuthFlagsContext";
-import type { Locale } from "@/core/context/translations.types";
 import { NAV_DOCS, NAV_GROUPS, entryHref, navActive } from "@/features/landing/utils/site-nav";
 
 export { navActive } from "@/features/landing/utils/site-nav";
 
-const LOCALES: { code: Locale; label: string }[] = [
-  { code: "en", label: "EN" },
-  { code: "fr", label: "FR" },
-];
-
 const REPO_URL = "https://github.com/krizaka/orazaka-web-client";
 const TALK_URL = "https://www.krizaka.com/contact?topic=orazaka";
-
-function Locales({ className }: Readonly<{ className?: string }>) {
-  const { t, locale, setLocale } = useTranslation();
-  return (
-    <span role="group" aria-label={t.landing.nav.langLabel} className={cn("items-center", className)}>
-      {LOCALES.map(({ code, label }) => (
-        <Button
-          key={code}
-          variant="ghost"
-          size="sm"
-          onClick={() => setLocale(code)}
-          aria-pressed={locale === code}
-          className="px-2 font-mono aria-pressed:text-fg-accent"
-        >
-          {label}
-        </Button>
-      ))}
-    </span>
-  );
-}
 
 /**
  * The bar of the public pages — the product-site standard (`site-nav.ts`, docs/ux/information-architecture.md of the
@@ -54,6 +28,7 @@ export function LandingNav({ onHome = true }: Readonly<{ onHome?: boolean }>) {
   const { t } = useTranslation();
   const n = t.landing.nav;
   const flags = useAuthFlags();
+  const language = useLanguageSwitch(n.langLabel);
   const active = navActive(usePathname());
   const groups = NAV_GROUPS.map((g) => ({
     id: g.id,
@@ -90,7 +65,9 @@ export function LandingNav({ onHome = true }: Readonly<{ onHome?: boolean }>) {
 
         <NavBar.Actions className="gap-1">
           <NavBar.Repo href={REPO_URL} label={n.repo} target="_blank" rel="noopener noreferrer" className="hidden lg:inline-flex" />
-          <Locales className="hidden md:flex" />
+          <span className="hidden md:inline-flex">
+            <NavBar.Language {...language} />
+          </span>
           <ThemeToggle variant="ghost" className="hidden md:inline-flex" label={themeLabel} />
           <Button asChild variant="ghost" size="sm" className="hidden md:inline-flex">
             <Link href="/login">{n.signIn}</Link>
@@ -113,10 +90,10 @@ export function LandingNav({ onHome = true }: Readonly<{ onHome?: boolean }>) {
             <NavBar.MobileLink asChild active={active.top === "docs"}>
               <Link href={NAV_DOCS.path}>{n.docs}</Link>
             </NavBar.MobileLink>
-            <span className="mt-2 flex items-center justify-between gap-3 border-t border-border-subtle pt-3">
-              <Locales className="flex" />
+            <NavBar.MobilePreferences label={n.preferences}>
               <ThemeToggle variant="ghost" label={themeLabel} />
-            </span>
+              <NavBar.Language {...language} />
+            </NavBar.MobilePreferences>
             <span className="flex items-center gap-2">
               <Button asChild variant="ghost" size="md">
                 <Link href="/login">{n.signIn}</Link>

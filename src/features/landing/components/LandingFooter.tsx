@@ -40,7 +40,7 @@ export function LandingFooter({ withLanguage = false }: Readonly<{ withLanguage?
           <SiteFooter.Link asChild>
             <Link href="/contact">{f.contact}</Link>
           </SiteFooter.Link>
-          {withLanguage && <LocaleSwitch />}
+          {withLanguage && <LocaleSwitch variant="inline" />}
         </>
       }
     >

@@ -115,11 +115,11 @@ describe("the mobile panel", () => {
     renderLanding("en", <LandingPage />, CLOSED);
     fireEvent.click(screen.getByRole("button", { name: nav.openMenu }));
     const groups = within(bar()).getAllByRole("group").filter((g) => g.getAttribute("aria-labelledby"));
-    expect(groups.map((g) => g.querySelector("p")?.textContent)).toEqual([nav.product, nav.platforms]);
+    expect(groups.map((g) => g.querySelector("p")?.textContent)).toEqual([nav.product, nav.platforms, nav.preferences]);
     expect(within(groups[1]).getAllByRole("link").map((a) => a.textContent)).toEqual([nav.web, nav.mobile, nav.desktop, nav.selfHost]);
     const panel = groups[0].closest("nav") as HTMLElement;
     const hrefs = [...panel.querySelectorAll("a")].map((a) => a.getAttribute("href"));
-    expect(hrefs).toEqual(["#how", "#studios", "#packs", "/models", "/gallery", "#platform", "/docs/mobile", "/desktop", "/docs/self-hosting", "/docs", "/login", "https://www.krizaka.com/contact?topic=orazaka"]);
+    expect(hrefs).toEqual(["#how", "#studios", "#packs", "/models", "/gallery", "#platform", "/docs/mobile", "/desktop", "/docs/self-hosting", "/docs", "/", "/", "/login", "https://www.krizaka.com/contact?topic=orazaka"]);
     expect(hrefs).not.toContain("/infrastructure");
   });
 
@@ -133,6 +133,24 @@ describe("the mobile panel", () => {
         expect(nav.menu[e.id].length).toBeLessThanOrEqual(48);
       }
     }
+  });
+});
+
+describe("the language switch", () => {
+  it("is the family's: a globe and the current code in the bar, never a row of EN/FR buttons", () => {
+    renderLanding("fr", <LandingNav />);
+    const trigger = within(bar()).getByRole("button", { name: `${translations.fr.landing.nav.langLabel}: Français` });
+    expect(trigger.querySelector("[data-code]")?.getAttribute("data-code")).toBe("fr");
+    expect(bar().querySelector("[aria-pressed]")).toBeNull();
+  });
+
+  it("lists the languages by their own names, and choosing one sets the locale without leaving the page", () => {
+    renderLanding("fr", <LandingNav />);
+    fireEvent.click(within(bar()).getByRole("button", { name: `${translations.fr.landing.nav.langLabel}: Français` }));
+    const english = screen.getByRole("link", { name: "English" });
+    expect(english).toHaveAttribute("hreflang", "en");
+    // The click is taken by the app (it sets the locale), the browser does not navigate.
+    expect(fireEvent.click(english)).toBe(false);
   });
 });
 
