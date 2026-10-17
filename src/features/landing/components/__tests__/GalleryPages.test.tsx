@@ -98,7 +98,7 @@ describe("GalleryFeatured (the home page's prompt → image → video, a slidesh
     const { container } = wrap(<GalleryFeatured />);
     FEATURED.forEach((item, i) => {
       const active = slide(container, i);
-      expect(active.querySelectorAll("video")).toHaveLength(1);
+      expect(active.querySelectorAll("ol figure")).toHaveLength(item.image ? 2 : 1); // the image and the video, or the video alone
       expect(active.querySelectorAll("img[alt]:not([alt=''])")).toHaveLength(item.image ? 1 : 0);
       expect(active.querySelector("[data-steps]")).toHaveAttribute("data-steps", item.image ? "3" : "2");
     });
