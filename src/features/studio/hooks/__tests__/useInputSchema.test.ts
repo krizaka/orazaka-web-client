@@ -28,3 +28,51 @@ describe("useInputSchema", () => {
     expect(result.current.map((f) => [f.key, f.assetKind])).toEqual([["image", "image"], ["prompt", null]]);
   });
 });
+
+describe("useInputSchema — closed sets are choices, not text", () => {
+  const schema = JSON.stringify({
+    type: "object",
+    required: ["prompt"],
+    properties: {
+      prompt: { type: "string" },
+      model: {
+        type: "string",
+        title: "Model",
+        "x-advanced": true,
+        "x-options": { source: "models", category: "image" },
+        default: "sd-hosted",
+        oneOf: [
+          { const: "sd-hosted", title: "SD hosted", description: "Hosted.", "x-meta": { runsOn: "cloud", speed: "fast", typicalSeconds: 8, priceCents: 8, available: true } },
+          { const: "flux", title: "FLUX", "x-meta": { runsOn: "local", available: false, unavailableReason: "FLUX is not running" } },
+        ],
+      },
+      seed: { type: "string", "x-control": "seed", "x-advanced": true },
+      voiceless: { type: "string", "x-options": { source: "models", category: "speech" } },
+      size: { type: "string", enum: ["1024x1024", "512x512"], default: "1024x1024" },
+    },
+  });
+  const field = (key: string) => renderHook(() => useInputSchema(schema)).result.current.find((f) => f.key === key)!;
+
+  it("reads a labelled oneOf as choices with the catalogue facts a picker shows", () => {
+    const model = field("model");
+    expect(model.choices).toEqual([
+      { value: "sd-hosted", label: "SD hosted", hint: "Hosted.", meta: { runsOn: "cloud", speed: "fast", typicalSeconds: 8, priceCents: 8, available: true, unavailableReason: null } },
+      { value: "flux", label: "FLUX", hint: null, meta: { runsOn: "local", speed: null, typicalSeconds: null, priceCents: null, available: false, unavailableReason: "FLUX is not running" } },
+    ]);
+    expect(model.defaultValue).toBe("sd-hosted");
+    expect(model.fedByCatalogue).toBe(true);
+    expect(model.advanced).toBe(true);
+  });
+
+  it("a catalogue-fed field whose list did not load is still a picker, with no choices", () => {
+    const f = field("voiceless");
+    expect(f.fedByCatalogue).toBe(true);
+    expect(f.choices).toBeNull();
+  });
+
+  it("reads the seed control and the static enum", () => {
+    expect(field("seed")).toMatchObject({ control: "seed", advanced: true, choices: null });
+    expect(field("size")).toMatchObject({ type: "enum", options: ["1024x1024", "512x512"], defaultValue: "1024x1024", advanced: false });
+    expect(field("prompt")).toMatchObject({ control: null, advanced: false, fedByCatalogue: false });
+  });
+});
