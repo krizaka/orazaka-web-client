@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Tabs } from "@krizaka/ui/tabs";
 import { useTranslation } from "@/core/context/LocaleContext";
 import { StudioCatalogue } from "@/features/studio/components/StudioCatalogue";
+import { RunsInProgress } from "@/features/studio/components/RunsInProgress";
 import { InstalledStudios } from "@/features/studio/components/InstalledStudios";
 
 type StudioTab = "mine" | "explore";
@@ -24,6 +25,8 @@ export function StudiosHome() {
         <h1 className="font-display text-2xl font-bold tracking-[-0.02em] text-fg">{t.studio.title}</h1>
         <p className="text-sm text-fg-secondary">{t.studio.subtitle}</p>
       </header>
+
+      <RunsInProgress />
 
       <Tabs.List aria-label={t.studio.title} className="border-border-subtle">
         <Tabs.Trigger value="mine" className="py-2 text-[13px] font-medium">

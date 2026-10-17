@@ -40,6 +40,8 @@ export const JOB_STATUS = {
   PROCESSING: "PROCESSING",
   COMPLETED: "COMPLETED",
   FAILED: "FAILED",
+  CANCELLED: "CANCELLED",
+  DELETED: "DELETED",
 } as const;
 
 export type JobStatusValue = (typeof JOB_STATUS)[keyof typeof JOB_STATUS];

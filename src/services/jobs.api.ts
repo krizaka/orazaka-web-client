@@ -34,4 +34,14 @@ export const JobsApi = {
       totalElements: data?.totalElements ?? 0,
     };
   },
+
+  /**
+   * Deletes a finished job's result: the files leave every store and the row becomes a tombstone (orazaka-web-client#86).
+   * Owner only; a job still running is refused (cancel it first).
+   *
+   * @param id - The job.
+   */
+  deleteJob: async (id: string): Promise<void> => {
+    await restRequest<unknown>(`/api/v1/jobs/${encodeURIComponent(id)}`, { method: "DELETE" });
+  },
 } as const;
