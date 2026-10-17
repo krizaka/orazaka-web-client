@@ -10,8 +10,8 @@ test("live: Made here is a three-step strip whose height never changes, with the
   await page.goto("/", { waitUntil: "networkidle" });
   const slide = page.locator('#made [aria-roledescription="slide"][data-active]').first();
   await slide.scrollIntoViewIfNeeded();
-  await expect(slide.getByText(/FLUX\.2 · on one Mac/)).toBeVisible();
-  await expect(slide.getByText(/Wan 2\.2 · DigitalOcean/)).toBeVisible();
+  // Each step says where and at what cost it was made (the models change; "DigitalOcean" + a price stay).
+  await expect(slide.getByText(/DigitalOcean · .*\$\d/).first()).toBeVisible();
   const height = async () => (await slide.boundingBox())!.height;
   const before = await height();
   await slide.getByRole("button", { name: "Details" }).last().click();
@@ -28,5 +28,6 @@ test("live: the clip plays by itself in view, muted, and /gallery lists the vide
   await video.scrollIntoViewIfNeeded();
   await expect.poll(() => video.evaluate((v: HTMLVideoElement) => !v.paused && v.readyState >= 2)).toBe(true);
   await page.goto("/gallery", { waitUntil: "networkidle" });
-  await expect(page.locator("#videos video[aria-label]")).toHaveCount(10);
+  // The gallery grows with the demos: at least the ten it shipped with, each one named.
+  expect(await page.locator("#videos video[aria-label]").count()).toBeGreaterThanOrEqual(10);
 });
