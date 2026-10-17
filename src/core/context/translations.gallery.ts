@@ -124,7 +124,6 @@ export interface GalleryDictionary {
   imagePromptHeading: string;
   videoPromptHeading: string;
   /** What a clip is: its prompt is its own, no image feeds it. */
-  noImage: string;
   videoModel: string;
   videoProvider: string;
   runBy: string;
@@ -248,7 +247,6 @@ export const gallery: Record<Locale, GalleryDictionary> = {
     "videoStep": "Video",
     "imagePromptHeading": "Image prompt",
     "videoPromptHeading": "Video prompt",
-    "noImage": "This clip starts from a prompt of its own.",
     "videoModel": "Video model",
     "videoProvider": "Made by",
     "runBy": "Run by",
@@ -404,7 +402,6 @@ export const gallery: Record<Locale, GalleryDictionary> = {
     "videoStep": "Vidéo",
     "imagePromptHeading": "Consigne de l'image",
     "videoPromptHeading": "Consigne de la vidéo",
-    "noImage": "Ce plan part de sa propre consigne.",
     "videoModel": "Modèle vidéo",
     "videoProvider": "Réalisé par",
     "runBy": "Exécuté par",

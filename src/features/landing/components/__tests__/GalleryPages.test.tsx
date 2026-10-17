@@ -81,11 +81,27 @@ describe("GalleryFeatured (the home page's prompt → image → video, a slidesh
     expect(slide(container, FEATURED.length - 1)).toHaveAttribute("data-active");
   });
 
-  it("says so when a clip has no image: its prompt is its own", () => {
+  it("never shows an empty middle box: a clip with no image step is Prompt → Video, two columns", () => {
     const { container } = wrap(<GalleryFeatured />);
     const lone = FEATURED.findIndex((item) => !item.image);
-    expect(lone).toBeGreaterThanOrEqual(0);
-    expect(within(slide(container, lone)).getByText(g.noImage)).toBeInTheDocument();
+    if (lone < 0) return; // every example has its image step: nothing to degrade
+    const active = slide(container, lone);
+    const steps = within(active).getAllByRole("listitem").filter((li) => li.textContent?.match(/^\d · /));
+    expect(steps.map((s) => s.textContent?.slice(0, 3))).toEqual(["1 ·", "2 ·"]);
+    expect(steps[1]).toHaveTextContent(g.stepVideo);
+    expect(active.querySelector("[data-steps]")).toHaveAttribute("data-steps", "2");
+    expect(within(active).queryByText(/prompt of its own/)).toBeNull();
+    expect(active.querySelectorAll('[aria-hidden="true"] svg, li[aria-hidden="true"]')).toHaveLength(1); // one arrow
+  });
+
+  it("no slide has an empty frame: every frame holds a medium", () => {
+    const { container } = wrap(<GalleryFeatured />);
+    FEATURED.forEach((item, i) => {
+      const active = slide(container, i);
+      expect(active.querySelectorAll("video")).toHaveLength(1);
+      expect(active.querySelectorAll("img[alt]:not([alt=''])")).toHaveLength(item.image ? 1 : 0);
+      expect(active.querySelector("[data-steps]")).toHaveAttribute("data-steps", item.image ? "3" : "2");
+    });
   });
 
   it("is a named carousel with a counter and one clickable segment per item, and no pause button under reduced motion", () => {
