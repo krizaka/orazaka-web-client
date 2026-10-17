@@ -84,9 +84,16 @@ function Slide({ item, active }: Readonly<{ item: FeaturedItem; active: boolean 
   const g = t.gallery;
   const { clip, image } = item;
   const prompt = image?.prompt ?? clip.prompt;
+  const steps = image ? 3 : 2;
   return (
-    <div className="space-y-4" data-steps={3}>
-      <ol className="grid grid-cols-[minmax(0,1fr)] items-start gap-6 lg:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)_auto_minmax(0,1fr)] lg:gap-3">
+    <div className="space-y-4" data-steps={steps}>
+      <ol
+        className={
+          image
+            ? "grid grid-cols-[minmax(0,1fr)] items-start gap-6 lg:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)_auto_minmax(0,1fr)] lg:gap-3"
+            : "grid grid-cols-[minmax(0,1fr)] items-start gap-6 lg:mx-auto lg:max-w-4xl lg:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] lg:gap-3"
+        }
+      >
         <Step n={1} title={g.stepPrompt}>
           <div className="flex aspect-video flex-col justify-between gap-2 overflow-hidden rounded-xl border border-border-default bg-surface-2 p-4">
             <blockquote lang="en" className="line-clamp-5 text-sm leading-relaxed text-fg-secondary">{prompt}</blockquote>
@@ -99,9 +106,9 @@ function Slide({ item, active }: Readonly<{ item: FeaturedItem; active: boolean 
           </div>
         </Step>
         <Arrow />
-        <Step n={2} title={g.stepImage}>
-          {image ? (
-            <>
+        {image ? (
+          <>
+            <Step n={2} title={g.stepImage}>
               <Frame>
                 <Image src={gallerySrc(image.id)} alt="" aria-hidden width={image.width} height={image.height} sizes="360px" loading="lazy" unoptimized className="absolute inset-0 h-full w-full scale-125 object-cover opacity-70 blur-2xl" />
                 <Image src={gallerySrc(image.id)} alt={g.items[image.id]} width={image.width} height={image.height} sizes="(max-width: 1024px) 90vw, 360px" loading="lazy" unoptimized className="relative block h-full w-full object-contain" />
@@ -110,16 +117,11 @@ function Slide({ item, active }: Readonly<{ item: FeaturedItem; active: boolean 
               <Disclosure label={g.details} title={g.imageStep}>
                 <ImagePanel image={image} />
               </Disclosure>
-            </>
-          ) : (
-            <>
-              <Frame><p className="relative flex h-full items-center justify-center p-4 text-center text-sm text-fg-secondary">{g.noImage}</p></Frame>
-              <Chip>{" "}</Chip>
-            </>
-          )}
-        </Step>
-        <Arrow />
-        <Step n={3} title={g.stepVideo}>
+            </Step>
+            <Arrow />
+          </>
+        ) : null}
+        <Step n={steps} title={g.stepVideo}>
           <figure className="aspect-video overflow-hidden rounded-xl border border-border-default bg-surface-2 [&_video]:h-full [&_video]:w-full [&_video]:object-cover">
             <ClipPlayer sources={clipFiles(clip)} title={g.clips[clip.id]} labels={clipLabels(g, clip)} className="h-full" />
           </figure>
