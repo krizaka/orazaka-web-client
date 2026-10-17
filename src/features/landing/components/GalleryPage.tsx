@@ -10,6 +10,7 @@ import { GALLERY, STYLES, gallerySrc, type GalleryStyle } from "@/features/landi
 import { GalleryCompare } from "@/features/landing/components/GalleryCompare";
 import { LandingDemo } from "@/features/landing/components/LandingDemo";
 import { GalleryVideos } from "@/features/landing/components/GalleryVideos";
+import { GalleryFilms } from "@/features/landing/components/GalleryFilms";
 import { CLIPS } from "@/features/landing/utils/gallery-clips";
 import { LandingFooter } from "@/features/landing/components/LandingFooter";
 import { LandingNav } from "@/features/landing/components/LandingNav";
@@ -79,6 +80,7 @@ export function GalleryPage({ only, kind }: Readonly<{ only?: GalleryStyle; kind
             </span>
           </nav>
 
+          {showVideos && <GalleryFilms />}
           {showVideos && <GalleryVideos />}
           {showCompare && <GalleryCompare />}
 

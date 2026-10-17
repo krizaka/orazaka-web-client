@@ -1,6 +1,9 @@
 {
   "cdnRoot": "site",
   "files": {
+    "products/orazaka/cinema/nova-ardent-poster.webp": "64a9c43b07",
+    "products/orazaka/cinema/nova-ardent.mp4": "ba655b52bd",
+    "products/orazaka/cinema/nova-ardent.webm": "5c363d9f9c",
     "products/orazaka/compare/alps-dawn--flux-2-klein-4b.webp": "8e5c7a81ec",
     "products/orazaka/compare/alps-dawn--stable-diffusion-3-5-large.webp": "d2f910bbaf",
     "products/orazaka/compare/alps-dawn--v1-5-pruned-emaonly.webp": "39869c1b2d",

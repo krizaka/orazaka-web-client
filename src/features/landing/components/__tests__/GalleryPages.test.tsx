@@ -1,3 +1,4 @@
+import { FILMS } from "@/features/landing/utils/cinema-films";
 import "@testing-library/jest-dom";
 import { act, fireEvent, render, screen, within } from "@testing-library/react";
 import { ThemeProvider } from "@krizaka/ui/theme";
@@ -193,7 +194,9 @@ describe("GalleryPage", () => {
     expect(container.querySelectorAll("figure img").length).toBe(GALLERY.length + COMPARE_IMAGES.length);
     expect(screen.getAllByRole("button", { name: translations.en.gallery.copy }).length).toBe(GALLERY.length);
     // The videos come first (one command each), then the images (the model, the inputs, the run).
-    expect(container.querySelectorAll("pre code").length).toBe(CLIPS.length + GALLERY.length * 3);
+    // The cinematic shorts first (one command each), then the clips, then the images.
+    expect(container.querySelectorAll("pre code").length).toBe(FILMS.length + CLIPS.length + GALLERY.length * 3);
+    for (const film of FILMS) expect(screen.getAllByText(translations.en.gallery.films[film.id].title).length).toBeGreaterThan(0);
     const credits = document.getElementById("credits") as HTMLElement;
     expect(within(credits).getAllByRole("listitem").length).toBe(translations.en.gallery.credits.length);
   });
