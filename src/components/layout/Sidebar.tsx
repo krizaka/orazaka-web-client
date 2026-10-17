@@ -80,9 +80,11 @@ export function Sidebar() {
   return (
     <>
       <aside className="hidden h-full w-14 flex-shrink-0 flex-col md:flex">
-        <nav aria-label={t.appNav.label} className="krizaka-navbar relative flex h-full flex-col py-3">
-          <Link href="/" aria-label={t.appNav.home} className="mx-auto mb-4 grid h-10 w-10 place-items-center transition-opacity duration-200 hover:opacity-80">
-            <OrazakaLogo size={26} />
+        <nav aria-label={t.appNav.label} className="krizaka-navbar relative flex h-full flex-col pb-3">
+          <Link href="/" aria-label={t.appNav.home} className="mb-2 grid h-14 w-full flex-shrink-0 place-items-center transition-opacity duration-200 hover:opacity-80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
+            <span data-brand-mark className="grid place-items-center">
+              <OrazakaLogo size={26} />
+            </span>
           </Link>
           <ul className="flex w-full flex-1 flex-col items-center gap-1 px-1.5">
             {main.map((s) => <RailLink key={s.id} section={s} label={t.appNav[s.id]} active={current === s.id} />)}

@@ -17,8 +17,8 @@ import { NotificationBell } from "./NotificationBell";
 const LOCALES = ["en", "fr"] as const;
 
 /**
- * The top bar of the signed-in app. Left: the drawer's button (phone), the mark and the name (home), the sovereign
- * status. Right: the theme, the notifications, and the user menu under the avatar — who you are first (avatar, name,
+ * The top bar of the signed-in app. Left: the drawer's button (phone), the name (home; with the mark on a phone, where the rail is
+ * hidden — on a desktop the mark is the rail's, once), the sovereign status. Right: the theme, the notifications, and the user menu under the avatar — who you are first (avatar, name,
  * e-mail), the language, Sign out. Nothing here repeats the rail: Settings and the sections live there
  * (core/config/app-sections.ts).
  */
@@ -37,15 +37,17 @@ export const Header: React.FC = () => {
   );
 
   return (
-    <header className="sticky top-0 z-30 flex h-14 w-full items-center justify-between border-b border-border-subtle bg-surface-1 px-5">
+    <header className="sticky top-0 z-30 flex h-14 w-full items-center justify-between border-b border-border-subtle bg-surface-1 px-5 md:pl-2">
       <div className="flex items-center md:hidden">
         <IconButton variant="ghost" onClick={open} label={t.header.openSidebar} className="mr-2">
           <MenuIcon size={20} />
         </IconButton>
       </div>
-      {/* The app's mark and its name: the rail only carries the icon. */}
+      {/* The name only, right after the rail; the mark is the rail's (top). Without the rail (phone) the mark comes back here, so it shows exactly once at every width. */}
       <Link href="/" aria-label={t.appNav.home} className="flex items-center gap-2 rounded-lg p-1 transition-opacity hover:opacity-80">
-        <OrazakaLogo size={22} />
+        <span data-brand-mark className="md:hidden">
+          <OrazakaLogo size={22} />
+        </span>
         <span className="font-display text-sm font-bold tracking-tight text-fg">Orazaka</span>
       </Link>
       <Badge tone="success" dot className="ml-3 hidden sm:inline-flex">
