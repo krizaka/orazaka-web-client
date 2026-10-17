@@ -34,7 +34,7 @@ export const CRAWLERS = [
 ] as const;
 
 /** What a crawler may not walk into: the signed-in workspace, the BFF and the account forms. */
-export const PRIVATE_PATHS = ["/api/", "/dashboard", "/chat", "/profile", "/interceptions", "/login", "/register", "/verify", "/forgot-password"];
+export const PRIVATE_PATHS = ["/api/", "/dashboard", "/chat", "/jobs", "/usage", "/settings", "/interceptions", "/login", "/register", "/verify", "/forgot-password"];
 
 const FEATURE_IDS = Object.keys(features.en.pages) as (keyof typeof features.en.pages)[];
 

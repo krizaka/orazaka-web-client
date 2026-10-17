@@ -8,7 +8,7 @@ import {
   isVideo,
   isAudio,
   isImage,
-} from "@/app/dashboard/jobs/resultDisplay.utils";
+} from "@/app/jobs/resultDisplay.utils";
 
 /**
  * Props definition for the ResultDisplay component.

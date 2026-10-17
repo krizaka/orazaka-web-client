@@ -1,4 +1,4 @@
-import { computeJobStats, formatMs } from "@/app/dashboard/jobs/jobStats.utils";
+import { computeJobStats, formatMs } from "@/app/jobs/jobStats.utils";
 import type { Job } from "@/core/types/jobs.types";
 
 jest.mock("@/core/constants/http.constants", () => ({

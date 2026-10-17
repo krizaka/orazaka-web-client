@@ -1,16 +1,16 @@
 import "@testing-library/jest-dom";
 import { render, screen, fireEvent } from "@testing-library/react";
-import { JobModal } from "@/app/dashboard/jobs/JobModal";
+import { JobModal } from "@/app/jobs/JobModal";
 
 jest.mock("@/core/context/LocaleContext", () => ({
   useTranslation: () => ({ t: jest.requireActual("@/core/context/translations").translations.en, locale: "en" }),
 }));
 
-jest.mock("@/app/dashboard/jobs/ResultDisplay", () => ({
+jest.mock("@/app/jobs/ResultDisplay", () => ({
   ResultDisplay: () => <div data-testid="result-display" />,
 }));
 
-jest.mock("@/app/dashboard/jobs/JobModalParts", () => ({
+jest.mock("@/app/jobs/JobModalParts", () => ({
   ProgressTimeline: () => <div data-testid="progress-timeline" />,
   StageLabels: () => <div data-testid="stage-labels" />,
   StatusPill: ({ status }: { status: string }) => <span>{status}</span>,

@@ -9,7 +9,7 @@ let mockSearch = new URLSearchParams();
 
 jest.mock("next/navigation", () => ({
   useRouter: () => ({ replace: mockReplace, push: jest.fn() }),
-  usePathname: () => "/profile",
+  usePathname: () => "/settings",
   useSearchParams: () => mockSearch,
 }));
 
@@ -139,7 +139,7 @@ describe("ProfileView (tabbed)", () => {
   it("writes the selected tab to the URL on click", () => {
     render(<ProfileView />);
     fireEvent.click(screen.getByRole("tab", { name: "Integrations" }));
-    expect(mockReplace).toHaveBeenCalledWith("/profile?tab=integrations", {
+    expect(mockReplace).toHaveBeenCalledWith("/settings?tab=integrations", {
       scroll: false,
     });
   });

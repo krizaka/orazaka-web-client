@@ -1,6 +1,6 @@
 import "@testing-library/jest-dom";
 import { fireEvent, render, screen, within } from "@testing-library/react";
-import { JobsTable, type JobsTableProps } from "@/app/dashboard/jobs/JobsTable";
+import { JobsTable, type JobsTableProps } from "@/app/jobs/JobsTable";
 import { translations } from "@/core/context/translations";
 import type { Job } from "@/core/types/jobs.types";
 

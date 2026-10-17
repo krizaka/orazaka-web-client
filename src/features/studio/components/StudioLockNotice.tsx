@@ -48,7 +48,7 @@ export function StudioLockNotice({ reason, packKey }: Readonly<StudioLockNoticeP
 
       {reason === "REQUIRES_PLAN" && (
         <Button asChild variant="primary" size="sm" className="self-start">
-          <Link href="/billing">{t.studio.upgradePlan}</Link>
+          <Link href="/usage">{t.studio.upgradePlan}</Link>
         </Button>
       )}
     </div>

@@ -14,7 +14,7 @@ import { useChatStream } from "@/features/chat-session/hooks/useChatStream";
 import { useWallet } from "@/features/billing/hooks/useWallet";
 import { InterceptorPipeline } from "@/features/dashboard/components/InterceptorPipeline";
 import { RecentSessions } from "@/features/dashboard/components/RecentSessions";
-import { JobsGallery } from "@/app/dashboard/jobs/JobsGallery";
+import { JobsGallery } from "@/app/jobs/JobsGallery";
 import { CreditsMeter } from "@/features/billing/components/CreditsMeter";
 import { usePlan } from "@/features/billing/hooks/usePlan";
 import { ActivityCharts } from "@/features/insights/components/ActivityCharts";
@@ -123,7 +123,7 @@ export function DashboardHome() {
 
             <section className="grid gap-4 lg:grid-cols-2">
               <span className="flex flex-col gap-2">
-                <CreditsMeter wallet={wallet} available={available} plan={plan} loading={walletLoading} href="/billing" />
+                <CreditsMeter wallet={wallet} available={available} plan={plan} loading={walletLoading} href="/usage" />
                 <span className="flex justify-end"><UsageExport jobs={jobs} runs={runs} days={days} /></span>
               </span>
               <StudiosUsedChart runs={period.runs} studioLabel={studioLabel} loading={insightsLoading} error={hasError} />
@@ -134,10 +134,10 @@ export function DashboardHome() {
                 <header className="flex items-center justify-between px-1">
                   <h3 className="text-xs font-semibold uppercase tracking-wider text-fg-muted">{t.insights.usage.recent}</h3>
                   <Button asChild variant="ghost" size="sm">
-                    <Link href="/dashboard/jobs">{t.showcase.dashboard.seeAll}</Link>
+                    <Link href="/jobs">{t.showcase.dashboard.seeAll}</Link>
                   </Button>
                 </header>
-                <JobsGallery jobs={jobs} limit={3} onOpen={(job) => router.push(`/dashboard/jobs?jobId=${job.id}`)} />
+                <JobsGallery jobs={jobs} limit={3} onOpen={(job) => router.push(`/jobs?jobId=${job.id}`)} />
               </section>
             )}
 
