@@ -12,13 +12,13 @@ import { SectionBackdrop } from "@krizaka/ui/section-backdrop";
 import { Showcase, type ShowcaseLabels } from "@krizaka/ui/showcase";
 import { useTranslation } from "@/core/context/LocaleContext";
 import { fill } from "@/core/context/fill";
-import { gallerySrc, reproduceParts, type GalleryItem } from "@/features/landing/utils/gallery";
-import { FEATURED, clipFiles, clipReproduceParts, type FeaturedItem, type GalleryClip } from "@/features/landing/utils/gallery-clips";
+import { reproduceParts, type GalleryItem } from "@/features/landing/utils/gallery";
+import { FEATURED, IMAGE_MODEL, clipFiles, clipReproduceParts, imageReproduceParts, imageUrl, type FeaturedItem, type GalleryClip, type ImageRecord } from "@/features/landing/utils/gallery-clips";
 import { SectionHeading } from "@/features/landing/components/SectionHeading";
 import { CopyButton } from "@/features/landing/components/CopyButton";
 import { ItemFacts } from "@/features/landing/components/ItemFacts";
 import { ReproduceBlock } from "@/features/landing/components/ReproduceBlock";
-import { clipFacts, clipLabels } from "@/features/landing/components/clipUi";
+import { clipChip, clipFacts, clipLabels, imageFacts } from "@/features/landing/components/clipUi";
 import { TypedPrompt } from "@/features/landing/components/TypedPrompt";
 
 /**
@@ -110,12 +110,12 @@ function Slide({ item, active }: Readonly<{ item: FeaturedItem; active: boolean 
           <>
             <Step n={2} title={g.stepImage}>
               <Frame>
-                <Image src={gallerySrc(image.id)} alt="" aria-hidden width={image.width} height={image.height} sizes="360px" loading="lazy" unoptimized className="absolute inset-0 h-full w-full scale-125 object-cover opacity-70 blur-2xl" />
-                <Image src={gallerySrc(image.id)} alt={g.items[image.id]} width={image.width} height={image.height} sizes="(max-width: 1024px) 90vw, 360px" loading="lazy" unoptimized className="relative block h-full w-full object-contain" />
+                <Image src={imageUrl(image)} alt="" aria-hidden width={image.width} height={image.height} sizes="360px" loading="lazy" unoptimized className="absolute inset-0 h-full w-full scale-125 object-cover opacity-70 blur-2xl" />
+                <Image src={imageUrl(image)} alt={g.stills[image.id]} width={image.width} height={image.height} sizes="(max-width: 1024px) 90vw, 360px" loading="lazy" unoptimized className="relative block h-full w-full object-contain" />
               </Frame>
-              <Chip>{fill(g.imageChip, { seconds: image.seconds })}</Chip>
+              <Chip>{fill(g.imageChip, { seconds: image.seconds, cost: image.costUsd.toFixed(2) })}</Chip>
               <Disclosure label={g.details} title={g.imageStep}>
-                <ImagePanel image={image} />
+                <FeaturedImagePanel image={image} />
               </Disclosure>
             </Step>
             <Arrow />
@@ -125,13 +125,13 @@ function Slide({ item, active }: Readonly<{ item: FeaturedItem; active: boolean 
           <figure className="aspect-video overflow-hidden rounded-xl border border-border-default bg-surface-2 [&_video]:h-full [&_video]:w-full [&_video]:object-cover">
             <ClipPlayer sources={clipFiles(clip)} title={g.clips[clip.id]} labels={clipLabels(g, clip)} className="h-full" />
           </figure>
-          <Chip>{fill(clip.seconds === undefined ? g.videoChipNoTime : g.videoChip, { seconds: clip.seconds ?? 0, cost: clip.costUsd.toFixed(2) })}</Chip>
+          <Chip>{fill(clip.seconds === undefined ? g.videoChipNoTime : g.videoChip, { ...clipChip(clip), seconds: clip.seconds ?? 0, cost: clip.costUsd.toFixed(2) })}</Chip>
           <Disclosure label={g.details} title={g.videoStep}>
             <VideoPanel clip={clip} active={active} />
           </Disclosure>
         </Step>
       </ol>
-      <p className="min-h-12 text-sm text-fg-secondary">{image ? g.notFromImage : ""}</p>
+      <p className="min-h-12 text-sm text-fg-secondary">{image ? g.fromImage : ""}</p>
     </div>
   );
 }
@@ -222,6 +222,21 @@ function VideoPanel({ clip, active }: Readonly<{ clip: GalleryClip; active: bool
       <CopyButton text={clip.prompt} label={g.copy} done={g.copied} failed={g.copyFailed} />
       <RunFacts facts={clipFacts(g, clip)} />
       <ReproduceBlock parts={clipReproduceParts(clip)} lead={g.videoReproduceLead} />
+    </section>
+  );
+}
+
+/** The image of a featured clip: its prompt, what its own run recorded, the commands that make it again. */
+function FeaturedImagePanel({ image }: Readonly<{ image: ImageRecord }>) {
+  const { t } = useTranslation();
+  const g = t.gallery;
+  return (
+    <section aria-label={g.imageStep} className="space-y-3">
+      <h3 className="font-mono text-xs font-semibold uppercase tracking-[0.14em] text-fg-accent">{g.imagePromptHeading}</h3>
+      <blockquote lang="en" className="text-sm leading-relaxed text-fg-secondary">{image.prompt}</blockquote>
+      <CopyButton text={image.prompt} label={g.copy} done={g.copied} failed={g.copyFailed} />
+      <RunFacts facts={imageFacts(g, image, IMAGE_MODEL)} />
+      <ReproduceBlock parts={imageReproduceParts(image)} />
     </section>
   );
 }
