@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { SiteFooter } from "@krizaka/ui/site-footer";
 import { familyLabels } from "@krizaka/ui/sites";
+import { LocaleSwitch } from "@/components/LocaleSwitch";
 import { useTranslation } from "@/core/context/LocaleContext";
 import { APP_ENV, APP_VERSION } from "@/core/config/version";
 import { FEATURE_IDS } from "@/features/landing/components/features";
@@ -10,9 +11,10 @@ import { FEATURE_IDS } from "@/features/landing/components/features";
 /**
  * The footer of the public pages (NAV-SYS) is @krizaka/ui's SiteFooter: Orazaka's own column (the feature pages, the
  * documentation), no family columns (a deployed product is independent), the publisher line « A Krizaka product », DEV · the version, Montréal. The legal pages
- * and the licence end the signature line.
+ * and the licence end the signature line. `withLanguage`: the pages that have no bar (privacy, terms, contact) carry the
+ * language switch here.
  */
-export function LandingFooter() {
+export function LandingFooter({ withLanguage = false }: Readonly<{ withLanguage?: boolean }>) {
   const { t, locale } = useTranslation();
   const f = t.landing.footer;
 
@@ -37,6 +39,7 @@ export function LandingFooter() {
           <SiteFooter.Link asChild>
             <Link href="/contact">{f.contact}</Link>
           </SiteFooter.Link>
+          {withLanguage && <LocaleSwitch />}
         </>
       }
     >
