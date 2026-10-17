@@ -1,11 +1,10 @@
 /* eslint-disable react/display-name */
 import "@testing-library/jest-dom";
-import { render, screen, fireEvent, within } from "@testing-library/react";
+import { render, screen, within } from "@testing-library/react";
 import { Sidebar } from "@/components/layout/Sidebar";
 import { translations } from "@/core/context/translations";
 import { APP_SECTIONS, currentAppSection } from "@/core/config/app-sections";
 
-const mockClose = jest.fn();
 const mockPath = { current: "/" };
 const mockUser = { current: { name: "Admin", email: "admin@orazaka.io", role: "admin" } as { name: string; email: string; role: string } };
 const t = translations.en;
@@ -13,46 +12,41 @@ const t = translations.en;
 jest.mock("next/link", () => ({ children, ...props }: { children: React.ReactNode; href: string }) => <a {...props}>{children}</a>);
 jest.mock("next/navigation", () => ({ usePathname: () => mockPath.current }));
 jest.mock("@/core/hooks/useAuth", () => ({ useAuth: () => ({ user: mockUser.current, logout: jest.fn() }) }));
-jest.mock("@/core/context/SidebarContext", () => ({ useSidebar: () => ({ isOpen: true, close: mockClose }) }));
-jest.mock("@/core/context/TenantContext", () => ({ useTenant: () => ({ config: { displayName: "Orazaka", layoutMode: "default" } }) }));
 jest.mock("@/core/context/LocaleContext", () => ({ useTranslation: () => ({ t: jest.requireActual("@/core/context/translations").translations.en, locale: "en" }) }));
 
-/** The phone drawer (the second navigation): its links' words, in order. */
-const drawerWords = () => within(screen.getAllByRole("navigation", { name: t.appNav.label })[1]).getAllByRole("link").filter((a) => a.getAttribute("href") !== "/" || a.textContent === "Home").map((a) => a.textContent);
+const words = () => within(screen.getByRole("navigation", { name: t.appNav.label })).getAllByRole("link").map((a) => a.getAttribute("aria-label") ?? a.textContent);
 
-describe("the signed-in app's sections", () => {
+describe("the signed-in app's sections (RailNav)", () => {
   afterEach(() => {
-    jest.clearAllMocks();
     mockPath.current = "/";
     mockUser.current = { name: "Admin", email: "admin@orazaka.io", role: "admin" };
   });
 
-  it("are one list, in this order, shared by the rail, the drawer and the palette", () => {
-    expect(APP_SECTIONS.map((s) => `${s.id} ${s.href} ${s.place}`)).toMatchInlineSnapshot(`
-[
-  "home / main",
-  "studios /studios main",
-  "chat /chat main",
-  "jobs /jobs main",
-  "packs /packs main",
-  "usage /usage main",
-  "settings /settings foot",
-  "admin /dashboard/admin foot",
-]
-`);
+  it("are one list, in this order, shared by the rail and the palette", () => {
+    expect(APP_SECTIONS.map((s) => `${s.id} ${s.href} ${s.place}`)).toEqual([
+      "home / main",
+      "studios /studios main",
+      "chat /chat main",
+      "jobs /jobs main",
+      "packs /packs main",
+      "usage /usage main",
+      "settings /settings foot",
+      "admin /dashboard/admin foot",
+    ]);
   });
 
-  it("shows every section by its name in the drawer, Settings and Admin at the foot, and no Sign out (it is in the user menu)", () => {
+  it("shows the sections as one navigation — the mark (home) first, Settings and Admin last, no Sign out", () => {
     render(<Sidebar />);
-    expect(drawerWords()).toEqual(["Home", "Studios", "Chat", "Jobs", "Packs", "Usage & credits", "Settings", "Admin"]);
+    const list = words();
+    expect(list[0]).toBe(t.appNav.home);
+    expect(list.slice(1)).toEqual(["Studios", "Chat", "Jobs", "Packs", "Usage & credits", "Settings", "Admin"]);
     expect(screen.queryByText(t.appNav.signOut)).not.toBeInTheDocument();
-    expect(screen.queryByLabelText(t.sidebar.logout)).not.toBeInTheDocument();
   });
 
   it("hides Admin from a member", () => {
     mockUser.current = { name: "Eric", email: "eric@example.com", role: "user" };
     render(<Sidebar />);
-    expect(drawerWords()).not.toContain("Admin");
+    expect(words()).not.toContain("Admin");
   });
 
   it.each([
@@ -64,19 +58,19 @@ describe("the signed-in app's sections", () => {
     ["/usage", "usage"],
     ["/settings", "settings"],
     ["/automation", null],
-  ])("marks exactly one section current on %s", (path, id) => {
+  ])("marks at most one section current on %s", (path, id) => {
     expect(currentAppSection(path)).toBe(id);
     mockPath.current = path;
     render(<Sidebar />);
     const current = document.querySelectorAll('[aria-current="page"]');
-    // the rail and the drawer each mark the same one
-    expect(current).toHaveLength(id ? 2 : 0);
-    if (id) for (const el of current) expect(el.getAttribute("href")).toBe(APP_SECTIONS.find((s) => s.id === id)!.href);
+    // Home is the mark, not an item: it is never marked
+    const expected = id && id !== "home" ? 1 : 0;
+    expect(current).toHaveLength(expected);
+    if (expected) expect(current[0].getAttribute("href")).toBe(APP_SECTIONS.find((s) => s.id === id)!.href);
   });
 
-  it("closes the drawer from its button", () => {
-    render(<Sidebar />);
-    fireEvent.click(screen.getByLabelText(t.sidebar.closeMenu));
-    expect(mockClose).toHaveBeenCalled();
+  it("carries the brand mark once, in the rail", () => {
+    const { container } = render(<Sidebar />);
+    expect(container.querySelectorAll("[data-brand-mark]")).toHaveLength(1);
   });
 });

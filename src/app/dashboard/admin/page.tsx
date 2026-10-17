@@ -3,6 +3,7 @@
 import * as React from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/core/hooks/useAuth";
+import { RailNav } from "@krizaka/ui/rail-nav";
 import { Sidebar } from "@/components/layout/Sidebar";
 import { Header } from "@/components/layout/Header";
 import { useTranslation } from "@/core/context/LocaleContext";
@@ -175,10 +176,10 @@ export default function AdminDashboardPage() {
   }
 
   return (
-    <section className="flex h-screen overflow-hidden bg-surface-0 transition-colors duration-200">
+    <RailNav.Shell className="flex h-screen overflow-hidden bg-surface-0 transition-colors duration-200">
       <Sidebar />
 
-      <section className="flex flex-col flex-1 overflow-hidden">
+      <RailNav.Body className="flex flex-col flex-1 overflow-hidden">
         <Header />
 
         <main className="flex-1 overflow-auto p-6 scrollbar-thin ambient-grid bg-surface-0">
@@ -227,7 +228,7 @@ export default function AdminDashboardPage() {
             />
           </section>
         </main>
-      </section>
+      </RailNav.Body>
 
       <ModelDialog
         isOpen={isModalOpen}
@@ -241,6 +242,6 @@ export default function AdminDashboardPage() {
         setErrorMessage={setErrorMessage}
         providers={providers}
       />
-    </section>
+    </RailNav.Shell>
   );
 }
