@@ -33,10 +33,10 @@ describe("the signed-in app's sections", () => {
   "home / main",
   "studios /studios main",
   "chat /chat main",
-  "jobs /dashboard/jobs main",
+  "jobs /jobs main",
   "packs /packs main",
-  "usage /billing main",
-  "settings /profile foot",
+  "usage /usage main",
+  "settings /settings foot",
   "admin /dashboard/admin foot",
 ]
 `);
@@ -59,10 +59,10 @@ describe("the signed-in app's sections", () => {
     ["/", "home"],
     ["/chat", "chat"],
     ["/studios/runs/r1", "studios"],
-    ["/dashboard/jobs", "jobs"],
+    ["/jobs", "jobs"],
     ["/dashboard/admin", "admin"],
-    ["/billing", "usage"],
-    ["/profile", "settings"],
+    ["/usage", "usage"],
+    ["/settings", "settings"],
     ["/automation", null],
   ])("marks exactly one section current on %s", (path, id) => {
     expect(currentAppSection(path)).toBe(id);

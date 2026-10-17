@@ -15,9 +15,9 @@ test("the Jobs page is one line per task; the facts are grouped, in words and un
   await page.route("**/api/v1/**", (route) => {
     const url = route.request().url();
     if (/\/jobs(\?|$)/.test(url)) return route.fulfill({ status: 200, contentType: "application/json", body: JSON.stringify({ content: [video], totalPages: 1, totalElements: 1, number: 0, size: 10 }) });
-    return route.fulfill({ status: 200, contentType: "application/json", body: url.includes("/profile") ? JSON.stringify({ id: "e2e-user", username: "Eric" }) : "[]" });
+    return route.fulfill({ status: 200, contentType: "application/json", body: url.includes("/settings") ? JSON.stringify({ id: "e2e-user", username: "Eric" }) : "[]" });
   });
-  await page.goto("/dashboard/jobs");
+  await page.goto("/jobs");
   const row = page.getByRole("row").filter({ hasText: "Video Generation" }).first();
   await expect(row).toContainText("Wan 2.2 TI2V 5B");
   await expect(row).toContainText("H100 · RunPod");

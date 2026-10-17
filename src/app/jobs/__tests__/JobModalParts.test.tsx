@@ -5,7 +5,7 @@ import {
   StageLabels,
   StatusPill,
   LiveElapsed,
-} from "@/app/dashboard/jobs/JobModalParts";
+} from "@/app/jobs/JobModalParts";
 
 jest.mock("@/core/context/LocaleContext", () => ({
   useTranslation: () => ({

@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import "@testing-library/jest-dom";
 import { render, screen } from "@testing-library/react";
-import { ResultDisplay } from "@/app/dashboard/jobs/ResultDisplay";
+import { ResultDisplay } from "@/app/jobs/ResultDisplay";
 
 // Mock dependencies
 const mockT = {

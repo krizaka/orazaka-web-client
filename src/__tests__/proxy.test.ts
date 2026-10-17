@@ -29,7 +29,7 @@ describe("proxy with the entry points closed (default)", () => {
   });
 
   it("sends a protected page to /login (the closed notice)", () => {
-    const res = call("/dashboard/jobs");
+    const res = call("/jobs");
     expect(res.status).toBe(307);
     expect(res.headers.get("location")).toBe("https://dev.orazaka.com/login");
   });

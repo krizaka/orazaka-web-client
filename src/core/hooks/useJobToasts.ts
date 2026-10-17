@@ -43,7 +43,7 @@ export function useJobToasts(): JobToasts {
         toast.dismiss(job.id);
         groupedToast("jobs-ready", fill(q.ready, { name: name(job) }), {
           countLabel: (count) => fill(q.readyMany, { count }),
-          action: { label: t.showcase.jobs.result, onClick: () => router.push(`/dashboard/jobs?jobId=${job.id}`) },
+          action: { label: t.showcase.jobs.result, onClick: () => router.push(`/jobs?jobId=${job.id}`) },
         });
       },
       cancelled: (job) => {

@@ -66,6 +66,10 @@ const nextConfig: NextConfig = {
       { source: "/docs/worker_protocol", destination: "/docs/worker-protocol", permanent: true },
       { source: "/docs/business_implementation", destination: "/docs/business-playbook", permanent: true },
       { source: "/docs/use_cases", destination: "/docs/use-cases", permanent: true },
+      // The signed-in app's addresses say the section's name (docs/ux/information-architecture.md of the workspace).
+      { source: "/dashboard/jobs", destination: "/jobs", permanent: true },
+      { source: "/billing", destination: "/usage", permanent: true },
+      { source: "/profile", destination: "/settings", permanent: true },
     ];
   },
   // `next dev` would otherwise append its own block to AGENTS.md on every start; this repository's

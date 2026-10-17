@@ -19,7 +19,7 @@ async function signIn(page: Page) {
 async function mockBackend(page: Page) {
   await page.route("**/api/v1/**", (route) => {
     const url = route.request().url();
-    const body = url.includes("/jobs") ? { content: [], totalPages: 0, totalElements: 0 } : url.includes("/profile") ? { id: "e2e-user", username: "Eric" } : [];
+    const body = url.includes("/jobs") ? { content: [], totalPages: 0, totalElements: 0 } : url.includes("/settings") ? { id: "e2e-user", username: "Eric" } : [];
     return route.fulfill({ status: 200, contentType: "application/json", body: JSON.stringify(body) });
   });
 }

@@ -1,6 +1,6 @@
 import "@testing-library/jest-dom";
 import { render, screen } from "@testing-library/react";
-import { JobsKpiSummary } from "@/app/dashboard/jobs/JobsKpiSummary";
+import { JobsKpiSummary } from "@/app/jobs/JobsKpiSummary";
 
 jest.mock("@/core/context/LocaleContext", () => ({
   useTranslation: () => ({
@@ -17,7 +17,7 @@ jest.mock("@/core/context/LocaleContext", () => ({
   }),
 }));
 
-jest.mock("@/app/dashboard/jobs/jobStats.utils", () => ({
+jest.mock("@/app/jobs/jobStats.utils", () => ({
   computeJobStats: () => ({
     total: 42,
     completed: 30,

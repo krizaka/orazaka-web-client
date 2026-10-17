@@ -73,7 +73,7 @@ export const NotificationBell: React.FC<NotificationBellProps> = ({
         </section>
         <footer className="border-t border-border-subtle/80 p-1.5">
           <Button asChild variant="ghost" size="sm" className="w-full">
-            <Link href="/dashboard/jobs" onClick={() => onToggle(false)}>
+            <Link href="/jobs" onClick={() => onToggle(false)}>
               {t.notifications.viewAll}
             </Link>
           </Button>
@@ -99,7 +99,7 @@ function JobItem({ job, onSelect }: Readonly<{ job: Job; onSelect: () => void }>
   return (
     <li>
       <Link
-        href={`/dashboard/jobs?jobId=${job.id}`}
+        href={`/jobs?jobId=${job.id}`}
         onClick={onSelect}
         className="flex w-full items-center gap-3 rounded-lg p-2.5 text-left transition-colors hover:bg-surface-2 focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-ring"
       >
