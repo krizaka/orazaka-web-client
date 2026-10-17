@@ -17,6 +17,8 @@ export interface JobToasts {
   completed: (job: Job) => void;
   /** It failed: its progress toast goes, an error says why. */
   failed: (job: Job) => void;
+  /** Its owner stopped it: the progress toast goes and a quiet note says nothing was billed. */
+  cancelled: (job: Job) => void;
 }
 
 /**
@@ -43,6 +45,10 @@ export function useJobToasts(): JobToasts {
           countLabel: (count) => fill(q.readyMany, { count }),
           action: { label: t.showcase.jobs.result, onClick: () => router.push(`/dashboard/jobs?jobId=${job.id}`) },
         });
+      },
+      cancelled: (job) => {
+        toast.dismiss(job.id);
+        toast.info(fill(t.runProgress.cancelled, { name: name(job) }));
       },
       failed: (job) => {
         toast.dismiss(job.id);

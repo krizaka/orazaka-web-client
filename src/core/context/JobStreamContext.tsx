@@ -13,7 +13,7 @@ import type { Job } from "@/core/types/jobs.types";
 import { JobsApi } from "@/services/jobs.api";
 import { parseISO } from "date-fns";
 import { useChatStreamClient } from "@/core/hooks/useChatStreamClient";
-import { useJobSSE } from "@/core/hooks/useJobSSE";
+import { useJobSSE, type JobProgressDetail } from "@/core/hooks/useJobSSE";
 import { useJobReconciliation } from "@/core/hooks/useJobReconciliation";
 import { useJobToasts } from "@/core/hooks/useJobToasts";
 import { JOB_STATUS } from "@/core/constants/http.constants";
@@ -93,7 +93,7 @@ export function JobStreamProvider({
   /** A job's progression, announced by the platform Toaster (mounted once in Providers), in the reader's language. */
   const jobToasts = useJobToasts();
   const handleJobEvent = React.useCallback(
-    (job: Job, event: "started" | "completed" | "failed") => jobToasts[event](job),
+    (job: Job, event: "started" | "completed" | "failed" | "cancelled") => jobToasts[event](job),
     [jobToasts],
   );
 
@@ -139,12 +139,17 @@ export function JobStreamProvider({
   }, []);
 
   const handleJobProgress = React.useCallback(
-    (jobId: string, progress: number) => {
+    (jobId: string, progress: number, detail?: JobProgressDetail) => {
       setJobs((prev) => {
         const index = prev.findIndex((j) => j.id === jobId);
         if (index !== -1) {
           const updated = [...prev];
-          updated[index] = { ...updated[index], progress };
+          updated[index] = {
+            ...updated[index],
+            progress,
+            ...(detail?.phase ? { phase: detail.phase } : {}),
+            ...(detail?.steps ? { step: detail.step, steps: detail.steps } : {}),
+          };
           return updated;
         }
         return prev;

@@ -16,7 +16,7 @@ jest.mock("@/features/studio/components/RunOutputs", () => ({ RunOutputs: () => 
 jest.mock("@/services/studio.api", () => ({ StudioApi: {} }));
 jest.mock("@/features/studio/hooks/useStudioDetail", () => ({ useStudioDetail: () => ({ studio: { label: "Video generation" } }) }));
 
-const step = (stepId: string, status: string, ordinal = 0) => ({ stepId, ordinal, status, jobId: status === "RUNNING" ? "job-1" : null, error: null });
+const step = (stepId: string, status: string, ordinal = 0, extra: Record<string, unknown> = {}) => ({ stepId, ordinal, status, jobId: status === "RUNNING" ? "job-1" : null, error: null, ...extra });
 let steps: ReturnType<typeof step>[] = [];
 jest.mock("@/features/studio/hooks/useStudioRun", () => ({
   useStudioRun: () => ({
@@ -39,5 +39,32 @@ describe("RunScreen — one progress bar", () => {
     render(<RunScreen runId="r1" />);
     expect(screen.getAllByRole("progressbar")).toHaveLength(1);
     expect(screen.getByText("1 of 3 steps")).toBeInTheDocument();
+  });
+});
+
+describe("RunScreen — what is happening now (orazaka-web-client#85)", () => {
+  it("says it is waiting for a machine until the executor reports", () => {
+    steps = [step("video", "RUNNING", 0, { startedAt: new Date(Date.now() - 5000).toISOString() })];
+    render(<RunScreen runId="r1" />);
+    expect(screen.getByText("Waiting for a machine")).toBeInTheDocument();
+  });
+
+  it("gives no time left when too few runs finished, and says why instead of inventing one", () => {
+    steps = [step("video", "RUNNING", 0, { startedAt: new Date(Date.now() - 5000).toISOString(), estimateMs: 60000, estimateSamples: 1 })];
+    render(<RunScreen runId="r1" />);
+    expect(screen.getByText(/No estimate yet/)).toBeInTheDocument();
+  });
+
+  it("shows the measured time left with what it rests on", () => {
+    steps = [step("video", "RUNNING", 0, { startedAt: new Date(Date.now() - 10000).toISOString(), estimateMs: 120000, estimateSamples: 12 })];
+    render(<RunScreen runId="r1" />);
+    expect(screen.getByText(/Median of your last 12 similar runs/)).toBeInTheDocument();
+    expect(screen.getByText(/left/)).toBeInTheDocument();
+  });
+
+  it("offers a confirmed cancel", () => {
+    steps = [step("video", "RUNNING")];
+    render(<RunScreen runId="r1" />);
+    expect(screen.getByRole("button", { name: "Cancel the run" })).toBeInTheDocument();
   });
 });

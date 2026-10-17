@@ -13,6 +13,8 @@ import { Button } from "@krizaka/ui/button";
 import { Loader } from "@krizaka/ui/loader";
 import { Badge } from "@krizaka/ui/badge";
 import { JobsTable } from "./JobsTable";
+import { JobDeleteDialog } from "@/features/jobs/components/JobDeleteDialog";
+import { useJobDeletion } from "@/features/jobs/hooks/useJobDeletion";
 import { JobsKpiSummary } from "./JobsKpiSummary";
 import { JobModal } from "./JobModal";
 import { JobsGallery } from "./JobsGallery";
@@ -56,9 +58,16 @@ function JobsDashboardContent() {
     if (!isLoading && !isAuthenticated) router.push("/login");
   }, [isLoading, isAuthenticated, router]);
 
+  const handleRefresh = async () => {
+    await refreshJobs();
+    refreshJobsQuery();
+  };
+
+  const deletion = useJobDeletion(() => void handleRefresh());
+
   const pageData = React.useMemo(() => {
-    return pageJobs.map((j) => liveJobs.find((l) => l.id === j.id) || j);
-  }, [pageJobs, liveJobs]);
+    return pageJobs.map((j) => liveJobs.find((l) => l.id === j.id) || j).filter((j) => !deletion.hidden.has(j.id) && j.status !== "DELETED");
+  }, [pageJobs, liveJobs, deletion.hidden]);
 
   const running = React.useMemo(
     () => liveJobs.filter((j) => j.status === JOB_STATUS.PENDING || j.status === JOB_STATUS.PROCESSING),
@@ -69,11 +78,6 @@ function JobsDashboardContent() {
     navigator.clipboard.writeText(text);
     setCopiedId(id);
     setTimeout(() => setCopiedId(null), 2000);
-  };
-
-  const handleRefresh = async () => {
-    await refreshJobs();
-    refreshJobsQuery();
   };
 
   const handleOpenModal = (job: Job, type: "payload" | "result") => {
@@ -153,7 +157,7 @@ function JobsDashboardContent() {
               <JobsEmpty />
             ) : (
               <>
-                <JobsGallery jobs={recentJobs} onOpen={(job) => handleOpenModal(job, "result")} />
+                <JobsGallery jobs={recentJobs.filter((j) => !deletion.hidden.has(j.id))} onOpen={(job) => handleOpenModal(job, "result")} />
 
             {/* AI Consumption KPIs */}
             <JobsKpiSummary jobs={pageData} />
@@ -173,12 +177,15 @@ function JobsDashboardContent() {
               onOpenModal={handleOpenModal}
               copiedId={copiedId}
               onCopy={handleCopy}
+              onDelete={deletion.request}
             />
               </>
             )}
           </section>
         </main>
       </section>
+
+      <JobDeleteDialog job={deletion.asking} onConfirm={deletion.confirm} onDismiss={deletion.dismiss} />
 
       {/* JSON Payload Inspection Modal */}
       <JobModal

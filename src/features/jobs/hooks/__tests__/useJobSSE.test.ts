@@ -154,6 +154,38 @@ describe("useJobSSE", () => {
     expect(es.close).toHaveBeenCalled();
   });
 
+  it("a cancelled job is a terminal state: told to the person, and the stream can close", () => {
+    const callbacks = {
+      onJobUpdate: jest.fn(),
+      onJobProgress: jest.fn(),
+      onJobEvent: jest.fn(),
+      getJobs: jest.fn().mockReturnValue([]),
+    };
+    renderHook(() => useJobSSE(true, true, callbacks));
+    const es = MockEventSource.instances[0];
+    const job = { id: "j1", featureKey: "chat.text", status: "CANCELLED" };
+    act(() => {
+      es.dispatchEvent("job-status", JSON.stringify(job));
+    });
+    expect(callbacks.onJobEvent).toHaveBeenCalledWith(job, "cancelled");
+    expect(es.close).toHaveBeenCalled();
+  });
+
+  it("a progress event carries the phase and the step n of N to the caller", () => {
+    const callbacks = {
+      onJobUpdate: jest.fn(),
+      onJobProgress: jest.fn(),
+      onJobEvent: jest.fn(),
+      getJobs: jest.fn().mockReturnValue([]),
+    };
+    renderHook(() => useJobSSE(true, true, callbacks));
+    const es = MockEventSource.instances[0];
+    act(() => {
+      es.dispatchEvent("job-progress", JSON.stringify({ jobId: "j1", progress: 40, phase: "generating", step: 4, steps: 10 }));
+    });
+    expect(callbacks.onJobProgress).toHaveBeenCalledWith("j1", 40, { phase: "generating", step: 4, steps: 10 });
+  });
+
   it("keeps SSE open if there are other active jobs", () => {
     const callbacks = {
       onJobUpdate: jest.fn(),
@@ -184,7 +216,7 @@ describe("useJobSSE", () => {
     act(() => {
       es.dispatchEvent("job-progress", JSON.stringify({ jobId: "j1", progress: 50 }));
     });
-    expect(callbacks.onJobProgress).toHaveBeenCalledWith("j1", 50);
+    expect(callbacks.onJobProgress).toHaveBeenCalledWith("j1", 50, { phase: undefined, step: undefined, steps: undefined });
   });
 
   it("handles JSON parsing errors gracefully", () => {

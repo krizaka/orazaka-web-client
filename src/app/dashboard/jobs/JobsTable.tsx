@@ -18,7 +18,7 @@ import { MODEL_NAMES } from "./modelNames";
 import { JobThumb } from "./JobThumb";
 
 const PAGE_SIZES = [10, 20, 50] as const;
-const TONE: Record<JobStatus, "neutral" | "accent" | "success" | "danger"> = { PENDING: "neutral", PROCESSING: "accent", COMPLETED: "success", FAILED: "danger" };
+const TONE: Record<JobStatus, "neutral" | "accent" | "success" | "danger"> = { PENDING: "neutral", PROCESSING: "accent", COMPLETED: "success", FAILED: "danger", CANCELLED: "neutral", DELETED: "neutral" };
 
 export interface JobsTableProps {
   jobs: Job[];

@@ -11,7 +11,7 @@ export const jobsTable: Record<Locale, JobsTableDictionary> = {
   en: {
     caption: "Your tasks",
     columns: { preview: "Preview", task: "Task", model: "Model", where: "Where it ran", status: "Status", time: "Time", credits: "Credits", created: "Created", actions: "Actions" },
-    status: { PENDING: "Waiting", PROCESSING: "Running", COMPLETED: "Done", FAILED: "Failed" },
+    status: { PENDING: "Waiting", PROCESSING: "Running", COMPLETED: "Done", FAILED: "Failed", CANCELLED: "Stopped", DELETED: "Deleted" },
     sections: { output: "Output", generation: "Generation", hardware: "Hardware", timing: "Timing", other: "More", prompt: "Prompt", error: "What went wrong" },
     facts: {
       format: "Format", resolution: "Resolution", aspect: "Aspect ratio", frames: "Frames", fps: "Frame rate", clipLength: "Clip length", images: "Images", voice: "Voice", keyframes: "Keyframes",
@@ -39,7 +39,7 @@ export const jobsTable: Record<Locale, JobsTableDictionary> = {
   fr: {
     caption: "Vos tâches",
     columns: { preview: "Aperçu", task: "Tâche", model: "Modèle", where: "Où ça a tourné", status: "Statut", time: "Durée", credits: "Crédits", created: "Créée", actions: "Actions" },
-    status: { PENDING: "En attente", PROCESSING: "En cours", COMPLETED: "Terminée", FAILED: "Échec" },
+    status: { PENDING: "En attente", PROCESSING: "En cours", COMPLETED: "Terminée", FAILED: "Échec", CANCELLED: "Arrêtée", DELETED: "Supprimée" },
     sections: { output: "Résultat", generation: "Génération", hardware: "Matériel", timing: "Temps", other: "Autres", prompt: "Consigne", error: "Ce qui a échoué" },
     facts: {
       format: "Format", resolution: "Résolution", aspect: "Format d'image", frames: "Images (frames)", fps: "Cadence", clipLength: "Durée du clip", images: "Images", voice: "Voix", keyframes: "Images clés",

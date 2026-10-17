@@ -2,13 +2,21 @@
 "use client";
 
 import { useEffect, useRef, useCallback } from "react";
-import type { Job } from "@/core/types/jobs.types";
+import { JOB_STATUS } from "@/core/constants/http.constants";
+import type { Job, JobPhase } from "@/core/types/jobs.types";
+
+/** What the executor said it is doing, beside the percentage. */
+export interface JobProgressDetail {
+  phase?: JobPhase;
+  step?: number;
+  steps?: number;
+}
 
 interface JobSSECallbacks {
   onJobUpdate: (job: Job) => void;
-  onJobProgress: (jobId: string, progress: number) => void;
+  onJobProgress: (jobId: string, progress: number, detail?: JobProgressDetail) => void;
   /** A job changed state: started, completed or failed — the caller tells the person (in their language). */
-  onJobEvent: (job: Job, event: "started" | "completed" | "failed") => void;
+  onJobEvent: (job: Job, event: "started" | "completed" | "failed" | "cancelled") => void;
   getJobs: () => Job[];
 }
 
@@ -48,9 +56,12 @@ export function useJobSSE(
         } else if (updatedJob.status === "FAILED") {
           callbacksRef.current.onJobProgress(updatedJob.id, 0);
           callbacksRef.current.onJobEvent(updatedJob, "failed");
+        } else if (updatedJob.status === JOB_STATUS.CANCELLED) {
+          callbacksRef.current.onJobProgress(updatedJob.id, 0);
+          callbacksRef.current.onJobEvent(updatedJob, "cancelled");
         }
 
-        if (["COMPLETED", "FAILED"].includes(updatedJob.status)) {
+        if (["COMPLETED", "FAILED", "CANCELLED", "DELETED"].includes(updatedJob.status)) {
           const otherActive = callbacksRef.current
             .getJobs()
             .filter(
@@ -77,11 +88,16 @@ export function useJobSSE(
 
   const handleJobProgress = useCallback((event: MessageEvent) => {
     try {
-      const progressPayload: { jobId: string; progress: number } =
+      const progressPayload: { jobId: string; progress: number } & JobProgressDetail =
         JSON.parse(event.data);
       callbacksRef.current.onJobProgress(
         progressPayload.jobId,
         progressPayload.progress,
+        {
+          phase: progressPayload.phase,
+          step: progressPayload.step,
+          steps: progressPayload.steps,
+        },
       );
     } catch (err) {
       console.error("Failed to parse job progress SSE event data", err);

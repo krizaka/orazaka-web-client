@@ -6,6 +6,7 @@
 import type { FeaturesDictionary, LandingDictionary } from "./translations.landing.types";
 import type { InsightsDictionary } from "./translations.insights";
 import type { JobsTableDictionary } from "./translations.jobsTable.types";
+import type { RunProgressDictionary } from "./translations.runProgress.types";
 import type { ModelsDictionary } from "./translations.models.types";
 import type { GalleryDictionary } from "./translations.gallery";
 import type { MobileDictionary } from "./translations.mobile";
@@ -783,6 +784,7 @@ export interface TranslationDictionary {
   /** Charts, credits, the live job queue and the waits. */
   insights: InsightsDictionary;
   jobsTable: JobsTableDictionary;
+  runProgress: RunProgressDictionary;
   models: ModelsDictionary;
   /** The ⌘K palette: its words (the entries reuse the sidebar's). */
   commandPalette: {

@@ -3,7 +3,10 @@
 import Link from "next/link";
 import { format } from "date-fns";
 import { BackIcon } from "@krizaka/icons";
+import { useState } from "react";
 import { Button } from "@krizaka/ui/button";
+import { ConfirmButton } from "@krizaka/ui/confirm-button";
+import { toast } from "@krizaka/ui/toast";
 import { Card } from "@krizaka/ui/card";
 import { Mascot, type MascotMood } from "@krizaka/ui/mascots";
 import { isTerminalRun, type RunStatus } from "@krizaka/orazaka-shared";
@@ -49,6 +52,7 @@ const FINISHED_STEP_STATUSES: readonly string[] = ["SUCCEEDED", "SKIPPED"];
 export function RunScreen({ runId }: Readonly<RunScreenProps>) {
   const { t } = useTranslation();
   const { run, isLoading, hasError, reload } = useStudioRun(runId);
+  const [stopping, setStopping] = useState(false);
   const { studio } = useStudioDetail(run?.studioKey ?? "");
 
   if (isLoading) {
@@ -80,6 +84,20 @@ export function RunScreen({ runId }: Readonly<RunScreenProps>) {
   const act = async (action: () => Promise<void>) => {
     await action();
     reload();
+  };
+
+  /** A real stop: the server tells the worker, releases the hold; the screen says so or says it failed. */
+  const stop = async () => {
+    setStopping(true);
+    try {
+      await StudioApi.cancelRun(run.id);
+      toast.info(fill(t.runProgress.cancelled, { name: studio?.label ?? run.studioKey }));
+    } catch {
+      toast.error(t.runProgress.cancelFailed);
+    } finally {
+      setStopping(false);
+      reload();
+    }
   };
 
   return (
@@ -114,9 +132,9 @@ export function RunScreen({ runId }: Readonly<RunScreenProps>) {
                   {t.studio.approve}
                 </Button>
               )}
-              <Button variant="ghost" size="sm" onClick={() => void act(() => StudioApi.cancelRun(run.id))}>
-                {t.studio.cancelRun}
-              </Button>
+              <ConfirmButton variant="ghost" size="sm" disabled={stopping} confirmLabel={t.runProgress.cancelConfirm} onConfirm={() => void stop()}>
+                {stopping ? t.runProgress.cancelling : t.studio.cancelRun}
+              </ConfirmButton>
             </div>
           )}
         </Card.Body>

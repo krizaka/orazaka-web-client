@@ -8,6 +8,8 @@ import { useJobStream } from "@/core/context/JobStreamContext";
 import { useTranslation } from "@/core/context/LocaleContext";
 import { useNow } from "@/core/hooks/useNow";
 import { formatEta, remainingFor } from "@/core/jobs/jobInsights";
+import { RunStepLive } from "@/features/studio/components/RunStepLive";
+import { remainingOf } from "@/features/studio/utils/runProgress";
 
 interface RunTimelineProps {
   steps: RunStep[];
@@ -53,7 +55,9 @@ export function RunTimeline({ steps }: Readonly<RunTimelineProps>) {
     const job = step.jobId ? jobs.find((j) => j.id === step.jobId) : undefined;
     const percent = step.jobId ? jobProgress[step.jobId] : undefined;
     const left = status === "current" && job ? remainingFor(job, jobs, now) : null;
-    const eta = left === null ? undefined : formatEta(left, t.insights.queue);
+    // The server's measured estimate (RunStepLive) wins; the stream's own median is the fallback, never both.
+    const measured = remainingOf(step, now).tag !== "none";
+    const eta = left === null || measured ? undefined : formatEta(left, t.insights.queue);
     return {
       title: step.ordinal > 0 ? `${step.stepId} #${step.ordinal + 1}` : step.stepId,
       status,
@@ -61,7 +65,10 @@ export function RunTimeline({ steps }: Readonly<RunTimelineProps>) {
       description: step.status === "CANCELLED" ? t.studio.runCancelled : eta,
       content:
         status === "current" ? (
-          <Progress size="sm" label={step.stepId} value={typeof percent === "number" && percent > 0 ? percent : undefined} eta={eta} className="w-72 max-w-full" />
+          <>
+            <Progress size="sm" label={step.stepId} value={typeof percent === "number" && percent > 0 ? percent : undefined} eta={eta} className="w-72 max-w-full" />
+            <RunStepLive step={step} job={job} now={now} />
+          </>
         ) : status === "error" && step.error ? (
           <p role="alert" className="text-xs text-fg-danger">
             {step.error}
