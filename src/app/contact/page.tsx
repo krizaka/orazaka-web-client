@@ -1,7 +1,7 @@
 /* eslint-disable */
 "use client";
 
-import { LocaleSwitch } from "@/components/LocaleSwitch";
+import { LandingFooter } from "@/features/landing/components/LandingFooter";
 import * as React from "react";
 import Link from "next/link";
 import { Icon } from "@krizaka/orazaka-design-system";
@@ -14,7 +14,8 @@ import { toast } from "@krizaka/ui/toast";
 const CONTENT = {
   en: {
     title: "Get in Touch",
-    subtitle: "Have questions about local AI orchestration? We're here to help.",
+    subtitle:
+      "Have questions about local AI orchestration? We're here to help.",
     nameLabel: "Your Name",
     emailLabel: "Email Address",
     subjectLabel: "Subject",
@@ -27,7 +28,8 @@ const CONTENT = {
   },
   fr: {
     title: "Contactez-nous",
-    subtitle: "Des questions sur l'orchestration locale de l'IA ? Nous sommes là.",
+    subtitle:
+      "Des questions sur l'orchestration locale de l'IA ? Nous sommes là.",
     nameLabel: "Votre nom",
     emailLabel: "Adresse e-mail",
     subjectLabel: "Sujet",
@@ -72,143 +74,144 @@ export default function ContactPage() {
   };
 
   return (
-    <main className="min-h-screen flex flex-col items-center p-6 bg-surface-0 ambient-grid w-full overflow-y-auto">
-      {/* Navbar header */}
-      <header className="w-full max-w-2xl flex items-center justify-between py-4 mb-6 border-b border-border-subtle">
-        <Link href="/login" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
-          <img
-            src="/logo.svg"
-            alt="Orazaka Logo"
-            width={24}
-            height={24}
-            className="w-6 h-6"
-          />
-          <span className="text-lg font-bold tracking-tight text-fg">
-            Orazaka
-          </span>
-        </Link>
+    <>
+      <main className="min-h-screen flex flex-col items-center p-6 bg-surface-0 ambient-grid w-full overflow-y-auto">
+        {/* Navbar header */}
+        <header className="w-full max-w-2xl flex items-center justify-between py-4 mb-6 border-b border-border-subtle">
+          <Link
+            href="/login"
+            className="flex items-center gap-2 hover:opacity-80 transition-opacity"
+          >
+            <img
+              src="/logo.svg"
+              alt="Orazaka Logo"
+              width={24}
+              height={24}
+              className="w-6 h-6"
+            />
+            <span className="text-lg font-bold tracking-tight text-fg">
+              Orazaka
+            </span>
+          </Link>
 
-        <Link
-          href="/login"
-          className="text-xs font-semibold px-3 py-1.5 rounded-lg border border-border-default hover:border-accent transition-colors hover:text-accent text-fg-secondary"
-        >
-          {c.backToLogin}
-        </Link>
-      </header>
-
-      {/* Main Glass Card container */}
-      <article className="w-full max-w-2xl glass-card rounded-2xl p-6 md:p-10 space-y-6 animate-fade-up shadow-2xl">
-        <header className="space-y-2 border-b border-border-subtle pb-4">
-          <h1 className="text-3xl font-extrabold tracking-tight text-fg">
-            {c.title}
-          </h1>
-          <p className="text-fg-secondary text-sm leading-relaxed">
-            {c.subtitle}
-          </p>
+          <Link
+            href="/login"
+            className="text-xs font-semibold px-3 py-1.5 rounded-lg border border-border-default hover:border-accent transition-colors hover:text-accent text-fg-secondary"
+          >
+            {c.backToLogin}
+          </Link>
         </header>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="grid gap-4 md:grid-cols-2">
-            <div className="space-y-2">
-              <label htmlFor="contact-name" className="text-sm font-medium text-fg-secondary">
-                {c.nameLabel}
-              </label>
-              <Input
-                id="contact-name"
-                type="text"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                required
-              />
+        {/* Main Glass Card container */}
+        <article className="w-full max-w-2xl glass-card rounded-2xl p-6 md:p-10 space-y-6 animate-fade-up shadow-2xl">
+          <header className="space-y-2 border-b border-border-subtle pb-4">
+            <h1 className="text-3xl font-extrabold tracking-tight text-fg">
+              {c.title}
+            </h1>
+            <p className="text-fg-secondary text-sm leading-relaxed">
+              {c.subtitle}
+            </p>
+          </header>
+
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div className="grid gap-4 md:grid-cols-2">
+              <div className="space-y-2">
+                <label
+                  htmlFor="contact-name"
+                  className="text-sm font-medium text-fg-secondary"
+                >
+                  {c.nameLabel}
+                </label>
+                <Input
+                  id="contact-name"
+                  type="text"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  required
+                />
+              </div>
+              <div className="space-y-2">
+                <label
+                  htmlFor="contact-email"
+                  className="text-sm font-medium text-fg-secondary"
+                >
+                  {c.emailLabel}
+                </label>
+                <Input
+                  id="contact-email"
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                />
+              </div>
             </div>
+
             <div className="space-y-2">
-              <label htmlFor="contact-email" className="text-sm font-medium text-fg-secondary">
-                {c.emailLabel}
-              </label>
-              <Input
-                id="contact-email"
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-              />
-            </div>
-          </div>
-
-          <div className="space-y-2">
-            <label htmlFor="contact-subject" className="text-sm font-medium text-fg-secondary">
-              {c.subjectLabel}
-            </label>
-            <Input
-              id="contact-subject"
-              type="text"
-              value={subject}
-              onChange={(e) => setSubject(e.target.value)}
-              required
-            />
-          </div>
-
-          <div className="space-y-2">
-            <label htmlFor="contact-message" className="text-sm font-medium text-fg-secondary">
-              {c.messageLabel}
-            </label>
-            <textarea
-              id="contact-message"
-              value={message}
-              onChange={(e) => setMessage(e.target.value)}
-              required
-              rows={5}
-              className="w-full rounded-lg border border-border-default bg-surface-2 px-3 py-2 text-sm text-fg focus:border-accent focus:outline-none focus:ring-1 focus:ring-ring transition-all duration-150"
-            />
-          </div>
-
-          <Button
-            type="submit"
-            className="w-full gap-2 mt-2"
-            disabled={isSubmitting}
-          >
-            {isSubmitting && (
-              <svg
-                className="h-4 w-4 animate-spin-slow"
-                viewBox="0 0 24 24"
-                fill="none"
+              <label
+                htmlFor="contact-subject"
+                className="text-sm font-medium text-fg-secondary"
               >
-                <circle
-                  className="opacity-25"
-                  cx="12"
-                  cy="12"
-                  r="10"
-                  stroke="currentColor"
-                  strokeWidth="4"
-                />
-                <path
-                  className="opacity-75"
-                  fill="currentColor"
-                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                />
-              </svg>
-            )}
-            {isSubmitting ? c.sendingBtn : c.sendBtn}
-          </Button>
-        </form>
-      </article>
+                {c.subjectLabel}
+              </label>
+              <Input
+                id="contact-subject"
+                type="text"
+                value={subject}
+                onChange={(e) => setSubject(e.target.value)}
+                required
+              />
+            </div>
 
-      {/* Public Footer */}
-      <footer className="w-full max-w-2xl flex items-center justify-between py-6 mt-6 border-t border-border-subtle text-xs text-fg-muted">
-        <div className="flex gap-4">
-          <Link href="/privacy" className="hover:text-accent transition-colors">
-            {t.auth.legalPrivacy}
-          </Link>
-          <Link href="/terms" className="hover:text-accent transition-colors">
-            {t.auth.legalTerms}
-          </Link>
-          <Link href="/contact" className="hover:text-accent transition-colors underline">
-            {t.auth.legalContact}
-          </Link>
-        </div>
+            <div className="space-y-2">
+              <label
+                htmlFor="contact-message"
+                className="text-sm font-medium text-fg-secondary"
+              >
+                {c.messageLabel}
+              </label>
+              <textarea
+                id="contact-message"
+                value={message}
+                onChange={(e) => setMessage(e.target.value)}
+                required
+                rows={5}
+                className="w-full rounded-lg border border-border-default bg-surface-2 px-3 py-2 text-sm text-fg focus:border-accent focus:outline-none focus:ring-1 focus:ring-ring transition-all duration-150"
+              />
+            </div>
 
-        <LocaleSwitch />
-      </footer>
-    </main>
+            <Button
+              type="submit"
+              className="w-full gap-2 mt-2"
+              disabled={isSubmitting}
+            >
+              {isSubmitting && (
+                <svg
+                  className="h-4 w-4 animate-spin-slow"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                >
+                  <circle
+                    className="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    strokeWidth="4"
+                  />
+                  <path
+                    className="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                  />
+                </svg>
+              )}
+              {isSubmitting ? c.sendingBtn : c.sendBtn}
+            </Button>
+          </form>
+        </article>
+      </main>
+      <LandingFooter withLanguage />
+    </>
   );
 }

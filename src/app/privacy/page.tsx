@@ -1,7 +1,7 @@
 /* eslint-disable */
 "use client";
 
-import { LocaleSwitch } from "@/components/LocaleSwitch";
+import { LandingFooter } from "@/features/landing/components/LandingFooter";
 import * as React from "react";
 import Link from "next/link";
 import { useTranslation } from "@/core/context/LocaleContext";
@@ -67,79 +67,68 @@ export default function PrivacyPage() {
   const c = CONTENT[locale] || CONTENT.en;
 
   return (
-    <main className="min-h-screen flex flex-col items-center p-6 bg-surface-0 ambient-grid w-full overflow-y-auto">
-      {/* Navbar header */}
-      <header className="w-full max-w-4xl flex items-center justify-between py-4 mb-6 border-b border-border-subtle">
-        <Link href="/login" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
-          <img
-            src="/logo.svg"
-            alt="Orazaka Logo"
-            width={24}
-            height={24}
-            className="w-6 h-6"
-          />
-          <span className="text-lg font-bold tracking-tight text-fg">
-            Orazaka
-          </span>
-        </Link>
+    <>
+      <main className="min-h-screen flex flex-col items-center p-6 bg-surface-0 ambient-grid w-full overflow-y-auto">
+        {/* Navbar header */}
+        <header className="w-full max-w-4xl flex items-center justify-between py-4 mb-6 border-b border-border-subtle">
+          <Link
+            href="/login"
+            className="flex items-center gap-2 hover:opacity-80 transition-opacity"
+          >
+            <img
+              src="/logo.svg"
+              alt="Orazaka Logo"
+              width={24}
+              height={24}
+              className="w-6 h-6"
+            />
+            <span className="text-lg font-bold tracking-tight text-fg">
+              Orazaka
+            </span>
+          </Link>
 
-        <Link
-          href="/login"
-          className="text-xs font-semibold px-3 py-1.5 rounded-lg border border-border-default hover:border-accent transition-colors hover:text-accent text-fg-secondary"
-        >
-          {c.backToLogin}
-        </Link>
-      </header>
-
-      {/* Main Glass Card container */}
-      <article className="w-full max-w-4xl glass-card rounded-2xl p-6 md:p-10 space-y-8 animate-fade-up shadow-2xl">
-        <header className="space-y-2 border-b border-border-subtle pb-6">
-          <h1 className="text-3xl font-extrabold tracking-tight text-fg md:text-4xl">
-            {c.title}
-          </h1>
-          <p className="text-accent font-medium text-sm md:text-base">
-            {c.subtitle}
-          </p>
-          <p className="text-xs text-fg-muted pt-1">{c.lastUpdated}</p>
+          <Link
+            href="/login"
+            className="text-xs font-semibold px-3 py-1.5 rounded-lg border border-border-default hover:border-accent transition-colors hover:text-accent text-fg-secondary"
+          >
+            {c.backToLogin}
+          </Link>
         </header>
 
-        <p className="text-fg-secondary text-sm md:text-base leading-relaxed">
-          {c.intro}
-        </p>
+        {/* Main Glass Card container */}
+        <article className="w-full max-w-4xl glass-card rounded-2xl p-6 md:p-10 space-y-8 animate-fade-up shadow-2xl">
+          <header className="space-y-2 border-b border-border-subtle pb-6">
+            <h1 className="text-3xl font-extrabold tracking-tight text-fg md:text-4xl">
+              {c.title}
+            </h1>
+            <p className="text-accent font-medium text-sm md:text-base">
+              {c.subtitle}
+            </p>
+            <p className="text-xs text-fg-muted pt-1">{c.lastUpdated}</p>
+          </header>
 
-        <div className="grid gap-6 md:grid-cols-2 pt-2">
-          {c.sections.map((section, idx) => (
-            <section
-              key={idx}
-              className="p-5 rounded-xl border border-border-subtle bg-surface-1 hover:border-border-strong transition-colors duration-200"
-            >
-              <h2 className="text-base font-bold text-fg mb-2">
-                {section.title}
-              </h2>
-              <p className="text-xs text-fg-secondary leading-relaxed">
-                {section.text}
-              </p>
-            </section>
-          ))}
-        </div>
-      </article>
+          <p className="text-fg-secondary text-sm md:text-base leading-relaxed">
+            {c.intro}
+          </p>
 
-      {/* Public Footer */}
-      <footer className="w-full max-w-4xl flex items-center justify-between py-6 mt-6 border-t border-border-subtle text-xs text-fg-muted">
-        <div className="flex gap-4">
-          <Link href="/privacy" className="hover:text-accent transition-colors underline">
-            {t.auth.legalPrivacy}
-          </Link>
-          <Link href="/terms" className="hover:text-accent transition-colors">
-            {t.auth.legalTerms}
-          </Link>
-          <Link href="/contact" className="hover:text-accent transition-colors">
-            {t.auth.legalContact}
-          </Link>
-        </div>
-
-        <LocaleSwitch />
-      </footer>
-    </main>
+          <div className="grid gap-6 md:grid-cols-2 pt-2">
+            {c.sections.map((section, idx) => (
+              <section
+                key={idx}
+                className="p-5 rounded-xl border border-border-subtle bg-surface-1 hover:border-border-strong transition-colors duration-200"
+              >
+                <h2 className="text-base font-bold text-fg mb-2">
+                  {section.title}
+                </h2>
+                <p className="text-xs text-fg-secondary leading-relaxed">
+                  {section.text}
+                </p>
+              </section>
+            ))}
+          </div>
+        </article>
+      </main>
+      <LandingFooter withLanguage />
+    </>
   );
 }
