@@ -11,7 +11,7 @@ import type { ApiKeyInfo, GeneratedKey } from "@/features/profile/hooks/useApiKe
 export function ApiKeysEmptyState({ onCreate }: Readonly<{ onCreate: () => void }>) {
   const { t } = useTranslation();
   return (
-    <div className="flex flex-col items-center gap-3 rounded-lg border border-dashed border-border-subtle px-4 py-8 text-center">
+    <div className="flex flex-col items-center gap-3 px-4 py-8 text-center">
       <span className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-accent-soft text-accent">
         <Icon name="key" size={20} />
       </span>

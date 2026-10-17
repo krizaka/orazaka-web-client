@@ -1,11 +1,11 @@
 "use client";
 
 import * as React from "react";
-import { Input, Button, Icon } from "@krizaka/orazaka-design-system";
+import { Input, Button } from "@krizaka/orazaka-design-system";
 import { useTranslation } from "@/core/context/LocaleContext";
 import { useMcpServers } from "@/features/profile/hooks/useMcpServers";
 
-import { Card } from "@krizaka/ui/card";
+import { SettingsSection } from "@krizaka/ui/settings-layout";
 
 const selectClass =
   "flex h-10 w-full rounded-md border border-border-subtle bg-surface-1 px-3 py-2 text-sm text-fg focus:outline-none focus:ring-1 focus:ring-border-subtle";
@@ -47,40 +47,26 @@ export function McpServersSection({ fetchHeaders }: Readonly<McpServersSectionPr
   } = useMcpServers(fetchHeaders);
 
   return (
-    <Card.Root className="bg-surface-1 shadow-sm">
-      <Card.Body padding="lg" className="flex flex-row items-start justify-between gap-3">
-        <div className="space-y-1">
-          <Card.Title className="line-clamp-none tracking-tight group-hover:text-fg flex items-center gap-2 text-base font-semibold text-fg">
-            <span className="inline-flex h-7 w-7 items-center justify-center rounded-lg bg-accent-soft text-accent">
-              <Icon name="mcp" size={16} />
-            </span>
-            {t.settings.mcpServersTitle}
-          </Card.Title>
-          <Card.Description className="line-clamp-none text-sm text-fg-secondary">
-            {t.settings.mcpServersDesc}
-          </Card.Description>
-        </div>
-      </Card.Body>
-      <Card.Body padding="lg" className="block pt-0 space-y-4">
+    <SettingsSection variant="flat" id="integrations-mcp" title={t.settings.mcpServersTitle} description={t.settings.mcpServersDesc}>
       {serverMessage && (
         <div className="p-3 bg-success/20 border border-success/40 rounded-xl text-xs font-semibold text-success">
           {serverMessage}
         </div>
       )}
-      <section className="space-y-2">
+      <section>
         {(() => {
           if (isLoadingServers) {
-            return <p className="text-xs opacity-70">{t.settings.mcpLoading}</p>;
+            return <p className="py-4 text-xs text-fg-muted">{t.settings.mcpLoading}</p>;
           }
           if (servers.length === 0) {
-            return <p className="text-xs opacity-70">{t.settings.mcpNoServers}</p>;
+            return <p className="py-4 text-xs text-fg-muted">{t.settings.mcpNoServers}</p>;
           }
           return (
-            <ul className="divide-y divide-border-subtle border border-border-subtle rounded-xl overflow-hidden bg-surface-1/50">
+            <ul className="divide-y divide-border-subtle">
               {servers.map((srv) => (
                 <li
                   key={srv.id}
-                  className="flex items-center justify-between p-3 text-xs"
+                  className="flex items-center justify-between gap-3 py-3 text-xs"
                 >
                   <article className="space-y-1">
                     <h4 className="font-semibold text-fg flex items-center gap-2">
@@ -112,7 +98,7 @@ export function McpServersSection({ fetchHeaders }: Readonly<McpServersSectionPr
       </section>
       <form
         onSubmit={handleSaveServer}
-        className="space-y-3 p-4 border border-border-subtle rounded-xl bg-surface-1/20"
+        className="space-y-3 py-4"
       >
         <div className="space-y-2">
           <label className={labelClass}>{t.settings.mcpLabel}</label>
@@ -193,12 +179,11 @@ export function McpServersSection({ fetchHeaders }: Readonly<McpServersSectionPr
             !serverLabel ||
             (serverTransport === "remote" ? !serverUrl : !serverCommand)
           }
-          className="w-full mt-2"
+          className="mt-2"
         >
           {t.settings.mcpRegister}
         </Button>
       </form>
-      </Card.Body>
-    </Card.Root>
+    </SettingsSection>
   );
 }
