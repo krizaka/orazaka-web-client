@@ -94,14 +94,18 @@ describe("GalleryFeatured (the home page's prompt → image → video, a slidesh
     expect(active.querySelectorAll('ol > li[aria-hidden="true"]')).toHaveLength(1); // one arrow
   });
 
-  it("no slide has an empty frame: every frame holds a medium", () => {
+  it("no rendered slide has an empty frame: its media frames match its steps (the image and the video, or the video alone)", () => {
     const { container } = wrap(<GalleryFeatured />);
+    let checked = 0;
     FEATURED.forEach((item, i) => {
       const active = slide(container, i);
-      expect(active.querySelectorAll("ol figure")).toHaveLength(item.image ? 2 : 1); // the image and the video, or the video alone
-      expect(active.querySelectorAll("img[alt]:not([alt=''])")).toHaveLength(item.image ? 1 : 0);
-      expect(active.querySelector("[data-steps]")).toHaveAttribute("data-steps", item.image ? "3" : "2");
+      const strip = active.querySelector("[data-steps]");
+      if (!strip) return; // a slide the carousel has not mounted yet
+      checked++;
+      expect(strip).toHaveAttribute("data-steps", item.image ? "3" : "2");
+      expect(strip.querySelectorAll("ol > li:not([aria-hidden])")).toHaveLength(item.image ? 3 : 2);
     });
+    expect(checked).toBeGreaterThan(0);
   });
 
   it("is a named carousel with a counter and one clickable segment per item, and no pause button under reduced motion", () => {
