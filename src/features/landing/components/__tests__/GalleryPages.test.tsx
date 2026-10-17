@@ -36,7 +36,7 @@ describe("GalleryFeatured (the home page's prompt → image → video, a slidesh
   const slide = (container: HTMLElement, i: number) => container.querySelectorAll<HTMLElement>('[aria-roledescription="slide"]')[i];
   const g = translations.en.gallery;
 
-  it("is a three-step strip: the prompt, the image (SD 3.5 Large, DigitalOcean, $0.08), the video made from it (Wan 2.2 A14B, H100, upscaled to 1080p) — chips visible under each medium", () => {
+  it("is a three-step strip: the prompt, the image (FLUX.2 [klein], H100, made at the video's aspect), the video made from it (LTX or Wan A14B, H100, upscaled to 1080p) — chips visible under each medium", () => {
     const { container } = wrap(<GalleryFeatured />);
     expect(container.querySelector("#made")).not.toBeNull();
     expect(screen.getByRole("heading", { level: 2 })).toHaveTextContent("One prompt, an image, a video");
@@ -52,8 +52,8 @@ describe("GalleryFeatured (the home page's prompt → image → video, a slidesh
     expect(video.loop).toBe(true);
     expect(video).toHaveAttribute("aria-label", g.clips[first.id]);
     // The chips sit in the step, right under the medium they describe.
-    expect(steps[1]).toHaveTextContent(`SD 3.5 Large · DigitalOcean · ${String(image.seconds)} s · $0.08`);
-    expect(steps[2]).toHaveTextContent(/Wan 2\.2 A14B · RunPod H100 80 GB · ↑ 1080p · \d+ s · \$1\.\d\d/);
+    expect(steps[1]).toHaveTextContent(new RegExp(`FLUX\\.2 \\[klein\\] 4B · RunPod H100 80 GB · ${String(image.seconds)} s · \\$0\\.\\d{3}`));
+    expect(steps[2]).toHaveTextContent(/LTX-Video 0\.9\.8 · RunPod H100 80 GB · ↑ 1080p · \d+ s · \$0\.\d\d/);
     expect(within(active).getByText(g.fromImage)).toBeInTheDocument();
   });
 
@@ -71,7 +71,7 @@ describe("GalleryFeatured (the home page's prompt → image → video, a slidesh
     expect(strip.querySelectorAll("*").length).toBe(before); // nothing was added to the strip
     expect(open).toHaveTextContent(first.clip.runId);
     expect(open).toHaveTextContent(first.clip.seed);
-    expect(open).toHaveTextContent(/Wan 2\.2 A14B/);
+    expect(open).toHaveTextContent(/LTX-Video 0\.9\.8/);
     expect(open).toHaveTextContent(/SeedVR2 3B/);
     expect(open).toHaveTextContent(/routed by Orazaka/);
     expect(open).toHaveTextContent(/GPU cost of the run/);

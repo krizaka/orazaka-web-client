@@ -34,7 +34,8 @@ export function clipFacts(g: GalleryDictionary, clip: GalleryClip): RunFact[] {
     { label: g.clipLength, value: fill(g.seconds, { seconds: clip.duration }) },
   ];
   if (clip.seconds !== undefined) facts.push({ label: g.time, value: fill(g.videoTime, { seconds: clip.seconds }) });
-  if (clip.upscale) facts.push({ label: g.upscaleLabel, value: fill(g.upscaleFact, { model: clip.upscale.model, licence: clip.upscale.licence, from: clip.upscale.from, to: clip.upscale.to, seconds: clip.upscale.seconds, cost: clip.upscale.costUsd.toFixed(2) }) });
+  if (clip.upscale) facts.push({ label: g.upscaleLabel, value: fill(g.upscaleFact, { model: clip.upscale.model, licence: clip.upscale.licence, from: clip.upscale.from, to: clip.upscale.to, seconds: clip.upscale.seconds, cost: clip.upscale.costUsd.toFixed(3) }) });
+  if (clip.imageKept !== undefined) facts.push({ label: g.keptLabel, value: fill(g.kept, { pct: Math.round(clip.imageKept * 100) }) });
   // An image-to-video clip is charged by the GPU's hour, not by the clip: the figure is that run's share of the hour.
   facts.push({ label: clip.via ? g.gpuCostLabel : g.clipCost, value: fill(clip.via ? g.gpuCost : g.cost, { cost: clip.costUsd.toFixed(2) }) });
   return facts;
@@ -56,6 +57,6 @@ export function imageFacts(g: GalleryDictionary, image: ImageRecord, model: { na
     { label: g.seedValue, value: image.seed },
     { label: g.imageFrameLabel, value: fill(g.imageFrame, { width: image.width, height: image.height }) },
     { label: g.time, value: fill(g.videoTime, { seconds: image.seconds }) },
-    { label: g.clipCost, value: fill(g.imageCost, { cost: image.costUsd.toFixed(2) }) },
+    { label: g.clipCost, value: fill(g.imageCost, { cost: image.costUsd.toFixed(3) }) },
   ];
 }
