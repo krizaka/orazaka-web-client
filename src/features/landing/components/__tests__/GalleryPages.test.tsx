@@ -86,12 +86,12 @@ describe("GalleryFeatured (the home page's prompt → image → video, a slidesh
     const lone = FEATURED.findIndex((item) => !item.image);
     if (lone < 0) return; // every example has its image step: nothing to degrade
     const active = slide(container, lone);
-    const steps = within(active).getAllByRole("listitem").filter((li) => li.textContent?.match(/^\d · /));
+    const steps = Array.from(active.querySelectorAll("ol > li")).filter((li) => li.textContent?.match(/^\d · /));
     expect(steps.map((s) => s.textContent?.slice(0, 3))).toEqual(["1 ·", "2 ·"]);
     expect(steps[1]).toHaveTextContent(g.stepVideo);
     expect(active.querySelector("[data-steps]")).toHaveAttribute("data-steps", "2");
-    expect(within(active).queryByText(/prompt of its own/)).toBeNull();
-    expect(active.querySelectorAll('[aria-hidden="true"] svg, li[aria-hidden="true"]')).toHaveLength(1); // one arrow
+    expect(active.textContent).not.toMatch(/prompt of its own/);
+    expect(active.querySelectorAll('ol > li[aria-hidden="true"]')).toHaveLength(1); // one arrow
   });
 
   it("no slide has an empty frame: every frame holds a medium", () => {
