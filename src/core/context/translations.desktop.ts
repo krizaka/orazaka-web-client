@@ -1,351 +1,192 @@
 /**
  * @file translations.desktop.ts
- * @description The words of /desktop (Orazaka for Mac) and of the home page's "On your Mac" band (en, fr). What the app
- * does is what `apps/desktop/README.md` of krizaka/orazaka says the v0.1 build does — nothing more. The version, the
- * download URL and the SHA-256 are never written here: they are read from the GitHub release at build time.
+ * @description The words of /desktop (Orazaka for Mac), en and fr. What the app does is what `apps/desktop/README.md`
+ * of krizaka/orazaka says the v0.1 build does, and the services are the ones `orazaka start` brings up — nothing more,
+ * no figure that was not measured. The version, the download URL, the size and the SHA-256 are never written here:
+ * they are read from the GitHub release at build time.
  */
 type Locale = "en" | "fr";
 
-export interface DesktopShowcaseStep {
-  id: "modes" | "studio" | "packs" | "sagas" | "files";
-  tabLabel: string;
-  badge: string;
-  headline: string;
-  description: string;
-  proofBadge: string;
-  proofDetail: string;
+interface Titled {
+  title: string;
+  body: string;
 }
 
 export interface DesktopDictionary {
-  nav: string;
-  navDesc: string;
   meta: { title: string; description: string };
-  hero: { eyebrow: string; title: string; lead: string };
-  band: { eyebrow: string; title: string; lead: string; cta: string; alt: string };
+  hero: { eyebrow: string; title: string; lead: string; captureAlt: string };
   download: {
     button: string;
+    /** `{size}` is the .dmg's size. */
+    facts: string;
+    testBuild: string;
     version: string;
-    size: string;
-    sha: string;
+    verify: string;
+    verifyBody: string;
     shaCopy: string;
     shaCopied: string;
     shaCopyFailed: string;
-    fileFacts: string;
     unreadable: string;
     releases: string;
   };
-  testBuild: { title: string; body: string; terminal: string };
-  showcase: {
-    title: string;
-    lead: string;
-    playbackPlay: string;
-    playbackPause: string;
-    proofHeadline: string;
-    stepCounter: string;
-    switchModeLabel: string;
-    modeLocal: string;
-    modeCloud: string;
-    steps: DesktopShowcaseStep[];
-  };
-  does: { title: string; lead: string; items: { title: string; body: string }[]; captureAlt: string };
-  access: { title: string; items: string[] };
+  firstLaunch: { title: string; lead: string; steps: Titled[]; damaged: { summary: string; body: string; terminal: string } };
+  modes: { title: string; lead: string; items: Titled[] };
+  services: { title: string; lead: string; head: { service: string; runs: string; does: string }; rows: { name: string; runs: string; does: string }[] };
+  trouble: { title: string; items: (Titled & { code?: string })[] };
   requirements: { title: string; items: string[] };
-  notYet: { title: string; body: string };
 }
 
 export const desktop: Record<Locale, DesktopDictionary> = {
   en: {
-    nav: "Mac App",
-    navDesc: "Orazaka Desktop for Apple Silicon: control panel, dual connection modes, and menu bar icon.",
     meta: {
       title: "Orazaka for Mac — Orazaka",
-      description: "Orazaka Desktop: Apple Silicon app featuring dual connection modes (Local Metal and Cloud API), sovereign generation studio, domain packs, and least-privilege folder access.",
+      description: "Run Orazaka on your Mac, or connect it to your workspace: a control panel in the menu bar, and access only to the folders you choose. Apple Silicon, macOS 14+.",
     },
     hero: {
       eyebrow: "Orazaka for Mac",
-      title: "Orazaka on your Mac, native and sovereign.",
-      lead: "Orazaka Desktop toggles between local Apple Silicon Metal acceleration and the deployed cloud API. It runs generation workflows, sovereign packs, and studio sagas while sharing only the folders you choose.",
-    },
-    band: {
-      eyebrow: "On your Mac",
-      title: "Native sovereign AI on your Mac.",
-      lead: "Toggle between local Metal and cloud API, run generation pipelines, inspect domain pack guardrails, and control the sidecar CLI — from a native window and menu bar icon. Apple Silicon test build.",
-      cta: "Orazaka for Mac",
-      alt: "The Orazaka Desktop application: dual connection mode switcher, sovereign generation studio, domain packs catalog, and local sidecar controls.",
+      title: "Orazaka on your Mac.",
+      lead: "Run the whole engine on this Mac, or connect it to your workspace. A control panel in the menu bar — and Orazaka sees only the folders you choose.",
+      captureAlt: "The Orazaka for Mac control panel: the state of the local engine, Start, Stop and Open workspace",
     },
     download: {
       button: "Download for Mac",
-      version: "Version",
-      size: "Size",
-      sha: "SHA-256",
+      facts: "Apple Silicon · macOS 14+ · {size}",
+      testBuild: "A test build: not yet signed by Apple — the first launch takes one extra step.",
+      version: "Version {version}",
+      verify: "Verify the download",
+      verifyBody: "The SHA-256 of the .dmg, published with the release. Compare it with `shasum -a 256 Orazaka_*.dmg`:",
       shaCopy: "Copy",
       shaCopied: "Copied",
       shaCopyFailed: "Copy failed — select the hash by hand",
-      fileFacts: "Apple Silicon · macOS 14 or later",
       unreadable: "The latest build could not be read from GitHub right now.",
       releases: "Open the releases page",
     },
-    testBuild: {
-      title: "Test build — not yet signed by Apple",
-      body: "macOS blocks a plain double-click on this build. Drag Orazaka to Applications, then right-click the app, choose Open, and confirm Open — once. If macOS still says the app is damaged, run this in a terminal:",
-      terminal: "xattr -dr com.apple.quarantine /Applications/Orazaka.app",
-    },
-    showcase: {
-      title: "Interactive Desktop Showcase & Proofs",
-      lead: "Inspect the native application features in action. Every claim is validated by automated test suites, real latency probes, and cryptographic certificates.",
-      playbackPlay: "Play Walkthrough",
-      playbackPause: "Pause",
-      proofHeadline: "Verified Technical Proof",
-      stepCounter: "Feature {current} of {total}",
-      switchModeLabel: "Active Connection Mode",
-      modeLocal: "Local Metal (Airgapped)",
-      modeCloud: "Cloud API (dev.orazaka.com)",
+    firstLaunch: {
+      title: "First launch",
+      lead: "The app is not signed by Apple yet, so macOS asks once.",
       steps: [
-        {
-          id: "modes",
-          tabLabel: "Dual Modes",
-          badge: "Metal ⇄ Cloud",
-          headline: "Instant toggle: Local Metal 8B edge or Cloud API cluster",
-          description: "Switch in one click between sovereign on-device inference on Apple Silicon Metal (0 bytes to network) and the high-throughput cloud API on dev.orazaka.com with live latency probes and macOS Keychain auth.",
-          proofBadge: "Zero Network Exfiltration · 0.8ms vs 19ms",
-          proofDetail: "Proven by Cargo tests (34/34 passing), isolated connection headers (x-orazaka-connection-mode), and socket-level sandbox verification.",
-        },
-        {
-          id: "studio",
-          tabLabel: "Generation Studio",
-          badge: "Chat & Reasoning",
-          headline: "Multi-modal generation with thinking process inspection",
-          description: "Chat, deep reasoning, image synthesis, and Wan 2.1 video generation. Inspect the token reasoning stream step by step, choose local or cloud models, and attach documents from granted folders.",
-          proofBadge: "18.4 tok/s · Vitest 32/32 Passed",
-          proofDetail: "Verified through automated UI tests, streaming token pipelines, and file sandbox confinement.",
-        },
-        {
-          id: "packs",
-          tabLabel: "Packs & Scope Guard",
-          badge: "Statutory Guard",
-          headline: "Domain packs catalog with statutory refusal audit",
-          description: "Browse specialized industry packs (WORKER, DATA, OSS). Scope Guard enforces each pack's declared boundaries and blocks prohibited requests before execution.",
-          proofBadge: "Refusals before execution",
-          proofDetail: "Scope Guard refuses what a pack is not allowed to do before anything runs.",
-        },
-        {
-          id: "sagas",
-          tabLabel: "Studio Sagas",
-          badge: "Pipelines & Certs",
-          headline: "Automated multi-step pipelines with verified execution certificates",
-          description: "Run complex document audits (e.g. lease compliance audit). Follow the timeline steps in real-time, stream live daemon logs, and obtain a tamper-proof SHA-256 sovereign execution certificate.",
-          proofBadge: "Deterministic SHA-256 Certificate",
-          proofDetail: "Proven: End-to-end saga orchestration with step-level state machines and tamper-proof execution certificates.",
-        },
-        {
-          id: "files",
-          tabLabel: "Scoped Files & Sidecar",
-          badge: "Zero Trust",
-          headline: "Least-privilege folder access and sidecar CLI supervision",
-          description: "Grant individual folders via native macOS picker with zero access to sensitive directories (~, /, ~/.ssh). Supervise the local sidecar CLI stack with health probes and restart controls.",
-          proofBadge: "Path Traversal Denied · Sidecar Guard",
-          proofDetail: "Verified: Rust path canonicalization rejects all parent traversal (../) and symbolic links outside granted bounds.",
-        },
+        { title: "Drag to Applications", body: "Open the .dmg and drag Orazaka onto the Applications folder." },
+        { title: "Right-click, then Open", body: "In Applications, right-click Orazaka and choose Open — a plain double-click is blocked." },
+        { title: "Confirm Open", body: "macOS asks if you are sure: choose Open. It never asks again." },
+      ],
+      damaged: {
+        summary: "If macOS says the app is damaged",
+        body: "That is macOS's quarantine on an unsigned download, not a broken file. Remove it once, in a terminal:",
+        terminal: "xattr -dr com.apple.quarantine /Applications/Orazaka.app",
+      },
+    },
+    modes: {
+      title: "Two ways to use it",
+      lead: "Switch in the app's settings; your folders stay yours in both.",
+      items: [
+        { title: "Connected to your workspace", body: "The app opens your hosted Orazaka (dev.orazaka.com by default, https only). You sign in on the Orazaka page itself — the app never sees or stores your password." },
+        { title: "Everything on this Mac", body: "Start, stop and check the local engine from the panel. Models run on your Mac's own chip (Apple Silicon); nothing leaves the machine unless you connect a cloud model." },
+        { title: "Only the folders you choose", body: "Grant folders with the macOS picker, preview their files, drop files in, revoke any time. Your home folder, system folders and ~/.ssh can never be granted." },
       ],
     },
-    does: {
-      title: "What it does today",
-      lead: "Version 0.1 is a test build. This is what it does — verified and proven by automated tests and recordings.",
-      items: [
-        {
-          title: "Dual connection modes",
-          body: "Switch in one click between the sovereign local stack on Apple Silicon Metal (http://localhost:8088) and the deployed cloud API (dev.orazaka.com) with real-time latency probes and Keychain security.",
-        },
-        {
-          title: "Sovereign generation studio",
-          body: "Multi-modal generation: Chat & Reasoning with thinking process inspection, Image synthesis, and Wan 2.1 video generation. Switch between local Metal weights and cloud models, and attach files from your granted folders.",
-        },
-        {
-          title: "Sovereign packs & Scope Guard",
-          body: "Browse and install domain packs with statutory tier tags (WORKER, DATA, OSS). Inspect each pack's Scope Guard refusal rules and the terms it refuses before execution.",
-        },
-        {
-          title: "Studio blueprints & sagas",
-          body: "Run automated multi-step sagas (e.g. lease compliance audit). Watch step progression on the interactive timeline, stream live console logs, and generate verifiable sovereign execution certificates.",
-        },
-        {
-          title: "The folders you choose",
-          body: "Pick folders with the native macOS picker, browse and preview files, drag files into workflows, and revoke access at any time. System directories (~, /, ~/.ssh) are strictly blocked.",
-        },
-        {
-          title: "Sidecar CLI & menu bar",
-          body: "Control the local stack with sandboxed sidecar commands (status, start, stop, doctor, logs). A lightweight menu bar tray icon provides instant status and quick actions.",
-        },
+    services: {
+      title: "What runs when you start it",
+      lead: "« Start » runs the orazaka CLI on your Mac; the panel shows each service's state.",
+      head: { service: "Service", runs: "Runs in", does: "What it does" },
+      rows: [
+        { name: "PostgreSQL", runs: "Docker", does: "Your data: conversations, jobs, settings, and the search index of your documents." },
+        { name: "Redis", runs: "Docker", does: "Short-lived cache and sessions." },
+        { name: "RabbitMQ", runs: "Docker", does: "The queue that hands long jobs (images, video, voice) to the workers." },
+        { name: "Ollama", runs: "Your Mac", does: "The text models, on the Mac's own chip." },
+        { name: "Image engine", runs: "Your Mac", does: "Image generation (stable-diffusion.cpp or LocalAI)." },
+        { name: "Media worker", runs: "Your Mac", does: "Runs image, video and voice jobs from the queue." },
+        { name: "Engine API", runs: "Your Mac", does: "The router every request goes through: security, rules, the right model." },
+        { name: "Workspace", runs: "Your Mac", does: "The web app, opened in the app's window (Open workspace)." },
       ],
-      captureAlt: "The Orazaka Desktop application interface with dual mode switcher, generation studio, packs catalog, and sidecar controls.",
     },
-    access: {
-      title: "How little it can touch",
+    trouble: {
+      title: "If something goes wrong",
       items: [
-        "Only folders you grant, and only inside them: parent folders and links that leave a granted folder are refused.",
-        "Never your home folder itself, system folders, or ~/.ssh, ~/.aws, ~/Library.",
-        "The app runs the orazaka CLI through a fixed list of commands — it cannot run a shell or an arbitrary program.",
-        "Starting Orazaka when you log in is off by default, and it only opens the menu-bar app.",
+        { title: "Run doctor", body: "In the panel, Run doctor checks your Mac (Node.js, the chip) and whether each service answers, then lists what to fix.", code: "orazaka doctor" },
+        { title: "Read the logs", body: "The panel shows the live output; for one service, open its logs.", code: "orazaka logs --service router" },
+        { title: "Docker is not running", body: "Start OrbStack, Colima or Docker Desktop, then Start again." },
+        { title: "Node.js is missing", body: "This build needs Node.js 22 or later on the Mac.", code: "brew install node" },
       ],
     },
     requirements: {
-      title: "Requirements",
-      items: [
-        "A Mac with Apple Silicon, macOS 14 or later.",
-        "Node.js 22 or later (for example brew install node): the app bundles the orazaka CLI, not a Node runtime.",
-        "To run the stack on this Mac: Docker (OrbStack, Colima or Docker Desktop) and the Orazaka workspace folder, chosen in Settings.",
-      ],
-    },
-    notYet: {
-      title: "Not yet",
-      body: "There is no Windows or Linux build of the app, and the Mac build is not signed or notarized by Apple yet. The Orazaka platform itself runs on a Mac or a Linux server — see the installation guide.",
+      title: "What you need",
+      items: ["A Mac with Apple Silicon, macOS 14 or later.", "Node.js 22 or later.", "For everything on this Mac: Docker (OrbStack, Colima or Docker Desktop).", "No Windows or Linux build yet: on those, run Orazaka on a server (/docs/self-hosting)."],
     },
   },
   fr: {
-    nav: "App Mac",
-    navDesc: "Orazaka Desktop pour Apple Silicon : panneau de contrôle, deux modes de connexion et icône dans la barre des menus.",
     meta: {
       title: "Orazaka pour Mac — Orazaka",
-      description: "Orazaka Desktop : app Apple Silicon avec deux modes de connexion (Metal local et API Cloud), studio de génération souveraine, packs métiers et accès aux dossiers au moindre privilège.",
+      description: "Faites tourner Orazaka sur votre Mac, ou reliez-le à votre espace : un panneau dans la barre des menus, et l'accès aux seuls dossiers que vous choisissez. Apple Silicon, macOS 14+.",
     },
     hero: {
       eyebrow: "Orazaka pour Mac",
-      title: "Orazaka sur votre Mac, natif et souverain.",
-      lead: "Orazaka Desktop bascule entre l'accélération Metal locale d'Apple Silicon et l'API cloud déployée. Il exécute les flux de génération, les packs souverains et les sagas du studio tout en ne partageant que les dossiers que vous choisissez.",
-    },
-    band: {
-      eyebrow: "Sur votre Mac",
-      title: "IA souveraine native sur votre Mac.",
-      lead: "Basculez entre Metal local et l'API cloud, exécutez des pipelines de génération, inspectez les garde-fous des packs métiers et contrôlez le CLI sidecar — depuis une fenêtre native et l'icône de barre des menus. Version de test Apple Silicon.",
-      cta: "Orazaka pour Mac",
-      alt: "L'application Orazaka Desktop : sélecteur de deux modes de connexion, studio de génération souveraine, catalogue de packs et contrôles sidecar locaux.",
+      title: "Orazaka sur votre Mac.",
+      lead: "Faites tourner tout le moteur sur ce Mac, ou reliez-le à votre espace. Un panneau dans la barre des menus — et Orazaka ne voit que les dossiers que vous choisissez.",
+      captureAlt: "Le panneau d'Orazaka pour Mac : l'état du moteur local, Démarrer, Arrêter et Ouvrir l'espace",
     },
     download: {
       button: "Télécharger pour Mac",
-      version: "Version",
-      size: "Taille",
-      sha: "SHA-256",
+      facts: "Apple Silicon · macOS 14+ · {size}",
+      testBuild: "Une version de test : pas encore signée par Apple — le premier lancement demande une étape de plus.",
+      version: "Version {version}",
+      verify: "Vérifier le téléchargement",
+      verifyBody: "Le SHA-256 du .dmg, publié avec la version. Comparez-le avec `shasum -a 256 Orazaka_*.dmg` :",
       shaCopy: "Copier",
       shaCopied: "Copié",
-      shaCopyFailed: "Échec de la copie — sélectionnez le hash à la main",
-      fileFacts: "Apple Silicon · macOS 14 ou plus récent",
-      unreadable: "La dernière version n'a pas pu être lue depuis GitHub pour le moment.",
+      shaCopyFailed: "Échec de la copie — sélectionnez l'empreinte à la main",
+      unreadable: "La dernière version n'a pas pu être lue sur GitHub pour l'instant.",
       releases: "Ouvrir la page des versions",
     },
-    testBuild: {
-      title: "Version de test — pas encore signée par Apple",
-      body: "macOS bloque le double-clic simple sur cette version. Glissez Orazaka dans Applications, puis clic droit sur l'app, Ouvrir, et confirmez Ouvrir — une seule fois. Si macOS affirme encore que l'app est endommagée, lancez ceci dans un terminal :",
-      terminal: "xattr -dr com.apple.quarantine /Applications/Orazaka.app",
-    },
-    showcase: {
-      title: "Démonstration interactive & preuves techniques",
-      lead: "Inspectez les fonctionnalités de l'application native en action. Chaque affirmation est prouvée par des tests automatisés, des sondes de latence réelles et des certificats cryptographiques.",
-      playbackPlay: "Lancer l'animation",
-      playbackPause: "Pause",
-      proofHeadline: "Preuve technique vérifiée",
-      stepCounter: "Fonctionnalité {current} sur {total}",
-      switchModeLabel: "Mode de connexion actif",
-      modeLocal: "Metal local (Sans réseau)",
-      modeCloud: "API Cloud (dev.orazaka.com)",
+    firstLaunch: {
+      title: "Premier lancement",
+      lead: "L'app n'est pas encore signée par Apple : macOS demande une fois.",
       steps: [
-        {
-          id: "modes",
-          tabLabel: "Double mode",
-          badge: "Metal ⇄ Cloud",
-          headline: "Bascule instantanée : Metal 8B local souverain ou cluster API cloud",
-          description: "Basculez en un clic entre l'inférence locale souveraine sur Apple Silicon Metal (0 octet réseau) et l'API cloud déployée sur dev.orazaka.com avec sonde de latence en temps réel et trousseau macOS.",
-          proofBadge: "Zéro fuite réseau · 0,8 ms vs 19 ms",
-          proofDetail: "Prouvé par les tests Cargo (34/34 validés), en-têtes d'isolation réseau (x-orazaka-connection-mode) et vérification sandbox au niveau socket.",
-        },
-        {
-          id: "studio",
-          tabLabel: "Studio de génération",
-          badge: "Chat & Raisonnement",
-          headline: "Génération multi-modale avec inspection du raisonnement",
-          description: "Chat, raisonnement approfondi, synthèse d'images et génération vidéo Wan 2.1. Inspectez le flux de réflexion pas à pas, choisissez le modèle et joignez des fichiers autorisés.",
-          proofBadge: "18,4 tok/s · Vitest 32/32 validés",
-          proofDetail: "Vérifié par les tests d'interface automatisés, le pipeline de streaming de jetons et le confinement sandbox des fichiers.",
-        },
-        {
-          id: "packs",
-          tabLabel: "Packs & Scope Guard",
-          badge: "Garde statutaire",
-          headline: "Catalogue de packs spécialisés avec audit des refus statutaires",
-          description: "Parcourez les packs métier (WORKER, DATA, OSS). Le Scope Guard applique les limites déclarées de chaque pack et bloque les demandes interdites avant exécution.",
-          proofBadge: "Refus avant exécution",
-          proofDetail: "Le Scope Guard refuse ce qu'un pack n'a pas le droit de faire, avant que rien ne s'exécute.",
-        },
-        {
-          id: "sagas",
-          tabLabel: "Sagas Studio",
-          badge: "Pipelines & Certifs",
-          headline: "Pipelines automatisés multi-étapes avec certificats d'exécution vérifiés",
-          description: "Lancez des audits documentaires complexes (ex. audit de conformité de bail). Suivez la chronologie des étapes en temps réel, affichez les journaux et générez un certificat SHA-256 inviolable.",
-          proofBadge: "Certificat déterministe SHA-256",
-          proofDetail: "Prouvé : Orchestration de sagas de bout en bout avec machines d'état par étape et certificats scellés.",
-        },
-        {
-          id: "files",
-          tabLabel: "Fichiers & Sidecar",
-          badge: "Moindre privilège",
-          headline: "Accès aux dossiers par moindre privilège et supervision du sidecar CLI",
-          description: "Autorisez des dossiers spécifiques via le sélecteur macOS natif sans aucun accès aux répertoires sensibles (~, /, ~/.ssh). Supervisez le démon sidecar CLI avec sondes de santé.",
-          proofBadge: "Traversée interdite · Démon contrôlé",
-          proofDetail: "Vérifié : La canonicalisation Rust rejette toute traversée parente (../) et liens symboliques hors du périmètre accordé.",
-        },
+        { title: "Glisser dans Applications", body: "Ouvrez le .dmg et glissez Orazaka sur le dossier Applications." },
+        { title: "Clic droit, puis Ouvrir", body: "Dans Applications, clic droit sur Orazaka, puis Ouvrir — un simple double-clic est bloqué." },
+        { title: "Confirmer Ouvrir", body: "macOS demande si vous êtes sûr : choisissez Ouvrir. Il ne redemandera plus." },
+      ],
+      damaged: {
+        summary: "Si macOS dit que l'app est endommagée",
+        body: "C'est la quarantaine de macOS sur un téléchargement non signé, pas un fichier abîmé. Retirez-la une fois, dans un terminal :",
+        terminal: "xattr -dr com.apple.quarantine /Applications/Orazaka.app",
+      },
+    },
+    modes: {
+      title: "Deux façons de l'utiliser",
+      lead: "Changez dans les réglages de l'app ; vos dossiers restent à vous dans les deux cas.",
+      items: [
+        { title: "Relié à votre espace", body: "L'app ouvre votre Orazaka hébergé (dev.orazaka.com par défaut, https seulement). Vous vous connectez sur la page d'Orazaka elle-même — l'app ne voit ni ne garde votre mot de passe." },
+        { title: "Tout sur ce Mac", body: "Démarrez, arrêtez et vérifiez le moteur local depuis le panneau. Les modèles tournent sur la puce du Mac (Apple Silicon) ; rien ne sort de la machine, sauf si vous branchez un modèle cloud." },
+        { title: "Seulement les dossiers choisis", body: "Accordez des dossiers avec le sélecteur de macOS, prévisualisez leurs fichiers, déposez-en, retirez l'accès quand vous voulez. Votre dossier personnel, les dossiers système et ~/.ssh ne peuvent jamais être accordés." },
       ],
     },
-    does: {
-      title: "Ce qu'elle fait aujourd'hui",
-      lead: "La version 0.1 est une version de test. Voici ce qu'elle fait — vérifié et prouvé par des tests automatisés et des enregistrements.",
-      items: [
-        {
-          title: "Deux modes de connexion",
-          body: "Basculez en un clic entre la pile souveraine locale sur Apple Silicon Metal (http://localhost:8088) et l'API cloud déployée (dev.orazaka.com) avec mesure de latence en temps réel et sécurité Keychain.",
-        },
-        {
-          title: "Studio de génération souveraine",
-          body: "Génération multi-modale : Chat et raisonnement avec inspection du cheminement de pensée, synthèse d'images et génération vidéo Wan 2.1. Basculez entre poids locaux Metal et modèles cloud, et attachez des fichiers autorisés.",
-        },
-        {
-          title: "Packs souverains et Scope Guard",
-          body: "Parcourez et installez des packs métiers avec badges de niveau statutaires (WORKER, DATA, OSS). Inspectez les règles de refus du Scope Guard de chaque pack et les termes refusés avant exécution.",
-        },
-        {
-          title: "Blueprints et sagas du studio",
-          body: "Exécutez des sagas automatisées multi-étapes (ex. audit de conformité de bail). Suivez la progression sur la chronologie, lisez les journaux en direct et obtenez un certificat d'exécution souveraine vérifiable.",
-        },
-        {
-          title: "Les dossiers que vous choisissez",
-          body: "Choisissez des dossiers avec le sélecteur natif macOS, prévisualisez les fichiers, glissez-les dans les flux et révoquez l'accès à tout moment. Les répertoires système (~, /, ~/.ssh) sont strictement bloqués.",
-        },
-        {
-          title: "CLI sidecar et barre des menus",
-          body: "Contrôlez la pile locale avec des commandes sidecar cloisonnées (status, start, stop, doctor, logs). Une icône discrète dans la barre des menus offre l'état instantané et des actions rapides.",
-        },
+    services: {
+      title: "Ce qui tourne quand vous démarrez",
+      lead: "« Démarrer » lance le CLI orazaka sur votre Mac ; le panneau montre l'état de chaque service.",
+      head: { service: "Service", runs: "Tourne dans", does: "Ce qu'il fait" },
+      rows: [
+        { name: "PostgreSQL", runs: "Docker", does: "Vos données : conversations, tâches, réglages, et l'index de recherche de vos documents." },
+        { name: "Redis", runs: "Docker", does: "Cache court et sessions." },
+        { name: "RabbitMQ", runs: "Docker", does: "La file qui confie les longues tâches (images, vidéo, voix) aux workers." },
+        { name: "Ollama", runs: "Votre Mac", does: "Les modèles de texte, sur la puce du Mac." },
+        { name: "Moteur d'images", runs: "Votre Mac", does: "La génération d'images (stable-diffusion.cpp ou LocalAI)." },
+        { name: "Worker média", runs: "Votre Mac", does: "Exécute les tâches d'image, de vidéo et de voix de la file." },
+        { name: "API du moteur", runs: "Votre Mac", does: "Le routeur par lequel passe chaque requête : sécurité, règles, le bon modèle." },
+        { name: "Espace de travail", runs: "Votre Mac", does: "L'app web, ouverte dans la fenêtre de l'app (Ouvrir l'espace)." },
       ],
-      captureAlt: "L'interface d'Orazaka Desktop avec le sélecteur de mode, le studio de génération, le catalogue de packs et les contrôles sidecar.",
     },
-    access: {
-      title: "Le peu qu'elle peut toucher",
+    trouble: {
+      title: "Si quelque chose ne va pas",
       items: [
-        "Seulement les dossiers que vous autorisez, et seulement à l'intérieur : les dossiers parents et les liens qui sortent d'un dossier autorisé sont refusés.",
-        "Jamais votre dossier personnel lui-même, les dossiers système, ni ~/.ssh, ~/.aws, ~/Library.",
-        "L'app lance le CLI orazaka par une liste fixe de commandes — elle ne peut lancer ni un shell ni un programme quelconque.",
-        "Le démarrage d'Orazaka à l'ouverture de session est désactivé par défaut, et il ne fait qu'ouvrir l'app de la barre des menus.",
+        { title: "Lancer le diagnostic", body: "Dans le panneau, le diagnostic vérifie votre Mac (Node.js, la puce) et si chaque service répond, puis liste quoi corriger.", code: "orazaka doctor" },
+        { title: "Lire les journaux", body: "Le panneau montre la sortie en direct ; pour un service, ouvrez ses journaux.", code: "orazaka logs --service router" },
+        { title: "Docker ne tourne pas", body: "Lancez OrbStack, Colima ou Docker Desktop, puis Démarrer à nouveau." },
+        { title: "Node.js manque", body: "Cette version demande Node.js 22 ou plus sur le Mac.", code: "brew install node" },
       ],
     },
     requirements: {
-      title: "Prérequis",
-      items: [
-        "Un Mac Apple Silicon, macOS 14 ou plus récent.",
-        "Node.js 22 ou plus récent (par exemple brew install node) : l'app embarque le CLI orazaka, pas un environnement Node.",
-        "Pour faire tourner la pile sur ce Mac : Docker (OrbStack, Colima ou Docker Desktop) et le dossier de l'espace de travail Orazaka, choisi dans les Réglages.",
-      ],
-    },
-    notYet: {
-      title: "Pas encore",
-      body: "Il n'y a pas de version Windows ni Linux de l'app, et la version Mac n'est pas encore signée ni notariée par Apple. La plateforme Orazaka elle-même tourne sur un Mac ou un serveur Linux — voir le guide d'installation.",
+      title: "Ce qu'il vous faut",
+      items: ["Un Mac Apple Silicon, macOS 14 ou plus.", "Node.js 22 ou plus.", "Pour tout faire sur ce Mac : Docker (OrbStack, Colima ou Docker Desktop).", "Pas encore de version Windows ou Linux : sur ces systèmes, faites tourner Orazaka sur un serveur (/docs/self-hosting)."],
     },
   },
 };

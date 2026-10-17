@@ -18,11 +18,15 @@ export interface ChatDemoCopy {
   pipeline: string[];
 }
 
+/** One answer of the comparison: a key phrase in bold, then its detail. */
+export interface CompareAnswer {
+  key: string;
+  detail: string;
+}
+
 /** Copy of the public home page. */
 export interface LandingDictionary {
   nav: {
-    sovereignty: string;
-    platform: string;
     how: string;
     studios: string;
     signIn: string;
@@ -58,8 +62,22 @@ export interface LandingDictionary {
   };
   chat: ChatDemoCopy;
   proof: { value: string; label: string }[];
-  sovereignty: { eyebrow: string; title: string; lead: string; pillars: LandingItem[]; more: string };
-  platform: { eyebrow: string; title: string; lead: string; items: LandingItem[]; ctas: string[]; captureAlt: string };
+  what: { eyebrow: string; title: string; lead: string; demo: string; packs: string; packsLine: string; packsCta: string };
+  runs: {
+    eyebrow: string;
+    title: string;
+    lead: string;
+    tabs: Record<"web" | "mobile" | "mac", string>;
+    label: string;
+    play: string;
+    pause: string;
+    step: string;
+    web: Record<"workspace" | "studio" | "results", { title: string; description: string; alt: string }>;
+    mac: { title: string; body: string; alt: string; cta: string };
+    mobileMore: string;
+    recorded: string;
+  };
+  trust: { eyebrow: string; title: string; items: (LandingItem & { cta: string })[] };
   compare: {
     eyebrow: string;
     title: string;
@@ -67,13 +85,12 @@ export interface LandingDictionary {
     topic: string;
     cloud: string;
     orazaka: string;
-    rows: { topic: string; cloud: string; orazaka: string }[];
+    /** The key phrase is bold, the detail follows; claims must be true of the product today. */
+    rows: { id: "where" | "pay" | "decide" | "agents"; topic: string; cloud: CompareAnswer; orazaka: CompareAnswer }[];
   };
-  how: { eyebrow: string; title: string; lead: string; terminal: string; steps: (LandingItem & { command: string })[] };
   studios: { eyebrow: string; title: string; lead: string; items: LandingItem[]; ctas: string[]; cta: string };
   cta: { eyebrow: string; title: string; lead: string; primary: string; secondary: string };
   demo: { eyebrow: string; title: string; lead: string; frame: string; notice: string; origin: string };
-  packs: { eyebrow: string; title: string; lead: string; studios: string; more: string; cta: string };
   closed: { title: string; body: string; docs: string; contact: string; home: string; heroPrimary: string; heroSecondary: string; signInBanner: string };
   footer: { devNotice: string; privacy: string; terms: string; contact: string; license: string; by: string; product: string; docs: string; api: string; cli: string; legal: string };
 }

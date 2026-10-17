@@ -147,13 +147,3 @@ describe("the footer", () => {
     expect(hrefs).toEqual(expect.arrayContaining(["/docs", "/docs/api", "/docs/cli"]));
   });
 });
-
-describe("the Mac band", () => {
-  it("leads to /desktop with the real capture", () => {
-    renderLanding("en", <LandingPage />, CLOSED);
-    const band = document.getElementById("mac") as HTMLElement;
-    expect(within(band).getByRole("link", { name: translations.en.desktop.band.cta })).toHaveAttribute("href", "/desktop");
-    const img = within(band).getByRole("img", { name: translations.en.desktop.band.alt }) as HTMLImageElement;
-    expect(img.src).toMatch(/products\/orazaka\/home\/desktop-panel-2240\.[0-9a-f]{10}\.webp$/);
-  });
-});

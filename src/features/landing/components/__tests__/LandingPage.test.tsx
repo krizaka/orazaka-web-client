@@ -1,6 +1,6 @@
 import type * as React from "react";
 import "@testing-library/jest-dom";
-import { render, screen, within } from "@testing-library/react";
+import { fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import { ThemeProvider } from "@krizaka/ui/theme";
 import { translations, type Locale } from "@/core/context/translations";
 import { AuthFlagsProvider } from "@/core/context/AuthFlagsContext";
@@ -55,22 +55,35 @@ describe("LandingPage", () => {
     expect(screen.getAllByRole("link", { name: /Sign in/ })[0]).toHaveAttribute("href", "/login");
   });
 
-  it("links every pillar to the feature page that explains it", () => {
+  it("tells one story in six sections, each answering one question, in order", () => {
     renderLanding("en");
-    const pillars = document.getElementById("sovereignty") as HTMLElement;
-    const hrefs = within(pillars).getAllByRole("link").map((a) => a.getAttribute("href"));
-    expect(hrefs).toEqual(FEATURE_IDS.map((id) => `/features/${id}`));
+    const main = screen.getByRole("main");
+    expect(main.children).toHaveLength(6);
+    const ids = ["made", "how", "why", "trust"].map((id) => document.getElementById(id));
+    ids.forEach((el) => expect(main.contains(el)).toBe(true));
+    const order = ids.map((el) => [...main.children].findIndex((c) => c === el || c.contains(el!)));
+    expect(order).toEqual([1, 2, 3, 4]);
   });
 
   it("has an anchor target for every entry of the navigation", () => {
     renderLanding("en");
-    for (const id of ["sovereignty", "platform", "how", "demo", "studios", "packs"]) expect(document.getElementById(id)).not.toBeNull();
+    for (const id of ["how", "platform", "demo", "studios", "packs"]) expect(document.getElementById(id)).not.toBeNull();
   });
 
-  it("compares the same questions for a cloud assistant and for Orazaka", () => {
+  it("compares the same questions for a cloud assistant and for Orazaka, row by row, with an icon each", () => {
     renderLanding("en");
-    const table = screen.getByRole("table");
-    expect(within(table).getAllByRole("rowheader")).toHaveLength(translations.en.landing.compare.rows.length);
+    const table = screen.getByRole("table", { name: translations.en.landing.compare.title });
+    const heads = within(table).getAllByRole("rowheader");
+    expect(heads).toHaveLength(translations.en.landing.compare.rows.length);
+    heads.forEach((h) => expect(h.querySelector("svg")).not.toBeNull());
+    expect(within(table).getAllByRole("columnheader").find((h) => h.hasAttribute("data-highlight"))).toHaveTextContent("Orazaka");
+  });
+
+  it("says only what the product does today: the estimate before a run, an agent's plan approved first", () => {
+    const rows = Object.fromEntries(translations.en.landing.compare.rows.map((r) => [r.id, r]));
+    expect(rows.pay.orazaka.detail).toMatch(/estimated cost before it runs/);
+    expect(rows.agents.orazaka.detail).toMatch(/plan.*approve/);
+    expect(JSON.stringify(translations.en.landing.compare)).not.toMatch(/each action asks first|credits you set/);
   });
 
   it("speaks French when the visitor chose it", () => {
@@ -136,23 +149,17 @@ describe("LandingPage while sign-in and sign-up are closed (the default)", () =>
     expect(within(hero).getByRole("link", { name: translations.en.landing.nav.signIn })).toHaveAttribute("href", "/login");
   });
 
-  it("makes every capability, Studio and pack card one link to a real place", () => {
+  it("makes every Studio outcome one link to a real place, and the packs one line towards their catalogue", () => {
     renderLanding("en", <LandingPage />, CLOSED);
     const en = translations.en.landing;
-    const platform = document.getElementById("platform")!;
-    const wanted = ["/gallery#demo-chat", "/docs/tools", "/docs/architecture", "/#studios", "/docs/jobs", "/docs/packs"];
-    en.platform.items.forEach((item, i) => {
-      const link = within(platform).getByRole("link", { name: new RegExp(`^${item.title}`) });
-      expect(link).toHaveAttribute("href", wanted[i]);
-      expect(link).toHaveTextContent(en.platform.ctas[i]);
-    });
     const studios = document.getElementById("studios")!;
     en.studios.items.forEach((item, i) => {
       expect(within(studios).getByRole("link", { name: new RegExp(`^${item.title}`) })).toHaveTextContent(en.studios.ctas[i]);
     });
-    expect(within(studios).getAllByRole("link").map((a) => a.getAttribute("href"))).toEqual(expect.arrayContaining(["/gallery#demo-documents", "/gallery", "/docs/packs#outbound-prospecting", "/docs/packs#trade-showcase"]));
-    // no card of the home is a dead end: not a bare <li> without a link
-    expect(platform.querySelectorAll("li").length).toBe(0);
+    expect(within(studios).getAllByRole("link").map((a) => a.getAttribute("href"))).toEqual(["/gallery#demo-documents", "/gallery", "/docs/packs#outbound-prospecting", "/docs/packs#trade-showcase"]);
+    const packs = document.getElementById("packs")!;
+    expect(within(packs).getByRole("link", { name: new RegExp(en.what.packsCta) })).toHaveAttribute("href", "/docs/packs");
+    expect(packs.textContent).toMatch(/\d+ installable packs/);
   });
 
   it("offers the documentation and the demo too", () => {
@@ -161,23 +168,12 @@ describe("LandingPage while sign-in and sign-up are closed (the default)", () =>
     expect(screen.getAllByRole("link", { name: translations.en.landing.closed.heroSecondary })[0]).toHaveAttribute("href", "/gallery");
   });
 
-  it("groups the packs by category, each shelf named in the visitor's language (orazaka-packs#16)", () => {
-    renderLanding("fr", <LandingPage />, CLOSED);
-    const shelves = [...document.getElementById("packs")!.querySelectorAll("[data-category]")];
-    expect(shelves.map((g) => g.getAttribute("data-category"))).toEqual(["business-compliance", "creativity-media", "data-analytics", "wellbeing"]);
-    expect(within(shelves[0] as HTMLElement).getByRole("heading", { level: 3 })).toHaveTextContent("Affaires et documents");
-    expect(within(shelves[2] as HTMLElement).getByRole("heading", { level: 3 })).toHaveTextContent("Données et analyse");
-    expect(within(shelves[3] as HTMLElement).getByRole("heading", { level: 3 })).toHaveTextContent("Bien-être");
-    for (const g of shelves) expect(g.querySelectorAll("a[href^='/docs/packs#']").length).toBeGreaterThan(0);
-  });
-
-  it("shows the recordings and the packs, and the Krizaka signature with the version", () => {
+  it("shows the prompt → image → video recordings, and the Krizaka signature with the version", () => {
     renderLanding("en", <LandingPage />, CLOSED);
     // The demo is /gallery now: the home keeps a teaser (Made here, anchor #demo) with its clips and a way to the demo.
     expect(document.getElementById("demo")).not.toBeNull();
     expect(document.getElementById("made")!.querySelectorAll("video").length).toBeGreaterThan(0);
     expect(within(document.getElementById("made")!).getByRole("link", { name: translations.en.gallery.seeDemo })).toHaveAttribute("href", "/gallery");
-    expect(document.getElementById("packs")!.querySelectorAll("a[href^='/docs/packs#']").length).toBeGreaterThan(0);
     const footer = screen.getByTestId("app-version");
     expect(footer).toHaveTextContent("A Krizaka product");
     expect(footer).toHaveTextContent(/v\S+/);
@@ -185,23 +181,34 @@ describe("LandingPage while sign-in and sign-up are closed (the default)", () =>
     expect(within(footer).queryByRole("navigation", { name: "Krizaka family" })).toBeNull();
   });
 
-  it("has a Mobile section with the phone recordings, played on demand, and a way to the full page", () => {
+  it("shows where it runs — Web · Mobile · Mac — the real app in its frame, never a native video control", () => {
     renderLanding("en", <LandingPage />, CLOSED);
-    const section = document.getElementById("mobile") as HTMLElement;
-    // Four steps, each recorded in dark and in light — the one matching the page's theme is shown.
-    const videos = section.querySelectorAll("video");
-    expect(videos.length).toBe(8);
-    expect(section.querySelectorAll('video[data-appearance="dark"]').length).toBe(4);
-    videos.forEach((v) => {
-      expect(v.getAttribute("preload")).toBe("none");
-      expect(v.hasAttribute("autoplay")).toBe(false);
-      expect(v.getAttribute("poster")).toMatch(/products\/orazaka\/mobile\/.*\.webp$/);
-    });
-    expect(within(section).getByRole("link", { name: translations.en.mobile.all })).toHaveAttribute("href", "/docs/mobile");
+    const r = translations.en.landing.runs;
+    const section = document.getElementById("how") as HTMLElement;
+    expect(within(section).getAllByRole("tab").map((t) => t.textContent)).toEqual(expect.arrayContaining([r.tabs.web, r.tabs.mobile, r.tabs.mac]));
+    const web = within(section).getByRole("region", { name: new RegExp(r.tabs.web) });
+    expect(web.querySelector('[data-device="browser"]')).not.toBeNull();
+    const posters = [...web.querySelectorAll("img")].map((i) => i.getAttribute("src"));
+    expect(posters).toHaveLength(3);
+    posters.forEach((src) => expect(src).toMatch(/products\/orazaka\/web\/step-[a-z]+-dark-poster\.[0-9a-f]{10}\.webp$/));
+    expect(section.querySelectorAll("video[controls]")).toHaveLength(0);
+    expect(section).toHaveTextContent(r.recorded);
     // The bar reaches it through Platforms ▾ (site-nav.ts), never as a lone top-level entry.
     const bar = screen.getByRole("navigation", { name: "Orazaka" });
     expect(within(bar).getByRole("button", { name: translations.en.landing.nav.platforms })).toBeInTheDocument();
     expect(within(bar).queryByRole("link", { name: translations.en.landing.nav.mobile })).toBeNull();
+  });
+
+  it("shows the Mac as its one real capture in a macOS window, towards /desktop — no invented step", async () => {
+    renderLanding("en", <LandingPage />, CLOSED);
+    const r = translations.en.landing.runs;
+    const section = document.getElementById("how") as HTMLElement;
+    const mac = within(section).getByRole("tab", { name: r.tabs.mac });
+    fireEvent.mouseDown(mac);
+    fireEvent.click(mac);
+    const frame = await waitFor(() => section.querySelector('[data-device="desktop"]') as HTMLElement);
+    expect(within(frame).getByRole("img", { name: r.mac.alt })).toBeInTheDocument();
+    expect(within(section).getByRole("link", { name: new RegExp(r.mac.cta) })).toHaveAttribute("href", "/desktop");
   });
 
   it("wears its own navigation: no version (it is in the footer), one main action, no family switcher (a deployed product is independent)", () => {
