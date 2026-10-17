@@ -915,6 +915,11 @@ export interface ShowcaseDictionary {
     /** `{count}` */
     runningTitle: string;
     runningBody: string;
+    /** A result whose file is gone (the placeholder's title). */
+    expired: string;
+    expiredBody: string;
+    /** `{studio}`: the alt of a result picture, never its prompt. */
+    resultOf: string;
     result: string;
     copyId: string;
     rawJson: string;
