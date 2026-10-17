@@ -51,7 +51,7 @@ export function JobsTable({ jobs, loading, totalElements, currentPage, pageSize,
     const model = (j: Job) => modelOf(j, MODEL_NAMES) ?? d.modelAuto;
     const where = (j: Job) => whereRan(j) ?? d.whereUnknown;
     return [
-      { id: "preview", header: d.columns.preview, priority: 1, hideable: false, width: 84, cell: (j) => <JobThumb job={j} label={jobLabel(t, j)} /> },
+      { id: "preview", header: d.columns.preview, priority: 1, hideable: false, width: 84, cell: (j) => <JobThumb job={j} /> },
       {
         id: "task",
         header: d.columns.task,

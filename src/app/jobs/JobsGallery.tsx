@@ -6,7 +6,8 @@ import { ForwardIcon, ImageIcon, SoundIcon, VideoIcon } from "@krizaka/icons";
 import { Badge } from "@krizaka/ui/badge";
 import { Button } from "@krizaka/ui/button";
 import { Card } from "@krizaka/ui/card";
-import { jobKind, jobLabel, jobMediaUrl, jobPrompt } from "@/core/jobs/jobMedia";
+import { jobKind, jobLabel, jobMediaUrl, jobPrompt, jobResultAlt } from "@/core/jobs/jobMedia";
+import { ResultThumb } from "@/components/media/ResultThumb";
 import { useTranslation } from "@/core/context/LocaleContext";
 import { AudioWaveform } from "@/components/media/AudioWaveform";
 import type { Job } from "@/core/types/jobs.types";
@@ -45,15 +46,8 @@ export function JobsGallery({ jobs, onOpen, limit = 6 }: Readonly<JobsGalleryPro
         return (
           <Card.Root key={job.id} reveal={index}>
             <Card.Media aspect={kind === "audio" ? "auto" : "video"}>
-              {kind === "image" && (
-                /* eslint-disable-next-line @next/next/no-img-element -- a generated asset is a runtime URL. */
-                <img src={url} alt={prompt ?? jobLabel(t, job)} className="h-full w-full object-cover" loading="lazy" />
-              )}
-              {kind === "video" && (
-                <video src={url} muted loop playsInline autoPlay className="h-full w-full object-cover">
-                  <track kind="captions" />
-                </video>
-              )}
+              {kind === "image" && <ResultThumb kind="image" src={url} alt={jobResultAlt(t, job)} />}
+              {kind === "video" && <ResultThumb kind="video" src={url} alt={jobResultAlt(t, job)} autoPlay loop />}
               {kind === "audio" && (
                 <div className="flex flex-col gap-3 bg-linear-to-br from-accent/15 via-media to-accent-2/15 p-4">
                   <SoundIcon size={28} className="text-fg-accent" nodeColor="var(--kz-accent)" />

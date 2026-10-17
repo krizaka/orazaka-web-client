@@ -40,3 +40,10 @@ export function jobLabel(t: TranslationDictionary, job: Pick<Job, "featureKey">)
   if (kind === "audio") return t.notifications.speechGen;
   return t.notifications.textGen;
 }
+
+/** The short alt of a job's result picture: "Result of <studio>" (the Studio it came from, else the kind). Never the prompt; at most 120 characters. */
+export function jobResultAlt(t: TranslationDictionary, job: Pick<Job, "featureKey" | "payload">): string {
+  const studio = job.payload?.studio ?? job.payload?.studioLabel;
+  const name = typeof studio === "string" && studio.trim() !== "" ? studio.trim() : jobLabel(t, job);
+  return t.showcase.jobs.resultOf.replace("{studio}", name).slice(0, 120);
+}
