@@ -16,6 +16,8 @@ for (const vp of widths) {
     await page.context().addCookies([{ name: "next-auth.session-token", value: token, url: "http://localhost:3000" }]);
     await page.route("**/api/v1/**", (route) => route.fulfill({ status: 200, contentType: "application/json", body: "[]" }));
     await page.goto("/jobs");
+    await page.waitForLoadState("networkidle");
+    if (SHOTS) await page.screenshot({ path: `${SHOTS}/${vp.name}.png` });
 
     const marks = page.locator("[data-brand-mark]:visible");
     await expect(marks).toHaveCount(1);
@@ -28,6 +30,5 @@ for (const vp of widths) {
       expect(Math.abs(m!.y + m!.height / 2 - (w!.y + w!.height / 2))).toBeLessThanOrEqual(1);
       expect(w!.x - 56).toBeLessThan(16);
     }
-    if (SHOTS) await page.screenshot({ path: `${SHOTS}/${vp.name}.png` });
   });
 }
