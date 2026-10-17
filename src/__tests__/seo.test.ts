@@ -3,7 +3,7 @@ import robots from "@/app/robots";
 import sitemap from "@/app/sitemap";
 import { proxy } from "@/proxy";
 import { NextRequest } from "next/server";
-import { CRAWLERS, KRIZAKA_URL, llmsFullText, llmsText, ORG_ID, publicPaths, SITE_URL, siteJsonLd } from "@/app/_seo/seo";
+import { CRAWLERS, KRIZAKA_URL, SITE_DESCRIPTION, SITE_TITLE, llmsFullText, llmsText, ORG_ID, publicPaths, SITE_URL, siteJsonLd } from "@/app/_seo/seo";
 // eslint-disable-next-line no-restricted-imports -- the shared family guard lives in scripts/, outside src/
 import { auditLlms, auditRobots, auditSitemap } from "../../scripts/check-seo-family.mjs";
 
@@ -53,5 +53,15 @@ describe("search engines and AI assistants (the Krizaka family contract)", () =>
 
   it("claims no Windows build: the product runs on macOS and Linux", () => {
     expect(JSON.stringify(siteJsonLd())).not.toMatch(/windows/i);
+  });
+
+  it("the title and description name the product and say what it is, once, within what a result shows", () => {
+    expect(SITE_TITLE).toMatch(/^Orazaka — /);
+    expect(SITE_TITLE).toMatch(/open-source/i);
+    expect(SITE_TITLE).not.toMatch(/Krizaka.*\|.*Krizaka/);
+    expect(SITE_TITLE.length).toBeLessThanOrEqual(62);
+    expect(SITE_DESCRIPTION.length).toBeLessThanOrEqual(160);
+    const app = (siteJsonLd()["@graph"] as { "@type": string; sameAs?: string[] }[]).find((n) => n["@type"] === "SoftwareApplication");
+    expect(app?.sameAs).toContain("https://github.com/krizaka/orazaka");
   });
 });
