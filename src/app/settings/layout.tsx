@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import { useRouter } from "next/navigation";
+import { RailNav } from "@krizaka/ui/rail-nav";
 import { Sidebar } from "@/components/layout/Sidebar";
 import { Header } from "@/components/layout/Header";
 import { useAuth } from "@/core/hooks/useAuth";
@@ -23,16 +24,16 @@ export default function SettingsFrame({ children }: Readonly<{ children: React.R
   if (isLoading || !isAuthenticated) return null;
 
   return (
-    <section className="flex h-screen overflow-hidden bg-surface-0 transition-colors duration-200">
+    <RailNav.Shell className="flex h-screen overflow-hidden bg-surface-0 transition-colors duration-200">
       <Sidebar />
-      <div className="flex flex-1 flex-col overflow-hidden">
+      <RailNav.Body className="flex flex-1 flex-col overflow-hidden">
         <Header />
         <main className="flex-1 overflow-auto p-4 scrollbar-thin sm:p-6">
           <div className="mx-auto max-w-5xl">
             <React.Suspense fallback={null}>{children}</React.Suspense>
           </div>
         </main>
-      </div>
-    </section>
+      </RailNav.Body>
+    </RailNav.Shell>
   );
 }

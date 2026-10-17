@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import { Skeleton, Icon } from "@krizaka/orazaka-design-system";
 import { useAuth } from "@/core/hooks/useAuth";
 import { Greeting } from "@/core/components/Greeting";
+import { RailNav } from "@krizaka/ui/rail-nav";
 import { Sidebar } from "@/components/layout/Sidebar";
 import { Header } from "@/components/layout/Header";
 import { useTranslation } from "@/core/context/LocaleContext";
@@ -91,10 +92,10 @@ export function DashboardHome() {
   const recentThreads = [...(threads || [])].sort((a, b) => b.updatedAt - a.updatedAt).slice(0, 3);
 
   return (
-    <section className="flex h-screen overflow-hidden bg-surface-0 transition-colors duration-200">
+    <RailNav.Shell className="flex h-screen overflow-hidden bg-surface-0 transition-colors duration-200">
       <Sidebar />
 
-      <section className="flex flex-1 flex-col overflow-hidden">
+      <RailNav.Body className="flex flex-1 flex-col overflow-hidden">
         <Header />
 
         <main className="flex-1 overflow-auto p-6 scrollbar-thin ambient-grid">
@@ -152,7 +153,7 @@ export function DashboardHome() {
             </section>
           </article>
         </main>
-      </section>
-    </section>
+      </RailNav.Body>
+    </RailNav.Shell>
   );
 }
