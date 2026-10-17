@@ -453,6 +453,7 @@ export const gallery: Record<Locale, GalleryDictionary> = {
       "old-port": "Un drone glisse au-dessus du Vieux-Port de Montréal à l'heure bleue : le quai et la Tour de l'Horloge éclairés de chaud, le fleuve reflétant la ville — un seul plan continu",
       "maroc": "Heure dorée sur les ruelles bleues de Chefchaouen, puis dans la cour d'un riad avec sa fontaine en zellige — un fondu enchaîné relie les deux plans",
       "grenoble": "L'aube sur Grenoble : des cabines de téléphérique glissent au-dessus de la ville, les Alpes enneigées rosées derrière",
+      "chefchaouen": "Heure dorée sur les escaliers bleus de Chefchaouen : la caméra avance, la lumière glisse sur les murs, les plantes ondulent",
       "arcade": "Une salle d'arcade des années 90 la nuit : des mains sur un joystick et des boutons, néons magenta et cyan, fumée colorée",
       "yasakia-montreal-dawn": "L'aube sur le Vieux-Montréal : un vol plané vers le Saint-Laurent, brume basse, reflets émeraude et turquoise sur l'eau",
       "yororis-microphone": "Un micro à ruban d'époque dans une pièce calme couleur sable, des rideaux vert sauge qui bougent dans la brise, des particules de lumière",
@@ -461,7 +462,6 @@ export const gallery: Record<Locale, GalleryDictionary> = {
     },
     "stills": {
       "grenoble": "Aube sur Grenoble : des cabines orange du téléphérique au-dessus de la ville, les Alpes enneigées derrière, de la brume dans la vallée",
-      "chefchaouen": "Heure dorée sur les escaliers bleus de Chefchaouen : la caméra avance, la lumière glisse sur les murs, les plantes ondulent",
       "assistant": "Un atelier de nuit : un plan holographique orange d'une machine flotte au-dessus d'un établi en acier, un bras de soudure derrière",
       "chefchaouen": "Heure dorée sur les escaliers et ruelles bleus de Chefchaouen, des pots en terre cuite et les montagnes du Rif derrière",
       "old-port": "Le Vieux-Port de Montréal à l'heure bleue : la tour de l'Horloge éclairée, le quai mouillé de reflets, un grand voilier à quai",
