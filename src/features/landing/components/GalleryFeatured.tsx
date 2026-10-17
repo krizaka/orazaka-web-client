@@ -12,7 +12,7 @@ import { SectionBackdrop } from "@krizaka/ui/section-backdrop";
 import { Showcase, type ShowcaseLabels } from "@krizaka/ui/showcase";
 import { useTranslation } from "@/core/context/LocaleContext";
 import { fill } from "@/core/context/fill";
-import { FEATURED, clipFiles, imageUrl, type FeaturedItem } from "@/features/landing/utils/gallery-clips";
+import { FEATURED, IMAGE_MODEL, clipFiles, imageUrl, type FeaturedItem } from "@/features/landing/utils/gallery-clips";
 import { SectionHeading } from "@/features/landing/components/SectionHeading";
 import { CopyButton } from "@/features/landing/components/CopyButton";
 import { clipChip, clipLabels } from "@/features/landing/components/clipUi";
@@ -111,7 +111,7 @@ function Slide({ item, active }: Readonly<{ item: FeaturedItem; active: boolean 
                 <Image src={imageUrl(image)} alt="" aria-hidden width={image.width} height={image.height} sizes="360px" loading="lazy" unoptimized className="absolute inset-0 h-full w-full scale-125 object-cover opacity-70 blur-2xl" />
                 <Image src={imageUrl(image)} alt={g.stills[image.id]} width={image.width} height={image.height} sizes="(max-width: 1024px) 90vw, 360px" loading="lazy" unoptimized className="relative block h-full w-full object-contain" />
               </Frame>
-              <Chip>{fill(g.imageChip, { seconds: image.seconds, cost: image.costUsd.toFixed(2) })}</Chip>
+              <Chip>{fill(g.imageChip, { model: IMAGE_MODEL.name, where: IMAGE_MODEL.provider, seconds: image.seconds, cost: image.costUsd.toFixed(3) })}</Chip>
               <Disclosure label={g.details} title={g.imageStep}>
                 <FeaturedImagePanel image={image} />
               </Disclosure>

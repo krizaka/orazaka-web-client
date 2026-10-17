@@ -55,7 +55,7 @@ export function ProviderRow({
 export function ProviderEmptyState({ onAdd }: Readonly<{ onAdd: () => void }>) {
   const { t } = useTranslation();
   return (
-    <div className="flex flex-col items-center gap-3 rounded-lg border border-dashed border-border-default px-6 py-10 text-center">
+    <div className="flex flex-col items-center gap-3 px-6 py-8 text-center">
       <span className="inline-flex h-12 w-12 items-center justify-center rounded-full bg-accent-soft text-accent">
         <Icon name="key" size={22} />
       </span>

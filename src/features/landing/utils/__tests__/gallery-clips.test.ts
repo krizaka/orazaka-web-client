@@ -14,13 +14,16 @@ describe("the videos of Made here", () => {
       expect(clip.prompt.length).toBeGreaterThan(80);
       expect(clip.aspect).toBe("16:9");
       if (clip.via) {
-        // Image to video on our own H100 with Wan 2.2 A14B (1280x720, 16 fps, 81 frames), upscaled to 1080p by SeedVR2 — priced by the GPU's hour.
-        expect([clip.width, clip.height, clip.fps]).toEqual([1920, 1080, 16]);
-        expect(clip.duration).toBeGreaterThan(4.3);
+        // Made on our own H100 (LTX-Video 0.9.8 at 24 fps, or Wan 2.2 A14B at 16 fps), upscaled to 1080p by SeedVR2 in the same run; priced by the GPU's hour.
+        const portrait = clip.height > clip.width;
+        expect([clip.width, clip.height]).toEqual(portrait ? [1080, 1920] : [1920, 1080]);
+        expect(clip.fps).toBe(clip.via.key.startsWith("ltx") ? 24 : 16);
+        expect(clip.duration).toBeGreaterThan(4.9);
         expect(clip.duration).toBeLessThan(5.1);
-        expect(clip.costUsd).toBeGreaterThan(1);
+        expect(clip.costUsd).toBeGreaterThan(0.05);
         expect(clip.costUsd).toBeLessThan(2);
-        expect(clip.upscale).toMatchObject({ model: "SeedVR2 3B", licence: "Apache-2.0", from: "1280×720", to: "1920×1080" });
+        expect(clip.upscale).toMatchObject({ model: "SeedVR2 3B", licence: "Apache-2.0", to: portrait ? "1080×1920" : "1920×1080" });
+        expect(clip.imageKept).toBeGreaterThan(0.95); // the still was made at the video's own aspect: almost all of it stays in the frame
       } else {
         // The provider's measured shape: 832x480, 16 fps, 81 frames, $0.60 a clip.
         expect([clip.width, clip.height, clip.fps]).toEqual([832, 480, 16]);
@@ -38,8 +41,8 @@ describe("the videos of Made here", () => {
     for (const id of ["maroc", "arcade"]) expect(CLIPS.find((clip) => clip.id === id)?.seconds).toBeUndefined();
   });
 
-  it("features six on the home page, the strongest first, each made from its own image: prompt → image → video", () => {
-    expect(FEATURED.map((item) => item.clip.id)).toEqual(["old-port", "chefchaouen", "grenoble", "assistant", "montreal", "yasakia-montreal-dawn"]);
+  it("features five on the home page, the strongest first, each made from its own image: prompt → image → video", () => {
+    expect(FEATURED.map((item) => item.clip.id)).toEqual(["old-port", "snow-walk", "chefchaouen", "grenoble", "montreal-snow"]);
     for (const item of FEATURED) {
       const image = item.image;
       expect(image).toBeDefined();
@@ -48,8 +51,9 @@ describe("the videos of Made here", () => {
       expect(image!.runId).not.toBe(item.clip.runId);
       expect(image!.seed).toMatch(/^\d+$/);
       expect(image!.prompt.length).toBeGreaterThan(80);
-      expect(image!.costUsd).toBe(0.08);
-      expect(item.clip.via?.key).toBe("wan2.2-t2v-a14b");
+      expect(image!.costUsd).toBeLessThan(0.01); // seconds of an H100 by the hour
+      expect(["ltx-video-0.9.8-13b-distilled", "wan2.2-i2v-a14b-hq"]).toContain(item.clip.via?.key);
+      expect(item.clip.imageKept).toBeGreaterThan(0.95);
       expect(imageUrl(image!)).toMatch(/^https:\/\/krizaka-assets\.b-cdn\.net\/site\/products\/orazaka\/showcase\/[a-z0-9-]+\.[0-9a-f]{10}\.webp$/);
     }
     expect(new Set(FEATURED.map((item) => item.image!.id)).size).toBe(FEATURED.length);
@@ -93,10 +97,10 @@ describe("the videos of Made here", () => {
   it("reproduces an image-to-video clip and its still through the Studios, not the text-only CLI shortcut", () => {
     const item = FEATURED[0];
     const [inputs, run] = clipReproduceParts(item.clip);
-    expect(JSON.parse(inputs.code)).toMatchObject({ prompt: item.clip.prompt, seed: item.clip.seed, model: "wan2.2-t2v-a14b", aspect: "16:9", upscale: "1080p" });
+    expect(JSON.parse(inputs.code)).toMatchObject({ prompt: item.clip.prompt, seed: item.clip.seed, model: item.clip.via!.key, aspect: item.clip.aspect, upscale: "1080p" });
     expect(run.code).toBe("orazaka studio run --studio video-generation --inputs-file inputs.json");
     const [still, stillRun] = imageReproduceParts(item.image!);
-    expect(JSON.parse(still.code)).toEqual({ prompt: item.image!.prompt, size: "1024x1024", model: IMAGE_MODEL.key });
+    expect(JSON.parse(still.code)).toEqual({ prompt: item.image!.prompt, size: `${item.image!.width}x${item.image!.height}`, model: IMAGE_MODEL.key });
     expect(stillRun.code).toContain("--studio image-generation");
   });
 

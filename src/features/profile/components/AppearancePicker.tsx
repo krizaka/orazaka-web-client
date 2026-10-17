@@ -53,15 +53,12 @@ export function AppearancePicker({ theme, onThemeChange }: Readonly<AppearancePi
 
   return (
     <section className="space-y-3">
-      <header className="flex items-center gap-2">
-        <figure className="flex h-7 w-7 items-center justify-center rounded-lg bg-accent/10">
-          <Icon name="palette" className="h-3.5 w-3.5 text-fg/70" />
-        </figure>
+      <header>
         <hgroup>
           <h4 id={headingId} className="block text-sm font-semibold leading-tight text-fg">
             {t.settings.themeMode.replace(" (theme)", "")}
           </h4>
-          <p className="text-[11px] leading-tight text-fg/40">{t.settings.themeChangesInstant}</p>
+          <p className="text-xs leading-tight text-fg-secondary">{t.settings.themeChangesInstant}</p>
         </hgroup>
       </header>
 

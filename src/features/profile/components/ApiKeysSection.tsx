@@ -12,7 +12,7 @@ import {
   RevealKeyPanel,
 } from "./ApiKeysParts";
 
-import { Card } from "@krizaka/ui/card";
+import { SettingsSection } from "@krizaka/ui/settings-layout";
 
 interface ApiKeysSectionProps {
   fetchHeaders: () => Promise<Record<string, string>>;
@@ -46,63 +46,40 @@ export function ApiKeysSection({
   } = useApiKeys(fetchHeaders);
 
   return (
-    <Card.Root className="bg-surface-1 shadow-sm">
-      <Card.Body
-        padding="lg"
-        className="flex flex-row items-start justify-between gap-3"
-      >
-        <div className="space-y-1">
-          <Card.Title className="line-clamp-none tracking-tight group-hover:text-fg flex items-center gap-2 text-base font-semibold text-fg">
-            <span className="inline-flex h-7 w-7 items-center justify-center rounded-lg bg-accent-soft text-accent">
-              <Icon name="key" size={16} />
-            </span>
-            {t.apiKeys.title}
-          </Card.Title>
-          <Card.Description className="line-clamp-none text-sm text-fg-secondary">
-            {t.apiKeys.subtitle}
-          </Card.Description>
-        </div>
-        {keys.length > 0 && (
-          <Button
-            type="button"
-            size="sm"
-            onClick={openCreate}
-            disabled={!canCreate}
-            className="shrink-0 gap-1.5"
-          >
+    <SettingsSection
+      variant="flat"
+      id="api-keys"
+      title={t.apiKeys.title}
+      description={t.apiKeys.subtitle}
+      footer={
+        keys.length > 0 ? (
+          <Button type="button" size="sm" variant="secondary" onClick={openCreate} disabled={!canCreate} className="gap-1.5">
             <Icon name="plus" size={15} />
             {t.apiKeys.create}
           </Button>
-        )}
-      </Card.Body>
-
-      <Card.Body padding="lg" className="block pt-0">
-        {(() => {
-          if (isLoading) {
-            return <p className="text-xs text-fg-muted">{t.apiKeys.loading}</p>;
-          }
-          if (keys.length === 0) {
-            return <ApiKeysEmptyState onCreate={openCreate} />;
-          }
-          return (
-            <>
-              <ul className="divide-y divide-border-subtle overflow-hidden rounded-lg border border-border-subtle">
-                {keys.map((apiKey) => (
-                  <ApiKeyRow
-                    key={apiKey.id}
-                    apiKey={apiKey}
-                    onDelete={() => remove(apiKey.id)}
-                    disabled={isSaving}
-                  />
-                ))}
-              </ul>
-              <p className="mt-3 text-center text-xs text-fg-muted">
-                {keys.length} / {MAX_API_KEYS} {t.apiKeys.limitCaption}
-              </p>
-            </>
-          );
-        })()}
-      </Card.Body>
+        ) : undefined
+      }
+    >
+      {(() => {
+        if (isLoading) {
+          return <p className="py-4 text-xs text-fg-muted">{t.apiKeys.loading}</p>;
+        }
+        if (keys.length === 0) {
+          return <ApiKeysEmptyState onCreate={openCreate} />;
+        }
+        return (
+          <>
+            <ul className="divide-y divide-border-subtle">
+              {keys.map((apiKey) => (
+                <ApiKeyRow key={apiKey.id} apiKey={apiKey} onDelete={() => remove(apiKey.id)} disabled={isSaving} />
+              ))}
+            </ul>
+            <p className="py-3 text-xs text-fg-muted">
+              {keys.length} / {MAX_API_KEYS} {t.apiKeys.limitCaption}
+            </p>
+          </>
+        );
+      })()}
 
       <Dialog.Root
         open={isCreateOpen}
@@ -142,6 +119,6 @@ export function ApiKeysSection({
           </Dialog.Body>
         </Dialog.Content>
       </Dialog.Root>
-    </Card.Root>
+    </SettingsSection>
   );
 }

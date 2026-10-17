@@ -1,0 +1,29 @@
+{
+  "products/orazaka/cinema/nova-ardent": {
+    "id": "nova-ardent",
+    "title": "NOVA ARDENT: DAWN OF CYAN",
+    "aspect": "9:16",
+    "width": 1080,
+    "height": 1920,
+    "duration": 40.48,
+    "shots": 10,
+    "reshoots": 2,
+    "runs": 35,
+    "failedRuns": 5,
+    "scriptRunId": "b43a928c-8506-41ea-b0b0-25133e45b544",
+    "cutRunId": "75fcc97a-361b-40e5-8503-756abd64f4ac",
+    "soundRunId": "61cefebd-7051-4ae9-9709-f7cd954c7289",
+    "gpuSeconds": 7115,
+    "gpuUsd": 7.89,
+    "productionSeconds": 14241,
+    "models": {
+      "script": "deepseek-v4-pro",
+      "image": "FLUX.2 [klein] 4B",
+      "video": "Wan 2.2 I2V A14B (4-step distill)",
+      "upscale": "SeedVR2 3B",
+      "music": "ACE-Step 1.5 XL turbo",
+      "voice": "Kokoro-82M (am_fenrir)"
+    },
+    "command": "orazaka cinema new nova-ardent --format superhero-vfx --aspect 9:16 --duration 45 --shots 10 --seed 20261017 --script-model deepseek-v4-pro --brief \"Night city in the rain, an ORIGINAL superhero trailer…\""
+  }
+}
