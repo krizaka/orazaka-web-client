@@ -7,19 +7,16 @@ import { ForwardIcon, InfoIcon } from "@krizaka/icons";
 import { Dialog } from "@krizaka/ui/dialog";
 import { Popover } from "@krizaka/ui/popover";
 import { Button } from "@krizaka/ui/button";
-import { ClipPlayer, RunFacts } from "@krizaka/orazaka-design-system";
+import { ClipPlayer } from "@krizaka/orazaka-design-system";
 import { SectionBackdrop } from "@krizaka/ui/section-backdrop";
 import { Showcase, type ShowcaseLabels } from "@krizaka/ui/showcase";
 import { useTranslation } from "@/core/context/LocaleContext";
 import { fill } from "@/core/context/fill";
-import { reproduceParts, type GalleryItem } from "@/features/landing/utils/gallery";
-import { FEATURED, IMAGE_MODEL, clipFiles, clipReproduceParts, imageReproduceParts, imageUrl, type FeaturedItem, type GalleryClip, type ImageRecord } from "@/features/landing/utils/gallery-clips";
+import { FEATURED, clipFiles, imageUrl, type FeaturedItem } from "@/features/landing/utils/gallery-clips";
 import { SectionHeading } from "@/features/landing/components/SectionHeading";
 import { CopyButton } from "@/features/landing/components/CopyButton";
-import { ItemFacts } from "@/features/landing/components/ItemFacts";
-import { ReproduceBlock } from "@/features/landing/components/ReproduceBlock";
-import { clipChip, clipFacts, clipLabels, imageFacts } from "@/features/landing/components/clipUi";
-import { TypedPrompt } from "@/features/landing/components/TypedPrompt";
+import { clipChip, clipLabels } from "@/features/landing/components/clipUi";
+import { FeaturedImagePanel, VideoPanel } from "@/features/landing/components/GalleryPanels";
 
 /**
  * "Prompt → image", high on the home page, as a slideshow that moves on by itself (`@krizaka/ui/showcase`): one large
@@ -210,49 +207,3 @@ function Disclosure({ label, title, children }: Readonly<{ label: string; title:
     </Dialog.Root>
   );
 }
-
-/** The video's side of an item: its prompt (typed over its final size), the facts of its run, the command. */
-function VideoPanel({ clip, active }: Readonly<{ clip: GalleryClip; active: boolean }>) {
-  const { t } = useTranslation();
-  const g = t.gallery;
-  return (
-    <section aria-label={g.videoStep} className="space-y-3">
-      <h3 className="font-mono text-xs font-semibold uppercase tracking-[0.14em] text-fg-accent">{g.videoPromptHeading}</h3>
-      <TypedPrompt text={clip.prompt} active={active} />
-      <CopyButton text={clip.prompt} label={g.copy} done={g.copied} failed={g.copyFailed} />
-      <RunFacts facts={clipFacts(g, clip)} />
-      <ReproduceBlock parts={clipReproduceParts(clip)} lead={g.videoReproduceLead} />
-    </section>
-  );
-}
-
-/** The image of a featured clip: its prompt, what its own run recorded, the commands that make it again. */
-function FeaturedImagePanel({ image }: Readonly<{ image: ImageRecord }>) {
-  const { t } = useTranslation();
-  const g = t.gallery;
-  return (
-    <section aria-label={g.imageStep} className="space-y-3">
-      <h3 className="font-mono text-xs font-semibold uppercase tracking-[0.14em] text-fg-accent">{g.imagePromptHeading}</h3>
-      <blockquote lang="en" className="text-sm leading-relaxed text-fg-secondary">{image.prompt}</blockquote>
-      <CopyButton text={image.prompt} label={g.copy} done={g.copied} failed={g.copyFailed} />
-      <RunFacts facts={imageFacts(g, image, IMAGE_MODEL)} />
-      <ReproduceBlock parts={imageReproduceParts(image)} />
-    </section>
-  );
-}
-
-/** The image's side: its prompt, what the data records about it, the commands that make it again. */
-export function ImagePanel({ image }: Readonly<{ image: GalleryItem }>) {
-  const { t } = useTranslation();
-  const g = t.gallery;
-  return (
-    <section aria-label={g.imageStep} className="space-y-3">
-      <h3 className="font-mono text-xs font-semibold uppercase tracking-[0.14em] text-fg-accent">{g.imagePromptHeading}</h3>
-      <blockquote lang="en" className="text-sm leading-relaxed text-fg-secondary">{image.prompt}</blockquote>
-      <CopyButton text={image.prompt} label={g.copy} done={g.copied} failed={g.copyFailed} />
-      <ItemFacts item={image} />
-      <ReproduceBlock parts={reproduceParts(image)} />
-    </section>
-  );
-}
-

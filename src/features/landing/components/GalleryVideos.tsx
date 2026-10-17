@@ -7,7 +7,7 @@ import { useTranslation } from "@/core/context/LocaleContext";
 import { gallerySrc } from "@/features/landing/utils/gallery";
 import { CLIPS, clipFiles, clipReproduceParts, type GalleryClip } from "@/features/landing/utils/gallery-clips";
 import { clipFacts, clipLabels } from "@/features/landing/components/clipUi";
-import { ImagePanel } from "@/features/landing/components/GalleryFeatured";
+import { ImagePanel } from "@/features/landing/components/GalleryPanels";
 import { GALLERY } from "@/features/landing/utils/gallery";
 
 /**
