@@ -198,21 +198,23 @@ describe("LandingPage while sign-in and sign-up are closed (the default)", () =>
       expect(v.getAttribute("poster")).toMatch(/products\/orazaka\/mobile\/.*\.webp$/);
     });
     expect(within(section).getByRole("link", { name: translations.en.mobile.all })).toHaveAttribute("href", "/docs/mobile");
+    // The bar reaches it through Platforms ▾ (site-nav.ts), never as a lone top-level entry.
     const bar = screen.getByRole("navigation", { name: "Orazaka" });
-    expect(within(bar).getByRole("link", { name: translations.en.landing.nav.mobile })).toHaveAttribute("href", "/docs/mobile");
+    expect(within(bar).getByRole("button", { name: translations.en.landing.nav.platforms })).toBeInTheDocument();
+    expect(within(bar).queryByRole("link", { name: translations.en.landing.nav.mobile })).toBeNull();
   });
 
-  it("wears its own navigation: the environment badge, one main action, no family switcher (a deployed product is independent)", () => {
+  it("wears its own navigation: no version (it is in the footer), one main action, no family switcher (a deployed product is independent)", () => {
     renderLanding("en", <LandingPage />, CLOSED);
     const bar = document.querySelector("header[data-floating]") as HTMLElement;
     expect(screen.queryByRole("navigation", { name: "Krizaka family" })).toBeNull();
-    expect(bar).toHaveTextContent(/dev · v/);
+    expect(bar).not.toHaveTextContent(/dev · v/);
     expect(within(bar).getByRole("link", { name: translations.en.landing.nav.repo })).toHaveAttribute("href", "https://github.com/krizaka/orazaka-web-client");
     expect(within(bar).getAllByRole("link", { name: translations.en.landing.nav.talk })[0]).toHaveAttribute("href", "https://www.krizaka.com/contact?topic=orazaka");
-    // Demo · Mobile · Documentation beside the Product menu, never a link to another site
+    // Product ▾ · Platforms ▾ · Docs (site-nav.ts), never a link to another site
     const centre = within(bar).getByRole("navigation", { name: "Orazaka" });
     const top = within(centre).getAllByRole("link").map((a) => a.getAttribute("href"));
-    expect(top).toEqual(["/gallery", "/docs/mobile", "/docs"]);
-    expect(within(centre).getByRole("button", { name: translations.en.landing.nav.product })).toBeInTheDocument();
+    expect(top).toEqual(["/docs"]);
+    for (const name of [translations.en.landing.nav.product, translations.en.landing.nav.platforms]) expect(within(centre).getByRole("button", { name })).toBeInTheDocument();
   });
 });

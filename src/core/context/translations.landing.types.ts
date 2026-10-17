@@ -32,11 +32,13 @@ export interface LandingDictionary {
     packs: string;
     mobile: string;
     product: string;
+    platforms: string;
     models: string;
-    run: string;
+    web: string;
     desktop: string;
-    /** One line under each entry of the Product menu. */
-    menu: { how: string; studios: string; packs: string; models: string; run: string; desktop: string };
+    selfHost: string;
+    /** One short line (≤ 45 characters: the menu shows one line) under each entry of the Product and Platforms menus. */
+    menu: Record<"how" | "studios" | "packs" | "models" | "demo" | "web" | "mobile" | "desktop" | "selfHost", string>;
     langLabel: string;
     openMenu: string;
     closeMenu: string;
@@ -73,7 +75,7 @@ export interface LandingDictionary {
   demo: { eyebrow: string; title: string; lead: string; frame: string; notice: string; origin: string };
   packs: { eyebrow: string; title: string; lead: string; studios: string; more: string; cta: string };
   closed: { title: string; body: string; docs: string; contact: string; home: string; heroPrimary: string; heroSecondary: string; signInBanner: string };
-  footer: { devNotice: string; privacy: string; terms: string; contact: string; license: string; by: string; product: string; docs: string; legal: string };
+  footer: { devNotice: string; privacy: string; terms: string; contact: string; license: string; by: string; product: string; docs: string; api: string; cli: string; legal: string };
 }
 
 /** One feature page (/features/<id>). */

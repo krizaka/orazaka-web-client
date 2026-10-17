@@ -54,6 +54,8 @@ export interface TranslationDictionary {
     emptySubtitle: string;
     emptyContent: string;
   };
+  /** The signed-in app's sections (core/config/app-sections.ts) and the user menu — the same words on web, mobile and Mac. */
+  appNav: Record<"label" | "home" | "chat" | "studios" | "jobs" | "packs" | "usage" | "settings" | "admin" | "account" | "language" | "signOut", string>;
   header: {
     profile: string;
     logout: string;
