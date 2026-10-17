@@ -1,7 +1,6 @@
 "use client";
 
 import { type Language, LanguageSwitch, languageNames } from "@krizaka/ui/language-switch";
-import { usePathname } from "next/navigation";
 import type { ComponentProps } from "react";
 import { useTranslation } from "@/core/context/LocaleContext";
 import type { Locale } from "@/core/context/translations.types";
@@ -25,11 +24,11 @@ function LocaleLink({ onClick, ...props }: ComponentProps<"a">) {
   );
 }
 
-/** The props of the family's language switch for this app: the languages by their own names, on the current path. */
+/** The props of the family's language switch for this app: the languages by their own names. The locale lives in the app's context (and a cookie), not in the address: a click
+ * sets it and stays on the page, so the link's own address is only the fallback anchor. */
 export function useLanguageSwitch(label: string) {
   const { locale } = useTranslation();
-  const pathname = usePathname() ?? "/";
-  const languages: Language[] = LOCALES.map((code) => ({ code, name: languageNames[code] ?? code, href: pathname }));
+  const languages: Language[] = LOCALES.map((code) => ({ code, name: languageNames[code] ?? code, href: "#" }));
   return { label, current: locale, languages, linkAs: LocaleLink };
 }
 

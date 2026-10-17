@@ -119,7 +119,7 @@ describe("the mobile panel", () => {
     expect(within(groups[1]).getAllByRole("link").map((a) => a.textContent)).toEqual([nav.web, nav.mobile, nav.desktop, nav.selfHost]);
     const panel = groups[0].closest("nav") as HTMLElement;
     const hrefs = [...panel.querySelectorAll("a")].map((a) => a.getAttribute("href"));
-    expect(hrefs).toEqual(["#how", "#studios", "#packs", "/models", "/gallery", "#platform", "/docs/mobile", "/desktop", "/docs/self-hosting", "/docs", "/", "/", "/login", "https://www.krizaka.com/contact?topic=orazaka"]);
+    expect(hrefs).toEqual(["#how", "#studios", "#packs", "/models", "/gallery", "#platform", "/docs/mobile", "/desktop", "/docs/self-hosting", "/docs", "#", "#", "/login", "https://www.krizaka.com/contact?topic=orazaka"]);
     expect(hrefs).not.toContain("/infrastructure");
   });
 
