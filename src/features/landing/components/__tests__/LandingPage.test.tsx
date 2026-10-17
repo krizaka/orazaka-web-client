@@ -161,6 +161,15 @@ describe("LandingPage while sign-in and sign-up are closed (the default)", () =>
     expect(screen.getAllByRole("link", { name: translations.en.landing.closed.heroSecondary })[0]).toHaveAttribute("href", "/gallery");
   });
 
+  it("groups the packs by category, each shelf named in the visitor's language (orazaka-packs#16)", () => {
+    renderLanding("fr", <LandingPage />, CLOSED);
+    const shelves = [...document.getElementById("packs")!.querySelectorAll("[data-category]")];
+    expect(shelves.map((g) => g.getAttribute("data-category"))).toEqual(["business-compliance", "creativity-media", "wellbeing"]);
+    expect(within(shelves[0] as HTMLElement).getByRole("heading", { level: 3 })).toHaveTextContent("Affaires et conformité");
+    expect(within(shelves[2] as HTMLElement).getByRole("heading", { level: 3 })).toHaveTextContent("Bien-être");
+    for (const g of shelves) expect(g.querySelectorAll("a[href^='/docs/packs#']").length).toBeGreaterThan(0);
+  });
+
   it("shows the recordings and the packs, and the Krizaka signature with the version", () => {
     renderLanding("en", <LandingPage />, CLOSED);
     // The demo is /gallery now: the home keeps a teaser (Made here, anchor #demo) with its clips and a way to the demo.

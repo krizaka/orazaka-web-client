@@ -28,6 +28,8 @@ export interface Clip {
 
 export interface Pack {
   key: string;
+  /** The shelf it stands on (`catalog.categoryKey` of its pack.yaml, a closed list). */
+  category: string;
   label: string;
   tagline: string;
   studios: number;
@@ -56,9 +58,25 @@ const slug = (label: string) => label.toLowerCase().replace(/[^a-z0-9]+/g, "-").
 export function packsFor(locale: Locale): Pack[] {
   return data.packs.map((p) => ({
     key: p.key,
+    category: p.category,
     label: p.text[locale].label,
     tagline: p.text[locale].tagline,
     studios: p.studios,
     anchor: slug(p.text.en.label),
   }));
+}
+
+export interface PackGroup {
+  key: string;
+  label: string;
+  description: string;
+  packs: Pack[];
+}
+
+/** The shown packs grouped by category, the shelves in the order of their weight; a shelf with no pack is not listed. */
+export function packGroupsFor(locale: Locale): PackGroup[] {
+  const packs = packsFor(locale);
+  return data.categories
+    .map((c) => ({ key: c.key, label: c.text[locale].label, description: c.text[locale].description, packs: packs.filter((p) => p.category === c.key) }))
+    .filter((g) => g.packs.length > 0);
 }

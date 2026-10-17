@@ -24,9 +24,13 @@ const arch = read("app/data/architecture.json");
 
 // The words are this app's own (scripts/showcase-words.json): krizaka.com no longer carries the Orazaka tour.
 const words = JSON.parse(fs.readFileSync(path.join(root, "scripts/showcase-words.json"), "utf8"));
+// krizaka.com's CDN manifest no longer names the Orazaka tour (the site draws it no more): a recording's hashes then
+// stay those of the previous generation, which are the files already on Bunny.
+const outFile = path.join(root, "src/features/landing/utils/showcase.generated.json");
+const previous = fs.existsSync(outFile) ? JSON.parse(fs.readFileSync(outFile, "utf8")) : { clips: [] };
 const clips = words.clips.map((c) => {
   const hash = (ext) => {
-    const h = manifest.files[`products/orazaka/tour/${c.id}.${ext}`];
+    const h = manifest.files[`products/orazaka/tour/${c.id}.${ext}`] ?? previous.clips.find((x) => x.id === c.id)?.hash?.[ext];
     if (!h) throw new Error(`products/orazaka/tour/${c.id}.${ext} is not in the CDN manifest`);
     return h;
   };
@@ -40,14 +44,30 @@ const clips = words.clips.map((c) => {
   };
 });
 
-const packs = arch.packs
-  .filter((p) => p.status === "PUBLISHED" && p.showcase)
-  .map((p) => ({
+const shown = arch.packs.filter((p) => p.status === "PUBLISHED" && p.showcase);
+const packs = shown.map((p) => {
+  if (!p.category) throw new Error(`pack ${p.key} has no category (catalog.categoryKey in its pack.yaml)`);
+  return {
     key: p.key,
+    category: p.category,
     studios: p.studios.length,
     text: { en: { label: p.text.en.label, tagline: p.text.en.tagline }, fr: { label: p.text.fr.label, tagline: p.text.fr.tagline } },
-  }));
+  };
+});
 
-const out = { cdnRoot: manifest.root, clips, packs };
-fs.writeFileSync(path.join(root, "src/features/landing/utils/showcase.generated.json"), `${JSON.stringify(out, null, 2)}\n`);
-process.stdout.write(`${clips.length} clips, ${packs.length} packs\n`);
+// The shelves, only those a shown pack stands on: weight from the pack.yaml, words from the packs' i18n (`category:`).
+const categories = [...new Set(shown.map((p) => p.category))]
+  .map((key) => {
+    const owners = shown.filter((p) => p.category === key);
+    const words = (l) => {
+      const t = owners.map((p) => p.categoryText?.[l]).find((x) => x?.label);
+      if (!t) throw new Error(`category ${key} has no ${l} label in its packs' i18n`);
+      return { label: t.label, description: t.description ?? "" };
+    };
+    return { key, sortWeight: Math.max(...owners.map((p) => (p.categorySortWeight ?? 0))), text: { en: words("en"), fr: words("fr") } };
+  })
+  .sort((a, b) => b.sortWeight - a.sortWeight || a.key.localeCompare(b.key));
+
+const out = { cdnRoot: manifest.root ?? previous.cdnRoot, clips, categories, packs };
+fs.writeFileSync(outFile, `${JSON.stringify(out, null, 2)}\n`);
+process.stdout.write(`${clips.length} clips, ${packs.length} packs in ${categories.length} categories\n`);
