@@ -12,7 +12,7 @@ permissions:
 
 concurrency:
   group: live-smoke
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 jobs:
   smoke:
