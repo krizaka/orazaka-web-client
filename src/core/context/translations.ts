@@ -825,7 +825,6 @@ export const translations: Record<Locale, TranslationDictionary> = {
       title: "Packs",
       subtitle:
         "Bundles that add capabilities to your plan. What a pack grants is always on top of what you already have — never instead of it.",
-      emptyCategory: "Nothing on this shelf yet.",
       loadError: "Packs could not be loaded.",
       retry: "Retry",
       owned: "Owned",
@@ -1682,7 +1681,6 @@ export const translations: Record<Locale, TranslationDictionary> = {
       title: "Packs",
       subtitle:
         "Des bundles qui ajoutent des capacités à votre offre. Ce qu’un pack accorde s’ajoute toujours à ce que vous avez déjà — jamais à la place.",
-      emptyCategory: "Rien sur cette catégorie pour l’instant.",
       loadError: "Impossible de charger les packs.",
       retry: "Réessayer",
       owned: "Acquis",

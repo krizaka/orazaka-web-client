@@ -759,7 +759,6 @@ export interface TranslationDictionary {
   packs: {
     title: string;
     subtitle: string;
-    emptyCategory: string;
     loadError: string;
     retry: string;
     owned: string;

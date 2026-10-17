@@ -17,9 +17,9 @@ import { Button } from "@krizaka/ui/button";
  * a shelf was a deploy of the web client that also had to invent a translation. A shelf
  * is a row now and it arrives already named (ADR-036).
  *
- * Empty shelves are rendered rather than hidden. A category the product has not filled
- * yet is information — it tells a returning user there is somewhere new to look — and
- * hiding it would make the page silently change shape as the catalogue grows.
+ * A shelf with no pack is left out (orazaka-packs#16). Shelves are rows that outlive the packs that opened them
+ * (the pre-#16 `business` and `lifestyle` keep existing, empty, once their packs moved to the closed list), and a
+ * category such as Data & Analytics exists before its first pack: showing either would be a heading over nothing.
  *
  * The band above the shelves holds what this actor's plan already includes, and it is
  * keyed on `access` — the server's verdict from the pack's kind AND the entitlement
@@ -84,17 +84,15 @@ export function PackMarketplace({ studios }: Readonly<{ studios: ReadonlyMap<str
         </div>
       )}
 
-      {categories.map((category) => {
-        const shelf = verticals.filter((pack) => pack.categoryKey === category.categoryKey);
-        return (
-          <div key={category.categoryKey} className="flex flex-col gap-3">
-            <h2 className="text-base font-semibold text-fg">{category.label}</h2>
+      {isLoading && <p className="text-[12px] text-fg-muted">…</p>}
 
-            {isLoading ? (
-              <p className="text-[12px] text-fg-muted">…</p>
-            ) : shelf.length === 0 ? (
-              <p className="text-[12px] text-fg-muted">{t.packs.emptyCategory}</p>
-            ) : (
+      {!isLoading &&
+        categories.map((category) => {
+          const shelf = verticals.filter((pack) => pack.categoryKey === category.categoryKey);
+          if (shelf.length === 0) return null;
+          return (
+            <div key={category.categoryKey} className="flex flex-col gap-3">
+              <h2 className="text-base font-semibold text-fg">{category.label}</h2>
               <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
                 {shelf.map((pack, index) => (
                   <PackCard
@@ -109,10 +107,9 @@ export function PackMarketplace({ studios }: Readonly<{ studios: ReadonlyMap<str
                   />
                 ))}
               </div>
-            )}
-          </div>
-        );
-      })}
+            </div>
+          );
+        })}
     </section>
   );
 }

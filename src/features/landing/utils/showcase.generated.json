@@ -272,9 +272,54 @@
       }
     }
   ],
+  "categories": [
+    {
+      "key": "business-compliance",
+      "sortWeight": 100,
+      "text": {
+        "en": {
+          "label": "Business & compliance",
+          "description": "Packs that do the work and keep it in order: validate, prospect, comply."
+        },
+        "fr": {
+          "label": "Affaires et conformité",
+          "description": "Les packs qui font le travail et le mettent en règle : valider, prospecter, se conformer."
+        }
+      }
+    },
+    {
+      "key": "creativity-media",
+      "sortWeight": 80,
+      "text": {
+        "en": {
+          "label": "Creativity & media",
+          "description": "Packs that produce images, video, sound and showcases."
+        },
+        "fr": {
+          "label": "Création et médias",
+          "description": "Les packs qui produisent images, vidéo, son et vitrines."
+        }
+      }
+    },
+    {
+      "key": "wellbeing",
+      "sortWeight": 60,
+      "text": {
+        "en": {
+          "label": "Wellbeing",
+          "description": "Packs for you, not for your work."
+        },
+        "fr": {
+          "label": "Bien-être",
+          "description": "Les packs pour vous, pas pour votre travail."
+        }
+      }
+    }
+  ],
   "packs": [
     {
       "key": "realestate-studio",
+      "category": "creativity-media",
       "studios": 1,
       "text": {
         "en": {
@@ -289,7 +334,8 @@
     },
     {
       "key": "orazaka-media",
-      "studios": 10,
+      "category": "creativity-media",
+      "studios": 12,
       "text": {
         "en": {
           "label": "Media Studios",
@@ -303,6 +349,7 @@
     },
     {
       "key": "outbound-prospection",
+      "category": "business-compliance",
       "studios": 3,
       "text": {
         "en": {
@@ -317,6 +364,7 @@
     },
     {
       "key": "bien-etre",
+      "category": "wellbeing",
       "studios": 4,
       "text": {
         "en": {
@@ -331,6 +379,7 @@
     },
     {
       "key": "document-validation",
+      "category": "business-compliance",
       "studios": 2,
       "text": {
         "en": {

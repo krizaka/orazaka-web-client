@@ -1,4 +1,4 @@
-import { clipsFor, packsFor } from "@/features/landing/utils/showcase";
+import { clipsFor, packGroupsFor, packsFor } from "@/features/landing/utils/showcase";
 import data from "@/features/landing/utils/showcase.generated.json";
 
 describe("landing showcase", () => {
@@ -52,5 +52,33 @@ describe("the day of work", () => {
       expect([...ats].sort((a, b) => a - b)).toEqual(ats);
       expect(ats[ats.length - 1]).toBeLessThan(c.duration);
     }
+  });
+});
+
+describe("the packs, grouped by category (orazaka-packs#16)", () => {
+  const KNOWN = ["business-compliance", "creativity-media", "wellbeing", "data-analytics"];
+
+  it("puts every shown pack under exactly one shelf of the closed list, in both languages", () => {
+    for (const l of ["en", "fr"] as const) {
+      const groups = packGroupsFor(l);
+      const keys = groups.flatMap((g) => g.packs.map((p) => p.key));
+      expect(keys.sort()).toEqual(packsFor(l).map((p) => p.key).sort());
+      for (const g of groups) {
+        expect(KNOWN).toContain(g.key);
+        expect(g.label).not.toBe("");
+        expect(g.packs.length).toBeGreaterThan(0);
+      }
+    }
+  });
+
+  it("never lists a shelf with no pack (Data & Analytics waits for its first pack)", () => {
+    expect(packGroupsFor("en").map((g) => g.key)).not.toContain("data-analytics");
+  });
+
+  it("keeps Wellbeing as Wellbeing, and orders the shelves by their weight", () => {
+    const groups = packGroupsFor("en");
+    expect(groups.find((g) => g.key === "wellbeing")?.label).toBe("Wellbeing");
+    expect(packGroupsFor("fr").find((g) => g.key === "wellbeing")?.label).toBe("Bien-être");
+    expect(groups.map((g) => g.key)).toEqual(KNOWN.filter((k) => groups.some((g) => g.key === k)));
   });
 });
