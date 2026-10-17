@@ -278,12 +278,12 @@
       "sortWeight": 100,
       "text": {
         "en": {
-          "label": "Business & compliance",
-          "description": "Packs that do the work and keep it in order: validate, prospect, comply."
+          "label": "Business & documents",
+          "description": "Packs that do the work: check documents, prospect."
         },
         "fr": {
-          "label": "Affaires et conformité",
-          "description": "Les packs qui font le travail et le mettent en règle : valider, prospecter, se conformer."
+          "label": "Affaires et documents",
+          "description": "Les packs qui font le travail : vérifier des documents, prospecter."
         }
       }
     },
@@ -298,6 +298,20 @@
         "fr": {
           "label": "Création et médias",
           "description": "Les packs qui produisent images, vidéo, son et vitrines."
+        }
+      }
+    },
+    {
+      "key": "data-analytics",
+      "sortWeight": 70,
+      "text": {
+        "en": {
+          "label": "Data & analytics",
+          "description": "Packs that read your product's data: recommendations, insights, dashboards."
+        },
+        "fr": {
+          "label": "Données et analyse",
+          "description": "Les packs qui lisent les données de votre produit : recommandations, statistiques, tableaux de bord."
         }
       }
     },
@@ -335,7 +349,7 @@
     {
       "key": "orazaka-media",
       "category": "creativity-media",
-      "studios": 12,
+      "studios": 14,
       "text": {
         "en": {
           "label": "Media Studios",
@@ -359,6 +373,21 @@
         "fr": {
           "label": "Prospection Outbound",
           "tagline": "De la liste de prospects à la séquence envoyée."
+        }
+      }
+    },
+    {
+      "key": "data-analytics",
+      "category": "data-analytics",
+      "studios": 3,
+      "text": {
+        "en": {
+          "label": "Recommendations & insights",
+          "tagline": "A feed per person and analytics per creator, on your own data."
+        },
+        "fr": {
+          "label": "Recommandations et statistiques",
+          "tagline": "Un fil par personne et des statistiques par créateur, sur vos propres données."
         }
       }
     },

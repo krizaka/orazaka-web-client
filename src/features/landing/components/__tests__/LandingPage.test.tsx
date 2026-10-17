@@ -164,9 +164,10 @@ describe("LandingPage while sign-in and sign-up are closed (the default)", () =>
   it("groups the packs by category, each shelf named in the visitor's language (orazaka-packs#16)", () => {
     renderLanding("fr", <LandingPage />, CLOSED);
     const shelves = [...document.getElementById("packs")!.querySelectorAll("[data-category]")];
-    expect(shelves.map((g) => g.getAttribute("data-category"))).toEqual(["business-compliance", "creativity-media", "wellbeing"]);
-    expect(within(shelves[0] as HTMLElement).getByRole("heading", { level: 3 })).toHaveTextContent("Affaires et conformité");
-    expect(within(shelves[2] as HTMLElement).getByRole("heading", { level: 3 })).toHaveTextContent("Bien-être");
+    expect(shelves.map((g) => g.getAttribute("data-category"))).toEqual(["business-compliance", "creativity-media", "data-analytics", "wellbeing"]);
+    expect(within(shelves[0] as HTMLElement).getByRole("heading", { level: 3 })).toHaveTextContent("Affaires et documents");
+    expect(within(shelves[2] as HTMLElement).getByRole("heading", { level: 3 })).toHaveTextContent("Données et analyse");
+    expect(within(shelves[3] as HTMLElement).getByRole("heading", { level: 3 })).toHaveTextContent("Bien-être");
     for (const g of shelves) expect(g.querySelectorAll("a[href^='/docs/packs#']").length).toBeGreaterThan(0);
   });
 
