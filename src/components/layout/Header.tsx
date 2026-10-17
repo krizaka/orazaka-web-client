@@ -5,12 +5,11 @@ import Link from "next/link";
 import { useAuth } from "@/core/hooks/useAuth";
 import { ThemeToggle } from "@krizaka/ui/theme";
 import { useTranslation } from "@/core/context/LocaleContext";
-import { LogoutIcon } from "@krizaka/icons";
+import { LogoutIcon, SettingsIcon, UserIcon } from "@krizaka/icons";
 import { OrazakaLogo } from "@krizaka/ui";
 import { AppHeader } from "@krizaka/ui/app-header";
-import { Avatar } from "@krizaka/ui/avatar";
 import { Badge } from "@krizaka/ui/badge";
-import { DropdownMenu } from "@krizaka/ui/dropdown-menu";
+import { AccountMenu } from "@krizaka/ui/account-menu";
 import { NotificationBell } from "./NotificationBell";
 
 const LOCALES = ["en", "fr"] as const;
@@ -23,15 +22,9 @@ const LOCALES = ["en", "fr"] as const;
 export const Header: React.FC = () => {
   const { user, isAuthenticated, logout } = useAuth();
   const { locale, setLocale, t } = useTranslation();
-  const [menuOpen, setMenuOpen] = React.useState(false);
   const [bellOpen, setBellOpen] = React.useState(false);
 
-  const name = user?.name || user?.email || "";
-  const initial = (name || "U")[0].toUpperCase();
-  // No photo on an account: Orazaka's default picture (a person, one of six tones from the id), the initial while it loads.
-  const avatar = (size: "sm" | "md") => (
-    <Avatar size={size} defaultAvatar={{ brand: "orazaka", seed: user?.id ?? user?.email ?? user?.name ?? undefined }} fallback={initial} />
-  );
+  const initial = ((user?.name || user?.email || "U")[0] ?? "U").toUpperCase();
 
   return (
     <AppHeader
@@ -49,51 +42,29 @@ export const Header: React.FC = () => {
           {isAuthenticated && (
             <NotificationBell
               bellOpen={bellOpen}
-              onToggle={(openState) => {
-                setBellOpen(openState);
-                setMenuOpen(false);
-              }}
+              onToggle={setBellOpen}
             />
           )}
           {isAuthenticated && user && (
-            <DropdownMenu.Root
-              open={menuOpen}
-              onOpenChange={(openState) => {
-                setMenuOpen(openState);
-                if (openState) setBellOpen(false);
+            <AccountMenu
+              label={t.appNav.account}
+              showName
+              name={user.name || undefined}
+              email={user.email || undefined}
+              avatar={{ defaultAvatar: { brand: "orazaka", seed: user.id ?? user.email ?? user.name ?? undefined }, fallback: initial }}
+              linkAs={Link}
+              links={[
+                { id: "profile", label: t.profile.title, href: "/settings/account", icon: <UserIcon size={16} /> },
+                { id: "settings", label: t.appNav.settings, href: "/settings/appearance", icon: <SettingsIcon size={16} /> },
+              ]}
+              language={{
+                label: t.appNav.language,
+                value: locale,
+                options: LOCALES.map((code) => ({ value: code, label: code === "en" ? t.settings.english : t.settings.french })),
+                onChange: (code) => setLocale(code as (typeof LOCALES)[number]),
               }}
-            >
-              <DropdownMenu.Trigger
-                aria-label={t.appNav.account}
-                className="flex items-center gap-2.5 rounded-lg p-1 transition-colors duration-150 hover:bg-surface-2 focus:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-              >
-                {avatar("sm")}
-                <span className="hidden text-sm font-medium text-fg-secondary sm:inline-block">{name}</span>
-              </DropdownMenu.Trigger>
-              <DropdownMenu.Content align="end" className="w-64">
-                <DropdownMenu.Label className="flex items-center gap-3 py-2 normal-case tracking-normal">
-                  {avatar("md")}
-                  <span className="min-w-0">
-                    <span className="block truncate text-sm font-semibold text-fg">{user.name || user.email}</span>
-                    {user.name && user.email && <span className="block truncate text-xs font-normal text-fg-secondary">{user.email}</span>}
-                  </span>
-                </DropdownMenu.Label>
-                <DropdownMenu.Separator />
-                <DropdownMenu.Group aria-label={t.appNav.language}>
-                  <DropdownMenu.Label>{t.appNav.language}</DropdownMenu.Label>
-                  {LOCALES.map((code) => (
-                    <DropdownMenu.CheckboxItem key={code} checked={locale === code} onCheckedChange={() => setLocale(code)}>
-                      {code === "en" ? t.settings.english : t.settings.french}
-                    </DropdownMenu.CheckboxItem>
-                  ))}
-                </DropdownMenu.Group>
-                <DropdownMenu.Separator />
-                <DropdownMenu.Item tone="danger" onSelect={() => logout()}>
-                  <LogoutIcon size={16} />
-                  {t.appNav.signOut}
-                </DropdownMenu.Item>
-              </DropdownMenu.Content>
-            </DropdownMenu.Root>
+              signOut={{ label: t.appNav.signOut, onSelect: () => logout(), icon: <LogoutIcon size={16} /> }}
+            />
           )}
         </>
       }
