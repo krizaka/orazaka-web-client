@@ -35,25 +35,25 @@ describe("GalleryFeatured (the home page's prompt → image → video, a slidesh
   const slide = (container: HTMLElement, i: number) => container.querySelectorAll<HTMLElement>('[aria-roledescription="slide"]')[i];
   const g = translations.en.gallery;
 
-  it("is a three-step strip: the prompt, the image (FLUX.2, one Mac, free), the video (Wan 2.2, cloud, price) — chips visible under each medium", () => {
+  it("is a three-step strip: the prompt, the image (SD 3.5 Large, DigitalOcean, $0.08), the video made from it (Wan 2.2 A14B, H100, upscaled to 1080p) — chips visible under each medium", () => {
     const { container } = wrap(<GalleryFeatured />);
     expect(container.querySelector("#made")).not.toBeNull();
-    expect(screen.getByRole("heading", { level: 2 })).toHaveTextContent("One scene, two models");
+    expect(screen.getByRole("heading", { level: 2 })).toHaveTextContent("One prompt, an image, a video");
     const first = FEATURED[0];
     const image = first.image!;
     const active = slide(container, 0);
     const steps = within(active).getAllByRole("listitem").filter((li) => li.textContent?.match(/^\d · /));
     expect(steps.map((s) => s.textContent?.slice(0, 3))).toEqual(["1 ·", "2 ·", "3 ·"]);
     expect(within(active).queryByRole("tab")).toBeNull();
-    expect(within(active).getByAltText(g.items[image.id])).toBeInTheDocument();
+    expect(within(active).getByAltText(g.stills[image.id])).toBeInTheDocument();
     const video = active.querySelector("video")!;
     expect(video.muted).toBe(true);
     expect(video.loop).toBe(true);
     expect(video).toHaveAttribute("aria-label", g.clips[first.id]);
     // The chips sit in the step, right under the medium they describe.
-    expect(steps[1]).toHaveTextContent(`FLUX.2 · on one Mac · ${String(image.seconds)} s · free`);
-    expect(steps[2]).toHaveTextContent(/Wan 2\.2 · DigitalOcean · .*\$/);
-    expect(within(active).getByText(g.notFromImage)).toBeInTheDocument();
+    expect(steps[1]).toHaveTextContent(`SD 3.5 Large · DigitalOcean · ${String(image.seconds)} s · $0.08`);
+    expect(steps[2]).toHaveTextContent(/Wan 2\.2 A14B · RunPod H100 80 GB · ↑ 1080p · \d+ s · \$1\.\d\d/);
+    expect(within(active).getByText(g.fromImage)).toBeInTheDocument();
   });
 
   it("opens the facts and \"Reproduce it\" over the page (a popover), never inside the strip — its height cannot change", () => {
@@ -71,7 +71,9 @@ describe("GalleryFeatured (the home page's prompt → image → video, a slidesh
     expect(open).toHaveTextContent(first.clip.runId);
     expect(open).toHaveTextContent(first.clip.seed);
     expect(open).toHaveTextContent(/Wan 2\.2 A14B/);
+    expect(open).toHaveTextContent(/SeedVR2 3B/);
     expect(open).toHaveTextContent(/routed by Orazaka/);
+    expect(open).toHaveTextContent(/GPU cost of the run/);
     expect(Array.from(open.querySelectorAll("pre code")).map((c) => c.textContent)).toEqual(clipReproduceParts(first.clip).map((part) => part.code));
     fireEvent.keyDown(open, { key: "Escape" });
     fireEvent.click(screen.getByRole("button", { name: g.next }));
@@ -177,9 +179,9 @@ describe("GalleryFeatured (the home page's prompt → image → video, a slidesh
     const { container } = wrap(<GalleryFeatured />);
     const img = container.querySelector("img")!;
     expect(img.getAttribute("loading")).toBe("lazy");
-    expect(img.getAttribute("src")).toMatch(/^https:\/\/krizaka-assets\.b-cdn\.net\/site\/products\/orazaka\/gallery\//);
+    expect(img.getAttribute("src")).toMatch(/^https:\/\/krizaka-assets\.b-cdn\.net\/site\/products\/orazaka\/showcase\/[a-z-]+\.[0-9a-f]{10}\.webp$/);
     const source = container.querySelector("video source")!;
-    expect(source.getAttribute("src")).toMatch(/^https:\/\/krizaka-assets\.b-cdn\.net\/site\/products\/orazaka\/gallery-video\/[a-z-]+\.[0-9a-f]{10}\.(webm|mp4)$/);
+    expect(source.getAttribute("src")).toMatch(/^https:\/\/krizaka-assets\.b-cdn\.net\/site\/products\/orazaka\/(gallery-video|video)\/[a-z-]+\.[0-9a-f]{10}\.(webm|mp4)$/);
   });
 });
 
