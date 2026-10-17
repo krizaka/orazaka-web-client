@@ -6,41 +6,24 @@ jest.mock("@/core/context/LocaleContext", () => ({
   useTranslation: () => ({ t: { a11y: jest.requireActual("@/core/context/translations.automation").a11y.en }, locale: "en" }),
 }));
 
-
 jest.mock("@krizaka/orazaka-design-system", () => ({
-  Icon: ({ name }: { readonly name: string }) => (
-    <span data-testid="mock-icon">{name}</span>
-  ),
+  Icon: ({ name }: { readonly name: string }) => <span data-testid="mock-icon">{name}</span>,
 }));
 
-// Mock navigator.clipboard
-Object.assign(navigator, {
-  clipboard: {
-    writeText: jest.fn().mockResolvedValue(undefined),
-  },
-});
+Object.assign(navigator, { clipboard: { writeText: jest.fn().mockResolvedValue(undefined) } });
 
-describe("CopyableField", () => {
-  it("renders label and value", () => {
-    render(<CopyableField label="User ID" value="abc-123" icon="hash" />);
-    expect(screen.getByText("User ID")).toBeInTheDocument();
-    expect(screen.getByText("abc-123")).toBeInTheDocument();
+describe("CopyableField (an id in mono with one copy icon)", () => {
+  it("renders the value in small mono", () => {
+    render(<CopyableField value="abc-123" />);
+    const value = screen.getByText("abc-123");
+    expect(value.className).toContain("font-mono");
+    expect(value.className).toContain("text-xs");
   });
 
-  it("renders icon", () => {
-    render(<CopyableField label="Email" value="a@b.com" icon="hash" />);
-    expect(screen.getAllByTestId("mock-icon").length).toBeGreaterThan(0);
-  });
-
-  it("copies value on click", async () => {
-    render(<CopyableField label="Token" value="secret-token" icon="hash" />);
+  it("has exactly one copy action, and copies the value", () => {
+    render(<CopyableField value="secret-token" />);
+    expect(screen.getAllByLabelText("Copy")).toHaveLength(1);
     fireEvent.click(screen.getByLabelText("Copy"));
     expect(navigator.clipboard.writeText).toHaveBeenCalledWith("secret-token");
-  });
-
-  it("applies mono styling when isMono is true", () => {
-    render(<CopyableField label="API Key" value="key-123" icon="hash" isMono />);
-    const valueEl = screen.getByText("key-123");
-    expect(valueEl.className).toContain("font-mono");
   });
 });

@@ -4,22 +4,9 @@ import { IconButton } from "@krizaka/ui/button";
 import * as React from "react";
 import { useTranslation } from "@/core/context/LocaleContext";
 import { Icon } from "@krizaka/orazaka-design-system";
-import type { IconName } from "@krizaka/orazaka-design-system";
 
-import { cn } from "@krizaka/ui/cn";
-
-/* ─── Copyable Field Component ─── */
-export function CopyableField({
-  label,
-  value,
-  icon,
-  isMono = false,
-}: Readonly<{
-  label: string;
-  value: string;
-  icon: IconName;
-  isMono?: boolean;
-}>) {
+/** A value in small mono with one copy icon (an identifier only support needs). */
+export function CopyableField({ value }: Readonly<{ value: string }>) {
   const { t } = useTranslation();
   const [copied, setCopied] = React.useState(false);
 
@@ -30,29 +17,11 @@ export function CopyableField({
   };
 
   return (
-    <article className="group space-y-1.5">
-      <p className="flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-wider text-fg-muted">
-        <Icon name={icon} className="h-3 w-3" />
-        {label}
-      </p>
-      <section className="flex items-center gap-2">
-        <p
-          className={cn("flex-1 text-sm text-fg", isMono
-            ? "select-all break-all rounded-lg border border-border-subtle bg-surface-2 p-2.5 font-mono"
-            : "font-medium")}
-        >
-          {value}
-        </p>
-        <IconButton
-          variant="ghost"
-          size="sm"
-          onClick={handleCopy}
-          className="w-8 px-0 opacity-0 group-hover:opacity-100 focus:opacity-100"
-          label={t.a11y.copy}
-        >
-          {copied ? <Icon name="check" className="h-3.5 w-3.5 text-fg-success" /> : <Icon name="copy" className="h-3.5 w-3.5" />}
-        </IconButton>
-      </section>
-    </article>
+    <>
+      <code className="select-all break-all font-mono text-xs text-fg-secondary">{value}</code>
+      <IconButton variant="ghost" size="sm" onClick={handleCopy} className="w-8 shrink-0 px-0" label={t.a11y.copy}>
+        {copied ? <Icon name="check" className="h-3.5 w-3.5 text-fg-success" /> : <Icon name="copy" className="h-3.5 w-3.5" />}
+      </IconButton>
+    </>
   );
 }

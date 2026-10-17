@@ -1,102 +1,89 @@
 "use client";
 
-import { Button } from "@krizaka/ui/button";
 import * as React from "react";
-import { Icon } from "@krizaka/orazaka-design-system";
+import { Avatar } from "@krizaka/ui/avatar";
+import { Badge } from "@krizaka/ui/badge";
+import { Button } from "@krizaka/ui/button";
+import { SettingsRow, SettingsSection } from "@krizaka/ui/settings-layout";
 import type { UserProfile } from "@/services/profile.api";
 import type { TranslationDictionary } from "@/core/context/LocaleContext";
+import { useAuth } from "@/core/hooks/useAuth";
 import { CopyableField } from "./ProfileViewParts";
-
-import { Card } from "@krizaka/ui/card";
-import { cn } from "@krizaka/ui/cn";
 
 interface AccountTabProps {
   profile: UserProfile;
   t: TranslationDictionary;
 }
 
+/** The plan a person is on, from their authorities (a quiet line, not a badge). */
+function planName(profile: UserProfile, t: TranslationDictionary): string {
+  const auths = profile.authorities ?? [];
+  if (auths.includes("ROLE_ADMIN")) return t.profile.enterpriseTier;
+  if (auths.includes("ROLE_USER")) return t.profile.premiumTier;
+  return t.profile.freeTier;
+}
+
 /**
- * Account tab — identity details resolved from the identity context plus a
- * progressively-disclosed raw preferences payload.
+ * Account section — who you are as settings rows (a small avatar, the name and e-mail, the role, the plan), the
+ * danger zone, and, last, "Advanced": the account id (support only) and the raw preferences.
  */
 export function AccountTab({ profile, t }: Readonly<AccountTabProps>) {
+  const { logout } = useAuth();
   const [showPrefs, setShowPrefs] = React.useState(false);
+  const seed = profile.id || profile.email || profile.username;
 
   return (
-    <section className="space-y-6">
-      <Card.Root className="bg-surface-1 shadow-sm">
-        <Card.Body padding="lg" className="gap-1.5">
-          <Card.Title className="line-clamp-none tracking-tight group-hover:text-fg flex items-center gap-2 text-base font-semibold text-fg">
-            <Icon name="shield" className="h-4 w-4 text-accent" />
-            {t.profile.accountDetails}
-          </Card.Title>
-          <Card.Description className="line-clamp-none text-sm text-fg-muted">
-            {t.profile.detailsDesc}
-          </Card.Description>
-        </Card.Body>
-        <Card.Body padding="lg" className="block pt-0">
-          <section className="grid gap-5 sm:grid-cols-2">
-            <CopyableField label={t.profile.userId} value={profile.id} icon="hash" isMono />
-            <CopyableField label={t.profile.username} value={profile.username} icon="user" />
-            <CopyableField label={t.profile.email} value={profile.email} icon="mail" />
-            <article className="space-y-1.5">
-              <p className="flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-wider text-fg-muted">
-                <Icon name="shield" className="h-3 w-3" />
-                {t.profile.assignedAuth}
-              </p>
-              <section className="flex flex-wrap gap-1.5 pt-0.5">
-                {profile.authorities && profile.authorities.length > 0 ? (
-                  profile.authorities.map((auth) => (
-                    <span
-                      key={auth}
-                      className="inline-flex items-center rounded-lg border border-border-subtle bg-surface-2 px-2.5 py-1 text-xs font-medium text-fg-secondary"
-                    >
-                      {t.profile.roles[auth] ?? auth}
-                    </span>
-                  ))
-                ) : (
-                  <span className="text-sm italic text-fg-muted">
-                    {t.profile.noAuth}
-                  </span>
-                )}
-              </section>
-            </article>
-          </section>
-        </Card.Body>
-      </Card.Root>
+    <>
+      <SettingsSection variant="flat" id="account" title={t.profile.tabs.account} description={t.profile.accountDesc}>
+        <SettingsRow
+          label={
+            <span className="flex items-center gap-3">
+              <Avatar size="md" defaultAvatar={{ brand: "orazaka", seed }} fallback={(profile.username || "U")[0].toUpperCase()} />
+              <span className="flex min-w-0 flex-col">
+                <span className="truncate text-sm font-medium text-fg">{profile.username}</span>
+                <span className="truncate text-sm font-normal text-fg-secondary">{profile.email}</span>
+              </span>
+            </span>
+          }
+        />
+        <SettingsRow label={t.profile.assignedAuth} description={t.profile.roleHelp}>
+          {profile.authorities && profile.authorities.length > 0 ? (
+            profile.authorities.map((auth) => <Badge key={auth}>{t.profile.roles[auth] ?? auth}</Badge>)
+          ) : (
+            <span className="text-fg-muted">{t.profile.noAuth}</span>
+          )}
+        </SettingsRow>
+        <SettingsRow label={t.profile.planLabel} description={t.profile.planHelp}>
+          <span className="text-fg-secondary">{planName(profile, t)}</span>
+          <a className="text-fg-accent underline-offset-2 hover:underline" href="https://www.krizaka.com/contact?topic=orazaka">
+            {t.profile.planLink}
+          </a>
+        </SettingsRow>
+      </SettingsSection>
 
-      <Card.Root className="bg-surface-1 shadow-sm">
-        <Button
-          variant="ghost"
-          onClick={() => setShowPrefs((v) => !v)}
-          aria-expanded={showPrefs}
-          className="h-auto w-full justify-between gap-2 whitespace-normal rounded-xl p-6 text-left font-normal"
-        >
-          <span className="flex flex-col gap-1">
-            <span className="text-base font-semibold text-fg">
-              {t.profile.prefMetadata}
-            </span>
-            <span className="text-sm text-fg-secondary">
-              {t.profile.prefDesc}
-            </span>
-          </span>
-          <Icon name="chevronDown"
-            className={cn(
-              "h-4 w-4 flex-shrink-0 text-fg-muted transition-transform duration-200",
-              showPrefs ? "rotate-180" : ""
-            )}
-          />
-        </Button>
+      <SettingsSection variant="flat" id="danger" title={t.profile.dangerTitle} description={t.profile.dangerDesc}>
+        <SettingsRow label={t.profile.signOut} description={t.profile.signOutHelp}>
+          <Button variant="secondary" size="sm" onClick={logout}>
+            {t.profile.signOut}
+          </Button>
+        </SettingsRow>
+      </SettingsSection>
+
+      <SettingsSection variant="flat" id="advanced" title={t.profile.advancedTitle} description={t.profile.advancedDesc}>
+        <SettingsRow label={t.profile.userId} description={t.profile.accountIdHelp}>
+          <CopyableField value={profile.id} />
+        </SettingsRow>
+        <SettingsRow label={t.profile.prefMetadata} description={t.profile.prefDesc}>
+          <Button variant="ghost" size="sm" aria-expanded={showPrefs} onClick={() => setShowPrefs((v) => !v)}>
+            {showPrefs ? t.profile.hidePreferences : t.profile.showPreferences}
+          </Button>
+        </SettingsRow>
         {showPrefs && (
-          <Card.Body
-            padding="lg"
-            className="block pt-0 animate-in fade-in slide-in-from-top-1 duration-200">
-            <pre className="max-h-64 overflow-auto rounded-xl border border-border-subtle bg-surface-2 p-4 font-mono text-xs leading-relaxed text-fg-secondary scrollbar-thin">
-              {JSON.stringify(profile.preferences, null, 2)}
-            </pre>
-          </Card.Body>
+          <pre className="max-h-64 overflow-auto py-4 font-mono text-xs leading-relaxed text-fg-secondary scrollbar-thin">
+            {JSON.stringify(profile.preferences, null, 2)}
+          </pre>
         )}
-      </Card.Root>
-    </section>
+      </SettingsSection>
+    </>
   );
 }
