@@ -145,7 +145,7 @@ export const landing: Record<Locale, LandingDictionary> = {
         {
           id: "agents",
           topic: "What can agents touch?",
-          cloud: { key: "What the integration was granted.", detail: "" },
+          cloud: { key: "What the integration was granted:", detail: "its scopes decide." },
           orazaka: { key: "What you approve.", detail: "An agent shows its plan and acts once you approve it." },
         },
       ],
@@ -338,7 +338,7 @@ export const landing: Record<Locale, LandingDictionary> = {
         {
           id: "agents",
           topic: "Que peuvent toucher les agents ?",
-          cloud: { key: "Ce que l'intégration a reçu.", detail: "" },
+          cloud: { key: "Ce que l'intégration a reçu :", detail: "ses permissions décident." },
           orazaka: { key: "Ce que vous approuvez.", detail: "Un agent montre son plan et n'agit qu'une fois approuvé." },
         },
       ],

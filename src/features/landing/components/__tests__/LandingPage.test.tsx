@@ -190,7 +190,9 @@ describe("LandingPage while sign-in and sign-up are closed (the default)", () =>
     expect(web.querySelector('[data-device="browser"]')).not.toBeNull();
     const posters = [...web.querySelectorAll("img")].map((i) => i.getAttribute("src"));
     expect(posters).toHaveLength(3);
-    posters.forEach((src) => expect(src).toMatch(/products\/orazaka\/web\/step-[a-z]+-dark-poster\.[0-9a-f]{10}\.webp$/));
+    // The recordings follow the page's look (html.light): every poster of the same appearance.
+    const look = document.documentElement.classList.contains("light") ? "light" : "dark";
+    posters.forEach((src) => expect(src).toMatch(new RegExp(`products/orazaka/web/step-[a-z]+-${look}-poster\\.[0-9a-f]{10}\\.webp$`)));
     expect(section.querySelectorAll("video[controls]")).toHaveLength(0);
     expect(section).toHaveTextContent(r.recorded);
     // The bar reaches it through Platforms ▾ (site-nav.ts), never as a lone top-level entry.
