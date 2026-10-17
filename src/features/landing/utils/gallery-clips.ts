@@ -340,7 +340,7 @@ const RECORDS: Record<string, ClipRecord> = {
   },
 };
 
-const CLIP_FILE = /^products\/([a-z]+)\/(gallery-video|video)\/([a-z0-9-]+)\.mp4$/;
+const CLIP_FILE = /^products\/([a-z]+)\/(gallery-video|video)\/([a-z0-9-]+?)(?<!-2160p)\.mp4$/;
 
 /** The published clips, from the manifest: featured ones first (the order of `RECORDS`), then the rest in path order. */
 function discover(): GalleryClip[] {
@@ -372,6 +372,9 @@ export interface FeaturedItem {
 export const FEATURED: readonly FeaturedItem[] = CLIPS.filter((clip) => clip.featured).map((clip) => ({ id: clip.id, clip, image: clip.image }));
 
 export const imageUrl = (image: ImageRecord) => mediaUrl(image.src);
+
+/** The 4K master (`<stem>-2160p.mp4`) when one is published beside the clip: a link, never the autoplayed source (1080p stays the default). */
+export const uhdFile = (clip: GalleryClip): string | undefined => (hasMedia(`${clip.stem}-2160p.mp4`) ? mediaUrl(`${clip.stem}-2160p.mp4`) : undefined);
 
 export const clipFiles = (clip: GalleryClip) => ({
   mp4: mediaUrl(`${clip.stem}.mp4`),

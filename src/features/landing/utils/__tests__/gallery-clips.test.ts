@@ -1,11 +1,11 @@
 import { translations } from "@/core/context/translations";
 import { hasMedia, mediaPaths } from "@/core/media/cdn";
 import { GALLERY } from "@/features/landing/utils/gallery";
-import { CLIPS, CLIP_MODEL, FEATURED, IMAGE_MODEL, clipFiles, clipOf, clipReproduceParts, imageReproduceParts, imageUrl } from "@/features/landing/utils/gallery-clips";
+import { CLIPS, CLIP_MODEL, FEATURED, IMAGE_MODEL, clipFiles, clipOf, uhdFile, clipReproduceParts, imageReproduceParts, imageUrl } from "@/features/landing/utils/gallery-clips";
 
 describe("the videos of Made here", () => {
   it("lists every clip the media manifest publishes — no hand list — each with the record of its run", () => {
-    const published = mediaPaths("products/").filter((path) => /^products\/[a-z]+\/(gallery-video|video)\/[a-z0-9-]+\.mp4$/.test(path));
+    const published = mediaPaths("products/").filter((path) => /^products\/[a-z]+\/(gallery-video|video)\/[a-z0-9-]+\.mp4$/.test(path) && !path.endsWith("-2160p.mp4"));
     expect(published.length).toBeGreaterThanOrEqual(10);
     expect(CLIPS.map((clip) => `${clip.stem}.mp4`).sort()).toEqual(published);
     for (const clip of CLIPS) {
@@ -106,5 +106,20 @@ describe("the videos of Made here", () => {
 
   it("names no copyrighted character, brand or logo in a prompt", () => {
     for (const clip of CLIPS) expect(clip.prompt).not.toMatch(/iron man|marvel|snk|king of fighters|jarvis/i);
+  });
+});
+
+describe("the 4K masters of Made here", () => {
+  it("a 4K file sits beside a published clip, is offered as a link, and never replaces the 1080p default", () => {
+    const masters = mediaPaths("products/").filter((path) => path.endsWith("-2160p.mp4"));
+    expect(masters.length).toBeGreaterThan(0);
+    for (const path of masters) {
+      const clip = CLIPS.find((c) => `${c.stem}-2160p.mp4` === path);
+      expect(clip).toBeDefined(); // the 1080p clip sits beside every 4K master
+      expect(uhdFile(clip!)).toContain("-2160p.");
+      expect(clipFiles(clip!).mp4).not.toContain("-2160p");
+      expect(clipFiles(clip!).webm).not.toContain("-2160p");
+    }
+    expect(CLIPS.some((clip) => clip.stem.endsWith("-2160p"))).toBe(false);
   });
 });
