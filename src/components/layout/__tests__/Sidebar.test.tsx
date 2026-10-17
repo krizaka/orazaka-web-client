@@ -1,134 +1,82 @@
-/* eslint-disable @next/next/no-img-element, react/display-name */
+/* eslint-disable react/display-name */
 import "@testing-library/jest-dom";
-import { render, screen, fireEvent } from "@testing-library/react";
+import { render, screen, fireEvent, within } from "@testing-library/react";
 import { Sidebar } from "@/components/layout/Sidebar";
+import { translations } from "@/core/context/translations";
+import { APP_SECTIONS, currentAppSection } from "@/core/config/app-sections";
 
 const mockClose = jest.fn();
-const mockLogout = jest.fn();
+const mockPath = { current: "/" };
+const mockUser = { current: { name: "Admin", email: "admin@orazaka.io", role: "admin" } as { name: string; email: string; role: string } };
+const t = translations.en;
 
-jest.mock("next/link", () => {
-  return ({ children, ...props }: { children: React.ReactNode; href: string }) => (
-    <a {...props}>{children}</a>
-  );
-});
+jest.mock("next/link", () => ({ children, ...props }: { children: React.ReactNode; href: string }) => <a {...props}>{children}</a>);
+jest.mock("next/navigation", () => ({ usePathname: () => mockPath.current }));
+jest.mock("@/core/hooks/useAuth", () => ({ useAuth: () => ({ user: mockUser.current, logout: jest.fn() }) }));
+jest.mock("@/core/context/SidebarContext", () => ({ useSidebar: () => ({ isOpen: true, close: mockClose }) }));
+jest.mock("@/core/context/TenantContext", () => ({ useTenant: () => ({ config: { displayName: "Orazaka", layoutMode: "default" } }) }));
+jest.mock("@/core/context/LocaleContext", () => ({ useTranslation: () => ({ t: jest.requireActual("@/core/context/translations").translations.en, locale: "en" }) }));
 
-jest.mock("next/image", () => {
-  return (props: { alt: string; src: string }) => <img alt={props.alt} src={props.src} />;
-});
+/** The phone drawer (the second navigation): its links' words, in order. */
+const drawerWords = () => within(screen.getAllByRole("navigation", { name: t.appNav.label })[1]).getAllByRole("link").filter((a) => a.getAttribute("href") !== "/" || a.textContent === "Home").map((a) => a.textContent);
 
-jest.mock("next/navigation", () => ({
-  usePathname: () => "/",
-}));
-
-jest.mock("@/core/hooks/useAuth", () => ({
-  useAuth: () => ({
-    user: { name: "Admin", email: "admin@orazaka.io", role: "admin" },
-    logout: mockLogout,
-  }),
-}));
-
-jest.mock("@/core/context/SidebarContext", () => ({
-  useSidebar: () => ({ isOpen: true, close: mockClose }),
-}));
-
-jest.mock("@/core/context/TenantContext", () => ({
-  useTenant: () => ({
-    config: { displayName: "Orazaka", layoutMode: "default" },
-  }),
-}));
-
-jest.mock("@/core/context/LocaleContext", () => ({
-  useTranslation: () => ({
-    t: {
-      sidebar: {
-        dashboard: "Dashboard",
-        chatSessions: "Chat",
-        playground: "Playground",
-        jobsHistory: "Jobs",
-        adminPanel: "Admin",
-        navigation: "NAVIGATION",
-        logout: "Log out",
-        closeMenu: "Close Sidebar",
-        videoCategory: "Video",
-        audioCategory: "Audio",
-        textCategory: "Text",
-        imageCategory: "Image",
-        codeCategory: "Code",
-        speechCategory: "Speech",
-        visionCategory: "Vision",
-        generateVideo: "Generate",
-        analyzeVideo: "Analyze",
-        analyzeAudio: "Analyze Audio",
-        textChat: "Chat",
-        generateImage: "Generate Image",
-        featureToCode: "Feature to Code",
-        speechSynthesis: "TTS",
-        visionAnalysis: "Vision",
-      },
-      insights: { credits: { nav: "Credits" } },
-    },
-    locale: "en",
-  }),
-}));
-
-jest.mock("@krizaka/orazaka-design-system", () => ({
-  ...jest.requireActual("@krizaka/orazaka-design-system"),
-  Button: ({ children, ...props }: { children: React.ReactNode }) => (
-    <span {...props}>{children}</span>
-  ),
-}));
-
-describe("Sidebar", () => {
-  afterEach(() => jest.clearAllMocks());
-
-  it("renders brand name", () => {
-    render(<Sidebar />);
-    expect(screen.getByText("Orazaka")).toBeInTheDocument();
+describe("the signed-in app's sections", () => {
+  afterEach(() => {
+    jest.clearAllMocks();
+    mockPath.current = "/";
+    mockUser.current = { name: "Admin", email: "admin@orazaka.io", role: "admin" };
   });
 
-  it("renders navigation label", () => {
-    render(<Sidebar />);
-    expect(screen.getByText("NAVIGATION")).toBeInTheDocument();
+  it("are one list, in this order, shared by the rail, the drawer and the palette", () => {
+    expect(APP_SECTIONS.map((s) => `${s.id} ${s.href} ${s.place}`)).toMatchInlineSnapshot(`
+[
+  "home / main",
+  "studios /studios main",
+  "chat /chat main",
+  "jobs /dashboard/jobs main",
+  "packs /packs main",
+  "usage /billing main",
+  "settings /profile foot",
+  "admin /dashboard/admin foot",
+]
+`);
   });
 
-  it("renders all nav items for admin", () => {
+  it("shows every section by its name in the drawer, Settings and Admin at the foot, and no Sign out (it is in the user menu)", () => {
     render(<Sidebar />);
-    expect(screen.getAllByText("Dashboard").length).toBeGreaterThan(0);
-    expect(screen.getAllByText("Chat").length).toBeGreaterThan(0);
-    expect(screen.getAllByText("Jobs").length).toBeGreaterThan(0);
-    expect(screen.getAllByText("Admin").length).toBeGreaterThan(0);
+    expect(drawerWords()).toEqual(["Home", "Studios", "Chat", "Jobs", "Packs", "Usage & credits", "Settings", "Admin"]);
+    expect(screen.queryByText(t.appNav.signOut)).not.toBeInTheDocument();
+    expect(screen.queryByLabelText(t.sidebar.logout)).not.toBeInTheDocument();
   });
 
-  it("no longer renders a settings link", () => {
+  it("hides Admin from a member", () => {
+    mockUser.current = { name: "Eric", email: "eric@example.com", role: "user" };
     render(<Sidebar />);
-    expect(screen.queryByText("Settings")).not.toBeInTheDocument();
+    expect(drawerWords()).not.toContain("Admin");
   });
 
-  it("renders close sidebar button", () => {
+  it.each([
+    ["/", "home"],
+    ["/chat", "chat"],
+    ["/studios/runs/r1", "studios"],
+    ["/dashboard/jobs", "jobs"],
+    ["/dashboard/admin", "admin"],
+    ["/billing", "usage"],
+    ["/profile", "settings"],
+    ["/automation", null],
+  ])("marks exactly one section current on %s", (path, id) => {
+    expect(currentAppSection(path)).toBe(id);
+    mockPath.current = path;
     render(<Sidebar />);
-    expect(screen.getByLabelText("Close Sidebar")).toBeInTheDocument();
+    const current = document.querySelectorAll('[aria-current="page"]');
+    // the rail and the drawer each mark the same one
+    expect(current).toHaveLength(id ? 2 : 0);
+    if (id) for (const el of current) expect(el.getAttribute("href")).toBe(APP_SECTIONS.find((s) => s.id === id)!.href);
   });
 
-  it("calls close on close button click", () => {
+  it("closes the drawer from its button", () => {
     render(<Sidebar />);
-    fireEvent.click(screen.getByLabelText("Close Sidebar"));
+    fireEvent.click(screen.getByLabelText(t.sidebar.closeMenu));
     expect(mockClose).toHaveBeenCalled();
-  });
-
-  it("renders brand logo area", () => {
-    render(<Sidebar />);
-    // SentinelMini is an SVG, not an img — verify the brand area renders
-    expect(screen.getByText("Orazaka")).toBeInTheDocument();
-  });
-
-  it("renders a Log out control", () => {
-    render(<Sidebar />);
-    expect(screen.getAllByText("Log out").length).toBeGreaterThan(0);
-  });
-
-  it("calls logout when the Log out control is clicked", () => {
-    render(<Sidebar />);
-    fireEvent.click(screen.getAllByText("Log out")[0]);
-    expect(mockLogout).toHaveBeenCalled();
   });
 });

@@ -1,6 +1,7 @@
 /* eslint-disable react/display-name */
 import "@testing-library/jest-dom";
-import { render, screen, fireEvent } from "@testing-library/react";
+import { render, screen, fireEvent, within } from "@testing-library/react";
+import { translations } from "@/core/context/translations";
 import { Header } from "@/components/layout/Header";
 
 const mockLogout = jest.fn();
@@ -32,26 +33,7 @@ jest.mock("@/core/context/TenantContext", () => ({
 }));
 
 jest.mock("@/core/context/LocaleContext", () => ({
-  useTranslation: () => ({
-    locale: "en",
-    setLocale: mockSetLocale,
-    t: {
-      settings: { english: "English", french: "French" },
-      sidebar: { dashboard: "Dashboard" },
-      dashboard: { sovereignBadge: "Local · sovereign" },
-      header: { profile: "Profile", settings: "Settings", logout: "Logout", themeDark: "Dark theme", themeLight: "Light theme", themeSystem: "System theme", openSidebar: "Open Sidebar", changeLanguage: "Change Language", closeLanguageMenu: "Close language menu" },
-      notifications: {
-        title: "Notifications",
-        active: "active",
-        noTasks: "No tasks",
-        viewAll: "View All",
-        videoGen: "Video",
-        imageGen: "Image",
-        speechGen: "Speech",
-        textGen: "Text",
-      },
-    },
-  }),
+  useTranslation: () => ({ locale: "en", setLocale: mockSetLocale, t: jest.requireActual("@/core/context/translations").translations.en }),
 }));
 
 jest.mock("@krizaka/ui/theme", () => ({
@@ -66,77 +48,68 @@ jest.mock("@/components/layout/NotificationBell", () => ({
   ),
 }));
 
+const t = translations.en;
+const openMenu = () => fireEvent.keyDown(screen.getByRole("button", { name: t.appNav.account }), { key: "Enter" });
+
 describe("Header", () => {
   afterEach(() => jest.clearAllMocks());
 
   it("names the app next to its mark, with the sovereign status as a chip", () => {
     render(<Header />);
-    expect(screen.getByRole("link", { name: "Dashboard" })).toHaveTextContent("Orazaka");
-    expect(screen.getByText("Local · sovereign")).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: t.appNav.home })).toHaveTextContent("Orazaka");
+    expect(screen.getByText(t.dashboard.sovereignBadge)).toBeInTheDocument();
   });
 
-  it("renders user name", () => {
+  it("draws the user menu's trigger as the avatar, then the name", async () => {
     render(<Header />);
-    expect(screen.getByText("Oussama")).toBeInTheDocument();
+    const trigger = screen.getByRole("button", { name: t.appNav.account });
+    expect(await within(trigger).findByText("O")).toBeInTheDocument();
+    expect(trigger.firstElementChild?.getAttribute("data-size")).toBe("sm");
+    expect(within(trigger).getByText("Oussama")).toBeInTheDocument();
   });
 
-  it("renders the user's initial while the default Orazaka picture loads", async () => {
+  it("opens the user menu: who you are first, then the language, then Sign out", () => {
     render(<Header />);
-    expect(await screen.findByText("O")).toBeInTheDocument();
+    openMenu();
+    const menu = screen.getByRole("menu");
+    expect(menu.textContent?.indexOf("admin@orazaka.io")).toBeLessThan(menu.textContent!.indexOf(t.appNav.language));
+    expect(within(menu).getAllByRole("menuitemcheckbox").map((i) => i.textContent)).toEqual([t.settings.english, t.settings.french]);
+    expect(within(menu).getByRole("menuitemcheckbox", { name: t.settings.english })).toHaveAttribute("aria-checked", "true");
+    const items = within(menu).getAllByRole("menuitem");
+    expect(items.map((i) => i.textContent)).toEqual([t.appNav.signOut]);
   });
 
-  it("asks for Orazaka's default avatar when the account has no photo", async () => {
-    const { container } = render(<Header />);
-    await screen.findByText("O");
-    // Radix draws the <img> only once loaded; the fallback ring wraps it with the avatar's size marker.
-    expect(container.querySelector('[data-size="sm"]')).not.toBeNull();
-  });
-
-  it("renders language switcher with locale", () => {
+  it("switches the language from the user menu", () => {
     render(<Header />);
-    expect(screen.getByText("en")).toBeInTheDocument();
-  });
-
-  it("renders theme toggle", () => {
-    render(<Header />);
-    expect(screen.getByTestId("theme-toggle")).toBeInTheDocument();
-    expect(screen.getByTestId("theme-toggle")).toHaveTextContent("Dark theme");
-  });
-
-  it("renders notification bell", () => {
-    render(<Header />);
-    expect(screen.getByTestId("notif-bell")).toBeInTheDocument();
-  });
-
-  it("opens language dropdown (Radix menu: Enter on the trigger)", () => {
-    render(<Header />);
-    fireEvent.keyDown(screen.getByLabelText("Change Language"), { key: "Enter" });
-    expect(screen.getByText("English")).toBeInTheDocument();
-    expect(screen.getByText("French")).toBeInTheDocument();
-  });
-
-  it("switches to French locale", () => {
-    render(<Header />);
-    fireEvent.keyDown(screen.getByLabelText("Change Language"), { key: "Enter" });
-    fireEvent.click(screen.getByText("French"));
+    openMenu();
+    fireEvent.click(screen.getByRole("menuitemcheckbox", { name: t.settings.french }));
     expect(mockSetLocale).toHaveBeenCalledWith("fr");
   });
 
-  it("links the user chip straight to the profile page", () => {
+  it("signs out from the user menu", () => {
     render(<Header />);
-    const link = screen.getByText("Oussama").closest("a");
-    expect(link).toHaveAttribute("href", "/profile");
+    openMenu();
+    fireEvent.click(screen.getByRole("menuitem", { name: t.appNav.signOut }));
+    expect(mockLogout).toHaveBeenCalled();
   });
 
-  it("opens sidebar on menu button", () => {
+  it("repeats nothing the rail holds: no section of the app in the bar or the user menu", () => {
     render(<Header />);
-    fireEvent.click(screen.getByLabelText("Open Sidebar"));
+    openMenu();
+    for (const id of ["chat", "studios", "jobs", "packs", "usage", "settings", "admin"] as const) {
+      expect(screen.queryByText(t.appNav[id])).not.toBeInTheDocument();
+    }
+  });
+
+  it("keeps the theme toggle and the notifications in the bar", () => {
+    render(<Header />);
+    expect(screen.getByTestId("theme-toggle")).toHaveTextContent(t.header.themeDark);
+    expect(screen.getByTestId("notif-bell")).toBeInTheDocument();
+  });
+
+  it("opens the drawer from the menu button", () => {
+    render(<Header />);
+    fireEvent.click(screen.getByLabelText(t.header.openSidebar));
     expect(mockOpen).toHaveBeenCalled();
-  });
-
-  it("no longer exposes a settings or logout menu in the header", () => {
-    render(<Header />);
-    expect(screen.queryByText("Settings")).not.toBeInTheDocument();
-    expect(screen.queryByText("Logout")).not.toBeInTheDocument();
   });
 });

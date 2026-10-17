@@ -3,7 +3,6 @@ import { render, screen, within } from "@testing-library/react";
 import { ThemeProvider } from "@krizaka/ui/theme";
 import { translations, type Locale } from "@/core/context/translations";
 import { ModelsCatalogue } from "@/features/landing/components/ModelsCatalogue";
-import { LandingModels } from "@/features/landing/components/LandingModels";
 import { MODELS, filterModels } from "@/features/landing/utils/models";
 
 let mockLocale: Locale = "en";
@@ -89,18 +88,6 @@ describe("/models", () => {
   it("links the documentation of the catalogue", () => {
     renderPage("en");
     expect(screen.getByRole("link", { name: new RegExp(translations.en.models.docs.catalogue) })).toHaveAttribute("href", "/docs/models");
-  });
-});
-
-describe("the home page's Models section", () => {
-  it("shows six local models from the registry, the optional ones counted, and the way to all of them", () => {
-    mockLocale = "en";
-    mockQuery = "";
-    const { container } = render(<ThemeProvider><LandingModels /></ThemeProvider>);
-    const section = container.querySelector("#models") as HTMLElement;
-    expect(within(section).getAllByRole("heading", { level: 3 }).length).toBeLessThanOrEqual(6);
-    expect(within(section).getByRole("link", { name: new RegExp(translations.en.models.home.more) })).toHaveAttribute("href", "/models");
-    expect(section).toHaveTextContent(/optional models served by a provider/);
   });
 });
 

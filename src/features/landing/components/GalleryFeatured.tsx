@@ -25,7 +25,7 @@ import { FeaturedImagePanel, VideoPanel } from "@/features/landing/components/Ga
  * next and a pause button; it holds for the pointer, the keyboard, a hidden tab and a scroll away, and never moves on
  * its own under reduced motion. Images are served as they are from the CDN (unoptimized) and load on demand.
  */
-export function GalleryFeatured() {
+export function GalleryFeatured({ heading, children }: Readonly<{ heading?: { eyebrow: string; title: string; lead: string }; children?: React.ReactNode }> = {}) {
   const { t } = useTranslation();
   const g = t.gallery;
   const labels = React.useMemo<ShowcaseLabels>(
@@ -46,7 +46,7 @@ export function GalleryFeatured() {
       {/* The old #demo anchor of the home page: the demo is /gallery now, this teaser is where a #demo link lands. */}
       <span id="demo" className="block scroll-mt-20" />
       <article className="mx-auto max-w-6xl space-y-10 px-4 py-20 sm:px-5 lg:py-24">
-        <SectionHeading eyebrow={g.eyebrow} title={g.featuredTitle} lead={g.featuredLead} />
+        <SectionHeading eyebrow={heading?.eyebrow ?? g.eyebrow} title={heading?.title ?? g.featuredTitle} lead={heading?.lead ?? g.featuredLead} />
         <Showcase
           label={g.carousel}
           labels={labels}
@@ -56,6 +56,7 @@ export function GalleryFeatured() {
           interval={7000}
           renderItem={(item, { active }) => <Slide item={item} active={active} />}
         />
+        {children}
         <p>
           <Button asChild variant="secondary" size="md" shape="pill">
             <Link href="/gallery">

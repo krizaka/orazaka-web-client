@@ -42,26 +42,63 @@ function renderPage(locale: Locale, rel: typeof release | null) {
 }
 
 describe("DesktopPage", () => {
-  it("offers the download of the release it is given, with its version and SHA-256 — nothing hard-coded", () => {
+  it("puts one Download first, its facts quiet, the version read from the release — nothing hard-coded", () => {
     renderPage("en", release);
     const d = translations.en.desktop;
-    expect(screen.getByRole("link", { name: d.download.button })).toHaveAttribute("href", release.dmg.url);
+    const downloads = screen.getAllByRole("link", { name: d.download.button });
+    expect(downloads).toHaveLength(1);
+    expect(downloads[0]).toHaveAttribute("href", release.dmg.url);
+    expect(screen.getByText(/Apple Silicon · macOS 14\+ · 6\.3 MB/)).toBeInTheDocument();
     expect(screen.getByTestId("desktop-version")).toHaveTextContent("9.9.9-test");
-    expect(screen.getByTestId("desktop-sha")).toHaveTextContent(SHA);
   });
 
-  it("says honestly that the build is not signed by Apple, and how to open it", () => {
+  it("keeps the SHA-256 in a « Verify the download » disclosure, with a copy button", () => {
     renderPage("en", release);
-    const note = screen.getByRole("note");
-    expect(note).toHaveTextContent(translations.en.desktop.testBuild.title);
-    expect(note).toHaveTextContent("xattr -dr com.apple.quarantine /Applications/Orazaka.app");
+    const sha = screen.getByTestId("desktop-sha");
+    expect(sha).toHaveTextContent(SHA);
+    const details = sha.closest("details") as HTMLElement;
+    expect(details).not.toBeNull();
+    expect(details.hasAttribute("open")).toBe(false);
+    expect(within(details).getByText(translations.en.desktop.download.verify).tagName).toBe("SUMMARY");
+    expect(within(details).getByRole("button", { name: translations.en.desktop.download.shaCopy })).toBeInTheDocument();
+  });
+
+  it("shows the app in a macOS window above the fold", () => {
+    const { container } = renderPage("en", release);
+    const frame = container.querySelector('[data-device="desktop"]') as HTMLElement;
+    expect(within(frame).getByRole("img", { name: translations.en.desktop.hero.captureAlt })).toBeInTheDocument();
+  });
+
+  it("says it is a test build, then the first launch in three numbered steps, the quarantine fix folded in a bash block", () => {
+    const { container } = renderPage("en", release);
+    const d = translations.en.desktop;
+    expect(screen.getByRole("note")).toHaveTextContent(d.download.testBuild);
+    const steps = within(document.getElementById("first-launch")!).getAllByRole("listitem");
+    expect(steps.map((li) => li.querySelector("h3")?.textContent)).toEqual(d.firstLaunch.steps.map((s) => s.title));
+    const damaged = within(container).getByText(d.firstLaunch.damaged.summary).closest("details") as HTMLElement;
+    expect(damaged.hasAttribute("open")).toBe(false);
+    expect(damaged).toHaveTextContent("xattr -dr com.apple.quarantine /Applications/Orazaka.app");
+  });
+
+  it("explains the two modes and every service « Start » brings up, without jargon", () => {
+    const { container } = renderPage("en", release);
+    const d = translations.en.desktop;
+    for (const m of d.modes.items) expect(screen.getByRole("heading", { name: m.title })).toBeInTheDocument();
+    const services = container.querySelector(`dl[aria-label="${d.services.title}"]`)!;
+    expect([...services.querySelectorAll("dt")].map((dt) => dt.textContent)).toEqual(d.services.rows.map((r) => r.name));
+    expect(container.textContent).not.toMatch(/sagas|Metal acceleration|cryptographic|tok\/s|HIPAA/i);
+  });
+
+  it("tells what to do when something goes wrong: doctor and logs, as bash", () => {
+    const { container } = renderPage("en", release);
+    expect(container.textContent).toContain("orazaka doctor");
+    expect(container.textContent).toContain("orazaka logs --service router");
   });
 
   it("makes no claim about Windows or Linux builds, and lists the requirements", () => {
     const { container } = renderPage("en", release);
-    expect(container.textContent).toMatch(/no Windows or Linux build/i);
+    expect(container.textContent).toMatch(/No Windows or Linux build/i);
     expect(container.textContent).not.toMatch(/Download for Windows/i);
-    expect(container.textContent).toMatch(/Apple Silicon/);
     expect(container.textContent).toMatch(/Node\.js 22/);
   });
 
@@ -75,7 +112,7 @@ describe("DesktopPage", () => {
   it("speaks French when the visitor chose it", () => {
     renderPage("fr", release);
     expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent(translations.fr.desktop.hero.title);
-    expect(within(screen.getByRole("note")).getByText(translations.fr.desktop.testBuild.title)).toBeInTheDocument();
+    expect(screen.getByRole("note")).toHaveTextContent(translations.fr.desktop.download.testBuild);
   });
 
   it("has the same shape in English and French", () => {

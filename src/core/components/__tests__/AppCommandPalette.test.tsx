@@ -37,8 +37,8 @@ describe("AppCommandPalette", () => {
     render(<AppCommandPalette />);
     await open();
     expect(screen.getByRole("dialog", { name: t.commandPalette.label })).toBeInTheDocument();
-    expect(screen.getByRole("option", { name: new RegExp(t.sidebar.studios) })).toBeInTheDocument();
-    expect(screen.queryByRole("option", { name: new RegExp(t.sidebar.adminPanel) })).toBeNull();
+    expect(screen.getByRole("option", { name: new RegExp(t.appNav.studios) })).toBeInTheDocument();
+    expect(screen.queryByRole("option", { name: new RegExp(`^${t.appNav.admin}`) })).toBeNull();
   });
 
   it("adds the admin panel for an admin and navigates with the router", async () => {
@@ -46,8 +46,15 @@ describe("AppCommandPalette", () => {
     render(<AppCommandPalette />);
     await open();
     await act(async () => {
-      fireEvent.click(screen.getByRole("option", { name: new RegExp(t.sidebar.adminPanel) }));
+      fireEvent.click(screen.getByRole("option", { name: new RegExp(`^${t.appNav.admin}`) }));
     });
     expect(push).toHaveBeenCalledWith("/dashboard/admin");
+  });
+
+  it("lists the rail's sections in the rail's words and order", async () => {
+    render(<AppCommandPalette />);
+    await open();
+    const words = screen.getAllByRole("option").map((o) => o.textContent);
+    expect(words).toEqual(["home", "studios", "chat", "jobs", "packs", "usage", "settings"].map((id) => expect.stringContaining(t.appNav[id as keyof typeof t.appNav])));
   });
 });

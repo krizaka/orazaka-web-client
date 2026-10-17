@@ -59,6 +59,20 @@ export const translations: Record<Locale, TranslationDictionary> = {
       emptyContent:
         "This workspace is currently empty. Blueprints are resolved dynamically from the Operation Graph.",
     },
+    appNav: {
+      label: "Sections",
+      home: "Home",
+      chat: "Chat",
+      studios: "Studios",
+      jobs: "Jobs",
+      packs: "Packs",
+      usage: "Usage & credits",
+      settings: "Settings",
+      admin: "Admin",
+      account: "Your account",
+      language: "Language",
+      signOut: "Sign out",
+    },
     header: {
       profile: "Profile",
       logout: "Log out",
@@ -940,6 +954,20 @@ export const translations: Record<Locale, TranslationDictionary> = {
         "Espace de travail du nœud dynamique du moteur d'orchestration Orazaka IA",
       emptyContent:
         "Cet espace de travail est actuellement vide. Les plans sont résolus dynamiquement à partir du graphe d'opérations.",
+    },
+    appNav: {
+      label: "Sections",
+      home: "Accueil",
+      chat: "Chat",
+      studios: "Studios",
+      jobs: "Tâches",
+      packs: "Packs",
+      usage: "Usage et crédits",
+      settings: "Paramètres",
+      admin: "Admin",
+      account: "Votre compte",
+      language: "Langue",
+      signOut: "Se déconnecter",
     },
     header: {
       profile: "Profil",

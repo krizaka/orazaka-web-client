@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { AiIcon, DownloadIcon, PackIcon, PlayIcon, ServerIcon, StudioIcon } from "@krizaka/icons";
 import { OrazakaLogo } from "@krizaka/ui";
 import { Button } from "@krizaka/ui/button";
 import { NavBar } from "@krizaka/ui/nav-bar";
@@ -11,8 +10,9 @@ import { cn } from "@krizaka/ui/cn";
 import { useTranslation } from "@/core/context/LocaleContext";
 import { useAuthFlags } from "@/core/context/AuthFlagsContext";
 import type { Locale } from "@/core/context/translations.types";
-import { APP_ENV, APP_VERSION } from "@/core/config/version";
-import { SHIPPED_ROUTES } from "@/features/landing/utils/nav-routes";
+import { NAV_DOCS, NAV_GROUPS, entryHref, navActive } from "@/features/landing/utils/site-nav";
+
+export { navActive } from "@/features/landing/utils/site-nav";
 
 const LOCALES: { code: Locale; label: string }[] = [
   { code: "en", label: "EN" },
@@ -21,30 +21,6 @@ const LOCALES: { code: Locale; label: string }[] = [
 
 const REPO_URL = "https://github.com/krizaka/orazaka-web-client";
 const TALK_URL = "https://www.krizaka.com/contact?topic=orazaka";
-
-/** The Product menu — every public destination of the product that is not a top-level entry, with its icon. */
-const PRODUCT_ENTRIES = [
-  { id: "how", anchor: "how", Icon: PlayIcon },
-  { id: "studios", anchor: "studios", Icon: StudioIcon },
-  { id: "packs", anchor: "packs", Icon: PackIcon },
-  { id: "models", path: "/models", Icon: AiIcon },
-  { id: "run", path: "/infrastructure", Icon: ServerIcon, shipped: SHIPPED_ROUTES.infrastructure },
-  { id: "desktop", path: "/desktop", Icon: DownloadIcon },
-] as const;
-
-/** Where the visitor is, as the bar shows it: the menu entry, the current top-level link, or neither (on the home). */
-export function navActive(pathname: string | null | undefined) {
-  const p = pathname ?? "";
-  return {
-    models: p === "/models" || p.startsWith("/models/"),
-    run: p === "/infrastructure" || p.startsWith("/infrastructure/"),
-    desktop: p === "/desktop",
-    demo: p === "/gallery" || p.startsWith("/gallery/"),
-    features: p.startsWith("/features/"),
-    mobile: p === "/docs/mobile",
-    docs: (p === "/docs" || p.startsWith("/docs/")) && p !== "/docs/mobile",
-  };
-}
 
 function Locales({ className }: Readonly<{ className?: string }>) {
   const { t, locale, setLocale } = useTranslation();
@@ -67,33 +43,25 @@ function Locales({ className }: Readonly<{ className?: string }>) {
 }
 
 /**
- * The bar of the public pages (NAV-SYS, @krizaka/ui's NavBar). Left: the Orazaka mark, the family switcher and the
- * DEV · version badge. Centre, this site: Product (How it works · Studios · Packs · Models · Made here) · Demo ·
- * Mobile · Documentation — every public destination, the current page lit. Right: the repository, the language, the
- * theme, Sign in and the one action — « Talk to us » while sign-up is closed, « Get started » once it opens. Below md:
- * one panel, the family as its last group. `onHome` is false on the feature pages, where the anchors lead back to the
- * home page sections.
+ * The bar of the public pages — the product-site standard (`site-nav.ts`, docs/ux/information-architecture.md of the
+ * workspace). Left: the Orazaka mark (home). Then Product ▾ (what it does) · Platforms ▾ (where it runs) · Docs — one
+ * lit at a time, the page's own group. Right: the repository, the language, the theme, Sign in and the one action
+ * (« Talk to us » while sign-up is closed, « Get started » once it opens). The version is in the footer, not here.
+ * Below md: one panel with the same groups in the same order. `onHome` is false off the home page, where the anchors
+ * lead back to its sections.
  */
 export function LandingNav({ onHome = true }: Readonly<{ onHome?: boolean }>) {
   const { t } = useTranslation();
   const n = t.landing.nav;
   const flags = useAuthFlags();
-  const href = (id: string) => (onHome ? `#${id}` : `/#${id}`);
   const active = navActive(usePathname());
-  const entries = PRODUCT_ENTRIES.filter((e) => !("shipped" in e) || e.shipped).map((e) => ({
-    id: e.id,
-    Icon: e.Icon,
-    href: "anchor" in e ? href(e.anchor) : e.path,
-    label: n[e.id],
-    description: n.menu[e.id],
-    active: e.id === "models" || e.id === "run" || e.id === "desktop" ? active[e.id] : false,
+  const groups = NAV_GROUPS.map((g) => ({
+    id: g.id,
+    label: n[g.id],
+    entries: g.entries.map((e) => ({ id: e.id, Icon: e.Icon, href: entryHref(e, onHome), label: n[e.id], description: n.menu[e.id], active: active.entry === e.id })),
   }));
-  const links = [
-    { key: "demo", href: "/gallery", label: n.demo, active: active.demo },
-    { key: "mobile", href: "/docs/mobile", label: n.mobile, active: active.mobile },
-    { key: "docs", href: "/docs", label: n.docs, active: active.docs },
-  ] as const;
   const action = flags.signup ? { href: "/register", label: n.getStarted } : { href: TALK_URL, label: n.talk };
+  const themeLabel = (mode: "dark" | "light" | "system") => ({ "dark": t.header.themeDark, "light": t.header.themeLight, "system": t.header.themeSystem })[mode];
 
   return (
     <div className="sticky top-0 z-40">
@@ -104,31 +72,26 @@ export function LandingNav({ onHome = true }: Readonly<{ onHome?: boolean }>) {
             <span>Orazaka</span>
           </Link>
         </NavBar.Brand>
-        <NavBar.Badge env={APP_ENV} version={APP_VERSION} />
 
         <NavBar.Items>
-          <NavBar.Menu value="product" label={n.product} active={active.models || active.run || active.desktop || active.features} columns={1}>
-            {entries.map((e) => (
-              <NavBar.MenuLink key={e.id} asChild title={e.label} description={e.description} icon={<e.Icon size={18} />} active={e.active}>
-                <Link href={e.href} />
-              </NavBar.MenuLink>
-            ))}
-          </NavBar.Menu>
-          {links.map((l) => (
-            <NavBar.Link key={l.key} asChild active={l.active}>
-              <Link href={l.href}>{l.label}</Link>
-            </NavBar.Link>
+          {groups.map((g) => (
+            <NavBar.Menu key={g.id} value={g.id} label={g.label} active={active.top === g.id}>
+              {g.entries.map((e) => (
+                <NavBar.MenuLink key={e.id} asChild title={e.label} description={e.description} icon={<e.Icon size={18} />} active={e.active}>
+                  <Link href={e.href} />
+                </NavBar.MenuLink>
+              ))}
+            </NavBar.Menu>
           ))}
+          <NavBar.Link asChild active={active.top === "docs"}>
+            <Link href={NAV_DOCS.path}>{n.docs}</Link>
+          </NavBar.Link>
         </NavBar.Items>
 
         <NavBar.Actions className="gap-1">
           <NavBar.Repo href={REPO_URL} label={n.repo} target="_blank" rel="noopener noreferrer" className="hidden lg:inline-flex" />
           <Locales className="hidden md:flex" />
-          <ThemeToggle
-            variant="ghost"
-            className="hidden md:inline-flex"
-            label={(mode) => ({ "dark": t.header.themeDark, "light": t.header.themeLight, "system": t.header.themeSystem })[mode]}
-          />
+          <ThemeToggle variant="ghost" className="hidden md:inline-flex" label={themeLabel} />
           <Button asChild variant="ghost" size="sm" className="hidden md:inline-flex">
             <Link href="/login">{n.signIn}</Link>
           </Button>
@@ -137,24 +100,22 @@ export function LandingNav({ onHome = true }: Readonly<{ onHome?: boolean }>) {
           </Button>
 
           <NavBar.Mobile openLabel={n.openMenu} closeLabel={n.closeMenu} className="max-h-[calc(100dvh-5rem)] gap-1 overflow-y-auto overscroll-contain p-3">
-            <span className="px-3 pt-1 font-mono text-[10.5px] font-bold uppercase tracking-[0.12em] text-fg-accent">{n.product}</span>
-            {entries.map((e) => (
-              <NavBar.MobileLink key={e.id} asChild active={e.active}>
-                <Link href={e.href}>{e.label}</Link>
-              </NavBar.MobileLink>
+            {groups.map((g) => (
+              <NavBar.MobileGroup key={g.id} label={g.label}>
+                {g.entries.map((e) => (
+                  <NavBar.MobileLink key={e.id} asChild active={e.active}>
+                    <Link href={e.href}>{e.label}</Link>
+                  </NavBar.MobileLink>
+                ))}
+              </NavBar.MobileGroup>
             ))}
             <span aria-hidden className="my-1 h-px bg-border-subtle" />
-            {links.map((l) => (
-              <NavBar.MobileLink key={l.key} asChild active={l.active}>
-                <Link href={l.href}>{l.label}</Link>
-              </NavBar.MobileLink>
-            ))}
+            <NavBar.MobileLink asChild active={active.top === "docs"}>
+              <Link href={NAV_DOCS.path}>{n.docs}</Link>
+            </NavBar.MobileLink>
             <span className="mt-2 flex items-center justify-between gap-3 border-t border-border-subtle pt-3">
               <Locales className="flex" />
-              <ThemeToggle
-                variant="ghost"
-                label={(mode) => ({ "dark": t.header.themeDark, "light": t.header.themeLight, "system": t.header.themeSystem })[mode]}
-              />
+              <ThemeToggle variant="ghost" label={themeLabel} />
             </span>
             <span className="flex items-center gap-2">
               <Button asChild variant="ghost" size="md">
@@ -164,7 +125,7 @@ export function LandingNav({ onHome = true }: Readonly<{ onHome?: boolean }>) {
                 <a href={action.href}>{action.label}</a>
               </Button>
             </span>
-              </NavBar.Mobile>
+          </NavBar.Mobile>
         </NavBar.Actions>
       </NavBar.Root>
     </div>

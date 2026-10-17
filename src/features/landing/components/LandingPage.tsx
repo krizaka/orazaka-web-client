@@ -4,29 +4,26 @@ import { useTranslation } from "@/core/context/LocaleContext";
 import { LandingNav } from "@/features/landing/components/LandingNav";
 import { LandingHero } from "@/features/landing/components/LandingHero";
 import { GalleryFeatured } from "@/features/landing/components/GalleryFeatured";
-import { LandingMobile } from "@/features/landing/components/LandingMobile";
-import { LandingMac } from "@/features/landing/components/LandingMac";
-import { LandingSovereignty } from "@/features/landing/components/LandingSovereignty";
-import { LandingPlatform } from "@/features/landing/components/LandingPlatform";
+import { LandingOutcomes } from "@/features/landing/components/LandingOutcomes";
+import { LandingRuns } from "@/features/landing/components/LandingRuns";
 import { LandingCompare } from "@/features/landing/components/LandingCompare";
-import { LandingHow } from "@/features/landing/components/LandingHow";
+import { LandingTrust } from "@/features/landing/components/LandingTrust";
 import { DemoHashRedirect } from "@/features/landing/components/DemoHashRedirect";
-import { LandingPacks } from "@/features/landing/components/LandingPacks";
-import { LandingModels } from "@/features/landing/components/LandingModels";
-import { LandingStudios } from "@/features/landing/components/LandingStudios";
 import { LandingClosing } from "@/features/landing/components/LandingClosing";
 import { LandingFooter } from "@/features/landing/components/LandingFooter";
 import "@/features/landing/landing.css";
 
 /**
- * The public home page — what a visitor without a session sees at `/`: the promise and the live sovereign chat,
- * why it matters (privacy, cost, control), the platform, the comparison, how it works, the Studios, and the two
- * ways in. Each section glides from one brand tint to the next (SectionBackdrop). Every word comes from
- * `t.landing` (en/fr).
+ * The public home page — one story, six sections, each answering one question in order (docs/ux/information-
+ * architecture.md of the workspace): what is it (the hero and a live answer) · what can I do with it (the
+ * prompt → image → video showcase, four Studio outcomes, the packs) · where does it run (Web · Mobile · Mac, the real
+ * app) · why own it (the comparison) · can I trust it (code, measured runs, docs) · how do I start. Every word comes
+ * from `t.landing` (en/fr); the details live on their pages (/models, /gallery, /desktop, /docs).
  */
 export function LandingPage() {
   const { t } = useTranslation();
   const c = t.landing.cta;
+  const w = t.landing.what;
 
   return (
     <>
@@ -34,16 +31,12 @@ export function LandingPage() {
       <DemoHashRedirect />
       <main className="min-h-screen bg-surface-0 text-fg">
         <LandingHero />
-        <GalleryFeatured />
-        <LandingSovereignty />
-        <LandingPlatform />
+        <GalleryFeatured heading={{ eyebrow: w.eyebrow, title: w.title, lead: w.lead }}>
+          <LandingOutcomes />
+        </GalleryFeatured>
+        <LandingRuns />
         <LandingCompare />
-        <LandingHow />
-        <LandingMobile />
-        <LandingMac />
-        <LandingStudios />
-        <LandingPacks />
-        <LandingModels />
+        <LandingTrust />
         <LandingClosing eyebrow={c.eyebrow} title={c.title} lead={c.lead} primary={c.primary} secondary={c.secondary} />
       </main>
       <LandingFooter />
