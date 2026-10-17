@@ -297,7 +297,7 @@ export const gallery: Record<Locale, GalleryDictionary> = {
       "chefchaouen": "Golden hour over the blue-washed stairs and alleys of Chefchaouen, terracotta pots and the Rif mountains behind",
       "old-port": "The Old Port of Montréal at blue hour: the Clock Tower lit warm, the quay wet with reflections, a tall ship at its mooring",
       "montreal": "A snowy night on a street of the Plateau: spiral staircase, street lamp glowing, snowflakes in the light",
-      "yasakia-montreal-dawn": "Old Montréal rooftops at dawn seen from above, a green-copper dome, low fog and the river behind"
+      "montreal-dawn": "Old Montréal rooftops at dawn seen from above, a green-copper dome, low fog and the river behind"
     },
     "styles": {
       "golden": "Golden-hour editorial",
@@ -466,7 +466,7 @@ export const gallery: Record<Locale, GalleryDictionary> = {
       "chefchaouen": "Heure dorée sur les escaliers et ruelles bleus de Chefchaouen, des pots en terre cuite et les montagnes du Rif derrière",
       "old-port": "Le Vieux-Port de Montréal à l'heure bleue : la tour de l'Horloge éclairée, le quai mouillé de reflets, un grand voilier à quai",
       "montreal": "Une nuit de neige dans une rue du Plateau : escalier en colimaçon, lampadaire allumé, flocons dans la lumière",
-      "yasakia-montreal-dawn": "Les toits du Vieux-Montréal à l'aube vus d'en haut, un dôme vert-de-gris, une brume basse et le fleuve derrière"
+      "montreal-dawn": "Les toits du Vieux-Montréal à l'aube vus d'en haut, un dôme vert-de-gris, une brume basse et le fleuve derrière"
     },
     "styles": {
       "golden": "Éditorial lumière dorée",

@@ -178,9 +178,9 @@ describe("GalleryFeatured (the home page's prompt → image → video, a slidesh
     const { container } = wrap(<GalleryFeatured />);
     const img = container.querySelector("img")!;
     expect(img.getAttribute("loading")).toBe("lazy");
-    expect(img.getAttribute("src")).toMatch(/^https:\/\/krizaka-assets\.b-cdn\.net\/site\/products\/orazaka\/gallery\//);
+    expect(img.getAttribute("src")).toMatch(/^https:\/\/krizaka-assets\.b-cdn\.net\/site\/products\/orazaka\/showcase\/[a-z-]+\.[0-9a-f]{10}\.webp$/);
     const source = container.querySelector("video source")!;
-    expect(source.getAttribute("src")).toMatch(/^https:\/\/krizaka-assets\.b-cdn\.net\/site\/products\/orazaka\/gallery-video\/[a-z-]+\.[0-9a-f]{10}\.(webm|mp4)$/);
+    expect(source.getAttribute("src")).toMatch(/^https:\/\/krizaka-assets\.b-cdn\.net\/site\/products\/orazaka\/(gallery-video|video)\/[a-z-]+\.[0-9a-f]{10}\.(webm|mp4)$/);
   });
 });
 

@@ -79,7 +79,7 @@ describe("the videos of Made here", () => {
   });
 
   it("reproduces a clip with the real orazaka-cli syntax: same prompt, model, frame, seed and length", () => {
-    const clip = CLIPS[0];
+    const clip = CLIPS.find((c) => !c.image)!; // a text-to-video clip: the CLI command
     const [part] = clipReproduceParts(clip);
     expect(part.language).toBe("bash");
     expect(part.code).toContain("orazaka video \"");
