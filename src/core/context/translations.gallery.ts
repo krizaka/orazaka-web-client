@@ -77,6 +77,22 @@ export interface GalleryDictionary {
   /** The filter that lists only the images / only the videos of /gallery. */
   filterImages: string;
   filterVideos: string;
+  /** Cinematic shorts (krizaka/orazaka ADR-080): the section, the facts of a film, and each film's words by id. */
+  filmsTitle: string;
+  filmsLead: string;
+  filmBadge: string;
+  filmBriefHeading: string;
+  filmReproduceLead: string;
+  filmFrame: string;
+  filmShots: string;
+  filmShotsValue: string;
+  filmModels: string;
+  filmRuns: string;
+  filmRunsValue: string;
+  filmGpu: string;
+  filmGpuValue: string;
+  filmPerMinute: string;
+  films: Record<string, { title: string; logline: string; brief: string }>;
   /** The title and lead of the Videos section of /gallery. */
   videosTitle: string;
   videosLead: string;
@@ -220,6 +236,27 @@ export const gallery: Record<Locale, GalleryDictionary> = {
     "videoClose": "Close the video",
     "filterImages": "Images",
     "filterVideos": "Videos",
+    "filmsTitle": "Cinematic shorts",
+    "filmsLead": "Thirty seconds to a minute, made by Orazaka from a brief: a script and a directed shot list, character references and keyframes, shots by Wan 2.2 A14B at 720p, each one checked frame by frame, upscaled to 1080p, cut with speed ramps, a colour grade and titles, then music, foley and a voice. Every step is an ordinary Studio run on dev.orazaka.com. Every film is labelled AI-generated.",
+    "filmBadge": "Film · {seconds} s",
+    "filmBriefHeading": "The brief",
+    "filmReproduceLead": "The same brief, format and seed start the same production on your own Orazaka:",
+    "filmFrame": "Frame",
+    "filmShots": "Shots",
+    "filmShotsValue": "{shots} shots, {reshoots} reshot after review",
+    "filmModels": "Models",
+    "filmRuns": "Studio runs",
+    "filmRunsValue": "{runs} runs",
+    "filmGpu": "GPU",
+    "filmGpuValue": "{minutes} min of its runs · ${cost}",
+    "filmPerMinute": "GPU per minute of film",
+    "films": {
+      "nova-ardent": {
+        "title": "Nova Ardent — an original superhero short",
+        "logline": "Night, rain, a city of neon: an original heroine lands in a shockwave, raises a shield and rises into the storm. 9:16, 40 s.",
+        "brief": "Night city in the rain, an ORIGINAL superhero trailer. The hero is Nova Ardent (original character): short silver hair, matte graphite armour with glowing cyan seams and a cyan energy core. She watches the city from a rooftop, leaps, lands in an empty neon street in a ring shockwave of cyan energy (slow motion), raises an energy shield as debris flies, then launches into the storm. No existing characters, no logos, no readable signs."
+      }
+    },
     "videosTitle": "Videos",
     "videosLead": "Every video is an Orazaka run — the video Studio of orazaka-media — made by Wan 2.2 A14B on DigitalOcean's serverless inference and routed by Orazaka. Each shows its exact prompt and what the run recorded, and the command that makes it again.",
     "countVideos": "{count} videos",
@@ -391,6 +428,27 @@ export const gallery: Record<Locale, GalleryDictionary> = {
     "videoClose": "Fermer la vidéo",
     "filterImages": "Images",
     "filterVideos": "Vidéos",
+    "filmsTitle": "Courts métrages cinématographiques",
+    "filmsLead": "De trente secondes à une minute, faits par Orazaka à partir d'un brief : un script et une liste de plans dirigée, des références de personnages et des images clés, des plans par Wan 2.2 A14B en 720p, chacun vérifié image par image, montés en 1080p avec rampes de vitesse, étalonnage et titres, puis musique, bruitages et voix. Chaque étape est une exécution ordinaire d'un Studio sur dev.orazaka.com. Chaque film porte la mention « généré par IA ».",
+    "filmBadge": "Film · {seconds} s",
+    "filmBriefHeading": "Le brief",
+    "filmReproduceLead": "Le même brief, le même format et la même graine lancent la même production sur votre Orazaka :",
+    "filmFrame": "Cadre",
+    "filmShots": "Plans",
+    "filmShotsValue": "{shots} plans, {reshoots} refaits après revue",
+    "filmModels": "Modèles",
+    "filmRuns": "Exécutions de Studios",
+    "filmRunsValue": "{runs} exécutions",
+    "filmGpu": "GPU",
+    "filmGpuValue": "{minutes} min de ses exécutions · {cost} $",
+    "filmPerMinute": "GPU par minute de film",
+    "films": {
+      "nova-ardent": {
+        "title": "Nova Ardent — un court métrage de super-héroïne originale",
+        "logline": "La nuit, la pluie, une ville de néons : une héroïne originale atterrit dans une onde de choc, lève un bouclier et s'élève dans l'orage. 9:16, 40 s.",
+        "brief": "Night city in the rain, an ORIGINAL superhero trailer. The hero is Nova Ardent (original character): short silver hair, matte graphite armour with glowing cyan seams and a cyan energy core. She watches the city from a rooftop, leaps, lands in an empty neon street in a ring shockwave of cyan energy (slow motion), raises an energy shield as debris flies, then launches into the storm. No existing characters, no logos, no readable signs."
+      }
+    },
     "videosTitle": "Vidéos",
     "videosLead": "Chaque vidéo est une exécution Orazaka — le Studio vidéo d'orazaka-media — réalisée par Wan 2.2 A14B sur l'inférence serverless de DigitalOcean et routée par Orazaka. Chacune montre sa consigne exacte, ce que l'exécution a enregistré, et la commande qui la refait.",
     "countVideos": "{count} vidéos",

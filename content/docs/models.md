@@ -4,9 +4,25 @@
 
 ## Local first
 
-Orazaka supports **30 models**: **22 run on your own hardware** (Ollama, LocalAI, stable-diffusion.cpp on Metal or CUDA, the media worker) and **8 are served by a provider** — optional: a provider-hosted model needs a provider row and its API key, which only an operator adds; a fresh install has none.
+Orazaka supports **33 models**: **25 run on your own hardware** (Ollama, LocalAI, stable-diffusion.cpp on Metal or CUDA, the media worker) and **8 are served by a provider** — optional: a provider-hosted model needs a provider row and its API key, which only an operator adds; a fresh install has none.
 
 Every figure below is read from `orazaka_models` (the table the routing reads): the vendor, licence and context window are those of each model's own card; `last verified` is the date of the last passing sovereign smoke that named the model, empty until one is recorded.
+
+## Unfiltered models, your rules
+
+The catalogue carries open-weight chat models without a vendor's refusal layer — fine-tuned without refusals or
+abliterated (the refusal direction removed from the weights). They answer legitimate professional work plainly: a
+security team reading a malicious command, a nurse asking for a dose limit, a reporter on a fraud scheme, a novelist
+writing a dark scene. None of them is a default; the operator chooses to serve one.
+
+They are not the policy. The policy is the operator's: a pack declares the domain it refuses (`scopeGuard`) and the
+crisis text it answers (`safety`); the engine enforces both first in the pipeline, before any model runs and even when
+the AI kill-switch is pulled, and every turn is accounted for. "Uncensored" means not over-refusing legitimate work —
+it never covers content sexualising minors, explicit sexual content, real persons, weapons or bio-chemical procedures,
+working malware, or anything that enables serious harm. Unfiltered is not infallible either: serve the largest model
+the machine holds for clinical, legal or security work, and keep a professional in the loop.
+
+How fast and at what price they really run — time, cost and every parameter of the runs Orazaka measured — is on the [Measured runs](MEASURED_RUNS.md) page.
 
 ## On your hardware
 
@@ -26,6 +42,7 @@ Every figure below is read from `orazaka_models` (the table the routing reads): 
 | `argmaxinc/mlx-FLUX.1-schnell-4bit-quantized` — FLUX.1 Schnell 4-bit (MLX) | Black Forest Labs · FLUX.1 schnell | Image | MLX · Apple Silicon | [Apache-2.0](https://huggingface.co/argmaxinc/mlx-FLUX.1-schnell-4bit-quantized/blob/main/README.md) | — | available | — |
 | `v1-5-pruned-emaonly` — Stable Diffusion 1.5 | Stability AI · Stable Diffusion 1.5 | Image | stable-diffusion.cpp · Metal, CUDA | [CreativeML OpenRAIL-M](https://huggingface.co/spaces/CompVis/stable-diffusion-license) — commercial use under conditions | — | available | — |
 | `z-image-turbo` — Z-Image Turbo | Tongyi Lab (Alibaba) · Z-Image | Image | stable-diffusion.cpp · Metal, CUDA | [Apache-2.0](https://huggingface.co/Tongyi-MAI/Z-Image-Turbo/blob/main/README.md) | — | available | — |
+| `kokoro-82m` — Kokoro 82M (GPU host) | hexgrad · Kokoro | Text to speech | worker-media · CUDA | [Apache-2.0](https://huggingface.co/hexgrad/Kokoro-82M) | — | available | — |
 | `piper-en-low` — Piper Low (en) | Rhasspy · Piper (en-US, Lessac) | Text to speech | LocalAI · Piper | [Lessac Blizzard 2013 data licence](https://www.cstr.ed.ac.uk/projects/blizzard/2013/lessac_blizzard2013/license.html) — **non-commercial** | — | available | — |
 | `piper-en-medium-ryan` — Piper Ryan (en) | Rhasspy · Piper (en-US, Ryan) | Text to speech | LocalAI · Piper | [CC BY-NC-SA 4.0](https://huggingface.co/rhasspy/piper-voices/blob/main/en/en_US/ryan/medium/MODEL_CARD) — **non-commercial** | — | available | — |
 | `piper-fr-medium` — Piper Medium (fr) | Rhasspy · Piper (fr-FR, UPMC) | Text to speech | LocalAI · Piper | [CC BY-SA 4.0](https://huggingface.co/rhasspy/piper-voices/blob/main/fr/fr_FR/upmc/medium/MODEL_CARD) — commercial use under conditions | — | available | — |
@@ -33,6 +50,8 @@ Every figure below is read from `orazaka_models` (the table the routing reads): 
 | `piper-fr-tom-medium` — Piper Tom (fr-FR, masculine) | Rhasspy · Piper (fr-FR, Tom) | Text to speech | LocalAI · Piper | [AGPL-3.0](https://huggingface.co/rhasspy/piper-voices/blob/main/fr/fr_FR/tom/medium/MODEL_CARD) — commercial use under conditions | — | available | — |
 | `stable-video-diffusion-img2vid-xt` — Stable Video Diffusion XT (heavy, >64GB) | Stability AI · Stable Video Diffusion | Video | CUDA, more than 64 GB of memory | [Stability AI Community Licence](https://huggingface.co/stabilityai/stable-video-diffusion-img2vid-xt/blob/main/LICENSE.md) — commercial use under conditions | — | available | — |
 | `wan2.1-t2v-1.3b` — Wan 2.1 T2V 1.3B | Alibaba (Wan-AI) · Wan 2.1 | Video | worker-media · CUDA | [Apache-2.0](https://huggingface.co/Wan-AI/Wan2.1-T2V-1.3B-Diffusers/blob/main/README.md) | — | available | — |
+| `wan2.2-i2v-a14b` — Wan 2.2 I2V A14B (720p, 4-step distill) | Alibaba (Wan-AI) · Wan 2.2 | Video | worker-media · CUDA (80 GB) | [Apache-2.0](https://huggingface.co/Wan-AI/Wan2.2-I2V-A14B-Diffusers) | — | available | — |
+| `wan2.2-t2v-a14b` — Wan 2.2 T2V A14B (720p, 80 GB GPU) | Alibaba (Wan-AI) · Wan 2.2 | Video | worker-media · CUDA (80 GB) | [Apache-2.0](https://huggingface.co/Wan-AI/Wan2.2-T2V-A14B-Diffusers) | — | available | — |
 | `wan2.2-ti2v-5b` — Wan 2.2 TI2V 5B | Alibaba (Wan-AI) · Wan 2.2 | Video | worker-media · CUDA | [Apache-2.0](https://huggingface.co/Wan-AI/Wan2.2-TI2V-5B-Diffusers/blob/main/README.md) | — | available | — |
 
 ## Optional: served by a provider
@@ -48,5 +67,6 @@ Every figure below is read from `orazaka_models` (the table the routing reads): 
 | `wan2-2-t2v-a14b` — Wan 2.2 T2V A14B (serverless) | Alibaba (Wan-AI) · Wan 2.2 | Video | DigitalOcean serverless inference | [Apache-2.0](https://huggingface.co/Wan-AI/Wan2.2-T2V-A14B) | — | available | — |
 | `bge-m3` — BGE-M3 | BAAI · BGE-M3 | Embeddings | DigitalOcean serverless inference | [MIT](https://huggingface.co/BAAI/bge-m3/blob/main/LICENSE) | 8,192 | planned | — |
 
+## In the catalogue, not published
 
-How fast and at what price they really run — time, cost and every parameter of the runs Orazaka measured — is on the [Measured runs](MEASURED_RUNS.md) page.
+13 rows are aliases, runtime variants or test fixtures of the models above (`status = 'internal'`): `dolphin-llama3:8b`, `huihui_ai/qwen2.5-abliterate:7b`, `mdq100/Gemma3-Instruct-Abliterated:27b`, `tinyllama:latest`, `tts-1`, `apple-coreml-video-pipeline`, `ByteDance/AnimateDiff-Lightning`, `mlx-animatediff-lightning`, `mlx-stable-diffusion-video`, `stable-video-diffusion-img2vid-xt-mps-fp32`, `bakllava:latest`, `llama3.2-vision:latest`, `llava:v1.6`.

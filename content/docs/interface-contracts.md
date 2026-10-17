@@ -39,6 +39,7 @@
 
 **Inbound ports**
 
+- `AdminUserService`
 - `ApiKeyService`
 - `IdentityReconciliationService`
 - `IdentityService`
@@ -49,6 +50,7 @@
 
 **Outbound ports**
 
+- `AdminUserRepositoryPort`
 - `ApiKeyRepositoryPort`
 - `AuthorityRepositoryPort`
 - `CryptographyPort`
