@@ -3,10 +3,13 @@
 import { useState } from "react";
 import { format, formatISO, parseISO, subMinutes } from "date-fns";
 import { PlayIcon } from "@krizaka/icons";
+import { KpiStat } from "@krizaka/charts/card";
 import { Badge } from "@krizaka/ui/badge";
 import { Button } from "@krizaka/ui/button";
 import { Card } from "@krizaka/ui/card";
 import { EmptyState } from "@krizaka/ui/empty-state";
+import { StatGrid } from "@krizaka/ui/stat";
+import { INTL_LOCALES } from "@/core/constants/locale.constants";
 import { useTranslation } from "@/core/context/LocaleContext";
 import type { AutomationJob } from "@/features/automation/components/liveJobGrid.types";
 
@@ -71,7 +74,7 @@ export function AutomationStatusBadge({ status }: Readonly<{ status: AutomationJ
 
 /** The jobs awaiting approval or running: one @krizaka/ui card each, approve or revoke. */
 export default function LiveJobGrid() {
-  const { t } = useTranslation();
+  const { locale, t } = useTranslation();
   const [jobs, setJobs] = useState<AutomationJob[]>(DEMO_JOBS);
 
   const approve = async (jobId: string) => {
@@ -94,10 +97,10 @@ export default function LiveJobGrid() {
           <h2 className="hud-title text-2xl text-fg">{t.automation.jobsTitle}</h2>
           <p className="text-sm text-fg-secondary">{t.automation.jobsSubtitle}</p>
         </hgroup>
-        <dl className="flex gap-6">
-          <Stat label={t.automation.pending} value={count("PENDING_APPROVAL")} />
-          <Stat label={t.automation.running} value={count("RUNNING")} />
-        </dl>
+        <StatGrid minWidth={9}>
+          <KpiStat label={t.automation.pending} value={count("PENDING_APPROVAL")} format="integer" locale={INTL_LOCALES[locale]} />
+          <KpiStat label={t.automation.running} value={count("RUNNING")} format="integer" locale={INTL_LOCALES[locale]} />
+        </StatGrid>
       </header>
 
       {jobs.length === 0 ? (
@@ -142,14 +145,5 @@ export default function LiveJobGrid() {
         </ul>
       )}
     </section>
-  );
-}
-
-function Stat({ label, value }: Readonly<{ label: string; value: number }>) {
-  return (
-    <span className="flex flex-col items-end">
-      <dt className="hud-label">{label}</dt>
-      <dd className="font-display text-xl font-bold tabular-nums text-fg">{value}</dd>
-    </span>
   );
 }

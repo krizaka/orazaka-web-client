@@ -22,15 +22,28 @@ jest.mock("@/app/jobs/jobStats.utils", () => ({
     total: 42,
     completed: 30,
     failed: 5,
-    pending: 4,
-    processing: 3,
-    successRate: 85.7,
-    avgDurationMs: 2500,
-    models: new Set(["llama3", "gpt4"]),
-    capabilities: new Set(["chat.text", "media.image"]),
-    totalInferenceMs: 120000,
+    avgMs: 2500,
+    avgDuration: "2.5s",
+    maxDuration: "9s",
+    totalMs: 120000,
+    totalDuration: "2m",
+    uniqueModels: 2,
+    uniqueFeatures: 3,
+    topModel: "llama3",
+    topFeature: "text",
   }),
 }));
+
+// jsdom lays nothing out and has no observers: the kit's figures read them.
+beforeAll(() => {
+  window.matchMedia = ((query: string) => ({ matches: false, media: query, addEventListener: () => {}, removeEventListener: () => {}, addListener: () => {}, removeListener: () => {}, onchange: null, dispatchEvent: () => false })) as typeof window.matchMedia;
+  class Observer {
+    observe() {}
+    unobserve() {}
+    disconnect() {}
+  }
+  Object.assign(window, { IntersectionObserver: Observer, ResizeObserver: Observer });
+});
 
 describe("JobsKpiSummary", () => {
   const jobs: never[] = [];
@@ -50,8 +63,9 @@ describe("JobsKpiSummary", () => {
     expect(screen.getByText("Models Used")).toBeInTheDocument();
   });
 
-  it("renders the total as a NumberTicker, read once by assistive technology", () => {
+  it("is the kit's KpiStat: six figures in a StatGrid, the hint under each", () => {
     render(<JobsKpiSummary jobs={jobs} />);
-    expect(screen.getAllByText("42").some((node) => node.classList.contains("sr-only"))).toBe(true);
+    expect(screen.getByText("llama3")).toBeInTheDocument();
+    expect(screen.getByText("30 completed")).toBeInTheDocument();
   });
 });
