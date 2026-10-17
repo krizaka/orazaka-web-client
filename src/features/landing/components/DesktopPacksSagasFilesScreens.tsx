@@ -9,7 +9,7 @@ export function PacksScreen() {
     <article className="relative flex h-full flex-col justify-between space-y-3 rounded-xl bg-surface-0/60 p-4 font-sans sm:p-5">
       <header className="flex items-center justify-between border-b border-border-subtle pb-3">
         <h4 className="text-xs font-bold text-fg">Sovereign Domain Packs & Scope Guard Catalog</h4>
-        <span className="rounded-full bg-surface-1 px-2 py-0.5 font-mono text-[10px] text-fg-accent">Loi 25 · RGPD · HIPAA</span>
+        <span className="rounded-full bg-surface-1 px-2 py-0.5 font-mono text-[10px] text-fg-accent">WORKER · DATA · OSS</span>
       </header>
 
       <ul className="grid gap-2.5 sm:grid-cols-3">

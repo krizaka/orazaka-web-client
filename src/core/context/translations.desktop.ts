@@ -124,9 +124,9 @@ export const desktop: Record<Locale, DesktopDictionary> = {
           tabLabel: "Packs & Scope Guard",
           badge: "Statutory Guard",
           headline: "Domain packs catalog with statutory refusal audit",
-          description: "Browse specialized industry packs (WORKER, DATA, OSS). Scope Guard enforces regulatory boundaries (Loi 25, RGPD Art. 9, HIPAA) and blocks prohibited exfiltrations before execution.",
-          proofBadge: "Loi 25 & RGPD Art. 9 Compliant",
-          proofDetail: "Verified: Scope Guard hard-refuses prohibited terms and logs cryptographic statutory audit events.",
+          description: "Browse specialized industry packs (WORKER, DATA, OSS). Scope Guard enforces each pack's declared boundaries and blocks prohibited requests before execution.",
+          proofBadge: "Refusals before execution",
+          proofDetail: "Scope Guard refuses what a pack is not allowed to do before anything runs.",
         },
         {
           id: "sagas",
@@ -162,7 +162,7 @@ export const desktop: Record<Locale, DesktopDictionary> = {
         },
         {
           title: "Sovereign packs & Scope Guard",
-          body: "Browse and install domain packs with statutory tier tags (WORKER, DATA, OSS). Inspect Scope Guard refusal rules (Loi 25, RGPD, CCPA) and statutorily refused terms in modal view before execution.",
+          body: "Browse and install domain packs with statutory tier tags (WORKER, DATA, OSS). Inspect each pack's Scope Guard refusal rules and the terms it refuses before execution.",
         },
         {
           title: "Studio blueprints & sagas",
@@ -271,9 +271,9 @@ export const desktop: Record<Locale, DesktopDictionary> = {
           tabLabel: "Packs & Scope Guard",
           badge: "Garde statutaire",
           headline: "Catalogue de packs spécialisés avec audit des refus statutaires",
-          description: "Parcourez les packs métier (WORKER, DATA, OSS). Le Scope Guard applique les frontières réglementaires (Loi 25, RGPD art. 9, HIPAA) et bloque les exfiltrations prohibées avant exécution.",
-          proofBadge: "Conforme Loi 25 & RGPD art. 9",
-          proofDetail: "Vérifié : le Scope Guard refuse formellement les termes interdits et journalise un certificat d'audit inviolable.",
+          description: "Parcourez les packs métier (WORKER, DATA, OSS). Le Scope Guard applique les limites déclarées de chaque pack et bloque les demandes interdites avant exécution.",
+          proofBadge: "Refus avant exécution",
+          proofDetail: "Le Scope Guard refuse ce qu'un pack n'a pas le droit de faire, avant que rien ne s'exécute.",
         },
         {
           id: "sagas",
@@ -309,7 +309,7 @@ export const desktop: Record<Locale, DesktopDictionary> = {
         },
         {
           title: "Packs souverains et Scope Guard",
-          body: "Parcourez et installez des packs métiers avec badges de niveau statutaires (WORKER, DATA, OSS). Inspectez les règles de refus du Scope Guard (Loi 25, RGPD, CCPA) et les termes légalement interdits avant exécution.",
+          body: "Parcourez et installez des packs métiers avec badges de niveau statutaires (WORKER, DATA, OSS). Inspectez les règles de refus du Scope Guard de chaque pack et les termes refusés avant exécution.",
         },
         {
           title: "Blueprints et sagas du studio",

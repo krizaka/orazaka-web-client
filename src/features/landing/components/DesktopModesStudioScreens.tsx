@@ -99,7 +99,7 @@ export function StudioScreen() {
       <section className="space-y-3 text-xs">
         <div className="flex justify-end">
           <blockquote className="max-w-[85%] rounded-2xl rounded-tr-sm bg-brand-orazaka/15 px-3.5 py-2.5 text-fg">
-            <p className="font-medium">Analyse ce bail commercial et vérifie la clause de souveraineté des données (Loi 25).</p>
+            <p className="font-medium">Analyse ce bail commercial et résume la clause de résiliation.</p>
             <footer className="mt-2 flex items-center gap-1.5 font-mono text-[11px] text-brand-orazaka">
               <span>📄 bail-commercial-2026.pdf (1.2 MB · Granted folder)</span>
             </footer>
@@ -113,15 +113,15 @@ export function StudioScreen() {
             </summary>
             <p className="mt-1.5 font-mono text-[11px] leading-relaxed text-fg-muted">
               1. Extracted clauses 14.1 & 14.2 from granted PDF.<br />
-              2. Checked statutory requirements: Quebec Loi 25 (data residency).<br />
-              3. Verified: No cross-border exfiltration permitted without explicit consent.<br />
-              4. Formulation: Confirmed compliant clause wording.
+              2. Read the notice period and the renewal terms.<br />
+              3. Compared them with the summary the user asked for.<br />
+              4. Drafted the summary.
             </p>
           </details>
 
           <article className="rounded-2xl rounded-tl-sm border border-border-subtle bg-surface-1 p-3 text-fg">
             <p className="leading-relaxed">
-              <strong className="text-success">Conformité validée :</strong> La clause 14.2 répond aux critères de la Loi 25. Les données résident exclusivement sur l&apos;infrastructure souveraine sans transfert tiers non autorisé.
+              <strong className="text-success">Résumé :</strong> la clause 14.2 permet la résiliation avec un préavis écrit. Le document est resté sur votre machine pendant toute l&apos;analyse.
             </p>
           </article>
         </div>

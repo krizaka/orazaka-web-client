@@ -22,9 +22,10 @@ export const REPO_URL = "https://github.com/krizaka/orazaka";
 export const ORG_ID = `${KRIZAKA_URL}/#organization`;
 
 export const SITE_NAME = "Orazaka";
-export const SITE_TITLE = "Orazaka — the AI that never leaves home";
+/** What the search result says: the name first, then what it is (a query for « Orazaka » or « sovereign AI platform »). */
+export const SITE_TITLE = "Orazaka — open-source sovereign AI platform, self-hosted";
 export const SITE_DESCRIPTION =
-  "Sovereign AI workspace by Krizaka: chat, documents, images, video and agents running on your own machines.";
+  "Orazaka is an open-source AI platform by Krizaka (Montréal): chat, documents, images, video and agents running on your own machines, with local models.";
 
 /** The search bots and AI crawlers the whole family welcomes — the same list on every site. */
 export const CRAWLERS = [
@@ -61,6 +62,7 @@ export function siteJsonLd() {
         isAccessibleForFree: true,
         license: "https://www.apache.org/licenses/LICENSE-2.0",
         codeRepository: REPO_URL,
+        sameAs: [REPO_URL],
         publisher: ORG,
         isPartOf: { "@id": `${SITE_URL}/#website` },
       },
