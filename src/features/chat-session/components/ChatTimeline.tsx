@@ -55,7 +55,7 @@ export const ChatTimeline: React.FC<Props> = ({
         const toolPayload = msg.content ? parseToolMetrics(msg.content) : null;
         return (
           <React.Fragment key={msg.id}>
-            <ChatMessage message={msg} index={idx} />
+            <ChatMessage message={msg} index={idx} streaming={isGenerating && idx === messages.length - 1} />
             {toolPayload && <ToolMetricsCard payload={toolPayload} label={t.chat.toolMetrics} />}
           </React.Fragment>
         );

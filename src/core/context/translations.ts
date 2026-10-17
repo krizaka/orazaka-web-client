@@ -149,6 +149,7 @@ export const translations: Record<Locale, TranslationDictionary> = {
       generating: "Generating…",
       viewTask: "View task",
       awaitingInput: "This run is waiting for you",
+      genui: { surface: "The answer as a dashboard", loading: "Building the dashboard…", noData: "No data for this part" },
     },
     profile: {
       title: "Profile",
@@ -1032,6 +1033,7 @@ export const translations: Record<Locale, TranslationDictionary> = {
       generating: "Génération en cours…",
       viewTask: "Voir la tâche",
       awaitingInput: "Ce run attend une réponse de votre part",
+      genui: { surface: "La réponse en tableau de bord", loading: "Construction du tableau de bord…", noData: "Pas de données pour cette partie" },
     },
     profile: {
       title: "Profil",

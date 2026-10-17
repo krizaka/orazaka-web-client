@@ -9,10 +9,13 @@ import { ChatMessage as ChatMessageType } from "@/core/types/chat.types";
 import { useTranslation } from "@/core/context/LocaleContext";
 
 import { cn } from "@krizaka/ui/cn";
+import { GenUiAnswer, hasGenUi } from "./GenUiAnswer";
 
 interface Props {
   message: ChatMessageType;
   index?: number;
+  /** The answer is still arriving (the last assistant message while the chat streams). */
+  streaming?: boolean;
 }
 
 const MarkdownH1 = ({ children }: { children?: React.ReactNode }) => (
@@ -130,7 +133,9 @@ const ContentVideo: React.FC<{ content: string }> = ({ content }) => (
   </div>
 );
 
-export const ChatMessage: React.FC<Props> = ({ message, index = 0 }) => {
+const renderMarkdown = (prose: string) => <ContentText content={prose} />;
+
+export const ChatMessage: React.FC<Props> = ({ message, index = 0, streaming = false }) => {
   const isUser = message.role === "user";
   const { t } = useTranslation();
   const reduce = useReducedMotion();
@@ -157,7 +162,11 @@ export const ChatMessage: React.FC<Props> = ({ message, index = 0 }) => {
         );
       case "text":
       default:
-        return <ContentText content={message.content} />;
+        return !isUser && hasGenUi(message.content) ? (
+          <GenUiAnswer content={message.content} streaming={streaming} renderProse={renderMarkdown} />
+        ) : (
+          <ContentText content={message.content} />
+        );
     }
   };
 
