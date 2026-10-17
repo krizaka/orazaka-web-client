@@ -66,7 +66,7 @@ export function AuthScreen({
             <Link href="/privacy" className="hover:text-fg">{t.auth.legalPrivacy}</Link>
             <Link href="/terms" className="hover:text-fg">{t.auth.legalTerms}</Link>
             <Link href="/contact" className="hover:text-fg">{t.auth.legalContact}</Link>
-            <LocaleSwitch />
+            <LocaleSwitch variant="inline" />
           </span>
         }
       >
