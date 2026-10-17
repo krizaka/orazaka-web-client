@@ -143,6 +143,8 @@ export interface TranslationDictionary {
     generating: string;
     viewTask: string;
     awaitingInput: string;
+    /** A model's answer drawn as an interface (ADR-082). */
+    genui: { surface: string; loading: string; noData: string };
   };
   profile: {
     title: string;
