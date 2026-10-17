@@ -35,7 +35,7 @@ describe("GalleryFeatured (the home page's prompt → image → video, a slidesh
   const slide = (container: HTMLElement, i: number) => container.querySelectorAll<HTMLElement>('[aria-roledescription="slide"]')[i];
   const g = translations.en.gallery;
 
-  it("is a three-step strip: the prompt, the image (SD 3.5 Large, DigitalOcean, $0.08), the video made from it (Wan 2.2 TI2V 5B, H100, a few cents) — chips visible under each medium", () => {
+  it("is a three-step strip: the prompt, the image (SD 3.5 Large, DigitalOcean, $0.08), the video made from it (Wan 2.2 A14B, H100, upscaled to 1080p) — chips visible under each medium", () => {
     const { container } = wrap(<GalleryFeatured />);
     expect(container.querySelector("#made")).not.toBeNull();
     expect(screen.getByRole("heading", { level: 2 })).toHaveTextContent("One prompt, an image, a video");
@@ -52,7 +52,7 @@ describe("GalleryFeatured (the home page's prompt → image → video, a slidesh
     expect(video).toHaveAttribute("aria-label", g.clips[first.id]);
     // The chips sit in the step, right under the medium they describe.
     expect(steps[1]).toHaveTextContent(`SD 3.5 Large · DigitalOcean · ${String(image.seconds)} s · $0.08`);
-    expect(steps[2]).toHaveTextContent(/Wan 2\.2 TI2V 5B · RunPod H100 80 GB · \d+ s · \$0\.\d\d/);
+    expect(steps[2]).toHaveTextContent(/Wan 2\.2 A14B · RunPod H100 80 GB · ↑ 1080p · \d+ s · \$1\.\d\d/);
     expect(within(active).getByText(g.fromImage)).toBeInTheDocument();
   });
 
@@ -70,7 +70,8 @@ describe("GalleryFeatured (the home page's prompt → image → video, a slidesh
     expect(strip.querySelectorAll("*").length).toBe(before); // nothing was added to the strip
     expect(open).toHaveTextContent(first.clip.runId);
     expect(open).toHaveTextContent(first.clip.seed);
-    expect(open).toHaveTextContent(/Wan 2\.2 TI2V 5B/);
+    expect(open).toHaveTextContent(/Wan 2\.2 A14B/);
+    expect(open).toHaveTextContent(/SeedVR2 3B/);
     expect(open).toHaveTextContent(/routed by Orazaka/);
     expect(open).toHaveTextContent(/GPU cost of the run/);
     expect(Array.from(open.querySelectorAll("pre code")).map((c) => c.textContent)).toEqual(clipReproduceParts(first.clip).map((part) => part.code));

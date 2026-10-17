@@ -40,6 +40,18 @@ export interface ClipVia {
   provider: string;
 }
 
+/** The optional super-resolution pass after a clip (Studio `upscale`): what upscaled it, from what to what, how long it takes. */
+export interface ClipUpscale {
+  model: string;
+  licence: string;
+  from: string;
+  to: string;
+  /** The pass alone on a free H100 (measured), not its time beside another job. */
+  seconds: number;
+  /** That time at the GPU's hourly rate, US dollars. */
+  costUsd: number;
+}
+
 /** What a run recorded about a clip. */
 export interface ClipRecord {
   /** The key of its caption in `t.gallery.clips` (the file stem, prefixed by the product when it is not Orazaka's). */
@@ -64,6 +76,8 @@ export interface ClipRecord {
   runId: string;
   /** Set when the clip was made from an image by another model than `CLIP_MODEL`; `costUsd` is then the GPU time of the run. */
   via?: ClipVia;
+  /** The 1080p pass after the clip, when it has one: `width` x `height` are then the upscaled frame. */
+  upscale?: ClipUpscale;
   /** The image the clip starts from, when it does: the clip is `prompt → image → video`. */
   image?: ImageRecord;
 }
@@ -87,12 +101,22 @@ export const CLIP_MODEL = {
   provider: "DigitalOcean serverless inference",
 } as const;
 
-/** Image to video: Wan 2.2 TI2V 5B on an H100 80 GB (RunPod, by the hour), run by Orazaka's video Studio through its GPU relay. */
+/** Image to video: Wan 2.2 A14B (its image-to-video checkpoint) on an H100 80 GB (RunPod, by the hour), run by Orazaka's video Studio through its GPU relay. */
 export const IMAGE_TO_VIDEO: ClipVia = {
-  key: "wan2.2-ti2v-5b",
-  name: "Wan 2.2 TI2V 5B",
+  key: "wan2.2-t2v-a14b",
+  name: "Wan 2.2 A14B",
   licence: "Apache-2.0",
   provider: "RunPod H100 80 GB",
+};
+
+/** SeedVR2 3B takes the 1280x720 clip to 1920x1080: 107 s alone on an H100 (measured, docs/_generated/MEASURED_RUNS.md), $3.99 an hour. */
+export const UPSCALE_1080P: ClipUpscale = {
+  model: "SeedVR2 3B",
+  licence: "Apache-2.0",
+  from: "1280×720",
+  to: "1920×1080",
+  seconds: 107,
+  costUsd: 0.12,
 };
 
 /** The model of every image of the home page's strip: a run of the `image-generation` Studio. */
@@ -105,154 +129,160 @@ export const IMAGE_MODEL = {
 
 /** What each run recorded, by the media path of its file (no extension). */
 const RECORDS: Record<string, ClipRecord> = {
-  "products/orazaka/video/grenoble": {
-    id: "grenoble",
+  "products/orazaka/video/old-port": {
+    id: "old-port",
     featured: true,
-    prompt: "The spherical cable-car cabins glide slowly up above the city, the Alps glow pink, mist drifts in the valley. Slow aerial drift, one continuous shot. No text, no lettering, no logos. Photographic realism, stable composition, subtle natural motion, the subject keeps its shape.",
-    seed: "20261020",
-    width: 1280,
-    height: 704,
-    fps: 24,
-    duration: 5.04,
-    seconds: 181,
-    costUsd: 0.2006,
-    runId: "1b56755b-063c-409e-8244-5a16bec55a44",
+    prompt: "Slow lateral dolly along the quay at 35mm anamorphic: the amber lights of the Clock Tower and the quay lamps shimmer in long reflections on the glassy water, the moored ship's rigging sways very slightly, thin mist drifts across the river, distant silhouettes stroll along the quay, subtle anamorphic lens flare from the lamps. Cobalt blue hour grade with warm amber highlights, one continuous steady shot, photographic realism. No text, no lettering, no logos.",
+    seed: "20261103",
+    width: 1920,
+    height: 1080,
+    fps: 16,
+    duration: 5.06,
+    seconds: 1117,
+    costUsd: 1.238,
+    runId: "f476a266-adc9-47eb-bc7b-b929d97480d4",
     via: IMAGE_TO_VIDEO,
+    upscale: UPSCALE_1080P,
     image: {
-      id: "grenoble",
-      src: "products/orazaka/showcase/grenoble.webp",
-      prompt: "Dawn over Grenoble, the spherical cable-car cabins of the Bastille above the city, snow-capped Alps glowing pink behind, mist in the valley, aerial cinematic wide 16:9 photograph. No text, no lettering, no logos.",
-      seed: "2380877182",
+      id: "old-port",
+      src: "products/orazaka/showcase/old-port.webp",
+      prompt: "Cinematic still, 35mm anamorphic lens, blue hour: the Old Port of Montréal seen from the quay, the stone Clock Tower lit warm amber against a deep indigo sky, the St. Lawrence river glassy with long reflections of the city lights, a tall ship moored at the quay with softly lit rigging, a few people walking far away as silhouettes, thin mist on the water, cobalt shadows against warm amber practical lights, filmic teal-orange grade, sharp, photographic realism, wide 16:9 composition. No text, no lettering, no logos, no readable signs.",
+      seed: "678812080",
       width: 1024,
       height: 1024,
-      seconds: 9,
+      seconds: 8,
       costUsd: 0.08,
-      runId: "1eddafe2-06d5-454d-817e-5e6d130d5ed2",
-    },
-  },
-  "products/orazaka/gallery-video/assistant": {
-    id: "assistant",
-    featured: true,
-    prompt: "The holographic orange interface blooms and rearranges the blueprints in mid-air, sparks fly from the welding arm in the background, reflections move on the brushed metal, haze drifts slowly. Slow push-in, one continuous shot. No text, no lettering, no logos. Photographic realism, stable composition, subtle natural motion, the subject keeps its shape.",
-    seed: "20261018",
-    width: 1280,
-    height: 704,
-    fps: 24,
-    duration: 5.04,
-    seconds: 177,
-    costUsd: 0.1962,
-    runId: "22b5fc0e-3c82-4c6c-b520-9dd935b7b23e",
-    via: IMAGE_TO_VIDEO,
-    image: {
-      id: "assistant",
-      src: "products/orazaka/showcase/assistant.webp",
-      prompt: "An engineer's workshop at night, a clean orange holographic blueprint of a machine hovering above a steel workbench, a robotic welding arm in the background, brushed metal surfaces, volumetric haze, sharp focus, cinematic sci-fi, no people. No text, no lettering, no logos.",
-      seed: "3870958429",
-      width: 1024,
-      height: 1024,
-      seconds: 10,
-      costUsd: 0.08,
-      runId: "295be566-d7e9-4244-9409-2ff3fc277dea",
+      runId: "58bf878c-75bc-4506-8d9e-e04bd852ac9a",
     },
   },
   "products/orazaka/video/chefchaouen": {
     id: "chefchaouen",
     featured: true,
-    prompt: "Slow drone glide forward over the blue alleys of Chefchaouen at golden hour, warm light shifts gently across the walls, a few plants sway in a light breeze, soft haze over the Rif mountains. One continuous shot, steady camera. No text, no lettering, no logos. Photographic realism, stable composition, subtle natural motion.",
-    seed: "20261030",
-    width: 1280,
-    height: 704,
-    fps: 24,
-    duration: 5.04,
-    seconds: 170,
-    costUsd: 0.1884,
-    runId: "f001c354-32b1-451c-afeb-24c904a8c5fc",
+    prompt: "Slow forward dolly with a gentle upward tilt at 28mm along the blue steps: warm golden-hour light slides across the cobalt walls, leaves and flower petals in the terracotta pots sway in a light breeze, dust motes float in the sunbeams, the distant Rif mountains glow through soft haze. Warm highlights against cool blue shadows, filmic grade, one continuous steady shot, photographic realism. No text, no lettering, no logos.",
+    seed: "20261102",
+    width: 1920,
+    height: 1080,
+    fps: 16,
+    duration: 5.06,
+    seconds: 1119,
+    costUsd: 1.2402,
+    runId: "61aefd72-e063-4d94-bbd4-23dbc1c617a8",
     via: IMAGE_TO_VIDEO,
+    upscale: UPSCALE_1080P,
     image: {
       id: "chefchaouen",
       src: "products/orazaka/showcase/chefchaouen.webp",
-      prompt: "Golden hour over the blue-washed alleys of Chefchaouen in Morocco seen from a rooftop, stepped blue walls, terracotta pots with plants, warm light on the old town, the Rif mountains behind, wide 16:9 cinematic photograph. No text, no lettering, no logos.",
-      seed: "234499369",
-      width: 1024,
-      height: 1024,
-      seconds: 9,
-      costUsd: 0.08,
-      runId: "8a618a00-6852-44c1-b88b-936caba21b1f",
-    },
-  },
-  "products/orazaka/video/old-port": {
-    id: "old-port",
-    featured: true,
-    prompt: "Smooth cinematic drone glide forward over the Old Port, the water shimmers with reflections of the warm lights, a few people stroll along the quay, soft haze drifts. One single continuous shot, steady camera, no cuts. No text, no lettering, no logos. Photographic realism, stable composition, subtle natural motion, the subject keeps its shape.",
-    seed: "20261017",
-    width: 1280,
-    height: 704,
-    fps: 24,
-    duration: 5.04,
-    seconds: 182,
-    costUsd: 0.2017,
-    runId: "5c8fc9ca-b50f-4520-ae13-b1da956395d7",
-    via: IMAGE_TO_VIDEO,
-    image: {
-      id: "old-port",
-      src: "products/orazaka/showcase/old-port.webp",
-      prompt: "The Old Port of Montréal at blue hour seen from above, the cobblestone quay and the Clock Tower lit in warm lights against a deep blue sky, the St. Lawrence river reflecting the city, a few people strolling, soft haze, wide cinematic 16:9 composition, photographic realism. No text, no lettering, no logos.",
-      seed: "1305211136",
+      prompt: "Cinematic still, 28mm lens, golden hour: the blue-washed stepped alleys of Chefchaouen in Morocco seen from a low angle, deep cobalt-blue walls glowing in warm low sun, terracotta pots overflowing with green plants and pink flowers on the steps, a white-and-blue archway in the background, long soft shadows, the Rif mountains hazy and warm behind the rooftops, gentle atmospheric haze, rich filmic colour grade with warm highlights and cool blue shadows, tack-sharp, photographic realism, wide 16:9 composition. No text, no lettering, no logos.",
+      seed: "3082126038",
       width: 1024,
       height: 1024,
       seconds: 8,
       costUsd: 0.08,
-      runId: "021c4fde-afaa-4a5e-8f2d-c3f21ee3a01d",
+      runId: "c6db2ef7-7c05-431c-a300-64a1ded419af",
+    },
+  },
+  "products/orazaka/video/grenoble": {
+    id: "grenoble",
+    featured: true,
+    prompt: "Slow cinematic crane-up and forward dolly at 35mm: the camera rises smoothly beside the orange cable-car cabin as it glides along its cable, parallax reveals the layered Alps behind it, the low mist drifts and breathes through the valley, first rim light of sunrise slides along the snow ridges, tiny city lights twinkle below. Teal-and-orange filmic grade, shallow atmospheric haze, one continuous unbroken shot, steady and smooth, photographic realism. No text, no lettering, no logos.",
+    seed: "20261100",
+    width: 1920,
+    height: 1080,
+    fps: 16,
+    duration: 5.06,
+    seconds: 1184,
+    costUsd: 1.3123,
+    runId: "5f59dea1-faed-4506-accb-a9e8ec882642",
+    via: IMAGE_TO_VIDEO,
+    upscale: UPSCALE_1080P,
+    image: {
+      id: "grenoble",
+      src: "products/orazaka/showcase/grenoble.webp",
+      prompt: "Cinematic aerial still, 35mm anamorphic lens, blue-hour dawn over Grenoble: a bright orange spherical cable-car cabin hangs from a taut cable in the upper third of the frame, the city below sinking in luminous low mist, a wall of snow-capped Alps catching the first pink-gold sunrise light on their ridges, soft volumetric haze in the valley, shallow atmospheric perspective, teal shadows against warm orange highlights, filmic colour grade, ultra-sharp, photographic realism, wide 16:9 composition. No text, no lettering, no logos, no people visible.",
+      seed: "939883888",
+      width: 1024,
+      height: 1024,
+      seconds: 8,
+      costUsd: 0.08,
+      runId: "ee92acd3-0bff-4a4a-8ea5-74495ca17906",
+    },
+  },
+  "products/orazaka/gallery-video/assistant": {
+    id: "assistant",
+    featured: true,
+    prompt: "Slow push-in dolly at 50mm toward the floating orange hologram: its wireframe blueprint slowly rotates and rebuilds itself line by line, the out-of-focus welding arm in the background strikes a few bright sparks that fall and bounce on the steel, volumetric haze drifts through the orange key light and the teal rim light, reflections slide across the brushed metal. Filmic teal-orange grade, shallow depth of field, one continuous unbroken shot, no people. No text, no lettering, no logos.",
+    seed: "20261101",
+    width: 1920,
+    height: 1080,
+    fps: 16,
+    duration: 5.06,
+    seconds: 1118,
+    costUsd: 1.2391,
+    runId: "f9e981ee-a20a-4f86-8a4d-08b9947fafa4",
+    via: IMAGE_TO_VIDEO,
+    upscale: UPSCALE_1080P,
+    image: {
+      id: "assistant",
+      src: "products/orazaka/showcase/assistant.webp",
+      prompt: "Cinematic still, 50mm lens, shallow depth of field: a night engineer's workshop, a precise glowing orange holographic blueprint of a compact machine floats above a brushed-steel workbench, thin wireframe lines and soft light caught in drifting volumetric haze, a robotic welding arm out of focus in the background throwing a few warm sparks, strong orange key light from the hologram and a cool teal rim light from behind, reflections on brushed metal, filmic teal-orange grade, sharp focus on the hologram, photographic realism, wide 16:9 composition. No people, no faces, no text, no lettering, no logos.",
+      seed: "4272951330",
+      width: 1024,
+      height: 1024,
+      seconds: 8,
+      costUsd: 0.08,
+      runId: "1ad21e0d-950a-440c-9211-47e9ba5e114d",
     },
   },
   "products/orazaka/video/montreal": {
     id: "montreal",
     featured: true,
-    prompt: "Slow tracking shot along the snowy street, snowflakes fall through the streetlight, steam rises from the vent, warm windows glow. One continuous shot, steady camera. No text, no lettering, no logos. Photographic realism, stable composition, subtle natural motion, the subject keeps its shape.",
-    seed: "20261019",
-    width: 1280,
-    height: 704,
-    fps: 24,
-    duration: 5.04,
-    seconds: 184,
-    costUsd: 0.2039,
-    runId: "88e648fb-68c6-4245-89bd-e79c42864ef7",
+    prompt: "Locked-off 85mm shot with a very slow, subtle push-in, shallow depth of field: the snowy spiral staircase and the glowing street lamp stay perfectly in place, fat snowflakes drift down in layers through the warm lamp light, soft bokeh highlights, a thin plume of steam rises from a street vent, the lit window flickers gently. Natural muted colours, consistent exposure and colour temperature from the first frame to the last, neutral grey-blue shadows with warm amber only on the lamp, brick kept dark and desaturated, filmic grade, photographic realism. No text, no lettering, no logos.",
+    seed: "20261177",
+    width: 1920,
+    height: 1080,
+    fps: 16,
+    duration: 4.44,
+    seconds: 1179,
+    costUsd: 1.3067,
+    runId: "73c98873-040f-4db9-ab29-af04a030e02c",
     via: IMAGE_TO_VIDEO,
+    upscale: UPSCALE_1080P,
     image: {
       id: "montreal",
       src: "products/orazaka/showcase/montreal.webp",
-      prompt: "Winter night in Montréal, a snowy street of the Plateau with outside spiral staircases, warm windows glowing, snowflakes in the streetlight, steam rising from a vent, cinematic 35mm, shallow depth of field, wide 16:9. No text, no lettering, no logos.",
-      seed: "2636103373",
+      prompt: "Cinematic still, 85mm lens, shallow depth of field: a snowy winter night on a street of the Plateau in Montréal, an iron outside spiral staircase dusted with snow, a warm glowing street lamp with fat snowflakes caught in its light, a lit window glowing orange in a dark brick facade, fresh snow on the road, falling snow in layers of bokeh, deep teal shadows against warm amber highlights, filmic grade, sharp focus on the staircase, photographic realism, wide 16:9 composition. No text, no lettering, no logos, no readable signs.",
+      seed: "1642656917",
       width: 1024,
       height: 1024,
       seconds: 8,
       costUsd: 0.08,
-      runId: "6869549d-e2ea-45a9-bb10-dddd16ce6e16",
+      runId: "fc3797f0-1a1d-43ce-a605-79981e4617a5",
     },
   },
   "products/yasakia/video/montreal-dawn": {
     id: "yasakia-montreal-dawn",
     featured: true,
-    prompt: "Aerial drone shot gliding slowly over Old Montréal rooftops toward the river, low fog drifts, the light grows on the domes, reflections shimmer on the water. Smooth, one continuous shot. No text, no lettering, no logos. Photographic realism, stable composition, subtle natural motion, the subject keeps its shape.",
-    seed: "20261021",
-    width: 1280,
-    height: 704,
-    fps: 24,
-    duration: 5.04,
-    seconds: 194,
-    costUsd: 0.215,
-    runId: "6b7dc141-4f3e-46fd-9d58-3eb838a6ef9e",
+    prompt: "Smooth drone glide forward and slightly down at 24mm over the Old Montréal rooftops toward the river: low fog slowly drifts between the buildings, sunrise light grows and rakes across the copper dome and stone roofs, emerald and turquoise reflections shimmer on the river, a few birds cross the frame. Cool shadows with golden highlights, filmic grade, one continuous steady shot, photographic realism. No text, no lettering, no logos.",
+    seed: "20261105",
+    width: 1920,
+    height: 1080,
+    fps: 16,
+    duration: 5.06,
+    seconds: 1197,
+    costUsd: 1.3267,
+    runId: "71339847-5295-41e7-966f-157356a75716",
     via: IMAGE_TO_VIDEO,
+    upscale: UPSCALE_1080P,
     image: {
       id: "montreal-dawn",
       src: "products/orazaka/showcase/montreal-dawn.webp",
-      prompt: "Aerial view at dawn over Old Montréal rooftops toward the St. Lawrence river, low fog, emerald and turquoise reflections on the water, first light hitting the domes, wide 16:9 cinematic color grade. No text, no lettering, no logos.",
-      seed: "1328802241",
+      prompt: "Cinematic aerial still, 24mm lens, dawn: Old Montréal rooftops seen from above, grey stone and copper roofs, a green-copper dome catching the first light, a low layer of fog hanging between the buildings, the St. Lawrence river beyond glowing in soft emerald and turquoise reflections, long warm shafts of sunrise light raking across the roofs, atmospheric depth, cool shadows against golden highlights, filmic colour grade, crisp architectural detail, photographic realism, wide 16:9 composition. No text, no lettering, no logos.",
+      seed: "2905808571",
       width: 1024,
       height: 1024,
-      seconds: 8,
+      seconds: 9,
       costUsd: 0.08,
-      runId: "bd749a18-c27c-4d11-9a96-b4565489389b",
+      runId: "9a0ce9d2-44c2-4614-8adb-a61c7e456dc7",
     },
   },
   "products/orazaka/gallery-video/tea-pour": {
@@ -379,7 +409,7 @@ export function clipReproduceParts(clip: GalleryClip): ReproducePart[] {
       {
         language: "json",
         file: "inputs.json",
-        code: JSON.stringify({ prompt: clip.prompt, image: "<asset id of the image of step 2>", durationSeconds: Math.round(clip.duration), aspect: clip.aspect, seed: clip.seed, model: clip.via?.key ?? CLIP_MODEL.key }, null, 2),
+        code: JSON.stringify({ prompt: clip.prompt, image: "<asset id of the image of step 2>", durationSeconds: Math.round(clip.duration), aspect: clip.aspect, seed: clip.seed, model: clip.via?.key ?? CLIP_MODEL.key, ...(clip.upscale ? { upscale: clip.upscale.to.split("×")[1] + "p" } : {}) }, null, 2),
       },
       { language: "bash", file: "Terminal", code: "orazaka studio run --studio video-generation --inputs-file inputs.json" },
     ];

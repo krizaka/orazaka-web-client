@@ -117,6 +117,9 @@ export interface GalleryDictionary {
   /** "{cost}" US dollars of GPU time, and its label in the run's facts. */
   gpuCost: string;
   gpuCostLabel: string;
+  /** The upscale pass of a clip: its label and its fact ("{model}", "{licence}", "{from}", "{to}", "{seconds}", "{cost}"). */
+  upscaleLabel: string;
+  upscaleFact: string;
   /** "{cost}" US dollars, the provider's price for the image. */
   imageCost: string;
   /** The still of each featured clip, described for a screen reader. */
@@ -159,7 +162,7 @@ export const gallery: Record<Locale, GalleryDictionary> = {
   en: {
     "eyebrow": "Made here",
     "featuredTitle": "One prompt, an image, a video: three real runs.",
-    "featuredLead": "Each example is two Orazaka runs in a row: the prompt makes the image (Stable Diffusion 3.5 Large on DigitalOcean's serverless inference), then that image starts the video (Wan 2.2 TI2V 5B on an H100 GPU rented by the hour). Each step shows its exact prompt and what the run recorded — model, provider, time, cost, run id; reproduce it yourself.",
+    "featuredLead": "Each example is two Orazaka runs in a row: the prompt makes the image (Stable Diffusion 3.5 Large on DigitalOcean's serverless inference), then that image starts the video (Wan 2.2 A14B on an H100 GPU rented by the hour), upscaled to 1080p by SeedVR2 3B, graded and given its sound. Each step shows its exact prompt and what the run recorded — model, provider, time, cost, run id; reproduce it yourself.",
     "prev": "Previous image",
     "next": "Next image",
     "counter": "Image {n} of {total}",
@@ -252,7 +255,7 @@ export const gallery: Record<Locale, GalleryDictionary> = {
     "details": "Details",
     "more": "More",
     "less": "Less",
-    "fromImage": "The video starts from this image (cut to 16:9): its first frame is the image, then it moves.",
+    "fromImage": "The video starts from this image (cut to 16:9) and moves from it; the clip is then upscaled to 1080p and graded.",
     "imageStep": "Image",
     "videoStep": "Video",
     "imagePromptHeading": "Image prompt",
@@ -270,23 +273,25 @@ export const gallery: Record<Locale, GalleryDictionary> = {
     "cost": "${cost} a clip",
     "gpuCost": "${cost} of GPU time",
     "gpuCostLabel": "GPU cost of the run",
+    "upscaleLabel": "Upscale",
+    "upscaleFact": "{model} ({licence}) · {from} → {to} · about {seconds} s alone on an H100 · ${cost}",
     "imageCost": "${cost} an image",
     "imageFrame": "{width}×{height}, cut to 16:9 for the video",
     "imageFrameLabel": "Size",
     "routedBy": "routed by Orazaka",
     "videoReproduceLead": "The same prompt, model and seed give the same shot again from the CLI of your own Orazaka (it needs a provider key for serverless inference):",
     "videoSection": "Videos",
-    "videoNote": "Each video is an Orazaka run — the video Studio of orazaka-media — made by Wan 2.2 — A14B on DigitalOcean's serverless inference for a clip from a prompt alone, TI2V 5B on an H100 GPU for a clip made from an image — and routed by Orazaka. The images of the gallery are generated on one Mac.",
+    "videoNote": "Each video is an Orazaka run — the video Studio of orazaka-media — made by Wan 2.2 — A14B on DigitalOcean's serverless inference for a clip from a prompt alone, A14B on an H100 GPU for a clip made from an image, then SeedVR2 3B for 1080p — and routed by Orazaka. The images of the gallery are generated on one Mac.",
     "clips": {
       "tea-pour": "Slow-motion video: mint tea pours from a silver teapot into an engraved glass in a Berber tent, steam curling through a shaft of golden light",
-      "assistant": "Video: in a night workshop a holographic interface of orange light unfolds blueprints of a machine, welding sparks in the background",
-      "montreal": "Winter night in Montréal: a slow tracking shot along a snowy street of the Plateau, spiral staircases, warm windows, snow in the streetlight",
-      "old-port": "A drone glides over the Old Port of Montréal at blue hour: the quay and the Clock Tower lit warm, the river reflecting the city — one continuous shot",
+      "assistant": "A night workshop: an orange-gold holographic blueprint built above a steel bench under a machine head, sparks and light falling on the metal, a slow push-in",
+      "montreal": "A snowy night on a street of the Plateau: the spiral staircase and the street lamp, fat snowflakes in the warm light",
+      "old-port": "The Old Port of Montréal as the light falls: the Clock Tower and the tall ship at the quay, the sky deepening to blue hour, lamps coming up in the water",
       "maroc": "Golden hour over the blue alleys of Chefchaouen, then into a riad courtyard with a zellige fountain — a cross-dissolve joins the two shots",
-      "grenoble": "Dawn over Grenoble: cable-car cabins gliding above the city, the snow-capped Alps glowing pink behind",
-      "chefchaouen": "Golden hour over the blue stairs of Chefchaouen: the camera glides forward, light shifting on the walls, plants swaying",
+      "grenoble": "Dawn over Grenoble: a slow crane-up beside an orange cable-car cabin, the city lights below, the Alps and the mist revealed behind",
+      "chefchaouen": "Golden hour on the blue stairs of Chefchaouen: a slow forward move past the flowers, light shifting on the walls, the Rif mountains appearing through an arch",
       "arcade": "A 1990s arcade at night: hands on a joystick and buttons, neon magenta and cyan, coloured smoke",
-      "yasakia-montreal-dawn": "Dawn over Old Montréal: an aerial glide toward the St. Lawrence, low fog, emerald and turquoise reflections on the water",
+      "yasakia-montreal-dawn": "Old Montréal from above at first light: a slow glide past a green-copper dome, low fog drifting between the roofs, birds crossing",
       "yororis-microphone": "A vintage ribbon microphone in a quiet sand-coloured room, sage-green curtains moving in the breeze, light particles drifting",
       "orochia-studio-night": "A creator's studio at night seen from behind a cinema camera, violet and magenta light, haze and ring-light bokeh",
       "yomizaka-contracts": "Contracts on a walnut desk at blue hour, a line of warm light sweeping the pages, a coffee steaming, snow falling outside"
@@ -297,7 +302,7 @@ export const gallery: Record<Locale, GalleryDictionary> = {
       "chefchaouen": "Golden hour over the blue-washed stairs and alleys of Chefchaouen, terracotta pots and the Rif mountains behind",
       "old-port": "The Old Port of Montréal at blue hour: the Clock Tower lit warm, the quay wet with reflections, a tall ship at its mooring",
       "montreal": "A snowy night on a street of the Plateau: spiral staircase, street lamp glowing, snowflakes in the light",
-      "montreal-dawn": "Old Montréal rooftops at dawn seen from above, a green-copper dome, low fog and the river behind"
+      "montreal-dawn": "Old Montréal rooftops seen from above at first light, a green-copper dome, low fog and the river behind"
     },
     "styles": {
       "golden": "Golden-hour editorial",
@@ -328,7 +333,7 @@ export const gallery: Record<Locale, GalleryDictionary> = {
   fr: {
     "eyebrow": "Fait ici",
     "featuredTitle": "Une consigne, une image, une vidéo : trois vraies exécutions.",
-    "featuredLead": "Chaque exemple est deux exécutions Orazaka à la suite : la consigne produit l'image (Stable Diffusion 3.5 Large sur l'inférence serverless de DigitalOcean), puis cette image lance la vidéo (Wan 2.2 TI2V 5B sur un GPU H100 loué à l'heure). Chaque étape montre sa consigne exacte et ce que l'exécution a enregistré — modèle, fournisseur, durée, coût, identifiant ; reproduisez-la vous-même.",
+    "featuredLead": "Chaque exemple est deux exécutions Orazaka à la suite : la consigne produit l'image (Stable Diffusion 3.5 Large sur l'inférence serverless de DigitalOcean), puis cette image lance la vidéo (Wan 2.2 A14B sur un GPU H100 loué à l'heure), portée en 1080p par SeedVR2 3B, étalonnée et sonorisée. Chaque étape montre sa consigne exacte et ce que l'exécution a enregistré — modèle, fournisseur, durée, coût, identifiant ; reproduisez-la vous-même.",
     "prev": "Image précédente",
     "next": "Image suivante",
     "counter": "Image {n} sur {total}",
@@ -421,7 +426,7 @@ export const gallery: Record<Locale, GalleryDictionary> = {
     "details": "Détails",
     "more": "Plus",
     "less": "Moins",
-    "fromImage": "La vidéo part de cette image (recadrée en 16:9) : sa première image est celle-ci, puis elle s'anime.",
+    "fromImage": "La vidéo part de cette image (recadrée en 16:9) et s'anime à partir d'elle ; le plan est ensuite porté en 1080p et étalonné.",
     "imageStep": "Image",
     "videoStep": "Vidéo",
     "imagePromptHeading": "Consigne de l'image",
@@ -439,23 +444,25 @@ export const gallery: Record<Locale, GalleryDictionary> = {
     "cost": "{cost} $ US le plan",
     "gpuCost": "{cost} $ de temps GPU",
     "gpuCostLabel": "Coût GPU de l'exécution",
+    "upscaleLabel": "Montée en résolution",
+    "upscaleFact": "{model} ({licence}) · {from} → {to} · environ {seconds} s seul sur un H100 · {cost} $",
     "imageCost": "{cost} $ US l'image",
     "imageFrame": "{width}×{height}, recadrée en 16:9 pour la vidéo",
     "imageFrameLabel": "Taille",
     "routedBy": "routé par Orazaka",
     "videoReproduceLead": "La même consigne, le même modèle et la même graine redonnent le même plan depuis le CLI de votre propre Orazaka (il faut une clé de fournisseur d'inférence serverless) :",
     "videoSection": "Vidéos",
-    "videoNote": "Chaque vidéo est une exécution Orazaka — le Studio vidéo d'orazaka-media — réalisée par Wan 2.2 — A14B sur l'inférence serverless de DigitalOcean pour un plan fait de la seule consigne, TI2V 5B sur un GPU H100 pour un plan fait à partir d'une image — et routée par Orazaka. Les images de la galerie sont générées sur un seul Mac.",
+    "videoNote": "Chaque vidéo est une exécution Orazaka — le Studio vidéo d'orazaka-media — réalisée par Wan 2.2 — A14B sur l'inférence serverless de DigitalOcean pour un plan fait de la seule consigne, A14B sur un GPU H100 pour un plan fait à partir d'une image, puis SeedVR2 3B pour le 1080p — et routée par Orazaka. Les images de la galerie sont générées sur un seul Mac.",
     "clips": {
       "tea-pour": "Vidéo au ralenti : du thé à la menthe coule d'une théière en argent dans un verre gravé, sous une tente berbère, la vapeur dans un rayon de lumière dorée",
-      "assistant": "Vidéo : dans un atelier de nuit, une interface holographique de lumière orange déploie les plans d'une machine, des étincelles de soudure au fond",
-      "montreal": "Nuit d'hiver à Montréal : un lent travelling dans une rue enneigée du Plateau, escaliers en colimaçon, fenêtres chaudes, neige dans la lumière des lampadaires",
-      "old-port": "Un drone glisse au-dessus du Vieux-Port de Montréal à l'heure bleue : le quai et la Tour de l'Horloge éclairés de chaud, le fleuve reflétant la ville — un seul plan continu",
+      "assistant": "Un atelier de nuit : un plan holographique or-orange construit au-dessus d'un établi en acier, sous une tête de machine, des étincelles et de la lumière sur le métal, un lent travelling avant",
+      "montreal": "Une nuit de neige dans une rue du Plateau : l'escalier en colimaçon et le lampadaire, de gros flocons dans la lumière chaude",
+      "old-port": "Le Vieux-Port de Montréal quand la lumière tombe : la tour de l'Horloge et le grand voilier à quai, le ciel qui vire à l'heure bleue, les lampes qui s'allument dans l'eau",
       "maroc": "Heure dorée sur les ruelles bleues de Chefchaouen, puis dans la cour d'un riad avec sa fontaine en zellige — un fondu enchaîné relie les deux plans",
-      "grenoble": "L'aube sur Grenoble : des cabines de téléphérique glissent au-dessus de la ville, les Alpes enneigées rosées derrière",
-      "chefchaouen": "Heure dorée sur les escaliers bleus de Chefchaouen : la caméra avance, la lumière glisse sur les murs, les plantes ondulent",
+      "grenoble": "Aube sur Grenoble : une lente montée de grue le long d'une cabine orange du téléphérique, les lumières de la ville en dessous, les Alpes et la brume qui se révèlent derrière",
+      "chefchaouen": "Heure dorée sur les escaliers bleus de Chefchaouen : un lent mouvement en avant devant les fleurs, la lumière qui glisse sur les murs, les montagnes du Rif qui apparaissent sous une arche",
       "arcade": "Une salle d'arcade des années 90 la nuit : des mains sur un joystick et des boutons, néons magenta et cyan, fumée colorée",
-      "yasakia-montreal-dawn": "L'aube sur le Vieux-Montréal : un vol plané vers le Saint-Laurent, brume basse, reflets émeraude et turquoise sur l'eau",
+      "yasakia-montreal-dawn": "Le Vieux-Montréal vu d'en haut aux premières lueurs : un lent vol plané près d'un dôme vert-de-gris, une brume basse entre les toits, des oiseaux qui traversent",
       "yororis-microphone": "Un micro à ruban d'époque dans une pièce calme couleur sable, des rideaux vert sauge qui bougent dans la brise, des particules de lumière",
       "orochia-studio-night": "Un studio de créateur la nuit, vu de derrière une caméra de cinéma, lumière violette et magenta, brume et bokeh d'anneau lumineux",
       "yomizaka-contracts": "Des contrats sur un bureau en noyer à l'heure bleue, un trait de lumière chaude balaie les pages, un café fume, la neige tombe dehors"
