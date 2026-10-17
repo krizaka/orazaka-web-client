@@ -16,6 +16,68 @@ export interface InputField {
   multiline: boolean;
   /** What file the field takes, when it takes an uploaded one (a picker, never a typed asset id). */
   assetKind: AssetKind | null;
+  /** A labelled list the server wrote in (`oneOf` of `const`): the catalogue's models, with the facts a picker shows. */
+  choices: Choice[] | null;
+  /** The value the form starts on, when the schema (or the catalogue's resolved default) states one. */
+  defaultValue: string | null;
+  /** `seed`: a number with a "random" toggle rather than a text line. */
+  control: "seed" | null;
+  /** Rarely needed: folded under "More options". */
+  advanced: boolean;
+  /** The values come from the model catalogue (`x-options`): a picker even when the list could not be loaded. */
+  fedByCatalogue: boolean;
+}
+
+/** What the catalogue says about one model: shown beside its name so a person can choose, not guess. */
+export interface ChoiceMeta {
+  runsOn: "local" | "cloud" | null;
+  speed: "fast" | "balanced" | "slow" | null;
+  typicalSeconds: number | null;
+  priceCents: number | null;
+  available: boolean;
+  unavailableReason: string | null;
+}
+
+/** One entry of a closed list. */
+export interface Choice {
+  value: string;
+  label: string;
+  hint: string | null;
+  meta: ChoiceMeta | null;
+}
+
+interface RawChoice {
+  const?: unknown;
+  title?: string;
+  description?: string;
+  "x-meta"?: Partial<Record<keyof ChoiceMeta, unknown>>;
+}
+
+/** The `oneOf` of `const` entries the server writes for a catalogue-fed field; null for anything else. */
+function choicesOf(oneOf: unknown): Choice[] | null {
+  if (!Array.isArray(oneOf) || oneOf.length === 0 || !oneOf.every((entry) => entry && typeof entry === "object" && "const" in entry)) {
+    return null;
+  }
+  return (oneOf as RawChoice[]).map((entry) => {
+    const meta = entry["x-meta"];
+    const text = (value: unknown) => (typeof value === "string" ? value : null);
+    const num = (value: unknown) => (typeof value === "number" ? value : null);
+    return {
+      value: String(entry.const),
+      label: entry.title ?? String(entry.const),
+      hint: entry.description ?? null,
+      meta: meta
+        ? {
+            runsOn: meta.runsOn === "local" || meta.runsOn === "cloud" ? meta.runsOn : null,
+            speed: meta.speed === "fast" || meta.speed === "balanced" || meta.speed === "slow" ? meta.speed : null,
+            typicalSeconds: num(meta.typicalSeconds),
+            priceCents: num(meta.priceCents),
+            available: meta.available !== false,
+            unavailableReason: text(meta.unavailableReason),
+          }
+        : null,
+    };
+  });
 }
 
 export type AssetKind = "image" | "video" | "audio";
@@ -73,7 +135,13 @@ export function useInputSchema(inputSchema: string | null): InputField[] {
           description?: string;
           format?: string;
           contentMediaType?: string;
+          oneOf?: unknown;
+          default?: unknown;
+          "x-control"?: string;
+          "x-advanced"?: boolean;
+          "x-options"?: { source?: string };
         };
+        const choices = choicesOf(spec.oneOf);
         let type: InputField["type"] = "string";
         if (Array.isArray(spec.enum)) {
           type = "enum";
@@ -91,7 +159,12 @@ export function useInputSchema(inputSchema: string | null): InputField[] {
           description: spec.description ?? null,
           assetKind,
           multiline: type === "string" && !assetKind && typeof spec.maxLength === "number" && spec.maxLength > 500,
-        };
+          choices,
+          defaultValue: spec.default === undefined || spec.default === null ? null : String(spec.default),
+          control: spec["x-control"] === "seed" ? "seed" : null,
+          advanced: spec["x-advanced"] === true,
+          fedByCatalogue: spec["x-options"]?.source === "models",
+        } satisfies InputField;
       });
     } catch {
       return [];

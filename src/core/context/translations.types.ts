@@ -719,6 +719,32 @@ export interface TranslationDictionary {
     runHistory: string;
     runEmpty: string;
     runSteps: string;
+    form: {
+      moreOptions: string;
+      automatic: string;
+      automaticPlain: string;
+      automaticHint: string;
+      seedRandom: string;
+      seedRandomHint: string;
+      seedPlaceholder: string;
+      seedInvalid: string;
+      searchOptions: string;
+      noResults: string;
+      clear: string;
+      showOptions: string;
+      local: string;
+      cloud: string;
+      fast: string;
+      balanced: string;
+      slow: string;
+      about: string;
+      perRun: string;
+      free: string;
+      unavailable: string;
+      choicesUnreachable: string;
+    };
+    /** Readable names of the values of a closed list the blueprint states itself (`enum`), by field then value. */
+    choices: Record<string, Record<string, string>>;
     /** A file input of a Studio (an image to start from, a video, a recording): a picker, never an asset id. */
     asset: {
       imageTitle: string;
