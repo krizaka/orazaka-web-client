@@ -12,7 +12,7 @@ import { SectionBackdrop } from "@krizaka/ui/section-backdrop";
 import { Showcase, type ShowcaseLabels } from "@krizaka/ui/showcase";
 import { useTranslation } from "@/core/context/LocaleContext";
 import { fill } from "@/core/context/fill";
-import { FEATURED, IMAGE_MODEL, clipFiles, imageUrl, type FeaturedItem } from "@/features/landing/utils/gallery-clips";
+import { FEATURED, IMAGE_MODEL, clipFiles, imageUrl, uhdFile, type FeaturedItem } from "@/features/landing/utils/gallery-clips";
 import { SectionHeading } from "@/features/landing/components/SectionHeading";
 import { CopyButton } from "@/features/landing/components/CopyButton";
 import { clipChip, clipLabels } from "@/features/landing/components/clipUi";
@@ -124,6 +124,11 @@ function Slide({ item, active }: Readonly<{ item: FeaturedItem; active: boolean 
             <ClipPlayer sources={clipFiles(clip)} title={g.clips[clip.id]} labels={clipLabels(g, clip)} className="h-full" />
           </figure>
           <Chip>{fill(clip.seconds === undefined ? g.videoChipNoTime : g.videoChip, { ...clipChip(clip), seconds: clip.seconds ?? 0, cost: clip.costUsd.toFixed(2) })}</Chip>
+          {uhdFile(clip) ? (
+            <a className="text-sm text-fg-secondary underline underline-offset-4 hover:text-fg-primary" href={uhdFile(clip)} target="_blank" rel="noopener noreferrer" data-testid="watch-4k">
+              {g.watch4k}
+            </a>
+          ) : null}
           <Disclosure label={g.details} title={g.videoStep}>
             <VideoPanel clip={clip} active={active} />
           </Disclosure>

@@ -8,7 +8,7 @@ import { GalleryFeatured } from "@/features/landing/components/GalleryFeatured";
 import { GalleryPage } from "@/features/landing/components/GalleryPage";
 import { GALLERY } from "@/features/landing/utils/gallery";
 import { COMPARE_IMAGES } from "@/features/landing/utils/model-compare";
-import { CLIPS, FEATURED, clipReproduceParts } from "@/features/landing/utils/gallery-clips";
+import { CLIPS, FEATURED, clipReproduceParts, uhdFile } from "@/features/landing/utils/gallery-clips";
 
 let mockLocale: Locale = "en";
 jest.mock("@/core/context/LocaleContext", () => ({
@@ -95,6 +95,17 @@ describe("GalleryFeatured (the home page's prompt → image → video, a slidesh
     expect(active.querySelector("[data-steps]")).toHaveAttribute("data-steps", "2");
     expect(active.textContent).not.toMatch(/prompt of its own/);
     expect(active.querySelectorAll('ol > li[aria-hidden="true"]')).toHaveLength(1); // one arrow
+  });
+
+  it("offers each clip's 4K master as a link under the video, 1080p staying the played source", () => {
+    const { container } = wrap(<GalleryFeatured />);
+    FEATURED.forEach((item, index) => {
+      const link = slide(container, index).querySelector('[data-testid="watch-4k"]');
+      if (uhdFile(item.clip)) {
+        expect(link).toHaveAttribute("href", uhdFile(item.clip));
+        expect(link).toHaveTextContent(g.watch4k);
+      } else expect(link).toBeNull();
+    });
   });
 
   it("no rendered slide has an empty frame: its media frames match its steps (the image and the video, or the video alone)", () => {
