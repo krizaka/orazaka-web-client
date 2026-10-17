@@ -5,7 +5,6 @@ import { translations } from "@/core/context/translations";
 import { Header } from "@/components/layout/Header";
 
 const mockLogout = jest.fn();
-const mockOpen = jest.fn();
 const mockSetLocale = jest.fn();
 
 jest.mock("next/link", () => {
@@ -20,10 +19,6 @@ jest.mock("@/core/hooks/useAuth", () => ({
     isAuthenticated: true,
     logout: mockLogout,
   }),
-}));
-
-jest.mock("@/core/context/SidebarContext", () => ({
-  useSidebar: () => ({ open: mockOpen }),
 }));
 
 jest.mock("@/core/context/TenantContext", () => ({
@@ -105,11 +100,5 @@ describe("Header", () => {
     render(<Header />);
     expect(screen.getByTestId("theme-toggle")).toHaveTextContent(t.header.themeDark);
     expect(screen.getByTestId("notif-bell")).toBeInTheDocument();
-  });
-
-  it("opens the drawer from the menu button", () => {
-    render(<Header />);
-    fireEvent.click(screen.getByLabelText(t.header.openSidebar));
-    expect(mockOpen).toHaveBeenCalled();
   });
 });
