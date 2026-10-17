@@ -56,7 +56,7 @@ describe("the day of work", () => {
 });
 
 describe("the packs, grouped by category (orazaka-packs#16)", () => {
-  const KNOWN = ["business-compliance", "creativity-media", "wellbeing", "data-analytics"];
+  const KNOWN = ["business-compliance", "creativity-media", "data-analytics", "wellbeing"];
 
   it("puts every shown pack under exactly one shelf of the closed list, in both languages", () => {
     for (const l of ["en", "fr"] as const) {
@@ -71,8 +71,11 @@ describe("the packs, grouped by category (orazaka-packs#16)", () => {
     }
   });
 
-  it("never lists a shelf with no pack (Data & Analytics waits for its first pack)", () => {
-    expect(packGroupsFor("en").map((g) => g.key)).not.toContain("data-analytics");
+  it("shows the Data & Analytics shelf with its first pack (orazaka-packs#42)", () => {
+    const shelf = packGroupsFor("en").find((g) => g.key === "data-analytics");
+    expect(shelf?.label).toBe("Data & analytics");
+    expect(shelf?.packs.map((p) => p.key)).toEqual(["data-analytics"]);
+    expect(packGroupsFor("fr").find((g) => g.key === "data-analytics")?.label).toBe("Données et analyse");
   });
 
   it("keeps Wellbeing as Wellbeing, and orders the shelves by their weight", () => {
