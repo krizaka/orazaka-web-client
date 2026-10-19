@@ -44,6 +44,7 @@ export interface LandingDictionary {
     /** One short line (≤ 45 characters: the menu shows one line) under each entry of the Product and Platforms menus. */
     menu: Record<"how" | "studios" | "packs" | "models" | "demo" | "web" | "mobile" | "desktop" | "selfHost", string>;
     langLabel: string;
+    preferences: string;
     openMenu: string;
     closeMenu: string;
     home: string;

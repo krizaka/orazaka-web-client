@@ -7,7 +7,6 @@ import { ThemeProvider } from "@krizaka/ui/theme";
 import { QueryProvider } from "./QueryProvider";
 import { AuthFlagsProvider } from "@/core/context/AuthFlagsContext";
 import type { AuthFlags } from "@/core/config/auth-flags";
-import { SidebarProvider } from "@/core/context/SidebarContext";
 import { TenantProvider } from "@/core/context/TenantContext";
 import { LocaleProvider } from "@/core/context/LocaleContext";
 import { JobStreamProvider } from "@/core/context/JobStreamContext";
@@ -45,14 +44,12 @@ export function Providers({ children, authFlags }: Readonly<ProvidersProps>) {
         <QueryProvider>
           <LocaleProvider>
             <TenantProvider>
-              <SidebarProvider>
-                <JobStreamProvider>
-                  <AppCommandPalette />
-                  <MotionObserver />
-                  <AppCharts>{children}</AppCharts>
-                  <AppToaster />
-                </JobStreamProvider>
-              </SidebarProvider>
+              <JobStreamProvider>
+                <AppCommandPalette />
+                <MotionObserver />
+                <AppCharts>{children}</AppCharts>
+                <AppToaster />
+              </JobStreamProvider>
             </TenantProvider>
           </LocaleProvider>
         </QueryProvider>

@@ -1,42 +1,11 @@
-"use client";
-
-import * as React from "react";
-import { Sidebar } from "@/components/layout/Sidebar";
-import { Header } from "@/components/layout/Header";
-import { ProfileView } from "@/features/profile/components/ProfileView";
-import { useAuth } from "@/core/hooks/useAuth";
-import { useRouter } from "next/navigation";
+import { redirect } from "next/navigation";
+import { legacyTabTarget } from "@/features/profile/utils/settingsSections";
 
 /**
- * ProfilePage component rendering the user's profile view.
- *
- * @returns The profile page layout.
+ * `/settings` — the old entry point. Each section now has its own route (`/settings/account`, …); the former
+ * `/settings?tab=<section>` keeps working and lands on the section's route.
  */
-export default function ProfilePage() {
-  const router = useRouter();
-  const { isAuthenticated, isLoading } = useAuth();
-
-  React.useEffect(() => {
-    if (!isLoading && !isAuthenticated) {
-      router.push("/login");
-    }
-  }, [isLoading, isAuthenticated, router]);
-
-  if (isLoading || !isAuthenticated) return null;
-
-  return (
-    <section className="flex h-screen overflow-hidden bg-surface-0 transition-colors duration-200">
-      <Sidebar />
-      <div className="flex flex-1 flex-col overflow-hidden">
-        <Header />
-        <main className="flex-1 overflow-auto p-6 scrollbar-thin ambient-grid">
-          <div className="mx-auto max-w-5xl animate-in fade-in slide-in-from-bottom-3 duration-300">
-            <React.Suspense fallback={null}>
-              <ProfileView />
-            </React.Suspense>
-          </div>
-        </main>
-      </div>
-    </section>
-  );
+export default async function SettingsIndex({ searchParams }: Readonly<{ searchParams: Promise<{ tab?: string | string[] }> }>) {
+  const { tab } = await searchParams;
+  redirect(legacyTabTarget(Array.isArray(tab) ? tab[0] : tab));
 }
