@@ -42,6 +42,17 @@ with a message and, where safe, a `fix:`; written for Tsx and `.ts` is parsed as
   behaviour is identical — run `npm run lint && npm test` after, and land the result in a small pull request.
 - A rule is never silenced to get a PR green; fix the code, or (a business parameter that is a technical fact) justify it with `// @fixed:`.
 
+## One app, two hosts (dev.orazaka.com · admin.orazaka.com)
+
+The operator console of the former `orazaka-web-admin` lives here, served by **host routing** (krizaka/orazaka-web-admin#31):
+`src/proxy.ts` → `src/console/core/config/host.ts` (`routeFor`, pure) rewrites `Host: admin.*` under `/console`
+(`src/app/console/**`, logic in `src/console/**`) and answers 404 for `/console/**` on every other host; the network gate
+(`AUTH_ALLOWED_IPS`, 403) runs before any console route, sign-in included (`src/console/core/edge.ts`). The console never
+shares the public site's session cookie, signing key (`AUTH_CONSOLE_SECRET`) or sign-in flag (`AUTH_CONSOLE_LOGIN_ENABLED`).
+The public shell (`PublicShell`) skips itself for the `console` segment, so public pages stay static. Never add a console
+route outside `src/app/console`, never link `/console/...` (addresses on the admin host are unprefixed), and keep
+`/api/healthz` answered before any gate. Tests: `src/__tests__/host-routing.test.ts`, `npm run test:console`.
+
 ## Definition of done
 
 1. `npm run validate` (or `lint` + `build`) is green inside the workspace (`orazaka-apps/ui`).

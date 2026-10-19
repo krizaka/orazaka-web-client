@@ -119,6 +119,21 @@ The same app runs as a read-only public site: no sign-in, no sign-up, no call to
 
 No edge URL is needed to build or run it. The documentation (`/docs`) is generated: `node scripts/sync-docs.mjs <orazaka checkout>` (what is published, in which journey and order: `scripts/docs-manifest.mjs`; a wrong or unclear page is fixed in the Orazaka repository, then re-synced); the demo recordings and packs of the home page: `node scripts/sync-showcase.mjs <krizaka-com checkout>` — never hand-edit `content/docs` or `showcase.generated.json`. Media stay on Bunny.
 
+## Operator console (admin.orazaka.com)
+
+The same app serves the operator console (usage, credits, prices, Studios, accounts) on the host `admin.*`: `src/proxy.ts`
+rewrites that host to the internal `/console` tree (`src/app/console/`, code in `src/console/`); on any other host
+`/console/**` is a 404. Nothing is shared with the public site: its own session cookie, signing key and sign-in flag.
+
+| Variable | Default | Effect |
+| --- | --- | --- |
+| `AUTH_ALLOWED_IPS` | empty | Comma-separated client addresses (DigitalOcean's `do-connecting-ip`) allowed on the admin host; any other gets 403, sign-in page included. In production an empty list lets nobody in. |
+| `AUTH_CONSOLE_LOGIN_ENABLED` | `false` | Opens the console's sign-in (only `ROLE_ADMIN` signs in). Closed, its BFF routes answer 404. Independent of `AUTH_LOGIN_ENABLED`. |
+| `AUTH_CONSOLE_SECRET` | none | Signing key of the console's session (never the public site's `NEXTAUTH_SECRET`); unset in production, no console session can be opened. |
+| `AUTH_TRUST_HOST` | unset | `true` on the deployment: next-auth builds callback URLs from the requested Host (one `NEXTAUTH_URL` cannot name two hosts). |
+
+`ROUTER_URL` (the edge) is shared. These replace the standalone `krizaka/orazaka-web-admin` app; `npm run test:console` runs the console's logic tests, `src/__tests__/host-routing.test.ts` the host routing.
+
 ---
 
 <sub>A Krizaka product · [krizaka.com](https://www.krizaka.com) · Apache-2.0</sub>

@@ -4,8 +4,7 @@ import "./globals.css";
 import "@krizaka/ui/blocks.css";
 import { readAuthFlags } from "@/core/config/auth-flags";
 import { indexable } from "@/core/config/indexing";
-import { DevEnvironmentNotice } from "@/components/DevEnvironmentNotice";
-import { Providers } from "@/core/providers/Providers";
+import { PublicShell } from "@/components/layout/PublicShell";
 import { ThemeScript } from "@krizaka/ui/theme";
 
 import { cn } from "@krizaka/ui/cn";
@@ -115,10 +114,9 @@ export default function RootLayout({
           "antialiased transition-colors duration-200"
         )}
       >
-        <Providers authFlags={readAuthFlags()}>
+        <PublicShell authFlags={readAuthFlags()} showDevNotice={!indexable()}>
           {children}
-          <DevEnvironmentNotice show={!indexable()} />
-        </Providers>
+        </PublicShell>
       </body>
     </html>
   );
