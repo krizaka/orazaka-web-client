@@ -135,6 +135,8 @@ export interface GalleryDictionary {
   gpuCostLabel: string;
   /** The upscale pass of a clip: its label and its fact ("{model}", "{licence}", "{from}", "{to}", "{seconds}", "{cost}"). */
   keptLabel: string;
+  /** The link to the clip's 4K master (3840 × 2160, one of its two long sides). */
+  watch4k: string;
   /** "{pct}" % of the starting image kept in the frame. */
   kept: string;
   upscaleLabel: string;
@@ -314,6 +316,7 @@ export const gallery: Record<Locale, GalleryDictionary> = {
     "gpuCost": "${cost} of GPU time",
     "gpuCostLabel": "GPU cost of the run",
     "keptLabel": "Starting image kept",
+    "watch4k": "Watch in 4K (upscaled with SeedVR2)",
     "kept": "{pct} % of the image stays in the frame",
     "upscaleLabel": "Upscale",
     "upscaleFact": "{model} ({licence}) · {from} → {to} · {seconds} s in the same run · ${cost}",
@@ -506,6 +509,7 @@ export const gallery: Record<Locale, GalleryDictionary> = {
     "gpuCost": "{cost} $ de temps GPU",
     "gpuCostLabel": "Coût GPU de l'exécution",
     "keptLabel": "Image d'amorce gardée",
+    "watch4k": "Voir en 4K (agrandie avec SeedVR2)",
     "kept": "{pct} % de l'image reste dans le cadre",
     "upscaleLabel": "Montée en résolution",
     "upscaleFact": "{model} ({licence}) · {from} → {to} · {seconds} s dans la même exécution · {cost} $",
