@@ -47,5 +47,7 @@ const BACKEND_PREFIXES = ["/api/v1", "/api/auth", "/api/chat", "/uploads"];
 
 /** Paths served by the BFF on behalf of a signed-in user — they answer 404 when the site is closed. */
 export function isBackendPath(pathname: string): boolean {
+  // The sign-up route refuses by itself (403, Dev preview `site.signup-closed`): it is not hidden behind a 404.
+  if (pathname === "/api/auth/register") return false;
   return BACKEND_PREFIXES.some((p) => pathname === p || pathname.startsWith(`${p}/`));
 }

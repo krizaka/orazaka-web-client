@@ -14,7 +14,7 @@ describe("AuthApi", () => {
   });
 
   describe("register", () => {
-    it("sends registration payload to /api/register", async () => {
+    it("sends registration payload to /api/auth/register", async () => {
       mockFetch.mockResolvedValueOnce({
         ok: true,
         json: async () => ({ id: "new-user-123" }),
@@ -29,7 +29,7 @@ describe("AuthApi", () => {
 
       const result = await AuthApi.register(payload);
 
-      expect(mockFetch).toHaveBeenCalledWith("/api/register", {
+      expect(mockFetch).toHaveBeenCalledWith("/api/auth/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
