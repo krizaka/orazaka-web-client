@@ -25,7 +25,7 @@ export const AuthApi = {
    * @throws An error object with `status` and `error` fields on failure.
    */
   register: async (payload: RegisterPayload): Promise<unknown> => {
-    const response = await fetch("/api/register", {
+    const response = await fetch("/api/auth/register", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload),
