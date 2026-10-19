@@ -33,5 +33,6 @@ describe("auth flags", () => {
     expect(isBackendPath("/api/chat/stream/1")).toBe(true);
     expect(isBackendPath("/uploads/a.png")).toBe(true);
     expect(isBackendPath("/features/privacy")).toBe(false);
+    expect(isBackendPath("/api/auth/register")).toBe(false); // refuses by itself with a 403
   });
 });
