@@ -6,6 +6,8 @@ declare module "next-auth" {
       id?: string;
       role?: string;
       activeInterceptions?: string[];
+      /** Console only: the identity service's session JWT, replayed as the Bearer token by the console's BFF. */
+      token?: string;
     } & DefaultSession["user"];
   }
 
@@ -21,5 +23,7 @@ declare module "next-auth/jwt" {
     id?: string;
     role?: string;
     activeInterceptions?: string[];
+    /** Console only: the identity service's session JWT. */
+    sessionToken?: string;
   }
 }

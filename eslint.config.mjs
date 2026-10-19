@@ -120,6 +120,12 @@ const eslintConfig = defineConfig([
       ],
     },
   },
+  {
+    // The console's node:test suites (npm run test:console) import the modules they test by relative path, with their
+    // `.ts` extension, the way node resolves them.
+    files: ["src/console/test/**/*.mts"],
+    rules: { "no-restricted-imports": "off" },
+  },
   // Align globally ignored build directories
   globalIgnores([
     ".next/**",

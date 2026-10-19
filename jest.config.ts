@@ -53,7 +53,7 @@ const config = {
     "^@tanstack/markdown/(.*)$": `${markdown}/dist/$1.js`,
     "^@tanstack/highlight/(.*)$": `${highlight}/dist/$1.js`,
   },
-  testPathIgnorePatterns: ["<rootDir>/node_modules/", "<rootDir>/.next/", "<rootDir>/src/__tests__/helpers/", "<rootDir>/e2e/", "<rootDir>/scripts/"],
+  testPathIgnorePatterns: ["<rootDir>/node_modules/", "<rootDir>/.next/", "<rootDir>/src/__tests__/helpers/", "<rootDir>/e2e/", "<rootDir>/scripts/", "<rootDir>/src/console/test/"],
   collectCoverageFrom: [
     "src/**/*.{ts,tsx}",
     "!src/**/*.d.ts",

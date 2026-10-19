@@ -13,6 +13,10 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { authClosed, isBackendPath, readAuthFlags } from "@/core/config/auth-flags";
 import { indexable, NOINDEX_HEADER } from "@/core/config/indexing";
+import { consoleResponse } from "@/console/core/edge";
+import { isAdminHost, routeFor } from "@/console/core/config/host";
+/** The platform's liveness probe: answered on every host, before any gate. */
+const HEALTH_PATH = "/api/healthz";
 
 /**
  * Route prefixes that do NOT require authentication.
@@ -75,9 +79,29 @@ function route(request: NextRequest) {
   return NextResponse.next();
 }
 
-/** Every response of a deployment closed to search engines (APP_SEARCH_INDEXING=off) says noindex — pages, redirects, the BFF. */
+/**
+ * Two sites, one app. admin.orazaka.com is the operator console: its requests are gated (network, then sign-in) and
+ * rewritten under the internal `/console` tree, and every answer says noindex. On any other host `/console` is a 404.
+ * The rest is the public site; a deployment closed to search engines (APP_SEARCH_INDEXING=off) says noindex on every
+ * response — pages, redirects, the BFF.
+ */
 export function proxy(request: NextRequest) {
-  const response = route(request);
+  const { pathname } = request.nextUrl;
+  const host = request.headers.get("host");
+  let response: NextResponse;
+  if (pathname === HEALTH_PATH) {
+    response = NextResponse.next();
+  } else {
+    const hostRoute = routeFor(host, pathname);
+    if (hostRoute.kind === "notFound") {
+      response = new NextResponse("Not found", { status: 404 });
+      if (isAdminHost(host)) response.headers.set("x-robots-tag", NOINDEX_HEADER);
+    } else if (hostRoute.kind === "rewrite") {
+      return consoleResponse(request, hostRoute.path);
+    } else {
+      response = route(request);
+    }
+  }
   if (!indexable()) response.headers.set("x-robots-tag", NOINDEX_HEADER);
   return response;
 }

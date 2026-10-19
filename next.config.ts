@@ -68,7 +68,8 @@ const nextConfig: NextConfig = {
       { source: "/docs/use_cases", destination: "/docs/use-cases", permanent: true },
       // The signed-in app's addresses say the section's name (docs/ux/information-architecture.md of the workspace).
       { source: "/dashboard/jobs", destination: "/jobs", permanent: true },
-      { source: "/billing", destination: "/usage", permanent: true },
+      // Not on admin.orazaka.com: /billing is a section of the operator console there (src/console), served by the proxy.
+      { source: "/billing", has: [{ type: "host", value: "(?!admin\\.).*" }], destination: "/usage", permanent: true },
       { source: "/profile", destination: "/settings", permanent: true },
     ];
   },
