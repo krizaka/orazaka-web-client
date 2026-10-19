@@ -6,6 +6,9 @@
  */
 export const CONSOLE_PREFIX = "/console";
 
+/** The kinds of {@link HostRoute}, compared by constant. */
+export const HOST_ROUTE = { next: "next", rewrite: "rewrite", notFound: "notFound" } as const;
+
 export type HostRoute = { kind: "next" } | { kind: "rewrite"; path: string } | { kind: "notFound" };
 
 /** `admin.` as the first label of the Host header (port ignored). */

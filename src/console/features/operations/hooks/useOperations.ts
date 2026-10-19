@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState } from "react";
 import type { JobRecord } from "@krizaka/orazaka-shared";
 import { PlatformAdminApi } from "@/console/services/platform.admin.api";
 import type { Health, Infrastructure } from "@/console/services/platform.schemas";
+import { valueOr, rejected } from "@/console/core/settled";
 
 export interface Operations {
   health: Health | null;
@@ -27,11 +28,11 @@ export function useOperations(): Operations {
       PlatformAdminApi.fetchJobs(),
     ]);
     setState({
-      health: health.status === "fulfilled" ? health.value : null,
-      infrastructure: infrastructure.status === "fulfilled" ? infrastructure.value : null,
-      jobs: jobs.status === "fulfilled" ? jobs.value.content : [],
+      health: valueOr(health, null),
+      infrastructure: valueOr(infrastructure, null),
+      jobs: valueOr(jobs, { content: [] }).content,
       isLoading: false,
-      hasError: [health, infrastructure, jobs].some((r) => r.status === "rejected"),
+      hasError: [health, infrastructure, jobs].some((r) => rejected(r)),
     });
   }, []);
 

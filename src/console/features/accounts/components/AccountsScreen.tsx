@@ -11,6 +11,7 @@ import { PlatformAdminApi } from "@/console/services/platform.admin.api";
 import type { AdminUser } from "@/console/services/platform.schemas";
 import { useAccounts, type Accounts } from "@/console/features/accounts/hooks/useAccounts";
 import { erasureArmed, stateActions } from "@/console/features/accounts/utils/accounts";
+import { STATE_ACTION, ROLE_ACTION } from "@/console/core/constants";
 
 const a = consoleCopy.accounts;
 
@@ -22,11 +23,11 @@ function AccountActions({ user, accounts }: Readonly<{ user: AdminUser; accounts
   return (
     <section className="flex flex-col gap-4 p-3" aria-label={user.email}>
       <div className="flex flex-wrap gap-2">
-        <Button variant="secondary" size="sm" onClick={() => void accounts.run(() => (next.status === "suspend" ? PlatformAdminApi.suspendUser(user.id) : PlatformAdminApi.restoreUser(user.id)))}>
-          {next.status === "suspend" ? a.suspend : a.restore}
+        <Button variant="secondary" size="sm" onClick={() => void accounts.run(() => (next.status === STATE_ACTION.suspend ? PlatformAdminApi.suspendUser(user.id) : PlatformAdminApi.restoreUser(user.id)))}>
+          {next.status === STATE_ACTION.suspend ? a.suspend : a.restore}
         </Button>
-        <Button variant="secondary" size="sm" onClick={() => void accounts.run(() => PlatformAdminApi.setAdmin(user.id, next.role === "grant"))}>
-          {next.role === "grant" ? a.grant : a.withdraw}
+        <Button variant="secondary" size="sm" onClick={() => void accounts.run(() => PlatformAdminApi.setAdmin(user.id, next.role === ROLE_ACTION.grant))}>
+          {next.role === ROLE_ACTION.grant ? a.grant : a.withdraw}
         </Button>
         <Button variant="secondary" size="sm" asChild>
           <a href={`/api/v1/admin/users/${encodeURIComponent(user.id)}/export`} download={`orazaka-account-${user.id}.json`}>

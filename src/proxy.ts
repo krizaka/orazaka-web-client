@@ -14,7 +14,7 @@ import type { NextRequest } from "next/server";
 import { authClosed, isBackendPath, readAuthFlags } from "@/core/config/auth-flags";
 import { indexable, NOINDEX_HEADER } from "@/core/config/indexing";
 import { consoleResponse } from "@/console/core/edge";
-import { isAdminHost, routeFor } from "@/console/core/config/host";
+import { HOST_ROUTE, isAdminHost, routeFor } from "@/console/core/config/host";
 /** The platform's liveness probe: answered on every host, before any gate. */
 const HEALTH_PATH = "/api/healthz";
 
@@ -93,10 +93,10 @@ export function proxy(request: NextRequest) {
     response = NextResponse.next();
   } else {
     const hostRoute = routeFor(host, pathname);
-    if (hostRoute.kind === "notFound") {
+    if (hostRoute.kind === HOST_ROUTE.notFound) {
       response = new NextResponse("Not found", { status: 404 });
       if (isAdminHost(host)) response.headers.set("x-robots-tag", NOINDEX_HEADER);
-    } else if (hostRoute.kind === "rewrite") {
+    } else if (hostRoute.kind === HOST_ROUTE.rewrite) {
       return consoleResponse(request, hostRoute.path);
     } else {
       response = route(request);

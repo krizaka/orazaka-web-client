@@ -1,5 +1,6 @@
 "use client";
 
+import { clockNow } from "@/console/core/clock";
 import * as React from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { signIn } from "next-auth/react";
@@ -73,7 +74,7 @@ export function LoginForm({ preview }: Readonly<{ preview?: ClosedPreview }>) {
             <p>{copy.lead}</p>
           </div>
         }
-        asideFooter={<>© {new Date().getFullYear()} Orazaka · {consoleCopy.product} {consoleCopy.console}</>}
+        asideFooter={<>© {clockNow().getFullYear()} Orazaka · {consoleCopy.product} {consoleCopy.console}</>}
         title={copy.title}
         description={copy.lead}
       >

@@ -1,5 +1,6 @@
 "use client";
 
+import { clockNow } from "@/console/core/clock";
 import * as React from "react";
 import { Alert } from "@krizaka/ui/alert";
 import { Button } from "@krizaka/ui/button";
@@ -32,7 +33,7 @@ export function SupervisionScreen() {
   const totals = React.useMemo(() => usageTotals(data.usage), [data.usage]);
   const capabilities = React.useMemo(() => byCapability(data.usage), [data.usage]);
   const top = React.useMemo(() => consumers(data.consumers), [data.consumers]);
-  const perDay = React.useMemo(() => jobsPerDay(data.jobs, 14), [data.jobs]);
+  const perDay = React.useMemo(() => jobsPerDay(data.jobs, 14, clockNow()), [data.jobs]);
   const latency = React.useMemo(() => latencyByCapability(data.jobs), [data.jobs]);
 
   return (

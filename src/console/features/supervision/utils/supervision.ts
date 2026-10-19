@@ -7,6 +7,9 @@
 import { differenceInMilliseconds, formatISO, parseISO, startOfDay, subDays } from "date-fns";
 import type { ActorConsumption, CapabilityUsage, JobRecord } from "@krizaka/orazaka-shared";
 
+/** The job statuses this module compares with (pure module: no `@/` import, node:test loads it as is). */
+const JOB_STATUS = { COMPLETED: "COMPLETED", FAILED: "FAILED" } as const;
+
 /** Totals over every capability: requests served, credits charged, refusal share of the attempts. */
 export function usageTotals(rows: readonly CapabilityUsage[]) {
   const requests = rows.reduce((sum, r) => sum + r.events, 0);
@@ -38,14 +41,14 @@ export function consumers(rows: readonly ActorConsumption[]) {
 const dayKey = (date: Date) => formatISO(startOfDay(date), { representation: "date" });
 
 /** The jobs of each of the last `days` days by outcome, oldest first, empty days included. */
-export function jobsPerDay(jobs: readonly JobRecord[], days: number, now: Date = new Date()) {
+export function jobsPerDay(jobs: readonly JobRecord[], days: number, now: Date) {
   const rows = Array.from({ length: days }, (_, i) => ({ day: dayKey(subDays(now, days - 1 - i)), completed: 0, failed: 0, running: 0 }));
   const index = new Map(rows.map((row) => [row.day, row]));
   for (const job of jobs) {
     const row = index.get(dayKey(parseISO(job.createdAt)));
     if (!row) continue;
-    if (job.status === "COMPLETED") row.completed += 1;
-    else if (job.status === "FAILED") row.failed += 1;
+    if (job.status === JOB_STATUS.COMPLETED) row.completed += 1;
+    else if (job.status === JOB_STATUS.FAILED) row.failed += 1;
     else row.running += 1;
   }
   return rows;
@@ -58,7 +61,7 @@ const capabilityOf = (featureKey: string) => featureKey.split(".").pop() ?? feat
 export function latencyByCapability(jobs: readonly JobRecord[]) {
   const samples = new Map<string, number[]>();
   for (const job of jobs) {
-    if (job.status !== "COMPLETED") continue;
+    if (job.status !== JOB_STATUS.COMPLETED) continue;
     const ms = differenceInMilliseconds(parseISO(job.updatedAt), parseISO(job.createdAt));
     if (ms < 0) continue;
     const key = capabilityOf(job.featureKey);

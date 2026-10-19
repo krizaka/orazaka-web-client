@@ -1,6 +1,9 @@
 import type { JobRecord, JobStatus } from "@krizaka/orazaka-shared";
 import type { Health } from "@/console/services/platform.schemas";
 
+/** The job statuses this module compares with (pure module: no `@/` import, node:test loads it as is). */
+const JOB_STATUS = { COMPLETED: "COMPLETED", FAILED: "FAILED" } as const;
+
 export type QueueDepths = Record<JobStatus, number>;
 
 /** Every state the queue shows, in reading order. A `Record<JobStatus, …>` forces a new contract state to be added here. */
@@ -16,14 +19,14 @@ export function queueDepths(jobs: readonly JobRecord[]): QueueDepths {
 /** The latest failures with their message, newest first. */
 export function recentFailures(jobs: readonly JobRecord[], limit = 20): JobRecord[] {
   return jobs
-    .filter((job) => job.status === "FAILED")
+    .filter((job) => job.status === JOB_STATUS.FAILED)
     .sort((a, b) => Date.parse(b.updatedAt) - Date.parse(a.updatedAt))
     .slice(0, limit);
 }
 
 /** Seconds from request to the last update; null while the job has not ended or a date is unreadable. */
 export function jobSeconds(job: Pick<JobRecord, "status" | "createdAt" | "updatedAt">): number | null {
-  if (job.status !== "COMPLETED" && job.status !== "FAILED") return null;
+  if (job.status !== JOB_STATUS.COMPLETED && job.status !== JOB_STATUS.FAILED) return null;
   const seconds = (Date.parse(job.updatedAt) - Date.parse(job.createdAt)) / 1000;
   return Number.isFinite(seconds) && seconds >= 0 ? Math.round(seconds) : null;
 }

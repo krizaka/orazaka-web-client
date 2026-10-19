@@ -4,6 +4,7 @@ import { useState } from "react";
 import { DataTable, type DataTableColumn } from "@krizaka/ui/data-table";
 import { StudioAdminApi } from "@/console/services/studio.admin.api";
 import type { BlueprintVersion } from "@krizaka/orazaka-shared";
+import { VERSION_STATUS } from "@/console/core/constants";
 
 interface BlueprintVersionTableProps {
   studioKey: string;
@@ -44,7 +45,7 @@ export function BlueprintVersionTable({
       id: "status",
       header: "Statut",
       cell: (version) => (
-        <span className={version.status === "PUBLISHED" ? "text-fg-success" : "text-fg-muted"}>{version.status}</span>
+        <span className={version.status === VERSION_STATUS.PUBLISHED ? "text-fg-success" : "text-fg-muted"}>{version.status}</span>
       ),
     },
     { id: "estimatedCredits", header: "Crédits", align: "end" },
@@ -55,7 +56,7 @@ export function BlueprintVersionTable({
       align: "end",
       cell: (version) => (
         <span className="space-x-2">
-          {version.status === "DRAFT" && (
+          {version.status === VERSION_STATUS.DRAFT && (
             <button
               type="button"
               disabled={busy !== null}
@@ -65,7 +66,7 @@ export function BlueprintVersionTable({
               Publier
             </button>
           )}
-          {version.status === "PUBLISHED" && (
+          {version.status === VERSION_STATUS.PUBLISHED && (
             <button
               type="button"
               disabled={busy !== null}

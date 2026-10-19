@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState } from "react";
 import { PlatformAdminApi } from "@/console/services/platform.admin.api";
 import type { Capability, ModelEntry } from "@/console/services/platform.schemas";
 import { withCapability } from "@/console/features/catalogue/utils/catalogue";
+import { valueOr, rejected } from "@/console/core/settled";
 
 export interface Catalogue {
   models: ModelEntry[];
@@ -25,11 +26,11 @@ export function useCatalogue(): Catalogue {
     setState((s) => ({ ...s, isLoading: true }));
     const [models, providers, capabilities] = await Promise.allSettled([PlatformAdminApi.models(), PlatformAdminApi.providers(), PlatformAdminApi.capabilities()]);
     setState({
-      models: models.status === "fulfilled" ? models.value : [],
-      providers: providers.status === "fulfilled" ? providers.value : [],
-      capabilities: capabilities.status === "fulfilled" ? capabilities.value : [],
+      models: valueOr(models, []),
+      providers: valueOr(providers, []),
+      capabilities: valueOr(capabilities, []),
       isLoading: false,
-      hasError: [models, providers, capabilities].some((r) => r.status === "rejected"),
+      hasError: [models, providers, capabilities].some((r) => rejected(r)),
       switchFailed: false,
     });
   }, []);

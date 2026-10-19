@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState } from "react";
 import type { ActorConsumption, CapabilityUsage, JobRecord } from "@krizaka/orazaka-shared";
 import { BillingAdminApi } from "@/console/services/billing.admin.api";
 import { PlatformAdminApi } from "@/console/services/platform.admin.api";
+import { valueOr, rejected } from "@/console/core/settled";
 
 export interface Supervision {
   usage: CapabilityUsage[];
@@ -40,12 +41,12 @@ export function useSupervision(days = 30): Supervision {
       PlatformAdminApi.activeConnections(),
     ]);
     setState({
-      usage: usage.status === "fulfilled" ? usage.value : [],
-      consumers: top.status === "fulfilled" ? top.value : [],
-      jobs: jobs.status === "fulfilled" ? jobs.value.content : [],
-      connections: connections.status === "fulfilled" ? connections.value : null,
+      usage: valueOr(usage, []),
+      consumers: valueOr(top, []),
+      jobs: valueOr(jobs, { content: [] }).content,
+      connections: valueOr(connections, null),
       isLoading: false,
-      hasError: [usage, top, jobs, connections].some((r) => r.status === "rejected"),
+      hasError: [usage, top, jobs, connections].some((r) => rejected(r)),
     });
   }, [days]);
 
