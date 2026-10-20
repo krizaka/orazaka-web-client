@@ -47,9 +47,8 @@ describe("the information architecture of the public bar", () => {
 [
   {
     "entries": [
-      "how → #how",
-      "studios → #studios",
-      "packs → #packs",
+      "how → #features",
+      "packs → /docs/packs",
       "models → /models",
       "demo → /gallery",
     ],
@@ -57,7 +56,7 @@ describe("the information architecture of the public bar", () => {
   },
   {
     "entries": [
-      "web → #platform",
+      "web → #platforms",
       "mobile → /docs/mobile",
       "desktop → /desktop",
       "selfHost → /docs/self-hosting",
@@ -70,6 +69,19 @@ describe("the information architecture of the public bar", () => {
     const top = [...desktopNav().querySelectorAll("[data-nav-item]")].map((el) => el.textContent?.trim());
     expect(top).toEqual([nav.product, nav.platforms, nav.docs]);
     expect(top.length).toBeLessThanOrEqual(4);
+  });
+
+  it("is the family's floating bar, in the family's order: mark and name · sections · repository, theme, language, Sign in, Talk to us", () => {
+    renderLanding("en", <LandingNav />);
+    expect(bar().getAttribute("data-floating")).not.toBe("false");
+    expect(within(bar()).getByRole("link", { name: nav.home })).toHaveTextContent("Orazaka");
+    const order = (name: string | RegExp, role: "link" | "button") => {
+      const el = within(bar()).getAllByRole(role, { name })[0];
+      return [...bar().querySelectorAll("*")].indexOf(el);
+    };
+    const positions = [order(nav.repo, "link"), order(translations.en.header.themeSystem, "button"), order(new RegExp(`^${nav.langLabel}`), "button"), order(nav.signIn, "link"), order(nav.talk, "link")];
+    expect(positions).toEqual([...positions].sort((a, b) => a - b));
+    expect(new Set(positions).size).toBe(5);
   });
 
   it("keeps the version out of the bar (it is in the footer)", () => {
@@ -119,7 +131,7 @@ describe("the mobile panel", () => {
     expect(within(groups[1]).getAllByRole("link").map((a) => a.textContent)).toEqual([nav.web, nav.mobile, nav.desktop, nav.selfHost]);
     const panel = groups[0].closest("nav") as HTMLElement;
     const hrefs = [...panel.querySelectorAll("a")].map((a) => a.getAttribute("href"));
-    expect(hrefs).toEqual(["#how", "#studios", "#packs", "/models", "/gallery", "#platform", "/docs/mobile", "/desktop", "/docs/self-hosting", "/docs", "#", "#", "/login", "https://www.krizaka.com/contact?topic=orazaka"]);
+    expect(hrefs).toEqual(["#features", "/docs/packs", "/models", "/gallery", "#platforms", "/docs/mobile", "/desktop", "/docs/self-hosting", "/docs", "#", "#", "/login", "https://www.krizaka.com/contact?topic=orazaka"]);
     expect(hrefs).not.toContain("/infrastructure");
   });
 

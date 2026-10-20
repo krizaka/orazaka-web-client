@@ -1,6 +1,9 @@
+import fs from "node:fs";
+import path from "node:path";
 import { cookies } from "next/headers";
 import { LandingPage } from "@/features/landing/components/LandingPage";
 import { DashboardHome } from "@/app/_home/DashboardHome";
+import { measuredRuns } from "@/features/landing/utils/measured-runs";
 
 /** The next-auth session cookies (development and `__Secure-` production names) — the same pair the proxy reads. */
 const SESSION_COOKIES = ["next-auth.session-token", "__Secure-next-auth.session-token"];
@@ -14,5 +17,8 @@ const SESSION_COOKIES = ["next-auth.session-token", "__Secure-next-auth.session-
 export default async function HomePage() {
   const jar = await cookies();
   const signedIn = SESSION_COOKIES.some((name) => jar.has(name));
-  return signedIn ? <DashboardHome /> : <LandingPage />;
+  if (signedIn) return <DashboardHome />;
+  // The proof band is counted from the published « Measured runs » page, at build — never typed.
+  const measured = measuredRuns(fs.readFileSync(path.join(process.cwd(), "content", "docs", "measured-runs.md"), "utf8"));
+  return <LandingPage measured={measured} />;
 }

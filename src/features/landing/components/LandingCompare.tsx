@@ -3,9 +3,8 @@
 import type { ComponentType } from "react";
 import { AgentIcon, CreditsIcon, GlobeIcon, LocalIcon, ShieldIcon, UsersIcon, type IconProps } from "@krizaka/icons";
 import { ComparisonTable } from "@krizaka/ui/comparison-table";
-import { SectionBackdrop } from "@krizaka/ui/section-backdrop";
+import { Section } from "@krizaka/ui/page";
 import { useTranslation } from "@/core/context/LocaleContext";
-import { SectionHeading } from "@/features/landing/components/SectionHeading";
 
 /** One icon per question, in the order of the copy's ids. */
 const ICONS: Record<"where" | "pay" | "decide" | "agents", ComponentType<IconProps>> = { where: ShieldIcon, pay: CreditsIcon, decide: UsersIcon, agents: AgentIcon };
@@ -20,9 +19,7 @@ export function LandingCompare() {
   const c = t.landing.compare;
 
   return (
-    <SectionBackdrop id="why" direction="up" dome={false} animated={false} className="scroll-mt-16">
-      <article className="mx-auto max-w-6xl space-y-12 px-4 py-20 sm:px-5 lg:py-28">
-        <SectionHeading eyebrow={c.eyebrow} title={c.title} lead={c.lead} />
+    <Section id="why" eyebrow={c.eyebrow} title={c.title} lead={c.lead} reveal divider>
         <ComparisonTable
           label={c.title}
           topicLabel={c.topic}
@@ -41,7 +38,6 @@ export function LandingCompare() {
             };
           })}
         />
-      </article>
-    </SectionBackdrop>
+    </Section>
   );
 }
