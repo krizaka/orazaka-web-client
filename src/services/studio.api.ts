@@ -1,4 +1,5 @@
 import { attachArtefactLabels } from "@/features/studio/utils/artefactLabel";
+import { asConsentStep, type ConsentAnswer } from "@/features/studio/consent/consent";
 import { restRequest } from "@/services/rest-client";
 import {
   BlueprintVersionSchema,
@@ -123,15 +124,21 @@ export const StudioApi = {
    *
    * @param studioKey - the Studio to install
    * @param config - the answers to its config schema, collected once
+   * @param consent - for a wellbeing (REGULATED) Studio: the statement's version, the age attestation and the
+   *   region. Without them the service answers 451, which comes back as a `ConsentRequiredError` carrying the
+   *   statement to show.
    */
   install: async (
     studioKey: string,
     config: Record<string, string>,
+    consent?: ConsentAnswer,
   ): Promise<Installation | null> => {
     const data = await restRequest<unknown>(
       `/api/v1/studios/${encodeURIComponent(studioKey)}/installations`,
-      { method: "POST", body: { config } },
-    );
+      { method: "POST", body: { config, ...consent } },
+    ).catch((error: unknown) => {
+      throw asConsentStep(error);
+    });
     return data ? InstallationSchema.parse(data) : null;
   },
 
@@ -199,7 +206,9 @@ export const StudioApi = {
     const data = await restRequest<unknown>(
       `/api/v1/studios/installations/${encodeURIComponent(installationId)}/runs`,
       { method: "POST", body: { inputs } },
-    );
+    ).catch((error: unknown) => {
+      throw asConsentStep(error);
+    });
     return data ? RunSchema.parse(data) : null;
   },
 

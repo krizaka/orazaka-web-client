@@ -11,6 +11,7 @@ import type { AutomationsDictionary } from "./translations.automations.types";
 import type { RunProgressDictionary } from "./translations.runProgress.types";
 import type { ModelsDictionary } from "./translations.models.types";
 import type { CatalogueDictionary, PlanDictionary } from "./translations.catalogue";
+import type { ConsentDictionary } from "./translations.consent";
 import type { GalleryDictionary } from "./translations.gallery";
 import type { MobileDictionary } from "./translations.mobile";
 import type { DesktopDictionary } from "./translations.desktop";
@@ -844,6 +845,8 @@ export interface TranslationDictionary {
   automations: AutomationsDictionary;
   /** The Studio list of /studios: search, state, trade, one action per row. */
   catalogue: CatalogueDictionary;
+  /** The consent step of a wellbeing Studio (REGULATED). */
+  consent: ConsentDictionary;
   /** The plan line and « Plan & packs » (/packs). */
   plan: PlanDictionary;
   /** Accessible names of icon-only controls. */

@@ -19,6 +19,24 @@ interface ApiError {
   code?: string;
   requestId?: string;
   error?: string;
+  /** The Studio service's own error body says it here (`{ status, message }`). */
+  message?: string;
+}
+
+/**
+ * A non-2xx answer, with its status and parsed body, so a caller can act on a refusal that is a question rather
+ * than a failure (the 451 of a wellbeing Studio asks for consent). It is still an `Error`: callers that only show
+ * `message` are unchanged.
+ */
+export class RestError extends Error {
+  constructor(
+    message: string,
+    readonly status: number,
+    readonly body: unknown,
+  ) {
+    super(message);
+    this.name = "RestError";
+  }
 }
 
 /** Login route — the sign-out destination, and the one page that must never trigger a sign-out. */
@@ -72,9 +90,11 @@ export async function restRequest<T>(
 
   if (!response.ok) {
     let message = `REST request failed: ${response.status} ${response.statusText}`;
+    let body: unknown;
     try {
       const err = (await response.json()) as ApiError;
-      const reason = err?.detail ?? err?.error;
+      body = err;
+      const reason = err?.detail ?? err?.error ?? err?.message;
       if (reason) message = reason;
     } catch {
       // Non-JSON error body — keep the status-based message.
@@ -82,7 +102,7 @@ export async function restRequest<T>(
     if (response.status === 401) {
       await invalidateSession();
     }
-    throw new Error(message);
+    throw new RestError(message, response.status, body);
   }
 
   const text = await response.text();

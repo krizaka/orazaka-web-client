@@ -3,7 +3,7 @@
  * @description The error message a failed REST call surfaces.
  */
 
-import { restRequest } from "@/services/rest-client";
+import { RestError, restRequest } from "@/services/rest-client";
 
 jest.mock("next-auth/react", () => ({
   signOut: jest.fn(),
@@ -49,5 +49,14 @@ describe("restRequest errors", () => {
     mockFetch.mockResolvedValueOnce(failing(500, {}));
 
     await expect(restRequest("/api/v1/chat")).rejects.toThrow("REST request failed: 500 Error");
+  });
+
+  it("keeps the status and the parsed body on the error, and reads the Studio service's `message`", async () => {
+    mockFetch.mockResolvedValueOnce(failing(451, { status: "consent_required", message: "consent needed", consentVersion: "1.0" }));
+
+    const failure = await restRequest("/api/v1/studios/x/installations").catch((error: unknown) => error);
+
+    expect(failure).toBeInstanceOf(RestError);
+    expect(failure).toMatchObject({ message: "consent needed", status: 451, body: { consentVersion: "1.0" } });
   });
 });
