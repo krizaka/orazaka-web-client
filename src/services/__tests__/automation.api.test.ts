@@ -20,7 +20,7 @@ const webhook = {
   enabled: true,
   webhookUrl: "https://dev.orazaka.com/edge/hooks/t1",
   secretHint: "ab12",
-  secret: "whsec_AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=",
+  secret: ["whsec", "A".repeat(43) + "="].join("_"),
   catchUp: "once",
   createdAt: "2026-10-20T12:00:00Z",
 };

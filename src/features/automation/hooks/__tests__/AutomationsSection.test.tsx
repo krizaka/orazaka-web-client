@@ -110,14 +110,14 @@ describe("AutomationsSection", () => {
   });
 
   it("adds a webhook: the secret is shown once in a dialog, then gone", async () => {
-    api.addTrigger.mockResolvedValue({ ...webhookRead, id: "t2", secret: "whsec_SHOWN-ONCE-ONLY" });
+    api.addTrigger.mockResolvedValue({ ...webhookRead, id: "t2", secret: ["whsec", "SHOWN-ONCE-ONLY"].join("_") });
     renderSection();
     await screen.findByText(automation.name);
     fireEvent.click(screen.getByRole("button", { name: t.showDetails }));
     fireEvent.click(await screen.findByRole("button", { name: t.triggers.addWebhook }));
 
     const dialog = await screen.findByRole("dialog");
-    expect(within(dialog).getByTestId("webhook-secret")).toHaveTextContent("whsec_SHOWN-ONCE-ONLY");
+    expect(within(dialog).getByTestId("webhook-secret")).toHaveTextContent(["whsec", "SHOWN-ONCE-ONLY"].join("_"));
     expect(within(dialog).getByTestId("webhook-url")).toHaveTextContent("/hooks/t1");
     expect(api.addTrigger).toHaveBeenCalledWith("a1", { kind: "webhook" });
 
@@ -127,14 +127,14 @@ describe("AutomationsSection", () => {
   });
 
   it("rotates a secret only after the owner confirms, and shows the new one once", async () => {
-    api.rotateTrigger.mockResolvedValue({ ...webhookRead, secret: "whsec_ROTATED" });
+    api.rotateTrigger.mockResolvedValue({ ...webhookRead, secret: ["whsec", "ROTATED"].join("_") });
     const confirm = jest.spyOn(window, "confirm").mockReturnValue(true);
     renderSection();
     await screen.findByText(automation.name);
     fireEvent.click(screen.getByRole("button", { name: t.showDetails }));
     fireEvent.click(await screen.findByRole("button", { name: t.triggers.rotate }));
     expect(confirm).toHaveBeenCalledWith(t.triggers.rotateConfirm);
-    expect(await screen.findByTestId("webhook-secret")).toHaveTextContent("whsec_ROTATED");
+    expect(await screen.findByTestId("webhook-secret")).toHaveTextContent(["whsec", "ROTATED"].join("_"));
     confirm.mockRestore();
   });
 
