@@ -4,7 +4,7 @@ import { useEffect } from "react";
 import { Badge } from "@krizaka/ui/badge";
 import { Combobox, type ComboboxOption } from "@krizaka/ui/combobox";
 import { useTranslation } from "@/core/context/LocaleContext";
-import { choiceFacts } from "@/features/studio/components/describeChoice";
+import { choiceFacts, unavailableWords } from "@/features/studio/components/describeChoice";
 import type { Choice, InputField } from "@/features/studio/hooks/useInputSchema";
 
 interface ChoicePickerProps {
@@ -34,7 +34,7 @@ export function ChoicePicker({
   const options: ComboboxOption[] = choices.map((choice) => ({
     value: choice.value,
     label: choice.label,
-    description: choice.meta?.available === false ? (choice.meta.unavailableReason ?? form.unavailable) : (choice.hint ?? undefined),
+    description: choice.meta?.available === false ? unavailableWords(choice, form.unavailableCodes, form.unavailable) : (choice.hint ?? undefined),
     disabled: choice.meta?.available === false,
   }));
   const chosen = options.find((option) => option.value === value) ?? null;

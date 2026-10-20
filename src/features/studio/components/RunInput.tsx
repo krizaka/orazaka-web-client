@@ -129,13 +129,14 @@ export function RunInput({
         <Textarea
           {...control}
           rows={6}
+          placeholder={field.placeholder ?? undefined}
           onChange={(event) => onChange(event.target.value)}
         />
       ) : (
         <Input
           {...control}
           type="text"
-          placeholder={field.type === "array" ? "a, b, c" : undefined}
+          placeholder={field.placeholder ?? (field.type === "array" ? "a, b, c" : undefined)}
           onChange={(event) => onChange(event.target.value)}
         />
       )}
