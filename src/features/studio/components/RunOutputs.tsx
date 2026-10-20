@@ -7,6 +7,7 @@ import { Card } from "@krizaka/ui/card";
 import type { RunArtefact } from "@krizaka/orazaka-shared";
 import { useTranslation } from "@/core/context/LocaleContext";
 import { asReport, ReportFindings } from "./ReportFindings";
+import { artefactLabel } from "@/features/studio/utils/artefactLabel";
 import { AudioWaveform } from "@/components/media/AudioWaveform";
 
 interface RunOutputsProps {
@@ -49,7 +50,7 @@ interface RunOutputRowProps {
 
 /** One artefact: the media first (what impresses), then its label and its actions. */
 function RunOutputRow({ artefact, index, wide }: Readonly<RunOutputRowProps>) {
-  const { t } = useTranslation();
+  const { t, locale } = useTranslation();
   const [copied, setCopied] = useState(false);
   // The run row outlives its file (storage can be reset by a deploy): a media that 404s is said so.
   const [gone, setGone] = useState(false);
@@ -72,7 +73,7 @@ function RunOutputRow({ artefact, index, wide }: Readonly<RunOutputRowProps>) {
       <ArtefactMedia artefact={artefact} gone={gone} onGone={() => setGone(true)} />
       <Card.Body className="gap-2">
         <header className="flex items-center gap-3">
-          <span className="text-xs font-semibold uppercase tracking-wider text-fg-muted">{artefact.label}</span>
+          <span className="text-xs font-semibold uppercase tracking-wider text-fg-muted">{artefactLabel(artefact, locale)}</span>
           <span className="ml-auto flex items-center gap-1.5">
             {media && !gone && (
               <Button asChild variant="secondary" size="sm">
@@ -103,7 +104,7 @@ function RunOutputRow({ artefact, index, wide }: Readonly<RunOutputRowProps>) {
  * path is resolved against the current origin the same way the jobs dashboard does it.
  */
 function ArtefactMedia({ artefact, gone, onGone }: Readonly<RunOutputRowProps & { gone: boolean; onGone: () => void }>) {
-  const { t } = useTranslation();
+  const { t, locale } = useTranslation();
   const image = useRef<HTMLImageElement>(null);
 
   // An error that fired before hydration never reaches onError: look at the element once mounted.
@@ -148,7 +149,7 @@ function ArtefactMedia({ artefact, gone, onGone }: Readonly<RunOutputRowProps & 
 
   if (artefact.type === "AUDIO") {
     return (
-      <AudioWaveform src={source} label={artefact.label} className="px-4 pt-4" />
+      <AudioWaveform src={source} label={artefactLabel(artefact, locale)} className="px-4 pt-4" />
     );
   }
 
@@ -159,7 +160,7 @@ function ArtefactMedia({ artefact, gone, onGone }: Readonly<RunOutputRowProps & 
       ref={image}
       src={source}
       onError={onGone}
-      alt={artefact.label}
+      alt={artefactLabel(artefact, locale)}
       className="max-h-[520px] w-full bg-media object-contain"
     />
   );

@@ -33,6 +33,11 @@ export interface InputField {
   wordedByPack: boolean;
   /** An enum's choices in the page's language (`x-i18n`), by value; null when the pack gave none. */
   optionLabels: Record<string, string> | null;
+  /**
+   * On a catalogue-fed model field: the aspects each model can make (`x-options.aspects`) and the field they govern
+   * (`x-options.aspectField`): the form offers only the selected model's, never the blueprint's whole list.
+   */
+  aspectsByModel: { field: string; aspects: Record<string, string[]> } | null;
   /** An example of what to type, in the page's language (`x-i18n.<lang>.placeholder`); null when the pack gave none. */
   placeholder: string | null;
 }
@@ -143,6 +148,20 @@ function enumLabels(words: PackWords | null): Record<string, string> | null {
   return entries.length > 0 ? Object.fromEntries(entries) : null;
 }
 
+/** The per-model aspects a model field declares, or null. */
+function aspectsOf(options: { aspectField?: string; aspects?: Record<string, unknown> } | undefined): InputField["aspectsByModel"] {
+  if (!options?.aspectField || !options.aspects || typeof options.aspects !== "object") {
+    return null;
+  }
+  const aspects: Record<string, string[]> = {};
+  for (const [model, list] of Object.entries(options.aspects)) {
+    if (Array.isArray(list)) {
+      aspects[model] = list.filter((aspect): aspect is string => typeof aspect === "string");
+    }
+  }
+  return { field: options.aspectField, aspects };
+}
+
 /** A pack's helper is already one line; a list field's older one is cut to a line; a text field's guidance stays whole. */
 function shortHelperOf(text: string | null, writtenByPack: boolean, spec: { enum?: unknown; oneOf?: unknown; "x-options"?: unknown }): string | null {
   const isList = Array.isArray(spec.enum) || Boolean(spec["x-options"]) || Array.isArray(spec.oneOf);
@@ -210,7 +229,7 @@ export function useInputSchema(inputSchema: string | null, locale: Locale = "en"
           default?: unknown;
           "x-control"?: string;
           "x-advanced"?: boolean;
-          "x-options"?: { source?: string; facts?: Record<string, unknown> };
+          "x-options"?: { source?: string; facts?: Record<string, unknown>; aspectField?: string; aspects?: Record<string, unknown> };
           "x-i18n"?: unknown;
         };
         const words = wordsFor(spec["x-i18n"], locale);
@@ -246,6 +265,7 @@ export function useInputSchema(inputSchema: string | null, locale: Locale = "en"
           fedByCatalogue: spec["x-options"]?.source === "models",
           wordedByPack: Boolean(words?.title),
           optionLabels: enumLabels(words),
+          aspectsByModel: aspectsOf(spec["x-options"]),
           placeholder: words?.placeholder?.trim() || null,
         } satisfies InputField;
       });

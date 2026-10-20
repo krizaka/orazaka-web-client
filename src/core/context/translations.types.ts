@@ -783,6 +783,8 @@ export interface TranslationDictionary {
       unavailable: string;
       /** Short reasons a model is greyed out, by the code the job plane sends (`gpu_offline`, `worker_offline`, `provider_down`). */
       unavailableCodes: Record<string, string>;
+      /** Why an option of a model-governed field (the aspect) is greyed out: the selected model cannot make it. */
+      notForThisModel: string;
       choicesUnreachable: string;
       /** A catalogue-fed list with no model to offer: said out loud, never a blank select. */
       noModels: string;
