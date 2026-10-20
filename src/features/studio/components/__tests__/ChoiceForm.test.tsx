@@ -74,7 +74,7 @@ describe("RunForm — the video Studio's model is a populated, short, readable l
 
   it("compares every model in a disclosure, from the catalogue's facts", () => {
     setupVideo();
-    const compare = screen.getByText("Compare the models").closest("details")!;
+    const compare = screen.getByText("Compare models").closest("details")!;
     expect(compare).toHaveTextContent("LTX-Video · fast");
     expect(compare).toHaveTextContent("Wan 2.2 · cloud");
     expect(compare).toHaveTextContent("1216×704");
@@ -114,5 +114,22 @@ describe("RunForm — a number is a number input with the schema's bounds", () =
     fireEvent.change(duration, { target: { value: "8" } });
     fireEvent.click(screen.getByRole("button", { name: "Run" }));
     expect(onSubmit).toHaveBeenCalledWith({ durationSeconds: "8" });
+  });
+});
+
+describe("RunForm — the video prompt's guidance is in the page's language, in a line", () => {
+  it("shows the English helper, not the blueprint's French paragraph", () => {
+    render(
+      <RunForm
+        studioKey="video-generation"
+        inputSchema={JSON.stringify({ type: "object", required: ["prompt"], properties: { prompt: { type: "string", title: "Ce qui doit se passer à l'écran", description: "Décrivez le plan. ".repeat(20) } } })}
+        estimatedCredits={3}
+        isSubmitting={false}
+        onSubmit={jest.fn()}
+      />,
+    );
+    const help = screen.getByText(/Describe the shot/);
+    expect(help.textContent!.length).toBeLessThanOrEqual(140);
+    expect(screen.queryByText(/Décrivez le plan/)).toBeNull();
   });
 });

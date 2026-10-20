@@ -19,7 +19,7 @@ interface ChoicePickerProps {
  * A closed list the catalogue fed, as a searchable list: each entry is a short name and one line of what it is for;
  * one whose engine is off is shown but cannot be picked, with the reason. The facts of the model in view — where it
  * runs, how fast, about how long, what it costs, the size it makes — are chips under the field, for that model only;
- * the whole list side by side is one click away (« Compare the models »). Left alone, the field stays on « Automatic »
+ * the whole list side by side is one click away (« Compare models »). Left alone, the field stays on « Automatic »
  * and sends nothing, so the platform keeps choosing the best available model at run time.
  */
 export function ChoicePicker({
