@@ -25,6 +25,7 @@ const PUBLIC_PREFIXES = [
   "/login",
   "/register",
   "/api/",        // All API routes (auth, BFF proxy, etc.)
+  "/.well-known/", // Universal links / App Links files (app-links.json)
   "/_next/",      // Next.js internals (static, image, RSC payloads, HMR)
   "/favicon",
   "/logo.svg",

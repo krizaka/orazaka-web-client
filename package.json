@@ -11,7 +11,7 @@
     "start": "next start",
     "lint": "eslint && krizaka-ratchet && ast-grep test --skip-snapshot-tests && node scripts/sg-ratchet.mjs && node --test scripts/sg-ratchet.test.mjs",
     "format": "prettier --write \"src/**/*.{ts,tsx,json,md}\"",
-    "validate": "depcruise src --config .dependency-cruiser.cjs && npm run lint && npm run test:codemods && npm run test:deps && npm run check:deploy-build && npm run test:scripts && npm run test:console && npm run test:coverage",
+    "validate": "depcruise src --config .dependency-cruiser.cjs && npm run lint && npm run test:codemods && npm run test:deps && npm run check:deploy-build && npm run check:app-links && npm run test:scripts && npm run test:console && npm run test:coverage",
     "test": "jest",
     "test:coverage": "jest --coverage --runInBand",
     "test:e2e": "npx playwright test",
@@ -25,7 +25,8 @@
     "lint:sg": "node scripts/sg-ratchet.mjs",
     "lint:sg:test": "ast-grep test --skip-snapshot-tests",
     "sg:ratchet:update": "node scripts/sg-ratchet.mjs --update",
-    "sg:fix": "node scripts/sg-fix.mjs"
+    "sg:fix": "node scripts/sg-fix.mjs",
+    "check:app-links": "node scripts/check-app-links.mjs"
   },
   "dependencies": {
     "@dagrejs/dagre": "^3.0.0",
