@@ -1,0 +1,60 @@
+import "@testing-library/jest-dom";
+import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import type { Installation } from "@krizaka/orazaka-shared";
+import { ConsentNotice } from "@/features/studio/consent/ConsentNotice";
+import { StudioApi } from "@/services/studio.api";
+
+jest.mock("@/core/context/LocaleContext", () => ({
+  useTranslation: () => ({ t: jest.requireActual("@/core/context/translations").translations.en, locale: "en" }),
+}));
+jest.mock("@/services/studio.api", () => ({ StudioApi: { fetchPacks: jest.fn(), uninstall: jest.fn() } }));
+
+const pack = (regulatoryClass: string) => [{ packKey: "wellbeing", regulatoryClass }] as never;
+const installation = { id: "inst-1", status: "ACTIVE" } as Installation;
+
+describe("ConsentNotice (before the click, and the way out)", () => {
+  beforeEach(() => jest.clearAllMocks());
+
+  it("says before the click that a REGULATED Studio asks for consent", async () => {
+    jest.mocked(StudioApi.fetchPacks).mockResolvedValue(pack("REGULATED"));
+    render(<ConsentNotice packKey="wellbeing" installation={undefined} onChanged={jest.fn()} />);
+    expect(await screen.findByText(/Consent asked/)).toBeInTheDocument();
+  });
+
+  it("says nothing for a Studio that asks no consent", async () => {
+    jest.mocked(StudioApi.fetchPacks).mockResolvedValue(pack("STANDARD"));
+    const { container } = render(<ConsentNotice packKey="wellbeing" installation={undefined} onChanged={jest.fn()} />);
+    await waitFor(() => expect(StudioApi.fetchPacks).toHaveBeenCalled());
+    expect(container).toBeEmptyDOMElement();
+  });
+
+  it("says nothing when the pack is not known or the catalogue does not answer", async () => {
+    jest.mocked(StudioApi.fetchPacks).mockRejectedValue(new Error("down"));
+    const { container } = render(<ConsentNotice packKey="wellbeing" installation={installation} onChanged={jest.fn()} />);
+    await waitFor(() => expect(StudioApi.fetchPacks).toHaveBeenCalled());
+    expect(container).toBeEmptyDOMElement();
+  });
+
+  it("lets the person withdraw: a confirmation, then the installation is revoked", async () => {
+    jest.mocked(StudioApi.fetchPacks).mockResolvedValue(pack("REGULATED"));
+    jest.mocked(StudioApi.uninstall).mockResolvedValue(undefined);
+    const onChanged = jest.fn();
+    render(<ConsentNotice packKey="wellbeing" installation={installation} onChanged={onChanged} />);
+
+    fireEvent.click(await screen.findByRole("button", { name: "Withdraw my consent" }));
+    expect(screen.getByRole("dialog", { name: "Withdraw your consent?" })).toBeInTheDocument();
+    expect(StudioApi.uninstall).not.toHaveBeenCalled();
+    fireEvent.click(screen.getByRole("button", { name: "Withdraw consent" }));
+
+    await waitFor(() => expect(StudioApi.uninstall).toHaveBeenCalledWith("inst-1"));
+    expect(onChanged).toHaveBeenCalled();
+  });
+
+  it("keeps the consent when the person changes their mind", async () => {
+    jest.mocked(StudioApi.fetchPacks).mockResolvedValue(pack("REGULATED"));
+    render(<ConsentNotice packKey="wellbeing" installation={installation} onChanged={jest.fn()} />);
+    fireEvent.click(await screen.findByRole("button", { name: "Withdraw my consent" }));
+    fireEvent.click(screen.getByRole("button", { name: "Keep it" }));
+    expect(StudioApi.uninstall).not.toHaveBeenCalled();
+  });
+});

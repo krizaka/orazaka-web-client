@@ -11,6 +11,7 @@ import { StudioLoadError, StudioLoading } from "./StudioAsyncState";
 import { useStudioDetail } from "@/features/studio/hooks/useStudioDetail";
 import { useInstallations } from "@/features/studio/hooks/useInstallations";
 import { StudioInstallPanel } from "@/features/studio/components/StudioInstallPanel";
+import { ConsentNotice } from "@/features/studio/consent/ConsentNotice";
 import { StudioRunPanel } from "@/features/studio/components/StudioRunPanel";
 import { StudioVersionList } from "@/features/studio/components/StudioVersionList";
 import { useConfigSchema } from "@/features/studio/hooks/useConfigSchema";
@@ -84,6 +85,15 @@ export function StudioDetail({ studioKey }: Readonly<StudioDetailProps>) {
 
       <StudioInstallPanel
         studio={studio}
+        installation={installation}
+        onChanged={() => {
+          reloadInstallations();
+          reload();
+        }}
+      />
+
+      <ConsentNotice
+        packKey={studio.packKey}
         installation={installation}
         onChanged={() => {
           reloadInstallations();

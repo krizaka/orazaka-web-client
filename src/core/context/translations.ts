@@ -19,6 +19,7 @@ import { webhooks } from "./translations.webhooks";
 import { runProgress } from "./translations.runProgress";
 import { models } from "./translations.models";
 import { catalogue, plan } from "./translations.catalogue";
+import { consent } from "./translations.consent";
 import { THEME_MODE } from "@/core/constants/http.constants";
 export type { Locale, TranslationDictionary };
 
@@ -923,6 +924,7 @@ export const translations: Record<Locale, TranslationDictionary> = {
     automation: automation.en,
     automations: automations.en,
     catalogue: catalogue.en,
+    consent: consent.en,
     plan: plan.en,
     a11y: a11y.en,
     showcase: showcase.en,
@@ -1861,6 +1863,7 @@ export const translations: Record<Locale, TranslationDictionary> = {
     automation: automation.fr,
     automations: automations.fr,
     catalogue: catalogue.fr,
+    consent: consent.fr,
     plan: plan.fr,
     a11y: a11y.fr,
     showcase: showcase.fr,
