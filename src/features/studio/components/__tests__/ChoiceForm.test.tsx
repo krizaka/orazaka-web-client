@@ -74,7 +74,7 @@ describe("RunForm — the video Studio's model is a populated, short, readable l
 
   it("compares every model in a disclosure, from the catalogue's facts", () => {
     setupVideo();
-    const compare = screen.getByText("Compare the models").closest("details")!;
+    const compare = screen.getByText("Compare models").closest("details")!;
     expect(compare).toHaveTextContent("LTX-Video · fast");
     expect(compare).toHaveTextContent("Wan 2.2 · cloud");
     expect(compare).toHaveTextContent("1216×704");
