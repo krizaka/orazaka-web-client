@@ -837,6 +837,12 @@ export const translations: Record<Locale, TranslationDictionary> = {
         free: "Free",
         unavailable: "Unavailable right now",
         choicesUnreachable: "The list could not be loaded; the platform will choose for you.",
+        noModels: "No model available: contact the administrator.",
+        noOptions: "No option available: contact the administrator.",
+        unset: "Not set",
+        compare: "Compare the models",
+        compareHint: "Where each one runs, what it makes, how long it takes and what it costs.",
+        chosenLabel: "About this model",
       },
       choices: {
         size: {
@@ -1782,6 +1788,12 @@ export const translations: Record<Locale, TranslationDictionary> = {
         free: "Gratuit",
         unavailable: "Indisponible pour le moment",
         choicesUnreachable: "La liste n'a pas pu être chargée ; la plateforme choisira pour vous.",
+        noModels: "Aucun modèle disponible : contactez l'administrateur.",
+        noOptions: "Aucune option disponible : contactez l'administrateur.",
+        unset: "Non défini",
+        compare: "Comparer les modèles",
+        compareHint: "Où tourne chacun, ce qu'il produit, combien de temps il prend et ce qu'il coûte.",
+        chosenLabel: "À propos de ce modèle",
       },
       choices: {
         size: {
