@@ -1,9 +1,16 @@
 "use client";
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { AutomationRunStatusSchema } from "@krizaka/orazaka-shared";
 import { AutomationApi, type NewAutomation, type NewTrigger } from "@/services/automation.api";
 import { StudioApi } from "@/services/studio.api";
 import { useTranslation } from "@/core/context/LocaleContext";
+
+/** The states of a run that are not over: the history refreshes by itself while one is in flight. */
+const IN_FLIGHT: ReadonlySet<string> = new Set([
+  AutomationRunStatusSchema.enum.queued,
+  AutomationRunStatusSchema.enum.running,
+]);
 
 /** Query keys: one place, so a mutation invalidates exactly what it changed. */
 export const automationKeys = {
@@ -63,7 +70,7 @@ export function useAutomationRuns(automationId: string) {
     queryKey: automationKeys.runs(automationId),
     queryFn: () => AutomationApi.runs(automationId),
     refetchInterval: (query) =>
-      query.state.data?.some((run) => run.status === "queued" || run.status === "running") ? 3000 : false,
+      query.state.data?.some((run) => IN_FLIGHT.has(run.status)) ? 3000 : false,
   });
 }
 

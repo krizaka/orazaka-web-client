@@ -7,7 +7,7 @@ import { TrashIcon } from "@krizaka/icons";
 import { Badge } from "@krizaka/ui/badge";
 import { Button, IconButton } from "@krizaka/ui/button";
 import { Switch } from "@krizaka/ui/switch";
-import type { Trigger } from "@krizaka/orazaka-shared";
+import { TriggerKindSchema, type Trigger } from "@krizaka/orazaka-shared";
 import { fill } from "@/core/context/fill";
 import { useTranslation } from "@/core/context/LocaleContext";
 import { useTriggerMutations, useTriggers } from "@/features/automation/hooks/useAutomations";
@@ -56,12 +56,13 @@ function TriggerRow({
   const dateLocale = locale === "fr" ? fr : enUS;
   const when = (iso: string) => formatDistanceToNow(new Date(iso), { addSuffix: true, locale: dateLocale });
   const slot = trigger.schedule;
+  const isWebhook = trigger.kind === TriggerKindSchema.enum.webhook;
   const days = slot && slot.days.length < 7 ? slot.days.map((day) => t.automations.days[day as keyof typeof t.automations.days] ?? day).join(", ") : w.everyDay;
   return (
     <li className="flex flex-col gap-2 rounded-lg border border-border-subtle p-3" data-testid="trigger-row">
       <div className="flex flex-wrap items-center gap-2">
-        <Badge tone={trigger.kind === "webhook" ? "accent" : "neutral"} size="sm">
-          {trigger.kind === "webhook" ? w.webhook : w.schedule}
+        <Badge tone={isWebhook ? "accent" : "neutral"} size="sm">
+          {isWebhook ? w.webhook : w.schedule}
         </Badge>
         <span className="min-w-0 flex-1 text-sm text-fg">
           {slot ? fill(w.scheduleSummary, { days, time: slot.time, zone: slot.zone }) : <code className="break-all font-mono text-xs">{trigger.webhookUrl}</code>}
@@ -72,7 +73,7 @@ function TriggerRow({
           disabled={busy}
           onCheckedChange={onEnabled}
         />
-        {trigger.kind === "webhook" && (
+        {isWebhook && (
           <Button type="button" variant="ghost" size="sm" disabled={busy} onClick={onRotate}>
             {w.rotate}
           </Button>

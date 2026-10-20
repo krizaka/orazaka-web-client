@@ -3,9 +3,10 @@
 import * as React from "react";
 import { formatDistanceToNow } from "date-fns";
 import { enUS, fr } from "date-fns/locale";
+import { differenceInSeconds } from "date-fns";
 import { Badge } from "@krizaka/ui/badge";
 import { DataTable, type DataTableColumn } from "@krizaka/ui/data-table";
-import type { AutomationRun, AutomationRunStatus } from "@krizaka/orazaka-shared";
+import { AutomationRunStatusSchema, type AutomationRun, type AutomationRunStatus } from "@krizaka/orazaka-shared";
 import { fill } from "@/core/context/fill";
 import { useTranslation } from "@/core/context/LocaleContext";
 import { useAutomationRuns } from "@/features/automation/hooks/useAutomations";
@@ -18,10 +19,11 @@ const TONE: Record<AutomationRunStatus, "neutral" | "accent" | "success" | "dang
   skipped_budget: "warning",
 };
 
+const STATUS = AutomationRunStatusSchema.enum;
+
 /** Whole seconds between two ISO instants, or null while the run goes on. */
 function secondsBetween(start: string, end?: string | null): number | null {
-  if (!end) return null;
-  return Math.max(0, Math.round((new Date(end).getTime() - new Date(start).getTime()) / 1000));
+  return end ? Math.max(0, differenceInSeconds(new Date(end), new Date(start))) : null;
 }
 
 /**
@@ -42,7 +44,7 @@ export function RunHistory({ automationId }: Readonly<{ automationId: string }>)
         type: "status",
         value: (run) => r.status[run.status],
         cell: (run) => (
-          <Badge tone={TONE[run.status]} size="sm" dot={run.status === "running"}>
+          <Badge tone={TONE[run.status]} size="sm" dot={run.status === STATUS.running}>
             {r.status[run.status]}
           </Badge>
         ),
@@ -73,7 +75,7 @@ export function RunHistory({ automationId }: Readonly<{ automationId: string }>)
         priority: 2,
         value: (run) => run.errorMessage ?? run.errorCode ?? "",
         cell: (run) => {
-          if (run.status === "skipped_budget") return r.skippedBudget;
+          if (run.status === STATUS.skipped_budget) return r.skippedBudget;
           if (run.errorMessage ?? run.errorCode) return <span className="text-danger">{run.errorMessage ?? run.errorCode}</span>;
           return run.studioRunId ? <code className="font-mono text-xs">{run.studioRunId.slice(0, 8)}</code> : "—";
         },
