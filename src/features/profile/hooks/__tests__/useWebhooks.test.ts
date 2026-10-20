@@ -5,7 +5,14 @@ const headers = async () => ({ "Content-Type": "application/json" });
 const endpoint: WebhookEndpoint = { id: "e1", url: "https://hooks.example.com/x", events: ["run.completed"], enabled: true, createdAt: "2026-10-20T00:00:00Z" };
 
 function reply(status: number, body?: unknown): Response {
-  return new Response(body === undefined ? null : JSON.stringify(body), { status, headers: { "content-type": "application/json" } });
+  return { ok: status >= 200 && status < 300, status, json: async () => body } as unknown as Response;
+}
+
+/** jsdom has no fetch: the hook's calls go to a mock the test scripts. */
+function mockFetch(): jest.Mock {
+  const mock = jest.fn();
+  global.fetch = mock as unknown as typeof fetch;
+  return mock;
 }
 
 describe("webhook address and error rules", () => {
@@ -24,17 +31,16 @@ describe("webhook address and error rules", () => {
 });
 
 describe("useWebhooks", () => {
-  afterEach(() => jest.restoreAllMocks());
 
   it("lists the endpoints on mount", async () => {
-    jest.spyOn(global, "fetch").mockResolvedValue(reply(200, [endpoint]));
+    mockFetch().mockResolvedValue(reply(200, [endpoint]));
     const { result } = renderHook(() => useWebhooks(headers));
     await waitFor(() => expect(result.current.isLoading).toBe(false));
     expect(result.current.endpoints).toEqual([endpoint]);
   });
 
   it("shows the secret of a new endpoint once, and refuses a non-https address without calling the API", async () => {
-    const fetchMock = jest.spyOn(global, "fetch");
+    const fetchMock = mockFetch();
     fetchMock.mockResolvedValueOnce(reply(200, []));
     const { result } = renderHook(() => useWebhooks(headers));
     await waitFor(() => expect(result.current.isLoading).toBe(false));
@@ -58,7 +64,7 @@ describe("useWebhooks", () => {
   });
 
   it("says when the limit is reached", async () => {
-    const fetchMock = jest.spyOn(global, "fetch");
+    const fetchMock = mockFetch();
     fetchMock.mockResolvedValueOnce(reply(200, [])).mockResolvedValueOnce(reply(409, { status: "too_many_webhooks" }));
     const { result } = renderHook(() => useWebhooks(headers));
     await waitFor(() => expect(result.current.isLoading).toBe(false));
@@ -69,7 +75,7 @@ describe("useWebhooks", () => {
   });
 
   it("rotates a secret and shows the new one", async () => {
-    const fetchMock = jest.spyOn(global, "fetch");
+    const fetchMock = mockFetch();
     fetchMock.mockResolvedValueOnce(reply(200, [endpoint])).mockResolvedValueOnce(reply(200, { secret: "whsec_new" }));
     const { result } = renderHook(() => useWebhooks(headers));
     await waitFor(() => expect(result.current.isLoading).toBe(false));
@@ -81,7 +87,7 @@ describe("useWebhooks", () => {
   });
 
   it("removes a deleted endpoint at once and opens an endpoint's log", async () => {
-    const fetchMock = jest.spyOn(global, "fetch");
+    const fetchMock = mockFetch();
     fetchMock.mockResolvedValueOnce(reply(200, [endpoint])).mockResolvedValueOnce(reply(200, [{ id: "d1", runId: "r1", event: "run.completed", status: "DELIVERED", attempts: 1, lastHttpStatus: 200, lastError: null, createdAt: "2026-10-20T00:00:00Z", deliveredAt: "2026-10-20T00:00:01Z" }])).mockResolvedValueOnce(reply(204));
     const { result } = renderHook(() => useWebhooks(headers));
     await waitFor(() => expect(result.current.isLoading).toBe(false));
