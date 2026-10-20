@@ -21,6 +21,8 @@ export interface InputField {
   choices: Choice[] | null;
   /** The value the form starts on, when the schema (or the catalogue's resolved default) states one. */
   defaultValue: string | null;
+  /** An `integer` or `number` field: a number input with the schema's bounds, never a free text line. */
+  numeric: { min: number | null; max: number | null } | null;
   /** `seed`: a number with a "random" toggle rather than a text line. */
   control: "seed" | null;
   /** Rarely needed: folded under "More options". */
@@ -193,6 +195,8 @@ export function useInputSchema(inputSchema: string | null, locale: Locale = "en"
           enum?: string[];
           maxItems?: number;
           maxLength?: number;
+          minimum?: number;
+          maximum?: number;
           description?: string;
           format?: string;
           contentMediaType?: string;
@@ -224,6 +228,13 @@ export function useInputSchema(inputSchema: string | null, locale: Locale = "en"
           multiline: type === "string" && !assetKind && typeof spec.maxLength === "number" && spec.maxLength > 500,
           choices,
           defaultValue: spec.default === undefined || spec.default === null ? null : String(spec.default),
+          numeric:
+            spec.type === "integer" || spec.type === "number"
+              ? {
+                  min: typeof spec.minimum === "number" ? spec.minimum : null,
+                  max: typeof spec.maximum === "number" ? spec.maximum : null,
+                }
+              : null,
           control: spec["x-control"] === "seed" ? "seed" : null,
           advanced: spec["x-advanced"] === true,
           fedByCatalogue: spec["x-options"]?.source === "models",

@@ -115,6 +115,16 @@ export function RunInput({
             </option>
           ))}
         </Select>
+      ) : field.numeric ? (
+        <Input
+          {...control}
+          type="number"
+          inputMode="numeric"
+          min={field.numeric.min ?? undefined}
+          max={field.numeric.max ?? undefined}
+          placeholder={field.defaultValue ?? undefined}
+          onChange={(event) => onChange(event.target.value)}
+        />
       ) : field.multiline ? (
         <Textarea
           {...control}

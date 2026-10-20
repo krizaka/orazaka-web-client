@@ -96,3 +96,23 @@ describe("RunForm — the video Studio's model is a populated, short, readable l
     error.mockRestore();
   });
 });
+
+describe("RunForm — a number is a number input with the schema's bounds", () => {
+  it("renders an integer as a bounded number input, sending its digits", () => {
+    const onSubmit = jest.fn();
+    render(
+      <RunForm
+        studioKey="video-generation"
+        inputSchema={JSON.stringify({ type: "object", properties: { durationSeconds: { type: "integer", minimum: 1, maximum: 20, default: 5, title: "Duration (seconds)" } } })}
+        estimatedCredits={3}
+        isSubmitting={false}
+        onSubmit={onSubmit}
+      />,
+    );
+    const duration = screen.getByLabelText("Duration (seconds)") as HTMLInputElement;
+    expect([duration.type, duration.min, duration.max, duration.placeholder]).toEqual(["number", "1", "20", "5"]);
+    fireEvent.change(duration, { target: { value: "8" } });
+    fireEvent.click(screen.getByRole("button", { name: "Run" }));
+    expect(onSubmit).toHaveBeenCalledWith({ durationSeconds: "8" });
+  });
+});
