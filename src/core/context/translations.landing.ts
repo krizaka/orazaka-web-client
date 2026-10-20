@@ -49,7 +49,7 @@ export const landing: Record<Locale, LandingDictionary> = {
       secondary: "See it run",
       visualLabel: "dev.orazaka.com · chat",
       takeAlt: "The Orazaka chat: a question typed, the request routed, the answer written.",
-      takeCaption: "Recorded on dev.orazaka.com with a test account — nothing staged.",
+      takeCaption: "Recorded on dev.orazaka.com with a demo account — nothing staged.",
     },
     figures: {
       runs: "runs measured on real hardware, each with its record",
@@ -233,7 +233,7 @@ export const landing: Record<Locale, LandingDictionary> = {
       secondary: "Le voir tourner",
       visualLabel: "dev.orazaka.com · chat",
       takeAlt: "Le chat d'Orazaka : une question tapée, la requête routée, la réponse écrite.",
-      takeCaption: "Enregistré sur dev.orazaka.com avec un compte de test — rien de mis en scène.",
+      takeCaption: "Enregistré sur dev.orazaka.com avec un compte de démo — rien de mis en scène.",
     },
     figures: {
       runs: "runs mesurés sur du vrai matériel, chacun avec sa fiche",

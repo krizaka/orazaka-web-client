@@ -24,6 +24,7 @@ const password = process.env.ORAZAKA_USER_PASSWORD;
 if (!email || !password) throw new Error("ORAZAKA_USER_EMAIL and ORAZAKA_USER_PASSWORD are required");
 
 export const VIEWPORT = { width: 760, height: 640 };
+const PERSONA = "Eric";
 const SCALE = 1.5; // 760×640 CSS px × 1.5 = the 1140×960 frames
 const MIN_FPS = 25;
 /** The waiting for the model is sped up to this many seconds at most (never edited otherwise). */
@@ -63,9 +64,18 @@ for (const locale of ["en", "fr"]) {
       const json = await res.json().catch(() => ({}));
       await route.fulfill({ response: res, json: { ...json, preferences: { ...json.preferences, language: locale } } });
     });
+    // A demo shows a persona, never a QA name: the session's display name is « Eric » on the way in (nothing is saved).
+    await ctx.route("**/api/auth/session", async (route) => {
+      const res = await route.fetch();
+      const json = await res.json().catch(() => ({}));
+      await route.fulfill({ response: res, json: json?.user ? { ...json, user: { ...json.user, name: PERSONA } } : json });
+    });
     const page = await ctx.newPage();
+    // Refuses the take if « qa » shows anywhere on screen (the visible text, the labels and the titles).
+    const qaOnScreen = () => page.evaluate(() => /\bqa[_\s-]|qa_user|\bqa\b/i.test(document.body.innerText + [...document.querySelectorAll("[aria-label],[title],[alt]")].map((e) => e.getAttribute("aria-label") + e.getAttribute("title") + e.getAttribute("alt")).join(" ")));
     await page.goto(`${BASE}/chat`, { waitUntil: "networkidle" });
     await page.waitForTimeout(800);
+    if (await qaOnScreen()) throw new Error(`${locale}/${theme}: « qa » is on screen — a demo shows a persona, never a QA name`);
 
     const cdp = await ctx.newCDPSession(page);
     const frames = [];
@@ -87,6 +97,7 @@ for (const locale of ["en", "fr"]) {
     await page.waitForFunction(() => !/Answering|En train de répondre|Réponse en cours/i.test(document.body.innerText) && document.querySelectorAll('[class*="prose"], [data-role="assistant"], [data-testid*="assistant"]').length > 0, null, { timeout: 150_000 }).catch(() => {});
     const answered = Date.now() / 1000;
     await page.waitForTimeout(2600);
+    if (await qaOnScreen()) throw new Error(`${locale}/${theme}: « qa » is on screen at the end of the take`);
     await cdp.send("Page.stopScreencast");
     await ctx.close();
 
