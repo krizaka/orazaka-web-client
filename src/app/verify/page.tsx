@@ -50,10 +50,10 @@ function VerifyPageContent() {
 
   return (
     <AuthScreen title={heading.title} description={heading.description}>
-      {status === "loading" && <Button type="button" variant="secondary" size="lg" shape="cut" loading disabled className="w-full">{t.verify.loadingMessage}</Button>}
+      {status === "loading" && <Button type="button" variant="secondary" size="lg" loading disabled className="w-full">{t.verify.loadingMessage}</Button>}
 
       {status === "success" && (
-        <Button type="button" variant="primary" size="lg" shape="cut" shimmer onClick={() => router.push("/login")} className="w-full">
+        <Button type="button" variant="primary" size="lg" onClick={() => router.push("/login")} className="w-full">
           {t.verify.goToLogin}
         </Button>
       )}
@@ -64,7 +64,7 @@ function VerifyPageContent() {
             <Field.Label htmlFor="verify-token">{status === "error" ? t.verify.enterTokenManually : t.verify.tokenLabel}</Field.Label>
             <Input id="verify-token" type="text" value={token} onChange={(e) => setToken(e.target.value)} placeholder={t.verify.tokenPlaceholder} autoComplete="one-time-code" required invalid={status === "error"} />
           </Field.Root>
-          <Button type="submit" variant="primary" size="lg" shape="cut" shimmer className="w-full">
+          <Button type="submit" variant="primary" size="lg" className="w-full">
             {status === "error" ? t.verify.retryVerification : t.verify.activateAccount}
           </Button>
         </form>

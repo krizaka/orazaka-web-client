@@ -101,7 +101,7 @@ const ContentText: React.FC<Readonly<{ content: string }>> = ({ content }) => (
 );
 
 const ContentImage: React.FC<{ content: string }> = ({ content }) => (
-  <div className="mt-1 rounded-xl overflow-hidden border border-border-subtle bg-surface-2 max-w-sm shadow-sm transition-all duration-200 hover:scale-[1.01]">
+  <div className="mt-1 rounded-xl overflow-hidden border border-border-subtle bg-surface-2 max-w-sm shadow-sm transition-all duration-200">
     {/* eslint-disable-next-line @next/next/no-img-element */}
     <img
       src={content}

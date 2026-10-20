@@ -85,7 +85,7 @@ export function RegisterForm({ onSuccess, onError }: Readonly<RegisterFormProps>
           ))}
         </Select>,
       )}
-      <Button id="btn-register-submit" type="submit" variant="primary" size="lg" shape="cut" shimmer loading={isPending} className="w-full">
+      <Button id="btn-register-submit" type="submit" variant="primary" size="lg" loading={isPending} className="w-full">
         {isPending ? t.auth.creatingAccountBtn : t.auth.createAccountBtn}
       </Button>
       <p className="text-center text-xs text-fg-secondary">{t.auth.termsNotice}</p>

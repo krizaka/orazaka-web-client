@@ -44,7 +44,7 @@ export function DesktopPage({ release }: Readonly<{ release: DesktopDownload }>)
               <p className="text-lg leading-relaxed text-pretty text-fg-secondary">{d.hero.lead}</p>
               {release ? (
                 <div className="space-y-3">
-                  <Button asChild variant="primary" size="lg" shape="cut" magnetic className="kz-sheen font-bold">
+                  <Button asChild variant="primary" size="lg" className="font-bold">
                     <a href={release.dmg.url}>
                       <DownloadIcon size={18} />
                       {d.download.button}

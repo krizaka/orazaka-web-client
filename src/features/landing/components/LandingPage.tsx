@@ -50,13 +50,13 @@ export function LandingPage({ measured = NO_RUNS }: Readonly<{ measured?: Measur
           visual={<HeroTake />}
           actions={
             <>
-              <Button asChild variant="primary" size="lg" shape="cut" shimmer className="w-full sm:w-auto">
+              <Button asChild variant="primary" size="lg" className="w-full sm:w-auto">
                 <Link href={primary.href}>
                   {primary.label}
                   <ForwardIcon size={16} strokeWidth={2.25} />
                 </Link>
               </Button>
-              <Button asChild variant="ghost" size="lg" shape="cut" className="w-full sm:w-auto">
+              <Button asChild variant="ghost" size="lg" className="w-full sm:w-auto">
                 <Link href="/gallery">{h.secondary}</Link>
               </Button>
             </>
@@ -77,10 +77,10 @@ export function LandingPage({ measured = NO_RUNS }: Readonly<{ measured?: Measur
             body: t.landing.cta.body,
             actions: (
               <>
-                <Button asChild variant="primary" size="lg" shape="cut">
+                <Button asChild variant="primary" size="lg">
                   <Link href={closing.href}>{closing.label}</Link>
                 </Button>
-                <Button asChild variant="ghost" size="lg" shape="cut">
+                <Button asChild variant="ghost" size="lg">
                   <a href="https://www.krizaka.com/contact?topic=orazaka">{t.landing.nav.talk}</a>
                 </Button>
               </>

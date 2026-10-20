@@ -73,7 +73,7 @@ function ForgotPasswordPageContent() {
             <Field.Label htmlFor="forgot-email">{t.auth.emailLabel}</Field.Label>
             <Input id="forgot-email" type="email" required value={email} onChange={(e) => setEmail(e.target.value)} placeholder="you@orazaka.com" autoComplete="email" />
           </Field.Root>
-          <Button id="btn-forgot-submit" type="submit" variant="primary" size="lg" shape="cut" shimmer loading={isSubmitting} disabled={!email.trim()} className="w-full">
+          <Button id="btn-forgot-submit" type="submit" variant="primary" size="lg" loading={isSubmitting} disabled={!email.trim()} className="w-full">
             {t.auth.forgotSubmit}
           </Button>
         </form>

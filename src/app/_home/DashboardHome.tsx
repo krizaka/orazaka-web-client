@@ -110,7 +110,7 @@ export function DashboardHome() {
                 </h2>
                 <p className="text-fg-secondary fluid-sm">{t.dashboard.overview}</p>
               </section>
-              <Button variant="primary" size="md" shape="cut" onClick={handleStartNewChat}>
+              <Button variant="primary" size="md" onClick={handleStartNewChat}>
                 <ChatIcon size={16} />
                 {t.dashboard.startNewChat}
               </Button>

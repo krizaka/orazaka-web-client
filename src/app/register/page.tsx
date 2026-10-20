@@ -47,12 +47,12 @@ function RegisterPageContent() {
           <p className="text-center text-xs uppercase tracking-wide text-fg-secondary">{t.auth.orContinueWith}</p>
           <div className="grid gap-3 sm:grid-cols-2">
             {flags.github && (
-              <Button id="btn-github" type="button" variant="secondary" size="lg" shape="cut" onClick={loginWithGithub}>
+              <Button id="btn-github" type="button" variant="secondary" size="lg" onClick={loginWithGithub}>
                 GitHub
               </Button>
             )}
             {flags.google && (
-              <Button id="btn-google" type="button" variant="secondary" size="lg" shape="cut" onClick={loginWithGoogle}>
+              <Button id="btn-google" type="button" variant="secondary" size="lg" onClick={loginWithGoogle}>
                 Google
               </Button>
             )}
