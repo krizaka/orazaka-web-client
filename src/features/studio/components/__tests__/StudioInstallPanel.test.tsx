@@ -8,6 +8,8 @@ jest.mock("@/core/context/LocaleContext", () => ({
     t: {
       studio: {
         install: "Install",
+        setUp: "Set up",
+        setUpHint: "Asked once.",
         installed: "Installed",
         included: "Included",
         configure: "Configure",
@@ -35,7 +37,7 @@ jest.mock("@/features/studio/components/StudioLockNotice", () => ({
 
 jest.mock("@/services/studio.api", () => ({ StudioApi: {} }));
 
-function studio(kind: StudioDetail["kind"]): StudioDetail {
+function studio(kind: StudioDetail["kind"], configSchema: string | null = null): StudioDetail {
   return {
     studioKey: "image-generation",
     label: "Images",
@@ -50,7 +52,7 @@ function studio(kind: StudioDetail["kind"]): StudioDetail {
     latestVersion: "1.0.0",
     estimatedCredits: 5,
     inputSchema: null,
-    configSchema: null,
+    configSchema,
     locked: false,
     lockedReason: "NONE",
     packKey: "media-toolkit",
@@ -65,10 +67,19 @@ describe("StudioInstallPanel — kind (ADR-061)", () => {
     expect(screen.queryByRole("button")).not.toBeInTheDocument();
   });
 
-  it("offers Install for a VERTICAL Studio the actor has not installed", () => {
-    render(<StudioInstallPanel studio={studio("VERTICAL")} installation={undefined} onChanged={jest.fn()} />);
+  it("asks nothing of a VERTICAL Studio without settings: its first run installs it, so there is no Install step", () => {
+    const { container } = render(<StudioInstallPanel studio={studio("VERTICAL")} installation={undefined} onChanged={jest.fn()} />);
 
-    expect(screen.getByRole("button", { name: "Install" })).toBeInTheDocument();
-    expect(screen.queryByText("Included")).not.toBeInTheDocument();
+    expect(screen.queryByRole("button")).not.toBeInTheDocument();
+    expect(container).toBeEmptyDOMElement();
+  });
+
+  it("offers Set up, once, for a VERTICAL Studio whose blueprint declares settings", () => {
+    const settings = JSON.stringify({ brandName: { type: "string", title: "Agency name" } });
+    render(<StudioInstallPanel studio={studio("VERTICAL", settings)} installation={undefined} onChanged={jest.fn()} />);
+
+    expect(screen.getByRole("button", { name: "Set up" })).toBeInTheDocument();
+    expect(screen.getByText("Asked once.")).toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "Install" })).not.toBeInTheDocument();
   });
 });

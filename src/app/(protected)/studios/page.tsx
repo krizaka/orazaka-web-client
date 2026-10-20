@@ -1,22 +1,24 @@
+import { Suspense } from "react";
 import type { Metadata } from "next";
-import { StudiosHome } from "@/features/studio/components/StudiosHome";
+import { StudiosScreen } from "./StudiosScreen";
 
 export const metadata: Metadata = {
   title: "Studios | Orazaka",
-  description:
-    "Ready-made, profession-specific AI workflows. Install one, configure it once, run it forever.",
+  description: "Every Studio in one list: what your plan makes ready, what a pack would add, and one action for each.",
 };
 
 /**
- * The Studios section: My Studios and Explore.
+ * The Studios section: one list, its filters in the address (`?q=`, `?show=`, `?trade=`, `?pack=`).
  *
- * A thin route shell — the tab state lives in {@link StudiosHome} because it is
- * client state, and a server component cannot hold it.
+ * A thin route shell. The Suspense boundary is what `useSearchParams` asks for: the shell renders statically and the
+ * list reads its address on the client.
  */
 export default function StudiosPage() {
   return (
     <main className="mx-auto w-full max-w-5xl px-4 py-6 sm:px-6">
-      <StudiosHome />
+      <Suspense>
+        <StudiosScreen />
+      </Suspense>
     </main>
   );
 }

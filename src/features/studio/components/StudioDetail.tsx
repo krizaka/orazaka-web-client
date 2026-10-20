@@ -13,6 +13,8 @@ import { useInstallations } from "@/features/studio/hooks/useInstallations";
 import { StudioInstallPanel } from "@/features/studio/components/StudioInstallPanel";
 import { StudioRunPanel } from "@/features/studio/components/StudioRunPanel";
 import { StudioVersionList } from "@/features/studio/components/StudioVersionList";
+import { useConfigSchema } from "@/features/studio/hooks/useConfigSchema";
+import { PackKindSchema } from "@krizaka/orazaka-shared";
 
 interface StudioDetailProps {
   studioKey: string;
@@ -31,6 +33,7 @@ export function StudioDetail({ studioKey }: Readonly<StudioDetailProps>) {
   const { studio, versions, isLoading, notFound, hasError, reload } = useStudioDetail(studioKey);
   const { findFor, reload: reloadInstallations } = useInstallations();
   const installation = studio ? findFor(studio.studioKey) : undefined;
+  const hasSettings = useConfigSchema(studio?.configSchema ?? null).length > 0;
 
   if (isLoading) {
     return <StudioLoading />;
@@ -40,6 +43,9 @@ export function StudioDetail({ studioKey }: Readonly<StudioDetailProps>) {
     return <StudioLoadError onRetry={notFound ? undefined : reload} />;
   }
 
+
+  // Run where the Studio is open to this person, unless it still has its settings to ask (« Set up » comes first).
+  const canRun = !studio.locked && studio.latestVersion !== null && (installation !== undefined || studio.kind === PackKindSchema.enum.TOOLKIT || !hasSettings);
 
   return (
     <div className="flex flex-col gap-6">
@@ -51,9 +57,7 @@ export function StudioDetail({ studioKey }: Readonly<StudioDetailProps>) {
       </Button>
 
       <header className="flex items-start gap-4">
-        <span className="grid h-14 w-14 flex-shrink-0 place-items-center rounded-2xl bg-accent-soft text-fg-accent ring-1 ring-inset ring-accent/25">
-          <CatalogueIcon iconKey={studio.iconKey} size={28} />
-        </span>
+        <CatalogueIcon iconKey={studio.iconKey} size={28} className="mt-1 flex-shrink-0 text-fg-accent" />
         <div className="flex flex-col gap-1.5">
           <h1 className="font-display text-2xl font-bold tracking-[-0.02em] text-fg">{studio.label}</h1>
           {studio.tagline && <p className="text-[15px] text-fg-secondary">{studio.tagline}</p>}
@@ -72,7 +76,7 @@ export function StudioDetail({ studioKey }: Readonly<StudioDetailProps>) {
 
       {studio.estimatedCredits > 0 && (
         <div className="flex items-baseline gap-2 self-start rounded-xl border border-border-default bg-surface-1 px-4 py-3">
-          <span className="text-xs font-semibold uppercase tracking-wider text-fg-muted">{t.studio.estimatedCost}</span>
+          <span className="text-xs font-medium text-fg-secondary">{t.studio.estimatedCost}</span>
           <span className="font-display text-xl font-bold tabular-nums text-fg">{studio.estimatedCredits}</span>
           <span className="text-xs text-fg-muted">{t.studio.creditsPerRun}</span>
         </div>
@@ -87,7 +91,7 @@ export function StudioDetail({ studioKey }: Readonly<StudioDetailProps>) {
         }}
       />
 
-      {(installation || (studio.kind === "TOOLKIT" && !studio.locked)) && (
+      {canRun && (
         <StudioRunPanel studio={studio} installation={installation} />
       )}
 

@@ -1,22 +1,22 @@
+import { Suspense } from "react";
 import type { Metadata } from "next";
 import { PacksScreen } from "./PacksScreen";
 
 export const metadata: Metadata = {
-  title: "Packs | Orazaka",
-  description:
-    "Business and lifestyle bundles that add capabilities to your plan. Add one to your account and its Studios unlock immediately.",
+  title: "Plan & packs | Orazaka",
+  description: "What your plan gives you, the packs you hold, and what another pack would add to your Studios.",
 };
 
 /**
- * The packs marketplace route.
- *
- * A thin shell — the catalogue, the ownership overlay and the add/remove actions are
- * client state, which a server component cannot hold.
+ * « Plan & packs »: a thin route shell. The Suspense boundary is what `useSearchParams` asks for (`?pack=` opens a
+ * pack's drawer).
  */
 export default function PacksPage() {
   return (
     <main className="mx-auto w-full max-w-5xl px-4 py-6 sm:px-6">
-      <PacksScreen />
+      <Suspense>
+        <PacksScreen />
+      </Suspense>
     </main>
   );
 }

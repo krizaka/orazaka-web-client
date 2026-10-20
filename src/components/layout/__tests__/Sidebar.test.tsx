@@ -39,7 +39,7 @@ describe("the signed-in app's sections (RailNav)", () => {
     render(<Sidebar />);
     const list = words();
     expect(list[0]).toBe(t.appNav.home);
-    expect(list.slice(1)).toEqual(["Studios", "Chat", "Jobs", "Packs", "Usage & credits", "Settings", "Admin"]);
+    expect(list.slice(1)).toEqual(["Studios", "Chat", "Jobs", "Plan", "Usage & credits", "Settings", "Admin"]);
     expect(screen.queryByText(t.appNav.signOut)).not.toBeInTheDocument();
   });
 
