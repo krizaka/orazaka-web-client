@@ -1,3 +1,4 @@
+import { attachArtefactLabels } from "@/features/studio/utils/artefactLabel";
 import { restRequest } from "@/services/rest-client";
 import {
   BlueprintVersionSchema,
@@ -243,13 +244,13 @@ export const StudioApi = {
   /** One run with its per-step states and outputs. */
   fetchRun: async (runId: string): Promise<Run | null> => {
     const data = await restRequest<unknown>(`/api/v1/studios/runs/${encodeURIComponent(runId)}`);
-    return data ? RunSchema.parse(data) : null;
+    return data ? attachArtefactLabels(RunSchema.parse(data), data) : null;
   },
 
   /** This user's run history, most recent first. */
   fetchRuns: async (): Promise<Run[]> => {
     const data = await restRequest<unknown[]>("/api/v1/studios/runs");
-    return (data ?? []).map((run) => RunSchema.parse(run));
+    return (data ?? []).map((run) => attachArtefactLabels(RunSchema.parse(run), run));
   },
 
   /** Resolves an approval step, resuming the run. */
