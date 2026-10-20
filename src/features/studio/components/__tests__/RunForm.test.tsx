@@ -140,8 +140,9 @@ describe("RunForm — closed sets are chosen from a list, never typed", () => {
     setupImage();
     openMore();
     fireEvent.click(screen.getByRole("combobox", { name: /Modèle|Model/ }));
-    expect(screen.getByRole("option", { name: /Stable Diffusion 3.5 Large/ })).toHaveTextContent("Cloud · Fast · about 8 s · $0.08 per run");
-    expect(screen.getByRole("option", { name: /Z-Image Turbo/ })).toHaveTextContent("Local · Slow · about 157 s · Free");
+    // The option says what it is in a line; the facts are chips, for the model in view only.
+    expect(screen.getByRole("option", { name: /Stable Diffusion 3.5 Large/ })).toHaveTextContent("Hosted by a provider.");
+    expect(screen.getByRole("list", { name: /About this model/ })).not.toHaveTextContent("Free"); // the model in view: cloud, priced
   });
 
   it("shows a model whose engine is off, but does not let it be chosen, and says why", () => {
@@ -199,17 +200,32 @@ describe("RunForm — closed sets are chosen from a list, never typed", () => {
     expect(onSubmit).toHaveBeenCalledWith({ prompt: "a fox", size: "1024x1024", seed: "427" });
   });
 
-  it("when the list could not be loaded, the model stays a picker set to automatic — never a text box", () => {
+  it("when the list could not be loaded, the model says so out loud — never a blank select or a text box", () => {
     const unloaded = JSON.stringify({
       type: "object",
       properties: { prompt: { type: "string" }, model: { type: "string", title: "Modèle", "x-advanced": true, "x-options": { source: "models", category: "image" } } },
     });
+    const error = jest.spyOn(console, "error").mockImplementation(() => undefined);
     const { container } = setupImage(unloaded);
     openMore();
-    const picker = screen.getByLabelText(/Modèle|Model/) as HTMLSelectElement;
-    expect(picker.tagName).toBe("SELECT");
-    expect([...picker.options].map((o) => o.textContent)).toEqual(["Automatic (recommended)"]);
-    expect(screen.getByText("The list could not be loaded; the platform will choose for you.")).toBeInTheDocument();
+    expect(screen.getByRole("alert")).toHaveTextContent("No model available: contact the administrator.");
+    expect(screen.getByRole("alert")).toHaveTextContent("The list could not be loaded");
+    expect(error).toHaveBeenCalledWith(expect.stringContaining("« model »"));
+    expect(container.querySelector("select")).toBeNull();
     expect(container.querySelectorAll('input[type="text"]')).toHaveLength(1); // the prompt only
+    error.mockRestore();
+  });
+
+  it("an empty catalogue list is the same visible error, and is logged", () => {
+    const empty = JSON.stringify({
+      type: "object",
+      properties: { prompt: { type: "string" }, model: { type: "string", title: "Model", "x-options": { source: "models", category: "chat" }, oneOf: [] } },
+    });
+    const error = jest.spyOn(console, "error").mockImplementation(() => undefined);
+    setupImage(empty);
+    expect(screen.getByRole("alert")).toHaveTextContent("No model available: contact the administrator.");
+    expect(screen.queryByRole("combobox")).toBeNull();
+    expect(error).toHaveBeenCalled();
+    error.mockRestore();
   });
 });

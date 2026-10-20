@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo } from "react";
+import type { Locale } from "@/core/context/LocaleContext";
 
 /** One field the run form renders, derived from the blueprint's input schema. */
 export interface InputField {
@@ -20,12 +21,50 @@ export interface InputField {
   choices: Choice[] | null;
   /** The value the form starts on, when the schema (or the catalogue's resolved default) states one. */
   defaultValue: string | null;
+  /** An `integer` or `number` field: a number input with the schema's bounds, never a free text line. */
+  numeric: { min: number | null; max: number | null } | null;
   /** `seed`: a number with a "random" toggle rather than a text line. */
   control: "seed" | null;
   /** Rarely needed: folded under "More options". */
   advanced: boolean;
   /** The values come from the model catalogue (`x-options`): a picker even when the list could not be loaded. */
   fedByCatalogue: boolean;
+  /** The pack wrote this field's title and helper in the page's language (`x-i18n`): the client's own words must not replace them. */
+  wordedByPack: boolean;
+  /** An enum's choices in the page's language (`x-i18n`), by value; null when the pack gave none. */
+  optionLabels: Record<string, string> | null;
+}
+
+/** The longest helper line a field shows (the pack's data check holds its selects to the same). */
+// @fixed: a helper is one line of the form (≤ 140 characters, the same limit as orazaka-packs/tests/closed-sets)
+export const HELPER_MAX = 140;
+
+/** One language's words for a field, as the pack writes them (`x-i18n.<lang>`). */
+interface PackWords {
+  title?: string;
+  description?: string;
+  options?: Record<string, string | { label?: string; hint?: string }>;
+}
+
+/** The pack's words for a locale: that language, else English, else nothing (the blueprint's own text stays). */
+function wordsFor(i18n: unknown, locale: Locale): PackWords | null {
+  if (!i18n || typeof i18n !== "object") return null;
+  const byLang = i18n as Record<string, PackWords | undefined>;
+  return byLang[locale] ?? byLang.en ?? null;
+}
+
+/**
+ * A helper kept to one line: the first sentence when it fits, else the text cut at a word with an ellipsis. A pack's
+ * selects are held to the limit by its own data check; this protects a form whose pack predates it.
+ */
+export function shortHelper(text: string | null): string | null {
+  if (!text) return null;
+  const clean = text.trim().replace(/\s+/g, " ");
+  if (clean.length <= HELPER_MAX) return clean;
+  const sentence = /^.{1,138}?[.!?](?=\s|$)/.exec(clean);
+  if (sentence) return sentence[0];
+  const cut = clean.slice(0, HELPER_MAX - 1);
+  return `${cut.slice(0, Math.max(cut.lastIndexOf(" "), 40)).replace(/[\s,;:·(]+$/, "")}…`;
 }
 
 /** What the catalogue says about one model: shown beside its name so a person can choose, not guess. */
@@ -44,6 +83,8 @@ export interface Choice {
   label: string;
   hint: string | null;
   meta: ChoiceMeta | null;
+  /** Language-neutral facts the pack states for a comparison (a resolution, a duration): « 1216×704 », « 5 s ». */
+  facts: string[];
 }
 
 interface RawChoice {
@@ -54,7 +95,11 @@ interface RawChoice {
 }
 
 /** The `oneOf` of `const` entries the server writes for a catalogue-fed field; null for anything else. */
-function choicesOf(oneOf: unknown): Choice[] | null {
+function choicesOf(
+  oneOf: unknown,
+  words: PackWords | null,
+  facts: Record<string, unknown> | undefined,
+): Choice[] | null {
   if (!Array.isArray(oneOf) || oneOf.length === 0 || !oneOf.every((entry) => entry && typeof entry === "object" && "const" in entry)) {
     return null;
   }
@@ -62,10 +107,16 @@ function choicesOf(oneOf: unknown): Choice[] | null {
     const meta = entry["x-meta"];
     const text = (value: unknown) => (typeof value === "string" ? value : null);
     const num = (value: unknown) => (typeof value === "number" ? value : null);
+    const value = String(entry.const);
+    const packed = words?.options?.[value];
+    const own = packed && typeof packed === "object" ? packed : null;
+    const known = facts?.[value];
     return {
-      value: String(entry.const),
-      label: entry.title ?? String(entry.const),
-      hint: entry.description ?? null,
+      value,
+      label: own?.label ?? entry.title ?? value,
+      // The catalogue's own sentence is a paragraph; a pack that wrote the hint wins, else it is cut to a line.
+      hint: own?.hint ?? shortHelper(entry.description ?? null),
+      facts: Array.isArray(known) ? known.filter((fact): fact is string => typeof fact === "string") : [],
       meta: meta
         ? {
             runsOn: meta.runsOn === "local" || meta.runsOn === "cloud" ? meta.runsOn : null,
@@ -78,6 +129,18 @@ function choicesOf(oneOf: unknown): Choice[] | null {
         : null,
     };
   });
+}
+
+/** An enum's value → label map, as the pack wrote it for the language (a model's `{ label, hint }` is read by its choices). */
+function enumLabels(words: PackWords | null): Record<string, string> | null {
+  const entries = Object.entries(words?.options ?? {}).filter((entry): entry is [string, string] => typeof entry[1] === "string");
+  return entries.length > 0 ? Object.fromEntries(entries) : null;
+}
+
+/** A pack's helper is already one line; a list field's older one is cut to a line; a text field's guidance stays whole. */
+function shortHelperOf(text: string | null, writtenByPack: boolean, spec: { enum?: unknown; oneOf?: unknown; "x-options"?: unknown }): string | null {
+  const isList = Array.isArray(spec.enum) || Boolean(spec["x-options"]) || Array.isArray(spec.oneOf);
+  return writtenByPack || !isList ? text : shortHelper(text);
 }
 
 export type AssetKind = "image" | "video" | "audio";
@@ -114,7 +177,7 @@ export function assetKindOf(key: string, spec: { format?: string; contentMediaTy
  *
  * @param inputSchema - the raw JSON Schema string, or null when unpublished
  */
-export function useInputSchema(inputSchema: string | null): InputField[] {
+export function useInputSchema(inputSchema: string | null, locale: Locale = "en"): InputField[] {
   return useMemo(() => {
     if (!inputSchema) {
       return [];
@@ -132,6 +195,8 @@ export function useInputSchema(inputSchema: string | null): InputField[] {
           enum?: string[];
           maxItems?: number;
           maxLength?: number;
+          minimum?: number;
+          maximum?: number;
           description?: string;
           format?: string;
           contentMediaType?: string;
@@ -139,9 +204,11 @@ export function useInputSchema(inputSchema: string | null): InputField[] {
           default?: unknown;
           "x-control"?: string;
           "x-advanced"?: boolean;
-          "x-options"?: { source?: string };
+          "x-options"?: { source?: string; facts?: Record<string, unknown> };
+          "x-i18n"?: unknown;
         };
-        const choices = choicesOf(spec.oneOf);
+        const words = wordsFor(spec["x-i18n"], locale);
+        const choices = choicesOf(spec.oneOf, words, spec["x-options"]?.facts);
         let type: InputField["type"] = "string";
         if (Array.isArray(spec.enum)) {
           type = "enum";
@@ -151,23 +218,32 @@ export function useInputSchema(inputSchema: string | null): InputField[] {
         const assetKind = type === "string" ? assetKindOf(key, spec) : null;
         return {
           key,
-          title: spec.title ?? key,
+          title: words?.title ?? spec.title ?? key,
           type,
           options: Array.isArray(spec.enum) ? spec.enum : null,
           required: required.has(key),
           maxItems: typeof spec.maxItems === "number" ? spec.maxItems : null,
-          description: spec.description ?? null,
+          description: shortHelperOf(words?.description ?? spec.description ?? null, Boolean(words?.description), spec),
           assetKind,
           multiline: type === "string" && !assetKind && typeof spec.maxLength === "number" && spec.maxLength > 500,
           choices,
           defaultValue: spec.default === undefined || spec.default === null ? null : String(spec.default),
+          numeric:
+            spec.type === "integer" || spec.type === "number"
+              ? {
+                  min: typeof spec.minimum === "number" ? spec.minimum : null,
+                  max: typeof spec.maximum === "number" ? spec.maximum : null,
+                }
+              : null,
           control: spec["x-control"] === "seed" ? "seed" : null,
           advanced: spec["x-advanced"] === true,
           fedByCatalogue: spec["x-options"]?.source === "models",
+          wordedByPack: Boolean(words?.title),
+          optionLabels: enumLabels(words),
         } satisfies InputField;
       });
     } catch {
       return [];
     }
-  }, [inputSchema]);
+  }, [inputSchema, locale]);
 }

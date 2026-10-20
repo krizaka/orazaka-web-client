@@ -781,6 +781,17 @@ export interface TranslationDictionary {
       free: string;
       unavailable: string;
       choicesUnreachable: string;
+      /** A catalogue-fed list with no model to offer: said out loud, never a blank select. */
+      noModels: string;
+      /** A closed list that arrived with no choice. */
+      noOptions: string;
+      /** The blank first line of an optional list that has no default. */
+      unset: string;
+      /** The disclosure that compares every choice of a model list. */
+      compare: string;
+      compareHint: string;
+      /** The chips of the chosen model: what it makes, where it runs. */
+      chosenLabel: string;
     };
     /** Readable names of the values of a closed list the blueprint states itself (`enum`), by field then value. */
     choices: Record<string, Record<string, string>>;

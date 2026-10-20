@@ -2,11 +2,8 @@
 
 import { useCallback, useState } from "react";
 import { Button } from "@krizaka/ui/button";
-import { Field, Input, Select, Textarea } from "@krizaka/ui/field";
 import { useTranslation } from "@/core/context/LocaleContext";
-import { AssetInput } from "@/features/studio/components/AssetInput";
-import { ChoicePicker } from "@/features/studio/components/ChoicePicker";
-import { SeedControl } from "@/features/studio/components/SeedControl";
+import { RunInput, localized } from "@/features/studio/components/RunInput";
 import {
   useInputSchema,
   type InputField,
@@ -35,8 +32,8 @@ export function RunForm({
   isSubmitting,
   onSubmit,
 }: Readonly<RunFormProps>) {
-  const { t } = useTranslation();
-  const fields = useInputSchema(inputSchema);
+  const { t, locale } = useTranslation();
+  const fields = useInputSchema(inputSchema, locale);
   const [values, setValues] = useState<Record<string, string>>({});
   const [uploading, setUploading] = useState<Record<string, boolean>>({});
   const setBusy = useCallback((key: string, busy: boolean) => {
@@ -122,121 +119,5 @@ export function RunForm({
         </Button>
       </div>
     </div>
-  );
-}
-
-interface RunInputProps {
-  field: InputField;
-  value: string;
-  disabled: boolean;
-  onChange: (value: string) => void;
-  onBusyChange: (busy: boolean) => void;
-}
-
-/** A field in the caller's language: the title and help of the inputs the packs share are messages, not the blueprint's French. */
-function localized(
-  field: InputField,
-  inputs: Record<string, { title: string; description?: string }>,
-  studioKey?: string,
-): InputField {
-  const words =
-    (studioKey ? inputs[`${studioKey}/${field.key}`] : undefined) ??
-    inputs[field.key];
-  return words
-    ? {
-        ...field,
-        title: words.title,
-        description: words.description ?? field.description,
-      }
-    : field;
-}
-
-/** One generated field, on the @krizaka/ui field (label, control, hint). */
-function RunInput({
-  field,
-  value,
-  disabled,
-  onChange,
-  onBusyChange,
-}: Readonly<RunInputProps>) {
-  const { t } = useTranslation();
-  const inputId = `studio-run-${field.key}`;
-  const hintId = field.description ? `${inputId}-hint` : undefined;
-  const control = { id: inputId, value, disabled, "aria-describedby": hintId };
-
-  if (field.choices) {
-    return (
-      <ChoicePicker
-        field={field}
-        choices={field.choices}
-        value={value}
-        disabled={disabled}
-        onChange={onChange}
-      />
-    );
-  }
-  if (field.control === "seed") {
-    return (
-      <SeedControl
-        field={field}
-        value={value}
-        disabled={disabled}
-        onChange={onChange}
-      />
-    );
-  }
-
-  return (
-    <Field.Root className="gap-1.5">
-      <Field.Label htmlFor={inputId}>
-        {field.title}
-        {field.required ? " *" : ""}
-      </Field.Label>
-      {field.assetKind ? (
-        <AssetInput
-          id={inputId}
-          kind={field.assetKind}
-          value={value}
-          disabled={disabled}
-          onChange={onChange}
-          onBusyChange={onBusyChange}
-          describedBy={hintId}
-          label={field.title}
-        />
-      ) : field.fedByCatalogue ? (
-        // The catalogue's list could not be loaded: still a list (just "automatic"), never a box to type a model id in.
-        <Select {...control} value="" disabled onChange={() => undefined}>
-          <option value="">{t.studio.form.automaticPlain}</option>
-        </Select>
-      ) : field.type === "enum" && field.options ? (
-        <Select {...control} onChange={(event) => onChange(event.target.value)}>
-          {field.defaultValue === null && <option value="" />}
-          {field.options.map((option) => (
-            <option key={option} value={option}>
-              {t.studio.choices[field.key]?.[option] ?? option}
-            </option>
-          ))}
-        </Select>
-      ) : field.multiline ? (
-        <Textarea
-          {...control}
-          rows={6}
-          onChange={(event) => onChange(event.target.value)}
-        />
-      ) : (
-        <Input
-          {...control}
-          type="text"
-          placeholder={field.type === "array" ? "a, b, c" : undefined}
-          onChange={(event) => onChange(event.target.value)}
-        />
-      )}
-      {field.description && (
-        <Field.Hint id={hintId}>{field.description}</Field.Hint>
-      )}
-      {field.fedByCatalogue && (
-        <Field.Hint>{t.studio.form.choicesUnreachable}</Field.Hint>
-      )}
-    </Field.Root>
   );
 }
