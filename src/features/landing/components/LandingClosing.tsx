@@ -27,7 +27,7 @@ export function LandingClosing({
         <h2 className="font-display text-3xl font-bold tracking-tight text-balance text-fg sm:text-5xl">{title}</h2>
         <p className="max-w-xl text-base leading-relaxed text-pretty text-fg-secondary sm:text-lg">{lead}</p>
         <nav className="flex flex-wrap justify-center gap-3" aria-label={first.label}>
-          <Button asChild variant="primary" size="lg" shape="pill" className="kz-sheen">
+          <Button asChild variant="primary" size="lg" shape="pill" className="">
             <Link href={first.href}>
               {first.label}
               <ForwardIcon size={18} />

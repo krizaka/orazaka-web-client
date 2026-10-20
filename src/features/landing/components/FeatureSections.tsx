@@ -38,7 +38,7 @@ export function FeaturePoints({ id }: Readonly<{ id: FeatureId }>) {
           {page.points.map((point, i) => {
             const Icon = POINT_ICONS[id][i];
             return (
-              <li key={point.title} data-reveal className="kz-spotlight kz-lift flex flex-col gap-3 rounded-2xl border border-border-subtle bg-surface-1/80 p-6 backdrop-blur-sm">
+              <li key={point.title} data-reveal className="flex flex-col gap-3 rounded-2xl border border-border-subtle bg-surface-1/80 p-6 backdrop-blur-sm">
                 <span className="relative grid h-11 w-11 place-items-center rounded-xl border border-accent/25 bg-accent-soft text-fg-accent">
                   <Icon size={22} nodeColor="var(--kz-accent)" />
                 </span>
@@ -100,13 +100,13 @@ export function FeatureOthers({ id }: Readonly<{ id: FeatureId }>) {
             <li key={other}>
               <Link
                 href={`/features/${other}`}
-                className="kz-spotlight kz-lift group flex h-full flex-col gap-2 rounded-2xl border border-border-subtle bg-surface-1 p-6 transition-colors hover:border-accent/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                className="group flex h-full flex-col gap-2 rounded-2xl border border-border-subtle bg-surface-1 p-6 transition-colors hover:border-accent/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
               >
                 <span className="relative font-mono text-xs uppercase tracking-[0.14em] text-fg-secondary">{page.name}</span>
                 <span className="relative text-xl font-semibold text-fg">
                   {page.titleLead} {page.titleAccent}
                 </span>
-                <ForwardIcon size={18} className="relative mt-auto text-fg-accent transition-transform group-hover:translate-x-1" />
+                <ForwardIcon size={18} className="relative mt-auto text-fg-accent transition-transform" />
               </Link>
             </li>
           );

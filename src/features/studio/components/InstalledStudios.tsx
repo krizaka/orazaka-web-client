@@ -65,7 +65,7 @@ export function InstalledStudios({ onBrowse }: Readonly<InstalledStudiosProps>) 
                 </span>
                 <span className="ml-auto flex items-center gap-1 text-[12px] font-semibold text-fg-accent">
                   {t.studio.open}
-                  <ForwardIcon size={14} className="transition-transform duration-200 group-hover:translate-x-0.5" />
+                  <ForwardIcon size={14} className="transition-transform duration-200" />
                 </span>
               </Card.Footer>
             </Card.Body>

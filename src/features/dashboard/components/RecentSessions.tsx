@@ -89,7 +89,7 @@ export function RecentSessions({
                   <span className="mr-1.5 hidden sm:inline-block font-semibold tracking-wide uppercase">
                     {t.dashboard.resumeSession}
                   </span>
-                  <Icon name="arrowRight" size={14} className="transform group-hover:translate-x-0.5 transition-transform duration-200" />
+                  <Icon name="arrowRight" size={14} className="transform transition-transform duration-200" />
                 </div>
                 </Button>
               </li>

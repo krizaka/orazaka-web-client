@@ -29,7 +29,7 @@ interface ProvidersProps {
  * <AppCharts> gives every chart the reader's locale, the Orazaka palette and its words.
  *
  * <MotionObserver /> is mounted once here: every `[data-reveal]` of the app (the landing and the signed-in screens)
- * rises into view, and `.kz-spotlight` cards follow the pointer.
+ * rises into view. Nothing follows the pointer (krizaka-ui#393).
  *
  * @param props The provider tree properties.
  * @returns The wrapped ReactNode provider layout.

@@ -93,7 +93,7 @@ export function LoginForm({ preview }: Readonly<{ preview?: ClosedPreview }>) {
             <Field.Label htmlFor="login-password">{copy.password}</Field.Label>
             <Input id="login-password" name="password" type="password" autoComplete="current-password" required disabled={pending || Boolean(preview)} invalid={Boolean(error)} />
           </Field.Root>
-          <Button type="submit" variant="primary" size="lg" shape="cut" shimmer loading={pending} disabled={Boolean(preview)} className="w-full">
+          <Button type="submit" variant="primary" size="lg" loading={pending} disabled={Boolean(preview)} className="w-full">
             {copy.submit}
           </Button>
         </form>

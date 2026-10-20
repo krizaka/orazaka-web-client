@@ -69,7 +69,7 @@ export function LoginCard({ preview = false, notice, error = "", isLoading = fal
             </Link>
           </Field.Hint>
         </Field.Root>
-        <Button id="btn-login-submit" type="submit" variant="primary" size="lg" shape="cut" shimmer loading={isLoading && !preview} disabled={preview} className="w-full">
+        <Button id="btn-login-submit" type="submit" variant="primary" size="lg" loading={isLoading && !preview} disabled={preview} className="w-full">
           {isLoading ? t.auth.signingInBtn : t.auth.signInBtn}
         </Button>
       </form>
@@ -79,12 +79,12 @@ export function LoginCard({ preview = false, notice, error = "", isLoading = fal
           <p className="text-center text-xs uppercase tracking-wide text-fg-secondary">{t.auth.orContinueWith}</p>
           <div className="grid gap-3 sm:grid-cols-2">
             {providers.github && (
-              <Button id="btn-github" type="button" variant="secondary" size="lg" shape="cut" onClick={onGithub}>
+              <Button id="btn-github" type="button" variant="secondary" size="lg" onClick={onGithub}>
                 GitHub
               </Button>
             )}
             {providers.google && (
-              <Button id="btn-google" type="button" variant="secondary" size="lg" shape="cut" onClick={onGoogle}>
+              <Button id="btn-google" type="button" variant="secondary" size="lg" onClick={onGoogle}>
                 Google
               </Button>
             )}

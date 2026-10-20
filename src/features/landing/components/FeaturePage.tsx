@@ -40,7 +40,7 @@ export function FeaturePage({ id }: Readonly<{ id: FeatureId }>) {
               </h1>
               <p className="max-w-xl text-lg leading-relaxed text-pretty text-fg-secondary">{page.lead}</p>
               <nav className="flex flex-wrap gap-3" aria-label={f.ctaPrimary}>
-                <Button asChild variant="primary" size="lg" shape="pill" className="kz-sheen">
+                <Button asChild variant="primary" size="lg" shape="pill" className="">
                   <Link href={primary.href}>
                     {primary.label}
                     <ForwardIcon size={18} />

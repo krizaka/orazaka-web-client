@@ -70,7 +70,7 @@ export function LandingNav({ onHome = true }: Readonly<{ onHome?: boolean }>) {
           <Button asChild variant="ghost" size="sm" className="hidden md:inline-flex">
             <Link href="/login">{n.signIn}</Link>
           </Button>
-          <Button asChild variant="primary" size="sm" shape="cut" className="ml-1 hidden font-bold md:inline-flex">
+          <Button asChild variant="primary" size="sm" className="ml-1 hidden font-bold md:inline-flex">
             <a href={TALK_URL}>{n.talk}</a>
           </Button>
 
@@ -96,7 +96,7 @@ export function LandingNav({ onHome = true }: Readonly<{ onHome?: boolean }>) {
               <Button asChild variant="ghost" size="md">
                 <Link href="/login">{n.signIn}</Link>
               </Button>
-              <Button asChild variant="primary" size="md" shape="cut" className="flex-1 font-bold">
+              <Button asChild variant="primary" size="md" className="flex-1 font-bold">
                 <a href={TALK_URL}>{n.talk}</a>
               </Button>
             </span>
