@@ -3,7 +3,7 @@ import { encode } from "next-auth/jwt";
 
 /**
  * The video Studio's « Model » is a populated, readable list: a short name and a line per model, the facts of the model
- * in view as chips, every model side by side under « Compare the models », and a run that carries the chosen id.
+ * in view as chips, every model side by side under « Compare models », and a run that carries the chosen id.
  *
  * Mocked (no backend), as the other suites, with the shape the Studio service serves: the catalogue's `oneOf` of
  * `const` written into the schema, and the pack's words in both languages (`x-i18n`).
@@ -89,7 +89,7 @@ test.describe("video Studio — the model list (mocked)", () => {
     await page.keyboard.press("Escape");
 
     // every model side by side
-    await page.getByText("Compare the models").click();
+    await page.getByText("Compare models").click();
     await expect(page.getByText("1216×704")).toBeVisible();
 
     await page.getByRole("textbox", { name: /What should happen/ }).fill("A paper boat crossing a puddle");

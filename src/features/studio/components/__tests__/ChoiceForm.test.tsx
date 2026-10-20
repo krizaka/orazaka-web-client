@@ -116,3 +116,20 @@ describe("RunForm — a number is a number input with the schema's bounds", () =
     expect(onSubmit).toHaveBeenCalledWith({ durationSeconds: "8" });
   });
 });
+
+describe("RunForm — the video prompt's guidance is in the page's language, in a line", () => {
+  it("shows the English helper, not the blueprint's French paragraph", () => {
+    render(
+      <RunForm
+        studioKey="video-generation"
+        inputSchema={JSON.stringify({ type: "object", required: ["prompt"], properties: { prompt: { type: "string", title: "Ce qui doit se passer à l'écran", description: "Décrivez le plan. ".repeat(20) } } })}
+        estimatedCredits={3}
+        isSubmitting={false}
+        onSubmit={jest.fn()}
+      />,
+    );
+    const help = screen.getByText(/Describe the shot/);
+    expect(help.textContent!.length).toBeLessThanOrEqual(140);
+    expect(screen.queryByText(/Décrivez le plan/)).toBeNull();
+  });
+});
