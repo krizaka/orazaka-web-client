@@ -80,7 +80,10 @@ export function useWebhooks(fetchHeaders: () => Promise<Record<string, string>>)
   }, [fetchHeaders]);
 
   React.useEffect(() => {
-    void load();
+    const run = async () => {
+      await load();
+    };
+    run();
   }, [load]);
 
   const create = async (url: string, events: WebhookEvent[]): Promise<boolean> => {
