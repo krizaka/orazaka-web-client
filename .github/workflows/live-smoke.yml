@@ -10,9 +10,11 @@ on:
 permissions:
   contents: read
 
+# Only the latest main matters: a run for a superseded commit waits up to 30 minutes for a build that will never be
+# served (the bar shows the sha of what is live), then fails. A newer push cancels it (CI-COST).
 concurrency:
   group: live-smoke
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 jobs:
   smoke:
