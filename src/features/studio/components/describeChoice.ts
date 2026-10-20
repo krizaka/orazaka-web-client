@@ -17,6 +17,13 @@ export function dollars(cents: number): string {
   return `$${(cents / 100).toFixed(2)}`;
 }
 
+/** Why a model that cannot run is greyed out, in the page's language: the code's short words, else the server's sentence. */
+export function unavailableWords(choice: Choice, codes: Record<string, string>, fallback: string): string {
+  const meta = choice.meta;
+  const code = meta?.unavailableCode;
+  return (code ? codes[code] : undefined) ?? meta?.unavailableReason ?? fallback;
+}
+
 /** What the catalogue says of a choice, one fact each: where it runs, how fast, about how long, what it costs. */
 function catalogueFacts(choice: Choice, words: ChoiceWords): string[] {
   const meta = choice.meta;
@@ -41,13 +48,13 @@ export function choiceFacts(choice: Choice, words: ChoiceWords): string[] {
  * The line under a choice: where it runs, how fast, about how long, what it costs — "Cloud · Fast · about 8 s · $0.08 per
  * run". A model that is off says why instead. Facts the catalogue does not have are left out rather than guessed.
  */
-export function describeChoice(choice: Choice, words: ChoiceWords): string {
+export function describeChoice(choice: Choice, words: ChoiceWords, codes: Record<string, string> = {}): string {
   const meta = choice.meta;
   if (!meta) {
     return "";
   }
-  if (!meta.available && meta.unavailableReason) {
-    return meta.unavailableReason;
+  if (!meta.available && (meta.unavailableReason || meta.unavailableCode)) {
+    return unavailableWords(choice, codes, "");
   }
   return catalogueFacts(choice, words).join(" · ");
 }

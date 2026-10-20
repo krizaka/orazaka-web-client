@@ -780,6 +780,8 @@ export interface TranslationDictionary {
       perRun: string;
       free: string;
       unavailable: string;
+      /** Short reasons a model is greyed out, by the code the job plane sends (`gpu_offline`, `worker_offline`, `provider_down`). */
+      unavailableCodes: Record<string, string>;
       choicesUnreachable: string;
       /** A catalogue-fed list with no model to offer: said out loud, never a blank select. */
       noModels: string;

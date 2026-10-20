@@ -43,7 +43,7 @@ describe("useInputSchema — closed sets are choices, not text", () => {
         default: "sd-hosted",
         oneOf: [
           { const: "sd-hosted", title: "SD hosted", description: "Hosted.", "x-meta": { runsOn: "cloud", speed: "fast", typicalSeconds: 8, priceCents: 8, available: true } },
-          { const: "flux", title: "FLUX", "x-meta": { runsOn: "local", available: false, unavailableReason: "FLUX is not running" } },
+          { const: "flux", title: "FLUX", "x-meta": { runsOn: "local", available: false, unavailableReason: "FLUX is not running", unavailableCode: null } },
         ],
       },
       seed: { type: "string", "x-control": "seed", "x-advanced": true },
@@ -56,8 +56,8 @@ describe("useInputSchema — closed sets are choices, not text", () => {
   it("reads a labelled oneOf as choices with the catalogue facts a picker shows", () => {
     const model = field("model");
     expect(model.choices).toEqual([
-      { value: "sd-hosted", label: "SD hosted", hint: "Hosted.", facts: [], meta: { runsOn: "cloud", speed: "fast", typicalSeconds: 8, priceCents: 8, available: true, unavailableReason: null } },
-      { value: "flux", label: "FLUX", hint: null, facts: [], meta: { runsOn: "local", speed: null, typicalSeconds: null, priceCents: null, available: false, unavailableReason: "FLUX is not running" } },
+      { value: "sd-hosted", label: "SD hosted", hint: "Hosted.", facts: [], meta: { runsOn: "cloud", speed: "fast", typicalSeconds: 8, priceCents: 8, available: true, unavailableReason: null, unavailableCode: null } },
+      { value: "flux", label: "FLUX", hint: null, facts: [], meta: { runsOn: "local", speed: null, typicalSeconds: null, priceCents: null, available: false, unavailableReason: "FLUX is not running", unavailableCode: null } },
     ]);
     expect(model.defaultValue).toBe("sd-hosted");
     expect(model.fedByCatalogue).toBe(true);

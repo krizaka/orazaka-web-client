@@ -33,6 +33,8 @@ export interface InputField {
   wordedByPack: boolean;
   /** An enum's choices in the page's language (`x-i18n`), by value; null when the pack gave none. */
   optionLabels: Record<string, string> | null;
+  /** An example of what to type, in the page's language (`x-i18n.<lang>.placeholder`); null when the pack gave none. */
+  placeholder: string | null;
 }
 
 /** The longest helper line a field shows (the pack's data check holds its selects to the same). */
@@ -43,6 +45,7 @@ export const HELPER_MAX = 140;
 interface PackWords {
   title?: string;
   description?: string;
+  placeholder?: string;
   options?: Record<string, string | { label?: string; hint?: string }>;
 }
 
@@ -75,6 +78,8 @@ export interface ChoiceMeta {
   priceCents: number | null;
   available: boolean;
   unavailableReason: string | null;
+  /** Why a model cannot run, as a code the client words in the page's language (`gpu_offline`, `worker_offline`, `provider_down`). */
+  unavailableCode: string | null;
 }
 
 /** One entry of a closed list. */
@@ -125,6 +130,7 @@ function choicesOf(
             priceCents: num(meta.priceCents),
             available: meta.available !== false,
             unavailableReason: text(meta.unavailableReason),
+            unavailableCode: text(meta.unavailableCode),
           }
         : null,
     };
@@ -240,6 +246,7 @@ export function useInputSchema(inputSchema: string | null, locale: Locale = "en"
           fedByCatalogue: spec["x-options"]?.source === "models",
           wordedByPack: Boolean(words?.title),
           optionLabels: enumLabels(words),
+          placeholder: words?.placeholder?.trim() || null,
         } satisfies InputField;
       });
     } catch {
