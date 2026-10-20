@@ -134,6 +134,8 @@ const eslintConfig = defineConfig([
     "next-env.d.ts",
     "coverage/**",
     "node_modules/**",
+    // Identical copy of krizaka/.github scripts/check-app-links.mjs (a CLI that prints its findings): not edited here.
+    "scripts/check-app-links.mjs",
   ]),
 ]);
 
