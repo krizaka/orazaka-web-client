@@ -892,7 +892,7 @@ export interface TranslationDictionary {
   docs: DocsDictionary;
 }
 
-/** The automation page (connectors and the jobs awaiting approval). `{name}` is the connector's name. */
+/** The connector catalogue of the automation page. `{name}` is the connector's name. */
 export interface AutomationDictionary {
   connectorsTitle: string;
   connectorsSubtitle: string;
@@ -906,18 +906,6 @@ export interface AutomationDictionary {
   saveCredentials: string;
   /** One description per connector id. */
   connectors: Record<"jira" | "whatsapp" | "messenger" | "slack" | "cli-agent", string>;
-  jobsTitle: string;
-  jobsSubtitle: string;
-  pending: string;
-  running: string;
-  payload: string;
-  approve: string;
-  revoke: string;
-  empty: string;
-  jobStatus: Record<
-    "PENDING_APPROVAL" | "APPROVED" | "RUNNING" | "COMPLETED" | "FAILED" | "AWAITING_CLI_EXECUTION",
-    string
-  >;
 }
 
 /** Accessible names of icon-only controls (a button showing only an icon still needs a name). */
