@@ -15,8 +15,9 @@ interface PacksState {
   error: string | null;
   pendingKey: string | null;
   reload: () => void;
-  subscribe: (packKey: string) => void;
-  remove: (packKey: string) => void;
+  /** Settles once the pack is added and the shelves re-read (never rejects: a failure is `error`). */
+  subscribe: (packKey: string) => Promise<void>;
+  remove: (packKey: string) => Promise<void>;
 }
 
 /**
@@ -112,7 +113,7 @@ export function usePacks(locale: string, errorMessage: string): PacksState {
     error,
     pendingKey,
     reload: () => void load(),
-    subscribe: (packKey) => void act(packKey, () => BillingApi.subscribeToPack(packKey)),
-    remove: (packKey) => void act(packKey, () => BillingApi.removePack(packKey)),
+    subscribe: (packKey) => act(packKey, () => BillingApi.subscribeToPack(packKey)),
+    remove: (packKey) => act(packKey, () => BillingApi.removePack(packKey)),
   };
 }

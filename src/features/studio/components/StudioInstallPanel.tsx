@@ -8,6 +8,7 @@ import { useTranslation } from "@/core/context/LocaleContext";
 import { StudioApi } from "@/services/studio.api";
 import { InstallDialog } from "@/features/studio/components/InstallDialog";
 import { StudioLockNotice } from "@/features/studio/components/StudioLockNotice";
+import { useConfigSchema } from "@/features/studio/hooks/useConfigSchema";
 import type { Installation, StudioDetail } from "@krizaka/orazaka-shared";
 
 interface StudioInstallPanelProps {
@@ -26,6 +27,10 @@ interface StudioInstallPanelProps {
  * A TOOLKIT Studio the actor is entitled to shows "included" and no install, configure,
  * upgrade or uninstall action (ADR-061): its installation is derived, so each of those
  * would address a row that does not exist. The run form below it is the whole surface.
+ *
+ * A VERTICAL Studio with nothing to ask has no Install step either: its first run installs it (see
+ * `StudioRunPanel`), so the form is the action. Only a Studio whose blueprint declares settings (an agency name, a
+ * tone, a signature) asks them once, behind « Set up », before its first run.
  */
 export function StudioInstallPanel({
   studio,
@@ -36,6 +41,7 @@ export function StudioInstallPanel({
   const [isDialogOpen, setDialogOpen] = useState(false);
   const [isSubmitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const hasSettings = useConfigSchema(studio.configSchema).length > 0;
 
   const submit = async (config: Record<string, string>) => {
     setSubmitting(true);
@@ -85,6 +91,11 @@ export function StudioInstallPanel({
     );
   }
 
+  if (!installation && !hasSettings) {
+    // Nothing to ask: the run form below is the action, and the first run installs it.
+    return null;
+  }
+
   return (
     <div className="flex flex-col gap-3">
       <InstallDialog
@@ -98,13 +109,11 @@ export function StudioInstallPanel({
       <div className="flex flex-wrap items-center gap-2">
         {installation ? (
           <>
-            <Badge tone="success" size="md">
-              <CheckIcon size={13} />
-              {t.studio.installed}
-            </Badge>
-            <Button variant="secondary" size="sm" onClick={() => setDialogOpen(true)} disabled={isSubmitting}>
-              {t.studio.configure}
-            </Button>
+            {hasSettings && (
+              <Button variant="secondary" size="sm" onClick={() => setDialogOpen(true)} disabled={isSubmitting}>
+                {t.studio.configure}
+              </Button>
+            )}
             {installation.status === "UPGRADE_AVAILABLE" && (
               <Button variant="primary" size="sm" onClick={() => void act(() => StudioApi.upgrade(installation.id))} disabled={isSubmitting}>
                 {t.studio.upgradeNow}
@@ -115,9 +124,14 @@ export function StudioInstallPanel({
             </Button>
           </>
         ) : (
-          <Button variant="primary" size="md" onClick={() => setDialogOpen(true)} loading={isSubmitting}>
-            {t.studio.install}
-          </Button>
+          hasSettings && (
+            <>
+              <Button variant="primary" size="md" onClick={() => setDialogOpen(true)} loading={isSubmitting}>
+                {t.studio.setUp}
+              </Button>
+              <span className="text-xs text-fg-secondary">{t.studio.setUpHint}</span>
+            </>
+          )
         )}
       </div>
 

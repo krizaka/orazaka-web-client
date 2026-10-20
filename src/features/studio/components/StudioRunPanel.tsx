@@ -6,7 +6,15 @@ import { useRouter } from "next/navigation";
 import { useTranslation } from "@/core/context/LocaleContext";
 import { StudioApi } from "@/services/studio.api";
 import { RunForm } from "@/features/studio/components/RunForm";
-import type { Installation, StudioDetail } from "@krizaka/orazaka-shared";
+import { PackKindSchema, type Installation, type Run, type StudioDetail } from "@krizaka/orazaka-shared";
+
+/** Runs the Studio: through its installation, by its key (TOOLKIT), or by installing it first (a VERTICAL never set up). */
+async function startFor(studio: StudioDetail, installation: Installation | undefined, inputs: Record<string, unknown>): Promise<Run | null> {
+  if (installation) return StudioApi.startRun(installation.id, inputs);
+  if (studio.kind === PackKindSchema.enum.TOOLKIT) return StudioApi.startStudioRun(studio.studioKey, inputs);
+  const installed = await StudioApi.install(studio.studioKey, {});
+  return installed ? StudioApi.startRun(installed.id, inputs) : null;
+}
 
 interface StudioRunPanelProps {
   studio: StudioDetail;
@@ -20,6 +28,10 @@ interface StudioRunPanelProps {
  * A started run redirects to its own screen rather than rendering progress inline:
  * a run outlives this page, and a user who navigates away must be able to come back
  * to it by URL.
+ *
+ * A VERTICAL Studio nobody has set up yet is installed by its first run (with its settings' defaults, which for most
+ * Studios is nothing at all): the Install button was a step that posted an empty form, so it is gone. A TOOLKIT
+ * Studio runs by its key, with no installation (ADR-061).
  */
 export function StudioRunPanel({ studio, installation }: Readonly<StudioRunPanelProps>) {
   const { t } = useTranslation();
@@ -31,9 +43,7 @@ export function StudioRunPanel({ studio, installation }: Readonly<StudioRunPanel
     setSubmitting(true);
     setError(null);
     try {
-      const run = installation
-        ? await StudioApi.startRun(installation.id, inputs)
-        : await StudioApi.startStudioRun(studio.studioKey, inputs);
+      const run = await startFor(studio, installation, inputs);
       if (run) {
         router.push(`/studios/runs/${run.id}`);
       }

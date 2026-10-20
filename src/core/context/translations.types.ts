@@ -10,6 +10,7 @@ import type { WebhooksDictionary } from "./translations.webhooks.types";
 import type { AutomationsDictionary } from "./translations.automations.types";
 import type { RunProgressDictionary } from "./translations.runProgress.types";
 import type { ModelsDictionary } from "./translations.models.types";
+import type { CatalogueDictionary, PlanDictionary } from "./translations.catalogue";
 import type { GalleryDictionary } from "./translations.gallery";
 import type { MobileDictionary } from "./translations.mobile";
 import type { DesktopDictionary } from "./translations.desktop";
@@ -714,16 +715,9 @@ export interface TranslationDictionary {
   studio: {
     title: string;
     subtitle: string;
-    tabMine: string;
-    tabExplore: string;
-    allProfessions: string;
     /** The accessible name of the trade filter. */
-    filterByTrade: string;
     /** A profession's name by its catalogue key; a key with no name here shows as is. */
     professions: Record<string, string>;
-    emptyCatalogue: string;
-    emptyInstalled: string;
-    emptyInstalledCta: string;
     loadError: string;
     retry: string;
     back: string;
@@ -740,8 +734,10 @@ export interface TranslationDictionary {
     versionHistory: string;
     noChangelog: string;
     install: string;
+    /** The one-time settings of a Studio that declares some (agency name, tone, signature). */
+    setUp: string;
+    setUpHint: string;
     installing: string;
-    installed: string;
     /** A TOOLKIT Studio (ADR-061): nothing to install, run it directly. */
     included: string;
     uninstall: string;
@@ -839,27 +835,17 @@ export interface TranslationDictionary {
     copy: string;
   };
   packs: {
-    title: string;
-    subtitle: string;
     loadError: string;
     retry: string;
-    owned: string;
-    subscribe: string;
-    subscribing: string;
-    remove: string;
-    includedCredits: string;
-    free: string;
-    /** Shown when billing could not be reached — never "free", which would be a price. */
-    priceUnavailable: string;
     holdingsUnavailable: string;
-    /** The TOOLKIT band (ADR-061): capability an entitled actor has, never installed. */
-    includedTitle: string;
-    includedSubtitle: string;
-    included: string;
   };
   automation: AutomationDictionary;
   /** The automations of /automation: triggers (webhook, schedule) and run history (ADR-084). */
   automations: AutomationsDictionary;
+  /** The Studio list of /studios: search, state, trade, one action per row. */
+  catalogue: CatalogueDictionary;
+  /** The plan line and « Plan & packs » (/packs). */
+  plan: PlanDictionary;
   /** Accessible names of icon-only controls. */
   a11y: A11yDictionary;
   showcase: ShowcaseDictionary;
@@ -937,8 +923,6 @@ export interface A11yDictionary {
 /** The moments a mascot speaks, and the Studios, packs, jobs and notifications surfaces. `{x}` are placeholders. */
 export interface ShowcaseDictionary {
   studio: {
-    installedEmptyTitle: string;
-    installedEmptyBody: string;
     loadErrorTitle: string;
     runRunningBody: string;
     runSucceededBody: string;
@@ -949,7 +933,6 @@ export interface ShowcaseDictionary {
     /** `{pack}` */
     included: string;
   };
-  packs: { studiosIncluded: string };
   jobs: {
     emptyTitle: string;
     emptyBody: string;
