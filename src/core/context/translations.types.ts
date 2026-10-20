@@ -7,6 +7,7 @@ import type { FeaturesDictionary, LandingDictionary } from "./translations.landi
 import type { InsightsDictionary } from "./translations.insights";
 import type { JobsTableDictionary } from "./translations.jobsTable.types";
 import type { WebhooksDictionary } from "./translations.webhooks.types";
+import type { AutomationsDictionary } from "./translations.automations.types";
 import type { RunProgressDictionary } from "./translations.runProgress.types";
 import type { ModelsDictionary } from "./translations.models.types";
 import type { GalleryDictionary } from "./translations.gallery";
@@ -855,6 +856,8 @@ export interface TranslationDictionary {
     included: string;
   };
   automation: AutomationDictionary;
+  /** The automations of /automation: triggers (webhook, schedule) and run history (ADR-084). */
+  automations: AutomationsDictionary;
   /** Accessible names of icon-only controls. */
   a11y: A11yDictionary;
   showcase: ShowcaseDictionary;
@@ -889,7 +892,7 @@ export interface TranslationDictionary {
   docs: DocsDictionary;
 }
 
-/** The automation page (connectors and the jobs awaiting approval). `{name}` is the connector's name. */
+/** The connector catalogue of the automation page. `{name}` is the connector's name. */
 export interface AutomationDictionary {
   connectorsTitle: string;
   connectorsSubtitle: string;
@@ -903,18 +906,6 @@ export interface AutomationDictionary {
   saveCredentials: string;
   /** One description per connector id. */
   connectors: Record<"jira" | "whatsapp" | "messenger" | "slack" | "cli-agent", string>;
-  jobsTitle: string;
-  jobsSubtitle: string;
-  pending: string;
-  running: string;
-  payload: string;
-  approve: string;
-  revoke: string;
-  empty: string;
-  jobStatus: Record<
-    "PENDING_APPROVAL" | "APPROVED" | "RUNNING" | "COMPLETED" | "FAILED" | "AWAITING_CLI_EXECUTION",
-    string
-  >;
 }
 
 /** Accessible names of icon-only controls (a button showing only an icon still needs a name). */

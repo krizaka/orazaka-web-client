@@ -35,7 +35,7 @@
     "@krizaka/icons": "^0.5.1",
     "@krizaka/intl": "^0.2.1",
     "@krizaka/orazaka-design-system": "^3.4.0",
-    "@krizaka/orazaka-shared": "^1.3.1",
+    "@krizaka/orazaka-shared": "^1.4.0",
     "@krizaka/tailwind": "^3.32.0",
     "@krizaka/tokens": "^3.35.0",
     "@krizaka/ui": "^3.35.0",
