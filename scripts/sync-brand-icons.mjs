@@ -63,7 +63,7 @@ export async function main(check = process.argv.includes("--check")) {
     if (sha256(buf) !== hashes[key]) throw new Error(`${key}: downloaded bytes do not match the manifest`);
     await mkdir(path.dirname(target), { recursive: true });
     await writeFile(target, buf);
-    console.log(`${dest}  <-  ${key}`);
+    process.stdout.write(`${dest}  <-  ${key}\n`);
   }
   if (drift) process.exit(1);
 }
