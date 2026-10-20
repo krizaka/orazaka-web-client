@@ -1,8 +1,11 @@
 import { test, expect } from "@playwright/test";
 
-/** The hero must not move while the sovereign chat plays: its box is the same at the start and at the end (CLS 0). */
+/**
+ * The hero is LCP-safe and does not move: the heading is the first paint, the recorded take reserves its box (width, height,
+ * aspect ratio) and its poster is the finished answer, so nothing shifts while the video loads or plays (CLS 0).
+ */
 for (const [name, viewport] of [["desktop", { width: 1440, height: 900 }], ["phone", { width: 390, height: 844 }]] as const) {
-  test(`the hero keeps its height while the chat plays (${name})`, async ({ page }) => {
+  test(`the hero keeps its box while the recorded take loads (${name})`, async ({ page }) => {
     await page.setViewportSize(viewport);
     await page.addInitScript(() => {
       (window as unknown as { shifts: number }).shifts = 0;
@@ -11,16 +14,17 @@ for (const [name, viewport] of [["desktop", { width: 1440, height: 900 }], ["pho
       }).observe({ type: "layout-shift", buffered: true });
     });
     await page.goto("/");
-    const hero = page.locator(".landing-hero").first();
-    await expect(hero).toBeVisible();
-    const heights = new Set<number>();
-    for (let t = 0; t < 12; t++) {
-      heights.add(Math.round((await hero.boundingBox())!.height));
-      await page.waitForTimeout(500);
+    await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
+    const take = page.getByTestId("hero-take");
+    await expect(take).toHaveAttribute("poster", /products\/orazaka\/home\/take-en-(dark|light)-poster\.[0-9a-f]{10}\.webp$/);
+    await expect(take).toHaveAttribute("width", "1140");
+    await expect(take).toHaveAttribute("height", "960");
+    const boxes = new Set<number>();
+    for (let t = 0; t < 6; t++) {
+      boxes.add(Math.round((await take.boundingBox())!.height));
+      await page.waitForTimeout(400);
     }
-    await expect(page.getByText(/routed locally/i).last()).toBeVisible();
-    heights.add(Math.round((await hero.boundingBox())!.height));
-    expect([...heights]).toHaveLength(1);
+    expect(boxes.size).toBe(1);
     expect(await page.evaluate(() => (window as unknown as { shifts: number }).shifts)).toBeLessThan(0.01);
   });
 }

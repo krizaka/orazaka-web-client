@@ -28,7 +28,6 @@ export interface CompareAnswer {
 export interface LandingDictionary {
   nav: {
     how: string;
-    studios: string;
     signIn: string;
     getStarted: string;
     docs: string;
@@ -42,8 +41,9 @@ export interface LandingDictionary {
     desktop: string;
     selfHost: string;
     /** One short line (≤ 45 characters: the menu shows one line) under each entry of the Product and Platforms menus. */
-    menu: Record<"how" | "studios" | "packs" | "models" | "demo" | "web" | "mobile" | "desktop" | "selfHost", string>;
+    menu: Record<"how" | "packs" | "models" | "demo" | "web" | "mobile" | "desktop" | "selfHost", string>;
     langLabel: string;
+    themeLabel: string;
     preferences: string;
     openMenu: string;
     closeMenu: string;
@@ -51,34 +51,23 @@ export interface LandingDictionary {
     talk: string;
     repo: string;
   };
-  hero: {
-    kicker: string;
-    titleLead: string;
-    titleAccent: string;
-    lead: string;
-    primaryCta: string;
-    secondaryCta: string;
-    trust: string[];
-    demoLabel: string;
-  };
-  chat: ChatDemoCopy;
-  proof: { value: string; label: string }[];
-  what: { eyebrow: string; title: string; lead: string; demo: string; packs: string; packsLine: string; packsCta: string };
-  runs: {
+  /** The first screen: one statement, one line, the real product beside it. */
+  hero: { title: string; lead: string; secondary: string; visualLabel: string; takeAlt: string; takeCaption: string };
+  /** The figures under the hero, counted from the published measured runs. */
+  figures: { runs: string; models: string; telemetry: string };
+  features: { eyebrow: string; title: string; lead: string; items: Record<"studios" | "records" | "home", { title: string; text: string; alt: string }> };
+  records: { eyebrow: string; title: string; lead: string; more: string; measuredOn: string; runLabel: string };
+  platforms: { eyebrow: string; title: string; items: Record<"web" | "mac" | "mobile" | "cli", { name: string; line: string }> };
+  family: {
     eyebrow: string;
     title: string;
     lead: string;
-    tabs: Record<"web" | "mobile" | "mac", string>;
-    label: string;
-    play: string;
-    pause: string;
-    step: string;
-    web: Record<"workspace" | "studio" | "results", { title: string; description: string; alt: string }>;
-    mac: { title: string; body: string; alt: string; cta: string };
-    mobileMore: string;
-    recorded: string;
+    /** What each product uses the engine for — one short line. */
+    uses: Record<"orochia" | "yomizaka" | "kachizaka" | "akinaza" | "yasakia" | "yororis", string>;
+    planned: string;
+    visit: string;
   };
-  trust: { eyebrow: string; title: string; items: (LandingItem & { cta: string })[] };
+  faq: { eyebrow: string; title: string; items: { q: string; a: string }[] };
   compare: {
     eyebrow: string;
     title: string;
@@ -89,8 +78,7 @@ export interface LandingDictionary {
     /** The key phrase is bold, the detail follows; claims must be true of the product today. */
     rows: { id: "where" | "pay" | "decide" | "agents"; topic: string; cloud: CompareAnswer; orazaka: CompareAnswer }[];
   };
-  studios: { eyebrow: string; title: string; lead: string; items: LandingItem[]; ctas: string[]; cta: string };
-  cta: { eyebrow: string; title: string; lead: string; primary: string; secondary: string };
+  cta: { title: string; body: string; primary: string };
   demo: { eyebrow: string; title: string; lead: string; frame: string; notice: string; origin: string };
   closed: { title: string; body: string; docs: string; contact: string; home: string; heroPrimary: string; heroSecondary: string; signInBanner: string };
   footer: { devNotice: string; privacy: string; terms: string; contact: string; license: string; by: string; product: string; docs: string; api: string; cli: string; legal: string };

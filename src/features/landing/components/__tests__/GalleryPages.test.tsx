@@ -1,14 +1,13 @@
 import { FILMS } from "@/features/landing/utils/cinema-films";
 import "@testing-library/jest-dom";
-import { act, fireEvent, render, screen, within } from "@testing-library/react";
+import { render, screen, within } from "@testing-library/react";
 import { ThemeProvider } from "@krizaka/ui/theme";
 import { translations, type Locale } from "@/core/context/translations";
 import { AuthFlagsProvider } from "@/core/context/AuthFlagsContext";
-import { GalleryFeatured } from "@/features/landing/components/GalleryFeatured";
 import { GalleryPage } from "@/features/landing/components/GalleryPage";
 import { GALLERY } from "@/features/landing/utils/gallery";
 import { COMPARE_IMAGES } from "@/features/landing/utils/model-compare";
-import { CLIPS, FEATURED, clipReproduceParts } from "@/features/landing/utils/gallery-clips";
+import { CLIPS } from "@/features/landing/utils/gallery-clips";
 
 let mockLocale: Locale = "en";
 jest.mock("@/core/context/LocaleContext", () => ({
@@ -31,160 +30,6 @@ const wrap = (ui: React.ReactNode, locale: Locale = "en") => {
     </AuthFlagsProvider>,
   );
 };
-
-describe("GalleryFeatured (the home page's prompt → image → video, a slideshow)", () => {
-  const slide = (container: HTMLElement, i: number) => container.querySelectorAll<HTMLElement>('[aria-roledescription="slide"]')[i];
-  const g = translations.en.gallery;
-
-  it("is a three-step strip: the prompt, the image (FLUX.2 [klein], H100, made at the video's aspect), the video made from it (LTX or Wan A14B, H100, upscaled to 1080p) — chips visible under each medium", () => {
-    const { container } = wrap(<GalleryFeatured />);
-    expect(container.querySelector("#made")).not.toBeNull();
-    expect(screen.getByRole("heading", { level: 2 })).toHaveTextContent("One prompt, an image, a video");
-    const first = FEATURED[0];
-    const image = first.image!;
-    const active = slide(container, 0);
-    const steps = within(active).getAllByRole("listitem").filter((li) => li.textContent?.match(/^\d · /));
-    expect(steps.map((s) => s.textContent?.slice(0, 3))).toEqual(["1 ·", "2 ·", "3 ·"]);
-    expect(within(active).queryByRole("tab")).toBeNull();
-    expect(within(active).getByAltText(g.stills[image.id])).toBeInTheDocument();
-    const video = active.querySelector("video")!;
-    expect(video.muted).toBe(true);
-    expect(video.loop).toBe(true);
-    expect(video).toHaveAttribute("aria-label", g.clips[first.id]);
-    // The chips sit in the step, right under the medium they describe.
-    expect(steps[1]).toHaveTextContent(new RegExp(`FLUX\\.2 \\[klein\\] 4B · RunPod H100 80 GB · ${String(image.seconds)} s · \\$0\\.\\d{3}`));
-    expect(steps[2]).toHaveTextContent(/LTX-Video 0\.9\.8 · RunPod H100 80 GB · ↑ 1080p · \d+ s · \$0\.\d\d/);
-    expect(within(active).getByText(g.fromImage)).toBeInTheDocument();
-  });
-
-  it("opens the facts and \"Reproduce it\" over the page (a popover), never inside the strip — its height cannot change", () => {
-    const { container } = wrap(<GalleryFeatured />);
-    const first = FEATURED[0];
-    const active = slide(container, 0);
-    const strip = active.querySelector("ol")!;
-    const before = strip.querySelectorAll("*").length;
-    expect(active.querySelector("details")).toBeNull();
-    const buttons = within(active).getAllByRole("button", { name: g.details });
-    expect(buttons).toHaveLength(2);
-    fireEvent.click(buttons[1]); // the video's
-    const open = screen.getByRole("dialog");
-    expect(strip.querySelectorAll("*").length).toBe(before); // nothing was added to the strip
-    expect(open).toHaveTextContent(first.clip.runId);
-    expect(open).toHaveTextContent(first.clip.seed);
-    expect(open).toHaveTextContent(/LTX-Video 0\.9\.8/);
-    expect(open).toHaveTextContent(/SeedVR2 3B/);
-    expect(open).toHaveTextContent(/routed by Orazaka/);
-    expect(open).toHaveTextContent(/GPU cost of the run/);
-    expect(Array.from(open.querySelectorAll("pre code")).map((c) => c.textContent)).toEqual(clipReproduceParts(first.clip).map((part) => part.code));
-    fireEvent.keyDown(open, { key: "Escape" });
-    fireEvent.click(screen.getByRole("button", { name: g.next }));
-    expect(slide(container, 1)).toHaveAttribute("data-active");
-    fireEvent.click(screen.getByRole("button", { name: g.prev }));
-    fireEvent.click(screen.getByRole("button", { name: g.prev }));
-    expect(slide(container, FEATURED.length - 1)).toHaveAttribute("data-active");
-  });
-
-  it("never shows an empty middle box: a clip with no image step is Prompt → Video, two columns", () => {
-    const { container } = wrap(<GalleryFeatured />);
-    const lone = FEATURED.findIndex((item) => !item.image);
-    if (lone < 0) return; // every example has its image step: nothing to degrade
-    const active = slide(container, lone);
-    const steps = Array.from(active.querySelectorAll("ol > li")).filter((li) => li.textContent?.match(/^\d · /));
-    expect(steps.map((s) => s.textContent?.slice(0, 3))).toEqual(["1 ·", "2 ·"]);
-    expect(steps[1]).toHaveTextContent(g.stepVideo);
-    expect(active.querySelector("[data-steps]")).toHaveAttribute("data-steps", "2");
-    expect(active.textContent).not.toMatch(/prompt of its own/);
-    expect(active.querySelectorAll('ol > li[aria-hidden="true"]')).toHaveLength(1); // one arrow
-  });
-
-  it("no rendered slide has an empty frame: its media frames match its steps (the image and the video, or the video alone)", () => {
-    const { container } = wrap(<GalleryFeatured />);
-    let checked = 0;
-    FEATURED.forEach((item, i) => {
-      const active = slide(container, i);
-      const strip = active.querySelector("[data-steps]");
-      if (!strip) return; // a slide the carousel has not mounted yet
-      checked++;
-      expect(strip).toHaveAttribute("data-steps", item.image ? "3" : "2");
-      expect(strip.querySelectorAll("ol > li:not([aria-hidden])")).toHaveLength(item.image ? 3 : 2);
-    });
-    expect(checked).toBeGreaterThan(0);
-  });
-
-  it("is a named carousel with a counter and one clickable segment per item, and no pause button under reduced motion", () => {
-    wrap(<GalleryFeatured />);
-    expect(screen.getByRole("region", { name: g.carousel })).toHaveAttribute("aria-roledescription", "carousel");
-    expect(screen.getByText(`Image 1 of ${FEATURED.length}`)).toBeInTheDocument();
-    expect(screen.getAllByRole("button", { name: /^Go to image / })).toHaveLength(FEATURED.length);
-    expect(screen.queryByRole("button", { name: g.pause })).toBeNull();
-  });
-
-  it("has a pause button and a bar that fills when motion is allowed, and speaks French", () => {
-    const original = window.matchMedia;
-    Object.defineProperty(window, "matchMedia", { writable: true, value: (query: string) => ({ matches: false, media: query, addEventListener: () => {}, removeEventListener: () => {} }) });
-    try {
-      const { container } = wrap(<GalleryFeatured />, "fr");
-      expect(screen.getByRole("button", { name: translations.fr.gallery.pause })).toBeInTheDocument();
-      expect(container.querySelector("[data-segment-fill]")).not.toBeNull();
-      fireEvent.click(screen.getByRole("button", { name: translations.fr.gallery.pause }));
-      expect(screen.getByRole("button", { name: translations.fr.gallery.play })).toBeInTheDocument();
-      expect(screen.getByText(`Image 1 sur ${FEATURED.length}`)).toBeInTheDocument();
-      expect(screen.getAllByText(new RegExp(translations.fr.gallery.stepPrompt)).length).toBeGreaterThan(0);
-    } finally {
-      Object.defineProperty(window, "matchMedia", { writable: true, value: original });
-    }
-  });
-
-  it("links to the whole gallery and copies the prompt from its popover", async () => {
-    const writeText = jest.fn().mockResolvedValue(undefined);
-    Object.assign(navigator, { clipboard: { writeText } });
-    const { container } = wrap(<GalleryFeatured />);
-    expect(screen.getByRole("link", { name: g.seeDemo })).toHaveAttribute("href", "/gallery");
-    fireEvent.click(within(slide(container, 0)).getByRole("button", { name: g.more }));
-    fireEvent.click(screen.getByRole("button", { name: g.copy }));
-    expect(writeText).toHaveBeenCalledWith(FEATURED[0].image?.prompt ?? FEATURED[0].clip.prompt);
-    expect(await screen.findByText(g.copied)).toBeInTheDocument();
-  });
-
-  it("types the video prompt over its final size: the invisible full copy holds the height, so nothing below moves", () => {
-    const original = window.matchMedia;
-    Object.defineProperty(window, "matchMedia", { writable: true, value: (query: string) => ({ matches: false, media: query, addEventListener: () => {}, removeEventListener: () => {} }) });
-    jest.useFakeTimers();
-    try {
-      const { container } = wrap(<GalleryFeatured />);
-      fireEvent.click(within(slide(container, 0)).getAllByRole("button", { name: g.details }).at(-1)!);
-      const quote = document.querySelector<HTMLElement>("[data-typed-prompt]")!;
-      const reserve = quote.querySelector<HTMLElement>("[data-typed-reserve]")!;
-      const visible = quote.querySelector<HTMLElement>("[data-typed-visible]")!;
-      expect(reserve.textContent).toBe(FEATURED[0].clip.prompt);
-      expect(reserve.className).toContain("invisible");
-      expect(reserve).toHaveAttribute("aria-hidden", "true");
-      expect(visible.className).toContain("absolute");
-      expect(visible.textContent!.length).toBeLessThan(FEATURED[0].clip.prompt.length);
-      act(() => { jest.advanceTimersByTime(60_000); });
-      expect(visible.textContent).toContain(FEATURED[0].clip.prompt.slice(0, 40));
-      expect(quote.style.minHeight).toBe("");
-    } finally {
-      jest.useRealTimers();
-      Object.defineProperty(window, "matchMedia", { writable: true, value: original });
-    }
-  });
-
-  it("types nothing under reduced motion: the whole prompt at once", () => {
-    const { container } = wrap(<GalleryFeatured />);
-    fireEvent.click(within(slide(container, 0)).getAllByRole("button", { name: g.details }).at(-1)!);
-    expect(document.querySelector<HTMLElement>("[data-typed-visible]")!.textContent).toBe(FEATURED[0].clip.prompt);
-  });
-
-  it("loads the image lazily and from the CDN as it is", () => {
-    const { container } = wrap(<GalleryFeatured />);
-    const img = container.querySelector("img")!;
-    expect(img.getAttribute("loading")).toBe("lazy");
-    expect(img.getAttribute("src")).toMatch(/^https:\/\/krizaka-assets\.b-cdn\.net\/site\/products\/orazaka\/showcase\/[a-z-]+\.[0-9a-f]{10}\.webp$/);
-    const source = container.querySelector("video source")!;
-    expect(source.getAttribute("src")).toMatch(/^https:\/\/krizaka-assets\.b-cdn\.net\/site\/products\/orazaka\/(gallery-video|video)\/[a-z-]+\.[0-9a-f]{10}\.(webm|mp4)$/);
-  });
-});
 
 describe("GalleryPage", () => {
   it("lists every image with its prompt, copy button and reproduce block, then the credits", () => {

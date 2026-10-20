@@ -15,11 +15,10 @@ test("the bar's Demo leads to /gallery, which holds the day of work and an hones
   await expect(page.locator("#demo-chat")).toBeAttached();
 });
 
-test("the home keeps a Made here teaser at #demo with a way to the demo, and an old #demo-<clip> link lands on the clip", async ({ page }) => {
+test("the home keeps its #demo anchor on the proof, and an old #demo-<clip> link lands on the clip", async ({ page }) => {
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.goto("/");
   await expect(page.locator("#demo")).toBeAttached();
-  await expect(page.locator("#made").getByRole("link", { name: "See the demo" })).toHaveAttribute("href", "/gallery");
   await page.goto("/#demo-chat");
   await expect(page).toHaveURL(/\/gallery#demo-chat$/, { timeout: 15_000 });
   await expect(page.locator("#demo-chat")).toBeAttached();

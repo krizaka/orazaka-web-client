@@ -42,34 +42,10 @@
 .iso-flow-out { animation-name: iso-dash-out; }
 .iso-beam { animation: iso-dash 5s linear infinite; }
 
-/* ── Product captures (our own screenshots) ──────────────── */
-/* Two captures per view, one per theme: the page shows the one of its theme. */
-.landing-capture-dark, .landing-capture-light { display: contents; }
-.landing-capture-light { display: none; }
-html.light .landing-capture-light { display: contents; }
-html.light .landing-capture-dark { display: none; }
-
-/* The hero's depth of field: its media layer is stronger than a plain section's (SectionBackdrop draws it at 50 %). */
-.landing-hero > .kz-backdrop-media { opacity: 0.85; --kz-backdrop-blur: 14px; }
-html.light .landing-hero > .kz-backdrop-media { opacity: 0.6; }
-
-/* The hero's depth of field: the real workspace, tilted and blurred behind the sovereign chat. */
-.landing-hero-capture {
-  position: absolute;
-  right: -12%;
-  top: 14%;
-  width: 72%;
-  max-width: 980px;
-  transform: perspective(1400px) rotateY(-16deg) rotateX(8deg);
-  border: 1px solid var(--kz-accent);
-  border-radius: 18px;
-  filter: brightness(1.35) saturate(1.2);
-  mask-image: linear-gradient(to left, #000 40%, transparent 98%);
-}
-/* On a phone the chat already fills the screen: no capture behind it (and nothing heavy before the first paint). */
-@media (max-width: 1023px) {
-  .landing-hero-capture { display: none !important; }
-}
+/* The home's hero: a subtle brand light, not a wash — the template's two glows (drift and dome) are kept at a third of their strength,
+   so the accent stays an accent and the headline and the real product carry the page. */
+.landing-home .kz-hero > .kz-backdrop-drift { opacity: 0.3; }
+.landing-home .kz-hero > .kz-backdrop-dome { opacity: 0.35; }
 
 /* A capture inside a card: crisp, fading into the card only along its bottom edge (never blurred). */
 .landing-card-capture { display: block; }

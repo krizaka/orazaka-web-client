@@ -6,13 +6,12 @@
  * The bar, the mobile panel and the footer read this one list, in this order.
  */
 import type { ComponentType } from "react";
-import { AiIcon, DownloadIcon, GlobeIcon, LocalIcon, PackIcon, PlayIcon, ServerIcon, StudioIcon, VideoIcon, type IconProps } from "@krizaka/icons";
+import { AiIcon, DownloadIcon, GlobeIcon, LocalIcon, PackIcon, PlayIcon, ServerIcon, VideoIcon, type IconProps } from "@krizaka/icons";
 import { SHIPPED_ROUTES } from "@/features/landing/utils/nav-routes";
 
 /** The words of an entry live in `t.landing.nav[id]` and its line in `t.landing.nav.menu[id]`. */
 export const NavEntryId = {
   How: "how",
-  Studios: "studios",
   Packs: "packs",
   Models: "models",
   Demo: "demo",
@@ -41,13 +40,12 @@ export interface NavGroup {
   entries: readonly NavEntry[];
 }
 
-/** Product ▾ — what Orazaka does, as outcomes, and the proof (Demo: real runs, nothing staged). */
+/** Product ▾ — what Orazaka does (the home's « What it does »), its packs, the models and the proof (Demo: real runs, nothing staged). */
 const PRODUCT: NavGroup = {
   id: NavGroupId.Product,
   entries: [
-    { id: NavEntryId.How, anchor: "how", Icon: PlayIcon, current: ["/features"] },
-    { id: NavEntryId.Studios, anchor: "studios", Icon: StudioIcon },
-    { id: NavEntryId.Packs, anchor: "packs", Icon: PackIcon },
+    { id: NavEntryId.How, anchor: "features", Icon: PlayIcon, current: ["/features"] },
+    { id: NavEntryId.Packs, path: "/docs/packs", Icon: PackIcon },
     { id: NavEntryId.Models, path: "/models", Icon: AiIcon, current: ["/models"] },
     { id: NavEntryId.Demo, path: "/gallery", Icon: VideoIcon, current: ["/gallery"] },
   ],
@@ -57,7 +55,7 @@ const PRODUCT: NavGroup = {
 const PLATFORMS: NavGroup = {
   id: NavGroupId.Platforms,
   entries: [
-    { id: NavEntryId.Web, anchor: "platform", Icon: GlobeIcon },
+    { id: NavEntryId.Web, anchor: "platforms", Icon: GlobeIcon },
     { id: NavEntryId.Mobile, path: "/docs/mobile", Icon: DownloadIcon, current: ["/docs/mobile"] },
     { id: NavEntryId.Desktop, path: "/desktop", Icon: LocalIcon, current: ["/desktop"] },
     // « Self-host » reads the install guide until the /infrastructure page ships (no dead link either way).
