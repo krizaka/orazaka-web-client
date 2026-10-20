@@ -39,6 +39,7 @@ jest.mock("@/features/profile/components/AppearanceTab", () => ({ AppearanceTab:
 jest.mock("@/features/profile/components/WorkspaceTab", () => ({ WorkspaceTab: () => <div data-testid="WorkspaceTab" /> }));
 jest.mock("@/features/profile/components/IntegrationsTab", () => ({ IntegrationsTab: () => <div data-testid="IntegrationsTab" /> }));
 jest.mock("@/features/profile/components/ApiKeysTab", () => ({ ApiKeysTab: () => <div data-testid="ApiKeysTab" /> }));
+jest.mock("@/features/profile/components/WebhooksTab", () => ({ WebhooksTab: () => <div data-testid="WebhooksTab" /> }));
 
 const t = translations.en;
 
@@ -55,6 +56,7 @@ describe("SettingsView (sub-nav + one section per route)", () => {
     expect(nav.querySelector('a[href="/settings/account"]')).toBeInTheDocument();
     expect(nav.querySelector('a[href="/settings/workspace"]')).toBeInTheDocument();
     expect(nav.querySelector('a[href="/settings/api-keys"]')).toBeInTheDocument();
+    expect(nav.querySelector('a[href="/settings/webhooks"]')).toBeInTheDocument();
     expect(nav.querySelector('a[href="/settings/appearance"]')).toHaveAttribute("aria-current", "page");
     expect(screen.getByTestId("AppearanceTab")).toBeInTheDocument();
     expect(screen.queryByTestId("AccountTab")).not.toBeInTheDocument();
