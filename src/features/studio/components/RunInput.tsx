@@ -12,6 +12,8 @@ export interface RunInputProps {
   value: string;
   disabled: boolean;
   onChange: (value: string) => void;
+  /** The only options the selected model can make (an enum field it governs); the others are greyed out with a reason. */
+  allowedOptions?: string[] | null;
   onBusyChange: (busy: boolean) => void;
 }
 
@@ -44,6 +46,7 @@ export function RunInput({
   value,
   disabled,
   onChange,
+  allowedOptions = null,
   onBusyChange,
 }: Readonly<RunInputProps>) {
   const { t } = useTranslation();
@@ -108,10 +111,17 @@ export function RunInput({
             <option value="">{field.required ? "" : t.studio.form.unset}</option>
           )}
           {field.options.map((option) => (
-            <option key={option} value={option}>
+            <option
+              key={option}
+              value={option}
+              disabled={allowedOptions !== null && !allowedOptions.includes(option)}
+            >
               {field.optionLabels?.[option] ??
                 t.studio.choices[field.key]?.[option] ??
                 option}
+              {allowedOptions !== null && !allowedOptions.includes(option)
+                ? ` · ${t.studio.form.notForThisModel}`
+                : ""}
             </option>
           ))}
         </Select>

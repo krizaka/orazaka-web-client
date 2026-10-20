@@ -45,10 +45,26 @@ export function RunForm({
   }, []);
   const isUploading = Object.values(uploading).some(Boolean);
 
+  /** The aspects the model in view can make, by the field they govern (a model field that declares them: x-options.aspects). */
+  const aspectRule = (() => {
+    for (const field of fields) {
+      if (!field.aspectsByModel) continue;
+      const model = (values[field.key] ?? "") || (field.defaultValue ?? "");
+      const supported = field.aspectsByModel.aspects[model];
+      return supported && supported.length > 0 ? { field: field.aspectsByModel.field, supported } : null;
+    }
+    return null;
+  })();
+
   /** What a field holds: the person's answer, else — for a plain list — the default it shows selected. */
-  const valueOf = (field: InputField) =>
-    values[field.key] ??
-    (field.type === "enum" ? (field.defaultValue ?? "") : "");
+  const valueOf = (field: InputField) => {
+    const own = values[field.key] ?? (field.type === "enum" ? (field.defaultValue ?? "") : "");
+    // A model that cannot make the aspect in view moves the field to the first one it can (the hosted Wan: 16:9).
+    if (aspectRule && field.key === aspectRule.field && own !== "" && !aspectRule.supported.includes(own)) {
+      return aspectRule.supported[0];
+    }
+    return own;
+  };
 
   const submit = () => {
     const payload: Record<string, unknown> = {};
@@ -79,6 +95,7 @@ export function RunForm({
       field={localized(field, t.studio.inputs, studioKey)}
       value={valueOf(field)}
       disabled={isSubmitting}
+      allowedOptions={aspectRule && field.key === aspectRule.field ? aspectRule.supported : null}
       onBusyChange={(busy) => setBusy(field.key, busy)}
       onChange={(value) =>
         setValues((current) => ({ ...current, [field.key]: value }))
