@@ -7,6 +7,7 @@ import type { FeaturesDictionary, LandingDictionary } from "./translations.landi
 import type { InsightsDictionary } from "./translations.insights";
 import type { JobsTableDictionary } from "./translations.jobsTable.types";
 import type { WebhooksDictionary } from "./translations.webhooks.types";
+import type { AutomationsDictionary } from "./translations.automations.types";
 import type { RunProgressDictionary } from "./translations.runProgress.types";
 import type { ModelsDictionary } from "./translations.models.types";
 import type { GalleryDictionary } from "./translations.gallery";
@@ -855,6 +856,8 @@ export interface TranslationDictionary {
     included: string;
   };
   automation: AutomationDictionary;
+  /** The automations of /automation: triggers (webhook, schedule) and run history (ADR-084). */
+  automations: AutomationsDictionary;
   /** Accessible names of icon-only controls. */
   a11y: A11yDictionary;
   showcase: ShowcaseDictionary;

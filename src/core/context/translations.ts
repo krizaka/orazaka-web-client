@@ -11,6 +11,7 @@ import { mobile } from "./translations.mobile";
 import { desktop } from "./translations.desktop";
 import { docs } from "./translations.docs";
 import { a11y, automation } from "./translations.automation";
+import { automations } from "./translations.automations";
 import { showcase } from "./translations.showcase";
 import { insights } from "./translations.insights";
 import { jobsTable } from "./translations.jobsTable";
@@ -937,6 +938,7 @@ export const translations: Record<Locale, TranslationDictionary> = {
       included: "Included",
     },
     automation: automation.en,
+    automations: automations.en,
     a11y: a11y.en,
     showcase: showcase.en,
     insights: insights.en,
@@ -1890,6 +1892,7 @@ export const translations: Record<Locale, TranslationDictionary> = {
       included: "Inclus",
     },
     automation: automation.fr,
+    automations: automations.fr,
     a11y: a11y.fr,
     showcase: showcase.fr,
     insights: insights.fr,
