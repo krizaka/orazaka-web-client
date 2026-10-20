@@ -6,6 +6,7 @@
 import type { FeaturesDictionary, LandingDictionary } from "./translations.landing.types";
 import type { InsightsDictionary } from "./translations.insights";
 import type { JobsTableDictionary } from "./translations.jobsTable.types";
+import type { WebhooksDictionary } from "./translations.webhooks.types";
 import type { RunProgressDictionary } from "./translations.runProgress.types";
 import type { ModelsDictionary } from "./translations.models.types";
 import type { GalleryDictionary } from "./translations.gallery";
@@ -174,6 +175,7 @@ export interface TranslationDictionary {
       workspace: string;
       integrations: string;
       apiKeys: string;
+      webhooks: string;
     };
     pageTitle: string;
     pageDesc: string;
@@ -846,6 +848,7 @@ export interface TranslationDictionary {
   /** Charts, credits, the live job queue and the waits. */
   insights: InsightsDictionary;
   jobsTable: JobsTableDictionary;
+  webhooks: WebhooksDictionary;
   runProgress: RunProgressDictionary;
   models: ModelsDictionary;
   /** The ⌘K palette: its words (the entries reuse the sidebar's). */

@@ -14,6 +14,7 @@ import { a11y, automation } from "./translations.automation";
 import { showcase } from "./translations.showcase";
 import { insights } from "./translations.insights";
 import { jobsTable } from "./translations.jobsTable";
+import { webhooks } from "./translations.webhooks";
 import { runProgress } from "./translations.runProgress";
 import { models } from "./translations.models";
 import { THEME_MODE } from "@/core/constants/http.constants";
@@ -191,6 +192,7 @@ export const translations: Record<Locale, TranslationDictionary> = {
         workspace: "Workspace",
         integrations: "Integrations",
         apiKeys: "API keys",
+        webhooks: "Webhooks",
       },
       pageTitle: "Settings",
       pageDesc: "Your account, how the workspace looks, and what it connects to.",
@@ -931,6 +933,7 @@ export const translations: Record<Locale, TranslationDictionary> = {
     showcase: showcase.en,
     insights: insights.en,
     jobsTable: jobsTable.en,
+    webhooks: webhooks.en,
     runProgress: runProgress.en,
     models: models.en,
     commandPalette: {
@@ -1122,6 +1125,7 @@ export const translations: Record<Locale, TranslationDictionary> = {
         workspace: "Espace de travail",
         integrations: "Intégrations",
         apiKeys: "Clés d'API",
+        webhooks: "Webhooks",
       },
       pageTitle: "Réglages",
       pageDesc: "Votre compte, l'apparence de l'espace et ce à quoi il se connecte.",
@@ -1874,6 +1878,7 @@ export const translations: Record<Locale, TranslationDictionary> = {
     showcase: showcase.fr,
     insights: insights.fr,
     jobsTable: jobsTable.fr,
+    webhooks: webhooks.fr,
     runProgress: runProgress.fr,
     models: models.fr,
     commandPalette: {

@@ -15,6 +15,7 @@ import { AppearanceTab } from "./AppearanceTab";
 import { WorkspaceTab } from "./WorkspaceTab";
 import { IntegrationsTab } from "./IntegrationsTab";
 import { ApiKeysTab } from "./ApiKeysTab";
+import { WebhooksTab } from "./WebhooksTab";
 
 const ICONS: Record<SettingsSectionId, IconName> = {
   account: "profile",
@@ -22,6 +23,7 @@ const ICONS: Record<SettingsSectionId, IconName> = {
   workspace: "system",
   integrations: "mcp",
   "api-keys": "key",
+  webhooks: "mcp",
 };
 
 /**
@@ -67,6 +69,7 @@ export function SettingsView({ section }: Readonly<{ section: string }>) {
     workspace: t.profile.tabs.workspace,
     integrations: t.profile.tabs.integrations,
     "api-keys": t.profile.tabs.apiKeys,
+    webhooks: t.profile.tabs.webhooks,
   };
   const nav: SettingsNavItem[] = visibleSections(isAdmin).map((id) => ({
     id,
@@ -84,6 +87,7 @@ export function SettingsView({ section }: Readonly<{ section: string }>) {
         {active === "workspace" && isAdmin && <WorkspaceTab pf={pf} />}
         {active === "integrations" && <IntegrationsTab />}
         {active === "api-keys" && <ApiKeysTab />}
+        {active === "webhooks" && <WebhooksTab />}
       </SettingsLayout>
 
       {/* Sticky Save bar: pending appearance/workspace edits */}

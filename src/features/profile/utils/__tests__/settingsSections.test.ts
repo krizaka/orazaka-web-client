@@ -2,9 +2,10 @@ import { SETTINGS_SECTIONS, isSettingsSection, legacyTabTarget, resolveSection, 
 
 describe("settings sections: the URL is the state", () => {
   it("has one route per section", () => {
-    expect(SETTINGS_SECTIONS).toEqual(["account", "appearance", "workspace", "integrations", "api-keys"]);
+    expect(SETTINGS_SECTIONS).toEqual(["account", "appearance", "workspace", "integrations", "api-keys", "webhooks"]);
     expect(settingsHref("appearance")).toBe("/settings/appearance");
     expect(settingsHref("api-keys")).toBe("/settings/api-keys");
+    expect(settingsHref("webhooks")).toBe("/settings/webhooks");
   });
 
   it("hides the workspace from non-admins", () => {
