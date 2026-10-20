@@ -93,7 +93,7 @@ export function StudioDetail({ studioKey }: Readonly<StudioDetailProps>) {
       />
 
       <ConsentNotice
-        packKey={studio.packKey}
+        studioKey={studio.studioKey}
         installation={installation}
         onChanged={() => {
           reloadInstallations();

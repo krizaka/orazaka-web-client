@@ -14,12 +14,12 @@ const E2E_SECRET = "e2e-only-secret-not-used-anywhere-else";
 const STATEMENT = "Ce Studio enregistre ce que vous y écrivez sur votre humeur. Vous consentez explicitement à ce traitement.";
 const live = Boolean(process.env.E2E_BASE_URL);
 
-const summary = { studioKey: "guided-journaling", label: "Guided journaling", tagline: "Your words, set down.", profession: "general", iconKey: "heart", heroAssetId: null, pricing: "FREE", kind: "VERTICAL", latestVersion: "1.2.0", locked: false, lockedReason: "NONE", packKey: "wellbeing" };
+const summary = { studioKey: "guided-journaling", label: "Guided journaling", tagline: "Your words, set down.", profession: "general", iconKey: "heart", heroAssetId: null, pricing: "FREE", kind: "VERTICAL", latestVersion: "1.2.0", locked: false, lockedReason: "NONE", packKey: null };
 const detail = {
   ...summary, description: null, status: "PUBLISHED", estimatedCredits: 40, configSchema: null,
   inputSchema: JSON.stringify({ type: "object", required: ["entry"], properties: { entry: { type: "string", title: "What you want to write down", minLength: 3 } } }),
 };
-const wellbeingPack = { packKey: "wellbeing", categoryKey: "wellbeing", label: "Wellbeing", tagline: null, iconKey: "heart", heroAssetId: null, regulatoryClass: "REGULATED", kind: "VERTICAL", access: "BUYABLE", studioKeys: ["guided-journaling"], priceCents: 0, includedCredits: null };
+const wellbeingPack = { packKey: "bien-etre", categoryKey: "wellbeing", label: "Wellbeing", tagline: null, iconKey: "heart", heroAssetId: null, regulatoryClass: "REGULATED", kind: "VERTICAL", access: "BUYABLE", studioKeys: ["guided-journaling"], priceCents: 0, includedCredits: null };
 const installation = { id: "inst-7", studioKey: "guided-journaling", label: "Guided journaling", iconKey: "heart", pinnedVersion: "1.2.0", latestVersion: "1.2.0", status: "ACTIVE", config: {}, installedAt: "2026-10-20T12:00:00Z", lastRunAt: null };
 
 interface Calls { installs: Record<string, unknown>[]; runs: number; uninstalled: number }

@@ -9,7 +9,7 @@ import { StudioApi } from "@/services/studio.api";
 import type { Installation } from "@krizaka/orazaka-shared";
 
 interface ConsentNoticeProps {
-  packKey: string | null;
+  studioKey: string;
   installation: Installation | undefined;
   onChanged: () => void;
 }
@@ -23,9 +23,9 @@ interface ConsentNoticeProps {
  * the service refuses any install without it. Nothing here claims an erasure the service does not offer: entries
  * live no longer than the retention in the statement.
  */
-export function ConsentNotice({ packKey, installation, onChanged }: Readonly<ConsentNoticeProps>) {
+export function ConsentNotice({ studioKey, installation, onChanged }: Readonly<ConsentNoticeProps>) {
   const { t } = useTranslation();
-  const regulated = useRegulated(packKey);
+  const regulated = useRegulated(studioKey);
   const [asking, setAsking] = useState(false);
   const [busy, setBusy] = useState(false);
   const [failed, setFailed] = useState<string | null>(null);
