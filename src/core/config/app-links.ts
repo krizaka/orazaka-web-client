@@ -1,4 +1,4 @@
-import config from "../../../app-links.json";
+import config from "@/../app-links.json";
 
 /**
  * The two files that make https://<host>/… open the native app: Apple's `apple-app-site-association` and Android's
