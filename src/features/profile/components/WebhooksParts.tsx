@@ -9,7 +9,7 @@ import { Button } from "@krizaka/ui/button";
 import { DataTable, type DataTableColumn } from "@krizaka/ui/data-table";
 import { createKrizakaForm } from "@krizaka/ui/form";
 import { useTranslation } from "@/core/context/LocaleContext";
-import { WEBHOOK_EVENTS, isHttpsUrl, type WebhookDelivery, type WebhookEvent } from "@/features/profile/hooks/useWebhooks";
+import { EVENT_WORD, WEBHOOK_EVENTS, isHttpsUrl, type WebhookDelivery, type WebhookEvent } from "@/features/profile/hooks/useWebhooks";
 
 /** The create form: one address, and the events to be told about. Defined once; its words are keys the section translates. */
 const createWebhook = createKrizakaForm({
@@ -48,9 +48,9 @@ export function CreateWebhookForm({
       <form.TextField name="url" label={w.urlLabel} type="url" placeholder={w.urlPlaceholder} autoComplete="off" />
       <fieldset className="space-y-2">
         <legend className="text-xs font-medium text-fg-secondary">{w.eventsLabel}</legend>
-        <form.Checkbox name="completed" label={w.events["run.completed"]} />
-        <form.Checkbox name="failed" label={w.events["run.failed"]} />
-        <form.Checkbox name="cancelled" label={w.events["run.cancelled"]} />
+        <form.Checkbox name="completed" label={w.events.completed} />
+        <form.Checkbox name="failed" label={w.events.failed} />
+        <form.Checkbox name="cancelled" label={w.events.cancelled} />
       </fieldset>
       {message && (
         <p role="alert" className="text-xs text-danger">
@@ -105,7 +105,7 @@ export function DeliveryLog({ deliveries }: Readonly<{ deliveries: WebhookDelive
   const dateLocale = locale === "fr" ? fr : enUS;
   if (deliveries.length === 0) return <p className="py-4 text-sm text-fg-secondary">{w.logEmpty}</p>;
   const columns: DataTableColumn<WebhookDelivery>[] = [
-    { id: "event", header: w.logColumns.event, type: "title", value: (d) => w.events[d.event], cell: (d) => w.events[d.event] },
+    { id: "event", header: w.logColumns.event, type: "title", value: (d) => w.events[EVENT_WORD[d.event]], cell: (d) => w.events[EVENT_WORD[d.event]] },
     {
       id: "status",
       header: w.logColumns.status,
@@ -134,7 +134,7 @@ export function DeliveryLog({ deliveries }: Readonly<{ deliveries: WebhookDelive
       rows={deliveries}
       columns={columns}
       getRowId={(d) => d.id}
-      rowLabel={(d) => w.events[d.event]}
+      rowLabel={(d) => w.events[EVENT_WORD[d.event]]}
       labels={{ loading: w.loading, empty: w.logEmpty }}
     />
   );

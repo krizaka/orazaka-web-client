@@ -12,7 +12,7 @@ export interface WebhooksDictionary {
   emptyDesc: string;
   caption: string;
   columns: { url: string; events: string; created: string; actions: string };
-  events: { "run.completed": string; "run.failed": string; "run.cancelled": string };
+  events: { completed: string; failed: string; cancelled: string };
   urlLabel: string;
   urlPlaceholder: string;
   urlHelp: string;

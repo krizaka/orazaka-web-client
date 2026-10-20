@@ -12,7 +12,7 @@ import { Dialog } from "@krizaka/ui/dialog";
 import { SettingsSection } from "@krizaka/ui/settings-layout";
 import { fill } from "@/core/context/fill";
 import { useTranslation } from "@/core/context/LocaleContext";
-import { useWebhooks, type WebhookEndpoint } from "@/features/profile/hooks/useWebhooks";
+import { EVENT_WORD, useWebhooks, type WebhookEndpoint } from "@/features/profile/hooks/useWebhooks";
 import { CreateWebhookForm, DeliveryLog, RevealSecret } from "./WebhooksParts";
 
 interface WebhooksSectionProps {
@@ -37,12 +37,12 @@ export function WebhooksSection({ fetchHeaders }: Readonly<WebhooksSectionProps>
         id: "events",
         header: w.columns.events,
         priority: 2,
-        value: (e) => e.events.map((event) => w.events[event]).join(", "),
+        value: (e) => e.events.map((event) => w.events[EVENT_WORD[event]]).join(", "),
         cell: (e) => (
           <span className="inline-flex flex-wrap gap-1">
             {e.events.map((event) => (
               <Badge key={event} tone="neutral" size="sm">
-                {w.events[event]}
+                {w.events[EVENT_WORD[event]]}
               </Badge>
             ))}
           </span>
