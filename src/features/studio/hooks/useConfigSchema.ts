@@ -30,7 +30,13 @@ export function useConfigSchema(configSchema: string | null): ConfigField[] {
     }
     try {
       const parsed = JSON.parse(configSchema) as Record<string, unknown>;
-      return Object.entries(parsed).map(([key, raw]) => {
+      // Two shapes are served: a JSON Schema object (`{ type: "object", properties }`, what the Studio service
+      // answers) and a flat map of fields. Reading the first as the second asked « type » and « properties ».
+      const fields =
+        parsed.type === "object" && typeof parsed.properties === "object" && parsed.properties !== null
+          ? (parsed.properties as Record<string, unknown>)
+          : parsed;
+      return Object.entries(fields).map(([key, raw]) => {
         const spec = (raw ?? {}) as { title?: string; enum?: string[]; default?: string };
         return {
           key,

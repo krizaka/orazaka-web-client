@@ -68,7 +68,7 @@ export function StudioCatalogueToolbar({
             </Chip>
           ))}
         </Chip.Group>
-        <span className="block min-w-0 flex-1 sm:w-48 sm:flex-none">
+        <span className="block w-full min-w-0 sm:w-48 sm:flex-none">
           <Select
             aria-label={c.tradeLabel}
             className="h-8 w-full text-xs"
