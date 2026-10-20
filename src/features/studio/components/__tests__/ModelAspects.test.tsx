@@ -54,7 +54,7 @@ describe.each([
     expect(byValue("1:1")).toBeDisabled();
     expect(byValue("16:9")).not.toBeDisabled();
     expect(byValue("16:9")).toHaveTextContent(wide);
-    fireEvent.change(screen.getByLabelText(/Prompt/), { target: { value: "a cabin" } });
+    fireEvent.change(screen.getByRole("textbox"), { target: { value: "a cabin" } });
     fireEvent.click(screen.getByRole("button", { name: /Run|Lancer/ }));
     expect(onSubmit).toHaveBeenCalledWith(expect.objectContaining({ aspect: "16:9", prompt: "a cabin" }));
   });
