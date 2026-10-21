@@ -7,6 +7,25 @@ order Spring Security applies. `SERVICE` is the machine-to-machine authority req
 `/internal/v1/**` (ADR-035); `public` means no credential at all, and **⚠ no rule** means
 no matcher covers the path — the service has no security on it whatsoever.
 
+## automation-service
+
+| Method | Path | Access | Controller | Summary |
+|:---|:---|:---|:---|:---|
+| GET | `/api/v1/automations` | authenticated | AutomationController | The caller's automations. |
+| POST | `/api/v1/automations` | authenticated | AutomationController | Creates an automation. |
+| GET | `/api/v1/automations/{automationId}/runs` | authenticated | RunController | The runs of one automation. |
+| GET | `/api/v1/automations/{automationId}/triggers` | authenticated | TriggerController | The triggers of the automation (no secrets). |
+| POST | `/api/v1/automations/{automationId}/triggers` | authenticated | TriggerController | Adds a trigger. |
+| DELETE | `/api/v1/automations/{automationId}/triggers/{triggerId}` | authenticated | TriggerController | Removes a trigger; its runs stay in the history. |
+| PATCH | `/api/v1/automations/{automationId}/triggers/{triggerId}` | authenticated | TriggerController | Enables or disables a trigger. |
+| POST | `/api/v1/automations/{automationId}/triggers/{triggerId}/rotate` | authenticated | TriggerController | Issues a new secret. |
+| DELETE | `/api/v1/automations/{id}` | authenticated | AutomationController | Removes an automation with its triggers and history. |
+| GET | `/api/v1/automations/{id}` | authenticated | AutomationController | One automation. |
+| PATCH | `/api/v1/automations/{id}` | authenticated | AutomationController | Changes an automation; a missing field is left as it is. |
+| GET | `/api/v1/automations/runs` | authenticated | RunController | Every run of every automation of the caller. |
+| GET | `/api/v1/automations/runs/{runId}` | authenticated | RunController | One run, with the webhook body it was started with. |
+| POST | `/hooks/{triggerId}` | authenticated | WebhookIngressController | Receives a signed call and starts the automation it stands for. |
+
 ## conversation-service
 
 | Method | Path | Access | Controller | Summary |
@@ -44,12 +63,14 @@ no matcher covers the path — the service has no security on it whatsoever.
 | DELETE | `/api/v1/mcp/servers/user/{id}` | authenticated | McpController |  |
 | GET | `/api/v1/mcp/tools` | authenticated | McpController | Retrieves all registered tools and their schemas. |
 | POST | `/api/v1/mcp/tools/{name}/execute` | authenticated | McpController | Executes a tool by name with the provided arguments. |
+| DELETE | `/api/v1/media/assets/{assetId}` | authenticated | MediaAnalysisController | Deletes one of the caller's own uploads (the sealed file in <uploads>/<user>/temp). |
 | GET | `/api/v1/media/search` | authenticated | MediaAnalysisController | Performs a passive RAG context search against the semantic index. |
 | POST | `/api/v1/media/upload` | authenticated | MediaAnalysisController | Securely uploads a raw binary asset, isolated per authenticated user. |
 | GET | `/api/v1/models` | ADMIN + USER | ModelController | Retrieves the local catalog of Ollama models. |
 | POST | `/api/v1/models` | ADMIN | ModelController | Adds a new model definition to the catalog. |
 | DELETE | `/api/v1/models/{id}` | ADMIN | ModelController | Deletes a model definition by its database ID. |
 | PUT | `/api/v1/models/{id}` | ADMIN | ModelController | Updates an existing model definition in the catalog. |
+| GET | `/api/v1/models/admin/audit` | ADMIN | OperatorAuditController |  |
 | GET | `/api/v1/models/catalog` | authenticated | ModelController | Retrieves the complete AI model catalog definitions from the database. |
 | GET | `/api/v1/models/providers` | authenticated | ModelController | Retrieves all available AI provider names from the database. |
 | GET | `/api/v1/models/supported` | authenticated | ModelController | Retrieves the list of supported model names grouped by media type. |
@@ -63,6 +84,7 @@ no matcher covers the path — the service has no security on it whatsoever.
 | GET | `/api/v1/status/infrastructure` | authenticated | StatusController | Returns the current online/offline snapshot of the local inference engines. |
 | GET | `/api/v1/voice/clips/{clipId}` | public | VoiceController | One spoken sentence, by its signed URL — no bearer token, because an <audio> element cannot send one; the signature and its five-minute expiry are the authorisation. |
 | POST | `/api/v1/voice/turns` | ADMIN + USER | VoiceController | Takes a turn: audio (WAV, Ogg/Opus, WebM, MP3; ~30 s at most) or text, answered over SSE — transcript, delta, sentence (text and a signed audio URL valid 300 s), safety.crisis or scope.refused when a guard answers, then done with the turn's usage and timings. |
+| POST | `/internal/v1/protected-conversations/erase` | SERVICE | ProtectedConversationController | Erases a person's conversations under a pack. |
 
 ## edge
 
@@ -80,6 +102,9 @@ no matcher covers the path — the service has no security on it whatsoever.
 | GET | `/internal/v1/jobs/{jobId}/input/image` | SERVICE | JobOutputController | The starting image of a job, for a worker that does not share the platform's disk. |
 | GET | `/internal/v1/jobs/{jobId}/output/{filename}` | SERVICE | JobOutputController | Reads one of the actor's own outputs back (a step whose input is an earlier step's clip). |
 | PUT | `/internal/v1/jobs/{jobId}/output/{filename}` | SERVICE | JobOutputController | Stores one output file of a job, sealed, and answers the URL it is served under. |
+| POST | `/internal/v1/jobs/erase` | SERVICE | JobErasureController | Erases jobs of one person: rows, files and the durable copy. |
+| GET | `/internal/v1/models/options` | SERVICE | ModelOptionsController | The published models of one category, the ones that answer first, the default marked. |
+| GET | `/internal/v1/models/queue` | SERVICE | ModelOptionsController | The queue a job on a model is published with when it is not the capability's own (a hosted video model is run by the CPU worker's queue, a self-hosted one by the GPU worker's). |
 | POST | `/internal/v1/workers` | SERVICE | WorkerController | Registers a worker, or refreshes what is known about it. |
 | POST | `/internal/v1/workers/{workerName}/heartbeat` | SERVICE | WorkerController | Records a heartbeat from an already-registered worker. |
 
@@ -104,6 +129,7 @@ no matcher covers the path — the service has no security on it whatsoever.
 
 | Method | Path | Access | Controller | Summary |
 |:---|:---|:---|:---|:---|
+| GET | `/api/v1/billing/admin/audit` | ADMIN | OperatorAuditController |  |
 | GET | `/api/v1/billing/configuration` | ADMIN | ConfigurationController | The declared key vocabulary — type, permitted domain and code default per key. |
 | PATCH | `/api/v1/billing/configuration` | ADMIN | ConfigurationController | Applies one validated configuration change. |
 | GET | `/api/v1/billing/pack-subscriptions` | ADMIN | PackSubscriptionController | Every live holder of a pack — what an admin checks before withdrawing one. |
@@ -196,6 +222,7 @@ no matcher covers the path — the service has no security on it whatsoever.
 | POST | `/api/v1/studios/{studioKey}/policy-check` | authenticated | StudioRunController | Dry-run of the content policy: what would a run with these inputs do? Nothing is held, stored or sent to a provider. |
 | POST | `/api/v1/studios/{studioKey}/runs` | authenticated | StudioRunController | Starts a run of a Studio, addressed by its key rather than by an installation. |
 | GET | `/api/v1/studios/{studioKey}/versions` | authenticated | StudioController | A Studio's version history. |
+| GET | `/api/v1/studios/admin/audit` | ADMIN | OperatorAuditController |  |
 | GET | `/api/v1/studios/composer` | authenticated | StudioController | The Studios that belong in a chat composer, for this actor. |
 | GET | `/api/v1/studios/installations` | authenticated | StudioInstallationController | "My Studios". |
 | DELETE | `/api/v1/studios/installations/{installationId}` | authenticated | StudioInstallationController | Uninstalls, keeping the configuration for a future reinstall. |
@@ -205,12 +232,22 @@ no matcher covers the path — the service has no security on it whatsoever.
 | POST | `/api/v1/studios/installations/{installationId}/upgrade` | authenticated | StudioInstallationController | Moves the pin to the newest published version — never automatic. |
 | GET | `/api/v1/studios/packs` | authenticated | PackCatalogController | The marketplace, optionally narrowed to one shelf. |
 | GET | `/api/v1/studios/packs/{packKey}` | authenticated | PackCatalogController | One Pack's detail. |
+| GET | `/api/v1/studios/packs/{packKey}/consent` | authenticated | ProtectedDataController | What a person agrees to, in their language, with the verified crisis line of each region. |
+| DELETE | `/api/v1/studios/packs/{packKey}/my-data` | authenticated | ProtectedDataController | Erases everything the pack holds of the caller: entries, inputs and outputs, files, installations and the consent they recorded. |
 | POST | `/api/v1/studios/packs/bundles` | ADMIN | PackBundleController | Installs a bundle. |
 | DELETE | `/api/v1/studios/packs/bundles/{bundleKey}` | ADMIN | PackBundleController | Removes a bundle's catalogue rows and withdraws its pack from sale. |
 | POST | `/api/v1/studios/packs/bundles/validation` | ADMIN | PackBundleController | Checks a bundle against this platform without writing anything. |
 | GET | `/api/v1/studios/packs/categories` | authenticated | PackCatalogController | The shelves themselves, so the client renders headings it did not have to invent. |
 | GET | `/api/v1/studios/runs` | authenticated | StudioRunController | This actor's run history. |
+| DELETE | `/api/v1/studios/runs/{runId}` | authenticated | ProtectedDataController | Erases one entry of the caller's: a run of a protected pack, with its inputs, outputs and files. |
 | GET | `/api/v1/studios/runs/{runId}` | authenticated | StudioRunController | One run with its per-step states and outputs. |
 | POST | `/api/v1/studios/runs/{runId}/approve` | authenticated | StudioRunController | Resolves an approval step, resuming the run. |
 | POST | `/api/v1/studios/runs/{runId}/cancel` | authenticated | StudioRunController | Cancels a run and releases its hold. |
+| GET | `/api/v1/studios/runs/{runId}/events` | authenticated | StudioRunController | Follows a run as Server-Sent Events instead of polling it (orazaka#189, ADR-083). |
+| GET | `/api/v1/studios/runs/events` | authenticated | StudioRunController | Follows every run of the caller on one connection (the per-key stream of orazaka#189): event: run whenever a run in flight changes, event: done when one ends, each carrying the run as GET /runs/runId would. |
+| GET | `/api/v1/studios/webhooks` | authenticated | WebhookEndpointController | The caller's endpoints (no secrets). |
+| POST | `/api/v1/studios/webhooks` | authenticated | WebhookEndpointController | Creates an endpoint. |
+| DELETE | `/api/v1/studios/webhooks/{id}` | authenticated | WebhookEndpointController | Removes an endpoint and its log. |
+| GET | `/api/v1/studios/webhooks/{id}/deliveries` | authenticated | WebhookEndpointController | The delivery log of an endpoint, newest first. |
+| POST | `/api/v1/studios/webhooks/{id}/rotate` | authenticated | WebhookEndpointController | Issues a new secret. |
 | GET | `/internal/v1/installations/{installationId}/turn-declarations` | SERVICE | InstallationDeclarationController | What a turn taken under this installation must carry: the pack's guards, the reviewed crisis reply for the installation's region, and the pack's system prompt. |

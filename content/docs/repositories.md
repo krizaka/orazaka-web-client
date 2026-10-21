@@ -2,7 +2,7 @@
 
 > 🤖 **Generated from code** by `scripts/generate-docs.mjs` — do not hand-edit. Run `orazaka docs build` to refresh.
 
-Orazaka is published as **22 repositories** in the [`krizaka`](https://github.com/krizaka) organisation: one per component, plus the workspace [`orazaka`](https://github.com/krizaka/orazaka) that assembles them (governance contract, `orazaka.workspace.json`, local infrastructure, end-to-end tests, these docs).
+Orazaka is published as **21 repositories** in the [`krizaka`](https://github.com/krizaka) organisation: one per component, plus the workspace [`orazaka`](https://github.com/krizaka/orazaka) that assembles them (governance contract, `orazaka.workspace.json`, local infrastructure, end-to-end tests, these docs).
 
 ```bash
 git clone https://github.com/krizaka/orazaka.git && cd orazaka
@@ -28,7 +28,7 @@ node scripts/workspace.mjs clone   # every repository at its workspace path
 | [`orazaka-conversation-service`](https://github.com/krizaka/orazaka-conversation-service) | maven | Interactive ingress of the Orazaka engine: chat (SSE streaming), intents, models, pipeline, MCP and job APIs — translates transport into Intentions, never business logic. Modules: `orazaka-conversation-service`. Owns `20-conversation.sql`. | `orazaka-build`, `orazaka-contracts`, `krizaka-users`, `krizaka-billing`, `orazaka-ai-engine` |
 | [`orazaka-job-service`](https://github.com/krizaka/orazaka-job-service) | maven | Asynchronous job executor of the Orazaka engine: drains the interactive and batch lanes, owns the capability registry and the worker registry. Modules: `orazaka-job-service`. Owns `30-jobs-config.sql`. | `orazaka-build`, `orazaka-contracts`, `krizaka-users`, `krizaka-billing`, `orazaka-ai-engine` |
 | [`orazaka-knowledge-service`](https://github.com/krizaka/orazaka-knowledge-service) | maven | Knowledge & RAG retrieval service (pgvector) with asynchronous indexing. Modules: `orazaka-knowledge-service`. Owns `40-knowledge.sql`. | `orazaka-build` |
-| [`orazaka-automation-service`](https://github.com/krizaka/orazaka-automation-service) | maven | Connector automation (Jira, Slack, WhatsApp, Messenger, CLI agents) with Quartz scheduling and execution telemetry. Modules: `orazaka-automation-service`. Owns `50-automation.sql`. | `orazaka-build`, `krizaka-billing` |
+| [`orazaka-automation-service`](https://github.com/krizaka/orazaka-automation-service) | maven | Connector automation (Jira, Slack, WhatsApp, Messenger, CLI agents) with Quartz scheduling and execution telemetry. Modules: `orazaka-automation-service`. Owns `50-automation.sql`. | `orazaka-build`, `krizaka-billing`, `orazaka-ai-engine` |
 
 ## Native workers
 
@@ -41,7 +41,6 @@ node scripts/workspace.mjs clone   # every repository at its workspace path
 | Repository | Kind | What it holds | Depends on |
 |:---|:---|:---|:---|
 | [`orazaka-web-client`](https://github.com/krizaka/orazaka-web-client) | npm | Next.js (App Router) client of the Orazaka platform with its mandatory BFF. Modules: `orazaka-web-client`. | `orazaka-ui-kit` |
-| [`orazaka-web-admin`](https://github.com/krizaka/orazaka-web-admin) | npm | Next.js SecOps & administration console of the Orazaka platform. Modules: `orazaka-web-admin`. | `orazaka-ui-kit` |
 | [`orazaka-mobile-client`](https://github.com/krizaka/orazaka-mobile-client) | npm | Expo / React Native client of the Orazaka platform (talks to the edge with Bearer tokens). Modules: `orazaka-mobile-client`. | `orazaka-ui-kit` |
 | [`orazaka-cli`](https://github.com/krizaka/orazaka-cli) | npm | The `orazaka` developer CLI: install, start, dev, test, docs and pack tooling for the Orazaka workspace, with an offline SQLite queue. Modules: `orazaka-cli`. | — |
 
