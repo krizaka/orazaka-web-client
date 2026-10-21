@@ -17,7 +17,7 @@ const USER = process.env.E2E_ADMIN_USER;
 const SECRET = process.env.E2E_ADMIN_SECRET;
 const THEMES = ["dark", "light"];
 const VIEWPORTS = { desktop: { width: 1440, height: 900 }, phone: { width: 390, height: 844 } };
-const SCREENS = ["/", "/operations", "/users", "/billing", "/models", "/studios", "/audit"];
+const SCREENS = ["/", "/operations", "/tasks", "/users", "/billing", "/models", "/studios", "/audit"];
 const PLACES = ["Supervision", "Operations", "Accounts", "Catalogue", "Audit log"];
 const IGNORED_CONSOLE = [/Download the React DevTools/i, /favicon/i, /Failed to load resource.*(401|403|404)/i];
 const say = (line) => process.stdout.write(`${line}\n`);
