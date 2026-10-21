@@ -40,3 +40,10 @@ jobs:
       - run: npm install --legacy-peer-deps --no-audit --no-fund
       - run: npx playwright install --with-deps chromium webkit firefox
       - run: npx playwright test e2e/live-smoke.spec.ts --reporter=github
+      # The SEO family contract (Dev preview seo.family), on the deployed site, with its declared policy: indexed.
+      - run: node scripts/check-seo-family.mjs --base https://dev.orazaka.com --host https://dev.orazaka.com
+      # The UI crawl (Dev preview ui.themes-devices): dark/light, phone/desktop on the deployed site, the demo persona signed in.
+      - run: npm run test:ui-crawl
+        env:
+          E2E_USER: ${{ secrets.E2E_USER }}
+          E2E_PASSWORD: ${{ secrets.E2E_PASSWORD }}
