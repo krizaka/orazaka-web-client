@@ -1,19 +1,7 @@
-import { KrizakaLogo } from "@krizaka/ui";
+import { SiteFooter as FamilyFooter } from "@krizaka/ui/site-footer";
 import { APP_VERSION } from "@/console/core/config/version";
 
-/** The signature of every deployed Krizaka site: « A Krizaka product » → krizaka.com, and the version of the build. */
+/** The operator console's footer: @krizaka/ui's SiteFooter in its compact app mode (one line: « A Krizaka product » → www.krizaka.com, the version). */
 export function SiteFooter() {
-  return (
-    <footer className="border-t border-border-subtle bg-surface-0">
-      <p className="mx-auto flex max-w-6xl flex-wrap items-center gap-x-6 gap-y-2 px-4 py-5 text-sm text-fg-secondary">
-        <a href="https://www.krizaka.com" className="inline-flex items-center gap-2 hover:text-fg">
-          <KrizakaLogo size={20} animated={false} />
-          A Krizaka product
-        </a>
-        <span className="ml-auto font-mono text-xs" data-testid="app-version">
-          Version {APP_VERSION}
-        </span>
-      </p>
-    </footer>
-  );
+  return <FamilyFooter current="orazaka" family={false} variant="app" version={APP_VERSION} data-testid="app-version" />;
 }
