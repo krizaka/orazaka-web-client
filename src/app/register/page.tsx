@@ -44,7 +44,7 @@ function RegisterPageContent() {
       <RegisterForm onSuccess={setSuccess} onError={setError} />
       {(flags.github || flags.google) && (
         <nav className="flex flex-col gap-3" aria-label={t.a11y.socialRegister}>
-          <p className="text-center text-xs uppercase tracking-wide text-fg-secondary">{t.auth.orContinueWith}</p>
+          <p className="text-center text-xs text-fg-secondary">{t.auth.orContinueWith}</p>
           <div className="grid gap-3 sm:grid-cols-2">
             {flags.github && (
               <Button id="btn-github" type="button" variant="secondary" size="lg" onClick={loginWithGithub}>

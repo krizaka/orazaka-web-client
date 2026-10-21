@@ -44,7 +44,7 @@ export function RunsInProgress() {
   const dateLocale = locale === "fr" ? fr : enUS;
   return (
     <section aria-label={w.title} className="flex flex-col gap-2 rounded-xl border border-border-default bg-surface-1 p-4">
-      <h2 className="text-xs font-semibold uppercase tracking-wider text-fg-muted">{w.title}</h2>
+      <h2 className="text-xs font-semibold text-fg-muted">{w.title}</h2>
       <ul className="flex flex-col gap-2">
         {runs.map((run) => (
           <li key={run.id} className="flex flex-wrap items-center gap-3">

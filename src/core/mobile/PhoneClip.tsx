@@ -35,7 +35,7 @@ export function PhoneClip({ id, label, alt, caption }: Readonly<{ id: ClipId; la
       </div>
       {caption && (
         <figcaption className="space-y-1 text-center">
-          <span className="block font-mono text-xs font-semibold uppercase tracking-[0.14em] text-fg-accent">{label}</span>
+          <span className="block font-mono text-xs font-semibold text-fg-accent">{label}</span>
           <span className="block text-sm leading-relaxed text-fg-secondary">{caption}</span>
         </figcaption>
       )}

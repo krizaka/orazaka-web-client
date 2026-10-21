@@ -58,7 +58,7 @@ export function CreditsScreen() {
       <section className="flex flex-col gap-4" aria-labelledby="usage-title">
         <header className="flex flex-col gap-3 px-1 sm:flex-row sm:items-end sm:justify-between">
           <span className="flex flex-col gap-1">
-            <h2 id="usage-title" className="text-xs font-semibold uppercase tracking-wider text-fg-muted">{w.activityTitle}</h2>
+            <h2 id="usage-title" className="text-xs font-semibold text-fg-muted">{w.activityTitle}</h2>
             <p className="text-[13px] text-fg-secondary">{w.activityDesc}</p>
           </span>
           <PeriodTabs value={days} onChange={setDays} />

@@ -43,7 +43,7 @@ function Figure({ title, children }: Readonly<{ title: string; children: ReactNo
   const id = useId();
   return (
     <figure aria-labelledby={id} className="my-6 rounded-2xl border border-border-default bg-surface-1/70 p-4 sm:p-5">
-      <figcaption id={id} className="mb-3 font-mono text-xs font-semibold uppercase tracking-[0.14em] text-fg-accent">
+      <figcaption id={id} className="mb-3 font-mono text-xs font-semibold text-fg-accent">
         {title}
       </figcaption>
       {children}
@@ -57,7 +57,7 @@ function Sequence({ block, l }: Readonly<{ block: Extract<DiagramData, { kind: "
   const label = (key: string) => block.participants.find((p) => p.key === key)?.label ?? key;
   return (
     <Figure title={l.sequence}>
-      <p className="m-0 font-mono text-xs uppercase tracking-[0.12em] text-fg-muted">{l.participants}</p>
+      <p className="m-0 font-mono text-xs text-fg-muted">{l.participants}</p>
       <ul className="mb-4 mt-2 flex list-none flex-wrap gap-2 p-0">
         {block.participants.map((p) => (
           <li key={p.key} className={chip}>
@@ -79,7 +79,7 @@ function Sequence({ block, l }: Readonly<{ block: Extract<DiagramData, { kind: "
               </span>
               <span>
                 {it.branch && (
-                  <span className="mr-2 rounded bg-surface-2 px-1.5 py-0.5 font-mono text-[0.7rem] uppercase text-fg-muted">
+                  <span className="mr-2 rounded bg-surface-2 px-1.5 py-0.5 font-mono text-[0.7rem] text-fg-muted">
                     {it.branch.kind} {it.branch.condition}
                   </span>
                 )}

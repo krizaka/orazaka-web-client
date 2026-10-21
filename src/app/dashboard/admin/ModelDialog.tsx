@@ -45,12 +45,12 @@ export function ModelDialog({
 
   const catMeta = CATEGORY_META[formModel.category] || CATEGORY_META.code;
   const labelClass =
-    "text-xs font-semibold text-fg-muted uppercase tracking-wider flex items-center gap-1.5";
+    "text-xs font-semibold text-fg-muted flex items-center gap-1.5";
   const inputClass =
     "bg-surface-2 border-border-default text-fg text-sm rounded-xl focus:ring-2 focus:ring-ring transition-all duration-200";
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-overlay backdrop-blur-sm animate-in fade-in duration-200">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-overlay animate-in fade-in duration-200">
       <button
         type="button"
         className="fixed inset-0 bg-transparent border-none cursor-default"

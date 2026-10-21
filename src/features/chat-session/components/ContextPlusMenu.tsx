@@ -80,7 +80,7 @@ export const ContextPlusMenu: React.FC<Props> = ({
     if (group.length === 0) return null;
     return (
       <div className="flex flex-col gap-0.5">
-        <div className="px-2.5 pb-1 pt-1.5 text-[10px] font-semibold uppercase tracking-wider text-fg-muted">
+        <div className="px-2.5 pb-1 pt-1.5 text-[10px] font-semibold text-fg-muted">
           {label}
         </div>
         {group.map((studio) => {
@@ -104,7 +104,7 @@ export const ContextPlusMenu: React.FC<Props> = ({
               </span>
               <span className="flex-1">{studio.label}</span>
               {unavailable && (
-                <span className="text-[10px] font-semibold uppercase tracking-wide text-fg-muted">
+                <span className="text-[10px] font-semibold text-fg-muted">
                   {t.operationGraph.stateLocked}
                 </span>
               )}
@@ -119,7 +119,7 @@ export const ContextPlusMenu: React.FC<Props> = ({
     <div
       ref={menuRef}
       role="menu"
-      className="absolute bottom-16 left-4 z-40 flex w-72 flex-col gap-1 rounded-2xl border border-border-default bg-surface-1/94 p-2 shadow-xl backdrop-blur-xl animate-in slide-in-from-bottom-2 fade-in duration-200"
+      className="absolute bottom-16 left-4 z-40 flex w-72 flex-col gap-1 rounded-2xl border border-border-default bg-surface-1/94 p-2 shadow-xl animate-in slide-in-from-bottom-2 fade-in duration-200"
     >
       {studios.length === 0 ? (
         <div className="px-3 py-3 text-xs italic text-fg-muted">

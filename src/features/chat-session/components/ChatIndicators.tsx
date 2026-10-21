@@ -15,7 +15,7 @@ interface ChatIndicatorProps {
 }
 
 const CHIP_BASE =
-  "inline-flex items-center gap-1.5 pl-2.5 pr-1.5 py-1 rounded-full text-xs font-semibold border";
+  "inline-flex items-center gap-1.5 pl-2.5 pr-1.5 py-1 rounded-sm text-xs font-semibold border";
 
 /** Spring entrance/exit for a chip; collapses to a fade under reduced-motion. */
 function useChipMotion() {

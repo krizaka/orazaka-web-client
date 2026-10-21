@@ -32,7 +32,7 @@ export function FeaturePage({ id }: Readonly<{ id: FeatureId }>) {
         <SectionBackdrop grid className="border-b border-border-subtle">
           <article className="mx-auto grid max-w-6xl items-center gap-10 px-4 pb-16 pt-14 sm:px-5 lg:grid-cols-[1fr_1.1fr] lg:gap-14 lg:pb-24 lg:pt-20">
             <header className="space-y-6">
-              <p className="font-mono text-xs font-semibold uppercase tracking-[0.18em] text-fg-accent">
+              <p className="font-mono text-xs font-semibold text-fg-accent">
                 {f.eyebrow} · {page.kicker}
               </p>
               <h1 className="font-display text-[2.5rem] font-extrabold leading-[1.04] tracking-tight text-balance text-fg sm:text-6xl">

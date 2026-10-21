@@ -91,7 +91,7 @@ export function InterceptorPipeline() {
                 {node.status === "active" && (
                   <span
                     className={cn(
-                      "absolute inset-0 rounded-full animate-[pulse-ring_2s_ease-in-out_infinite] border border-solid",
+                      "absolute inset-0 rounded-sm animate-[pulse-ring_2s_ease-in-out_infinite] border border-solid",
                       STATUS_BORDER_CLASSES[node.status],
                       "opacity-30"
                     )}
@@ -106,7 +106,7 @@ export function InterceptorPipeline() {
               </div>
 
               {/* Label */}
-              <span className="text-[9px] font-semibold uppercase tracking-wider text-fg-muted group-hover:text-fg-secondary transition-colors whitespace-nowrap">
+              <span className="text-[9px] font-semibold text-fg-muted group-hover:text-fg-secondary transition-colors whitespace-nowrap">
                 {node.label}
               </span>
             </div>

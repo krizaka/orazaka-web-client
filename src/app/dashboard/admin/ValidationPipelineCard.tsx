@@ -90,7 +90,7 @@ export function ValidationPipelineCard({
     return (
       <section
         id="validation-pipeline-card"
-        className="bg-surface-1/70 border border-border-subtle rounded-2xl p-6 shadow-sm backdrop-blur-lg"
+        className="bg-surface-1/70 border border-border-subtle rounded-2xl p-6 shadow-sm "
       >
         <article className="animate-pulse space-y-3">
           <span className="h-5 w-64 bg-surface-2 rounded block" />
@@ -109,7 +109,7 @@ export function ValidationPipelineCard({
   return (
     <section
       id="validation-pipeline-card"
-      className="bg-surface-1/70 border border-border-subtle rounded-2xl p-6 shadow-sm backdrop-blur-lg relative"
+      className="bg-surface-1/70 border border-border-subtle rounded-2xl p-6 shadow-sm relative"
     >
       {/* Toast */}
       {toast && (
@@ -198,7 +198,7 @@ export function ValidationPipelineCard({
 
               {/* Disabled badge */}
               {!tier.enabled && (
-                <span className="flex-shrink-0 text-[10px] font-semibold uppercase tracking-wider text-fg-muted bg-surface-2 px-2 py-0.5 rounded-full">
+                <span className="flex-shrink-0 text-[10px] font-semibold text-fg-muted bg-surface-2 px-2 py-0.5 rounded-sm">
                   Disabled
                 </span>
               )}

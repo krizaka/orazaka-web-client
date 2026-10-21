@@ -42,7 +42,7 @@ export function ChatDrawer({
         placement="right"
         closeLabel={t.a11y.closeHistory}
         aria-describedby={undefined}
-        className="left-0 right-auto w-72 max-w-[80vw] border-l-0 border-r bg-surface-1/95 backdrop-blur-md md:hidden"
+        className="left-0 right-auto w-72 max-w-[80vw] border-l-0 border-r bg-surface-1/95 md:hidden"
       >
         <Dialog.Header className="border-b border-border-subtle/60 pb-4">
           <Dialog.Title className="text-sm font-semibold">{t.chat.memoryBlocks}</Dialog.Title>

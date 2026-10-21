@@ -62,7 +62,7 @@ export function PlanApprovalCard({
         </div>
 
         {/* Status pill */}
-        <span className="ml-auto inline-flex items-center gap-1.5 px-3 py-1 text-[10px] font-semibold uppercase tracking-wider bg-warning/10 text-warning border border-warning/20"
+        <span className="ml-auto inline-flex items-center gap-1.5 px-3 py-1 text-[10px] font-semibold bg-warning/10 text-warning border border-warning/20"
               style={{ borderRadius: "var(--kz-radius-full)" }}>
           <span className="w-1.5 h-1.5 rounded-full bg-warning animate-pulse" />
           Awaiting

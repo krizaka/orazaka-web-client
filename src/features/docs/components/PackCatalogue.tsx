@@ -5,8 +5,8 @@ import { useTranslation } from "@/core/context/LocaleContext";
 import { StudioCard } from "@/features/docs/components/StudioCard";
 import { filterPacks, packAnchor, type PackData, type PackIndexItem } from "@/features/docs/utils/packs";
 
-const chip = "rounded-full border border-border-subtle bg-surface-2 px-2.5 py-0.5 font-mono text-xs text-fg";
-const label = "font-mono text-[0.7rem] font-semibold uppercase tracking-[0.14em] text-fg-muted";
+const chip = "rounded-sm border border-border-subtle bg-surface-2 px-2.5 py-0.5 font-mono text-xs text-fg";
+const label = "font-mono text-[0.7rem] font-semibold text-fg-muted";
 
 function Chips({ name, values, current, onPick, all }: Readonly<{ name: string; values: string[]; current: string | null; onPick: (v: string | null) => void; all: string }>) {
   return (
@@ -18,7 +18,7 @@ function Chips({ name, values, current, onPick, all }: Readonly<{ name: string; 
           type="button"
           aria-pressed={current === v}
           onClick={() => onPick(v)}
-          className="rounded-full border border-border-subtle px-2.5 py-0.5 text-xs text-fg-secondary transition-colors aria-pressed:border-accent aria-pressed:bg-accent/10 aria-pressed:text-fg"
+          className="rounded-sm border border-border-subtle px-2.5 py-0.5 text-xs text-fg-secondary transition-colors aria-pressed:border-accent aria-pressed:bg-accent/10 aria-pressed:text-fg"
         >
           {v ?? all}
         </button>

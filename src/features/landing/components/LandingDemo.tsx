@@ -24,7 +24,7 @@ export function LandingDemo() {
         <SectionHeading eyebrow={d.eyebrow} title={d.title} lead={d.lead} />
         <ul className="grid gap-6 md:grid-cols-2">
           {clips.map((c) => (
-            <li key={c.id} id={`demo-${c.id}`} data-reveal className="scroll-mt-20 flex flex-col gap-4 rounded-2xl border border-border-default bg-surface-1/85 p-4 backdrop-blur-md">
+            <li key={c.id} id={`demo-${c.id}`} data-reveal className="scroll-mt-20 flex flex-col gap-4 rounded-2xl border border-border-default bg-surface-1/85 p-4 ">
               <DemoClip clip={c} />
             </li>
           ))}
@@ -78,14 +78,14 @@ function DemoClip({ clip }: Readonly<{ clip: Clip }>) {
         />
       </div>
       <figcaption className="space-y-3">
-        <span className="block font-mono text-xs font-semibold uppercase tracking-[0.14em] text-fg-accent">{clip.label}</span>
+        <span className="block font-mono text-xs font-semibold text-fg-accent">{clip.label}</span>
         <span className="block text-sm leading-relaxed text-fg-secondary">{clip.caption}</span>
         <span className="block text-[13px] leading-relaxed text-fg-secondary">
           <b className="font-semibold text-fg">{d.origin} · </b>
           {clip.origin}
         </span>
         <span className="block space-y-1.5">
-          <span className="block font-mono text-[11px] font-semibold uppercase tracking-[0.14em] text-fg-muted">{d.notice}</span>
+          <span className="block font-mono text-[11px] font-semibold text-fg-muted">{d.notice}</span>
           <ol className="space-y-1">
             {clip.notes.map((note, i) => (
               <li key={note.at} data-active={i === current ? "" : undefined} className="flex gap-2 text-[13px] leading-snug text-fg-muted transition-colors data-active:text-fg">

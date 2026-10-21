@@ -3,7 +3,7 @@
  * Puts the faces of @krizaka/fonts where `next/font/local` can read them: src/app/_fonts/ (git-ignored, never committed).
  * `next/font/local` takes a literal path relative to the file, and this app is built in two layouts — standalone (App Platform:
  * node_modules beside src/) and inside the Orazaka npm workspace (CI: node_modules hoisted two levels up) — so no literal
- * `../…/node_modules/…` is right in both. The package is resolved the Node way and its three files are copied. Runs as
+ * `../…/node_modules/…` is right in both. The package is resolved the Node way and its faces are copied. Runs as
  * `postinstall` and before every build.
  */
 import { copyFileSync, existsSync, mkdirSync } from "node:fs";
@@ -11,7 +11,8 @@ import { createRequire } from "node:module";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
-export const FACES = ["inter-latin-wght.woff2", "jetbrains-mono-latin-wght.woff2", "plus-jakarta-sans-latin-wght.woff2"];
+/** The Cahier faces (krizaka-ui ADR-004): Atkinson Hyperlegible Next (text), Courier Prime (mono, two weights), Young Serif (display). */
+export const FACES = ["atkinson-hyperlegible-next-latin-wght.woff2", "courier-prime-latin-400.woff2", "courier-prime-latin-700.woff2", "young-serif-latin-400.woff2"];
 
 /** Copies the faces of the package at `packageDir` into `target`; returns the files written. Throws when one is missing. */
 export function linkFonts(packageDir, target) {

@@ -78,7 +78,7 @@ export function RecentSessions({
                     <p className="fluid-sm font-semibold text-fg truncate max-w-[200px] sm:max-w-[320px]">
                       {thread.title}
                     </p>
-                    <span className="fluid-xs text-fg-muted font-mono tracking-wider flex items-center mt-0.5">
+                    <span className="fluid-xs text-fg-muted font-mono flex items-center mt-0.5">
                       <Icon name="history" size={12} className="mr-1" />
                       {formatDate(thread.updatedAt)}
                     </span>
@@ -86,7 +86,7 @@ export function RecentSessions({
                 </div>
 
                 <div className="flex items-center fluid-xs text-fg-muted font-medium group-hover:text-accent transition-colors duration-200">
-                  <span className="mr-1.5 hidden sm:inline-block font-semibold tracking-wide uppercase">
+                  <span className="mr-1.5 hidden sm:inline-block font-semibold ">
                     {t.dashboard.resumeSession}
                   </span>
                   <Icon name="arrowRight" size={14} className="transform transition-transform duration-200" />

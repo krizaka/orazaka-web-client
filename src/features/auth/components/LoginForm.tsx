@@ -76,7 +76,7 @@ export function LoginCard({ preview = false, notice, error = "", isLoading = fal
 
       {(providers.github || providers.google) && (
         <nav className="flex flex-col gap-3" aria-label={t.a11y.socialLogin}>
-          <p className="text-center text-xs uppercase tracking-wide text-fg-secondary">{t.auth.orContinueWith}</p>
+          <p className="text-center text-xs text-fg-secondary">{t.auth.orContinueWith}</p>
           <div className="grid gap-3 sm:grid-cols-2">
             {providers.github && (
               <Button id="btn-github" type="button" variant="secondary" size="lg" onClick={onGithub}>

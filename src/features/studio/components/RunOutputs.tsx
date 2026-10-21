@@ -31,7 +31,7 @@ export function RunOutputs({ outputs }: Readonly<RunOutputsProps>) {
 
   return (
     <section className="flex flex-col gap-2">
-      <h2 className="text-xs font-semibold uppercase tracking-wider text-fg-muted">{t.studio.runOutputs}</h2>
+      <h2 className="text-xs font-semibold text-fg-muted">{t.studio.runOutputs}</h2>
       <div className="grid gap-3 md:grid-cols-2">
         {outputs.map((artefact, index) => (
           <RunOutputRow key={artefact.key} artefact={artefact} index={index} wide={outputs.length === 1} />
@@ -73,7 +73,7 @@ function RunOutputRow({ artefact, index, wide }: Readonly<RunOutputRowProps>) {
       <ArtefactMedia artefact={artefact} gone={gone} onGone={() => setGone(true)} />
       <Card.Body className="gap-2">
         <header className="flex items-center gap-3">
-          <span className="text-xs font-semibold uppercase tracking-wider text-fg-muted">{artefactLabel(artefact, locale)}</span>
+          <span className="text-xs font-semibold text-fg-muted">{artefactLabel(artefact, locale)}</span>
           <span className="ml-auto flex items-center gap-1.5">
             {media && !gone && (
               <Button asChild variant="secondary" size="sm">

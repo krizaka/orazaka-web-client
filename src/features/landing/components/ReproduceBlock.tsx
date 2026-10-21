@@ -16,7 +16,7 @@ export function ReproduceBlock({ item, heading = true, parts, lead }: Readonly<{
   const shown = parts ?? (item ? reproduceParts(item) : []);
   return (
     <section aria-label={g.reproduce} className="space-y-2 rounded-xl border border-border-default bg-surface-1/70 p-3">
-      {heading && <h4 className="font-mono text-xs font-semibold uppercase tracking-[0.14em] text-fg-accent">{g.reproduce}</h4>}
+      {heading && <h4 className="font-mono text-xs font-semibold text-fg-accent">{g.reproduce}</h4>}
       <p className="text-xs leading-relaxed text-fg-secondary">{lead ?? g.reproduceLead}</p>
       <div className="space-y-2">
         {shown.map((part) => (

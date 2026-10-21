@@ -128,7 +128,7 @@ export function PipelineConfigCard({ fetchWithAuth }: Readonly<PipelineConfigCar
 
   if (loading) {
     return (
-      <section className="bg-surface-1/70 border border-border-subtle rounded-2xl p-6 shadow-sm backdrop-blur-lg">
+      <section className="bg-surface-1/70 border border-border-subtle rounded-2xl p-6 shadow-sm ">
         <article className="animate-pulse space-y-3">
           <span className="h-5 w-56 bg-surface-2 rounded block" />
           <span className="h-3 w-80 bg-surface-2 rounded block" />
@@ -144,7 +144,7 @@ export function PipelineConfigCard({ fetchWithAuth }: Readonly<PipelineConfigCar
   }
 
   return (
-    <section className="bg-surface-1/70 border border-border-subtle rounded-2xl p-6 shadow-sm backdrop-blur-lg relative">
+    <section className="bg-surface-1/70 border border-border-subtle rounded-2xl p-6 shadow-sm relative">
       {/* Toast */}
       {toast && (
         <aside

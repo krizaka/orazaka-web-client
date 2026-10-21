@@ -27,14 +27,14 @@ export function JobDetail({ job, copiedId, onCopy }: Readonly<{ job: Job; copied
     <div className="flex flex-col gap-4 p-1 text-left">
       {prompt && (
         <section aria-label={d.sections.prompt} className="flex flex-col gap-1">
-          <h4 className="text-xs font-semibold uppercase tracking-wide text-fg-muted">{d.sections.prompt}</h4>
+          <h4 className="text-xs font-semibold text-fg-muted">{d.sections.prompt}</h4>
           <p className="m-0 text-sm text-fg">{prompt}</p>
         </section>
       )}
       {job.status === JOB_STATUS.FAILED && job.errorMessage && (
         <section aria-label={d.sections.error} className="flex flex-col gap-2 rounded-lg border border-danger/30 bg-danger/10 p-3">
           <div className="flex items-center justify-between gap-2">
-            <h4 className="text-xs font-semibold uppercase tracking-wide text-danger">{d.sections.error}</h4>
+            <h4 className="text-xs font-semibold text-danger">{d.sections.error}</h4>
             <Button variant="ghost" size="sm" onClick={() => onCopy(job.errorMessage ?? "", errorId)}>
               {copiedId === errorId ? <CheckIcon size={14} /> : <CopyIcon size={14} />}
               {copiedId === errorId ? d.actions.copied : d.actions.copyError}
@@ -46,7 +46,7 @@ export function JobDetail({ job, copiedId, onCopy }: Readonly<{ job: Job; copied
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {sections.map(({ section, items }) => (
           <section key={section} aria-label={d.sections[section]} className="flex min-w-0 flex-col gap-1">
-            <h4 className="text-xs font-semibold uppercase tracking-wide text-fg-muted">{d.sections[section]}</h4>
+            <h4 className="text-xs font-semibold text-fg-muted">{d.sections[section]}</h4>
             <DescriptionList
               layout="inline"
               items={items.map((f) => ({ id: f.id, term: f.label ?? d.facts[f.id as keyof typeof d.facts], details: f.value }))}

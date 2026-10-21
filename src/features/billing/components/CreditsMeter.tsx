@@ -41,7 +41,7 @@ export function CreditsMeter({ wallet, available, plan, loading, href }: Readonl
     <section className="flex flex-col gap-5 p-6">
       <header className="flex items-start justify-between gap-4">
         <span className="flex flex-col gap-1">
-          <span className="text-xs font-semibold uppercase tracking-wider text-fg-muted">{w.available}</span>
+          <span className="text-xs font-semibold text-fg-muted">{w.available}</span>
           {loading ? (
             <Skeleton className="h-10 w-40" />
           ) : noCredits ? (
@@ -55,7 +55,7 @@ export function CreditsMeter({ wallet, available, plan, loading, href }: Readonl
             <NumberTicker value={available} locale={numberLocale} trigger="change" announce align="start" className="font-display text-4xl font-bold tracking-tight text-fg" />
           )}
         </span>
-        {plan && <span className="rounded-full border border-border-default px-3 py-1 text-xs font-medium text-fg-secondary">{fill(w.plan, { plan: plan.label })}</span>}
+        {plan && <span className="rounded-sm border border-border-default px-3 py-1 text-xs font-medium text-fg-secondary">{fill(w.plan, { plan: plan.label })}</span>}
       </header>
       {wallet && (
         <Meter
