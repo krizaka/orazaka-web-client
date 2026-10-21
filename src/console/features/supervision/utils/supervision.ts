@@ -4,7 +4,7 @@
  * functions (dates through date-fns), tested on their own.
  */
 
-import { differenceInMilliseconds, formatISO, parseISO, startOfDay, subDays } from "date-fns";
+import { differenceInMilliseconds, parseISO, subDays } from "date-fns";
 import type { ActorConsumption, CapabilityUsage, JobRecord } from "@krizaka/orazaka-shared";
 
 /** Totals over every capability: requests served, credits charged, refusal share of the attempts. */
@@ -35,7 +35,8 @@ export function consumers(rows: readonly ActorConsumption[]) {
   return rows.map((row) => ({ actor: `${row.actorId.split("-")[0]}…`, credits: row.creditsCharged, events: row.events }));
 }
 
-const dayKey = (date: Date) => formatISO(startOfDay(date), { representation: "date" });
+/** A UTC day: the server renders the first paint, the browser hydrates it, and the two must name the same days. */
+const dayKey = (date: Date) => date.toISOString().slice(0, 10);
 
 /** The jobs of each of the last `days` days by outcome, oldest first, empty days included. */
 export function jobsPerDay(jobs: readonly JobRecord[], days: number, now: Date = new Date()) {

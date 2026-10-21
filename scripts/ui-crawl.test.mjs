@@ -43,3 +43,13 @@ test("the post-deploy workflow also runs the SEO family contract against the dep
   assert.match(wf, /node scripts\/check-seo-family\.mjs --base https:\/\/dev\.orazaka\.com --host https:\/\/dev\.orazaka\.com(\s|$)/);
   assert.ok(!/--index off/.test(wf), "dev.orazaka.com is indexed (AGENTS.md)");
 });
+
+test("the console crawl covers every console screen in both themes and both viewports, and checks the DEV badge (admin.shell)", () => {
+  const c = read("e2e/console-crawl.mjs");
+  assert.match(c, /THEMES = \["dark", "light"\]/);
+  assert.match(c, /desktop:/);
+  assert.match(c, /phone:/);
+  for (const screen of ["/operations", "/users", "/billing", "/models", "/studios", "/audit"]) assert.ok(c.includes(`"${screen}"`), screen);
+  assert.ok(c.includes("no DEV badge"));
+  assert.equal(JSON.parse(read("package.json")).scripts["test:console-crawl"], "node e2e/console-crawl.mjs");
+});

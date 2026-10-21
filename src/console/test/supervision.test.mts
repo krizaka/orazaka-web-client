@@ -45,3 +45,12 @@ test("latency: the median of the completed jobs, per capability, slowest first",
     ],
   );
 });
+
+test("jobs per day: the days are UTC days, so the server and the browser draw the same labels in any time zone (React #418 on /)", () => {
+  // 02:30 UTC on the 11th is still the 10th in Montréal: a local day key made the server (UTC) and the browser disagree.
+  const now = new Date("2026-10-11T02:30:00Z");
+  const rows = jobsPerDay([], 3, now);
+  assert.deepEqual(rows.map((r) => r.day), ["2026-10-09", "2026-10-10", "2026-10-11"]);
+  const late = jobsPerDay([job({ createdAt: "2026-10-11T02:10:00Z" })], 1, now);
+  assert.equal(late[0].completed, 1);
+});
