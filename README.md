@@ -133,7 +133,7 @@ rewrites that host to the internal `/console` tree (`src/app/console/`, code in 
 | `AUTH_CONSOLE_SECRET` | none | Signing key of the console's session (never the public site's `NEXTAUTH_SECRET`); unset in production, no console session can be opened. |
 | `AUTH_TRUST_HOST` | unset | `true` on the deployment: next-auth builds callback URLs from the requested Host (one `NEXTAUTH_URL` cannot name two hosts). |
 
-`ROUTER_URL` (the edge) is shared. These replace the standalone `krizaka/orazaka-web-admin` app; `npm run test:console` runs the console's logic tests, `src/__tests__/host-routing.test.ts` the host routing.
+`ROUTER_URL` (the edge) is shared. They replace the standalone `orazaka-web-admin` app (now part of this repository); `npm run test:console` runs the console's logic tests, `src/__tests__/host-routing.test.ts` the host routing.
 
 ---
 

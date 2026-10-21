@@ -44,7 +44,7 @@ with a message and, where safe, a `fix:`; written for Tsx and `.ts` is parsed as
 
 ## One app, two hosts (dev.orazaka.com · admin.orazaka.com)
 
-The operator console of the former `orazaka-web-admin` lives here, served by **host routing** (krizaka/orazaka-web-admin#31):
+The operator console (formerly the standalone `orazaka-web-admin` repository) lives here, served by **host routing**:
 `src/proxy.ts` → `src/console/core/config/host.ts` (`routeFor`, pure) rewrites `Host: admin.*` under `/console`
 (`src/app/console/**`, logic in `src/console/**`) and answers 404 for `/console/**` on every other host; the network gate
 (`AUTH_ALLOWED_IPS`, 403) runs before any console route, sign-in included (`src/console/core/edge.ts`). The console never
