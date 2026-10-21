@@ -53,3 +53,9 @@ test("the console crawl covers every console screen in both themes and both view
   assert.ok(c.includes("no DEV badge"));
   assert.equal(JSON.parse(read("package.json")).scripts["test:console-crawl"], "node e2e/console-crawl.mjs");
 });
+
+test("the same workflow proves the console gate from outside: 403 on the admin host, 404 on the public one (admin.gated)", () => {
+  const wf = read(".github/workflows/dev-preview-live.yml");
+  assert.match(wf, /admin\.orazaka\.com\/login[^\n]*\n?[^\n]*= 403/);
+  assert.match(wf, /dev\.orazaka\.com\/console[^\n]*= 404/);
+});
