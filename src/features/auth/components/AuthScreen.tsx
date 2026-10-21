@@ -65,12 +65,16 @@ export function AuthScreen({
           <span className="flex flex-wrap items-center justify-center gap-x-3 gap-y-1">
             <Link href="/privacy" className="hover:text-fg">{t.auth.legalPrivacy}</Link>
             <Link href="/terms" className="hover:text-fg">{t.auth.legalTerms}</Link>
-            <Link href="/contact" className="hover:text-fg">{t.auth.legalContact}</Link>
-            <LocaleSwitch variant="inline" />
+            {/* /contact answers a redirect to www.krizaka.com: prefetching it is a CORS error on every visit. */}
+            <Link href="/contact" prefetch={false} className="hover:text-fg">{t.auth.legalContact}</Link>
           </span>
         }
       >
         {children}
+        {/* Outside `legal`: AuthLayout wraps that in a <p>, and the switch is a group of links in a <div>. */}
+        <div className="mt-6 flex justify-center">
+          <LocaleSwitch variant="inline" />
+        </div>
       </AuthLayout>
     </div>
   );
