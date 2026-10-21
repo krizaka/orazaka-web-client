@@ -1,12 +1,33 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@krizaka/ui/button";
 import { Dialog } from "@krizaka/ui/dialog";
 import { useTranslation } from "@/core/context/LocaleContext";
 import { useRegulatedPack } from "@/features/studio/consent/useRegulated";
 import { StudioApi } from "@/services/studio.api";
 import type { Installation } from "@krizaka/orazaka-shared";
+
+/** The confirmation outlives the reload the erase triggers (the page remounts): remembered, then forgotten. */
+const ERASED_KEY = "orazaka_wellbeing_erased";
+const ERASED_NOTE_MS = 15_000;
+
+function recentlyErased(): boolean {
+  try {
+    return sessionStorage.getItem(ERASED_KEY) === "1";
+  } catch {
+    return false;
+  }
+}
+
+function rememberErased(on: boolean) {
+  try {
+    if (on) sessionStorage.setItem(ERASED_KEY, "1");
+    else sessionStorage.removeItem(ERASED_KEY);
+  } catch {
+    // The note is a courtesy; the erase already happened.
+  }
+}
 
 interface ConsentNoticeProps {
   studioKey: string;
@@ -30,7 +51,17 @@ export function ConsentNotice({ studioKey, installation, onChanged }: Readonly<C
   const [busy, setBusy] = useState(false);
   const [failed, setFailed] = useState<string | null>(null);
   const [erasing, setErasing] = useState(false);
-  const [erased, setErased] = useState(false);
+  const [erased, setErased] = useState(recentlyErased);
+
+  // The note goes away by itself; the timer, not an unmount, forgets it (the reload remounts this component).
+  useEffect(() => {
+    if (!erased) return;
+    const timer = setTimeout(() => {
+      rememberErased(false);
+      setErased(false);
+    }, ERASED_NOTE_MS);
+    return () => clearTimeout(timer);
+  }, [erased]);
 
   if (!pack) return null;
 
@@ -41,6 +72,7 @@ export function ConsentNotice({ studioKey, installation, onChanged }: Readonly<C
       await StudioApi.eraseWellbeingData(pack);
       setErasing(false);
       setErased(true);
+      rememberErased(true);
       onChanged();
     } catch (caught) {
       setFailed(caught instanceof Error ? caught.message : t.studio.loadError);
