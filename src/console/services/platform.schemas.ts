@@ -59,5 +59,5 @@ export type AdminUser = z.infer<typeof AdminUserSchema>;
 export const AdminUserPageSchema = z.object({ content: z.array(AdminUserSchema).default([]), total: z.number().default(0), page: z.number().default(0), size: z.number().default(25) });
 export type AdminUserPage = z.infer<typeof AdminUserPageSchema>;
 
-export const AdminAuditEntrySchema = z.object({ id: z.number(), at: z.string().nullish(), actor: z.string().nullish(), action: z.string(), targetId: z.string().nullish(), detail: z.string().nullish() });
+export const AdminAuditEntrySchema = z.object({ id: z.number(), at: z.string().nullish(), actor: z.string().nullish(), action: z.string(), targetId: z.string().nullish(), detail: z.string().nullish(), requestId: z.string().nullish() });
 export type AdminAuditEntry = z.infer<typeof AdminAuditEntrySchema>;
