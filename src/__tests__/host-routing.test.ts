@@ -102,12 +102,22 @@ describe("admin host", () => {
     const res = call("admin.orazaka.com", "/sitemap.xml", { ip: ALLOWED, cookie: "orazaka-admin.session-token=x" });
     expect(rewritten(res)).toContain("/console/sitemap.xml");
   });
-  it("keeps robots.txt (Disallow: /) readable from anywhere, as the stand-alone console did", () => {
-    expect(rewritten(call("admin.orazaka.com", "/robots.txt", { ip: OTHER }))).toContain("/console/robots.txt");
-  });
   it("keeps /api/healthz for the platform probe, whatever the address", () => {
     const res = call("admin.orazaka.com", "/api/healthz", { ip: OTHER });
     expect(res.status).toBe(200);
     expect(res.headers.get("x-middleware-next")).toBe("1");
+  });
+});
+
+describe("robots.txt on the admin host (dev-preview admin.noindex)", () => {
+  it("is answered for any address, before the gate: Disallow everything, and noindex", async () => {
+    const res = call("admin.orazaka.com", "/robots.txt", { ip: OTHER });
+    expect(res.status).toBe(200);
+    expect(res.headers.get("content-type")).toMatch(/text\/plain/);
+    expect(await res.text()).toMatch(/User-agent: \*\s+Disallow: \/\s*$/);
+    expect(res.headers.get("x-robots-tag")).toMatch(/noindex/);
+  });
+  it("leaves the public host's robots.txt to the site (indexed)", () => {
+    expect(rewritten(call("dev.orazaka.com", "/robots.txt"))).toBeNull();
   });
 });
