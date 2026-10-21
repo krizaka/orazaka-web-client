@@ -6,30 +6,37 @@ import { Button } from "@krizaka/ui/button";
 import { DataTable, DataTableExport, DataTableFilters, type DataTableColumn } from "@krizaka/ui/data-table";
 import { consoleCopy } from "@/console/core/copy/console";
 import { PlatformAdminApi } from "@/console/services/platform.admin.api";
-import type { AdminAuditEntry } from "@/console/services/platform.schemas";
+import { mergeAudit, type AuditRow } from "@/console/features/accounts/utils/audit";
 
 const t = consoleCopy.audit;
 
-const columns: DataTableColumn<AdminAuditEntry>[] = [
-  { id: "at", header: t.when, sortable: true, value: (e) => e.at ?? "", cell: (e) => (e.at ? e.at.replace("T", " ").slice(0, 19) : "—") },
+const columns: DataTableColumn<AuditRow>[] = [
+  { id: "at", header: t.when, sortable: true, value: (e) => e.at, cell: (e) => (e.at ? e.at.replace("T", " ").slice(0, 19) : "—") },
+  { id: "source", header: t.source, filter: "facet", value: (e) => e.source },
   { id: "outcome", header: t.outcome, filter: "facet", value: (e) => e.outcome },
-  { id: "actor", header: t.actor, filter: "text", value: (e) => e.actor ?? "" },
+  { id: "actor", header: t.actor, filter: "text", value: (e) => e.actor },
   { id: "action", header: t.action, filter: "facet", card: "title", cell: (e) => <span className="font-mono text-xs">{e.action}</span> },
-  { id: "targetId", header: t.target, value: (e) => e.targetId ?? "", cell: (e) => <span className="font-mono text-[11px]">{e.targetId ?? "—"}</span> },
-  { id: "detail", header: t.detail, value: (e) => e.detail ?? "" },
+  { id: "targetId", header: t.target, value: (e) => e.targetId, cell: (e) => <span className="font-mono text-[11px]">{e.targetId || "—"}</span> },
+  { id: "detail", header: t.detail, value: (e) => e.detail },
   // The request the action was made in (the edge's X-Request-Id): filter by it to see everything one request did.
-  { id: "requestId", header: t.request, filter: "text", value: (e) => e.requestId ?? "", cell: (e) => <span className="font-mono text-[11px]">{e.requestId ?? "—"}</span> },
+  { id: "requestId", header: t.request, filter: "text", value: (e) => e.requestId, cell: (e) => <span className="font-mono text-[11px]">{e.requestId || "—"}</span> },
 ];
 
-/** The identity service's audit trail of account administration, newest first, filterable and exportable. */
+/** A call that reports its outcome instead of throwing: one service down must not hide the others' lines. */
+const attempt = <T,>(p: Promise<T>) => p.then((value) => ({ ok: true as const, value }), (error: unknown) => ({ ok: false as const, error }));
+
+/** Every service's operator audit trail of account administration, newest first, filterable and exportable. */
 export function AuditScreen() {
-  const [rows, setRows] = React.useState<AdminAuditEntry[]>([]);
+  const [rows, setRows] = React.useState<AuditRow[]>([]);
   const [state, setState] = React.useState<"loading" | "ready" | "error">("loading");
   const load = React.useCallback(async () => {
     setState("loading");
     try {
-      setRows(await PlatformAdminApi.audit());
-      setState("ready");
+      // Every service's operator audit in one list; one that does not answer leaves the others (and says so).
+      const [identity, billing] = await Promise.all([attempt(PlatformAdminApi.audit()), attempt(PlatformAdminApi.billingAudit())]);
+      if (!identity.ok && !billing.ok) throw identity.error;
+      setRows(mergeAudit(identity.ok ? identity.value : null, billing.ok ? billing.value : null));
+      setState(identity.ok && billing.ok ? "ready" : "error");
     } catch {
       setState("error");
     }
@@ -49,7 +56,7 @@ export function AuditScreen() {
         caption={t.title}
         rows={rows}
         columns={columns}
-        getRowId={(e) => String(e.id)}
+        getRowId={(e) => e.key}
         loading={state === "loading"}
         defaultPageSize={25}
         defaultSort={{ column: "at", direction: "descending" }}
