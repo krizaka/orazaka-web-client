@@ -11,12 +11,13 @@ test("five places at most: what is happening, what is running, who and what they
 
 test("every screen of the console is reachable exactly once", () => {
   const routes = consoleRoutes();
-  assert.deepEqual([...routes].sort(), ["/", "/audit", "/billing", "/models", "/operations", "/studios", "/users"]);
+  assert.deepEqual([...routes].sort(), ["/", "/audit", "/billing", "/models", "/operations", "/studios", "/tasks", "/users"]);
   assert.equal(new Set(routes).size, routes.length);
 });
 
-test("a menu of two never mixes concepts: accounts hold people and billing, the catalogue models and studios", () => {
+test("a menu of two never mixes concepts: operations hold the running platform and its tasks, accounts people and billing, the catalogue models and studios", () => {
   const children = (id: string) => CONSOLE_GROUPS.find((g) => g.id === id)?.children.map((c) => c.id);
+  assert.deepEqual(children("operations"), ["operations", "tasks"]);
   assert.deepEqual(children("accounts"), ["users", "billing"]);
   assert.deepEqual(children("catalogue"), ["models", "studios"]);
   for (const g of CONSOLE_GROUPS) assert.ok(g.children.length === 0 || g.children.length >= 2, "a group of one is a link");

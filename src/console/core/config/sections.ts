@@ -16,7 +16,14 @@ export interface ConsoleGroup extends ConsoleSection {
 
 export const CONSOLE_GROUPS: readonly ConsoleGroup[] = [
   { id: "supervision", href: "/", children: [] },
-  { id: "operations", href: "/operations", children: [] },
+  {
+    id: "operations",
+    href: "/operations",
+    children: [
+      { id: "operations", href: "/operations" },
+      { id: "tasks", href: "/tasks" },
+    ],
+  },
   {
     id: "accounts",
     href: "/users",
