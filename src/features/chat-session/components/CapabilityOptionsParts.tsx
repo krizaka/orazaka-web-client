@@ -26,7 +26,7 @@ export function CapabilityField({
   const id = React.useId();
   return (
     <Field.Root className="min-w-[120px] flex-1 gap-1">
-      <Field.Label htmlFor={id} className="text-[10px] uppercase tracking-wider text-fg-muted">
+      <Field.Label htmlFor={id} className="text-[10px] text-fg-muted">
         {label}
       </Field.Label>
       <Select id={id} className={cn("h-8 cursor-pointer pl-2.5 text-xs", className)} {...props} />

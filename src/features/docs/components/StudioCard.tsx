@@ -31,7 +31,7 @@ export function StudioCard({ studio }: Readonly<{ studio: PackStudio }>) {
         </details>
       )}
       <div className="space-y-1.5">
-        <p className="font-mono text-[0.7rem] font-semibold uppercase tracking-[0.14em] text-fg-muted">{p.asks}</p>
+        <p className="font-mono text-[0.7rem] font-semibold text-fg-muted">{p.asks}</p>
         {studio.inputs.length ? (
           <ul className="flex flex-wrap gap-1.5">
             {studio.inputs.map((i) => (
@@ -46,13 +46,13 @@ export function StudioCard({ studio }: Readonly<{ studio: PackStudio }>) {
       </div>
       <dl className="mt-auto grid grid-cols-2 gap-3 border-t border-border-subtle pt-3 text-sm">
         <div>
-          <dt className="font-mono text-[0.7rem] uppercase tracking-[0.14em] text-fg-muted">{p.steps}</dt>
+          <dt className="font-mono text-[0.7rem] text-fg-muted">{p.steps}</dt>
           <dd className="text-fg">
             {studio.steps} <span className="text-xs text-fg-secondary">{studio.stepKinds.join(", ").toLowerCase()}</span>
           </dd>
         </div>
         <div>
-          <dt className="font-mono text-[0.7rem] uppercase tracking-[0.14em] text-fg-muted">{p.credits}</dt>
+          <dt className="font-mono text-[0.7rem] text-fg-muted">{p.credits}</dt>
           <dd className="text-fg">{studio.credits ?? "—"}</dd>
         </div>
       </dl>

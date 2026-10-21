@@ -87,7 +87,7 @@ export function BlueprintVersionTable({
 
   return (
     <section className="space-y-2">
-      <h2 className="text-xs uppercase tracking-wide text-fg-muted">Versions</h2>
+      <h2 className="text-xs text-fg-muted">Versions</h2>
       <DataTable
         caption="Versions"
         rows={versions}

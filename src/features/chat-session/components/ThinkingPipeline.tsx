@@ -63,10 +63,10 @@ export const ThinkingPipeline: React.FC<Props> = ({
         <section className="bg-surface-1 border border-border-subtle rounded-2xl rounded-tl-md px-4 py-3 min-w-[15rem] max-w-md">
           <div className="flex items-center gap-2 mb-2">
             <span className="relative flex h-2 w-2">
-              <span className="absolute inline-flex h-full w-full rounded-full bg-accent opacity-60 motion-safe:animate-ping" />
+              <span className="absolute inline-flex h-full w-full rounded-sm bg-accent opacity-60 motion-safe:animate-ping" />
               <span className="relative inline-flex h-2 w-2 rounded-full bg-accent" />
             </span>
-            <span className="text-[11px] font-semibold tracking-wide text-fg-secondary">
+            <span className="text-[11px] font-semibold text-fg-secondary">
               {t.chat.typing}
             </span>
             <span className="ml-auto text-[10px] font-mono text-fg-muted">
@@ -103,7 +103,7 @@ export const ThinkingPipeline: React.FC<Props> = ({
               )}
               <span className="leading-tight font-medium">{current.label}</span>
               {current.phase === "dynamic" && (
-                <span className="ml-auto pl-2 text-[9px] font-semibold uppercase tracking-wider text-success">
+                <span className="ml-auto pl-2 text-[9px] font-semibold text-success">
                   routed
                 </span>
               )}

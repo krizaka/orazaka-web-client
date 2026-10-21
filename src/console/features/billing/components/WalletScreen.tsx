@@ -150,7 +150,7 @@ function Metric({
 }) {
   return (
     <div>
-      <p className="text-xs uppercase tracking-wide text-fg-muted">{label}</p>
+      <p className="text-xs text-fg-muted">{label}</p>
       <p
         className={
           muted

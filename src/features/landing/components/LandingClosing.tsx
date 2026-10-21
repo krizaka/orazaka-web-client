@@ -23,7 +23,7 @@ export function LandingClosing({
     <SectionBackdrop grid className="border-t border-border-subtle">
       <article data-reveal className="mx-auto flex max-w-3xl flex-col items-center gap-6 px-4 py-24 text-center sm:px-5 lg:py-32">
         <OrazakaLogo size={104} />
-        <p className="font-mono text-xs font-semibold uppercase tracking-[0.18em] text-fg-accent">{eyebrow}</p>
+        <p className="font-mono text-xs font-semibold text-fg-accent">{eyebrow}</p>
         <h2 className="font-display text-3xl font-bold tracking-tight text-balance text-fg sm:text-5xl">{title}</h2>
         <p className="max-w-xl text-base leading-relaxed text-pretty text-fg-secondary sm:text-lg">{lead}</p>
         <nav className="flex flex-wrap justify-center gap-3" aria-label={first.label}>

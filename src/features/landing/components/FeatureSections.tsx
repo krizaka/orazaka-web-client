@@ -38,7 +38,7 @@ export function FeaturePoints({ id }: Readonly<{ id: FeatureId }>) {
           {page.points.map((point, i) => {
             const Icon = POINT_ICONS[id][i];
             return (
-              <li key={point.title} data-reveal className="flex flex-col gap-3 rounded-2xl border border-border-subtle bg-surface-1/80 p-6 backdrop-blur-sm">
+              <li key={point.title} data-reveal className="flex flex-col gap-3 rounded-2xl border border-border-subtle bg-surface-1/80 p-6 ">
                 <span className="relative grid h-11 w-11 place-items-center rounded-xl border border-accent/25 bg-accent-soft text-fg-accent">
                   <Icon size={22} nodeColor="var(--kz-accent)" />
                 </span>
@@ -76,7 +76,7 @@ export function FeatureFlow({ id }: Readonly<{ id: FeatureId }>) {
         </section>
         <figure className="flex flex-col items-center gap-4">
           <ChatShowcase key={locale} className="w-full" labels={page.chat.labels} question={page.chat.question} answer={page.chat.answer} pipeline={page.chat.pipeline} />
-          <figcaption className="inline-flex items-center gap-1.5 font-mono text-xs uppercase tracking-[0.14em] text-fg-secondary">
+          <figcaption className="inline-flex items-center gap-1.5 font-mono text-xs text-fg-secondary">
             <ShieldIcon size={14} className="text-fg-accent" nodeColor="var(--kz-accent)" />
             {page.demoLabel}
           </figcaption>
@@ -92,7 +92,7 @@ export function FeatureOthers({ id }: Readonly<{ id: FeatureId }>) {
   const others = FEATURE_IDS.filter((other) => other !== id);
   return (
     <nav aria-label={t.features.others} className="mx-auto max-w-6xl space-y-6 px-4 py-16 sm:px-5">
-      <h2 className="font-mono text-xs font-semibold uppercase tracking-[0.18em] text-fg-accent">{t.features.others}</h2>
+      <h2 className="font-mono text-xs font-semibold text-fg-accent">{t.features.others}</h2>
       <ul className="grid gap-4 md:grid-cols-2">
         {others.map((other) => {
           const page = t.features.pages[other];
@@ -102,7 +102,7 @@ export function FeatureOthers({ id }: Readonly<{ id: FeatureId }>) {
                 href={`/features/${other}`}
                 className="group flex h-full flex-col gap-2 rounded-2xl border border-border-subtle bg-surface-1 p-6 transition-colors hover:border-accent/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
               >
-                <span className="relative font-mono text-xs uppercase tracking-[0.14em] text-fg-secondary">{page.name}</span>
+                <span className="relative font-mono text-xs text-fg-secondary">{page.name}</span>
                 <span className="relative text-xl font-semibold text-fg">
                   {page.titleLead} {page.titleAccent}
                 </span>

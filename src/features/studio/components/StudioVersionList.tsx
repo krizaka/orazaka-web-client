@@ -25,7 +25,7 @@ export function StudioVersionList({ versions }: Readonly<StudioVersionListProps>
 
   return (
     <section className="flex flex-col gap-2">
-      <h2 className="text-xs font-semibold uppercase tracking-wider text-fg-muted">{t.studio.versionHistory}</h2>
+      <h2 className="text-xs font-semibold text-fg-muted">{t.studio.versionHistory}</h2>
       <ul className="flex flex-col divide-y divide-border-subtle overflow-hidden rounded-xl border border-border-default bg-surface-1">
         {published.map((version) => (
           <StudioVersionRow key={version.version} version={version} />

@@ -21,7 +21,7 @@ interface FeatureToggleCardProps {
  * @krizaka/ui card and switch (role="switch", Space and Enter toggle).
  */
 export const FeatureToggleCard: React.FC<FeatureToggleCardProps> = ({ features, onToggle, t }) => (
-  <Card.Root className="rounded-2xl border-border-subtle bg-surface-1/70 shadow-sm backdrop-blur-lg">
+  <Card.Root className="rounded-2xl border-border-subtle bg-surface-1/70 shadow-sm ">
     <Card.Body padding="lg" className="gap-4">
       <Card.Title className="line-clamp-none border-b border-border-subtle pb-2 text-lg font-bold group-hover:text-fg">
         {t.admin.featureOverridesTitle}

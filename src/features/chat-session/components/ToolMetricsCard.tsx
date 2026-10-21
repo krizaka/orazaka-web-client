@@ -34,8 +34,8 @@ export function ToolMetricsCard({ payload, label }: Readonly<ToolMetricsCardProp
           <span className="flex h-6 w-6 items-center justify-center rounded-md bg-accent-soft text-fg-accent">
             <Icon name="sliders" size={14} />
           </span>
-          <Card.Title className="text-xs uppercase tracking-wide group-hover:text-fg">{payload.toolName}</Card.Title>
-          <span className="ml-auto font-mono text-[10px] uppercase text-fg-muted">{label}</span>
+          <Card.Title className="text-xs group-hover:text-fg">{payload.toolName}</Card.Title>
+          <span className="ml-auto font-mono text-[10px] text-fg-muted">{label}</span>
         </header>
         <section className="grid grid-cols-2 gap-3 sm:grid-cols-3">
           {Object.entries(payload.data).map(([key, value]) => (

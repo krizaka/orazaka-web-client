@@ -87,9 +87,9 @@ export function ProgressTimeline({ status }: Readonly<{ status: string }>) {
 
             {/* Connector */}
             {i < stages.length - 1 && (
-              <div className="flex-1 h-[2px] rounded-full bg-surface-3 overflow-hidden">
+              <div className="flex-1 h-[2px] rounded-sm bg-surface-3 overflow-hidden">
                 <div
-                  className={cn("h-full rounded-full transition-all duration-700 ease-out", (() => {
+                  className={cn("h-full rounded-sm transition-all duration-700 ease-out", (() => {
                     if (isDone || (isActive && i < currentIdx))
                       return isFailed
                         ? "bg-danger w-full"
@@ -151,7 +151,7 @@ export function StatusPill({ status }: Readonly<{ status: string }>) {
   return (
     <span
       className={cn(
-        "inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-semibold",
+        "inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-sm text-[10px] font-semibold",
         style.cls
       )}
     >

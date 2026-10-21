@@ -79,7 +79,7 @@ export function RunTimeline({ steps }: Readonly<RunTimelineProps>) {
 
   return (
     <section className="flex flex-col gap-3">
-      <h2 className="text-xs font-semibold uppercase tracking-wider text-fg-muted">{t.studio.runSteps}</h2>
+      <h2 className="text-xs font-semibold text-fg-muted">{t.studio.runSteps}</h2>
       <Stepper steps={items} labels={t.insights.queue.steps} className="rounded-xl border border-border-default bg-surface-1 p-5" />
     </section>
   );

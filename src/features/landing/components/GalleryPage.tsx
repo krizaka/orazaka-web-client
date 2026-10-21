@@ -19,7 +19,7 @@ import { ItemFacts } from "@/features/landing/components/ItemFacts";
 import { ReproduceBlock } from "@/features/landing/components/ReproduceBlock";
 import "@/features/landing/landing.css";
 
-const chip = "inline-flex min-h-11 items-center rounded-full border px-4 text-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring";
+const chip = "inline-flex min-h-11 items-center rounded-sm border px-4 text-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring";
 
 /**
  * /gallery — every image Orazaka made here, filterable by style (`?style=`, a link each: the URL is the state). Each
@@ -43,7 +43,7 @@ export function GalleryPage({ only, kind }: Readonly<{ only?: GalleryStyle; kind
       <main className="min-h-screen bg-surface-0 text-fg">
         <SectionBackdrop grid className="border-b border-border-subtle">
           <article className="mx-auto max-w-6xl space-y-6 px-4 pb-12 pt-14 sm:px-5 lg:pt-20">
-            <p className="font-mono text-xs font-semibold uppercase tracking-[0.18em] text-fg-accent">{g.eyebrow}</p>
+            <p className="font-mono text-xs font-semibold text-fg-accent">{g.eyebrow}</p>
             <h1 className="max-w-3xl font-display text-[2.4rem] font-extrabold leading-[1.05] tracking-tight text-balance sm:text-5xl">{g.galleryTitle}</h1>
             <p className="max-w-2xl text-lg leading-relaxed text-pretty text-fg-secondary">{g.galleryLead}</p>
             <p className="font-mono text-xs text-fg-muted">{g.engine}</p>
@@ -103,12 +103,12 @@ export function GalleryPage({ only, kind }: Readonly<{ only?: GalleryStyle; kind
                       <span className="block text-sm font-semibold text-fg">{g.styles[item.style]}</span>
                       <ItemFacts item={item} />
                       <details className="text-sm">
-                        <summary className="cursor-pointer font-mono text-xs uppercase tracking-[0.12em] text-fg-accent">{g.promptLabel}</summary>
+                        <summary className="cursor-pointer font-mono text-xs text-fg-accent">{g.promptLabel}</summary>
                         <blockquote lang="en" className="mt-2 text-[13px] leading-relaxed text-fg-secondary">{item.prompt}</blockquote>
                       </details>
                       <CopyButton text={item.prompt} label={g.copy} done={g.copied} failed={g.copyFailed} />
                       <details className="text-sm">
-                        <summary className="cursor-pointer font-mono text-xs uppercase tracking-[0.12em] text-fg-accent">{g.reproduce}</summary>
+                        <summary className="cursor-pointer font-mono text-xs text-fg-accent">{g.reproduce}</summary>
                         <div className="mt-2">
                           <ReproduceBlock item={item} heading={false} />
                         </div>

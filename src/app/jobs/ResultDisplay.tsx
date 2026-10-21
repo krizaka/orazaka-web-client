@@ -38,7 +38,7 @@ function JobResultDisplay({ job, jobId }: Readonly<JobResultDisplayProps>) {
         </div>
         <p className="text-xs text-fg-secondary">
           {t.playground.status}
-          <span className="font-semibold uppercase text-accent">
+          <span className="font-semibold text-accent">
             {job.status}
           </span>
         </p>
@@ -130,7 +130,7 @@ function ResultDisplayInner({ payload }: Readonly<ResultDisplayProps>) {
             </span>
           </div>
           <div className="rounded-lg bg-surface-0/40 p-4 border border-border-subtle text-sm">
-            <span className="text-xs font-semibold text-fg-secondary uppercase tracking-widest block mb-2">
+            <span className="text-xs font-semibold text-fg-secondary block mb-2">
               {t.playground.transcript}
             </span>
             <p className="text-fg-secondary leading-relaxed italic">
@@ -172,7 +172,7 @@ function ResultDisplayInner({ payload }: Readonly<ResultDisplayProps>) {
         >
           <track kind="captions" />
         </video>
-        <span className="mt-2 text-xs text-fg-secondary font-semibold uppercase tracking-wider">
+        <span className="mt-2 text-xs text-fg-secondary font-semibold ">
           {t.playground.localCPlusPlusInference}
         </span>
       </div>
@@ -181,7 +181,7 @@ function ResultDisplayInner({ payload }: Readonly<ResultDisplayProps>) {
 
   if (isAudio(format, rawUrl)) {
     return (
-      <div className="mt-4 flex flex-col items-center justify-center rounded-xl border border-border-subtle/80 bg-surface-1/10 p-6 shadow-sm backdrop-blur-sm transition-all duration-300">
+      <div className="mt-4 flex flex-col items-center justify-center rounded-xl border border-border-subtle/80 bg-surface-1/10 p-6 shadow-sm transition-all duration-300">
         <audio
           src={absoluteUrl}
           controls
@@ -190,7 +190,7 @@ function ResultDisplayInner({ payload }: Readonly<ResultDisplayProps>) {
         >
           <track kind="captions" />
         </audio>
-        <span className="mt-3 text-fg-muted text-fg-secondary font-semibold uppercase tracking-widest">
+        <span className="mt-3 text-fg-muted text-fg-secondary font-semibold ">
           {t.playground.localAudioGeneration}
         </span>
       </div>
@@ -207,7 +207,7 @@ function ResultDisplayInner({ payload }: Readonly<ResultDisplayProps>) {
           className="max-h-[512px] w-full max-w-[512px] rounded-md object-contain shadow-md transition-all duration-300"
           loading="lazy"
         />
-        <span className="mt-2 text-xs text-fg-secondary font-semibold uppercase tracking-wider">
+        <span className="mt-2 text-xs text-fg-secondary font-semibold ">
           {t.playground.localImageGeneration}
         </span>
       </div>

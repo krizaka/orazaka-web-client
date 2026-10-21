@@ -17,45 +17,51 @@ import { KRIZAKA_URL, SITE_DESCRIPTION, SITE_NAME, SITE_TITLE, SITE_URL, siteJso
  * from wherever the package is installed (standalone on App Platform, hoisted in the workspace).
  */
 const inter = localFont({
-  src: "./_fonts/inter-latin-wght.woff2",
-  weight: "300 700",
+  src: "./_fonts/atkinson-hyperlegible-next-latin-wght.woff2",
+  weight: "400 700",
   variable: "--font-inter",
   display: "swap",
 });
 
 const jetbrainsMono = localFont({
-  src: "./_fonts/jetbrains-mono-latin-wght.woff2",
-  weight: "400 600",
+  src: [
+    { path: "./_fonts/courier-prime-latin-400.woff2", weight: "400" },
+    { path: "./_fonts/courier-prime-latin-700.woff2", weight: "700" },
+  ],
   variable: "--font-jetbrains-mono",
   display: "swap",
 });
 
-/** Outfit's role (headings) is taken by Plus Jakarta Sans, the display face of @krizaka/fonts. */
+/** Outfit's role (headings) is taken by Young Serif, the display face of @krizaka/fonts (Cahier, krizaka-ui ADR-004). */
 const outfit = localFont({
-  src: "./_fonts/plus-jakarta-sans-latin-wght.woff2",
-  weight: "500 800",
+  src: "./_fonts/young-serif-latin-400.woff2",
+  weight: "400",
+  adjustFontFallback: "Times New Roman",
   variable: "--font-outfit",
   display: "swap",
 });
 
 /**
- * Krizaka Display: the display face of @krizaka/fonts (Plus Jakarta Sans).
+ * Krizaka Display: the display face of @krizaka/fonts (Young Serif, one weight).
  * CSS variable --font-krizaka-display resolves to it.
  */
 const krizakaDisplay = localFont({
-  src: "./_fonts/plus-jakarta-sans-latin-wght.woff2",
-  weight: "500 800",
+  src: "./_fonts/young-serif-latin-400.woff2",
+  weight: "400",
+  adjustFontFallback: "Times New Roman",
   variable: "--font-krizaka-display",
   display: "swap",
 });
 
 /**
- * Krizaka Mono: the mono face of @krizaka/fonts (JetBrains Mono).
+ * Krizaka Mono: the mono face of @krizaka/fonts (Courier Prime).
  * CSS variable --font-krizaka-mono resolves to it.
  */
 const krizakaMono = localFont({
-  src: "./_fonts/jetbrains-mono-latin-wght.woff2",
-  weight: "400 600",
+  src: [
+    { path: "./_fonts/courier-prime-latin-400.woff2", weight: "400" },
+    { path: "./_fonts/courier-prime-latin-700.woff2", weight: "700" },
+  ],
   variable: "--font-krizaka-mono",
   display: "swap",
 });

@@ -36,7 +36,7 @@ export function ReasoningAccordion({
 
   return (
     <section
-      className="my-2 border border-border-subtle bg-surface-1/80 backdrop-blur-md overflow-hidden transition-all duration-300"
+      className="my-2 border border-border-subtle bg-surface-1/80 overflow-hidden transition-all duration-300"
       style={{ borderRadius: "var(--kz-radius-md)" }}
     >
       {/* Toggle header */}
@@ -55,7 +55,7 @@ export function ReasoningAccordion({
             isStreaming ? "animate-spin-slow" : ""
           )}
         />
-        <span className="text-[11px] font-semibold uppercase tracking-wider text-fg-muted">
+        <span className="text-[11px] font-semibold text-fg-muted">
           {isStreaming ? t.showcase.chat.thinking : t.showcase.chat.reasoning}
         </span>
 

@@ -16,7 +16,7 @@ export function VideoPanel({ clip, active }: Readonly<{ clip: GalleryClip; activ
   const g = t.gallery;
   return (
     <section aria-label={g.videoStep} className="space-y-3">
-      <h3 className="font-mono text-xs font-semibold uppercase tracking-[0.14em] text-fg-accent">{g.videoPromptHeading}</h3>
+      <h3 className="font-mono text-xs font-semibold text-fg-accent">{g.videoPromptHeading}</h3>
       <TypedPrompt text={clip.prompt} active={active} />
       <CopyButton text={clip.prompt} label={g.copy} done={g.copied} failed={g.copyFailed} />
       <RunFacts facts={clipFacts(g, clip)} />
@@ -31,7 +31,7 @@ export function FeaturedImagePanel({ image }: Readonly<{ image: ImageRecord }>) 
   const g = t.gallery;
   return (
     <section aria-label={g.imageStep} className="space-y-3">
-      <h3 className="font-mono text-xs font-semibold uppercase tracking-[0.14em] text-fg-accent">{g.imagePromptHeading}</h3>
+      <h3 className="font-mono text-xs font-semibold text-fg-accent">{g.imagePromptHeading}</h3>
       <blockquote lang="en" className="text-sm leading-relaxed text-fg-secondary">{image.prompt}</blockquote>
       <CopyButton text={image.prompt} label={g.copy} done={g.copied} failed={g.copyFailed} />
       <RunFacts facts={imageFacts(g, image, IMAGE_MODEL)} />
@@ -46,7 +46,7 @@ export function ImagePanel({ image }: Readonly<{ image: GalleryItem }>) {
   const g = t.gallery;
   return (
     <section aria-label={g.imageStep} className="space-y-3">
-      <h3 className="font-mono text-xs font-semibold uppercase tracking-[0.14em] text-fg-accent">{g.imagePromptHeading}</h3>
+      <h3 className="font-mono text-xs font-semibold text-fg-accent">{g.imagePromptHeading}</h3>
       <blockquote lang="en" className="text-sm leading-relaxed text-fg-secondary">{image.prompt}</blockquote>
       <CopyButton text={image.prompt} label={g.copy} done={g.copied} failed={g.copyFailed} />
       <ItemFacts item={image} />

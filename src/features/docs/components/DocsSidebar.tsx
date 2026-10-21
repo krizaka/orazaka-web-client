@@ -11,7 +11,7 @@ export function DocsSidebar({ items, current }: Readonly<{ items: readonly NavIt
   const d = t.docs;
   return (
     <nav aria-label={d.sidebarLabel} className="space-y-6 text-sm">
-      <Link href="/docs" className={cn("block font-mono text-xs font-semibold uppercase tracking-[0.14em] hover:text-fg", current === null ? "text-fg-accent" : "text-fg-secondary")}>
+      <Link href="/docs" className={cn("block font-mono text-xs font-semibold hover:text-fg", current === null ? "text-fg-accent" : "text-fg-secondary")}>
         {d.home}
       </Link>
       {JOURNEY_IDS.map((j) => {
@@ -24,7 +24,7 @@ export function DocsSidebar({ items, current }: Readonly<{ items: readonly NavIt
             </h2>
             {groups.map((g) => (
               <div key={g ?? "main"}>
-                {g && <p className="mb-1 mt-3 px-2.5 font-mono text-[0.68rem] uppercase tracking-[0.12em] text-fg-muted">{d.groups[g]}</p>}
+                {g && <p className="mb-1 mt-3 px-2.5 font-mono text-[0.68rem] text-fg-muted">{d.groups[g]}</p>}
                 <ul className="m-0 list-none space-y-0.5 p-0">
                   {pages
                     .filter((p) => p.group === g)

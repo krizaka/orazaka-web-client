@@ -41,20 +41,20 @@ function MiniApp({ light = false, className }: Readonly<{ light?: boolean; class
       <span className={cn("absolute bottom-0 left-0 top-0 block w-[22px] border-r", panel, edge)}>
         <span className="flex flex-col gap-1.5 px-1 pt-3">
           <span className="block h-2.5 w-2.5 rounded-sm bg-accent/60" />
-          <span className={cn("block h-1 w-2.5 rounded-full opacity-60", line)} />
-          <span className={cn("block h-1 w-2.5 rounded-full opacity-40", line)} />
+          <span className={cn("block h-1 w-2.5 rounded-sm opacity-60", line)} />
+          <span className={cn("block h-1 w-2.5 rounded-sm opacity-40", line)} />
         </span>
       </span>
       <span className={cn("absolute left-[22px] right-0 top-0 block h-[14px] border-b", panel, edge)}>
-        <span className={cn("absolute left-2 top-1/2 block h-1 w-5 -translate-y-1/2 rounded-full opacity-50", line)} />
+        <span className={cn("absolute left-2 top-1/2 block h-1 w-5 -translate-y-1/2 rounded-sm opacity-50", line)} />
       </span>
       <span className="absolute bottom-0 left-[22px] right-0 top-[14px] flex flex-col gap-[5px] p-2">
-        <span className={cn("block h-[5px] w-[65%] rounded-full opacity-60", line)} />
-        <span className={cn("block h-[5px] w-[45%] rounded-full opacity-45", line)} />
-        <span className={cn("block h-[5px] w-[55%] rounded-full opacity-50", line)} />
+        <span className={cn("block h-[5px] w-[65%] rounded-sm opacity-60", line)} />
+        <span className={cn("block h-[5px] w-[45%] rounded-sm opacity-45", line)} />
+        <span className={cn("block h-[5px] w-[55%] rounded-sm opacity-50", line)} />
         <span className="mt-auto flex items-center gap-1.5">
           <span className="block h-[7px] w-[28px] rounded-sm bg-accent" />
-          <span className={cn("block h-[5px] w-[18px] rounded-full opacity-30", line)} />
+          <span className={cn("block h-[5px] w-[18px] rounded-sm opacity-30", line)} />
         </span>
       </span>
     </span>
@@ -104,7 +104,7 @@ export function AppearanceOption({ value, label, desc, icon, isActive, pulse, cl
       <figure className="relative h-[80px] w-full overflow-hidden bg-surface-2">
         <Preview value={value} />
         {isActive && (
-          <mark className="theme-check-pop absolute right-1 top-1 flex h-[18px] w-[18px] items-center justify-center rounded-full bg-success shadow-md">
+          <mark className="theme-check-pop absolute right-1 top-1 flex h-[18px] w-[18px] items-center justify-center rounded-sm bg-success shadow-md">
             <svg aria-hidden className="h-2.5 w-2.5 text-on-accent" fill="none" viewBox="0 0 24 24" strokeWidth={3} stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
             </svg>
@@ -115,7 +115,7 @@ export function AppearanceOption({ value, label, desc, icon, isActive, pulse, cl
             aria-hidden
             className="absolute inset-0 flex items-center justify-center bg-transparent transition-colors duration-200 group-hover:bg-scrim/30"
           >
-            <span className="rounded-full bg-scrim px-2 py-0.5 text-[10px] font-medium text-fg-on-media opacity-0 backdrop-blur-sm transition-opacity duration-200 group-hover:opacity-100">
+            <span className="rounded-sm bg-scrim px-2 py-0.5 text-[10px] font-medium text-fg-on-media opacity-0 transition-opacity duration-200 group-hover:opacity-100">
               {clickToApplyLabel}
             </span>
           </figcaption>
@@ -126,7 +126,7 @@ export function AppearanceOption({ value, label, desc, icon, isActive, pulse, cl
         <span aria-hidden className="text-fg/60 transition-colors group-hover:text-fg/90">
           {icon}
         </span>
-        <span className="truncate text-[11px] font-semibold tracking-wide text-fg">{label}</span>
+        <span className="truncate text-[11px] font-semibold text-fg">{label}</span>
       </span>
       <span className="w-full bg-surface-1 px-3 pb-2.5 text-[10px] leading-tight text-fg-muted">{desc}</span>
     </RadioGroup.Card>

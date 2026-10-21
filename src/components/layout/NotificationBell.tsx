@@ -40,7 +40,7 @@ export const NotificationBell: React.FC<NotificationBellProps> = ({
         <IconButton id="notification-bell" variant="ghost" label={t.notifications.region} className="relative">
           <NotificationIcon size={20} nodeColor={activeJobsCount > 0 ? "var(--kz-accent)" : undefined} />
           {activeJobsCount > 0 && (
-            <span className="absolute right-1 top-1 grid h-4 min-w-4 place-items-center rounded-full bg-accent px-1 text-[10px] font-bold text-on-accent motion-safe:animate-pulse">
+            <span className="absolute right-1 top-1 grid h-4 min-w-4 place-items-center rounded-sm bg-accent px-1 text-[10px] font-bold text-on-accent motion-safe:animate-pulse">
               {activeJobsCount}
             </span>
           )}

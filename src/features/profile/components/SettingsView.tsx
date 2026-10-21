@@ -92,7 +92,7 @@ export function SettingsView({ section }: Readonly<{ section: string }>) {
 
       {/* Sticky Save bar: pending appearance/workspace edits */}
       {pf.isDirty && (
-        <div className="sticky bottom-4 z-20 flex items-center justify-between gap-3 rounded-xl border border-border-default bg-surface-1/92 p-3 pl-4 shadow-lg backdrop-blur-xl animate-in fade-in slide-in-from-bottom-2 duration-200">
+        <div className="sticky bottom-4 z-20 flex items-center justify-between gap-3 rounded-xl border border-border-default bg-surface-1/92 p-3 pl-4 shadow-lg animate-in fade-in slide-in-from-bottom-2 duration-200">
           <span className="text-sm text-fg-secondary">{t.profile.unsavedChanges}</span>
           <div className="flex items-center gap-2">
             <Button variant="ghost" size="sm" onClick={pf.discard} disabled={pf.isUpdating}>

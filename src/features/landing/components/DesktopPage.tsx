@@ -39,7 +39,7 @@ export function DesktopPage({ release }: Readonly<{ release: DesktopDownload }>)
         <SectionBackdrop grid className="border-b border-border-subtle">
           <article className="mx-auto grid max-w-6xl items-center gap-10 px-4 pb-16 pt-14 sm:px-5 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)] lg:pb-24 lg:pt-20">
             <header className="space-y-6">
-              <p className="font-mono text-xs font-semibold uppercase tracking-[0.18em] text-fg-accent">{d.hero.eyebrow}</p>
+              <p className="font-mono text-xs font-semibold text-fg-accent">{d.hero.eyebrow}</p>
               <h1 className="font-display text-[2.5rem] font-extrabold leading-[1.04] tracking-tight text-balance text-fg sm:text-6xl">{d.hero.title}</h1>
               <p className="text-lg leading-relaxed text-pretty text-fg-secondary">{d.hero.lead}</p>
               {release ? (
@@ -138,7 +138,7 @@ export function DesktopPage({ release }: Readonly<{ release: DesktopDownload }>)
               {d.services.rows.map((row) => (
                 <div key={row.name} className="grid gap-1 px-4 py-3 sm:grid-cols-[12rem_7rem_1fr] sm:gap-4">
                   <dt className="font-semibold text-fg">{row.name}</dt>
-                  <dd className="font-mono text-xs uppercase tracking-[0.12em] text-fg-accent sm:pt-1">{row.runs}</dd>
+                  <dd className="font-mono text-xs text-fg-accent sm:pt-1">{row.runs}</dd>
                   <dd className="text-sm text-fg-secondary">{row.does}</dd>
                 </div>
               ))}

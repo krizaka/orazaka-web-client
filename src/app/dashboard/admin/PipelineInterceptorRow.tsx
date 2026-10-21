@@ -77,7 +77,7 @@ export function PipelineInterceptorRow({
 
       {/* Disabled badge */}
       {!item.enabled && (
-        <span className="flex-shrink-0 text-fg-muted font-semibold uppercase tracking-wider text-fg-secondary bg-surface-2 px-2 py-0.5 rounded-full">
+        <span className="flex-shrink-0 text-fg-muted font-semibold text-fg-secondary bg-surface-2 px-2 py-0.5 rounded-sm">
           {disabledLabel}
         </span>
       )}

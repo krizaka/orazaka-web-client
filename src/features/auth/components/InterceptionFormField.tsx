@@ -66,7 +66,7 @@ export function InterceptionFormField({
           value={value}
           onChange={(e) => onChange(e.target.value)}
           disabled={disabled}
-          className="flex w-full rounded-xl border border-border-subtle/60 bg-surface-1/30 px-3 py-2 text-sm backdrop-blur-sm transition-all duration-200 placeholder:text-fg-muted focus:outline-none focus:ring-2 focus:ring-border-subtle disabled:cursor-not-allowed disabled:opacity-50 focus:ring-success focus-visible:ring-border-subtle text-fg"
+          className="flex w-full rounded-xl border border-border-subtle/60 bg-surface-1/30 px-3 py-2 text-sm transition-all duration-200 placeholder:text-fg-muted focus:outline-none focus:ring-2 focus:ring-border-subtle disabled:cursor-not-allowed disabled:opacity-50 focus:ring-success focus-visible:ring-border-subtle text-fg"
         />
       )}
 
@@ -75,7 +75,7 @@ export function InterceptionFormField({
           value={value}
           onChange={(e) => onChange(e.target.value)}
           disabled={disabled}
-          className="flex h-10 w-full rounded-xl border border-border-subtle/60 bg-surface-1/30 px-3 py-2 text-sm backdrop-blur-sm transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-border-subtle disabled:cursor-not-allowed disabled:opacity-50 focus:ring-success focus-visible:ring-border-subtle text-fg"
+          className="flex h-10 w-full rounded-xl border border-border-subtle/60 bg-surface-1/30 px-3 py-2 text-sm transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-border-subtle disabled:cursor-not-allowed disabled:opacity-50 focus:ring-success focus-visible:ring-border-subtle text-fg"
         >
           {field.options?.map((opt) => (
             <option

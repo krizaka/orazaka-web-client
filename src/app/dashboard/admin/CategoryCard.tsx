@@ -58,12 +58,12 @@ export function CategoryCard({
   );
 
   return (
-    <Card.Root className="p-6 bg-surface-1/70 border-border-subtle backdrop-blur-lg flex flex-col gap-4 shadow-sm hover:shadow-md transition-shadow duration-200">
+    <Card.Root className="p-6 bg-surface-1/70 border-border-subtle flex flex-col gap-4 shadow-sm hover:shadow-md transition-shadow duration-200">
       <h3 className="text-lg font-bold text-fg border-b pb-2 border-border-subtle capitalize flex items-center justify-between">
         <span>
           {getCategoryLabel(category)} {t.admin.modelsSuffix}
         </span>
-        <span className="text-xs bg-surface-2 text-fg-secondary px-2.5 py-0.5 rounded-full font-bold">
+        <span className="text-xs bg-surface-2 text-fg-secondary px-2.5 py-0.5 rounded-sm font-bold">
           {models.length}
         </span>
       </h3>
@@ -84,7 +84,7 @@ export function CategoryCard({
                     {model.modelLabel}
                   </h4>
                   {model.isDefault && (
-                    <span className="text-[10px] bg-warning/20 text-warning font-bold px-2 py-0.5 rounded-full flex items-center gap-1 shrink-0">
+                    <span className="text-[10px] bg-warning/20 text-warning font-bold px-2 py-0.5 rounded-sm flex items-center gap-1 shrink-0">
                       <Icon name="checkCircle" className="h-2.5 w-2.5" />
                       {t.admin.activeDefault}
                     </span>

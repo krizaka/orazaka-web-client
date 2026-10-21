@@ -90,7 +90,7 @@ export function InterceptionForm({
 
   if (error || !schema) {
     return (
-      <Card.Root className="max-w-md mx-auto border-danger/30 bg-danger/5 backdrop-blur-md">
+      <Card.Root className="max-w-md mx-auto border-danger/30 bg-danger/5 ">
         <Card.Body padding="lg" className="gap-1.5">
           <div className="flex items-center space-x-2 text-danger">
             <Icon name="error" size={24} />
@@ -113,7 +113,7 @@ export function InterceptionForm({
   }
 
   return (
-    <Card.Root className="max-w-xl mx-auto border-border-subtle/60 bg-surface-0/60 shadow-2xl backdrop-blur-xl transition-all duration-300">
+    <Card.Root className="max-w-xl mx-auto border-border-subtle/60 bg-surface-0/60 shadow-2xl transition-all duration-300">
       <form onSubmit={handleSubmit}>
         <Card.Body padding="lg" className="gap-1.5 space-y-2">
           <Card.Title className="line-clamp-none group-hover:text-transparent text-2xl font-bold tracking-tight bg-gradient-to-r from-surface-1 to-surface-3 bg-clip-text text-transparent">

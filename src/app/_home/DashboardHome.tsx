@@ -133,7 +133,7 @@ export function DashboardHome() {
             {jobs.some((job) => jobMediaUrl(job)) && (
               <section className="flex flex-col gap-3">
                 <header className="flex items-center justify-between px-1">
-                  <h3 className="text-xs font-semibold uppercase tracking-wider text-fg-muted">{t.insights.usage.recent}</h3>
+                  <h3 className="text-xs font-semibold text-fg-muted">{t.insights.usage.recent}</h3>
                   <Button asChild variant="ghost" size="sm">
                     <Link href="/jobs">{t.showcase.dashboard.seeAll}</Link>
                   </Button>
