@@ -159,7 +159,7 @@ export const consoleCopy = {
   },
   audit: {
     title: "Audit log",
-    lead: "Every operator action, newest first, from every service that records one (identity, billing): who, what, which target, which request, how it ended. Ids and a few words, never a secret.",
+    lead: "Every operator action, newest first, from every service that records one (identity, billing, Studio, engine): who, what, which target, which request, how it ended. Ids and a few words, never a secret.",
     when: "When",
     actor: "Who",
     action: "Action",
