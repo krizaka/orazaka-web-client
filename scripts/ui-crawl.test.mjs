@@ -1,0 +1,45 @@
+// Dev preview `ui.themes-devices` (orazaka-web-client#124): the UI crawl exists, covers both themes and both viewports,
+// reads the sitemap, and the post-deploy workflow runs it against the deployed site.
+import { readFileSync } from "node:fs";
+import test from "node:test";
+import assert from "node:assert/strict";
+
+const read = (rel) => readFileSync(new URL(`../${rel}`, import.meta.url), "utf8");
+const crawl = read("e2e/ui-crawl.mjs");
+
+test("the crawl covers dark and light, phone and desktop", () => {
+  assert.match(crawl, /THEMES = \["dark", "light"\]/);
+  assert.match(crawl, /desktop:/);
+  assert.match(crawl, /phone:/);
+});
+
+test("it checks what the criterion asks: console errors, horizontal scroll, one footer, broken pictures, empty tiles, colours", () => {
+  for (const needle of ["pageerror", "horizontal scroll", "page footers", "broken picture", "empty tile", "hard-coded colour"]) {
+    assert.ok(crawl.includes(needle), `missing: ${needle}`);
+  }
+});
+
+test("public screens come from the sitemap, signed-in screens need a persona (E2E_USER / E2E_PASSWORD)", () => {
+  assert.match(crawl, /sitemap\.xml/);
+  assert.match(crawl, /E2E_USER/);
+  assert.match(crawl, /E2E_PASSWORD/);
+  for (const screen of ["/", "/studios", "/packs", "/chat", "/jobs"]) assert.ok(crawl.includes(`"${screen}"`), `signed-in screen ${screen}`);
+});
+
+test("captures go to a scratch folder (OUT), never into the repository", () => {
+  assert.match(crawl, /process\.env\.OUT/);
+  assert.doesNotMatch(crawl, /docs\/screenshots/);
+});
+
+test("it is an npm script and a step of the post-deploy workflow, after the live smoke", () => {
+  assert.equal(JSON.parse(read("package.json")).scripts["test:ui-crawl"], "node e2e/ui-crawl.mjs");
+  const wf = read(".github/workflows/live-smoke.yml");
+  assert.ok(wf.includes("npm run test:ui-crawl"));
+  assert.ok(wf.indexOf("e2e/live-smoke.spec.ts") < wf.indexOf("npm run test:ui-crawl"));
+});
+
+test("the post-deploy workflow also runs the SEO family contract against the deployed site, indexed (seo.family)", () => {
+  const wf = read(".github/workflows/live-smoke.yml");
+  assert.match(wf, /node scripts\/check-seo-family\.mjs --base https:\/\/dev\.orazaka\.com --host https:\/\/dev\.orazaka\.com(\s|$)/);
+  assert.ok(!/--index off/.test(wf), "dev.orazaka.com is indexed (AGENTS.md)");
+});
