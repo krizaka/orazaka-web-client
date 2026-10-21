@@ -16,6 +16,7 @@ import {
   type Infrastructure,
   type ModelEntry,
 } from "./platform.schemas";
+import type { BillingAuditLine } from "@/console/features/accounts/utils/audit";
 
 /**
  * Stateless adapter for the job service's operator surface, through the BFF (`/api/v1/**`, AGENTS.md §8). Responses
@@ -83,6 +84,11 @@ export const PlatformAdminApi = {
   setAdmin: async (id: string, admin: boolean): Promise<AdminUser> => AdminUserSchema.parse(await write(`/api/v1/admin/users/${encodeURIComponent(id)}/admin`, "PUT", { admin })),
   eraseUser: async (id: string, confirmEmail: string): Promise<void> => void (await write(`/api/v1/admin/users/${encodeURIComponent(id)}`, "DELETE", { confirmEmail })),
 
+  /** Billing's operator audit (every ADMIN write), newest first. */
+  billingAudit: async (limit = 200): Promise<BillingAuditLine[]> =>
+    z
+      .array(z.object({ id: z.number(), at: z.string(), actor: z.string(), action: z.string(), targetId: z.string().nullish().transform((v) => v ?? null), requestId: z.string().nullish().transform((v) => v ?? null), outcome: z.enum(["ok", "refused", "failed"]).catch("ok") }))
+      .parse(await read(`/api/v1/billing/admin/audit?limit=${limit}`)),
   /** The administration's audit trail, newest first. */
   audit: async (limit = 200): Promise<AdminAuditEntry[]> => z.array(AdminAuditEntrySchema).parse(await read(`/api/v1/admin/users/audit?limit=${limit}`)),
 } as const;
