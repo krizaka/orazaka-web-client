@@ -49,7 +49,7 @@ test("the console crawl covers every console screen in both themes and both view
   assert.match(c, /THEMES = \["dark", "light"\]/);
   assert.match(c, /desktop:/);
   assert.match(c, /phone:/);
-  for (const screen of ["/operations", "/users", "/billing", "/models", "/studios", "/audit"]) assert.ok(c.includes(`"${screen}"`), screen);
+  for (const screen of ["/operations", "/tasks", "/users", "/billing", "/models", "/studios", "/audit"]) assert.ok(c.includes(`"${screen}"`), screen);
   assert.ok(c.includes("no DEV badge"));
   assert.equal(JSON.parse(read("package.json")).scripts["test:console-crawl"], "node e2e/console-crawl.mjs");
 });
