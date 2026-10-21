@@ -176,7 +176,7 @@ describe("LoginPage while sign-in is closed (the default)", () => {
     expect(screen.getByText("Sign in to your account")).toBeInTheDocument();
     expect(screen.getByRole("status")).toHaveTextContent(banner);
     expect(banner).toMatch(/dev services/);
-    expect(screen.getByRole("link", { name: /watch/i })).toHaveAttribute("href", "/gallery");
+    expect(screen.queryByRole("link", { name: /watch/i })).toBeNull();
   });
 
   it("disables every field and button of the form", () => {

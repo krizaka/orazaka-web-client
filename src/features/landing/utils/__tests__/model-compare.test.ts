@@ -24,8 +24,8 @@ describe("Compare models", () => {
     expect(COMPARE_MODELS.find((model) => model.id === "stable-diffusion-3.5-large")?.seedHonoured).toBe(false);
   });
 
-  it("gives every inspiration the same prompt for every model, a title in English and French, and no brand or copyrighted name", () => {
-    for (const locale of ["en", "fr"] as const) for (const inspiration of COMPARE_INSPIRATIONS) expect(translations[locale].gallery.compareTitles[inspiration.id]?.trim()).toBeTruthy();
+  it("gives every inspiration the same prompt for every model, and no brand or copyrighted name", () => {
+    for (const locale of ["en", "fr"] as const) expect(translations[locale].landing.records.prompt.trim()).toBeTruthy();
     for (const inspiration of COMPARE_INSPIRATIONS) expect(inspiration.prompt).not.toMatch(/iron man|marvel|snk|king of fighters/i);
     expect(new Set(COMPARE_INSPIRATIONS.map((item) => item.id)).size).toBe(COMPARE_INSPIRATIONS.length);
   });

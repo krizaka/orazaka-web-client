@@ -5,8 +5,6 @@
 
 import { type Locale, type TranslationDictionary } from "./translations.types";
 import { landing } from "./translations.landing";
-import { features } from "./translations.features";
-import { gallery } from "./translations.gallery";
 import { mobile } from "./translations.mobile";
 import { desktop } from "./translations.desktop";
 import { docs } from "./translations.docs";
@@ -17,7 +15,6 @@ import { insights } from "./translations.insights";
 import { jobsTable } from "./translations.jobsTable";
 import { webhooks } from "./translations.webhooks";
 import { runProgress } from "./translations.runProgress";
-import { models } from "./translations.models";
 import { catalogue, plan } from "./translations.catalogue";
 import { consent } from "./translations.consent";
 import { THEME_MODE } from "@/core/constants/http.constants";
@@ -932,7 +929,6 @@ export const translations: Record<Locale, TranslationDictionary> = {
     jobsTable: jobsTable.en,
     webhooks: webhooks.en,
     runProgress: runProgress.en,
-    models: models.en,
     commandPalette: {
       label: "Command palette",
       placeholder: "Search a page…",
@@ -945,8 +941,6 @@ export const translations: Record<Locale, TranslationDictionary> = {
       sectionAccount: "Account",
     },
     landing: landing.en,
-    features: features.en,
-    gallery: gallery.en,
     mobile: mobile.en,
     desktop: desktop.en,
     docs: docs.en,
@@ -1871,7 +1865,6 @@ export const translations: Record<Locale, TranslationDictionary> = {
     jobsTable: jobsTable.fr,
     webhooks: webhooks.fr,
     runProgress: runProgress.fr,
-    models: models.fr,
     commandPalette: {
       label: "Palette de commandes",
       placeholder: "Chercher une page…",
@@ -1884,8 +1877,6 @@ export const translations: Record<Locale, TranslationDictionary> = {
       sectionAccount: "Compte",
     },
     landing: landing.fr,
-    features: features.fr,
-    gallery: gallery.fr,
     mobile: mobile.fr,
     desktop: desktop.fr,
     docs: docs.fr,

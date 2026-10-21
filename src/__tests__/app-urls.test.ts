@@ -40,7 +40,7 @@ describe("the app's addresses", () => {
         if (e.isDirectory()) {
           // The operator console (src/console, served on admin.orazaka.com) has its own addresses: /billing is its section.
           if (e.name !== "__tests__" && e.name !== "node_modules" && p !== path.join(process.cwd(), "src", "console")) walk(p);
-        } else if (/\.(ts|tsx)$/.test(e.name) && /["'`]\/(dashboard\/jobs|billing|profile)\b/.test(fs.readFileSync(p, "utf8"))) hits.push(p);
+        } else if (e.name !== "redirects.ts" && /\.(ts|tsx)$/.test(e.name) && /["'`]\/(dashboard\/jobs|billing|profile)\b/.test(fs.readFileSync(p, "utf8"))) hits.push(p);
       }
     };
     walk(path.join(process.cwd(), "src"));

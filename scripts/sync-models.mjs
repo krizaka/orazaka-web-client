@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Writes `src/features/landing/utils/models.generated.json` — the models Orazaka supports, for /models and the home
+ * Writes `src/features/landing/utils/models.generated.json` — the models Orazaka supports, for the job screens and the docs
  * page — and refreshes `content/docs/models.md` (the catalogue page of the documentation).
  *
  *   node scripts/sync-models.mjs <path to the krizaka/orazaka workspace>

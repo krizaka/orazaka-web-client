@@ -20,7 +20,7 @@ describe("proxy with the entry points closed (default)", () => {
     expect(call(path).status).toBe(404);
   });
 
-  it.each(["/", "/docs", "/docs/core", "/features/privacy", "/login", "/register"])("lets %s through", (path) => {
+  it.each(["/", "/docs", "/docs/core", "/desktop", "/login", "/register"])("lets %s through", (path) => {
     expect(call(path).headers.get("x-middleware-next")).toBe("1");
   });
 

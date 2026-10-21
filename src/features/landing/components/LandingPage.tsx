@@ -6,15 +6,10 @@ import { Button } from "@krizaka/ui/button";
 import { LandingPage as LandingTemplate } from "@krizaka/ui/landing-page";
 import { NumberTicker } from "@krizaka/ui/number-ticker";
 import { useTranslation } from "@/core/context/LocaleContext";
-import { DemoHashRedirect } from "@/features/landing/components/DemoHashRedirect";
 import { FeatureShot } from "@/features/landing/components/FeatureShot";
 import { HeroTake } from "@/features/landing/components/HeroTake";
-import { LandingCompare } from "@/features/landing/components/LandingCompare";
-import { LandingFamily } from "@/features/landing/components/LandingFamily";
-import { LandingFaq } from "@/features/landing/components/LandingFaq";
 import { LandingFooter } from "@/features/landing/components/LandingFooter";
 import { LandingNav } from "@/features/landing/components/LandingNav";
-import { LandingPlatforms } from "@/features/landing/components/LandingPlatforms";
 import { LandingRecords } from "@/features/landing/components/LandingRecords";
 import { useEntries } from "@/features/landing/components/useEntries";
 import type { MeasuredRuns } from "@/features/landing/utils/measured-runs";
@@ -40,7 +35,6 @@ export function LandingPage({ measured = NO_RUNS }: Readonly<{ measured?: Measur
   return (
     <>
       <LandingNav />
-      <DemoHashRedirect />
       <main id="main" className="bg-surface-0 text-fg">
         <LandingTemplate
           className="landing-home"
@@ -57,7 +51,7 @@ export function LandingPage({ measured = NO_RUNS }: Readonly<{ measured?: Measur
                 </Link>
               </Button>
               <Button asChild variant="ghost" size="lg" className="w-full sm:w-auto">
-                <Link href="/gallery">{h.secondary}</Link>
+                <Link href="#records">{h.secondary}</Link>
               </Button>
             </>
           }
@@ -88,10 +82,6 @@ export function LandingPage({ measured = NO_RUNS }: Readonly<{ measured?: Measur
           }}
         >
           <LandingRecords measured={measured} />
-          <LandingPlatforms />
-          <LandingFamily />
-          <LandingCompare />
-          <LandingFaq />
         </LandingTemplate>
       </main>
       <LandingFooter />
