@@ -1,9 +1,12 @@
 import type { AdminAuditEntry } from "@/console/services/platform.schemas";
 
+/** The services whose operator audit the console reads. */
+export type AuditSource = "identity" | "billing" | "studio" | "engine";
+
 /** One line of the console's Audit log, whatever service wrote it. */
 export interface AuditRow {
   key: string;
-  source: "identity" | "billing";
+  source: AuditSource;
   at: string;
   actor: string;
   action: string;
@@ -36,9 +39,9 @@ export const identityLine = (e: AdminAuditEntry): AuditRow => ({
   outcome: e.outcome,
 });
 
-export const billingLine = (l: BillingAuditLine): AuditRow => ({
-  key: `billing:${l.id}`,
-  source: "billing",
+export const serviceLine = (source: Exclude<AuditSource, "identity">, l: BillingAuditLine): AuditRow => ({
+  key: `${source}:${l.id}`,
+  source,
   at: l.at,
   actor: l.actor,
   action: l.action,
@@ -48,7 +51,12 @@ export const billingLine = (l: BillingAuditLine): AuditRow => ({
   outcome: l.outcome,
 });
 
-/** Every source in one list, newest first; a source that did not answer (`null`) leaves the others. */
-export function mergeAudit(identity: readonly AdminAuditEntry[] | null, billing: readonly BillingAuditLine[] | null): AuditRow[] {
-  return [...(identity ?? []).map(identityLine), ...(billing ?? []).map(billingLine)].sort((a, b) => (a.at < b.at ? 1 : a.at > b.at ? -1 : 0));
+/** Every source in one list, newest first; a source that did not answer (`null`, or absent) leaves the others. */
+export function mergeAudit(
+  identity: readonly AdminAuditEntry[] | null,
+  services: Partial<Record<Exclude<AuditSource, "identity">, readonly BillingAuditLine[] | null>>,
+): AuditRow[] {
+  const rows = [...(identity ?? []).map(identityLine)];
+  for (const source of ["billing", "studio", "engine"] as const) rows.push(...(services[source] ?? []).map((l) => serviceLine(source, l)));
+  return rows.sort((a, b) => (a.at < b.at ? 1 : a.at > b.at ? -1 : 0));
 }

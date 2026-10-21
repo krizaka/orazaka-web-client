@@ -33,10 +33,17 @@ export function AuditScreen() {
     setState("loading");
     try {
       // Every service's operator audit in one list; one that does not answer leaves the others (and says so).
-      const [identity, billing] = await Promise.all([attempt(PlatformAdminApi.audit()), attempt(PlatformAdminApi.billingAudit())]);
-      if (!identity.ok && !billing.ok) throw identity.error;
-      setRows(mergeAudit(identity.ok ? identity.value : null, billing.ok ? billing.value : null));
-      setState(identity.ok && billing.ok ? "ready" : "error");
+      const [identity, billing, studio, engine] = await Promise.all([
+        attempt(PlatformAdminApi.audit()),
+        attempt(PlatformAdminApi.serviceAudit("billing")),
+        attempt(PlatformAdminApi.serviceAudit("studio")),
+        attempt(PlatformAdminApi.serviceAudit("engine")),
+      ]);
+      const all = [identity, billing, studio, engine];
+      if (all.every((r) => !r.ok)) throw new Error("no service answered");
+      const lines = (r: typeof billing) => (r.ok ? r.value : null);
+      setRows(mergeAudit(identity.ok ? identity.value : null, { billing: lines(billing), studio: lines(studio), engine: lines(engine) }));
+      setState(all.every((r) => r.ok) ? "ready" : "error");
     } catch {
       setState("error");
     }
