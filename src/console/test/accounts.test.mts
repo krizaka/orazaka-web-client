@@ -27,3 +27,10 @@ test("an audit line carries the request it was made in (ADR-085), and an older s
   assert.equal(AdminAuditEntrySchema.parse({ ...line, requestId: "9f1c2d3e-aaaa-bbbb-cccc-123456789abc" }).requestId, "9f1c2d3e-aaaa-bbbb-cccc-123456789abc");
   assert.equal(AdminAuditEntrySchema.parse(line).requestId, undefined);
 });
+
+test("an audit line carries its outcome: ok, refused or failed (an older server's line is ok)", async () => {
+  const { AdminAuditEntrySchema } = await import("../services/platform.schemas.ts");
+  const line = { id: 2, at: "2026-10-21T01:00:00Z", actor: "ada@example.test", action: "admin.user_suspended", targetId: "u1", detail: "SELF" };
+  assert.equal(AdminAuditEntrySchema.parse({ ...line, outcome: "refused" }).outcome, "refused");
+  assert.equal(AdminAuditEntrySchema.parse(line).outcome, "ok");
+});

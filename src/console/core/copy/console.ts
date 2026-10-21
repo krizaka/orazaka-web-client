@@ -166,6 +166,7 @@ export const consoleCopy = {
     target: "Account",
     detail: "Detail",
     request: "Request",
+    outcome: "Outcome",
     error: "The audit trail could not be read.",
     retry: "Retry",
   },
