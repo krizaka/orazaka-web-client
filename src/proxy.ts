@@ -94,6 +94,10 @@ export function proxy(request: NextRequest) {
     response = NextResponse.next();
   } else {
     const hostRoute = routeFor(host, pathname);
+    if (pathname === "/robots.txt" && isAdminHost(host)) {
+      // The console is never indexed: said here, for any address, before the network gate (a crawler must read it).
+      return new NextResponse("User-agent: *\nDisallow: /\n", { status: 200, headers: { "content-type": "text/plain; charset=utf-8", "x-robots-tag": NOINDEX_HEADER } });
+    }
     if (hostRoute.kind === "notFound") {
       response = new NextResponse("Not found", { status: 404 });
       if (isAdminHost(host)) response.headers.set("x-robots-tag", NOINDEX_HEADER);
