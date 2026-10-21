@@ -3,7 +3,7 @@ import { render, screen } from "@testing-library/react";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 
-import { SiteFooter } from "../SiteFooter";
+import { SiteFooter } from "@/console/components/SiteFooter";
 
 /* The operator console ends with @krizaka/ui's SiteFooter (compact app mode), one line: the publisher, the version. */
 describe("the console's footer", () => {
