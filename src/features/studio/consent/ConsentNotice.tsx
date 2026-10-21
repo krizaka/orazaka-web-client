@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@krizaka/ui/button";
 import { Dialog } from "@krizaka/ui/dialog";
 import { useTranslation } from "@/core/context/LocaleContext";
@@ -8,22 +8,22 @@ import { useRegulatedPack } from "@/features/studio/consent/useRegulated";
 import { StudioApi } from "@/services/studio.api";
 import type { Installation } from "@krizaka/orazaka-shared";
 
-/** The confirmation outlives the reload the erase triggers (the page remounts): remembered for a few seconds. */
-const ERASED_KEY = "orazaka_wellbeing_erased_at";
+/** The confirmation outlives the reload the erase triggers (the page remounts): remembered, then forgotten. */
+const ERASED_KEY = "orazaka_wellbeing_erased";
 const ERASED_NOTE_MS = 15_000;
 
 function recentlyErased(): boolean {
   try {
-    const at = Number(sessionStorage.getItem(ERASED_KEY));
-    return at > 0 && Date.now() - at < ERASED_NOTE_MS;
+    return sessionStorage.getItem(ERASED_KEY) === "1";
   } catch {
     return false;
   }
 }
 
-function rememberErased() {
+function rememberErased(on: boolean) {
   try {
-    sessionStorage.setItem(ERASED_KEY, String(Date.now()));
+    if (on) sessionStorage.setItem(ERASED_KEY, "1");
+    else sessionStorage.removeItem(ERASED_KEY);
   } catch {
     // The note is a courtesy; the erase already happened.
   }
@@ -53,6 +53,16 @@ export function ConsentNotice({ studioKey, installation, onChanged }: Readonly<C
   const [erasing, setErasing] = useState(false);
   const [erased, setErased] = useState(recentlyErased);
 
+  // The note goes away by itself; the timer, not an unmount, forgets it (the reload remounts this component).
+  useEffect(() => {
+    if (!erased) return;
+    const timer = setTimeout(() => {
+      rememberErased(false);
+      setErased(false);
+    }, ERASED_NOTE_MS);
+    return () => clearTimeout(timer);
+  }, [erased]);
+
   if (!pack) return null;
 
   const eraseAll = async () => {
@@ -62,7 +72,7 @@ export function ConsentNotice({ studioKey, installation, onChanged }: Readonly<C
       await StudioApi.eraseWellbeingData(pack);
       setErasing(false);
       setErased(true);
-      rememberErased();
+      rememberErased(true);
       onChanged();
     } catch (caught) {
       setFailed(caught instanceof Error ? caught.message : t.studio.loadError);
