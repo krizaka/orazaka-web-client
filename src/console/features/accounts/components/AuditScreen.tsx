@@ -12,6 +12,7 @@ const t = consoleCopy.audit;
 
 const columns: DataTableColumn<AdminAuditEntry>[] = [
   { id: "at", header: t.when, sortable: true, value: (e) => e.at ?? "", cell: (e) => (e.at ? e.at.replace("T", " ").slice(0, 19) : "—") },
+  { id: "outcome", header: t.outcome, filter: "facet", value: (e) => e.outcome },
   { id: "actor", header: t.actor, filter: "text", value: (e) => e.actor ?? "" },
   { id: "action", header: t.action, filter: "facet", card: "title", cell: (e) => <span className="font-mono text-xs">{e.action}</span> },
   { id: "targetId", header: t.target, value: (e) => e.targetId ?? "", cell: (e) => <span className="font-mono text-[11px]">{e.targetId ?? "—"}</span> },
