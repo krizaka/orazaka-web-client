@@ -22,20 +22,20 @@ describe("search engines and AI assistants (the Krizaka family contract)", () =>
     expect(text).toContain("Disallow: /dashboard");
   });
 
-  it("sitemap.xml lists the home, the features and every published doc on the host", () => {
+  it("sitemap.xml lists the home, the Mac page and every published doc on the host", () => {
     const entries = sitemap();
     const xml = `<urlset>${entries.map((e) => `<url><loc>${e.url}</loc><lastmod>${new Date(e.lastModified as Date).toISOString()}</lastmod></url>`).join("")}</urlset>`;
     expect(auditSitemap(xml, { host: SITE_URL, minUrls: 10 })).toEqual([]);
-    expect(entries.map((e) => e.url)).toContain(`${SITE_URL}/features/unified-engine`);
+    expect(entries.map((e) => e.url)).toContain(`${SITE_URL}/desktop`);
     expect(publicPaths()).toContain("/docs/architecture");
-    expect(publicPaths()).toEqual(expect.arrayContaining(["/docs/mobile", "/gallery", "/models", "/desktop"]));
-    expect(entries.map((e) => e.url)).toContain(`${SITE_URL}/models`);
+    expect(publicPaths()).toEqual(expect.arrayContaining(["/docs/mobile", "/docs/models", "/desktop"]));
+    expect(entries.map((e) => e.url)).toContain(`${SITE_URL}/docs/models`);
   });
 
   it("llms.txt and llms-full.txt follow llmstxt.org, name this host and link the publisher", () => {
     expect(auditLlms(llmsText(), { host: SITE_URL })).toEqual([]);
     expect(auditLlms(llmsFullText(), { host: SITE_URL, full: true })).toEqual([]);
-    expect(llmsText()).toContain(`[Models](${SITE_URL}/models)`);
+    expect(llmsText()).toContain(`[Models](${SITE_URL}/docs/models)`);
     expect(llmsFullText().length).toBeGreaterThan(llmsText().length * 5);
   });
 
@@ -46,7 +46,7 @@ describe("search engines and AI assistants (the Krizaka family contract)", () =>
     expect(graph.find((n) => n["@type"] === "SoftwareApplication")).toMatchObject({ applicationCategory: "BusinessApplication" });
   });
 
-  it.each(["/robots.txt", "/sitemap.xml", "/llms.txt", "/llms-full.txt", "/opengraph-image", "/models"])("the sign-in proxy lets crawlers read %s", (path) => {
+  it.each(["/robots.txt", "/sitemap.xml", "/llms.txt", "/llms-full.txt", "/opengraph-image"])("the sign-in proxy lets crawlers read %s", (path) => {
     const res = proxy(new NextRequest(`${SITE_URL}${path}`));
     expect(res.headers.get("x-middleware-next")).toBe("1");
   });

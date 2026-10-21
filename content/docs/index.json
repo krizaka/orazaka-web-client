@@ -48,18 +48,6 @@
     "file": "packs.md"
   },
   {
-    "slug": "business-playbook",
-    "journey": "use",
-    "group": null,
-    "order": 2,
-    "title": "Playbook: build a product on Orazaka",
-    "intro": "A worked example — what to deploy, in what order, and what each step delivers — written for decision-makers as much as engineers.",
-    "audience": "decision-maker",
-    "source": "docs/BUSINESS_IMPLEMENTATION.md",
-    "generated": false,
-    "file": "business-playbook.md"
-  },
-  {
     "slug": "jobs",
     "journey": "use",
     "group": null,
@@ -82,18 +70,6 @@
     "source": "docs/_generated/MODELS.md",
     "generated": true,
     "file": "models.md"
-  },
-  {
-    "slug": "cinematic-shorts",
-    "journey": "use",
-    "group": null,
-    "order": 6,
-    "title": "Cinematic shorts",
-    "intro": "A 30–60 s film from a brief — directed shot list, character references, Wan 2.2 A14B shots, an upscaled cut with ramps, grade and titles, music, foley and voice — each step an ordinary Studio run, gated frame by frame.",
-    "audience": "everyone",
-    "source": "docs/CINEMATIC_SHORTS.md",
-    "generated": false,
-    "file": "cinematic-shorts.md"
   },
   {
     "slug": "content-policy",
@@ -286,18 +262,6 @@
     "source": "docs/_generated/BUSINESS.md",
     "generated": true,
     "file": "business.md"
-  },
-  {
-    "slug": "use-cases",
-    "journey": "build",
-    "group": "internals",
-    "order": 5,
-    "title": "Use-case catalogue",
-    "intro": "The App Factory use-cases of the business layer.",
-    "audience": "developer",
-    "source": "docs/_generated/USE_CASES.md",
-    "generated": true,
-    "file": "use-cases.md"
   },
   {
     "slug": "repositories",

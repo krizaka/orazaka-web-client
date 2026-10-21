@@ -18,7 +18,7 @@ function quickstart(): string {
 export default function DocsHubPage() {
   const journeys: HubJourney[] = JOURNEY_IDS.map((id) => {
     const pages = pagesOf(id);
-    const links = pages.slice(0, 4).map((p) => ({ href: p.slug === "models" ? "/models" : pageHref(p.slug), label: p.title }));
+    const links = pages.slice(0, 4).map((p) => ({ href: pageHref(p.slug), label: p.title }));
     // The install page also answers "how do I update and back up?": the run journey links its section.
     if (id === "run") links.unshift({ href: `${pageHref("self-hosting")}#living-with-it-10`, label: docs.en.updateLink });
     return { id, href: pageHref(pages[0].slug), links: links.slice(0, 4) };

@@ -20,24 +20,23 @@ const INSPIRATION = "montreal-winter";
 export function LandingRecords({ measured }: Readonly<{ measured: MeasuredRuns }>) {
   const { t } = useTranslation();
   const r = t.landing.records;
-  const g = t.gallery;
   const images = imagesOf(INSPIRATION);
-  const title = g.compareTitles[INSPIRATION];
+  const title = r.prompt;
   return (
     <Section id="records" eyebrow={r.eyebrow} title={r.title} lead={r.lead} reveal divider>
       <span id="demo" className="block scroll-mt-20" />
       <ul className="grid gap-6 md:grid-cols-3">
         {images.map((image) => (
           <li key={image.stem} data-reveal className="flex min-w-0 flex-col gap-3">
-            <Image src={image.src} alt={fill(g.compareAlt, { model: image.model.name, title })} width={image.width} height={image.height} sizes="(max-width: 768px) 100vw, 360px" loading="lazy" unoptimized className="block h-auto w-full rounded-lg border border-border-subtle bg-surface-2" />
+            <Image src={image.src} alt={fill(r.alt, { model: image.model.name, title })} width={image.width} height={image.height} sizes="(max-width: 768px) 100vw, 360px" loading="lazy" unoptimized className="block h-auto w-full rounded-lg border border-border-subtle bg-surface-2" />
             <h3 className="font-display text-base font-bold text-fg">{image.model.name}</h3>
             <dl className="grid grid-cols-[auto_1fr] gap-x-4 gap-y-1 text-sm">
-              <dt className="text-fg-secondary">{g.compareWhere}</dt>
-              <dd className="m-0 text-fg">{image.model.where === "mac" ? g.compareOnMac : g.compareOnDo}</dd>
-              <dt className="text-fg-secondary">{g.time}</dt>
-              <dd className="m-0 text-fg">{fill(g.videoTime, { seconds: image.seconds })}</dd>
-              <dt className="text-fg-secondary">{g.clipCost}</dt>
-              <dd className="m-0 text-fg">{image.model.costUsd === undefined ? g.compareNoCost : fill(g.compareImageCost, { cost: image.model.costUsd.toFixed(2) })}</dd>
+              <dt className="text-fg-secondary">{r.where}</dt>
+              <dd className="m-0 text-fg">{image.model.where === "mac" ? r.onMac : r.onHosted}</dd>
+              <dt className="text-fg-secondary">{r.time}</dt>
+              <dd className="m-0 text-fg">{fill(r.timeValue, { seconds: image.seconds })}</dd>
+              <dt className="text-fg-secondary">{r.cost}</dt>
+              <dd className="m-0 text-fg">{image.model.costUsd === undefined ? r.noCost : fill(r.imageCost, { cost: image.model.costUsd.toFixed(2) })}</dd>
               <dt className="text-fg-secondary">{r.runLabel}</dt>
               <dd className="m-0 font-mono text-xs text-fg" title={image.runId}>
                 {image.runId.slice(0, 8)}

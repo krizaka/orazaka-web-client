@@ -41,7 +41,7 @@ const bar = () => document.querySelector("header[data-floating]") as HTMLElement
 const desktopNav = () => within(bar()).getAllByRole("navigation", { name: "Orazaka" })[0];
 
 describe("the information architecture of the public bar", () => {
-  it("is the product-site standard: Product ▾ · Platforms ▾ · Docs — at most four entries, no lone Demo/Mobile/Mac", () => {
+  it("is short (epic #231): Product ▾ (How it works · Packs · Download) · Docs", () => {
     const shape = NAV_GROUPS.map((g) => ({ group: g.id, entries: g.entries.map((e) => `${e.id} → ${e.anchor ? `#${e.anchor}` : e.path}`) }));
     expect(shape).toMatchInlineSnapshot(`
 [
@@ -49,26 +49,16 @@ describe("the information architecture of the public bar", () => {
     "entries": [
       "how → #features",
       "packs → /docs/packs",
-      "models → /models",
-      "demo → /gallery",
+      "download → /desktop",
     ],
     "group": "product",
-  },
-  {
-    "entries": [
-      "web → #platforms",
-      "mobile → /docs/mobile",
-      "desktop → /desktop",
-      "selfHost → /docs/self-hosting",
-    ],
-    "group": "platforms",
   },
 ]
 `);
     renderLanding("en", <LandingNav />);
     const top = [...desktopNav().querySelectorAll("[data-nav-item]")].map((el) => el.textContent?.trim());
-    expect(top).toEqual([nav.product, nav.platforms, nav.docs]);
-    expect(top.length).toBeLessThanOrEqual(4);
+    expect(top).toEqual([nav.product, nav.how, nav.packs, nav.download, nav.docs]);
+    expect(top.length).toBeLessThanOrEqual(5);
   });
 
   it("is the family's floating bar, in the family's order: mark and name · sections · repository, theme, language, Sign in, Talk to us", () => {
@@ -92,12 +82,9 @@ describe("the information architecture of the public bar", () => {
 
   it.each([
     ["/", null],
-    ["/models", "product"],
-    ["/gallery", "product"],
-    ["/features/absolute-privacy", "product"],
-    ["/desktop", "platforms"],
-    ["/docs/mobile", "platforms"],
-    ["/docs/self-hosting", "platforms"],
+    ["/desktop", "product"],
+    ["/docs/mobile", "docs"],
+    ["/docs/self-hosting", "docs"],
     ["/docs", "docs"],
     ["/docs/packs", "docs"],
   ])("lights one item at most on %s (%s)", (path, top) => {
@@ -105,7 +92,7 @@ describe("the information architecture of the public bar", () => {
     mockPath.current = path;
     renderLanding("en", <LandingNav onHome={path === "/"} />);
     const lit = [...desktopNav().querySelectorAll("[data-nav-item][data-active]")].map((el) => el.textContent?.trim());
-    expect(lit).toEqual(top ? [top === "docs" ? nav.docs : nav[top as "product" | "platforms"]] : []);
+    expect(lit).toEqual(top === "docs" ? [nav.docs] : top ? [nav.product, nav.download] : []);
     mockPath.current = "/";
   });
 
@@ -114,7 +101,7 @@ describe("the information architecture of the public bar", () => {
       const { container, unmount } = renderLanding(locale, <LandingNav />);
       let res = await axe.run(container, { rules: { region: { enabled: false } } });
       expect(res.violations.map((v) => v.id)).toEqual([]);
-      fireEvent.click(within(bar()).getByRole("button", { name: translations[locale].landing.nav.platforms }));
+      fireEvent.click(within(bar()).getByRole("button", { name: translations[locale].landing.nav.product }));
       res = await axe.run(container, { rules: { region: { enabled: false } } });
       expect(res.violations.map((v) => v.id)).toEqual([]);
       unmount();
@@ -127,11 +114,11 @@ describe("the mobile panel", () => {
     renderLanding("en", <LandingPage />, CLOSED);
     fireEvent.click(screen.getByRole("button", { name: nav.openMenu }));
     const groups = within(bar()).getAllByRole("group").filter((g) => g.getAttribute("aria-labelledby"));
-    expect(groups.map((g) => g.querySelector("p")?.textContent)).toEqual([nav.product, nav.platforms, nav.preferences]);
-    expect(within(groups[1]).getAllByRole("link").map((a) => a.textContent)).toEqual([nav.web, nav.mobile, nav.desktop, nav.selfHost]);
+    expect(groups.map((g) => g.querySelector("p")?.textContent)).toEqual([nav.product, nav.preferences]);
+    expect(within(groups[0]).getAllByRole("link").map((a) => a.textContent)).toEqual([nav.how, nav.packs, nav.download]);
     const panel = groups[0].closest("nav") as HTMLElement;
     const hrefs = [...panel.querySelectorAll("a")].map((a) => a.getAttribute("href"));
-    expect(hrefs).toEqual(["#features", "/docs/packs", "/models", "/gallery", "#platforms", "/docs/mobile", "/desktop", "/docs/self-hosting", "/docs", "#", "#", "/login", "https://www.krizaka.com/contact?topic=orazaka"]);
+    expect(hrefs).toEqual(["#features", "/docs/packs", "/desktop", "/docs", "#", "#", "/login", "https://www.krizaka.com/contact?topic=orazaka"]);
     expect(hrefs).not.toContain("/infrastructure");
   });
 

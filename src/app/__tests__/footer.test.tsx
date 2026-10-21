@@ -3,13 +3,12 @@ import { render, screen } from "@testing-library/react";
 import { ThemeProvider } from "@krizaka/ui/theme";
 import { translations, type Locale } from "@/core/context/translations";
 import { AuthFlagsProvider } from "@/core/context/AuthFlagsContext";
-import ContactPage from "@/app/contact/page";
 import PrivacyPage from "@/app/privacy/page";
 import TermsPage from "@/app/terms/page";
 import { LandingPage } from "@/features/landing/components/LandingPage";
 
 /* One footer, one contentinfo: the public pages end with @krizaka/ui's SiteFooter (LandingFooter) and nothing else — the
-   hand-made legal footers of privacy, terms and contact are gone. The signed-in shell (sidebar) has none. */
+   hand-made legal footers of privacy, terms are gone. The signed-in shell (sidebar) has none. */
 let mockLocale: Locale = "en";
 jest.mock("@/core/context/LocaleContext", () => ({
   useTranslation: () => ({ t: translations[mockLocale], locale: mockLocale, setLocale: jest.fn() }),
@@ -29,7 +28,6 @@ describe.each<[string, React.ReactElement]>([
   ["/", <LandingPage key="home" />],
   ["/privacy", <PrivacyPage key="privacy" />],
   ["/terms", <TermsPage key="terms" />],
-  ["/contact", <ContactPage key="contact" />],
 ])("%s", (_route, page) => {
   it.each<Locale>(["en", "fr"])("renders exactly one contentinfo, the product's (%s), outside main", (locale) => {
     mockLocale = locale;

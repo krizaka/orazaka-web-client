@@ -47,9 +47,9 @@ if (sitemap === null) {
   console.error(`✗ Nothing answers at ${BASE}/sitemap.xml: set E2E_BASE_URL to a running Orazaka.`);
   process.exit(2);
 }
-// The sections with a distinct layout first (home, gallery, models, docs, a feature), then the rest up to the limit.
+// The sections with a distinct layout first (home, docs, the Mac page), then the rest up to the limit.
 const paths = [...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => new URL(m[1]).pathname || "/");
-const picked = [...new Set(["/", "/gallery", "/models", "/docs", ...paths.filter((p) => p.startsWith("/features/")).slice(0, 1), ...paths])].slice(0, PUBLIC_LIMIT);
+const picked = [...new Set(["/", "/docs", "/desktop", ...paths])].slice(0, PUBLIC_LIMIT);
 const PAGES = [
   ...picked.map((url) => ({ name: url === "/" ? "home" : url.slice(1).replace(/\//g, "-"), url })),
   // The sign-in screen is the auth layout (no bar, no footer, by design); the signed-in app is the rail + header shell

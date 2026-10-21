@@ -79,3 +79,22 @@ test("the Measured runs page is published beside Supported models, from the gene
   assert.match(fs.readFileSync(path.join(dir, "models.md"), "utf8"), /\(MEASURED_RUNS\.md\)/);
   assert.equal(JSON.parse(fs.readFileSync(path.join(dir, "sources.json"), "utf8"))["docs/_generated/MEASURED_RUNS.md"], "measured-runs");
 });
+
+test("removedPublicRoutes reads src/core/config/redirects.ts; a doc linking one of them is refused", async () => {
+  const { removedPublicRoutes, removedLinks } = await import("./sync-docs.mjs");
+  const routes = removedPublicRoutes();
+  assert.ok(routes.includes("/gallery") && routes.includes("/features"));
+  assert.deepEqual(removedLinks("See [the demos](/gallery) and https://www.orazaka.com/features/privacy"), ["/gallery", "/features"]);
+  assert.deepEqual(removedLinks("[models](/docs/models), [gallery pages](/galleryx) and a gallery of images"), []);
+});
+
+test("sync fails when a synced doc links a removed public route", () => {
+  const src = fs.mkdtempSync(path.join(os.tmpdir(), "orazaka-src-"));
+  const out = fs.mkdtempSync(path.join(os.tmpdir(), "orazaka-out-"));
+  for (const d of DOCS) {
+    fs.mkdirSync(path.dirname(path.join(src, d.source)), { recursive: true });
+    fs.writeFileSync(path.join(src, d.source), d.slug === "101" ? "# T\n[demos](https://dev.orazaka.com/gallery)\n" : "# T\n");
+  }
+  fs.mkdirSync(path.join(src, "docs", "_generated"), { recursive: true });
+  assert.throws(() => sync(src, out), /101.*\/gallery/);
+});

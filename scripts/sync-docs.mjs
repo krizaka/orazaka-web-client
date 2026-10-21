@@ -53,6 +53,23 @@ export function modelSlice(arch) {
   };
 }
 
+/** The removed public routes, read from src/core/config/redirects.ts (`REMOVED_PUBLIC`): `/gallery`, `/features`, `/models`… */
+export function removedPublicRoutes() {
+  const ts = fs.readFileSync(path.join(root, "src", "core", "config", "redirects.ts"), "utf8");
+  const block = ts.slice(ts.indexOf("REMOVED_PUBLIC"), ts.indexOf("];", ts.indexOf("REMOVED_PUBLIC")));
+  return [...new Set([...block.matchAll(/source:\s*"([^"]+)"/g)].map((m) => m[1].replace(/\/:[a-z]+$/, "")))];
+}
+
+/** The removed routes a markdown text links (`](/gallery)` or `orazaka.com/gallery/…`), in order, once each. */
+export function removedLinks(md) {
+  const hits = [];
+  for (const route of removedPublicRoutes()) {
+    const esc = route.replace(/[.*+?^${}()|[\]\\/]/g, "\\$&");
+    if (new RegExp(`(\\]\\(|orazaka\\.com)${esc}(?![\\w-])`).test(md)) hits.push(route);
+  }
+  return hits.sort((a, b) => md.indexOf(a) - md.indexOf(b));
+}
+
 export function sync(srcDir, outDir = path.join(root, "content", "docs")) {
   fs.rmSync(outDir, { recursive: true, force: true });
   fs.mkdirSync(outDir, { recursive: true });
@@ -60,7 +77,10 @@ export function sync(srcDir, outDir = path.join(root, "content", "docs")) {
   for (const d of DOCS) {
     const file = path.join(srcDir, d.source);
     if (!fs.existsSync(file)) throw new Error(`${d.slug}: ${d.source} is not in ${srcDir}`);
-    fs.writeFileSync(path.join(outDir, `${d.slug}.md`), clean(fs.readFileSync(file, "utf8"), d.omit));
+    const body = clean(fs.readFileSync(file, "utf8"), d.omit);
+    const gone = removedLinks(body);
+    if (gone.length) throw new Error(`${d.slug}: links a removed public route (${gone.join(", ")}) — fix ${d.source} in the Orazaka repository`);
+    fs.writeFileSync(path.join(outDir, `${d.slug}.md`), body);
     index.push({ slug: d.slug, journey: d.journey, group: d.group ?? null, order: d.order, title: d.title, intro: d.intro, audience: d.audience, source: d.source, generated: Boolean(d.generated), file: `${d.slug}.md` });
   }
   for (const s of SPECIAL) index.push({ ...s, group: null, source: null, generated: false, file: null });
