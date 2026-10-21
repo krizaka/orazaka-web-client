@@ -8,6 +8,27 @@ import { useRegulatedPack } from "@/features/studio/consent/useRegulated";
 import { StudioApi } from "@/services/studio.api";
 import type { Installation } from "@krizaka/orazaka-shared";
 
+/** The confirmation outlives the reload the erase triggers (the page remounts): remembered for a few seconds. */
+const ERASED_KEY = "orazaka_wellbeing_erased_at";
+const ERASED_NOTE_MS = 15_000;
+
+function recentlyErased(): boolean {
+  try {
+    const at = Number(sessionStorage.getItem(ERASED_KEY));
+    return at > 0 && Date.now() - at < ERASED_NOTE_MS;
+  } catch {
+    return false;
+  }
+}
+
+function rememberErased() {
+  try {
+    sessionStorage.setItem(ERASED_KEY, String(Date.now()));
+  } catch {
+    // The note is a courtesy; the erase already happened.
+  }
+}
+
 interface ConsentNoticeProps {
   studioKey: string;
   installation: Installation | undefined;
@@ -30,7 +51,7 @@ export function ConsentNotice({ studioKey, installation, onChanged }: Readonly<C
   const [busy, setBusy] = useState(false);
   const [failed, setFailed] = useState<string | null>(null);
   const [erasing, setErasing] = useState(false);
-  const [erased, setErased] = useState(false);
+  const [erased, setErased] = useState(recentlyErased);
 
   if (!pack) return null;
 
@@ -41,6 +62,7 @@ export function ConsentNotice({ studioKey, installation, onChanged }: Readonly<C
       await StudioApi.eraseWellbeingData(pack);
       setErasing(false);
       setErased(true);
+      rememberErased();
       onChanged();
     } catch (caught) {
       setFailed(caught instanceof Error ? caught.message : t.studio.loadError);

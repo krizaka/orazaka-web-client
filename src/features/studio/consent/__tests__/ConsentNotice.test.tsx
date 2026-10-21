@@ -13,7 +13,7 @@ const pack = (regulatoryClass: string) => [{ packKey: "bien-etre", regulatoryCla
 const installation = { id: "inst-1", status: "ACTIVE" } as Installation;
 
 describe("ConsentNotice (before the click, and the way out)", () => {
-  beforeEach(() => jest.clearAllMocks());
+  beforeEach(() => { jest.clearAllMocks(); sessionStorage.clear(); });
 
   it("says before the click that a REGULATED Studio asks for consent", async () => {
     jest.mocked(StudioApi.fetchPacks).mockResolvedValue(pack("REGULATED"));
