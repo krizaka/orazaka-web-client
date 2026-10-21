@@ -1,4 +1,4 @@
-// Dev preview `admin.ux-review` (orazaka-web-client#125 family, orazaka-web-admin#36): the console's navigation shape is a
+// Dev preview `admin.ux-review` (orazaka-web-client#125 family): the console's navigation shape is a
 // tested contract — the operator's jobs map to about five places, one concept each, every screen reachable once.
 import { test } from "node:test";
 import assert from "node:assert/strict";

@@ -1,6 +1,6 @@
 /** @jest-environment node */
 /**
- * The admin console is served by this app on its own host (admin.orazaka.com, krizaka/orazaka-web-admin#31):
+ * The admin console is served by this app on its own host (admin.orazaka.com, formerly the standalone orazaka-web-admin):
  * the proxy rewrites that host to the internal `/console` tree, and the public host never reaches it.
  */
 import { NextRequest } from "next/server";
