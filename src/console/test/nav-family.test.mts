@@ -11,8 +11,11 @@ test("the bar shows the environment badge and no family switcher", () => {
   assert.doesNotMatch(nav, /<NavBar\.Family/);
 });
 
-test("the footer is the console's own: no family columns", () => {
-  assert.doesNotMatch(read("components/SiteFooter.tsx"), /site-footer|amily/);
+test("the footer is @krizaka/ui's SiteFooter in app mode: one slim line, no family columns", () => {
+  const src = read("components/SiteFooter.tsx");
+  assert.match(src, /@krizaka\/ui\/site-footer/);
+  assert.match(src, /family=\{false\}/);
+  assert.match(src, /variant="app"/);
 });
 
 test("the build names its environment, dev by default", () => {
