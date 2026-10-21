@@ -22,7 +22,10 @@ const columns: DataTableColumn<AuditRow>[] = [
   { id: "requestId", header: t.request, filter: "text", value: (e) => e.requestId, cell: (e) => <span className="font-mono text-[11px]">{e.requestId || "—"}</span> },
 ];
 
-/** The identity service's audit trail of account administration, newest first, filterable and exportable. */
+/** A call that reports its outcome instead of throwing: one service down must not hide the others' lines. */
+const attempt = <T,>(p: Promise<T>) => p.then((value) => ({ ok: true as const, value }), (error: unknown) => ({ ok: false as const, error }));
+
+/** Every service's operator audit trail of account administration, newest first, filterable and exportable. */
 export function AuditScreen() {
   const [rows, setRows] = React.useState<AuditRow[]>([]);
   const [state, setState] = React.useState<"loading" | "ready" | "error">("loading");
@@ -30,10 +33,10 @@ export function AuditScreen() {
     setState("loading");
     try {
       // Every service's operator audit in one list; one that does not answer leaves the others (and says so).
-      const [identity, billing] = await Promise.allSettled([PlatformAdminApi.audit(), PlatformAdminApi.billingAudit()]);
-      if (identity.status === "rejected" && billing.status === "rejected") throw identity.reason;
-      setRows(mergeAudit(identity.status === "fulfilled" ? identity.value : null, billing.status === "fulfilled" ? billing.value : null));
-      setState(identity.status === "fulfilled" && billing.status === "fulfilled" ? "ready" : "error");
+      const [identity, billing] = await Promise.all([attempt(PlatformAdminApi.audit()), attempt(PlatformAdminApi.billingAudit())]);
+      if (!identity.ok && !billing.ok) throw identity.error;
+      setRows(mergeAudit(identity.ok ? identity.value : null, billing.ok ? billing.value : null));
+      setState(identity.ok && billing.ok ? "ready" : "error");
     } catch {
       setState("error");
     }
