@@ -37,7 +37,8 @@ export function ConsoleNav() {
           </Link>
         </NavBar.Brand>
         {/* NAV-SYS: a private console shows the environment (DEV) and never the family panel. */}
-        {APP_ENV !== "production" && <NavBar.Badge env={APP_ENV} />}
+        {/* inline-flex: the kit hides the badge below 640 px, but an operator on a phone must still see the environment. */}
+        {APP_ENV !== "production" && <NavBar.Badge env={APP_ENV} className="inline-flex" />}
         <NavBar.Items>
           {SECTIONS.map((section) => (
             <NavBar.Link key={section.href} asChild active={active(section.id)}>
