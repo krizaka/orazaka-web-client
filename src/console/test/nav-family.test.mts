@@ -18,3 +18,7 @@ test("the footer is the console's own: no family columns", () => {
 test("the build names its environment, dev by default", () => {
   assert.match(readFileSync(new URL("../../../next.config.ts", import.meta.url), "utf8"), /NEXT_PUBLIC_APP_ENV[^\n]*\|\| "dev"/);
 });
+
+test("the environment badge shows on a phone too: the kit hides it below 640 px, the console overrides that", () => {
+  assert.match(read("components/ConsoleNav.tsx"), /<NavBar\.Badge env=\{APP_ENV\} className="inline-flex"/);
+});
