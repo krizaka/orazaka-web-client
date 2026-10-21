@@ -14,8 +14,8 @@ function plainDoc(slug: string): string | undefined {
 import { features } from "@/core/context/translations.features";
 import { MODELS } from "@/features/landing/utils/models";
 
-/** The public origin of this site (dev today; the production origin replaces it here, in one place). */
-export const SITE_URL = "https://dev.orazaka.com";
+/** The public origin of this site (www.orazaka.com: the real app, sign-up closed; dev.orazaka.com sends its pages here). */
+export const SITE_URL = "https://www.orazaka.com";
 export const KRIZAKA_URL = "https://www.krizaka.com";
 export const REPO_URL = "https://github.com/krizaka/orazaka";
 /** The Krizaka Organization, defined by www.krizaka.com: every JSON-LD node of the family points back to it. */

@@ -12,7 +12,8 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { authClosed, isBackendPath, readAuthFlags } from "@/core/config/auth-flags";
-import { indexable, NOINDEX_HEADER } from "@/core/config/indexing";
+import { CLOSED_ROBOTS, devRedirect, indexable, isDevHost, NOINDEX_HEADER } from "@/core/config/indexing";
+import { SITE_URL } from "@/app/_seo/seo";
 import { consoleResponse } from "@/console/core/edge";
 import { isAdminHost, routeFor } from "@/console/core/config/host";
 /** The platform's liveness probe: answered on every host, before any gate. */
@@ -89,6 +90,19 @@ function route(request: NextRequest) {
 export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
   const host = request.headers.get("host");
+  // dev.orazaka.com (APP_DEV_HOST): robots.txt closes everything, a page goes to www (308); the BFF, auth and
+  // /.well-known keep serving - all noindex (src/core/config/indexing.ts).
+  if (isDevHost(host)) {
+    const closed = (r: NextResponse) => {
+      r.headers.set("x-robots-tag", NOINDEX_HEADER);
+      return r;
+    };
+    if (pathname === "/robots.txt") return closed(new NextResponse(CLOSED_ROBOTS, { status: 200, headers: { "content-type": "text/plain; charset=utf-8" } }));
+    const to = devRedirect(request.method, pathname, request.nextUrl.search, process.env.APP_PUBLIC_URL ?? SITE_URL);
+    if (to) return closed(NextResponse.redirect(to, 308));
+    if (pathname !== HEALTH_PATH) return closed(route(request));
+    return closed(NextResponse.next());
+  }
   let response: NextResponse;
   if (pathname === HEALTH_PATH) {
     response = NextResponse.next();
