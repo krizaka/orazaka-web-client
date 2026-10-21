@@ -40,6 +40,12 @@ jobs:
       - run: npx playwright install --with-deps chromium
       - name: SEO family contract (indexed)
         run: node scripts/check-seo-family.mjs --base https://dev.orazaka.com --host https://dev.orazaka.com
+      - name: Console gate (admin.gated) — a GitHub runner is not an allowed address
+        run: |
+          test "$(curl -s -o /dev/null -w '%{http_code}' https://admin.orazaka.com/login)" = 403
+          test "$(curl -s -o /dev/null -w '%{http_code}' https://admin.orazaka.com/)" = 403
+          test "$(curl -s -o /dev/null -w '%{http_code}' https://dev.orazaka.com/console)" = 404
+          test "$(curl -s -o /dev/null -w '%{http_code}' https://admin.orazaka.com/api/healthz)" = 200
       - name: UI crawl
         run: npm run test:ui-crawl
         env:
