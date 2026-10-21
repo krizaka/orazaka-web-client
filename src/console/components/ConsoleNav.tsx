@@ -10,26 +10,19 @@ import { ThemeToggle } from "@krizaka/ui/theme";
 import { LogoutIcon } from "@krizaka/icons";
 import { consoleCopy } from "@/console/core/copy/console";
 import { APP_ENV } from "@/console/core/config/version";
+import { CONSOLE_GROUPS, activeGroup } from "@/console/core/config/sections";
 
-const SECTIONS = [
-  { href: "/", label: consoleCopy.nav.supervision },
-  { href: "/operations", label: consoleCopy.nav.operations },
-  { href: "/models", label: consoleCopy.nav.models },
-  { href: "/users", label: consoleCopy.nav.users },
-  { href: "/audit", label: consoleCopy.nav.audit },
-  { href: "/billing", label: consoleCopy.nav.billing },
-  { href: "/studios", label: consoleCopy.nav.studios },
-] as const;
+const SECTIONS = CONSOLE_GROUPS.map((g) => ({ href: g.href, id: g.id, label: consoleCopy.nav[g.id as keyof typeof consoleCopy.nav] as string }));
 
 /**
- * The console's bar (@krizaka/ui NavBar, full width): the Orazaka mark, its three sections with the light gliding to
- * the current one, the environment badge (DEV), the theme toggle and sign-out; a disclosure panel below `md`. A private
- * console: no family switcher (NavBar.Family) and no family footer — they are for the public sites.
+ * The console's bar (@krizaka/ui NavBar, full width): the Orazaka mark, its five sections (config/sections.ts) with the
+ * light gliding to the current one, the environment badge (DEV), the theme toggle and sign-out; a disclosure panel below
+ * `md`. A private console: no family switcher (NavBar.Family) and no family footer — they are for the public sites.
  */
 export function ConsoleNav() {
   // The address bar says `/studios`; the rendered tree says `/console/studios` — either way the same section.
-  const pathname = usePathname().replace(/^\/console(?=\/|$)/, "") || "/";
-  const active = (href: string) => (href === "/" ? pathname === "/" : pathname.startsWith(href));
+  const group = activeGroup(usePathname());
+  const active = (id: string) => group?.id === id;
   const copy = consoleCopy.nav;
 
   return (
@@ -47,7 +40,7 @@ export function ConsoleNav() {
         {APP_ENV !== "production" && <NavBar.Badge env={APP_ENV} />}
         <NavBar.Items>
           {SECTIONS.map((section) => (
-            <NavBar.Link key={section.href} asChild active={active(section.href)}>
+            <NavBar.Link key={section.href} asChild active={active(section.id)}>
               <Link href={section.href}>{section.label}</Link>
             </NavBar.Link>
           ))}
@@ -59,7 +52,7 @@ export function ConsoleNav() {
           </IconButton>
           <NavBar.Mobile openLabel={copy.open} closeLabel={copy.close}>
             {SECTIONS.map((section) => (
-              <NavBar.MobileLink key={section.href} asChild active={active(section.href)}>
+              <NavBar.MobileLink key={section.href} asChild active={active(section.id)}>
                 <Link href={section.href}>{section.label}</Link>
               </NavBar.MobileLink>
             ))}
