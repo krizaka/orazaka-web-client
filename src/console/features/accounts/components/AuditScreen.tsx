@@ -16,6 +16,8 @@ const columns: DataTableColumn<AdminAuditEntry>[] = [
   { id: "action", header: t.action, filter: "facet", card: "title", cell: (e) => <span className="font-mono text-xs">{e.action}</span> },
   { id: "targetId", header: t.target, value: (e) => e.targetId ?? "", cell: (e) => <span className="font-mono text-[11px]">{e.targetId ?? "—"}</span> },
   { id: "detail", header: t.detail, value: (e) => e.detail ?? "" },
+  // The request the action was made in (the edge's X-Request-Id): filter by it to see everything one request did.
+  { id: "requestId", header: t.request, filter: "text", value: (e) => e.requestId ?? "", cell: (e) => <span className="font-mono text-[11px]">{e.requestId ?? "—"}</span> },
 ];
 
 /** The identity service's audit trail of account administration, newest first, filterable and exportable. */

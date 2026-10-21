@@ -20,3 +20,10 @@ test("the erasure is armed only by the account's own e-mail, case and spaces asi
   assert.equal(erasureArmed("ada@example.te", "ada@example.test"), false);
   assert.equal(erasureArmed("", "ada@example.test"), false);
 });
+
+test("an audit line carries the request it was made in (ADR-085), and an older server's line without one still parses", async () => {
+  const { AdminAuditEntrySchema } = await import("../services/platform.schemas.ts");
+  const line = { id: 1, at: "2026-10-21T01:00:00Z", actor: "ada@example.test", action: "admin.user_suspended", targetId: "u1", detail: null };
+  assert.equal(AdminAuditEntrySchema.parse({ ...line, requestId: "9f1c2d3e-aaaa-bbbb-cccc-123456789abc" }).requestId, "9f1c2d3e-aaaa-bbbb-cccc-123456789abc");
+  assert.equal(AdminAuditEntrySchema.parse(line).requestId, undefined);
+});
