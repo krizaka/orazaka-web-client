@@ -79,9 +79,12 @@ the service's `application.yml` or environment.
 | `orazaka-ai-engine` | `InfrastructureProber.probeVideoInfrastructure` | every 5 s (`orazaka.core.video.probing.interval-ms`) | Periodically pings the configured video port to check if the video inference engine is responsive. |
 | `orazaka-ai-engine` | `InfrastructureProber.probeImageInfrastructure` | every 5 s (`orazaka.core.image.probing.interval-ms`) | Periodically pings the configured image port to check if the image inference engine (Stable Diffusion) is responsive. |
 | `orazaka-ai-engine` | `SandboxEvictionScheduler.evictExpiredSandboxes` | every 60 s | Scheduled eviction process — prunes expired or orphaned jobId sandbox contexts from memory. |
+| `orazaka-automation-service` | `SweepTicker.tick` | every 15s (`orazaka.automation-service.scheduler.interval`) | The clock of the automation service: every interval it runs one sweep (schedule slots, queued runs, lost events, retention). |
 | `orazaka-conversation-service` | `JobReconciliationService.reconcileScheduled` | every 60 s (`orazaka.jobs.reconcile-interval-ms`) | Recovers jobs whose result was written to disk but whose terminal status update never reached the database (e.g. |
 | `orazaka-conversation-service` | `JobStreamService.sendHeartbeats` | every 15 s | Service managing client Server-Sent Events (SSE) connections for real-time job lifecycle updates. |
-| `orazaka-job-service` | `JobRetentionSweeper.sweep` | every 60 s (`orazaka.jobs.retention-sweep-interval`) | Runs the job plane's retention on a fixed delay (ADR-065). |
+| `orazaka-conversation-service` | `ProtectedConversationSweeper.sweep` | cron `0 45 3 * * *` (`orazaka.router.regulated-retention.cron`) | Ages out the conversation memory of regulated packs, daily: the 30 days the consent statement states, counted from the conversation's last turn (orazaka#301). |
+| `orazaka-job-service` | `JobRetentionSweeper.sweep` | every 60 s (`orazaka.jobs.retention-sweep-interval`) | Purges expired jobs, then deletes any purged job's directory that came back. |
+| `orazaka-job-service` | `JobRetentionSweeper.sweepUploads` | every 3600 s (`orazaka.jobs.upload-retention-interval`) | Deletes uploads older than the ordinary retention window; hourly, listing is not free. |
 | `orazaka-job-service` | `WorkerHeartbeatSweeper.markStaleWorkers` | every 30 s (`orazaka.jobs.worker-sweeper-interval`) | Marks workers that have stopped heartbeating as `STALE`. |
 | `orazaka-job-service` | `WorkerSelfRegistration.heartbeat` | every 30 s (`orazaka.jobs.worker-heartbeat-interval`) | Registers the job service in the worker registry from its own `worker.yaml`. |
 | `orazaka-knowledge-service` | `AnalyticsRetentionSchedule.purge` | cron `0 27 3 * * *` | Runs the analytics retention sweep once a day (03:27 UTC — after the recommender's). |
@@ -89,6 +92,7 @@ the service's `application.yml` or environment.
 | `orazaka-studio` | `PackBootstrap.install` | every 30 s (`orazaka.studio-service.packs.bootstrap-interval`) | Installs the packs this deployment ships, so a fresh environment has Studios (ADR-068, `#45`). |
 | `orazaka-studio` | `RetentionSweeper.purge` | cron `0 30 3 * * *` (`orazaka.studio-service.retention.cron`) | Purges what the retention window says may no longer be kept (ADR-034 §14, GDPR / Loi 25). |
 | `orazaka-studio` | `RunSweeper.sweep` | every 60 s (`orazaka.studio-service.sweeper.interval`) | Closes runs whose steps stopped reporting, and releases their holds. |
+| `orazaka-studio` | `WebhookSweeper.sweep` | every 10 s (`orazaka.studio-service.webhooks.interval`) | Queues and sends the webhooks of finished runs (orazaka#189 slice B). |
 
 ## Automation
 
@@ -121,5 +125,3 @@ orazaka agent listen   # Start CLI agent listener and reverse tunnel
 |:---|:---|:---|:---|
 | POST | `/api/v1/agent/report` | authenticated | Receives execution reports from the CLI agent after local task completion. |
 | GET | `/api/v1/agent/stream` | authenticated | Establishes a persistent SSE stream for the CLI agent. |
-
-The service embeds a Quartz scheduler (`OrazakaAutomationScheduler`): JDBC job store in its own database, 5 threads, clustered: false.

@@ -29,7 +29,7 @@ capability rows, a price, catalogue entries — and changes no code.
   "tagline": "Generate, listen, describe — without leaving a run.",
   "tier": "DATA",
   "category": "Creativity & media",
-  "studios": 14
+  "studios": 16
  },
  {
   "key": "outbound-prospection",
@@ -64,6 +64,30 @@ capability rows, a price, catalogue entries — and changes no code.
   "studios": 2
  },
  {
+  "key": "media-safety",
+  "title": "Media safety",
+  "tagline": "Is this photo, video or voice message safe to show?",
+  "tier": "WORKER",
+  "category": null,
+  "studios": 1
+ },
+ {
+  "key": "message-authenticity",
+  "title": "Message authenticity",
+  "tagline": "Does this message read like a person wrote it? A signal, never a verdict.",
+  "tier": "WORKER",
+  "category": null,
+  "studios": 1
+ },
+ {
+  "key": "profile-photo-check",
+  "title": "Profile photo check",
+  "tagline": "Are these photos one real adult's profile?",
+  "tier": "WORKER",
+  "category": null,
+  "studios": 1
+ },
+ {
   "key": "trade-showcase",
   "title": "Trade Showcase",
   "tagline": null,
@@ -82,7 +106,7 @@ capability rows, a price, catalogue entries — and changes no code.
  "title": "Real-Estate Studio",
  "tagline": "Your listings become Reels ready to publish.",
  "description": "The real-estate agent's pack: the Real-Estate Reels Studio and the credits to run it.",
- "version": "1.0.0",
+ "version": "1.3.0",
  "tier": "DATA",
  "kind": null,
  "distribution": "OSS",
@@ -139,7 +163,7 @@ capability rows, a price, catalogue entries — and changes no code.
  "title": "Media Studios",
  "tagline": "Generate, listen, describe — without leaving a run.",
  "description": null,
- "version": "1.7.0",
+ "version": "1.13.0",
  "tier": "DATA",
  "kind": "TOOLKIT",
  "distribution": "OSS",
@@ -178,7 +202,7 @@ capability rows, a price, catalogue entries — and changes no code.
     },
     {
      "key": "model",
-     "title": "Modèle (facultatif)"
+     "title": "Modèle"
     }
    ],
    "steps": 1,
@@ -311,11 +335,15 @@ capability rows, a price, catalogue entries — and changes no code.
     },
     {
      "key": "model",
-     "title": "Modèle (facultatif)"
+     "title": "Modèle"
     },
     {
      "key": "seed",
-     "title": "Graine (facultatif)"
+     "title": "Graine"
+    },
+    {
+     "key": "upscale",
+     "title": "Netteté"
     }
    ],
    "steps": 1,
@@ -323,6 +351,64 @@ capability rows, a price, catalogue entries — and changes no code.
     "CAPABILITY"
    ],
    "credits": 3600
+  },
+  {
+   "key": "cinematic-treatment",
+   "label": "Cinematic short — treatment",
+   "summary": "A short brief becomes a story: an arc, intentions, living shots, directed lines, music, sound.",
+   "description": null,
+   "inputs": [
+    {
+     "key": "brief",
+     "title": "Le brief"
+    },
+    {
+     "key": "aspect",
+     "title": "Format d'image"
+    },
+    {
+     "key": "durationSeconds",
+     "title": "Durée (secondes)"
+    },
+    {
+     "key": "notes",
+     "title": "Notes de la critique"
+    },
+    {
+     "key": "language",
+     "title": "Langue des textes"
+    },
+    {
+     "key": "model",
+     "title": "Modèle de langage"
+    }
+   ],
+   "steps": 1,
+   "stepKinds": [
+    "CAPABILITY"
+   ],
+   "credits": 30
+  },
+  {
+   "key": "cinematic-critique",
+   "label": "Cinematic short — critique",
+   "summary": "A director's read of a treatment: scores, flat or off-topic shots rejected, what to change.",
+   "description": null,
+   "inputs": [
+    {
+     "key": "treatment",
+     "title": "Le traitement à juger"
+    },
+    {
+     "key": "model",
+     "title": "Modèle de langage"
+    }
+   ],
+   "steps": 1,
+   "stepKinds": [
+    "CAPABILITY"
+   ],
+   "credits": 10
   },
   {
    "key": "cinematic-script",
@@ -356,7 +442,7 @@ capability rows, a price, catalogue entries — and changes no code.
     },
     {
      "key": "model",
-     "title": "Modèle de langage (facultatif)"
+     "title": "Modèle de langage"
     }
    ],
    "steps": 1,
@@ -410,7 +496,7 @@ capability rows, a price, catalogue entries — and changes no code.
     },
     {
      "key": "model",
-     "title": "Modèle (facultatif)"
+     "title": "Modèle"
     },
     {
      "key": "seed",
@@ -483,12 +569,8 @@ capability rows, a price, catalogue entries — and changes no code.
      "title": "Le texte à lire"
     },
     {
-     "key": "voice",
-     "title": "Voix"
-    },
-    {
      "key": "model",
-     "title": "Modèle (facultatif)"
+     "title": "Voix"
     }
    ],
    "steps": 1,
@@ -513,7 +595,7 @@ capability rows, a price, catalogue entries — and changes no code.
     },
     {
      "key": "model",
-     "title": "Modèle (facultatif)"
+     "title": "Modèle"
     }
    ],
    "steps": 1,
@@ -534,7 +616,7 @@ capability rows, a price, catalogue entries — and changes no code.
     },
     {
      "key": "model",
-     "title": "Modèle (facultatif)"
+     "title": "Modèle"
     }
    ],
    "steps": 1,
@@ -555,7 +637,7 @@ capability rows, a price, catalogue entries — and changes no code.
     },
     {
      "key": "model",
-     "title": "Modèle (facultatif)"
+     "title": "Modèle"
     }
    ],
    "steps": 1,
@@ -576,7 +658,7 @@ capability rows, a price, catalogue entries — and changes no code.
  "title": "Outbound Prospecting",
  "tagline": "From a prospect list to a sequence that ships.",
  "description": "The salesperson's pack: qualify a list, write each prospect's angle, and get the follow-ups out — three Studios over the same list.",
- "version": "1.1.0",
+ "version": "1.3.0",
  "tier": "DATA",
  "kind": null,
  "distribution": "OSS",
@@ -685,7 +767,7 @@ capability rows, a price, catalogue entries — and changes no code.
  "title": "Recommendations & insights",
  "tagline": "A feed per person and analytics per creator, on your own data.",
  "description": "The recommender your product calls with a service key: send pseudonymous events and your eligible items, read a \"for you\" feed, similar items and creator insights — every item says why it is there. Two Studios read your videos and suggest titles and tags.",
- "version": "1.3.0",
+ "version": "1.6.0",
  "tier": "DATA",
  "kind": null,
  "distribution": "OSS",
@@ -720,7 +802,7 @@ capability rows, a price, catalogue entries — and changes no code.
     },
     {
      "key": "model",
-     "title": "Modèle de langage (facultatif)"
+     "title": "Modèle de langage"
     }
    ],
    "steps": 1,
@@ -803,7 +885,7 @@ capability rows, a price, catalogue entries — and changes no code.
  "title": "Wellbeing",
  "tagline": "Put into words what you live through, and bring it to your sessions.",
  "description": "Guided journaling, session preparation and mood tracking. Not care: no diagnosis, no advice on treatment, no emergency service — what you bring to a professional, not instead of one. Health data, kept 30 days at most, never used to train a model.",
- "version": "1.0.0",
+ "version": "1.5.0",
  "tier": "DATA",
  "kind": null,
  "distribution": "CLOUD",
@@ -914,7 +996,7 @@ capability rows, a price, catalogue entries — and changes no code.
  "title": "Document Verification",
  "tagline": "Check a contract against the rules, and a PDF for signs of tampering.",
  "description": "Check a document against a versioned body of rules — every finding cites its rule, its source and the passage that justifies it — and examine a PDF file for the signals that something was altered. Reports, never legal advice.",
- "version": "1.1.0",
+ "version": "1.7.2",
  "tier": "WORKER",
  "kind": null,
  "distribution": "CLOUD",
@@ -948,11 +1030,27 @@ capability rows, a price, catalogue entries — and changes no code.
    ]
   },
   {
+   "label": "Facture — Québec (TPS et TVQ)",
+   "jurisdiction": "QC",
+   "rules": 8,
+   "versions": [
+    "2024-06-20"
+   ]
+  },
+  {
    "label": "Bail de logement — Québec",
    "jurisdiction": "QC",
-   "rules": 9,
+   "rules": 10,
    "versions": [
     "2024-02-21"
+   ]
+  },
+  {
+   "label": "Contrat de service — Québec (première étape)",
+   "jurisdiction": "QC",
+   "rules": 4,
+   "versions": [
+    "2026-10-19"
    ]
   }
  ],
@@ -995,6 +1093,10 @@ capability rows, a price, catalogue entries — and changes no code.
     {
      "key": "asOf",
      "title": "Règles en vigueur à la date du"
+    },
+    {
+     "key": "ruleset",
+     "title": "Corpus nommé"
     }
    ],
    "steps": 3,
@@ -1002,6 +1104,180 @@ capability rows, a price, catalogue entries — and changes no code.
     "CAPABILITY"
    ],
    "credits": 120
+  }
+ ]
+}
+```
+
+### Media safety
+
+```pack
+{
+ "key": "media-safety",
+ "title": "Media safety",
+ "tagline": "Is this photo, video or voice message safe to show?",
+ "description": "Judges pictures (a photo, or frames of a video) and a voice message's transcript against a short, public set of lines: no nudity or sexual content, no graphic violence, no threats or harassment. An answer nobody could read is never a pass.",
+ "version": "1.2.0",
+ "tier": "WORKER",
+ "kind": null,
+ "distribution": "CLOUD",
+ "regulatoryClass": "SENSITIVE",
+ "category": null,
+ "listed": false,
+ "workers": [
+  "orazaka-worker-safety"
+ ],
+ "controls": {
+  "scopeGuard": true,
+  "consent": false,
+  "safety": false
+ },
+ "rulesets": [],
+ "studios": [
+  {
+   "key": "media-safety",
+   "label": "Media safety",
+   "summary": "A safety check that fails closed.",
+   "description": "A vision question per picture, a transcript and a text judgement for sound, then closed rules. Unreadable means held, never approved.",
+   "inputs": [
+    {
+     "key": "frames",
+     "title": "Les images à examiner"
+    },
+    {
+     "key": "frameCount",
+     "title": "Le nombre d'images"
+    },
+    {
+     "key": "audio",
+     "title": "Le son à juger (facultatif)"
+    },
+    {
+     "key": "expectsSpeech",
+     "title": "Il y a du son à juger"
+    }
+   ],
+   "steps": 4,
+   "stepKinds": [
+    "CAPABILITY"
+   ],
+   "credits": 30
+  }
+ ]
+}
+```
+
+### Message authenticity
+
+```pack
+{
+ "key": "message-authenticity",
+ "title": "Message authenticity",
+ "tagline": "Does this message read like a person wrote it? A signal, never a verdict.",
+ "description": "Reads one message with a small open classifier and answers a coarse level — never a score. It can be wrong, above all on short texts and on non-native or French writing. It never writes a message for anyone.",
+ "version": "1.3.0",
+ "tier": "WORKER",
+ "kind": null,
+ "distribution": "CLOUD",
+ "regulatoryClass": "SENSITIVE",
+ "category": null,
+ "listed": false,
+ "workers": [
+  "orazaka-worker-authenticity"
+ ],
+ "controls": {
+  "scopeGuard": true,
+  "consent": false,
+  "safety": false
+ },
+ "rulesets": [],
+ "studios": [
+  {
+   "key": "message-authenticity",
+   "label": "Message authenticity",
+   "summary": "A coarse signal on a text, never a verdict.",
+   "description": "One step, no generative model. The text is read and forgotten; the answer is low, mid, high or unavailable.",
+   "inputs": [
+    {
+     "key": "text",
+     "title": "Le message"
+    },
+    {
+     "key": "locale",
+     "title": "Langue du compte (facultatif)"
+    }
+   ],
+   "steps": 1,
+   "stepKinds": [
+    "CAPABILITY"
+   ],
+   "credits": 5
+  }
+ ]
+}
+```
+
+### Profile photo check
+
+```pack
+{
+ "key": "profile-photo-check",
+ "title": "Profile photo check",
+ "tagline": "Are these photos one real adult's profile?",
+ "description": "Checks a set of profile photos: enough of them, enough with a face, the same person from one face photo to the next, nothing written over the picture, no screenshots. It answers in codes, identifies no one and recognises no celebrity.",
+ "version": "1.2.0",
+ "tier": "WORKER",
+ "kind": null,
+ "distribution": "CLOUD",
+ "regulatoryClass": "SENSITIVE",
+ "category": null,
+ "listed": false,
+ "workers": [
+  "orazaka-worker-photo"
+ ],
+ "controls": {
+  "scopeGuard": true,
+  "consent": false,
+  "safety": false
+ },
+ "rulesets": [],
+ "studios": [
+  {
+   "key": "profile-photo-check",
+   "label": "Profile photo check",
+   "summary": "Faces present, the same person throughout, nothing written on the photo.",
+   "description": "Finds the faces in each photo, asks a vision model three yes/no questions about it, and gives a verdict made of codes. The face vectors live for one job and are never kept; a model answer that cannot be read blocks nothing.",
+   "inputs": [
+    {
+     "key": "photos",
+     "title": "Les photos (fichiers envoyés)"
+    },
+    {
+     "key": "photosBase64",
+     "title": "Les mêmes photos, en base64"
+    },
+    {
+     "key": "compareFaces",
+     "title": "Comparer les visages entre eux"
+    },
+    {
+     "key": "minPhotos",
+     "title": "Photos au moins"
+    },
+    {
+     "key": "maxPhotos",
+     "title": "Photos au plus"
+    },
+    {
+     "key": "minFacePhotos",
+     "title": "Photos de visage au moins"
+    }
+   ],
+   "steps": 3,
+   "stepKinds": [
+    "CAPABILITY"
+   ],
+   "credits": 40
   }
  ]
 }
@@ -1015,7 +1291,7 @@ capability rows, a price, catalogue entries — and changes no code.
  "title": "Trade Showcase",
  "tagline": null,
  "description": null,
- "version": "1.0.0",
+ "version": "1.2.0",
  "tier": "DATA",
  "kind": null,
  "distribution": "OSS",
@@ -1061,14 +1337,17 @@ Kept off the shelf (`catalog.status: DRAFT`): `echo-toolkit` — installable for
 
 | Pack | Version | Tier | Distribution | Regulatory class | Catalogue entry | Studios | Own capabilities |
 |:---|:---|:---|:---|:---|:---|:---|:---|
-| `data-analytics` | 1.3.0 | DATA | OSS | STANDARD | yes | `data-driven-ui`, `video-understanding`, `creator-suggestions` | — |
-| `document-validation` | 1.1.0 | WORKER | CLOUD | SENSITIVE | yes | `document-authenticity`, `compliance-check` | `orazaka.validation.document.screen`, `orazaka.validation.document.signals`, `orazaka.validation.document.assemble` (worker `orazaka-worker-validation`) |
-| `echo-toolkit` | 1.0.0 | WORKER | OSS | STANDARD | yes | `echo-reverse` | `orazaka.echo.text.reverse` (worker `orazaka-worker-echo`) |
-| `orazaka-media` | 1.7.0 | DATA | OSS | STANDARD | yes | `image-generation`, `art-golden-hour`, `art-miniature`, `art-still-life`, `art-montreal-night`, `video-generation`, `cinematic-script`, `cinematic-cut`, `video-with-sound`, `video-sound`, `speech-synthesis`, `image-analysis`, `audio-analysis`, `video-analysis` | — |
-| `outbound-prospection` | 1.1.0 | DATA | OSS | STANDARD | yes | `outbound-prospection`, `lead-research`, `followup-sequences` | — |
-| `realestate-studio` | 1.0.0 | DATA | OSS | STANDARD | yes | `realestate-reels` | — |
-| `trade-showcase` | 1.0.0 | DATA | OSS | STANDARD | no | `trade-showcase` | — |
-| `bien-etre` | 1.0.0 | DATA | CLOUD | REGULATED | yes | `guided-journaling`, `session-preparation`, `mood-tracking`, `session-summary` | — |
+| `data-analytics` | 1.6.0 | DATA | OSS | STANDARD | yes | `data-driven-ui`, `video-understanding`, `creator-suggestions` | — |
+| `document-validation` | 1.7.2 | WORKER | CLOUD | SENSITIVE | yes | `document-authenticity`, `compliance-check` | `orazaka.validation.document.screen`, `orazaka.validation.document.signals`, `orazaka.validation.document.assemble` (worker `orazaka-worker-validation`) |
+| `echo-toolkit` | 1.2.0 | WORKER | OSS | STANDARD | yes | `echo-reverse` | `orazaka.echo.text.reverse` (worker `orazaka-worker-echo`) |
+| `media-safety` | 1.2.0 | WORKER | CLOUD | SENSITIVE | no | `media-safety` | `orazaka.safety.media.assess` (worker `orazaka-worker-safety`) |
+| `message-authenticity` | 1.3.0 | WORKER | CLOUD | SENSITIVE | no | `message-authenticity` | `orazaka.message.authenticity.read` (worker `orazaka-worker-authenticity`) |
+| `orazaka-media` | 1.13.0 | DATA | OSS | STANDARD | yes | `image-generation`, `art-golden-hour`, `art-miniature`, `art-still-life`, `art-montreal-night`, `video-generation`, `cinematic-treatment`, `cinematic-critique`, `cinematic-script`, `cinematic-cut`, `video-with-sound`, `video-sound`, `speech-synthesis`, `image-analysis`, `audio-analysis`, `video-analysis` | — |
+| `outbound-prospection` | 1.3.0 | DATA | OSS | STANDARD | yes | `outbound-prospection`, `lead-research`, `followup-sequences` | — |
+| `profile-photo-check` | 1.2.0 | WORKER | CLOUD | SENSITIVE | no | `profile-photo-check` | `orazaka.photo.profile.inspect`, `orazaka.photo.profile.assess` (worker `orazaka-worker-photo`) |
+| `realestate-studio` | 1.3.0 | DATA | OSS | STANDARD | yes | `realestate-reels` | — |
+| `trade-showcase` | 1.2.0 | DATA | OSS | STANDARD | no | `trade-showcase` | — |
+| `bien-etre` | 1.5.0 | DATA | CLOUD | REGULATED | yes | `guided-journaling`, `session-preparation`, `mood-tracking`, `session-summary` | — |
 
 ## From the terminal
 
@@ -1258,6 +1537,35 @@ human), `CONNECTOR` (calls out), `KNOWLEDGE`. **`onError`**: `FAIL` | `SKIP` | `
 **Templates.** `{{inputs.x}}`, `{{config.x}}`, `{{steps.<out>}}`, `{{item}}` inside a `forEach`. A
 template that is *exactly one placeholder* over a list stays a list; anywhere else it renders as
 text. That is what lets a step take a list of asset ids.
+
+**Closed sets are chosen, never typed.** A field whose values are a known set is a list in every client
+(web, phone), so a person cannot type a value that does not exist (`tests/closed-sets.test.mjs` refuses it):
+
+| You write | The client draws |
+| :--- | :--- |
+| `"enum": ["9:16", "16:9"]` | a select (readable names come from the client's messages) |
+| `"oneOf": [{ "const": "9:16", "title": "Vertical" }, …]` | a select with your labels |
+| `"x-options": { "source": "models", "category": "image" }` | a searchable picker fed by the model catalogue (`orazaka_models`): label, local or cloud, speed, typical time, price, availability and the default that will run. **Never list the models yourself** — a hand-kept `enum` drifts from the catalogue. |
+| `"x-control": "seed"` | a number with a « random » switch (nothing is sent while it is on) |
+| `"x-advanced": true` | folded under « More options » — model, seed and things to avoid are advanced; the field the Studio is about is not |
+
+**Every select speaks both languages (`x-i18n`).** A field that is a list carries its words in English and French, so a
+client never shows the blueprint's French on an English page: `"x-i18n": {"en": {"title", "description", "options"},
+"fr": {…}}`, where `options` maps each `enum` value to its label — or, on a catalogue-fed model field, each model id to
+`{ "label": "LTX-Video · fast", "hint": "one line" }`. The helper is one line (**≤ 140 characters**), a hint ≤ 100; the
+long comparison of the models is never written there: the client draws it from the catalogue's facts (time, price, where it
+runs) and from `x-options.facts` (`{ "<model id>": ["1216×704", "5 s"] }`, language-neutral). The category of `x-options` is
+the catalogue's, **lowercase** (`chat`, not `CHAT`: a category that matches no model draws an empty select).
+`tests/closed-sets.test.mjs` refuses a select without its words, a long helper, or an uppercase category.
+
+**Every field speaks both languages, not only the selects.** A free-text, numeric, boolean or file field carries
+`x-i18n.en` and `x-i18n.fr` too: a `title`, a one-line `description` (**≤ 140 characters**) and, for a free-text field,
+the `placeholder` it shows (an example of what to type). The blueprint's own `title` / `description` stay for clients
+that predate it. The same test refuses a field without them, an English word that is French, and the dev data check
+(`node scripts/audit-studio-forms.mjs` in krizaka/orazaka) reads the published blueprints for the same.
+
+The Studio service writes the catalogue's list into the schema it serves (`oneOf` of `const`/`title`, the facts in
+`x-meta`) and refuses, before any credit is held, a value that is not in it.
 
 **`estimatedCredits` is a hold, not a price.** Size it for your blueprint's *worst legal input* —
 the maximum `forEach` fan-out, every optional step firing. It is released, not charged: a run
