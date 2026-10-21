@@ -1,5 +1,5 @@
 import { attachArtefactLabels } from "@/features/studio/utils/artefactLabel";
-import { asConsentStep, type ConsentAnswer } from "@/features/studio/consent/consent";
+import { asConsentStep, type ConsentAnswer, type ErasureReceipt } from "@/features/studio/consent/consent";
 import { restRequest } from "@/services/rest-client";
 import {
   BlueprintVersionSchema,
@@ -132,9 +132,12 @@ export const StudioApi = {
     studioKey: string,
     config: Record<string, string>,
     consent?: ConsentAnswer,
+    locale?: string,
   ): Promise<Installation | null> => {
+    // The locale makes the server answer a 451 with the statement in the person's language.
+    const query = locale ? `?locale=${encodeURIComponent(locale)}` : "";
     const data = await restRequest<unknown>(
-      `/api/v1/studios/${encodeURIComponent(studioKey)}/installations`,
+      `/api/v1/studios/${encodeURIComponent(studioKey)}/installations${query}`,
       { method: "POST", body: { config, ...consent } },
     ).catch((error: unknown) => {
       throw asConsentStep(error);
@@ -188,6 +191,24 @@ export const StudioApi = {
       `/api/v1/studios/installations/${encodeURIComponent(installationId)}`,
       { method: "DELETE" },
     );
+  },
+
+  /**
+   * Erases everything a wellbeing pack holds of this person: entries, inputs and outputs, files, installations and
+   * the consent they recorded. Permanent and idempotent; the service leaves only a record with no content.
+   *
+   * @param packKey - the pack, e.g. `bien-etre`
+   */
+  eraseWellbeingData: async (packKey: string): Promise<ErasureReceipt | null> =>
+    restRequest<ErasureReceipt>(`/api/v1/studios/packs/${encodeURIComponent(packKey)}/my-data`, { method: "DELETE" }),
+
+  /**
+   * Erases one entry (a run of a protected pack) with its inputs, outputs and files. Idempotent.
+   *
+   * @param runId - the entry
+   */
+  eraseEntry: async (runId: string): Promise<void> => {
+    await restRequest<unknown>(`/api/v1/studios/runs/${encodeURIComponent(runId)}`, { method: "DELETE" });
   },
 
   /**

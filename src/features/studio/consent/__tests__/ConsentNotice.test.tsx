@@ -7,7 +7,7 @@ import { StudioApi } from "@/services/studio.api";
 jest.mock("@/core/context/LocaleContext", () => ({
   useTranslation: () => ({ t: jest.requireActual("@/core/context/translations").translations.en, locale: "en" }),
 }));
-jest.mock("@/services/studio.api", () => ({ StudioApi: { fetchPacks: jest.fn(), uninstall: jest.fn() } }));
+jest.mock("@/services/studio.api", () => ({ StudioApi: { fetchPacks: jest.fn(), uninstall: jest.fn(), eraseWellbeingData: jest.fn() } }));
 
 const pack = (regulatoryClass: string) => [{ packKey: "bien-etre", regulatoryClass, studioKeys: ["guided-journaling"] }, { packKey: "other", regulatoryClass: "REGULATED", studioKeys: ["not-this-one"] }] as never;
 const installation = { id: "inst-1", status: "ACTIVE" } as Installation;
@@ -63,5 +63,39 @@ describe("ConsentNotice (before the click, and the way out)", () => {
     fireEvent.click(await screen.findByRole("button", { name: "Withdraw my consent" }));
     fireEvent.click(screen.getByRole("button", { name: "Keep it" }));
     expect(StudioApi.uninstall).not.toHaveBeenCalled();
+  });
+
+  it("deletes all the wellbeing data after a confirmation: the pack is erased, nothing before the click", async () => {
+    jest.mocked(StudioApi.fetchPacks).mockResolvedValue(pack("REGULATED"));
+    jest.mocked(StudioApi.eraseWellbeingData).mockResolvedValue({ packKey: "bien-etre", entries: 2, installations: 1, jobs: 2 });
+    const onChanged = jest.fn();
+    render(<ConsentNotice studioKey="guided-journaling" installation={installation} onChanged={onChanged} />);
+
+    fireEvent.click(await screen.findByRole("button", { name: "Delete all my wellbeing data" }));
+    expect(screen.getByRole("dialog", { name: "Delete all your wellbeing data?" })).toBeInTheDocument();
+    expect(StudioApi.eraseWellbeingData).not.toHaveBeenCalled();
+    fireEvent.click(screen.getByRole("button", { name: "Delete everything" }));
+
+    await waitFor(() => expect(StudioApi.eraseWellbeingData).toHaveBeenCalledWith("bien-etre"));
+    expect(onChanged).toHaveBeenCalled();
+    expect(await screen.findByText("Your wellbeing data has been deleted.")).toBeInTheDocument();
+  });
+
+  it("keeps everything when the person backs out of the deletion", async () => {
+    jest.mocked(StudioApi.fetchPacks).mockResolvedValue(pack("REGULATED"));
+    render(<ConsentNotice studioKey="guided-journaling" installation={installation} onChanged={jest.fn()} />);
+    fireEvent.click(await screen.findByRole("button", { name: "Delete all my wellbeing data" }));
+    fireEvent.click(screen.getByRole("button", { name: "Keep it" }));
+    expect(StudioApi.eraseWellbeingData).not.toHaveBeenCalled();
+  });
+
+  it("says so when the deletion fails, and claims nothing was deleted", async () => {
+    jest.mocked(StudioApi.fetchPacks).mockResolvedValue(pack("REGULATED"));
+    jest.mocked(StudioApi.eraseWellbeingData).mockRejectedValue(new Error("Nothing was deleted; please ask again"));
+    render(<ConsentNotice studioKey="guided-journaling" installation={installation} onChanged={jest.fn()} />);
+    fireEvent.click(await screen.findByRole("button", { name: "Delete all my wellbeing data" }));
+    fireEvent.click(screen.getByRole("button", { name: "Delete everything" }));
+    expect(await screen.findByRole("alert")).toHaveTextContent("Nothing was deleted");
+    expect(screen.queryByText("Your wellbeing data has been deleted.")).not.toBeInTheDocument();
   });
 });

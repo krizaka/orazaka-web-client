@@ -16,14 +16,14 @@ import { PackKindSchema, type Installation, type Run, type StudioDetail } from "
  * With a `consent` (a wellbeing Studio, after the person agreed) the Studio is installed again with the three
  * declarations, which is also how a statement that changed since is agreed to anew.
  */
-async function startFor(studio: StudioDetail, installation: Installation | undefined, inputs: Record<string, unknown>, consent?: ConsentAnswer): Promise<Run | null> {
+async function startFor(studio: StudioDetail, installation: Installation | undefined, inputs: Record<string, unknown>, locale: string, consent?: ConsentAnswer): Promise<Run | null> {
   if (consent) {
-    const installed = await StudioApi.install(studio.studioKey, installation?.config ?? {}, consent);
+    const installed = await StudioApi.install(studio.studioKey, installation?.config ?? {}, consent, locale);
     return installed ? StudioApi.startRun(installed.id, inputs) : null;
   }
   if (installation) return StudioApi.startRun(installation.id, inputs);
   if (studio.kind === PackKindSchema.enum.TOOLKIT) return StudioApi.startStudioRun(studio.studioKey, inputs);
-  const installed = await StudioApi.install(studio.studioKey, {});
+  const installed = await StudioApi.install(studio.studioKey, {}, undefined, locale);
   return installed ? StudioApi.startRun(installed.id, inputs) : null;
 }
 
@@ -54,7 +54,7 @@ interface StudioRunPanelProps {
  * consent step is shown (`ConsentDialog`), and the inputs typed so far are kept to run as soon as it is given.
  */
 export function StudioRunPanel({ studio, installation }: Readonly<StudioRunPanelProps>) {
-  const { t } = useTranslation();
+  const { t, locale } = useTranslation();
   const router = useRouter();
   const [isSubmitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -66,7 +66,7 @@ export function StudioRunPanel({ studio, installation }: Readonly<StudioRunPanel
     setError(null);
     setConsentError(null);
     try {
-      const run = await startFor(studio, installation, inputs, consent);
+      const run = await startFor(studio, installation, inputs, locale, consent);
       setPending(null);
       if (run) {
         router.push(`/studios/runs/${run.id}`);

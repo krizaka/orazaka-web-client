@@ -100,4 +100,20 @@ describe("ConsentDialog (a wellbeing Studio's consent step)", () => {
     expect(screen.getByText(/ni un avis médical ni un soin/)).toBeInTheDocument();
     expect(ticks().region).toHaveDisplayValue("Choisissez votre région");
   });
+
+  it("offers the regions the server sent and shows the server's verified line for the one chosen", () => {
+    const regions = [
+      { region: "FR", label: "3114", contact: "3114", availability: "24h/24", sourceUrl: "https://www.bourgogne-franche-comte.ars.sante.fr/le-3114-numero-national-de-prevention-du-suicide", verifiedOn: "2026-10-20" },
+      { region: "CA-QC", label: "Ligne québécoise de prévention du suicide", contact: "1 866 APPELLE (1 866 277-3553)", availability: "En tout temps", sourceUrl: "https://www.quebec.ca/", verifiedOn: "2026-10-20" },
+    ];
+    render(<ConsentDialog {...base} requirement={{ ...requirement, regions }} />);
+    const region = screen.getByRole("combobox") as HTMLSelectElement;
+    expect(Array.from(region.options).map((o) => o.value)).toEqual(["", "FR", "CA-QC"]);
+    expect(screen.queryByTestId("helpline")).not.toBeInTheDocument();
+
+    fireEvent.change(region, { target: { value: "CA-QC" } });
+
+    expect(screen.getByTestId("helpline")).toHaveTextContent("1 866 APPELLE (1 866 277-3553)");
+    expect(screen.getByRole("link", { name: "Official source" })).toHaveAttribute("href", "https://www.quebec.ca/");
+  });
 });
