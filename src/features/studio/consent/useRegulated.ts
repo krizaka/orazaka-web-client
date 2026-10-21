@@ -12,14 +12,19 @@ import { StudioApi } from "@/services/studio.api";
  * in no pack, is `false`: the note is a courtesy, the 451 on the first run is the guard.
  */
 export function useRegulated(studioKey: string): boolean {
+  return useRegulatedPack(studioKey) !== null;
+}
+
+/** The key of the REGULATED pack a Studio belongs to (what "delete all my data" names), or `null`. */
+export function useRegulatedPack(studioKey: string): string | null {
   const { locale } = useTranslation();
-  const [regulated, setRegulated] = useState(false);
+  const [regulated, setRegulated] = useState<string | null>(null);
 
   useEffect(() => {
     let live = true;
     StudioApi.fetchPacks(null, locale)
-      .then((packs) => live && setRegulated(packs.some((pack) => pack.regulatoryClass === "REGULATED" && pack.studioKeys.includes(studioKey))))
-      .catch(() => live && setRegulated(false));
+      .then((packs) => live && setRegulated(packs.find((pack) => pack.regulatoryClass === "REGULATED" && pack.studioKeys.includes(studioKey))?.packKey ?? null))
+      .catch(() => live && setRegulated(null));
     return () => { live = false; };
   }, [studioKey, locale]);
 

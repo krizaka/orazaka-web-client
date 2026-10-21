@@ -47,4 +47,26 @@ describe("StudioApi.install and the consent a wellbeing Studio requires (451)", 
     answer(451, { status: "consent_required", consentVersion: "1.1", statement: "Nouvelle déclaration." });
     await expect(StudioApi.startRun("inst-1", {})).rejects.toBeInstanceOf(ConsentRequiredError);
   });
+
+  it("asks for the statement in the person's language and carries the server's regions with their lines", async () => {
+    const regions = [{ region: "FR", label: "3114", contact: "3114", availability: "24h/24", sourceUrl: "https://3114.fr/", verifiedOn: "2026-10-20" }];
+    answer(451, { status: "consent_required", consentVersion: "2.0", statement: "This Studio records what you write.", regions });
+    const failure = await StudioApi.install("guided-journaling", {}, undefined, "en").catch((error: unknown) => error);
+    expect((jest.mocked(global.fetch).mock.calls[0][0])).toBe("/api/v1/studios/guided-journaling/installations?locale=en");
+    expect((failure as ConsentRequiredError).requirement).toEqual({ version: "2.0", statement: "This Studio records what you write.", regions });
+  });
+
+  it("erases all the wellbeing data with one DELETE on the pack, and one entry with a DELETE on the run", async () => {
+    answer(200, { packKey: "bien-etre", entries: 2, installations: 1, jobs: 2 });
+    await expect(StudioApi.eraseWellbeingData("bien-etre")).resolves.toEqual({ packKey: "bien-etre", entries: 2, installations: 1, jobs: 2 });
+    let [url, init] = jest.mocked(global.fetch).mock.calls[0];
+    expect(url).toBe("/api/v1/studios/packs/bien-etre/my-data");
+    expect((init as RequestInit).method).toBe("DELETE");
+
+    answer(204, null);
+    await StudioApi.eraseEntry("run-1");
+    [url, init] = jest.mocked(global.fetch).mock.calls[0];
+    expect(url).toBe("/api/v1/studios/runs/run-1");
+    expect((init as RequestInit).method).toBe("DELETE");
+  });
 });

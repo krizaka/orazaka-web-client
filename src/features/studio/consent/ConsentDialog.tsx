@@ -44,6 +44,11 @@ export function ConsentDialog({ open, isSubmitting, onCancel, ...form }: Readonl
   );
 }
 
+/** The name of a region in the person's language; the code itself for one we have no name for. */
+function regionName(names: Record<string, string>, code: string): string {
+  return names[code] ?? code;
+}
+
 function ConsentForm({ requirement, error, isSubmitting, onConfirm, onCancel }: Readonly<Omit<ConsentDialogProps, "open" | "studioLabel">>) {
   const { t } = useTranslation();
   const c = t.consent;
@@ -51,6 +56,9 @@ function ConsentForm({ requirement, error, isSubmitting, onConfirm, onCancel }: 
   const [agreed, setAgreed] = useState(false);
   const [region, setRegion] = useState("");
   const ready = age && agreed && region !== "";
+  // The regions come from the server with their verified line; the fixed list only stands in when it sent none.
+  const regionCodes: readonly string[] = requirement.regions?.map((line) => line.region) ?? CONSENT_REGIONS;
+  const line = requirement.regions?.find((candidate) => candidate.region === region);
 
   return (
     <>
@@ -80,9 +88,16 @@ function ConsentForm({ requirement, error, isSubmitting, onConfirm, onCancel }: 
           <Field.Label htmlFor="consent-region" className="text-xs font-semibold text-fg">{c.regionLabel}</Field.Label>
           <Select id="consent-region" value={region} disabled={isSubmitting} onChange={(event) => setRegion(event.target.value)}>
             <option value="">{c.regionPlaceholder}</option>
-            {CONSENT_REGIONS.map((code) => <option key={code} value={code}>{c.regions[code]}</option>)}
+            {regionCodes.map((code) => <option key={code} value={code}>{regionName(c.regions, code)}</option>)}
           </Select>
           <p className="text-xs text-fg-muted">{c.regionHelp}</p>
+          {line && (
+            // The server's verified line for the region, shown before anything is agreed to.
+            <p className="rounded-lg border border-border-default bg-surface-1 px-3 py-2 text-xs text-fg" data-testid="helpline">
+              {fill(c.helpline, { label: line.label, contact: line.contact, availability: line.availability })}{" "}
+              <a className="underline" href={line.sourceUrl} target="_blank" rel="noreferrer">{c.helplineSource}</a>
+            </p>
+          )}
         </Field.Root>
 
         <Checkbox checked={agreed} onCheckedChange={(next) => setAgreed(next === true)} disabled={isSubmitting}>{c.consentLabel}</Checkbox>

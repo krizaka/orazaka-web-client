@@ -37,7 +37,7 @@ describe("StudioRunPanel", () => {
     fireEvent.click(screen.getByRole("button", { name: "Run" }));
 
     await waitFor(() => expect(push).toHaveBeenCalledWith("/studios/runs/run-1"));
-    expect(StudioApi.install).toHaveBeenCalledWith("mood-tracking", {});
+    expect(StudioApi.install).toHaveBeenCalledWith("mood-tracking", {}, undefined, "en");
     expect(StudioApi.startRun).toHaveBeenCalledWith("inst-1", { prompt: "a lamp" });
   });
 
@@ -91,7 +91,7 @@ describe("StudioRunPanel", () => {
       fireEvent.click(screen.getByRole("button", { name: "Agree and continue" }));
 
       await waitFor(() => expect(push).toHaveBeenCalledWith("/studios/runs/run-1"));
-      expect(StudioApi.install).toHaveBeenLastCalledWith("mood-tracking", {}, { consentVersion: "1.0", ageAttested: true, region: "CA-QC" });
+      expect(StudioApi.install).toHaveBeenLastCalledWith("mood-tracking", {}, { consentVersion: "1.0", ageAttested: true, region: "CA-QC" }, "en");
       expect(StudioApi.startRun).toHaveBeenCalledWith("inst-2", { prompt: "a lamp" });
     });
 
@@ -137,7 +137,7 @@ describe("StudioRunPanel", () => {
       fireEvent.click(screen.getByRole("button", { name: "Agree and continue" }));
 
       await waitFor(() => expect(push).toHaveBeenCalledWith("/studios/runs/run-1"));
-      expect(StudioApi.install).toHaveBeenCalledWith("mood-tracking", {}, { consentVersion: "1.1", ageAttested: true, region: "FR" });
+      expect(StudioApi.install).toHaveBeenCalledWith("mood-tracking", {}, { consentVersion: "1.1", ageAttested: true, region: "FR" }, "en");
     });
   });
 });

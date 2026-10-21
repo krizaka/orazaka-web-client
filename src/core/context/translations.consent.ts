@@ -42,6 +42,16 @@ export interface ConsentDictionary {
   withdrawConfirm: string;
   withdrawing: string;
   keep: string;
+  /** The verified helpline of the chosen region, as the server sends it. `{label}` `{contact}` `{availability}`. */
+  helpline: string;
+  helplineSource: string;
+  /** « Delete all my wellbeing data »: the erase the statement promises. */
+  erase: string;
+  eraseTitle: string;
+  eraseBody: string;
+  eraseConfirm: string;
+  erasing: string;
+  erased: string;
 }
 
 export const consent: Record<"en" | "fr", ConsentDictionary> = {
@@ -85,10 +95,19 @@ export const consent: Record<"en" | "fr", ConsentDictionary> = {
     withdraw: "Withdraw my consent",
     withdrawTitle: "Withdraw your consent?",
     withdrawBody:
-      "This Studio stops for you now. Entries already saved are kept no longer than the retention announced in the statement you agreed to. To use it again, you will be asked again.",
+      "This Studio stops for you now. Entries already saved are deleted automatically within the retention announced in the statement you agreed to; to erase them right away, use « Delete all my wellbeing data ». To use it again, you will be asked again.",
     withdrawConfirm: "Withdraw consent",
     withdrawing: "Withdrawing…",
     keep: "Keep it",
+    helpline: "Helpline for this region: {label}, {contact} ({availability}).",
+    helplineSource: "Official source",
+    erase: "Delete all my wellbeing data",
+    eraseTitle: "Delete all your wellbeing data?",
+    eraseBody:
+      "This permanently erases your entries, their results, the files tied to them and the consent you gave. It cannot be undone. All that remains is a record with no content: the date and the Studio, proving you asked.",
+    eraseConfirm: "Delete everything",
+    erasing: "Deleting…",
+    erased: "Your wellbeing data has been deleted.",
   },
   fr: {
     title: "Avant de commencer {studio}",
@@ -130,9 +149,18 @@ export const consent: Record<"en" | "fr", ConsentDictionary> = {
     withdraw: "Retirer mon consentement",
     withdrawTitle: "Retirer votre consentement ?",
     withdrawBody:
-      "Ce Studio s'arrête pour vous maintenant. Les entrées déjà enregistrées ne sont pas conservées au-delà de la durée annoncée dans la déclaration que vous avez acceptée. Pour le réutiliser, on vous le redemandera.",
+      "Ce Studio s'arrête pour vous maintenant. Les entrées déjà enregistrées sont supprimées automatiquement dans la durée annoncée dans la déclaration que vous avez acceptée ; pour les effacer tout de suite, utilisez « Supprimer toutes mes données de bien-être ». Pour le réutiliser, on vous le redemandera.",
     withdrawConfirm: "Retirer le consentement",
     withdrawing: "Retrait en cours…",
     keep: "Le garder",
+    helpline: "Ligne d'écoute pour cette région : {label}, {contact} ({availability}).",
+    helplineSource: "Source officielle",
+    erase: "Supprimer toutes mes données de bien-être",
+    eraseTitle: "Supprimer toutes vos données de bien-être ?",
+    eraseBody:
+      "Cela efface définitivement vos entrées, leurs résultats, les fichiers associés et le consentement que vous avez donné. C'est irréversible. Il ne reste qu'une trace sans contenu : la date et le Studio, qui prouve que vous l'avez demandé.",
+    eraseConfirm: "Tout supprimer",
+    erasing: "Suppression…",
+    erased: "Vos données de bien-être ont été supprimées.",
   },
 };
