@@ -31,15 +31,15 @@ test("captures go to a scratch folder (OUT), never into the repository", () => {
   assert.doesNotMatch(crawl, /docs\/screenshots/);
 });
 
-test("it is an npm script and a step of the post-deploy workflow, after the live smoke", () => {
+test("it is an npm script and a step of its own post-deploy workflow (a failing smoke never hides it)", () => {
   assert.equal(JSON.parse(read("package.json")).scripts["test:ui-crawl"], "node e2e/ui-crawl.mjs");
-  const wf = read(".github/workflows/live-smoke.yml");
+  const wf = read(".github/workflows/dev-preview-live.yml");
   assert.ok(wf.includes("npm run test:ui-crawl"));
-  assert.ok(wf.indexOf("e2e/live-smoke.spec.ts") < wf.indexOf("npm run test:ui-crawl"));
+  assert.ok(wf.includes("Wait for the deployed build"));
 });
 
 test("the post-deploy workflow also runs the SEO family contract against the deployed site, indexed (seo.family)", () => {
-  const wf = read(".github/workflows/live-smoke.yml");
+  const wf = read(".github/workflows/dev-preview-live.yml");
   assert.match(wf, /node scripts\/check-seo-family\.mjs --base https:\/\/dev\.orazaka\.com --host https:\/\/dev\.orazaka\.com(\s|$)/);
   assert.ok(!/--index off/.test(wf), "dev.orazaka.com is indexed (AGENTS.md)");
 });
