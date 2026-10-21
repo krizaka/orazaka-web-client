@@ -127,7 +127,7 @@ describe("LandingPage", () => {
     renderLanding("en", <LandingPage measured={MEASURED} />);
     const engine = sectionOf("engine");
     const names = within(engine).getAllByRole("link").map((a) => a.getAttribute("href"));
-    expect(names).toEqual(["https://dev.orochia.com", "https://dev.yomizaka.com", "https://dev.kachizaka.com", "https://dev.akinaza.com", "https://dev.yasakia.com", "https://dev.yororis.com"]);
+    expect(names).toEqual(["https://www.orochia.com", "https://www.yomizaka.com", "https://www.kachizaka.com", "https://www.akinaza.com", "https://www.yasakia.com", "https://www.yororis.com"]);
     expect(within(engine).getAllByText(translations.en.landing.family.planned)).toHaveLength(3);
     expect(engine.querySelectorAll("svg").length).toBeGreaterThanOrEqual(6);
     // Orochia is named neutrally: its line is a use of the engine, never a creator or payout pitch.
