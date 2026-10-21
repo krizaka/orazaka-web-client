@@ -104,7 +104,7 @@ export const consent: Record<"en" | "fr", ConsentDictionary> = {
     erase: "Delete all my wellbeing data",
     eraseTitle: "Delete all your wellbeing data?",
     eraseBody:
-      "This permanently erases your entries, their results, the files tied to them and the consent you gave. It cannot be undone. All that remains is a record with no content: the date and the Studio, proving you asked.",
+      "This permanently erases your entries, your written or spoken exchanges, their results, the files tied to them and the consent you gave. It cannot be undone. All that remains is a record with no content: the date and the Studio, proving you asked.",
     eraseConfirm: "Delete everything",
     erasing: "Deleting…",
     erased: "Your wellbeing data has been deleted.",
@@ -158,7 +158,7 @@ export const consent: Record<"en" | "fr", ConsentDictionary> = {
     erase: "Supprimer toutes mes données de bien-être",
     eraseTitle: "Supprimer toutes vos données de bien-être ?",
     eraseBody:
-      "Cela efface définitivement vos entrées, leurs résultats, les fichiers associés et le consentement que vous avez donné. C'est irréversible. Il ne reste qu'une trace sans contenu : la date et le Studio, qui prouve que vous l'avez demandé.",
+      "Cela efface définitivement vos entrées, vos échanges écrits ou parlés, leurs résultats, les fichiers associés et le consentement que vous avez donné. C'est irréversible. Il ne reste qu'une trace sans contenu : la date et le Studio, qui prouve que vous l'avez demandé.",
     eraseConfirm: "Tout supprimer",
     erasing: "Suppression…",
     erased: "Vos données de bien-être ont été supprimées.",

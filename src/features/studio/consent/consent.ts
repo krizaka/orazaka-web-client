@@ -29,6 +29,8 @@ export interface ErasureReceipt {
   entries: number;
   installations: number;
   jobs: number;
+  /** Conversations whose memory (voice and listening turns) was removed. */
+  conversations?: number;
 }
 
 function crisisLines(value: unknown): CrisisLine[] | undefined {
