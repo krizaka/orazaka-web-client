@@ -22,11 +22,10 @@ export interface LandingDictionary {
     how: string;
     signIn: string;
     docs: string;
-    packs: string;
     product: string;
     download: string;
     /** One short line (≤ 45 characters: the menu shows one line) under each entry of the Product menu. */
-    menu: Record<"how" | "packs" | "download", string>;
+    menu: Record<"how" | "download", string>;
     langLabel: string;
     themeLabel: string;
     preferences: string;

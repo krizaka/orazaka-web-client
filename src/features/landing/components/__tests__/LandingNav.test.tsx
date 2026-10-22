@@ -41,14 +41,13 @@ const bar = () => document.querySelector("header[data-floating]") as HTMLElement
 const desktopNav = () => within(bar()).getAllByRole("navigation", { name: "Orazaka" })[0];
 
 describe("the information architecture of the public bar", () => {
-  it("is short (epic #231): Product ▾ (How it works · Packs · Download) · Docs", () => {
+  it("is short (epic #231): Product ▾ (How it works · Download) · Docs; Packs lives in the docs", () => {
     const shape = NAV_GROUPS.map((g) => ({ group: g.id, entries: g.entries.map((e) => `${e.id} → ${e.anchor ? `#${e.anchor}` : e.path}`) }));
     expect(shape).toMatchInlineSnapshot(`
 [
   {
     "entries": [
       "how → #features",
-      "packs → /docs/packs",
       "download → /desktop",
     ],
     "group": "product",
@@ -57,7 +56,7 @@ describe("the information architecture of the public bar", () => {
 `);
     renderLanding("en", <LandingNav />);
     const top = [...desktopNav().querySelectorAll("[data-nav-item]")].map((el) => el.textContent?.trim());
-    expect(top).toEqual([nav.product, nav.how, nav.packs, nav.download, nav.docs]);
+    expect(top).toEqual([nav.product, nav.how, nav.download, nav.docs]);
     expect(top.length).toBeLessThanOrEqual(5);
   });
 
@@ -115,10 +114,10 @@ describe("the mobile panel", () => {
     fireEvent.click(screen.getByRole("button", { name: nav.openMenu }));
     const groups = within(bar()).getAllByRole("group").filter((g) => g.getAttribute("aria-labelledby"));
     expect(groups.map((g) => g.querySelector("p")?.textContent)).toEqual([nav.product, nav.preferences]);
-    expect(within(groups[0]).getAllByRole("link").map((a) => a.textContent)).toEqual([nav.how, nav.packs, nav.download]);
+    expect(within(groups[0]).getAllByRole("link").map((a) => a.textContent)).toEqual([nav.how, nav.download]);
     const panel = groups[0].closest("nav") as HTMLElement;
     const hrefs = [...panel.querySelectorAll("a")].map((a) => a.getAttribute("href"));
-    expect(hrefs).toEqual(["#features", "/docs/packs", "/desktop", "/docs", "#", "#", "/login", "https://www.krizaka.com/contact?topic=orazaka"]);
+    expect(hrefs).toEqual(["#features", "/desktop", "/docs", "#", "#", "/login", "https://www.krizaka.com/contact?topic=orazaka"]);
     expect(hrefs).not.toContain("/infrastructure");
   });
 

@@ -80,6 +80,7 @@ export function llmsText(): string {
 - [Home](${SITE_URL}/): what Orazaka is
 - [Mobile app](${SITE_URL}/docs/mobile): recordings and screenshots of the iOS and Android app
 - [Orazaka for Mac](${SITE_URL}/desktop): the Orazaka Desktop test build for Apple Silicon — what it does today, requirements, download
+- [Packs](${SITE_URL}/docs/packs): the catalogue of installable offers, what each pack adds to the Studios, and how to write one
 - [Models](${SITE_URL}/docs/models): the models Orazaka supports — what each does, where it runs, its licence and context window
 - [Talk to the team](${KRIZAKA_URL}/contact?topic=orazaka): the contact form lives on krizaka.com
 

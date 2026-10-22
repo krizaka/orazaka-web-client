@@ -131,8 +131,8 @@
   },
   {
     "slug": "packs",
-    "journey": "reference",
-    "group": "platform",
+    "journey": "packs",
+    "group": null,
     "order": 1,
     "title": "Packs and Studios",
     "intro": "The catalogue, every manifest field, and how to write, validate and install a pack.",

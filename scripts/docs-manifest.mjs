@@ -15,6 +15,7 @@
 export const JOURNEYS = [
   { id: "start", icon: "rocket" },
   { id: "guides", icon: "sparkles" },
+  { id: "packs", icon: "layers" },
   { id: "reference", icon: "code" },
 ];
 
@@ -36,7 +37,7 @@ export const DOCS = [
   { slug: "tools", journey: "reference", group: "integrate", order: 3, source: "docs/_generated/TOOLS.md", generated: true, title: "Tools and MCP", intro: "What a model may call during a turn: tools, MCP servers, the tool cache and the write sandbox.", audience: "developer" },
   { slug: "worker-protocol", journey: "reference", group: "integrate", order: 4, source: "docs/WORKER_PROTOCOL.md", title: "Worker protocol", intro: "The AMQP contract a worker speaks to join the platform, in any language.", audience: "developer" },
   { slug: "automation", journey: "reference", group: "integrate", order: 5, source: "docs/AUTOMATION.md", title: "Automation and the local agent", intro: "The protocol of the local executing agent and the automation worker.", audience: "developer" },
-  { slug: "packs", journey: "reference", group: "platform", order: 1, source: "docs/_generated/PACKS.md", generated: true, title: "Packs and Studios", intro: "The catalogue, every manifest field, and how to write, validate and install a pack.", audience: "everyone" },
+  { slug: "packs", journey: "packs", order: 1, source: "docs/_generated/PACKS.md", generated: true, title: "Packs and Studios", intro: "The catalogue, every manifest field, and how to write, validate and install a pack.", audience: "everyone" },
   { slug: "jobs", journey: "reference", group: "platform", order: 2, source: "docs/_generated/JOBS.md", generated: true, title: "Jobs, schedules and automation", intro: "The job plane, its workers, every scheduled task and the automation connectors.", audience: "everyone" },
   { slug: "models", journey: "reference", group: "platform", order: 3, source: "docs/_generated/MODELS.md", generated: true, title: "Models", intro: "Every supported model: where it runs, its licence and its context window.", audience: "everyone" },
   { slug: "measured-runs", journey: "reference", group: "platform", order: 4, source: "docs/_generated/MEASURED_RUNS.md", generated: true, title: "Measured runs", intro: "Time, cost and parameters of the runs Orazaka made, per model and provider, failures included.", audience: "everyone" },

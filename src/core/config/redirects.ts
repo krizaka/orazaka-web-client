@@ -10,6 +10,15 @@ export interface Redirect {
   has?: { type: "host"; value: string }[];
 }
 
+const LOCALE_PREFIXES = ["fr", "en"] as const;
+const PACKS_DOCS = "/docs/packs";
+
+/**
+ * Addresses that are a page of the signed-in app: a config redirect would also hit a session, so the proxy answers 308
+ * only to a visitor without one (`/packs` is « Plan & packs » once signed in).
+ */
+export const SIGNED_OUT_REDIRECTS: readonly { source: string; destination: string }[] = [{ source: "/packs", destination: PACKS_DOCS }];
+
 /** Removed on 2026-10-21 (#231): feature tours, the gallery, the models catalogue, three marketing or stub docs. */
 export const REMOVED_PUBLIC: readonly { source: string; destination: string }[] = [
   { source: "/features", destination: "/#features" },
@@ -18,8 +27,10 @@ export const REMOVED_PUBLIC: readonly { source: string; destination: string }[] 
   { source: "/models", destination: "/docs/models" },
   { source: "/infrastructure", destination: "/docs/self-hosting" },
   { source: "/docs/business-playbook", destination: "/docs/101" },
-  { source: "/docs/cinematic-shorts", destination: "/docs/packs" },
+  { source: "/docs/cinematic-shorts", destination: PACKS_DOCS },
   { source: "/docs/use-cases", destination: "/docs/studio-guide" },
+  // Packs left the bar for the docs (2026-10-22): the catalogue is /docs/packs, whatever the locale prefix.
+  ...LOCALE_PREFIXES.map((l) => ({ source: `/${l}/packs`, destination: PACKS_DOCS })),
 ];
 
 /**

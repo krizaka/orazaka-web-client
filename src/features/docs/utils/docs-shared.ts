@@ -36,6 +36,9 @@ export function editUrl(entry: DocEntry): string | null {
   return `${REPO}/${entry.generated ? "blob" : "edit"}/main/${entry.source}`;
 }
 
+/** The packs catalogue: the docs' `packs` section, featured on the hub and linked from the sidebar. */
+export const PACKS_SLUG = "packs";
+
 export const pageHref = (slug: string) => `/docs/${slug}`;
 
 /** What the hub's search reads: a page's title, intro and headings. */

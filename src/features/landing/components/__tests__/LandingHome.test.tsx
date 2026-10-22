@@ -181,7 +181,7 @@ describe("LandingPage while sign-in and sign-up are closed (the default)", () =>
     expect(within(bar).getByRole("link", { name: translations.en.landing.nav.repo })).toHaveAttribute("href", "https://github.com/krizaka/orazaka-web-client");
     expect(within(bar).getAllByRole("link", { name: translations.en.landing.nav.talk })[0]).toHaveAttribute("href", "https://www.krizaka.com/contact?topic=orazaka");
     const centre = within(bar).getByRole("navigation", { name: "Orazaka" });
-    expect(within(centre).getAllByRole("link").map((a) => a.getAttribute("href"))).toEqual(["#features", "/docs/packs", "/desktop", "/docs"]);
+    expect(within(centre).getAllByRole("link").map((a) => a.getAttribute("href"))).toEqual(["#features", "/desktop", "/docs"]);
     expect(within(centre).getAllByRole("button").map((b) => b.textContent)).toEqual([translations.en.landing.nav.product]);
   });
 });

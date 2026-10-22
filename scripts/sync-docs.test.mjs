@@ -105,7 +105,7 @@ test("the short path: the reading path is a handful of pages, the rest is the fo
   const pages = [...DOCS, ...SPECIAL];
   const reading = pages.filter((d) => d.journey !== "reference");
   assert.ok(reading.length <= 7, `${reading.length} pages to read`);
-  assert.deepEqual(JOURNEYS.map((j) => j.id), ["start", "guides", "reference"]);
+  assert.deepEqual(JOURNEYS.map((j) => j.id), ["start", "guides", "packs", "reference"]);
   for (const d of pages.filter((d) => d.journey === "reference")) assert.ok(d.group, `${d.slug}: a reference page sits in a group`);
 });
 
