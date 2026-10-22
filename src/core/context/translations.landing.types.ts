@@ -30,10 +30,10 @@ export interface LandingDictionary {
     repo: string;
   };
   /** The first screen: one statement, one line, the real product beside it. */
-  hero: { title: string; lead: string; secondary: string; visualLabel: string; takeAlt: string; takeCaption: string };
+  hero: { title: string; lead: string; secondary: string; visualLabel: string };
   /** The figures under the hero, counted from the published measured runs. */
   figures: { runs: string; models: string; telemetry: string };
-  features: { eyebrow: string; title: string; lead: string; items: Record<"studios" | "records" | "home", { title: string; text: string; alt: string }> };
+  features: { eyebrow: string; title: string; lead: string; items: Record<"studios" | "records" | "home", { title: string; text: string }> };
   records: { eyebrow: string; title: string; lead: string; more: string; measuredOn: string; runLabel: string; prompt: string; alt: string; where: string; onMac: string; onHosted: string; noCost: string; imageCost: string; time: string; timeValue: string; cost: string };
   cta: { title: string; body: string; primary: string };
   closed: { title: string; body: string; docs: string; contact: string; home: string; heroPrimary: string; signInBanner: string };

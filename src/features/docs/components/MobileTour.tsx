@@ -13,7 +13,7 @@ export function MobileTour({ entry, nav, previous, next }: Readonly<{ entry: Doc
   return (
     <DocArticle
       slug={entry.slug}
-      journey="mobile"
+      journey="guides"
       title={entry.title}
       intro={entry.intro}
       audience={entry.audience}

@@ -54,8 +54,10 @@ test("sync writes the pages, the index, the model slice and the source map from 
   assert.equal(n, DOCS.length + SPECIAL.length);
   const index = JSON.parse(fs.readFileSync(path.join(out, "index.json"), "utf8"));
   assert.equal(index.find((d) => d.slug === "mobile").file, null);
-  assert.equal(JSON.parse(fs.readFileSync(path.join(out, "sources.json"), "utf8"))["docs/CORE.md"], "core");
-  assert.ok(fs.readFileSync(path.join(out, "core.md"), "utf8").startsWith("# core"));
+  assert.equal(JSON.parse(fs.readFileSync(path.join(out, "sources.json"), "utf8"))["docs/CONCEPTS.md"], "concepts");
+  assert.ok(fs.readFileSync(path.join(out, "concepts.md"), "utf8").startsWith("# concepts"));
+  assert.equal(index.find((d) => d.slug === "studio-guide").clip, "studio");
+  assert.equal(index.find((d) => d.slug === "api").clip, null);
 });
 
 test("the published content has no link to an internal document and no <https://…> autolink", () => {
@@ -97,4 +99,17 @@ test("sync fails when a synced doc links a removed public route", () => {
   }
   fs.mkdirSync(path.join(src, "docs", "_generated"), { recursive: true });
   assert.throws(() => sync(src, out), /101.*\/gallery/);
+});
+
+test("the short path: the reading path is a handful of pages, the rest is the folded reference", () => {
+  const pages = [...DOCS, ...SPECIAL];
+  const reading = pages.filter((d) => d.journey !== "reference");
+  assert.ok(reading.length <= 7, `${reading.length} pages to read`);
+  assert.deepEqual(JOURNEYS.map((j) => j.id), ["start", "guides", "reference"]);
+  for (const d of pages.filter((d) => d.journey === "reference")) assert.ok(d.group, `${d.slug}: a reference page sits in a group`);
+});
+
+test("a page's clip is one of the recordings of src/features/clips/clips.ts", () => {
+  const ids = [...fs.readFileSync(new URL("../src/features/clips/clips.ts", import.meta.url), "utf8").match(/CLIP_IDS = \[([^\]]*)\]/)[1].matchAll(/"(\w+)"/g)].map((m) => m[1]);
+  for (const d of DOCS.filter((d) => d.clip)) assert.ok(ids.includes(d.clip), `${d.slug}: unknown clip ${d.clip}`);
 });

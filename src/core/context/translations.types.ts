@@ -3,6 +3,7 @@
  * @description Shared type definitions for the internationalization dictionary.
  */
 
+import type { ClipsDictionary } from "./translations.clips";
 import type { LandingDictionary } from "./translations.landing.types";
 import type { InsightsDictionary } from "./translations.insights";
 import type { JobsTableDictionary } from "./translations.jobsTable.types";
@@ -869,6 +870,8 @@ export interface TranslationDictionary {
   };
   /** The public home page (visitors without a session). */
   landing: LandingDictionary;
+  /** The demo clips: alt, caption and captions. */
+  clips: ClipsDictionary;
   /** The Mobile section of the home page and /mobile. */
   mobile: MobileDictionary;
   /** /desktop (Orazaka for Mac) and the home page's "On your Mac" band. */

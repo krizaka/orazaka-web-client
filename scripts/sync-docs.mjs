@@ -81,9 +81,9 @@ export function sync(srcDir, outDir = path.join(root, "content", "docs")) {
     const gone = removedLinks(body);
     if (gone.length) throw new Error(`${d.slug}: links a removed public route (${gone.join(", ")}) — fix ${d.source} in the Orazaka repository`);
     fs.writeFileSync(path.join(outDir, `${d.slug}.md`), body);
-    index.push({ slug: d.slug, journey: d.journey, group: d.group ?? null, order: d.order, title: d.title, intro: d.intro, audience: d.audience, source: d.source, generated: Boolean(d.generated), file: `${d.slug}.md` });
+    index.push({ slug: d.slug, journey: d.journey, group: d.group ?? null, order: d.order, title: d.title, intro: d.intro, audience: d.audience, source: d.source, generated: Boolean(d.generated), clip: d.clip ?? null, file: `${d.slug}.md` });
   }
-  for (const s of SPECIAL) index.push({ ...s, group: null, source: null, generated: false, file: null });
+  for (const s of SPECIAL) index.push({ ...s, group: null, source: null, generated: false, clip: null, file: null });
   fs.writeFileSync(path.join(outDir, "index.json"), `${JSON.stringify(index, null, 2)}\n`);
   const arch = JSON.parse(fs.readFileSync(path.join(srcDir, "docs", "_generated", "architecture.json"), "utf8"));
   fs.writeFileSync(path.join(outDir, "model.json"), `${JSON.stringify(modelSlice(arch))}\n`);

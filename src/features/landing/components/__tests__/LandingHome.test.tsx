@@ -63,19 +63,19 @@ describe("LandingPage", () => {
   it("shows the real product in the hero: the recorded chat of the page's language and theme, poster first, never a mock chat", () => {
     renderLanding("en", <LandingPage measured={MEASURED} />);
     const look = document.documentElement.classList.contains("light") ? "light" : "dark";
-    const take = screen.getByTestId("hero-take") as HTMLVideoElement;
+    const take = screen.getByTestId("clip-take") as HTMLVideoElement;
     expect(take.muted).toBe(true);
     expect(take.loop).toBe(true);
     expect(take).not.toHaveAttribute("controls");
     expect(take).toHaveAttribute("poster", expect.stringMatching(new RegExp(`products/orazaka/home/take-en-${look}-poster\\.[0-9a-f]{10}\\.webp$`)));
     expect(take.querySelector("source[type='video/webm']")).toHaveAttribute("src", expect.stringMatching(new RegExp(`take-en-${look}\\.[0-9a-f]{10}\\.webm$`)));
     expect(take.querySelector("source[type='video/mp4']")).toHaveAttribute("src", expect.stringMatching(new RegExp(`take-en-${look}\\.[0-9a-f]{10}\\.mp4$`)));
-    expect(screen.getByText(translations.en.landing.hero.takeCaption)).toBeInTheDocument();
+    expect(screen.getByText(translations.en.clips.take.caption)).toBeInTheDocument();
   });
 
   it("follows the language: the French page films the French take", () => {
     renderLanding("fr", <LandingPage measured={MEASURED} />);
-    expect(screen.getByTestId("hero-take")).toHaveAttribute("poster", expect.stringMatching(/take-fr-(dark|light)-poster/));
+    expect(screen.getByTestId("clip-take")).toHaveAttribute("poster", expect.stringMatching(/take-fr-(dark|light)-poster/));
     expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent(translations.fr.landing.hero.title);
   });
 
@@ -96,14 +96,19 @@ describe("LandingPage", () => {
     expect(order).toEqual([...order].sort((a, b) => a - b));
   });
 
-  it("has three capabilities, each with a real screen of the app (never a fake chat)", () => {
+  it("has three capabilities, each a captioned clip of the real app (never a fake chat)", () => {
     renderLanding("en", <LandingPage measured={MEASURED} />);
     const features = sectionOf("features");
     const tiles = features.querySelectorAll("ul > li");
     expect(tiles).toHaveLength(3);
-    const shots = [...features.querySelectorAll("img")].map((i) => i.getAttribute("src"));
-    expect(shots).toHaveLength(3);
-    shots.forEach((src) => expect(src).toMatch(/products\/orazaka\/web\/step-(studio|results|workspace)-(dark|light)-poster\.[0-9a-f]{10}\.webp$/));
+    const clips = [...features.querySelectorAll("video")];
+    expect(clips.map((v) => v.getAttribute("data-testid"))).toEqual(["clip-studio", "clip-results", "clip-workspace"]);
+    clips.forEach((v) => {
+      expect(v.getAttribute("poster")).toMatch(/products\/orazaka\/web\/step-(studio|results|workspace)-(dark|light)-poster\.[0-9a-f]{10}\.webp$/);
+      expect(v.muted).toBe(true);
+      expect(v.loop).toBe(true);
+      expect(v.querySelectorAll("track[kind='captions']")).toHaveLength(2);
+    });
   });
 
   it("proves it with three run records — model, where it ran, time, cost and the run id — read from the comparison's data", () => {

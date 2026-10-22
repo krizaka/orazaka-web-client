@@ -4,6 +4,8 @@ import type { ReactNode } from "react";
 import Link from "next/link";
 import { DocsArticlePage } from "@krizaka/ui/docs-article-page";
 import { Button } from "@krizaka/ui/button";
+import { Clip } from "@/features/clips/Clip";
+import type { ClipId } from "@/features/clips/clips";
 import { useTranslation } from "@/core/context/LocaleContext";
 import "@/features/docs/docs.css";
 import { DocsSidebar } from "@/features/docs/components/DocsSidebar";
@@ -23,11 +25,13 @@ export interface DocArticleProps {
   next: { slug: string; title: string } | null;
   /** The page's own words, translated (the mobile tour): they replace the title and the lead. */
   words?: { title: string; lead: string };
+  /** A recording shown under the lead, in place of a paragraph. */
+  clip?: ClipId | null;
   children: ReactNode;
 }
 
 /** A documentation article on @krizaka/ui's template: sidebar by journey · breadcrumb, title, lead, facts · the reading column · contents; previous and next. */
-export function DocArticle({ slug, journey, title, intro, audience, generated, editUrl, toc, nav, previous, next, words, children }: Readonly<DocArticleProps>) {
+export function DocArticle({ slug, journey, title, intro, audience, generated, editUrl, toc, nav, previous, next, words, clip, children }: Readonly<DocArticleProps>) {
   const { t, locale } = useTranslation();
   const d = t.docs;
   const first = nav.find((n) => n.journey === journey);
@@ -56,6 +60,7 @@ export function DocArticle({ slug, journey, title, intro, audience, generated, e
         labels: { previous: d.previous, next: d.next },
       }}
     >
+      {clip && <Clip id={clip} className="mb-8 max-w-xl" />}
       {children}
       {editUrl && (
         <p className="mt-10 border-t border-border-subtle pt-4 text-sm">

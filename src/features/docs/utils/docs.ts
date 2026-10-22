@@ -6,7 +6,7 @@
  */
 import fs from "node:fs";
 import path from "node:path";
-import { JOURNEY_IDS, REPO, type DocEntry, type GroupId, type JourneyId, type NavItem, type SearchEntry } from "@/features/docs/utils/docs-shared";
+import { GROUP_IDS, JOURNEY_IDS, REPO, type DocEntry, type GroupId, type JourneyId, type NavItem, type SearchEntry } from "@/features/docs/utils/docs-shared";
 import { parseSource, type BlockNode, type InlineNode } from "@krizaka/ui/markdown";
 
 export { JOURNEY_IDS, REPO, editUrl, pageHref, searchDocs } from "@/features/docs/utils/docs-shared";
@@ -16,7 +16,7 @@ const read = <T>(name: string): T => JSON.parse(fs.readFileSync(path.join(DIR, n
 
 /** Every page of the documentation, in reading order: by journey, then group (integrate before internals), then order. */
 export function listPages(): DocEntry[] {
-  const groupRank = (g: GroupId | null) => (g === "internals" ? 1 : 0);
+  const groupRank = (g: GroupId | null) => (g ? GROUP_IDS.indexOf(g) : -1);
   return read<DocEntry[]>("index.json").sort(
     (a, b) => JOURNEY_IDS.indexOf(a.journey) - JOURNEY_IDS.indexOf(b.journey) || groupRank(a.group) - groupRank(b.group) || a.order - b.order,
   );

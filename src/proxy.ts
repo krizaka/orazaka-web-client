@@ -36,6 +36,7 @@ const PUBLIC_PREFIXES = [
   "/docs",
   "/mobile",
   "/desktop",
+  "/captions/", // the clips' WebVTT (src/app/captions)
   // What search engines and AI assistants read (src/app/robots.ts, sitemap.ts, llms*.txt, opengraph-image.tsx).
   "/robots.txt",
   "/sitemap.xml",

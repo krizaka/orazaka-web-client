@@ -4,6 +4,7 @@
  */
 
 import { type Locale, type TranslationDictionary } from "./translations.types";
+import { clips } from "./translations.clips";
 import { landing } from "./translations.landing";
 import { mobile } from "./translations.mobile";
 import { desktop } from "./translations.desktop";
@@ -941,6 +942,7 @@ export const translations: Record<Locale, TranslationDictionary> = {
       sectionAccount: "Account",
     },
     landing: landing.en,
+    clips: clips.en,
     mobile: mobile.en,
     desktop: desktop.en,
     docs: docs.en,
@@ -1877,6 +1879,7 @@ export const translations: Record<Locale, TranslationDictionary> = {
       sectionAccount: "Compte",
     },
     landing: landing.fr,
+    clips: clips.fr,
     mobile: mobile.fr,
     desktop: desktop.fr,
     docs: docs.fr,

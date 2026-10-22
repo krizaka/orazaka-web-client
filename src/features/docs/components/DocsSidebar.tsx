@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { cn } from "@krizaka/ui/cn";
 import { useTranslation } from "@/core/context/LocaleContext";
-import { JOURNEY_IDS, pageHref, type NavItem } from "@/features/docs/utils/docs-shared";
+import { FOLDED_JOURNEY, JOURNEY_IDS, pageHref, type NavItem } from "@/features/docs/utils/docs-shared";
 
 /** The pages of the documentation by journey; the one being read is marked (`aria-current`). */
 export function DocsSidebar({ items, current }: Readonly<{ items: readonly NavItem[]; current: string | null }>) {
@@ -17,11 +17,8 @@ export function DocsSidebar({ items, current }: Readonly<{ items: readonly NavIt
       {JOURNEY_IDS.map((j) => {
         const pages = items.filter((i) => i.journey === j);
         const groups = [...new Set(pages.map((p) => p.group))];
-        return (
-          <section key={j} aria-labelledby={`nav-${j}`} className="space-y-1.5">
-            <h2 id={`nav-${j}`} className="m-0 font-display text-sm font-semibold text-fg">
-              {d.journeys[j].title}
-            </h2>
+        const list = (
+          <>
             {groups.map((g) => (
               <div key={g ?? "main"}>
                 {g && <p className="mb-1 mt-3 px-2.5 font-mono text-[0.68rem] text-fg-muted">{d.groups[g]}</p>}
@@ -45,6 +42,21 @@ export function DocsSidebar({ items, current }: Readonly<{ items: readonly NavIt
                 </ul>
               </div>
             ))}
+          </>
+        );
+        const heading = "m-0 font-display text-sm font-semibold text-fg";
+        // The reference is generated and long: it stays folded until the page being read belongs to it.
+        return j === FOLDED_JOURNEY ? (
+          <details key={j} open={pages.some((p) => p.slug === current)} className="space-y-1.5">
+            <summary className={cn(heading, "cursor-pointer")}>{d.journeys[j].title}</summary>
+            {list}
+          </details>
+        ) : (
+          <section key={j} aria-labelledby={`nav-${j}`} className="space-y-1.5">
+            <h2 id={`nav-${j}`} className={heading}>
+              {d.journeys[j].title}
+            </h2>
+            {list}
           </section>
         );
       })}
