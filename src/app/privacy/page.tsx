@@ -1,7 +1,6 @@
-/* eslint-disable */
 "use client";
 
-import { LegalPage, type LegalContent } from "@/features/legal/LegalPage";
+import { LegalPage, type LegalContent } from "@/features/landing/components/LegalPage";
 import type { Locale } from "@/core/context/translations.types";
 
 const CONTENT: Record<Locale, LegalContent> = {

@@ -1,6 +1,7 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
 
-import { LandingFooter } from "@/features/landing/components/LandingFooter";
+import { LandingFooter } from "./LandingFooter";
 import Link from "next/link";
 import { useTranslation } from "@/core/context/LocaleContext";
 import type { Locale } from "@/core/context/translations.types";
