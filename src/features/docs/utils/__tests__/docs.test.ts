@@ -11,7 +11,8 @@ describe("published docs", () => {
   const docs = listDocs();
 
   it("lists the allow-listed docs, each with its markdown file and a journey", () => {
-    expect(docs.length).toBeGreaterThan(20);
+    expect(docs.length).toBeGreaterThan(15);
+    expect(docs.length).toBeLessThan(25); // the short path: a page that repeats another is folded, not added
     for (const d of docs) {
       expect(fs.existsSync(path.join(process.cwd(), "content", "docs", d.file!))).toBe(true);
       expect(d.title).not.toBe("");
@@ -20,10 +21,12 @@ describe("published docs", () => {
     expect(new Set(listPages().map((d) => d.slug)).size).toBe(listPages().length);
   });
 
-  it("covers the five journeys, in reading order, the install guide right after the intro", () => {
+  it("covers the three journeys, in reading order: quickstart, then concepts, then the guides", () => {
     const journeys = [...new Set(listPages().map((d) => d.journey))];
     expect(journeys).toEqual([...JOURNEY_IDS]);
-    expect(listPages().slice(0, 2).map((d) => d.slug)).toEqual(["101", "self-hosting"]);
+    expect(listPages().slice(0, 3).map((d) => d.slug)).toEqual(["101", "concepts", "self-hosting"]);
+    // The reference is the last journey: folded out of the reading path.
+    expect(JOURNEY_IDS.at(-1)).toBe("reference");
   });
 
   it("never publishes contributor-only or strategy docs, and no frontmatter is left behind", () => {
@@ -45,7 +48,7 @@ describe("published docs", () => {
   });
 
   it("sends 'edit' to the source file, and generated pages to the generated file", () => {
-    expect(editUrl(listPages().find((d) => d.slug === "core")!)).toBe("https://github.com/krizaka/orazaka/edit/main/docs/CORE.md");
+    expect(editUrl(listPages().find((d) => d.slug === "concepts")!)).toBe("https://github.com/krizaka/orazaka/edit/main/docs/CONCEPTS.md");
     expect(editUrl(listPages().find((d) => d.slug === "cli")!)).toBe("https://github.com/krizaka/orazaka/blob/main/docs/_generated/CLI.md");
     expect(editUrl(listPages().find((d) => d.slug === "mobile")!)).toBeNull();
   });
@@ -146,7 +149,7 @@ describe("search", () => {
   it("finds a page by its title, and a section by its heading", () => {
     expect(searchDocs(index, "install")[0].slug).toBe("self-hosting");
     expect(searchDocs(index, "cli")[0].slug).toBe("cli");
-    expect(searchDocs(index, "orchestrator").some((h) => h.slug === "core" && h.id)).toBe(true);
+    expect(searchDocs(index, "workers").some((h) => h.slug === "concepts" && h.id)).toBe(true);
   });
 
   it("returns nothing for nothing", () => {

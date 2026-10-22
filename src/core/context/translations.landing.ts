@@ -36,8 +36,6 @@ export const landing: Record<Locale, LandingDictionary> = {
       lead: "Chat, documents, images and video on hardware you own — every run priced up front and recorded.",
       secondary: "See it run",
       visualLabel: "dev.orazaka.com · chat",
-      takeAlt: "The Orazaka chat: a question typed, the request routed, the answer written.",
-      takeCaption: "Recorded on dev.orazaka.com with a demo account — nothing staged.",
     },
     figures: {
       runs: "runs measured on real hardware, each with its record",
@@ -52,17 +50,14 @@ export const landing: Record<Locale, LandingDictionary> = {
         studios: {
           title: "Studios, priced before they run",
           text: "A Studio turns a sentence or a file into an image, a video or a checked document. Its estimated cost shows before it starts.",
-          alt: "The Image generation Studio, its estimated cost in credits",
         },
         records: {
           title: "Every result keeps its run",
           text: "The output, its steps, its input and its run id stay together — so any result can be checked again.",
-          alt: "The jobs gallery, then one result opened",
         },
         home: {
           title: "Chat and agents that ask first",
           text: "Models run on your machines; a hosted one only if you connect it. An agent shows its plan and acts once you approve it.",
-          alt: "The workspace home: jobs, success rate, time to a result",
         },
       },
     },
@@ -139,8 +134,6 @@ export const landing: Record<Locale, LandingDictionary> = {
       lead: "Conversation, documents, images et vidéo sur du matériel qui vous appartient — chaque run au prix annoncé, consigné.",
       secondary: "Le voir tourner",
       visualLabel: "dev.orazaka.com · chat",
-      takeAlt: "Le chat d'Orazaka : une question tapée, la requête routée, la réponse écrite.",
-      takeCaption: "Enregistré sur dev.orazaka.com avec un compte de démo — rien de mis en scène.",
     },
     figures: {
       runs: "runs mesurés sur du vrai matériel, chacun avec sa fiche",
@@ -155,17 +148,14 @@ export const landing: Record<Locale, LandingDictionary> = {
         studios: {
           title: "Des Studios au prix connu d'avance",
           text: "Un Studio change une phrase ou un fichier en image, en vidéo ou en document vérifié. Son coût estimé s'affiche avant de lancer.",
-          alt: "Le Studio Génération d'image, son coût estimé en crédits",
         },
         records: {
           title: "Chaque résultat garde son run",
           text: "La sortie, ses étapes, son entrée et son identifiant de run restent ensemble — tout résultat peut être revérifié.",
-          alt: "La galerie des tâches, puis un résultat ouvert",
         },
         home: {
           title: "Un chat et des agents qui demandent d'abord",
           text: "Les modèles tournent sur vos machines ; un modèle hébergé seulement si vous en branchez un. Un agent montre son plan et n'agit qu'une fois approuvé.",
-          alt: "L'accueil de l'espace : tâches, taux de réussite, temps jusqu'au résultat",
         },
       },
     },

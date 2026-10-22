@@ -19,7 +19,18 @@ export const REMOVED_PUBLIC: readonly { source: string; destination: string }[] 
   { source: "/infrastructure", destination: "/docs/self-hosting" },
   { source: "/docs/business-playbook", destination: "/docs/101" },
   { source: "/docs/cinematic-shorts", destination: "/docs/packs" },
-  { source: "/docs/use-cases", destination: "/docs/business" },
+  { source: "/docs/use-cases", destination: "/docs/studio-guide" },
+];
+
+/**
+ * Removed on 2026-10-22 (the docs' short path, krizaka/orazaka#351): the pages that repeated the Concepts page or the
+ * architecture reference. They stay generated on GitHub; the reading path no longer carries them.
+ */
+const CONCEPTS_PAGES = ["glossary", "core"] as const;
+const ARCHITECTURE_PAGES = ["interceptors", "interface-contracts", "business", "repositories", "governance", "adrs"] as const;
+export const REMOVED_DOCS: readonly { source: string; destination: string }[] = [
+  ...CONCEPTS_PAGES.map((slug) => ({ source: `/docs/${slug}`, destination: "/docs/concepts" })),
+  ...ARCHITECTURE_PAGES.map((slug) => ({ source: `/docs/${slug}`, destination: "/docs/architecture" })),
 ];
 
 /** Older renames, kept (their targets are the pages that stay). */
@@ -27,10 +38,10 @@ const RENAMED: readonly { source: string; destination: string }[] = [
   // The mobile guide is a section of the documentation; the docs' pages were renamed (slugs without underscores).
   { source: "/mobile", destination: "/docs/mobile" },
   { source: "/docs/api_reference", destination: "/docs/api" },
-  { source: "/docs/interface_contracts", destination: "/docs/interface-contracts" },
+  { source: "/docs/interface_contracts", destination: "/docs/architecture" },
   { source: "/docs/worker_protocol", destination: "/docs/worker-protocol" },
   { source: "/docs/business_implementation", destination: "/docs/101" },
-  { source: "/docs/use_cases", destination: "/docs/business" },
+  { source: "/docs/use_cases", destination: "/docs/studio-guide" },
   // The signed-in app's addresses say the section's name (docs/ux/information-architecture.md of the workspace).
   { source: "/dashboard/jobs", destination: "/jobs" },
   { source: "/profile", destination: "/settings" },
@@ -39,7 +50,7 @@ const RENAMED: readonly { source: string; destination: string }[] = [
 export const PUBLIC_REDIRECTS: readonly Redirect[] = [
   // The contact form lives on krizaka.com.
   { source: "/contact", destination: "https://www.krizaka.com/contact", permanent: false },
-  ...[...REMOVED_PUBLIC, ...RENAMED].map((r) => ({ ...r, permanent: true })),
+  ...[...REMOVED_PUBLIC, ...REMOVED_DOCS, ...RENAMED].map((r) => ({ ...r, permanent: true })),
   // Not on admin.orazaka.com: /billing is a section of the operator console there (src/console), served by the proxy.
   { source: "/billing", has: [{ type: "host", value: "(?!admin\\.).*" }], destination: "/usage", permanent: true },
 ];
