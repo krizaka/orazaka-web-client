@@ -20,7 +20,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 45
     env:
-      E2E_BASE_URL: https://dev.orazaka.com
+      E2E_BASE_URL: https://www.orazaka.com
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
@@ -31,7 +31,7 @@ jobs:
           short="${GITHUB_SHA::7}"; ok=0
           for i in $(seq 1 180); do
             # five answers in a row carry the sha: a rolling deploy serves old and new instances side by side
-            if curl -fsS "$E2E_BASE_URL/" | grep -q "$short"; then ok=$((ok+1)); else ok=0; fi
+            if curl -fsS "$E2E_BASE_URL/api/healthz" | grep -q "$short"; then ok=$((ok+1)); else ok=0; fi
             if [ "$ok" -ge 5 ]; then echo "deployed: $short"; exit 0; fi
             echo "waiting for $short ($i/180, $ok in a row)"; sleep 10
           done
@@ -39,12 +39,12 @@ jobs:
       - run: npm install --legacy-peer-deps --no-audit --no-fund
       - run: npx playwright install --with-deps chromium
       - name: SEO family contract (indexed)
-        run: node scripts/check-seo-family.mjs --base https://dev.orazaka.com --host https://dev.orazaka.com
+        run: node scripts/check-seo-family.mjs --base https://www.orazaka.com --host https://www.orazaka.com
       - name: Console gate (admin.gated) — a GitHub runner is not an allowed address
         run: |
           test "$(curl -s -o /dev/null -w '%{http_code}' https://admin.orazaka.com/login)" = 403
           test "$(curl -s -o /dev/null -w '%{http_code}' https://admin.orazaka.com/)" = 403
-          test "$(curl -s -o /dev/null -w '%{http_code}' https://dev.orazaka.com/console)" = 404
+          test "$(curl -s -o /dev/null -w '%{http_code}' https://www.orazaka.com/console)" = 404
           test "$(curl -s -o /dev/null -w '%{http_code}' https://admin.orazaka.com/api/healthz)" = 200
       - name: UI crawl
         run: npm run test:ui-crawl
