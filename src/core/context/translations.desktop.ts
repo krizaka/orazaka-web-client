@@ -5,6 +5,8 @@
  * no figure that was not measured. The version, the download URL, the size and the SHA-256 are never written here:
  * they are read from the GitHub release at build time.
  */
+import type { PhoneWords } from "./translations.landing.types";
+
 type Locale = "en" | "fr";
 
 interface Titled {
@@ -16,6 +18,8 @@ export interface DesktopDictionary {
   meta: { title: string; description: string };
   hero: { eyebrow: string; title: string; lead: string; captureAlt: string };
   /** The phone apps: a store button only when its URL is configured (`APP_STORE_IOS_URL`, `APP_STORE_ANDROID_URL`), else « soon ». */
+  /** The phone clip of the Download page (`PhoneSection`). */
+  phone: PhoneWords;
   mobile: { title: string; soon: string; ios: { button: string; soon: string }; android: { button: string; soon: string } };
   download: {
     button: string;
@@ -49,6 +53,11 @@ export const desktop: Record<Locale, DesktopDictionary> = {
       title: "Orazaka on your Mac.",
       lead: "Run the whole engine on this Mac, or connect it to your workspace. A control panel in the menu bar — and Orazaka sees only the folders you choose.",
       captureAlt: "The Orazaka for Mac control panel: the state of the local engine, Start, Stop and Open workspace",
+    },
+    phone: {
+      eyebrow: "Orazaka on your phone",
+      title: "And the same Orazaka in your hand.",
+      lead: "The phone app talks to the same platform as the Mac app and the web: a chat, the Studios, your jobs. Recorded on a real device.",
     },
     mobile: {
       title: "On your phone",
@@ -131,6 +140,11 @@ export const desktop: Record<Locale, DesktopDictionary> = {
       title: "Orazaka sur votre Mac.",
       lead: "Faites tourner tout le moteur sur ce Mac, ou reliez-le à votre espace. Un panneau dans la barre des menus — et Orazaka ne voit que les dossiers que vous choisissez.",
       captureAlt: "Le panneau d'Orazaka pour Mac : l'état du moteur local, Démarrer, Arrêter et Ouvrir l'espace",
+    },
+    phone: {
+      eyebrow: "Orazaka sur votre téléphone",
+      title: "Et le même Orazaka dans votre main.",
+      lead: "L'app mobile parle à la même plateforme que l'app Mac et le web : un chat, les Studios, vos tâches. Enregistrée sur un vrai appareil.",
     },
     mobile: {
       title: "Sur votre téléphone",

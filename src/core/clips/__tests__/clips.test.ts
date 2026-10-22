@@ -31,6 +31,15 @@ describe("the demo clips", () => {
     expect(clipBase("studio", "fr", "dark")).toBe(clipBase("studio", "en", "dark"));
   });
 
+  it("the phone clips are the demo persona's framed 9:16 recordings of the app, one table, no second one", () => {
+    expect(clipBase("phone-studio", "fr", "light")).toBe("products/orazaka/mobile/studio-run-light-916");
+    expect(clipBase("phone-ask", "en", "dark")).toBe("products/orazaka/mobile/ask-dark-916");
+    for (const id of ["phone-studio", "phone-ask"] as const) {
+      expect(CLIPS[id].width / CLIPS[id].height).toBeCloseTo(9 / 16, 3);
+      expect(CLIPS[id].perLang).toBe(false);
+    }
+  });
+
   it("writes WebVTT whose cues share the clip's length in order", () => {
     const vtt = captionsVtt("studio", ["a", "b"]);
     expect(vtt).toBe("WEBVTT\n\n00:00.000 --> 00:03.000\na\n\n00:03.000 --> 00:06.000\nb\n");

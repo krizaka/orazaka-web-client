@@ -34,6 +34,16 @@ export const clips = {
       caption: "Every result keeps its run.",
       cues: ["Every result is kept under Jobs.", "One result opened: its steps and its run id."],
     },
+    "phone-studio": {
+      alt: "The Orazaka phone app: a sentence typed, the run in progress, the generated image with its seed and model.",
+      caption: "From your phone: a sentence in, an image out.",
+      cues: ["Mira describes the picture she needs.", "The run is followed live.", "The result, with its seed and model."],
+    },
+    "phone-ask": {
+      alt: "The Orazaka phone app chat: a question typed, the answer streamed in.",
+      caption: "The same chat as on the web, in your hand.",
+      cues: ["Mira asks a question.", "The answer streams in."],
+    },
   },
   fr: {
     take: {
@@ -55,6 +65,16 @@ export const clips = {
       alt: "La galerie des tâches, puis un résultat ouvert avec son identifiant de run.",
       caption: "Chaque résultat garde son run.",
       cues: ["Chaque résultat est conservé dans Tâches.", "Un résultat ouvert : ses étapes et son identifiant de run."],
+    },
+    "phone-studio": {
+      alt: "L'app mobile d'Orazaka : une phrase tapée, le run en cours, l'image générée avec sa graine et son modèle.",
+      caption: "Depuis votre téléphone : une phrase, une image.",
+      cues: ["Mira décrit l'image dont elle a besoin.", "Le run se suit en direct.", "Le résultat, avec sa graine et son modèle."],
+    },
+    "phone-ask": {
+      alt: "Le chat de l'app mobile d'Orazaka : une question tapée, la réponse qui arrive en continu.",
+      caption: "Le même chat que sur le web, dans votre main.",
+      cues: ["Mira pose une question.", "La réponse arrive en continu."],
     },
   },
 } as const satisfies Record<"en" | "fr", ClipsDictionary>;

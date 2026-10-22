@@ -10,6 +10,7 @@ import { Clip } from "@/core/clips/Clip";
 import type { ClipId } from "@/core/clips/clips";
 import { LandingFooter } from "@/features/landing/components/LandingFooter";
 import { LandingNav } from "@/features/landing/components/LandingNav";
+import { PhoneSection } from "@/features/landing/components/PhoneSection";
 import { LandingRecords } from "@/features/landing/components/LandingRecords";
 import { useEntries } from "@/features/landing/components/useEntries";
 import type { LandingDictionary } from "@/core/context/translations.landing.types";
@@ -86,6 +87,7 @@ export function LandingPage({ measured = NO_RUNS }: Readonly<{ measured?: Measur
           }}
         >
           <LandingRecords measured={measured} />
+          <PhoneSection id="phone-studio" words={t.landing.phone} testId="landing-phone" />
         </LandingTemplate>
       </main>
       <LandingFooter />

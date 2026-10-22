@@ -6,7 +6,7 @@
  */
 import { mediaUrl } from "@/core/media/cdn";
 
-export const CLIP_IDS = ["take", "workspace", "studio", "results"] as const;
+export const CLIP_IDS = ["take", "workspace", "studio", "results", "phone-studio", "phone-ask"] as const;
 export type ClipId = (typeof CLIP_IDS)[number];
 
 export const LANGS = ["en", "fr"] as const;
@@ -24,6 +24,8 @@ interface ClipSpec {
   seconds: number;
   /** The take is recorded once per language (the question is typed in it); the web steps are the app as it is. */
   perLang: boolean;
+  /** A clip recorded elsewhere than the web app (the phone app): its CDN path without look or extension. */
+  base?: string;
 }
 
 export const CLIPS: Readonly<Record<ClipId, ClipSpec>> = {
@@ -31,6 +33,9 @@ export const CLIPS: Readonly<Record<ClipId, ClipSpec>> = {
   workspace: { width: 1120, height: 700, aspect: "aspect-[1120/700]", seconds: 4, perLang: false },
   studio: { width: 1120, height: 700, aspect: "aspect-[1120/700]", seconds: 6, perLang: false },
   results: { width: 1120, height: 700, aspect: "aspect-[1120/700]", seconds: 5, perLang: false },
+  // The phone app in a device frame, signed in as the demo persona (orazaka-mobile-client scripts/record-story.mjs, frame-clips.mjs).
+  "phone-studio": { width: 1080, height: 1920, aspect: "aspect-[1080/1920]", seconds: 19, perLang: false, base: "products/orazaka/mobile/studio-run" },
+  "phone-ask": { width: 1080, height: 1920, aspect: "aspect-[1080/1920]", seconds: 11, perLang: false, base: "products/orazaka/mobile/ask" },
 };
 
 export const isClipId = (id: string): id is ClipId => (CLIP_IDS as readonly string[]).includes(id);
@@ -38,6 +43,8 @@ export const isLang = (lang: string): lang is Lang => (LANGS as readonly string[
 
 /** `products/orazaka/home/take-fr-dark` or `products/orazaka/web/step-studio-light`: the CDN path without extension. */
 export function clipBase(id: ClipId, lang: Lang, look: Look): string {
+  const { base } = CLIPS[id];
+  if (base) return `${base}-${look}-916`;
   return CLIPS[id].perLang ? `products/orazaka/home/${id}-${lang}-${look}` : `products/orazaka/web/step-${id}-${look}`;
 }
 

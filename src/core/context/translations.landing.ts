@@ -79,6 +79,11 @@ export const landing: Record<Locale, LandingDictionary> = {
       timeValue: "{seconds} s, from the command to the file",
       cost: "Provider price",
     },
+    phone: {
+      eyebrow: "On your phone",
+      title: "The same work, from your phone.",
+      lead: "Sign in, describe what you need, follow the run, open the result. The phone app is the same Orazaka, recorded here on a real device.",
+    },
     cta: {
       title: "Bring AI in-house — not your data out.",
       body: "On your Mac, your servers or your phone. Tell us what you want to run on your own machines; a person answers.",
@@ -176,6 +181,11 @@ export const landing: Record<Locale, LandingDictionary> = {
       time: "Durée",
       timeValue: "{seconds} s, de la commande au fichier",
       cost: "Prix du fournisseur",
+    },
+    phone: {
+      eyebrow: "Sur votre téléphone",
+      title: "Le même travail, depuis votre téléphone.",
+      lead: "Connectez-vous, décrivez ce qu'il vous faut, suivez le run, ouvrez le résultat. L'app mobile est le même Orazaka, enregistrée ici sur un vrai appareil.",
     },
     cta: {
       title: "Faites entrer l'IA — sans faire sortir vos données.",
