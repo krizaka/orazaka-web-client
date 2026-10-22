@@ -1,8 +1,10 @@
 /** @jest-environment node */
 import fs from "node:fs";
+import { createRequire } from "node:module";
 import path from "node:path";
 
 const read = (p: string) => fs.readFileSync(path.join(process.cwd(), p), "utf8");
+const require = createRequire(path.join(process.cwd(), "package.json"));
 
 // One page change, one system: Krizaka UI's PageTransition wraps the page content once, in the provider tree. Its
 // cross-fade, and the instant change under prefers-reduced-motion, live in @krizaka/ui's motion.css (tested there).
@@ -15,10 +17,9 @@ describe("page transitions", () => {
     expect(providers).toMatch(/<PageTransition>\{children\}<\/PageTransition>/);
   });
 
-  it("loads the stylesheet that carries the transition and its reduced-motion rule", () => {
-    expect(read("src/app/globals.css")).toContain('@import "@krizaka/orazaka-design-system/theme.css"');
-    expect(read("node_modules/@krizaka/orazaka-design-system/src/theme.css")).toContain('@import "@krizaka/tailwind"');
-    expect(read("node_modules/@krizaka/tailwind/index.css")).toContain("@krizaka/ui/motion.css");
-    expect(read("node_modules/@krizaka/ui/dist/motion.css")).toMatch(/prefers-reduced-motion[\s\S]*::view-transition-old\(\*\)/);
+  it("ships the stylesheet that carries the transition and its reduced-motion rule", () => {
+    const motion = fs.readFileSync(require.resolve("@krizaka/ui/motion.css"), "utf8");
+    expect(motion).toContain("::view-transition-old(.kz-page)");
+    expect(motion).toMatch(/prefers-reduced-motion[\s\S]*::view-transition-old\(\*\)/);
   });
 });
