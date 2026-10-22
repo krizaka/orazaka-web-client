@@ -11,7 +11,7 @@ describe("PhoneClip", () => {
     for (const video of videos) {
       expect(video.getAttribute("preload")).toBe("none");
       expect(video.hasAttribute("autoplay")).toBe(false);
-      expect(video.getAttribute("poster")).toMatch(/^https:\/\/.*clip-ask-(dark|light)-poster\.[0-9a-f]{10}\.webp$/);
+      expect(video.getAttribute("poster")).toMatch(/^https:\/\/.*ask-(dark|light)-916-poster\.[0-9a-f]{10}\.webp$/);
       expect(Array.from(video.querySelectorAll("source")).map((s) => s.getAttribute("type"))).toEqual(["video/webm", "video/mp4"]);
     }
     // Which one is shown is the stylesheet's job (html.light hides the dark recording): the rule is in globals.css.

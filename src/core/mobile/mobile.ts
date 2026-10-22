@@ -1,7 +1,7 @@
 /**
  * @file mobile.ts
- * @description The steps of the Orazaka mobile app, in the order a person lives them: sign in, make an image, ask, follow the jobs. Each step is one recording of the real app (iOS simulator, signed in as the QA
- * user, against dev.orazaka.com), in dark and in light, on the CDN under products/orazaka/mobile (hashes:
+ * @description The steps of the Orazaka mobile app, in the order a person lives them: sign in, make an image, ask, follow the jobs. Each step is one recording of the real app (iOS simulator, signed in as the demo
+ * persona (Mira), against dev.orazaka.com), in dark and in light, on the CDN under products/orazaka/mobile, already in a device frame, 9:16 (hashes:
  * core/media/media.generated.json); its words — goal, purpose, alt, the things to notice — are `t.mobile.steps`.
  * Typing is sped up and waits are cut, each cut labelled on the recording. A recording of anything but the app is not
  * shown: there is no mock-up, and no step without a recording.
@@ -20,8 +20,8 @@ const AREA = "products/orazaka/mobile";
 
 export function clipUrls(id: ClipId, appearance: Appearance) {
   return {
-    webm: mediaUrl(`${AREA}/clip-${id}-${appearance}.webm`),
-    mp4: mediaUrl(`${AREA}/clip-${id}-${appearance}.mp4`),
-    poster: mediaUrl(`${AREA}/clip-${id}-${appearance}-poster.webp`),
+    webm: mediaUrl(`${AREA}/${id}-${appearance}-916.webm`),
+    mp4: mediaUrl(`${AREA}/${id}-${appearance}-916.mp4`),
+    poster: mediaUrl(`${AREA}/${id}-${appearance}-916-poster.webp`),
   };
 }

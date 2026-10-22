@@ -14,14 +14,16 @@ describe("the mobile journey", () => {
       for (const appearance of APPEARANCES) {
         const u = clipUrls(id, appearance);
         expect([u.webm, u.mp4, u.poster].every((x) => CDN.test(x))).toBe(true);
-        expect(u.mp4).toContain(`clip-${id}-${appearance}.`);
+        expect(u.mp4).toContain(`/${id}-${appearance}-916.`);
       }
     }
   });
 
-  it("shows only recordings of the real app: no still or promo of an older, mocked screen is left in the media manifest", () => {
-    const left = mediaPaths("products/orazaka/mobile/").filter((p) => !/\/clip-[a-z-]+-(dark|light)(-poster)?\.(mp4|webm|webp)$/.test(p));
-    expect(left).toEqual([]);
+  it("shows only the persona's recordings of the real app (Mira, framed, 9:16): never a still or promo, never the older QA-user takes", () => {
+    const shown = STEPS.flatMap((id) => APPEARANCES.flatMap((a) => Object.values(clipUrls(id, a))));
+    expect(shown.filter((u) => /\/clip-/.test(u))).toEqual([]);
+    const known = mediaPaths("products/orazaka/mobile/");
+    for (const id of STEPS) for (const a of APPEARANCES) expect(known).toContain(`products/orazaka/mobile/${id}-${a}-916.mp4`);
   });
 
   it("has a goal, a purpose, an alt and three things to notice for every step, in English and French", () => {
