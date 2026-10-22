@@ -32,9 +32,9 @@ test("the layout names the same files the script copies, relative to itself", ()
   assert.doesNotMatch(layout, /node_modules/);
 });
 
-test("the faces are the Cahier's (krizaka-ui ADR-004): Young Serif, Atkinson Hyperlegible Next, Courier Prime — never the old trio", () => {
-  assert.ok(FACES.includes("young-serif-latin-400.woff2"));
-  assert.ok(FACES.includes("atkinson-hyperlegible-next-latin-wght.woff2"));
-  assert.ok(FACES.includes("courier-prime-latin-400.woff2"));
-  for (const face of FACES) assert.doesNotMatch(face, /inter-|jetbrains|plus-jakarta/);
+test("a product wears plain Krizaka UI: the sans only, never the notebook's faces (Young Serif, Courier Prime)", () => {
+  assert.deepEqual(FACES, ["atkinson-hyperlegible-next-latin-wght.woff2"]);
+  const layout = readFileSync(new URL("../src/app/layout.tsx", import.meta.url), "utf8");
+  assert.doesNotMatch(layout, /young-serif|courier-prime/);
+  assert.match(layout, /<html[^>]*data-surface="product"/);
 });

@@ -12,7 +12,8 @@ import { KRIZAKA_URL, SITE_DESCRIPTION, SITE_NAME, SITE_TITLE, SITE_URL, siteJso
 
 /*
  * The typefaces are the files of @krizaka/fonts (SIL OFL 1.1), loaded by next/font/local: preloaded, fingerprinted and
- * served from the same origin — never fetched from Google at build. The CSS variables are the ones the app already uses.
+ * served from the same origin — never fetched from Google at build. The app is a product, so it wears plain Krizaka UI
+ * (`data-surface="product"` on <html>): the sans only — no Young Serif, no Courier Prime (those are the notebook's).
  * The arguments must be literals, relative to this file: scripts/link-fonts.mjs copies the faces to ./_fonts (git-ignored)
  * from wherever the package is installed (standalone on App Platform, hoisted in the workspace).
  */
@@ -20,49 +21,6 @@ const inter = localFont({
   src: "./_fonts/atkinson-hyperlegible-next-latin-wght.woff2",
   weight: "400 700",
   variable: "--font-inter",
-  display: "swap",
-});
-
-const jetbrainsMono = localFont({
-  src: [
-    { path: "./_fonts/courier-prime-latin-400.woff2", weight: "400" },
-    { path: "./_fonts/courier-prime-latin-700.woff2", weight: "700" },
-  ],
-  variable: "--font-jetbrains-mono",
-  display: "swap",
-});
-
-/** Outfit's role (headings) is taken by Young Serif, the display face of @krizaka/fonts (Cahier, krizaka-ui ADR-004). */
-const outfit = localFont({
-  src: "./_fonts/young-serif-latin-400.woff2",
-  weight: "400",
-  adjustFontFallback: "Times New Roman",
-  variable: "--font-outfit",
-  display: "swap",
-});
-
-/**
- * Krizaka Display: the display face of @krizaka/fonts (Young Serif, one weight).
- * CSS variable --font-krizaka-display resolves to it.
- */
-const krizakaDisplay = localFont({
-  src: "./_fonts/young-serif-latin-400.woff2",
-  weight: "400",
-  adjustFontFallback: "Times New Roman",
-  variable: "--font-krizaka-display",
-  display: "swap",
-});
-
-/**
- * Krizaka Mono: the mono face of @krizaka/fonts (Courier Prime).
- * CSS variable --font-krizaka-mono resolves to it.
- */
-const krizakaMono = localFont({
-  src: [
-    { path: "./_fonts/courier-prime-latin-400.woff2", weight: "400" },
-    { path: "./_fonts/courier-prime-latin-700.woff2", weight: "700" },
-  ],
-  variable: "--font-krizaka-mono",
   display: "swap",
 });
 
@@ -104,7 +62,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en" data-surface="product" suppressHydrationWarning>
       <head>
         {/* The organisation's theme mechanism: applies the persisted mode and named theme before the first paint. */}
         <ThemeScript />
@@ -117,10 +75,6 @@ export default function RootLayout({
       <body
         className={cn(
           inter.variable,
-          jetbrainsMono.variable,
-          outfit.variable,
-          krizakaDisplay.variable,
-          krizakaMono.variable,
           "antialiased transition-colors duration-200"
         )}
       >
