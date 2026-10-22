@@ -4,14 +4,11 @@
  * address of a page and the search. Pure — no file access (that is `docs.ts`, server side).
  */
 
-import type { ClipId } from "@/features/clips/clips";
+import type { ClipId } from "@/core/clips/clips";
+import { FOLDED_JOURNEY, GROUP_IDS, JOURNEY_IDS, type GroupId, type JourneyId } from "@/core/constants/docs-journeys";
 
-/** The reading path is `start` then `guides`; the `reference` is generated from the code and folded out of it. */
-export const JOURNEY_IDS = ["start", "guides", "reference"] as const;
-export type JourneyId = (typeof JOURNEY_IDS)[number];
-export const FOLDED_JOURNEY: JourneyId = "reference";
-export const GROUP_IDS = ["integrate", "platform", "policies"] as const;
-export type GroupId = (typeof GROUP_IDS)[number];
+export { FOLDED_JOURNEY, GROUP_IDS, JOURNEY_IDS };
+export type { GroupId, JourneyId };
 
 export interface DocEntry {
   slug: string;
@@ -25,7 +22,7 @@ export interface DocEntry {
   source: string | null;
   /** Written from the code by `orazaka docs sync`. */
   generated: boolean;
-  /** A recording of `features/clips` shown under the title (null for none). */
+  /** A recording of `core/clips` shown under the title (null for none). */
   clip: ClipId | null;
   /** The synced markdown (null for a page that is not a markdown file). */
   file: string | null;

@@ -5,7 +5,7 @@
  */
 type Locale = "en" | "fr";
 
-import type { GroupId, JourneyId } from "@/features/docs/utils/docs-shared";
+import type { GroupId, JourneyId } from "@/core/constants/docs-journeys";
 
 export interface DocsJourneyCopy {
   title: string;

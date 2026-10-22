@@ -109,7 +109,7 @@ test("the short path: the reading path is a handful of pages, the rest is the fo
   for (const d of pages.filter((d) => d.journey === "reference")) assert.ok(d.group, `${d.slug}: a reference page sits in a group`);
 });
 
-test("a page's clip is one of the recordings of src/features/clips/clips.ts", () => {
-  const ids = [...fs.readFileSync(new URL("../src/features/clips/clips.ts", import.meta.url), "utf8").match(/CLIP_IDS = \[([^\]]*)\]/)[1].matchAll(/"(\w+)"/g)].map((m) => m[1]);
+test("a page's clip is one of the recordings of src/core/clips/clips.ts", () => {
+  const ids = [...fs.readFileSync(new URL("../src/core/clips/clips.ts", import.meta.url), "utf8").match(/CLIP_IDS = \[([^\]]*)\]/)[1].matchAll(/"(\w+)"/g)].map((m) => m[1]);
   for (const d of DOCS.filter((d) => d.clip)) assert.ok(ids.includes(d.clip), `${d.slug}: unknown clip ${d.clip}`);
 });

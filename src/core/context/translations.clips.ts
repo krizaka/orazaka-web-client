@@ -3,7 +3,7 @@
  * @description The words of the demo clips (en, fr): what each shows for assistive technology, its one-line caption under
  * the clip, and its captions (`<track>`, served by /captions/<clip>/<lang>). Each line says what the recording shows.
  */
-import type { ClipId } from "@/features/clips/clips";
+import type { ClipId } from "@/core/clips/clips";
 
 export interface ClipCopy {
   alt: string;

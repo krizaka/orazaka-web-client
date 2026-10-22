@@ -9,7 +9,7 @@
  *
  * Journeys (the hub and the sidebar follow them): start → guides → reference. The reading path is the first two; the
  * reference (generated from the code) is folded. A page the manifest does not list stays on GitHub; its old address
- * answers 308 (`REMOVED_DOCS` in src/core/config/redirects.ts). `clip` names a recording of `src/features/clips/clips.ts`.
+ * answers 308 (`REMOVED_DOCS` in src/core/config/redirects.ts). `clip` names a recording of `src/core/clips/clips.ts`.
  */
 
 export const JOURNEYS = [

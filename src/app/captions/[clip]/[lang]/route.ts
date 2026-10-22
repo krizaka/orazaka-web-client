@@ -1,5 +1,5 @@
 import { clips } from "@/core/context/translations.clips";
-import { CLIP_IDS, LANGS, captionsVtt, isClipId, isLang } from "@/features/clips/clips";
+import { CLIP_IDS, LANGS, captionsVtt, isClipId, isLang } from "@/core/clips/clips";
 
 export const dynamic = "force-static";
 

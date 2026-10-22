@@ -3,8 +3,8 @@
 import * as React from "react";
 import { cn } from "@krizaka/ui/cn";
 import { useTranslation } from "@/core/context/LocaleContext";
-import { useAppearance } from "@/features/landing/components/useAppearance";
-import { CLIPS, LANGS, clipFiles, type ClipId } from "@/features/clips/clips";
+import { useLook } from "@/core/clips/useLook";
+import { CLIPS, LANGS, clipFiles, type ClipId } from "@/core/clips/clips";
 
 /**
  * A demo recording in place of a paragraph: muted, looping, captioned (`<track>` in both languages, the page's first),
@@ -14,7 +14,7 @@ import { CLIPS, LANGS, clipFiles, type ClipId } from "@/features/clips/clips";
  */
 export function Clip({ id, priority = false, className }: Readonly<{ id: ClipId; priority?: boolean; className?: string }>) {
   const { t, locale } = useTranslation();
-  const look = useAppearance();
+  const look = useLook();
   const video = React.useRef<HTMLVideoElement>(null);
   const { width, height, aspect } = CLIPS[id];
   const files = clipFiles(id, locale, look);

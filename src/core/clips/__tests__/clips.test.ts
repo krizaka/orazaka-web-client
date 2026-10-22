@@ -2,7 +2,7 @@
  * @jest-environment node
  */
 import { clips } from "@/core/context/translations.clips";
-import { CLIPS, CLIP_IDS, LANGS, captionsVtt, clipBase, clipFiles } from "@/features/clips/clips";
+import { CLIPS, CLIP_IDS, LANGS, captionsVtt, clipBase, clipFiles } from "@/core/clips/clips";
 import { GET } from "@/app/captions/[clip]/[lang]/route";
 
 describe("the demo clips", () => {
