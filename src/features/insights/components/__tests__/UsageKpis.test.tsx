@@ -48,13 +48,15 @@ describe("UsageKpis", () => {
 });
 
 describe("PeriodTabs", () => {
-  it("offers 7, 30 and 90 days and reports the choice", () => {
-    const onChange = jest.fn();
-    render(<PeriodTabs value={30} onChange={onChange} />);
+  beforeEach(() => window.history.replaceState(null, "", "/usage"));
+
+  it("offers 7, 30 and 90 days, opens on 30, and writes the choice in the URL (?period=)", () => {
+    render(<PeriodTabs />);
     expect(screen.getAllByRole("tab").map((tab) => tab.textContent)).toEqual(["7 days", "30 days", "90 days"]);
-    fireEvent.mouseDown(screen.getByRole("tab", { name: "90 days" }));
-    fireEvent.keyDown(screen.getByRole("tab", { name: "30 days" }), { key: "ArrowRight" });
-    expect(onChange).toHaveBeenCalled();
+    expect(screen.getByRole("tab", { name: "30 days" })).toHaveAttribute("aria-selected", "true");
+    fireEvent.mouseDown(screen.getByRole("tab", { name: "90 days" }), { button: 0 });
+    expect(window.location.search).toBe("?period=90");
+    expect(screen.getByRole("tab", { name: "90 days" })).toHaveAttribute("aria-selected", "true");
   });
 });
 

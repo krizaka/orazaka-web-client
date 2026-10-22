@@ -49,6 +49,7 @@ export function AutomationCard({
           {open ? a.hideDetails : a.showDetails}
         </Button>
         {open && (
+          // @ephemeral: the tabs of an unfolded card, closed with the card
           <Tabs.Root defaultValue="triggers">
             <Tabs.List>
               <Tabs.Trigger value="triggers">{a.tabs.triggers}</Tabs.Trigger>

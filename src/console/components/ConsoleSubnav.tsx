@@ -1,6 +1,7 @@
 "use client";
 
-import { usePathname, useRouter } from "next/navigation";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { Tabs } from "@krizaka/ui/tabs";
 import { consoleCopy } from "@/console/core/copy/console";
 import { activeGroup, activeScreen } from "@/console/core/config/sections";
@@ -12,21 +13,18 @@ import { activeGroup, activeScreen } from "@/console/core/config/sections";
  */
 export function ConsoleSubnav() {
   const pathname = usePathname();
-  const router = useRouter();
   const group = activeGroup(pathname);
   const screen = activeScreen(pathname);
   if (!group || group.children.length === 0 || !screen) return null;
   return (
     <div className="mx-auto w-full max-w-7xl px-4 pt-4 sm:px-6">
-      <Tabs.Root value={screen.href} onValueChange={(href) => router.push(href)} variant="underline">
-        <Tabs.List aria-label={consoleCopy.nav.sections}>
-          {group.children.map((child) => (
-            <Tabs.Trigger key={child.id} value={child.href}>
-              {consoleCopy.nav[child.id as keyof typeof consoleCopy.nav] as string}
-            </Tabs.Trigger>
-          ))}
-        </Tabs.List>
-      </Tabs.Root>
+      <Tabs.Nav label={consoleCopy.nav.sections} current={screen.href} variant="underline">
+        {group.children.map((child) => (
+          <Tabs.NavLink key={child.id} href={child.href} exact asChild>
+            <Link href={child.href}>{consoleCopy.nav[child.id as keyof typeof consoleCopy.nav] as string}</Link>
+          </Tabs.NavLink>
+        ))}
+      </Tabs.Nav>
     </div>
   );
 }

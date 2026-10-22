@@ -17,6 +17,9 @@ const FAILED: JobStatus = "FAILED";
 /** The periods the page offers, in days. */
 export const PERIODS = [7, 30, 90] as const;
 export type Period = (typeof PERIODS)[number];
+/** The same periods as the values of the `?period=` parameter (the URL is the state). */
+export const PERIOD_KEYS = ["7", "30", "90"] as const satisfies readonly `${Period}`[];
+export const DEFAULT_PERIOD_KEY = "30" as const;
 
 /** What a period holds. */
 export interface Totals {

@@ -61,6 +61,7 @@ export const JobModal: React.FC<JobModalProps> = ({ job, modalType, onClose, cop
             <StageLabels status={job.status} />
           </div>
 
+          {/* @ephemeral: the result / payload switch of an open job modal, gone with the modal */}
           <Tabs.Root value={activeTab} onValueChange={(value) => setActiveTab(value as TabKey)} className="gap-4">
             <Tabs.List aria-label={jobLabel(t, job)}>
               {job.status === JOB_STATUS.COMPLETED && <Tabs.Trigger value="result">{t.jobs.resultModalTitle}</Tabs.Trigger>}

@@ -52,6 +52,7 @@ export function StudioCatalogueToolbar({
         />
       </div>
       <div className="flex flex-wrap items-center gap-2 sm:flex-nowrap">
+        {/* @ephemeral: already in the URL through useCatalogueQuery (replaceState); to move to routeKey with its siblings */}
         <Chip.Group
           type="single"
           size="sm"
