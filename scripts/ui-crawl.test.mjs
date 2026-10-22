@@ -40,8 +40,8 @@ test("it is an npm script and a step of its own post-deploy workflow (a failing 
 
 test("the post-deploy workflow also runs the SEO family contract against the deployed site, indexed (seo.family)", () => {
   const wf = read(".github/workflows/dev-preview-live.yml");
-  assert.match(wf, /node scripts\/check-seo-family\.mjs --base https:\/\/dev\.orazaka\.com --host https:\/\/dev\.orazaka\.com(\s|$)/);
-  assert.ok(!/--index off/.test(wf), "dev.orazaka.com is indexed (AGENTS.md)");
+  assert.match(wf, /node scripts\/check-seo-family\.mjs --base https:\/\/www\.orazaka\.com --host https:\/\/www\.orazaka\.com(\s|$)/);
+  assert.ok(!/--index off/.test(wf), "www.orazaka.com is indexed (AGENTS.md)");
 });
 
 test("the console crawl covers every console screen in both themes and both viewports, and checks the DEV badge (admin.shell)", () => {
@@ -57,5 +57,5 @@ test("the console crawl covers every console screen in both themes and both view
 test("the same workflow proves the console gate from outside: 403 on the admin host, 404 on the public one (admin.gated)", () => {
   const wf = read(".github/workflows/dev-preview-live.yml");
   assert.match(wf, /admin\.orazaka\.com\/login[^\n]*\n?[^\n]*= 403/);
-  assert.match(wf, /dev\.orazaka\.com\/console[^\n]*= 404/);
+  assert.match(wf, /www\.orazaka\.com\/console[^\n]*= 404/);
 });
