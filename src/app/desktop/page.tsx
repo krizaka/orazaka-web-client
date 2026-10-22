@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { DesktopPage } from "@/features/landing/components/DesktopPage";
+import { readStoreLinks } from "@/core/config/store-links";
 import { loadDesktopRelease } from "@/features/landing/utils/release";
 import { translations } from "@/core/context/translations";
 
@@ -11,8 +12,8 @@ export const metadata: Metadata = {
   alternates: { canonical: "/desktop" },
 };
 
-/** `/desktop` — Orazaka for Mac. The download is read from the latest `desktop-*` GitHub release (refreshed hourly). */
+/** `/desktop` — Orazaka for Mac. The download is read from the latest `desktop-*` GitHub release (refreshed hourly); the phone apps' store buttons appear when `APP_STORE_IOS_URL` / `APP_STORE_ANDROID_URL` are set at build. */
 export default async function Page() {
   const release = await loadDesktopRelease();
-  return <DesktopPage release={release} />;
+  return <DesktopPage release={release} stores={readStoreLinks()} />;
 }
