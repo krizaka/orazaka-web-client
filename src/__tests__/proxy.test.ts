@@ -35,6 +35,19 @@ describe("proxy with the entry points closed (default)", () => {
   });
 });
 
+describe("Packs moved into the docs", () => {
+  it("sends a visitor without a session from /packs to /docs/packs with a 308", () => {
+    const res = call("/packs");
+    expect(res.status).toBe(308);
+    expect(res.headers.get("location")).toBe("https://dev.orazaka.com/docs/packs");
+  });
+
+  it("keeps /packs the signed-in Plan & packs for a session", () => {
+    const req = new NextRequest("https://dev.orazaka.com/packs", { headers: { cookie: "next-auth.session-token=x" } });
+    expect(proxy(req).headers.get("x-middleware-next")).toBe("1");
+  });
+});
+
 describe("proxy with sign-in open", () => {
   it("lets the BFF routes through", () => {
     expect(call("/api/v1/profile", { AUTH_LOGIN_ENABLED: "true" }).headers.get("x-middleware-next")).toBe("1");

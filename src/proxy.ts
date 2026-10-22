@@ -13,6 +13,7 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { authClosed, isBackendPath, readAuthFlags } from "@/core/config/auth-flags";
 import { CLOSED_ROBOTS, devRedirect, indexable, isDevHost, NOINDEX_HEADER } from "@/core/config/indexing";
+import { SIGNED_OUT_REDIRECTS } from "@/core/config/redirects";
 import { SITE_URL } from "@/app/_seo/seo";
 import { consoleResponse } from "@/console/core/edge";
 import { isAdminHost, routeFor } from "@/console/core/config/host";
@@ -72,6 +73,8 @@ function route(request: NextRequest) {
     request.cookies.get("__Secure-next-auth.session-token")?.value;
 
   if (!sessionToken) {
+    const moved = SIGNED_OUT_REDIRECTS.find((r) => r.source === pathname);
+    if (moved) return NextResponse.redirect(new URL(moved.destination, request.url), 308);
     const loginUrl = new URL("/login", request.url);
     return NextResponse.redirect(loginUrl);
   }

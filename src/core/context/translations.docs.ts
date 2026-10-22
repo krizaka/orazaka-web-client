@@ -84,6 +84,8 @@ export interface DocsDictionary {
   journeys: Record<JourneyId, DocsJourneyCopy>;
   groups: Record<GroupId, string>;
   quickstartTitle: string;
+  /** The hub's entry block, right after the quickstart: what a pack is, and the way to the catalogue. */
+  packsEntry: { title: string; line: string; cta: string };
   popularTitle: string;
   modelsTitle: string;
   modelsLine: string;
@@ -121,10 +123,12 @@ export const docs: Record<Locale, DocsDictionary> = {
     journeys: {
       start: { title: "Start", blurb: "Five minutes to a running install, then the whole model on one page.", start: "Open the quickstart" },
       guides: { title: "Guides", blurb: "One task each, short: install, run a Studio, decide what is refused, use the phone app.", start: "Run a Studio" },
+      packs: { title: "Packs", blurb: "The catalogue: what each pack installs, every manifest field, how to write and install one.", start: "Open the catalogue" },
       reference: { title: "Reference", blurb: "Generated from the code: the API, the CLI, packs, models, architecture, policies.", start: "Open the API reference" },
     },
     groups: { integrate: "Integrate", platform: "The platform", policies: "Policies and apps" },
     quickstartTitle: "From zero to a running stack",
+    packsEntry: { title: "Packs", line: "A pack is an installable offer, one per trade: the Studios, models and rules a job needs, in one install.", cta: "Browse the packs" },
     popularTitle: "Most read",
     modelsTitle: "Supported models",
     modelsLine: "Every model Orazaka supports: what it does, where it runs, its licence and context window.",
@@ -211,10 +215,12 @@ export const docs: Record<Locale, DocsDictionary> = {
     journeys: {
       start: { title: "Démarrer", blurb: "Cinq minutes pour une installation qui tourne, puis tout le modèle sur une page.", start: "Ouvrir le démarrage" },
       guides: { title: "Guides", blurb: "Une tâche chacun, court : installer, lancer un Studio, décider ce qui est refusé, l'app mobile.", start: "Lancer un Studio" },
+      packs: { title: "Packs", blurb: "Le catalogue : ce que chaque pack installe, chaque champ du manifeste, comment en écrire et en installer un.", start: "Ouvrir le catalogue" },
       reference: { title: "Référence", blurb: "Générée depuis le code : l'API, la CLI, les packs, les modèles, l'architecture, les politiques.", start: "Ouvrir la référence API" },
     },
     groups: { integrate: "Intégrer", platform: "La plateforme", policies: "Politiques et apps" },
     quickstartTitle: "De zéro à une pile qui tourne",
+    packsEntry: { title: "Packs", line: "Un pack est une offre installable, une par métier : les Studios, modèles et règles d'un travail, en une installation.", cta: "Parcourir les packs" },
     popularTitle: "Les plus lues",
     modelsTitle: "Modèles pris en charge",
     modelsLine: "Chaque modèle qu'Orazaka prend en charge : ce qu'il fait, où il tourne, sa licence et sa fenêtre de contexte.",

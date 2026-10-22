@@ -14,9 +14,9 @@ function quickstart(): string {
   return block?.kind === "diagram" ? block.source.trim() : "npx orazaka install\nnpx orazaka start\nnpx orazaka dev";
 }
 
-/** `/docs` — the hub of the documentation, organised by what the reader came to do. */
+/** `/docs` — the hub (the packs section has its own entry block after the quickstart, not a card) of the documentation, organised by what the reader came to do. */
 export default function DocsHubPage() {
-  const journeys: HubJourney[] = JOURNEY_IDS.map((id) => {
+  const journeys: HubJourney[] = JOURNEY_IDS.filter((id) => id !== "packs").map((id) => {
     const pages = pagesOf(id);
     return { id, href: pageHref(pages[0].slug), links: pages.slice(0, 4).map((p) => ({ href: pageHref(p.slug), label: p.title })) };
   });

@@ -7,12 +7,11 @@
  * The bar, the mobile panel and the footer read this one list, in this order.
  */
 import type { ComponentType } from "react";
-import { LocalIcon, PackIcon, PlayIcon, type IconProps } from "@krizaka/icons";
+import { LocalIcon, PlayIcon, type IconProps } from "@krizaka/icons";
 
 /** The words of an entry live in `t.landing.nav[id]` and its line in `t.landing.nav.menu[id]`. */
 export const NavEntryId = {
   How: "how",
-  Packs: "packs",
   Download: "download",
 } as const;
 export type NavEntryId = (typeof NavEntryId)[keyof typeof NavEntryId];
@@ -35,12 +34,11 @@ export interface NavGroup {
   entries: readonly NavEntry[];
 }
 
-/** Product ▾ — what Orazaka does (the home's « What it does »), its packs, and where to get it (the Mac app). */
+/** Product ▾ — what Orazaka does (the home's « What it does »), and where to get it (the Mac app). */
 const PRODUCT: NavGroup = {
   id: NavGroupId.Product,
   entries: [
     { id: NavEntryId.How, anchor: "features", Icon: PlayIcon },
-    { id: NavEntryId.Packs, path: "/docs/packs", Icon: PackIcon },
     { id: NavEntryId.Download, path: "/desktop", Icon: LocalIcon, current: ["/desktop"] },
   ],
 };

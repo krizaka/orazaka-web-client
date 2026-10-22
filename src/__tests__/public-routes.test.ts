@@ -4,10 +4,11 @@
  */
 import fs from "node:fs";
 import path from "node:path";
-import { PUBLIC_REDIRECTS, REMOVED_PUBLIC } from "@/core/config/redirects";
+import { PUBLIC_REDIRECTS, REMOVED_PUBLIC, SIGNED_OUT_REDIRECTS } from "@/core/config/redirects";
 import { NAV_DOCS, NAV_GROUPS } from "@/features/landing/utils/site-nav";
 import { findPage } from "@/features/docs/utils/docs";
-import { publicPaths } from "@/app/_seo/seo";
+import { publicPaths, llmsText } from "@/app/_seo/seo";
+import { JOURNEY_IDS } from "@/core/constants/docs-journeys";
 
 const root = process.cwd();
 const APP = path.join(root, "src", "app");
@@ -44,6 +45,11 @@ describe("the bar", () => {
     else expect(homeIds().has(e.anchor!)).toBe(true);
   });
 
+  it("has no Packs: it is featured in the docs, not in the bar or the footer", () => {
+    expect(entries.map((e) => e.id)).toEqual(["how", "download"]);
+    expect(entries.some((e) => e.path?.includes("packs"))).toBe(false);
+  });
+
   it("Docs resolves", () => expect(isPage(NAV_DOCS.path)).toBe(true));
 });
 
@@ -61,6 +67,24 @@ describe("removed public addresses", () => {
   it("never redirects to another removed address", () => {
     const removed = new Set(REMOVED_PUBLIC.map((r) => r.source));
     for (const r of PUBLIC_REDIRECTS) expect(removed.has(r.destination.split("#")[0])).toBe(false);
+  });
+});
+
+describe("Packs, now in the docs", () => {
+  it("/fr/packs and /en/packs answer 308 to /docs/packs, a published page", () => {
+    for (const source of ["/fr/packs", "/en/packs"]) expect(PUBLIC_REDIRECTS.find((r) => r.source === source)).toMatchObject({ destination: "/docs/packs", permanent: true });
+    expect(resolves("/docs/packs")).toBe(true);
+  });
+
+  it("/packs is the signed-in Plan & packs: only a visitor without a session is sent to the docs (308, by the proxy)", () => {
+    expect(SIGNED_OUT_REDIRECTS).toEqual([{ source: "/packs", destination: "/docs/packs" }]);
+    expect(isPage("(protected)/packs")).toBe(true);
+  });
+
+  it("is a docs section of its own, and in the sitemap and llms.txt", () => {
+    expect(JOURNEY_IDS).toContain("packs");
+    expect(publicPaths()).toContain("/docs/packs");
+    expect(llmsText()).toContain("/docs/packs");
   });
 });
 
