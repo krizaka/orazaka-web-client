@@ -12,6 +12,7 @@ import { LandingNav } from "@/features/landing/components/LandingNav";
 import { LandingFooter } from "@/features/landing/components/LandingFooter";
 import { CopyButton } from "@/features/landing/components/CopyButton";
 import { DesktopCapture } from "@/features/landing/components/DesktopCapture";
+import { PhoneSection } from "@/features/landing/components/PhoneSection";
 import { SectionHeading } from "@/features/landing/components/SectionHeading";
 import type { StoreLinks } from "@/core/config/store-links";
 import { RELEASES_URL, type DesktopRelease } from "@/features/landing/utils/release";
@@ -154,6 +155,10 @@ export function DesktopPage({ release, stores = { ios: null, android: null } }: 
               ))}
             </ul>
           </article>
+        </SectionBackdrop>
+
+        <SectionBackdrop className="border-b border-border-subtle">
+          <PhoneSection id="phone-ask" words={d.phone} testId="desktop-phone" />
         </SectionBackdrop>
 
         <SectionBackdrop className="border-b border-border-subtle">
