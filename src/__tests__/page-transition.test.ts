@@ -18,7 +18,7 @@ describe("page transitions", () => {
   });
 
   it("ships the stylesheet that carries the transition and its reduced-motion rule", () => {
-    const motion = fs.readFileSync(require.resolve("@krizaka/ui/motion.css"), "utf8");
+    const motion = fs.readFileSync(path.join(path.dirname(require.resolve("@krizaka/ui/motion")), "motion.css"), "utf8");
     expect(motion).toContain("::view-transition-old(.kz-page)");
     expect(motion).toMatch(/prefers-reduced-motion[\s\S]*::view-transition-old\(\*\)/);
   });
