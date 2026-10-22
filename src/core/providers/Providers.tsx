@@ -3,6 +3,7 @@
 import { ReactNode } from "react";
 import { SessionProvider } from "next-auth/react";
 import { MotionObserver } from "@krizaka/ui";
+import { PageTransition } from "@krizaka/ui/motion";
 import { ThemeProvider } from "@krizaka/ui/theme";
 import { QueryProvider } from "./QueryProvider";
 import { AuthFlagsProvider } from "@/core/context/AuthFlagsContext";
@@ -47,7 +48,9 @@ export function Providers({ children, authFlags }: Readonly<ProvidersProps>) {
               <JobStreamProvider>
                 <AppCommandPalette />
                 <MotionObserver />
-                <AppCharts>{children}</AppCharts>
+                <AppCharts>
+                  <PageTransition>{children}</PageTransition>
+                </AppCharts>
                 <AppToaster />
               </JobStreamProvider>
             </TenantProvider>
