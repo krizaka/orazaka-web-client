@@ -130,6 +130,7 @@ rewrites that host to the internal `/console` tree (`src/app/console/`, code in 
 | --- | --- | --- |
 | `AUTH_ALLOWED_IPS` | empty | Comma-separated client addresses (DigitalOcean's `do-connecting-ip`) allowed on the admin host; any other gets 403, sign-in page included. In production an empty list lets nobody in. |
 | `AUTH_CONSOLE_LOGIN_ENABLED` | `false` | Opens the console's sign-in (only `ROLE_ADMIN` signs in). Closed, its BFF routes answer 404. Independent of `AUTH_LOGIN_ENABLED`. |
+| `APP_STORE_IOS_URL` / `APP_STORE_ANDROID_URL` | unset | Store pages of the mobile apps, read at build (`src/core/config/store-links.ts`). Unset: the Download page says « Coming to iPhone and Android », no button. Set (an `apps.apple.com` / `play.google.com` https page only — never TestFlight or an APK): the store button appears by itself. |
 | `AUTH_CONSOLE_SECRET` | none | Signing key of the console's session (never the public site's `NEXTAUTH_SECRET`); unset in production, no console session can be opened. |
 | `AUTH_TRUST_HOST` | unset | `true` on the deployment: next-auth builds callback URLs from the requested Host (one `NEXTAUTH_URL` cannot name two hosts). |
 

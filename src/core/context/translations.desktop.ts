@@ -15,6 +15,8 @@ interface Titled {
 export interface DesktopDictionary {
   meta: { title: string; description: string };
   hero: { eyebrow: string; title: string; lead: string; captureAlt: string };
+  /** The phone apps: a store button only when its URL is configured (`APP_STORE_IOS_URL`, `APP_STORE_ANDROID_URL`), else « soon ». */
+  mobile: { title: string; soon: string; ios: { button: string; soon: string }; android: { button: string; soon: string } };
   download: {
     button: string;
     /** `{size}` is the .dmg's size. */
@@ -47,6 +49,12 @@ export const desktop: Record<Locale, DesktopDictionary> = {
       title: "Orazaka on your Mac.",
       lead: "Run the whole engine on this Mac, or connect it to your workspace. A control panel in the menu bar — and Orazaka sees only the folders you choose.",
       captureAlt: "The Orazaka for Mac control panel: the state of the local engine, Start, Stop and Open workspace",
+    },
+    mobile: {
+      title: "On your phone",
+      soon: "Coming to iPhone and Android",
+      ios: { button: "Download on the App Store", soon: "iPhone: coming soon" },
+      android: { button: "Get it on Google Play", soon: "Android: coming soon" },
     },
     download: {
       button: "Download for Mac",
@@ -123,6 +131,12 @@ export const desktop: Record<Locale, DesktopDictionary> = {
       title: "Orazaka sur votre Mac.",
       lead: "Faites tourner tout le moteur sur ce Mac, ou reliez-le à votre espace. Un panneau dans la barre des menus — et Orazaka ne voit que les dossiers que vous choisissez.",
       captureAlt: "Le panneau d'Orazaka pour Mac : l'état du moteur local, Démarrer, Arrêter et Ouvrir l'espace",
+    },
+    mobile: {
+      title: "Sur votre téléphone",
+      soon: "Bientôt sur iPhone et Android",
+      ios: { button: "Télécharger sur l'App Store", soon: "iPhone : bientôt" },
+      android: { button: "Disponible sur Google Play", soon: "Android : bientôt" },
     },
     download: {
       button: "Télécharger pour Mac",
