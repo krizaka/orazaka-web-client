@@ -32,7 +32,7 @@ jobs:
           short="${GITHUB_SHA::7}"; ok=0
           for i in $(seq 1 180); do
             # five answers in a row carry the sha: a rolling deploy serves old and new instances side by side
-            if curl -fsS "$E2E_BASE_URL/" | grep -q "$short"; then ok=$((ok+1)); else ok=0; fi
+            if curl -fsS "$E2E_BASE_URL/api/healthz" | grep -q "$short"; then ok=$((ok+1)); else ok=0; fi
             if [ "$ok" -ge 5 ]; then echo "deployed: $short"; exit 0; fi
             echo "waiting for $short ($i/180, $ok in a row)"; sleep 10
           done
