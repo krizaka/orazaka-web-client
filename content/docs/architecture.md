@@ -1,7 +1,5 @@
 # Architecture Reference
 
-> 🤖 **Generated from code** by `scripts/generate-docs.mjs` — do not hand-edit. Run `orazaka docs build` to refresh.
-
 Ports & Adapters: dependencies point toward the core. Each module has one **role** — one ring of the hexagon, outermost first — read from the code by the rule beside it.
 
 | Role | Rule | Modules |
@@ -184,6 +182,7 @@ Who calls whom while the platform runs: HTTP (UI defaults, the edge route table,
 | 6 | `BrandContextInterceptor` | ✅ | ✅ |
 | 7 | `MemoryInterceptor` | ✅ | ✅ |
 | 8 | `RefinerInterceptor` | ✅ | ✅ |
+| 8 | `SemanticCacheInterceptor` | — | ✅ |
 | 9 | `RouterInterceptor` | ✅ | ✅ |
 | 9 | `ToolInterceptor` | ✅ | ✅ |
 | 10 | `MediaInterceptor` | ✅ | ⚠ no class |

@@ -91,19 +91,6 @@
     "file": "cli.md"
   },
   {
-    "slug": "tools",
-    "journey": "reference",
-    "group": "integrate",
-    "order": 3,
-    "title": "Tools and MCP",
-    "intro": "What a model may call during a turn: tools, MCP servers, the tool cache and the write sandbox.",
-    "audience": "developer",
-    "source": "docs/_generated/TOOLS.md",
-    "generated": true,
-    "clip": null,
-    "file": "tools.md"
-  },
-  {
     "slug": "worker-protocol",
     "journey": "reference",
     "group": "integrate",
@@ -117,19 +104,6 @@
     "file": "worker-protocol.md"
   },
   {
-    "slug": "automation",
-    "journey": "reference",
-    "group": "integrate",
-    "order": 5,
-    "title": "Automation and the local agent",
-    "intro": "The protocol of the local executing agent and the automation worker.",
-    "audience": "developer",
-    "source": "docs/AUTOMATION.md",
-    "generated": false,
-    "clip": null,
-    "file": "automation.md"
-  },
-  {
     "slug": "packs",
     "journey": "packs",
     "group": null,
@@ -141,19 +115,6 @@
     "generated": true,
     "clip": null,
     "file": "packs.md"
-  },
-  {
-    "slug": "jobs",
-    "journey": "reference",
-    "group": "platform",
-    "order": 2,
-    "title": "Jobs, schedules and automation",
-    "intro": "The job plane, its workers, every scheduled task and the automation connectors.",
-    "audience": "everyone",
-    "source": "docs/_generated/JOBS.md",
-    "generated": true,
-    "clip": null,
-    "file": "jobs.md"
   },
   {
     "slug": "models",
@@ -180,19 +141,6 @@
     "generated": true,
     "clip": null,
     "file": "measured-runs.md"
-  },
-  {
-    "slug": "admin",
-    "journey": "reference",
-    "group": "platform",
-    "order": 5,
-    "title": "Administration",
-    "intro": "What an administrator controls, and how the console is secured.",
-    "audience": "operator",
-    "source": "docs/_generated/ADMIN.md",
-    "generated": true,
-    "clip": null,
-    "file": "admin.md"
   },
   {
     "slug": "architecture",
@@ -245,19 +193,6 @@
     "generated": false,
     "clip": null,
     "file": "licensing.md"
-  },
-  {
-    "slug": "mobile-guide",
-    "journey": "reference",
-    "group": "policies",
-    "order": 4,
-    "title": "The mobile app, screen by screen",
-    "intro": "What the app does today, how to run it against the local stack, and which screens do not read the server yet.",
-    "audience": "everyone",
-    "source": "docs/MOBILE.md",
-    "generated": false,
-    "clip": null,
-    "file": "mobile-guide.md"
   },
   {
     "slug": "mobile",

@@ -1,7 +1,5 @@
 # API Reference
 
-> 🤖 **Generated from code** by `scripts/generate-docs.mjs` — do not hand-edit. Run `orazaka docs build` to refresh.
-
 **Access** is read from each service's `SecurityConfig`, most-specific matcher first — the same
 order Spring Security applies. `SERVICE` is the machine-to-machine authority required on
 `/internal/v1/**` (ADR-035); `public` means no credential at all, and **⚠ no rule** means
@@ -157,6 +155,7 @@ no matcher covers the path — the service has no security on it whatsoever.
 | POST | `/api/v1/billing/subscriptions/{actorId}` | ADMIN | SubscriptionController | Moves an actor onto a plan — upgrade, downgrade or trial. |
 | POST | `/api/v1/billing/subscriptions/{actorId}/rollover` | ADMIN | SubscriptionController | Rolls a subscription into its next period, honouring a pending cancellation. |
 | GET | `/api/v1/billing/usage/capabilities` | ADMIN | UsageController | Consumption and refusals per capability × model. |
+| GET | `/api/v1/billing/usage/me` | ADMIN | UsageController | The caller's own usage and cost for a calendar month. |
 | GET | `/api/v1/billing/usage/top-consumers` | ADMIN | UsageController | The heaviest consumers. |
 | GET | `/api/v1/billing/wallets/{actorId}` | ADMIN | WalletController | Reads an actor's balances. |
 | POST | `/api/v1/billing/wallets/{actorId}/adjustments` | ADMIN | WalletController | Issues a manual credit adjustment — support goodwill, or a claw-back. |

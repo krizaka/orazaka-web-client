@@ -42,6 +42,12 @@ const ARCHITECTURE_PAGES = ["interceptors", "interface-contracts", "business", "
 export const REMOVED_DOCS: readonly { source: string; destination: string }[] = [
   ...CONCEPTS_PAGES.map((slug) => ({ source: `/docs/${slug}`, destination: "/docs/concepts" })),
   ...ARCHITECTURE_PAGES.map((slug) => ({ source: `/docs/${slug}`, destination: "/docs/architecture" })),
+  // Unpublished on 2026-10-23 (the essential only): each to the page that covers it for a reader.
+  { source: "/docs/tools", destination: "/docs/api" },
+  { source: "/docs/automation", destination: "/docs/worker-protocol" },
+  { source: "/docs/jobs", destination: "/docs/architecture" },
+  { source: "/docs/admin", destination: "/docs/self-hosting" },
+  { source: "/docs/mobile-guide", destination: "/docs/mobile" },
 ];
 
 /** Older renames, kept (their targets are the pages that stay). */
