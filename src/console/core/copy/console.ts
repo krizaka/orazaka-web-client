@@ -18,6 +18,7 @@ export const consoleCopy = {
     billing: "Billing & credits",
     studios: "Studios",
     tasks: "Tasks",
+    engine: "Engine",
     accounts: "Accounts",
     catalogue: "Catalogue",
     sections: "Sections of this part of the console",
