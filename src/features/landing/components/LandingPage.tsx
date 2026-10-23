@@ -79,9 +79,6 @@ export function LandingPage({ measured = NO_RUNS }: Readonly<{ measured?: Measur
                 <Button asChild variant="primary" size="lg">
                   <Link href={closing.href}>{closing.label}</Link>
                 </Button>
-                <Button asChild variant="ghost" size="lg">
-                  <a href="https://www.krizaka.com/contact?topic=orazaka">{t.landing.nav.talk}</a>
-                </Button>
               </>
             ),
           }}

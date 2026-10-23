@@ -32,7 +32,8 @@ export interface LandingDictionary {
     openMenu: string;
     closeMenu: string;
     home: string;
-    talk: string;
+    tryIt: string;
+    openApp: string;
     repo: string;
   };
   /** The first screen: one statement, one line, the real product beside it. */

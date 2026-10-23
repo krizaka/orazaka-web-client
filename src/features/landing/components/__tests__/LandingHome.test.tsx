@@ -129,10 +129,9 @@ describe("LandingPage", () => {
     expect(document.querySelector('script[type="application/ld+json"]')).toBeNull();
   });
 
-  it("closes with one call: the way in, and Talk to us", () => {
+  it("closes with one call: the way in — no « Talk to us »", () => {
     renderLanding("en", <LandingPage measured={MEASURED} />);
-    const links = screen.getAllByRole("link", { name: translations.en.landing.nav.talk });
-    expect(links.map((a) => a.getAttribute("href"))).toEqual(expect.arrayContaining(["https://www.krizaka.com/contact?topic=orazaka"]));
+    expect(screen.queryByRole("link", { name: /talk to us/i })).toBeNull();
     expect(screen.getByText(translations.en.landing.cta.title)).toBeInTheDocument();
   });
 
@@ -179,7 +178,8 @@ describe("LandingPage while sign-in and sign-up are closed (the default)", () =>
     expect(screen.queryByRole("navigation", { name: "Krizaka family" })).toBeNull();
     expect(bar).not.toHaveTextContent(/dev · v/);
     expect(within(bar).getByRole("link", { name: translations.en.landing.nav.repo })).toHaveAttribute("href", "https://github.com/krizaka/orazaka-web-client");
-    expect(within(bar).getAllByRole("link", { name: translations.en.landing.nav.talk })[0]).toHaveAttribute("href", "https://www.krizaka.com/contact?topic=orazaka");
+    expect(within(bar).getAllByRole("link", { name: translations.en.landing.nav.signIn })[0]).toHaveAttribute("href", "/login");
+    expect(within(bar).queryByRole("link", { name: /talk to us|contact/i })).toBeNull();
     const centre = within(bar).getByRole("navigation", { name: "Orazaka" });
     expect(within(centre).getAllByRole("link").map((a) => a.getAttribute("href"))).toEqual(["#features", "/desktop", "/docs"]);
     expect(within(centre).getAllByRole("button").map((b) => b.textContent)).toEqual([translations.en.landing.nav.product]);

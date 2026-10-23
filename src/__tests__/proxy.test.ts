@@ -52,4 +52,20 @@ describe("proxy with sign-in open", () => {
   it("lets the BFF routes through", () => {
     expect(call("/api/v1/profile", { AUTH_LOGIN_ENABLED: "true" }).headers.get("x-middleware-next")).toBe("1");
   });
+
+  it.each(["/jobs", "/studios", "/settings", "/dashboard"])("sends a signed-out visitor of %s to /login, and lets a session through", (path) => {
+    const open = { AUTH_LOGIN_ENABLED: "true" };
+    const res = call(path, open);
+    expect(res.status).toBe(307);
+    expect(res.headers.get("location")).toBe("https://dev.orazaka.com/login");
+    const before = { ...process.env };
+    Object.assign(process.env, open);
+    try {
+      const req = new NextRequest(`https://dev.orazaka.com${path}`, { headers: { cookie: "next-auth.session-token=x" } });
+      expect(proxy(req).headers.get("x-middleware-next")).toBe("1");
+    } finally {
+      delete process.env.AUTH_LOGIN_ENABLED;
+      Object.assign(process.env, before);
+    }
+  });
 });
