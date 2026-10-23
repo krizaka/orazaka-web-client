@@ -108,9 +108,10 @@ in the workspace is normative; the local [AGENTS.md](AGENTS.md) only scopes it t
 
 Apache License 2.0 — see [LICENSE](LICENSE) and [NOTICE](NOTICE).
 
-## Public development site (dev.orazaka.com)
+## Public site (www.orazaka.com) and the dev address
 
-The same app runs as a read-only public site: no sign-in, no sign-up, no call to the backend.
+The same app runs as a read-only public site: no sign-in, no sign-up, no call to the backend. `www.orazaka.com` is
+indexed; `dev.orazaka.com` sends its pages to www (308) and, like any `dev.*` address, is never indexed.
 
 | Variable | Default | Effect |
 | --- | --- | --- |

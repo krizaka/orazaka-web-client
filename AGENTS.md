@@ -42,7 +42,11 @@ with a message and, where safe, a `fix:`; written for Tsx and `.ts` is parsed as
   behaviour is identical — run `npm run lint && npm test` after, and land the result in a small pull request.
 - A rule is never silenced to get a PR green; fix the code, or (a business parameter that is a technical fact) justify it with `// @fixed:`.
 
-## One app, two hosts (dev.orazaka.com · admin.orazaka.com)
+## One app, three hosts (www.orazaka.com · dev.orazaka.com · admin.orazaka.com)
+
+`www.orazaka.com` is the public site (production: indexed, canonical, sitemap, `llms.txt`). `dev.orazaka.com` answers its
+pages with a 308 to www (only `/api/*`, `/.well-known/*`, `/robots.txt` and the health check stay) and is **never
+indexed** — nor is any `dev.*` address, by its name, whatever the configuration (`isDevAddress`, `src/core/config/indexing.ts`).
 
 The operator console (formerly the standalone `orazaka-web-admin` repository) lives here, served by **host routing**:
 `src/proxy.ts` → `src/console/core/config/host.ts` (`routeFor`, pure) rewrites `Host: admin.*` under `/console`
@@ -67,4 +71,6 @@ route outside `src/app/console`, never link `/console/...` (addresses on the adm
 The contract is defined once, in krizaka-com `AGENTS.md` §2.4, and checked here by `scripts/check-seo-family.mjs` (a copy of
 the same dependency-free file in every site's repository — keep the copies identical; its unit test sits beside it).
 
-dev.orazaka.com is **indexed** (`src/core/config/seo.ts`: origin, crawlers, JSON-LD, `llms.txt`/`llms-full.txt` rendered from the synced docs; `src/app/robots.ts`, `sitemap.ts`, `opengraph-image.tsx`). The language is chosen in the page (one URL per page), so there is no hreflang. The sign-in proxy (`src/proxy.ts`) must keep those files public. Tests: `src/__tests__/seo.test.ts`.
+www.orazaka.com is **indexed**; `dev.*` and `admin.*` never are — robots `Disallow: /`, `X-Robots-Tag: noindex` on every answer, and
+`noindex` in the pages when the deployment's own address (`APP_PUBLIC_URL`) is `dev.*` or `APP_SEARCH_INDEXING=off`
+(`src/core/config/indexing.ts`, `src/proxy.ts`). What is indexed is described in `src/app/_seo/seo.ts`: origin, crawlers, JSON-LD, `llms.txt`/`llms-full.txt` rendered from the synced docs; `src/app/robots.ts`, `sitemap.ts`, `opengraph-image.tsx`). The language is chosen in the page (one URL per page), so there is no hreflang. The sign-in proxy (`src/proxy.ts`) must keep those files public. Tests: `src/__tests__/seo.test.ts`.

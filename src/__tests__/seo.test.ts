@@ -3,6 +3,7 @@ import robots from "@/app/robots";
 import sitemap from "@/app/sitemap";
 import { proxy } from "@/proxy";
 import { NextRequest } from "next/server";
+import { indexable, isDevAddress, NOINDEX_HEADER } from "@/core/config/indexing";
 import { CRAWLERS, KRIZAKA_URL, SITE_DESCRIPTION, SITE_TITLE, llmsFullText, llmsText, ORG_ID, publicPaths, SITE_URL, siteJsonLd } from "@/app/_seo/seo";
 // eslint-disable-next-line no-restricted-imports -- the shared family guard lives in scripts/, outside src/
 import { auditLlms, auditRobots, auditSitemap } from "../../scripts/check-seo-family.mjs";
@@ -49,6 +50,48 @@ describe("search engines and AI assistants (the Krizaka family contract)", () =>
   it.each(["/robots.txt", "/sitemap.xml", "/llms.txt", "/llms-full.txt", "/opengraph-image"])("the sign-in proxy lets crawlers read %s", (path) => {
     const res = proxy(new NextRequest(`${SITE_URL}${path}`));
     expect(res.headers.get("x-middleware-next")).toBe("1");
+  });
+
+  describe("dev.* is never indexed, www is (orazaka-web-client#262)", () => {
+    const at = (host: string, path: string) => proxy(new NextRequest(`https://${host}${path}`, { headers: { host } }));
+    const keep = { dev: process.env.APP_DEV_HOST, flag: process.env.APP_SEARCH_INDEXING };
+    beforeEach(() => {
+      // No configuration at all: the name alone must close a dev address.
+      delete process.env.APP_DEV_HOST;
+      delete process.env.APP_SEARCH_INDEXING;
+    });
+    afterAll(() => {
+      for (const [k, v] of [["APP_DEV_HOST", keep.dev], ["APP_SEARCH_INDEXING", keep.flag]] as const) {
+        if (v === undefined) delete process.env[k];
+        else process.env[k] = v;
+      }
+    });
+
+    it.each(["dev.orazaka.com", "DEV.orazaka.com:443", "dev.example.org"])("%s: robots.txt is Disallow: / and every answer says noindex", async (host) => {
+      expect(isDevAddress(host, {})).toBe(true);
+      const res = at(host, "/robots.txt");
+      expect(await res.text()).toBe("User-agent: *\nDisallow: /\n");
+      expect(res.headers.get("x-robots-tag")).toBe(NOINDEX_HEADER);
+      for (const path of ["/", "/docs", "/llms.txt", "/sitemap.xml", "/api/healthz"]) {
+        expect(`${path} ${at(host, path).headers.get("x-robots-tag")}`).toBe(`${path} ${NOINDEX_HEADER}`);
+      }
+    });
+
+    it("a deployment whose own address is dev.* closes itself: robots, sitemap and the pages' meta", () => {
+      expect(indexable({ APP_PUBLIC_URL: "https://dev.orazaka.com" })).toBe(false);
+      expect(indexable({ APP_PUBLIC_URL: "https://www.orazaka.com" })).toBe(true);
+      expect(indexable({ APP_PUBLIC_URL: "not a url" })).toBe(true);
+    });
+
+    it("www.orazaka.com is indexed: robots open with the sitemap, no noindex header", async () => {
+      expect(isDevAddress("www.orazaka.com", {})).toBe(false);
+      expect(isDevAddress("devtools.orazaka.com", {})).toBe(false);
+      const res = at("www.orazaka.com", "/");
+      expect(res.headers.get("x-robots-tag")).toBeNull();
+      const r = robots();
+      expect(r.sitemap).toBe(`${SITE_URL}/sitemap.xml`);
+      expect(sitemap().length).toBeGreaterThan(0);
+    });
   });
 
   it("claims no Windows build: the product runs on macOS and Linux", () => {
