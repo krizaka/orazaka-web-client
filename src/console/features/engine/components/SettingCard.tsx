@@ -22,6 +22,7 @@ export function SettingCard({ setting, words, onSave }: Readonly<{ setting: Runt
   const id = `setting-${setting.key}`;
   const dirty = draft !== draftOf(setting.value);
   const bounds = boundsText(setting, words);
+  const describedBy = error !== null ? `${id}-msg` : undefined;
 
   const change = (next: string) => {
     if (inFlight.current) return;
@@ -76,14 +77,15 @@ export function SettingCard({ setting, words, onSave }: Readonly<{ setting: Runt
             <>
               <Field.Label htmlFor={id}>{setting.key}</Field.Label>
               {setting.type === "list" ? (
-                <Textarea id={id} rows={4} value={draft} invalid={error !== null} disabled={status === "saving"} aria-describedby={`${id}-msg`} onChange={(e) => change(e.target.value)} />
+                <Textarea id={id} rows={4} value={draft} invalid={error !== null} disabled={status === "saving"} aria-describedby={describedBy} onChange={(e) => change(e.target.value)} />
               ) : (
-                <Input id={id} inputMode="numeric" value={draft} invalid={error !== null} disabled={status === "saving"} aria-describedby={`${id}-msg`} onChange={(e) => change(e.target.value)} />
+                <Input id={id} inputMode="numeric" value={draft} invalid={error !== null} disabled={status === "saving"} aria-describedby={describedBy} onChange={(e) => change(e.target.value)} />
               )}
             </>
           )}
           {setting.type === "list" && <Field.Hint>{words.listHint}</Field.Hint>}
-          <Field.Error id={`${id}-msg`} role={error ? "alert" : undefined}>{error}</Field.Error>
+          {/* Only when there is something to say: an empty Field.Error still draws its marker under every field. */}
+          {error !== null && <Field.Error id={`${id}-msg`}>{error}</Field.Error>}
         </Field.Root>
         {status === "saved" && <p role="status" className="text-sm text-success">{words.saved}</p>}
         <footer className="flex flex-wrap gap-2">

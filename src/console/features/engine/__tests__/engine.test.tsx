@@ -139,6 +139,21 @@ describe("EngineScreen", () => {
     expect((button("webhook.hosts", en.save) as HTMLButtonElement).disabled).toBe(true);
   });
 
+  it("shows no error marker while nothing is wrong, and one alert once something is", async () => {
+    mockFetch(() => ({ body: SETTINGS }));
+    render(<EngineScreen locale="en" />);
+    const input = await screen.findByLabelText("run.max_parallel");
+    expect(screen.queryAllByRole("alert")).toHaveLength(0);
+    expect(input.closest("[role=group]")!.querySelectorAll("p")).toHaveLength(1);
+    expect(input.getAttribute("aria-describedby")).toBeNull();
+
+    fireEvent.change(input, { target: { value: "99" } });
+    fireEvent.click(button("run.max_parallel", en.save));
+    const alert = await screen.findByRole("alert");
+    expect(alert.textContent).toBe("Must be between 1 and 10.");
+    expect(input.getAttribute("aria-describedby")).toBe(alert.id);
+  });
+
   it("does not call the API for an out-of-bounds value and shows the server's message for a refusal", async () => {
     const fetchMock = mockFetch((url, init) =>
       init?.method === "PUT" ? { status: 400, body: { status: "invalid_request", message: "value must be at most 10" } } : { body: SETTINGS },
