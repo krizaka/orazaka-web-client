@@ -8,7 +8,8 @@ export const NOINDEX_HEADER = "noindex, nofollow, noarchive";
 export const CLOSED_ROBOTS = "User-agent: *\nDisallow: /\n";
 
 export function indexable(env: Record<string, string | undefined> = process.env): boolean {
-  return env.APP_SEARCH_INDEXING?.trim().toLowerCase() !== "off";
+  // A deployment whose own address is dev.* is closed by its name, whatever the flag says (orazaka-web-client#262).
+  return env.APP_SEARCH_INDEXING?.trim().toLowerCase() !== "off" && !isDevAddress(hostOf(env.APP_PUBLIC_URL), env);
 }
 
 /* --- Two addresses, one app (epic krizaka/.github#119, krizaka-com AGENTS section 2.4) ---
@@ -18,6 +19,15 @@ export function indexable(env: Record<string, string | undefined> = process.env)
    platform ingress, not this app: it answers on both hosts. */
 const bare = (host: string | null | undefined) => (host ?? "").trim().toLowerCase().replace(/:\d+$/, "");
 export const isDevHost = (host: string | null | undefined, env: Record<string, string | undefined> = process.env): boolean => !!env.APP_DEV_HOST?.trim() && bare(host) === bare(env.APP_DEV_HOST);
+/** A dev.* address is never indexed — by its name, not by configuration: the one the app redirects (APP_DEV_HOST) and any other. */
+export const isDevAddress = (host: string | null | undefined, env: Record<string, string | undefined> = process.env): boolean => /^dev\./.test(bare(host)) || isDevHost(host, env);
+function hostOf(url: string | undefined): string {
+  try {
+    return url ? new URL(url).host : "";
+  } catch {
+    return "";
+  }
+}
 
 const DEV_KEEPS = ["/api/", "/.well-known/"];
 const DEV_KEEPS_EXACT = ["/robots.txt", "/healthz"];

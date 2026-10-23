@@ -12,7 +12,7 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { authClosed, isBackendPath, readAuthFlags } from "@/core/config/auth-flags";
-import { CLOSED_ROBOTS, devRedirect, indexable, isDevHost, NOINDEX_HEADER } from "@/core/config/indexing";
+import { CLOSED_ROBOTS, devRedirect, indexable, isDevAddress, isDevHost, NOINDEX_HEADER } from "@/core/config/indexing";
 import { SIGNED_OUT_REDIRECTS } from "@/core/config/redirects";
 import { SITE_URL } from "@/app/_seo/seo";
 import { consoleResponse } from "@/console/core/edge";
@@ -109,8 +109,8 @@ export function proxy(request: NextRequest) {
     response = NextResponse.next();
   } else {
     const hostRoute = routeFor(host, pathname);
-    if (pathname === "/robots.txt" && isAdminHost(host)) {
-      // The console is never indexed: said here, for any address, before the network gate (a crawler must read it).
+    if (pathname === "/robots.txt" && (isAdminHost(host) || isDevAddress(host))) {
+      // The console and any dev.* address are never indexed: said here, before the network gate (a crawler must read it).
       return new NextResponse("User-agent: *\nDisallow: /\n", { status: 200, headers: { "content-type": "text/plain; charset=utf-8", "x-robots-tag": NOINDEX_HEADER } });
     }
     if (hostRoute.kind === "notFound") {
@@ -122,7 +122,7 @@ export function proxy(request: NextRequest) {
       response = route(request);
     }
   }
-  if (!indexable()) response.headers.set("x-robots-tag", NOINDEX_HEADER);
+  if (!indexable() || isDevAddress(host)) response.headers.set("x-robots-tag", NOINDEX_HEADER);
   return response;
 }
 
