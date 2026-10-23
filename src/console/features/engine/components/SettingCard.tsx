@@ -14,6 +14,8 @@ import { SettingHistory } from "./SettingHistory";
 /** One setting: its description, current value, default and bounds, edited in place with validation, and its history. */
 export function SettingCard({ setting, words, onSave }: Readonly<{ setting: RuntimeSetting; words: EngineWords; onSave: (key: string, value: SettingValue) => Promise<string | null> }>) {
   const [draft, setDraft] = React.useState(draftOf(setting.value));
+  const draftRef = React.useRef(draft);
+  const inFlight = React.useRef(false);
   const [error, setError] = React.useState<string | null>(null);
   const [status, setStatus] = React.useState<"idle" | "saving" | "saved">("idle");
   const [showHistory, setShowHistory] = React.useState(false);
@@ -22,18 +24,36 @@ export function SettingCard({ setting, words, onSave }: Readonly<{ setting: Runt
   const bounds = boundsText(setting, words);
 
   const change = (next: string) => {
+    if (inFlight.current) return;
+    draftRef.current = next;
     setDraft(next);
     setError(null);
     setStatus("idle");
   };
 
   const submit = async () => {
+    if (inFlight.current) return;
     const parsed = parseDraft(setting, draft, words);
     if (!parsed.ok) return setError(parsed.error);
+    inFlight.current = true;
     setStatus("saving");
-    const refusal = await onSave(setting.key, parsed.value);
-    setError(refusal === null ? null : refusal || words.failed);
-    setStatus(refusal === null ? "saved" : "idle");
+    try {
+      let refusal: string | null;
+      try {
+        refusal = await onSave(setting.key, parsed.value);
+      } catch {
+        refusal = "";
+      }
+      setError(refusal === null ? null : refusal || words.failed);
+      setStatus(refusal === null ? "saved" : "idle");
+      if (refusal === null && draftRef.current === draft) {
+        const canonical = draftOf(parsed.value);
+        draftRef.current = canonical;
+        setDraft(canonical);
+      }
+    } finally {
+      inFlight.current = false;
+    }
   };
 
   return (
@@ -51,14 +71,14 @@ export function SettingCard({ setting, words, onSave }: Readonly<{ setting: Runt
         </dl>
         <Field.Root>
           {setting.type === "boolean" ? (
-            <Switch label={setting.key} checked={draft === "true"} onCheckedChange={(on) => change(String(on))} />
+            <Switch label={setting.key} checked={draft === "true"} disabled={status === "saving"} onCheckedChange={(on) => change(String(on))} />
           ) : (
             <>
               <Field.Label htmlFor={id}>{setting.key}</Field.Label>
               {setting.type === "list" ? (
-                <Textarea id={id} rows={4} value={draft} invalid={error !== null} aria-describedby={`${id}-msg`} onChange={(e) => change(e.target.value)} />
+                <Textarea id={id} rows={4} value={draft} invalid={error !== null} disabled={status === "saving"} aria-describedby={`${id}-msg`} onChange={(e) => change(e.target.value)} />
               ) : (
-                <Input id={id} inputMode="numeric" value={draft} invalid={error !== null} aria-describedby={`${id}-msg`} onChange={(e) => change(e.target.value)} />
+                <Input id={id} inputMode="numeric" value={draft} invalid={error !== null} disabled={status === "saving"} aria-describedby={`${id}-msg`} onChange={(e) => change(e.target.value)} />
               )}
             </>
           )}
@@ -68,7 +88,7 @@ export function SettingCard({ setting, words, onSave }: Readonly<{ setting: Runt
         {status === "saved" && <p role="status" className="text-sm text-success">{words.saved}</p>}
         <footer className="flex flex-wrap gap-2">
           <Button type="button" size="sm" onClick={() => void submit()} disabled={!dirty || status === "saving"}>{status === "saving" ? words.saving : words.save}</Button>
-          <Button type="button" size="sm" variant="secondary" onClick={() => change(draftOf(setting.default))}>{words.reset}</Button>
+          <Button type="button" size="sm" variant="secondary" onClick={() => change(draftOf(setting.default))} disabled={status === "saving"}>{words.reset}</Button>
           <Button type="button" size="sm" variant="ghost" aria-expanded={showHistory} onClick={() => setShowHistory((v) => !v)}>{showHistory ? words.hideHistory : words.history}</Button>
         </footer>
         {showHistory && <SettingHistory setting={setting} words={words} version={setting.value} />}

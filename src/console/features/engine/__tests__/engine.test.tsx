@@ -83,6 +83,62 @@ describe("EngineScreen", () => {
     expect(JSON.parse(put[1]!.body as string)).toEqual({ value: 6 });
   });
 
+  it.each(["Enter", "Save button"])("prevents overlapping saves started with %s", async (firstSubmit) => {
+    let resolvePut!: (response: Response) => void;
+    const pendingPut = new Promise<Response>((resolve) => {
+      resolvePut = resolve;
+    });
+    const fetchMock = jest.fn(async (_url: string, init?: RequestInit) => {
+      if (init?.method === "PUT") return pendingPut;
+      return { ok: true, json: async () => SETTINGS } as Response;
+    });
+    global.fetch = fetchMock as unknown as typeof fetch;
+    render(<EngineScreen locale="en" />);
+    const input = await screen.findByLabelText("run.max_parallel");
+    fireEvent.change(input, { target: { value: "6" } });
+
+    if (firstSubmit === "Enter") fireEvent.keyDown(input, { key: "Enter" });
+    else fireEvent.click(button("run.max_parallel", en.save));
+    await waitFor(() => expect(fetchMock.mock.calls.filter(([, init]) => init?.method === "PUT")).toHaveLength(1));
+
+    expect((input as HTMLInputElement).disabled).toBe(true);
+    expect((button("run.max_parallel", en.saving) as HTMLButtonElement).disabled).toBe(true);
+    expect((button("run.max_parallel", en.reset) as HTMLButtonElement).disabled).toBe(true);
+    if (firstSubmit === "Enter") fireEvent.click(button("run.max_parallel", en.saving));
+    else fireEvent.keyDown(input, { key: "Enter" });
+    expect(fetchMock.mock.calls.filter(([, init]) => init?.method === "PUT")).toHaveLength(1);
+
+    resolvePut({ ok: true, json: async () => ({ ...SETTINGS[0], value: 6 }) } as Response);
+    expect(await screen.findByText(en.saved)).toBeTruthy();
+  });
+
+  it("normalizes the draft after an accepted save", async () => {
+    mockFetch((_url, init) =>
+      init?.method === "PUT" ? { body: { ...SETTINGS[0], value: 6 } } : { body: SETTINGS },
+    );
+    render(<EngineScreen locale="en" />);
+    const input = await screen.findByLabelText("run.max_parallel");
+    fireEvent.change(input, { target: { value: "006" } });
+    fireEvent.click(button("run.max_parallel", en.save));
+
+    await waitFor(() => expect((input as HTMLInputElement).value).toBe("6"));
+    expect((button("run.max_parallel", en.save) as HTMLButtonElement).disabled).toBe(true);
+  });
+
+  it("normalizes trimmed list items after an accepted save", async () => {
+    const list = { key: "webhook.hosts", value: ["old.example"], type: "list", description: "Hosts", default: [], bounds: {} };
+    mockFetch((_url, init) =>
+      init?.method === "PUT" ? { body: { ...list, value: ["a.example", "b.example"] } } : { body: [list] },
+    );
+    render(<EngineScreen locale="en" />);
+    const input = await screen.findByLabelText("webhook.hosts");
+    fireEvent.change(input, { target: { value: " a.example \n b.example " } });
+    fireEvent.click(button("webhook.hosts", en.save));
+
+    await waitFor(() => expect((input as HTMLTextAreaElement).value).toBe("a.example\nb.example"));
+    expect((button("webhook.hosts", en.save) as HTMLButtonElement).disabled).toBe(true);
+  });
+
   it("does not call the API for an out-of-bounds value and shows the server's message for a refusal", async () => {
     const fetchMock = mockFetch((url, init) =>
       init?.method === "PUT" ? { status: 400, body: { status: "invalid_request", message: "value must be at most 10" } } : { body: SETTINGS },
@@ -102,12 +158,14 @@ describe("EngineScreen", () => {
 
   it("shows the change history with actor ids", async () => {
     const fetchMock = mockFetch((url) =>
-      url.includes("/audit") ? { body: [{ at: "2026-10-01T10:00:00Z", actorId: "actor-42", key: "run.max_parallel", before: 2, after: 4 }] } : { body: SETTINGS },
+      url.includes("/audit") ? { body: [{ at: "2026-10-01T10:00:00Z", actorId: "actor-42", key: "run.max_parallel", before: "2", after: "4" }] } : { body: SETTINGS },
     );
     render(<EngineScreen locale="en" />);
     await screen.findByText("Parallel runs");
     fireEvent.click(button("run.max_parallel", en.history));
     expect(await screen.findByText("actor-42")).toBeTruthy();
+    expect(within(screen.getByRole("table")).getByText("2")).toBeTruthy();
+    expect(within(screen.getByRole("table")).getByText("4")).toBeTruthy();
     expect(fetchMock).toHaveBeenCalledWith(expect.stringContaining("/audit?key=run.max_parallel&limit="), expect.anything());
   });
 

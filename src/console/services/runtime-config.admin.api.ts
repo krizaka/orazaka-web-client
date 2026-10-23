@@ -22,8 +22,8 @@ export const RuntimeAuditSchema = z.object({
   at: z.string(),
   actorId: z.string().nullish(),
   key: z.string(),
-  before: Typed.nullish(),
-  after: Typed.nullish(),
+  before: z.string().nullish(),
+  after: z.string().nullish(),
 });
 
 export type SettingValue = z.infer<typeof Typed>;
