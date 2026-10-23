@@ -26,7 +26,8 @@ export const landing: Record<Locale, LandingDictionary> = {
       openMenu: "Open the menu",
       closeMenu: "Close the menu",
       home: "Orazaka home",
-      talk: "Talk to us",
+      tryIt: "Try Orazaka",
+      openApp: "Open the app",
       repo: "Orazaka web client on GitHub",
     },
     hero: {
@@ -127,7 +128,8 @@ export const landing: Record<Locale, LandingDictionary> = {
       openMenu: "Ouvrir le menu",
       closeMenu: "Fermer le menu",
       home: "Accueil Orazaka",
-      talk: "Nous écrire",
+      tryIt: "Essayer Orazaka",
+      openApp: "Ouvrir l'app",
       repo: "Client web Orazaka sur GitHub",
     },
     hero: {

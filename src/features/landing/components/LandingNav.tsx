@@ -3,9 +3,9 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { OrazakaLogo } from "@krizaka/ui";
-import { Button } from "@krizaka/ui/button";
 import { NavBar } from "@krizaka/ui/nav-bar";
 import { ThemeToggle } from "@krizaka/ui/theme";
+import { BarActions } from "@/features/landing/components/BarActions";
 import { useLanguageSwitch } from "@/components/LocaleSwitch";
 import { useTranslation } from "@/core/context/LocaleContext";
 import { NAV_DOCS, NAV_GROUPS, entryHref, navActive } from "@/features/landing/utils/site-nav";
@@ -13,14 +13,13 @@ import { NAV_DOCS, NAV_GROUPS, entryHref, navActive } from "@/features/landing/u
 export { navActive } from "@/features/landing/utils/site-nav";
 
 const REPO_URL = "https://github.com/krizaka/orazaka-web-client";
-const TALK_URL = "https://www.krizaka.com/contact?topic=orazaka";
 
 /**
  * The bar of the public pages — the family's, the one of Yomizaka and the other products (`site-nav.ts`,
  * docs/ux/information-architecture.md of the workspace): a floating bar. Left: the Orazaka mark and name (home). Then
  * Product ▾ (what it does) · Platforms ▾ (where it runs) · Docs — one lit at a time, the page's own group (a group of
  * three or fewer entries will be inline once Krizaka UI's breakpoint-aware menu ships). Right: the repository, the
- * theme, the language, Sign in and the one action, « Talk to us ». The version is in the footer, not here.
+ * theme, the language, and the one action — using the app (BarActions). The version is in the footer, not here.
  * Below md: one panel with the same groups in the same order. `onHome` is false off the home page, where the anchors
  * lead back to its sections.
  */
@@ -67,12 +66,7 @@ export function LandingNav({ onHome = true }: Readonly<{ onHome?: boolean }>) {
           <span className="hidden md:inline-flex">
             <NavBar.Language {...language} />
           </span>
-          <Button asChild variant="ghost" size="sm" className="hidden md:inline-flex">
-            <Link href="/login">{n.signIn}</Link>
-          </Button>
-          <Button asChild variant="primary" size="sm" className="ml-1 hidden font-bold md:inline-flex">
-            <a href={TALK_URL}>{n.talk}</a>
-          </Button>
+          <BarActions placement="bar" />
 
           <NavBar.Mobile openLabel={n.openMenu} closeLabel={n.closeMenu} className="max-h-[calc(100dvh-6rem)] gap-1 overflow-y-auto overscroll-contain p-3">
             {groups.map((g) => (
@@ -92,14 +86,7 @@ export function LandingNav({ onHome = true }: Readonly<{ onHome?: boolean }>) {
               <ThemeToggle variant="ghost" label={themeLabel} />
               <NavBar.Language {...language} />
             </NavBar.MobilePreferences>
-            <span className="flex items-center gap-2">
-              <Button asChild variant="ghost" size="md">
-                <Link href="/login">{n.signIn}</Link>
-              </Button>
-              <Button asChild variant="primary" size="md" className="flex-1 font-bold">
-                <a href={TALK_URL}>{n.talk}</a>
-              </Button>
-            </span>
+            <BarActions placement="panel" />
           </NavBar.Mobile>
         </NavBar.Actions>
       </NavBar.Root>

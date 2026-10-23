@@ -1,6 +1,7 @@
 import type * as React from "react";
 import "@testing-library/jest-dom";
 import { fireEvent, render, screen, within } from "@testing-library/react";
+import { SessionContext } from "next-auth/react";
 import { ThemeProvider } from "@krizaka/ui/theme";
 import { translations, type Locale } from "@/core/context/translations";
 import { AuthFlagsProvider } from "@/core/context/AuthFlagsContext";
@@ -27,11 +28,17 @@ beforeAll(() => {
 
 const CLOSED: AuthFlags = { login: false, signup: false, github: false, google: false };
 
+type SessionValue = React.ContextType<typeof SessionContext>;
+const SIGNED_OUT = { data: null, status: "unauthenticated", update: async () => null };
+const mockSession = { current: SIGNED_OUT as SessionValue };
+
 function renderLanding(locale: Locale, page: React.ReactNode = <LandingPage />, flags: AuthFlags = CLOSED) {
   mockLocale = locale;
   return render(
     <AuthFlagsProvider flags={flags}>
-      <ThemeProvider>{page}</ThemeProvider>
+      <SessionContext.Provider value={mockSession.current}>
+        <ThemeProvider>{page}</ThemeProvider>
+      </SessionContext.Provider>
     </AuthFlagsProvider>,
   );
 }
@@ -60,7 +67,7 @@ describe("the information architecture of the public bar", () => {
     expect(top.length).toBeLessThanOrEqual(5);
   });
 
-  it("is the family's floating bar, in the family's order: mark and name · sections · repository, theme, language, Sign in, Talk to us", () => {
+  it("is the family's floating bar, in the family's order: mark and name · sections · repository, theme, language, Sign in", () => {
     renderLanding("en", <LandingNav />);
     expect(bar().getAttribute("data-floating")).not.toBe("false");
     expect(within(bar()).getByRole("link", { name: nav.home })).toHaveTextContent("Orazaka");
@@ -68,9 +75,9 @@ describe("the information architecture of the public bar", () => {
       const el = within(bar()).getAllByRole(role, { name })[0];
       return [...bar().querySelectorAll("*")].indexOf(el);
     };
-    const positions = [order(nav.repo, "link"), order(translations.en.header.themeSystem, "button"), order(new RegExp(`^${nav.langLabel}`), "button"), order(nav.signIn, "link"), order(nav.talk, "link")];
+    const positions = [order(nav.repo, "link"), order(translations.en.header.themeSystem, "button"), order(new RegExp(`^${nav.langLabel}`), "button"), order(nav.signIn, "link")];
     expect(positions).toEqual([...positions].sort((a, b) => a - b));
-    expect(new Set(positions).size).toBe(5);
+    expect(new Set(positions).size).toBe(4);
   });
 
   it("keeps the version out of the bar (it is in the footer)", () => {
@@ -117,7 +124,7 @@ describe("the mobile panel", () => {
     expect(within(groups[0]).getAllByRole("link").map((a) => a.textContent)).toEqual([nav.how, nav.download]);
     const panel = groups[0].closest("nav") as HTMLElement;
     const hrefs = [...panel.querySelectorAll("a")].map((a) => a.getAttribute("href"));
-    expect(hrefs).toEqual(["#features", "/desktop", "/docs", "#", "#", "/login", "https://www.krizaka.com/contact?topic=orazaka"]);
+    expect(hrefs).toEqual(["#features", "/desktop", "/docs", "#", "#", "/login"]);
     expect(hrefs).not.toContain("/infrastructure");
   });
 
@@ -161,5 +168,51 @@ describe("the footer", () => {
     const hrefs = [...footer.querySelectorAll("a")].map((a) => a.getAttribute("href"));
     for (const g of NAV_GROUPS) for (const e of g.entries) expect(hrefs).toContain(e.anchor ? `/#${e.anchor}` : e.path);
     expect(hrefs).toEqual(expect.arrayContaining(["/docs", "/docs/api", "/docs/cli"]));
+  });
+});
+
+describe("the one action of the bar: using the app", () => {
+  afterEach(() => {
+    mockSession.current = SIGNED_OUT as SessionValue;
+  });
+
+  it("is « Sign in » while sign-up is closed, with no « Talk to us » or Contact in the bar or the panel", () => {
+    renderLanding("en", <LandingNav />);
+    expect(within(bar()).getAllByRole("link", { name: nav.signIn })[0]).toHaveAttribute("href", "/login");
+    expect(within(bar()).queryByRole("link", { name: nav.tryIt })).toBeNull();
+    expect(within(bar()).queryByRole("link", { name: nav.openApp })).toBeNull();
+    expect(within(bar()).queryByText(/talk to us|contact/i)).toBeNull();
+  });
+
+  it("is « Try Orazaka » once sign-up is open, read from the flag", () => {
+    renderLanding("en", <LandingNav />, { ...CLOSED, login: true, signup: true });
+    expect(within(bar()).getAllByRole("link", { name: nav.tryIt })[0]).toHaveAttribute("href", "/register");
+  });
+
+  it("is « Open the app » with the avatar when signed in, and « Sign in » again once signed out or expired", () => {
+    mockSession.current = { data: { user: { name: "Oussama", email: "o@orazaka.io" }, expires: "2999-01-01" }, status: "authenticated", update: async () => null } as SessionValue;
+    const { unmount } = renderLanding("en", <LandingNav />);
+    expect(within(bar()).getAllByRole("link", { name: nav.openApp })[0]).toHaveAttribute("href", "/");
+    expect(within(bar()).queryByRole("link", { name: nav.signIn })).toBeNull();
+    expect(bar().querySelector("[data-slot=avatar], span[class*=rounded-full]")).not.toBeNull();
+    unmount();
+    mockSession.current = SIGNED_OUT as SessionValue;
+    renderLanding("en", <LandingNav />);
+    expect(within(bar()).getAllByRole("link", { name: nav.signIn }).length).toBeGreaterThan(0);
+    expect(within(bar()).queryByRole("link", { name: nav.openApp })).toBeNull();
+  });
+
+  it("keeps the signed-in avatar visible in the mobile bar and open panel", () => {
+    mockSession.current = { data: { user: { name: "Oussama", email: "o@orazaka.io" }, expires: "2999-01-01" }, status: "authenticated", update: async () => null } as SessionValue;
+    renderLanding("en", <LandingNav />);
+    fireEvent.click(within(bar()).getByRole("button", { name: nav.openMenu }));
+    const avatars = bar().querySelectorAll("span[class*=rounded-full]");
+    expect(avatars).toHaveLength(2);
+    expect(avatars[0]).not.toHaveClass("hidden");
+  });
+
+  it("puts Contact in the footer, pointing to krizaka.com/contact", () => {
+    renderLanding("en", <LandingPage />, CLOSED);
+    expect(within(screen.getByRole("contentinfo")).getByRole("link", { name: translations.en.landing.footer.contact })).toHaveAttribute("href", "https://www.krizaka.com/contact");
   });
 });
