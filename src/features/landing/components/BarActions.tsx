@@ -29,15 +29,12 @@ export function BarActions({ placement }: Readonly<{ placement: "bar" | "panel" 
     const initial = ((user?.name || user?.email || "U")[0] ?? "U").toUpperCase();
     return (
       <>
-        {!panel && (
-          <Avatar
-            size="sm"
-            alt={user?.name || user?.email || ""}
-            className="hidden md:inline-flex"
-            defaultAvatar={{ brand: "orazaka", seed: user?.id ?? user?.email ?? user?.name ?? undefined }}
-            fallback={initial}
-          />
-        )}
+        <Avatar
+          size="sm"
+          alt={user?.name || user?.email || ""}
+          defaultAvatar={{ brand: "orazaka", seed: user?.id ?? user?.email ?? user?.name ?? undefined }}
+          fallback={initial}
+        />
         <Button asChild variant="primary" size={panel ? "md" : "sm"} className={panel ? "mt-2 w-full font-bold" : "ml-1 hidden font-bold md:inline-flex"}>
           <Link href="/">{n.openApp}</Link>
         </Button>

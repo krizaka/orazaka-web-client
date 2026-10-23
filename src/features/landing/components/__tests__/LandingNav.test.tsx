@@ -202,6 +202,15 @@ describe("the one action of the bar: using the app", () => {
     expect(within(bar()).queryByRole("link", { name: nav.openApp })).toBeNull();
   });
 
+  it("keeps the signed-in avatar visible in the mobile bar and open panel", () => {
+    mockSession.current = { data: { user: { name: "Oussama", email: "o@orazaka.io" }, expires: "2999-01-01" }, status: "authenticated", update: async () => null } as SessionValue;
+    renderLanding("en", <LandingNav />);
+    fireEvent.click(within(bar()).getByRole("button", { name: nav.openMenu }));
+    const avatars = bar().querySelectorAll("span[class*=rounded-full]");
+    expect(avatars).toHaveLength(2);
+    expect(avatars[0]).not.toHaveClass("hidden");
+  });
+
   it("puts Contact in the footer, pointing to krizaka.com/contact", () => {
     renderLanding("en", <LandingPage />, CLOSED);
     expect(within(screen.getByRole("contentinfo")).getByRole("link", { name: translations.en.landing.footer.contact })).toHaveAttribute("href", "https://www.krizaka.com/contact");
