@@ -8,7 +8,6 @@ import { useTranslation } from "@/core/context/LocaleContext";
 import { LogoutIcon, SettingsIcon, UserIcon } from "@krizaka/icons";
 import { OrazakaLogo } from "@krizaka/ui";
 import { AppHeader } from "@krizaka/ui/app-header";
-import { Badge } from "@krizaka/ui/badge";
 import { AccountMenu } from "@krizaka/ui/account-menu";
 import { NotificationBell } from "./NotificationBell";
 
@@ -16,7 +15,7 @@ const LOCALES = ["en", "fr"] as const;
 
 /**
  * The top bar of the signed-in app — `@krizaka/ui` AppHeader: the name beside the rail (the mark on a phone, where the
- * rail is a bottom bar), the sovereign status, and on the right the theme, the notifications and the user menu under
+ * rail is a bottom bar), and on the right the theme, the notifications and the user menu under
  * the avatar. Nothing here repeats the rail (core/config/app-sections.ts).
  */
 export const Header: React.FC = () => {
@@ -31,11 +30,6 @@ export const Header: React.FC = () => {
       name="Orazaka"
       mark={<OrazakaLogo size={22} />}
       homeLink={<Link href="/" aria-label={t.appNav.home} />}
-      chips={
-        <Badge tone="success" dot className="hidden sm:inline-flex">
-          {t.dashboard.sovereignBadge}
-        </Badge>
-      }
       actions={
         <>
           <ThemeToggle id="theme-toggle" label={(mode) => ({ "dark": t.header.themeDark, "light": t.header.themeLight, "system": t.header.themeSystem })[mode]} />
