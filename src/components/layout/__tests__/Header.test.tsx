@@ -49,10 +49,12 @@ const openMenu = () => fireEvent.keyDown(screen.getByRole("button", { name: t.ap
 describe("Header", () => {
   afterEach(() => jest.clearAllMocks());
 
-  it("names the app next to its mark, with the sovereign status as a chip", () => {
+  it("names the app next to its mark, and claims no « Local · sovereign » it cannot know", () => {
     render(<Header />);
     expect(screen.getByRole("link", { name: t.appNav.home })).toHaveTextContent("Orazaka");
-    expect(screen.getByText(t.dashboard.sovereignBadge)).toBeInTheDocument();
+    // The badge was hard-coded: the dev deployment runs in the cloud, not locally (Oussama, 2026-10-24). A status chip
+    // comes back only when it is read from what the engine reports.
+    expect(screen.queryByText(t.dashboard.sovereignBadge)).not.toBeInTheDocument();
   });
 
   it("draws the user menu's trigger as the avatar, then the name", async () => {
