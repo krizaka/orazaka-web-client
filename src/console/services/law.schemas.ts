@@ -9,35 +9,37 @@ import { z } from "zod";
 export const PROPOSAL_STATUSES = ["PROPOSED", "REJECTED_AUTO", "APPROVED", "REJECTED", "PROMOTED", "SUPERSEDED"] as const;
 export type ProposalStatus = (typeof PROPOSAL_STATUSES)[number];
 
-export const RULE_SEVERITIES = ["BLOCKING", "MAJOR", "ADVISORY"] as const;
-export const RULE_METHODS = ["DETERMINISTIC", "JUDGMENT"] as const;
-export const CHECK_TYPES = ["REQUIRED_PATTERN", "FORBIDDEN_PATTERN"] as const;
 export const LAW_LANGUAGES = ["fr", "en"] as const;
 export type LawLanguage = (typeof LAW_LANGUAGES)[number];
 
+/**
+ * A rule and its law blocks are read leniently: a proposal the vet refused (`SCHEMA_INVALID`) is stored exactly as the
+ * model wrote it — fields missing or null, a severity or check type nobody knows. One such row must never hide the
+ * queue; the screen shows the raw value (or a dash) and its editor offers only the known values.
+ */
 export const LawBlockSchema = z.object({
-  instrument: z.string(),
-  ref: z.string(),
-  language: z.string(),
-  contentHash: z.string(),
-  quote: z.string(),
+  instrument: z.string().nullish(),
+  ref: z.string().nullish(),
+  language: z.string().nullish(),
+  contentHash: z.string().nullish(),
+  quote: z.string().nullish(),
 });
 export type LawBlock = z.infer<typeof LawBlockSchema>;
 
 export const RuleSchema = z.object({
-  ruleId: z.string(),
-  title: z.string(),
-  severity: z.enum(RULE_SEVERITIES),
-  method: z.enum(RULE_METHODS),
+  ruleId: z.string().nullish(),
+  title: z.string().nullish(),
+  severity: z.string().nullish(),
+  method: z.string().nullish(),
   subject: z.string().nullish(),
-  check: z.object({ type: z.enum(CHECK_TYPES), pattern: z.string() }).nullish(),
+  check: z.object({ type: z.string().nullish(), pattern: z.string().nullish() }).nullish(),
   question: z.string().nullish(),
-  citation: z.string(),
-  sourceUrl: z.string(),
+  citation: z.string().nullish(),
+  sourceUrl: z.string().nullish(),
   onPass: z.string().nullish(),
   onFail: z.string().nullish(),
-  fixtures: z.object({ pass: z.array(z.string()), fail: z.array(z.string()) }).nullish(),
-  law: z.array(LawBlockSchema).default([]),
+  fixtures: z.object({ pass: z.array(z.string()).default([]), fail: z.array(z.string()).default([]) }).nullish(),
+  law: z.array(LawBlockSchema).nullish(),
 });
 export type Rule = z.infer<typeof RuleSchema>;
 

@@ -12,7 +12,7 @@ import { LawAdminApi } from "@/console/services/law.admin.api";
 import { PROPOSAL_STATUSES, type ProposalStatus, type RuleProposal } from "@/console/services/law.schemas";
 import { useLawLoad } from "@/console/features/law/hooks/useLawLoad";
 import { useLawCopy, type LawWords } from "@/console/features/law/hooks/useLawCopy";
-import { kindsOf, type Notice } from "@/console/features/law/utils/law";
+import { kindsOf, orDash, wordOf, type Notice } from "@/console/features/law/utils/law";
 import { ProposalDetail } from "@/console/features/law/components/ProposalDetail";
 import { ProposalActions } from "@/console/features/law/components/ProposalActions";
 import { KindPanel } from "@/console/features/law/components/KindPanel";
@@ -33,10 +33,10 @@ const TONE: Record<ProposalStatus, "neutral" | "accent" | "success" | "warning" 
 function queueColumns({ t, date }: LawWords): DataTableColumn<RuleProposal>[] {
   const q = t.queue;
   return [
-      { id: "ruleId", header: q.rule, card: "title", sortable: true, value: (p) => p.ruleId, cell: (p) => <span className="flex flex-col"><code className="text-xs font-semibold text-fg">{p.ruleId}</code><span className="text-xs text-fg-secondary">{p.rule.title}</span></span> },
+      { id: "ruleId", header: q.rule, card: "title", sortable: true, value: (p) => p.ruleId, cell: (p) => <span className="flex flex-col"><code className="text-xs font-semibold text-fg">{p.ruleId}</code><span className="text-xs text-fg-secondary">{orDash(p.rule.title)}</span></span> },
       { id: "kindId", header: q.kind, sortable: true, cell: (p) => <code className="text-xs">{p.kindId}</code> },
       { id: "status", header: q.status, value: (p) => t.status[p.status], cell: (p) => <Badge tone={TONE[p.status]} size="sm">{t.status[p.status]}</Badge> },
-      { id: "severity", header: q.severity, value: (p) => t.severity[p.rule.severity] },
+      { id: "severity", header: q.severity, value: (p) => wordOf(t.severity, p.rule.severity) },
       { id: "revision", header: q.revision, align: "end", value: (p) => p.proposalRevision },
       { id: "createdAt", header: q.created, sortable: true, value: (p) => p.createdAt, cell: (p) => date(p.createdAt) },
     ];

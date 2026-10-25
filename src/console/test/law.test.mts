@@ -3,7 +3,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { lawCopy } from "../core/copy/law.ts";
-import { canApprove, canEdit, canReject, draftOf, isIsoDate, kindsOf, promotable, refusalKey, ruleOf } from "../features/law/utils/law.ts";
+import { canApprove, canEdit, canReject, draftOf, isIsoDate, kindsOf, orDash, promotable, refusalKey, ruleOf, wordOf } from "../features/law/utils/law.ts";
 import { proposal } from "../../__tests__/helpers/law-fixtures.ts";
 
 test("only a PROPOSED rule is approved; PROPOSED or APPROVED is rejected unless a packs pull request carries it", () => {
@@ -55,6 +55,16 @@ test("the editor's fields give the same rule back, its id and cited law kept, em
   assert.equal(edited.fixtures, null);
   assert.deepEqual(edited.law, rule.law);
   assert.equal(edited.ruleId, "QC-VISIT-001");
+});
+
+test("a rule stored as the model wrote it shows its raw values, and the editor starts it on known values only", () => {
+  const raw = { ...proposal().rule, title: null, severity: "CRITICAL", method: null, check: { type: "MAYBE_PATTERN", pattern: "x" }, sourceUrl: undefined };
+  assert.equal(wordOf(lawCopy.en.severity, raw.severity), "CRITICAL");
+  assert.equal(wordOf(lawCopy.en.severity, "BLOCKING"), "Blocking");
+  assert.equal(wordOf(lawCopy.en.method, raw.method), "—");
+  assert.equal(orDash(raw.title), "—");
+  const draft = draftOf(raw);
+  assert.deepEqual([draft.title, draft.severity, draft.method, draft.checkType, draft.sourceUrl], ["", "", "", "", ""]);
 });
 
 test("a date is YYYY-MM-DD", () => {

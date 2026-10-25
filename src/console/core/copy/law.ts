@@ -88,6 +88,7 @@ const messages = {
     article: { en: "{instrument}, art. {ref} ({language})", fr: "{instrument}, art. {ref} ({language})" },
     officialText: { en: "Official text of {citation}", fr: "Texte officiel de {citation}" },
     pinned: { en: "Pinned version {hash}", fr: "Version épinglée {hash}" },
+    noSource: { en: "No official URL was given.", fr: "Aucune adresse officielle n’a été donnée." },
     noLaw: { en: "No article is cited: this proposal cannot be promoted.", fr: "Aucun article n’est cité : cette proposition ne peut pas être promue." },
     rule: { en: "The rule", fr: "La règle" },
     subject: { en: "Applies when", fr: "S’applique quand" },
@@ -154,6 +155,7 @@ const messages = {
     fixturesFail: { en: "Fixtures that must fail (one per line)", fr: "Exemples qui doivent échouer (un par ligne)" },
     required: { en: "Required.", fr: "Obligatoire." },
     https: { en: "An https address.", fr: "Une adresse https." },
+    choose: { en: "Choose a value", fr: "Choisissez une valeur" },
   },
   kind: {
     pick: { en: "Choose a kind above to see its golden cases and promote its approved rules.", fr: "Choisissez un type ci-dessus pour voir ses cas de référence et promouvoir ses règles approuvées." },

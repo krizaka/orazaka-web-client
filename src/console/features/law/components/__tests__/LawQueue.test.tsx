@@ -99,6 +99,22 @@ describe.each(MATRIX)("Law → Proposals (%s, %s theme)", (locale, theme) => {
     expect(screen.getByRole("radio", { name: t.status.APPROVED })).toHaveAttribute("aria-checked", "true");
   });
 
+  it("still lists the queue when a vet-refused row is stored as the model wrote it (null title, unknown severity, no URL)", async () => {
+    const raw = proposal({ id: "77777777-7777-4777-8777-777777777777", ruleId: "QC-VISIT-RAW", status: "REJECTED_AUTO", vetReport: { vetVersion: "1", asOf: "2026-10-20", passed: false, findings: [{ reason: "SCHEMA_INVALID" }] } });
+    const rule = { ...raw.rule, ruleId: null, title: null, severity: "CRITICAL", method: null, check: { type: "MAYBE_PATTERN", pattern: "x" }, citation: null, law: [{ quote: "un préavis" }] } as Record<string, unknown>;
+    delete rule.sourceUrl;
+    answer({ "GET /proposals": () => ({ body: [{ ...raw, rule }, proposal()] }) });
+    const t = renderLaw(locale, theme);
+    fireEvent.click(await screen.findByRole("button", { name: fill(t.table.expandRow, { name: "QC-VISIT-RAW" }) }));
+    const detail = within(await screen.findByRole("article", { name: "QC-VISIT-RAW" }));
+    expect(detail.getByText("un préavis")).toBeInTheDocument();
+    expect(detail.getByText(t.vetReasons.SCHEMA_INVALID)).toBeInTheDocument();
+    expect(detail.getByText("MAYBE_PATTERN", { exact: false })).toBeInTheDocument();
+    expect(screen.getByRole("cell", { name: "CRITICAL" })).toBeInTheDocument();
+    expect(detail.getByText(t.detail.noSource)).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: fill(t.table.expandRow, { name: "QC-VISIT-001" }) })).toBeInTheDocument();
+  });
+
   it("says a non-administrator cannot use the screen (403)", async () => {
     answer({ "GET /proposals": () => ({ status: 403, body: {} }) });
     const t = renderLaw(locale, theme);

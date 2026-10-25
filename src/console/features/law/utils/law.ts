@@ -1,5 +1,6 @@
 import type { LawCopy } from "@/console/core/copy/law";
 import type { ProposalStatus, Rule, RuleProposal } from "@/console/services/law.schemas";
+import { CHECK_TYPES, RULE_METHODS, RULE_SEVERITIES } from "./rule-values.ts";
 
 /**
  * The decisions of Law → Proposals, pure (ADR-089 §8): which action a proposal offers, which ones a kind may promote,
@@ -59,12 +60,26 @@ export const hasText = (text: string) => text.trim().length > 0;
 export const isHttpsUrl = (text: string) => /^https:\/\/\S+$/.test(text);
 
 /** The editor's fields for a rule: every optional text as `""`, the fixtures one per line. */
+/** A value as the screen shows it: its words when it is a known one, else the raw value, else a dash. */
+export function wordOf(names: Readonly<Record<string, string>>, value: string | null | undefined): string {
+  if (value && Object.hasOwn(names, value)) return names[value];
+  return value ?? "—";
+}
+
+/** A text as the screen shows it, a dash when there is none. */
+export const orDash = (value: string | null | undefined) => (value && hasText(value) ? value : "—");
+
+const knownOr = (values: readonly string[], value: string | null | undefined) => (value && values.includes(value) ? value : "");
+
+export const EDITOR_CHECK_TYPES = ["NONE", ...CHECK_TYPES] as const;
+
+/** The editor's fields: a severity, method or check type nobody knows starts empty, to be chosen among the known ones. */
 export interface RuleDraft {
   title: string;
-  severity: Rule["severity"];
-  method: Rule["method"];
+  severity: string;
+  method: string;
   subject: string;
-  checkType: "NONE" | "REQUIRED_PATTERN" | "FORBIDDEN_PATTERN";
+  checkType: string;
   pattern: string;
   question: string;
   citation: string;
@@ -77,15 +92,15 @@ export interface RuleDraft {
 
 export function draftOf(rule: Rule): RuleDraft {
   return {
-    title: rule.title,
-    severity: rule.severity,
-    method: rule.method,
+    title: rule.title ?? "",
+    severity: knownOr(RULE_SEVERITIES, rule.severity),
+    method: knownOr(RULE_METHODS, rule.method),
     subject: rule.subject ?? "",
-    checkType: rule.check?.type ?? "NONE",
+    checkType: rule.check ? knownOr(CHECK_TYPES, rule.check.type) : "NONE",
     pattern: rule.check?.pattern ?? "",
     question: rule.question ?? "",
-    citation: rule.citation,
-    sourceUrl: rule.sourceUrl,
+    citation: rule.citation ?? "",
+    sourceUrl: rule.sourceUrl ?? "",
     onPass: rule.onPass ?? "",
     onFail: rule.onFail ?? "",
     fixturesPass: (rule.fixtures?.pass ?? []).join("\n"),

@@ -12,7 +12,7 @@ import { LawAdminApi } from "@/console/services/law.admin.api";
 import type { Golden, Promotion, RuleProposal } from "@/console/services/law.schemas";
 import { asRefusal, useLawLoad } from "@/console/features/law/hooks/useLawLoad";
 import { useLawCopy, type LawWords } from "@/console/features/law/hooks/useLawCopy";
-import { isIsoDate, promotable, type Notice } from "@/console/features/law/utils/law";
+import { isIsoDate, orDash, promotable, type Notice } from "@/console/features/law/utils/law";
 
 function caseColumns({ t }: LawWords): DataTableColumn<Golden["cases"][number]>[] {
   const k = t.kind;
@@ -43,7 +43,7 @@ function GoldenCases({ kindId, golden }: Readonly<{ kindId: string; golden: Gold
 function approvedColumns({ t }: LawWords): DataTableColumn<RuleProposal>[] {
   return [
     { id: "ruleId", header: t.queue.rule, card: "title", cell: (p) => <code className="text-xs">{p.ruleId}</code> },
-    { id: "title", header: t.editor.title, value: (p) => p.rule.title },
+    { id: "title", header: t.editor.title, value: (p) => orDash(p.rule.title) },
     { id: "revision", header: t.queue.revision, align: "end", value: (p) => p.proposalRevision },
   ];
 }

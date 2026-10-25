@@ -4,21 +4,24 @@ import { z } from "zod";
 import { createKrizakaForm } from "@krizaka/ui/form";
 import { fill } from "@/core/context/fill";
 import { LawAdminApi } from "@/console/services/law.admin.api";
-import { CHECK_TYPES, RULE_METHODS, RULE_SEVERITIES, type RuleProposal } from "@/console/services/law.schemas";
+import type { RuleProposal } from "@/console/services/law.schemas";
+import { RULE_METHODS, RULE_SEVERITIES } from "@/console/features/law/utils/rule-values";
 import { asRefusal } from "@/console/features/law/hooks/useLawLoad";
 import { useLawCopy } from "@/console/features/law/hooks/useLawCopy";
-import { draftOf, hasText, isHttpsUrl, passedVet, ruleOf, type Notice } from "@/console/features/law/utils/law";
+import { EDITOR_CHECK_TYPES, draftOf, hasText, isHttpsUrl, passedVet, ruleOf, type Notice } from "@/console/features/law/utils/law";
 
 const required = z.string().refine(hasText, "law.required");
+/** One of the known values: a raw one the model wrote is never sent back from the editor. */
+const oneOf = (values: readonly string[]) => z.string().refine((v) => values.includes(v), "law.required");
 
 /** The fields of a rule a reviewer may change; its id and the law it cites stay as derived (the vet checks them again). */
 const ruleForm = createKrizakaForm({
   schema: z.object({
     title: required,
-    severity: z.enum(RULE_SEVERITIES),
-    method: z.enum(RULE_METHODS),
+    severity: oneOf(RULE_SEVERITIES),
+    method: oneOf(RULE_METHODS),
     subject: z.string(),
-    checkType: z.enum(["NONE", ...CHECK_TYPES]),
+    checkType: oneOf(EDITOR_CHECK_TYPES),
     pattern: z.string(),
     question: z.string(),
     citation: required,
@@ -30,8 +33,8 @@ const ruleForm = createKrizakaForm({
   }),
   defaultValues: {
     title: "",
-    severity: "BLOCKING",
-    method: "DETERMINISTIC",
+    severity: "",
+    method: "",
     subject: "",
     checkType: "NONE",
     pattern: "",
@@ -69,12 +72,12 @@ export function RuleEditor({ proposal, onDone }: Readonly<{ proposal: RulePropos
     <form.Form aria-label={fill(t.actions.editTitle, { ruleId: proposal.ruleId })} className="flex flex-col gap-3">
       <form.TextField name="title" label={e.title} autoComplete="off" />
       <section className="grid gap-3 sm:grid-cols-2">
-        <form.Select name="severity" label={e.severity} options={options(RULE_SEVERITIES, t.severity)} />
-        <form.Select name="method" label={e.method} options={options(RULE_METHODS, t.method)} />
+        <form.Select name="severity" label={e.severity} options={options(RULE_SEVERITIES, t.severity)} placeholder={e.choose} />
+        <form.Select name="method" label={e.method} options={options(RULE_METHODS, t.method)} placeholder={e.choose} />
       </section>
       <form.TextField name="subject" label={e.subject} autoComplete="off" />
       <section className="grid gap-3 sm:grid-cols-2">
-        <form.Select name="checkType" label={e.checkType} options={options(["NONE", ...CHECK_TYPES] as const, t.checkType)} />
+        <form.Select name="checkType" label={e.checkType} options={options(EDITOR_CHECK_TYPES, t.checkType)} placeholder={e.choose} />
         <form.TextField name="pattern" label={e.pattern} autoComplete="off" />
       </section>
       <form.TextArea name="question" label={e.question} rows={2} />

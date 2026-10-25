@@ -7,8 +7,9 @@ import { DescriptionList } from "@krizaka/ui/description-list";
 import { fill } from "@/core/context/fill";
 import type { LawBlock, Rule, RuleProposal, VetReport } from "@/console/services/law.schemas";
 import { useLawCopy } from "@/console/features/law/hooks/useLawCopy";
+import { orDash, wordOf } from "@/console/features/law/utils/law";
 
-const short = (hash: string) => hash.slice(0, 12);
+const short = (hash: string | null | undefined) => (hash ? hash.slice(0, 12) : "—");
 
 /** The cited article: its quote, the pinned version and the official text beside it (the reviewer reads both). */
 function LawQuote({ block, rule }: Readonly<{ block: LawBlock; rule: Rule }>) {
@@ -17,15 +18,19 @@ function LawQuote({ block, rule }: Readonly<{ block: LawBlock; rule: Rule }>) {
   return (
     <figure className="flex flex-col gap-2 rounded-lg border border-border-subtle bg-surface-1 p-3">
       <figcaption className="text-xs font-semibold text-fg-secondary">
-        {fill(d.article, { instrument: block.instrument, ref: block.ref, language: block.language })}
+        {fill(d.article, { instrument: orDash(block.instrument), ref: orDash(block.ref), language: orDash(block.language) })}
       </figcaption>
-      <blockquote lang={block.language} className="border-l-2 border-accent pl-3 text-sm text-fg">
-        {block.quote}
+      <blockquote lang={block.language ?? undefined} className="border-l-2 border-accent pl-3 text-sm text-fg">
+        {orDash(block.quote)}
       </blockquote>
       <p className="font-mono text-xs text-fg-muted">{fill(d.pinned, { hash: short(block.contentHash) })}</p>
-      <a href={rule.sourceUrl} target="_blank" rel="noreferrer" className="text-sm font-medium text-fg-accent underline">
-        {fill(d.officialText, { citation: rule.citation })}
-      </a>
+      {rule.sourceUrl ? (
+        <a href={rule.sourceUrl} target="_blank" rel="noreferrer" className="text-sm font-medium text-fg-accent underline">
+          {fill(d.officialText, { citation: orDash(rule.citation) })}
+        </a>
+      ) : (
+        <p className="text-sm text-fg-muted">{d.noSource}</p>
+      )}
     </figure>
   );
 }
@@ -79,25 +84,27 @@ export function ProposalDetail({ proposal, children }: Readonly<{ proposal: Rule
   const { t, date } = useLawCopy();
   const d = t.detail;
   const { rule } = proposal;
+  const law = rule.law ?? [];
   const items = [
-    { id: "method", term: d.method, details: t.method[rule.method] },
+    { id: "severity", term: t.queue.severity, details: wordOf(t.severity, rule.severity) },
+    { id: "method", term: d.method, details: wordOf(t.method, rule.method) },
     ...(rule.subject ? [{ id: "subject", term: d.subject, details: <code className="text-xs">{rule.subject}</code> }] : []),
-    ...(rule.check ? [{ id: "check", term: d.check, details: <span>{t.checkType[rule.check.type]} <code className="text-xs">{rule.check.pattern}</code></span> }] : []),
+    ...(rule.check ? [{ id: "check", term: d.check, details: <span>{wordOf(t.checkType, rule.check.type)} <code className="text-xs">{orDash(rule.check.pattern)}</code></span> }] : []),
     ...(rule.question ? [{ id: "question", term: d.question, details: rule.question }] : []),
-    { id: "citation", term: d.citation, details: rule.citation },
+    { id: "citation", term: d.citation, details: orDash(rule.citation) },
     ...(rule.onPass ? [{ id: "onPass", term: d.onPass, details: rule.onPass }] : []),
     ...(rule.onFail ? [{ id: "onFail", term: d.onFail, details: rule.onFail }] : []),
   ];
   return (
-    <article className="flex flex-col gap-4 p-3" aria-label={rule.ruleId}>
+    <article className="flex flex-col gap-4 p-3" aria-label={proposal.ruleId}>
       <section className="grid gap-4 lg:grid-cols-2">
         <section aria-label={d.law} className="flex flex-col gap-2">
           <h3 className="text-sm font-bold text-fg">{d.law}</h3>
-          {rule.law.length === 0 ? <Alert tone="warning">{d.noLaw}</Alert> : rule.law.map((block) => <LawQuote key={`${block.instrument}-${block.ref}-${block.language}`} block={block} rule={rule} />)}
+          {law.length === 0 ? <Alert tone="warning">{d.noLaw}</Alert> : law.map((block, i) => <LawQuote key={`${block.instrument ?? i}-${block.ref ?? ""}-${block.language ?? ""}`} block={block} rule={rule} />)}
         </section>
         <section aria-label={d.rule} className="flex flex-col gap-2">
           <h3 className="text-sm font-bold text-fg">{d.rule}</h3>
-          <p className="text-sm font-semibold text-fg">{rule.title}</p>
+          <p className="text-sm font-semibold text-fg">{orDash(rule.title)}</p>
           <DescriptionList items={items} layout="inline" />
         </section>
       </section>
