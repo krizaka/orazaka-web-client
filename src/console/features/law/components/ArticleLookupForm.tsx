@@ -9,7 +9,7 @@ import { fill } from "@/core/context/fill";
 import { LawAdminApi } from "@/console/services/law.admin.api";
 import { LAW_LANGUAGES, type ArticleLookup, type ArticleVersion } from "@/console/services/law.schemas";
 import { asRefusal } from "@/console/features/law/hooks/useLawLoad";
-import { useLawCopy } from "@/console/features/law/hooks/useLawCopy";
+import { useLawCopy, type LawWords } from "@/console/features/law/hooks/useLawCopy";
 import { hasText, isIsoDate } from "@/console/features/law/utils/law";
 
 const required = z.string().refine(hasText, "law.required");
@@ -21,9 +21,22 @@ const lookupForm = createKrizakaForm({
 
 const short = (hash: string) => hash.slice(0, 12);
 
+/** The versions of an article, newest first as the service lists them. */
+function versionColumns({ t, date }: LawWords): DataTableColumn<ArticleVersion>[] {
+  const c = t.corpus;
+  return [
+    { id: "inForceFrom", header: c.from, card: "title", value: (v) => v.inForceFrom, cell: (v) => date(v.inForceFrom) },
+    { id: "inForceTo", header: c.to, value: (v) => (v.inForceTo ? date(v.inForceTo) : c.current) },
+    { id: "contentHash", header: c.hash, cell: (v) => <code className="text-xs" title={v.contentHash}>{short(v.contentHash)}</code> },
+    { id: "length", header: c.length, align: "end" },
+    { id: "officialUrl", header: c.official, cell: (v) => <a href={v.officialUrl} target="_blank" rel="noreferrer" className="text-fg-accent underline">{c.official}</a> },
+  ];
+}
+
 /** Which version of an article was in force on a date: metadata only (hash, length, official address) — never the text. */
 export function ArticleLookupForm() {
-  const { t, locale, date, refusal, table } = useLawCopy();
+  const copy = useLawCopy();
+  const { t, locale, date, refusal, table } = copy;
   const c = t.corpus;
   const [found, setFound] = React.useState<ArticleLookup | null>(null);
   const [problem, setProblem] = React.useState<string | null>(null);
@@ -40,13 +53,7 @@ export function ArticleLookupForm() {
       }
     },
   });
-  const columns: DataTableColumn<ArticleVersion>[] = [
-    { id: "inForceFrom", header: c.from, card: "title", value: (v) => v.inForceFrom, cell: (v) => date(v.inForceFrom) },
-    { id: "inForceTo", header: c.to, value: (v) => (v.inForceTo ? date(v.inForceTo) : c.current) },
-    { id: "contentHash", header: c.hash, cell: (v) => <code className="text-xs" title={v.contentHash}>{short(v.contentHash)}</code> },
-    { id: "length", header: c.length, align: "end" },
-    { id: "officialUrl", header: c.official, cell: (v) => <a href={v.officialUrl} target="_blank" rel="noreferrer" className="text-fg-accent underline">{c.official}</a> },
-  ];
+  const columns = versionColumns(copy);
   return (
     <section aria-label={c.lookup} className="flex flex-col gap-3">
       <h2 className="text-lg font-bold text-fg">{c.lookup}</h2>

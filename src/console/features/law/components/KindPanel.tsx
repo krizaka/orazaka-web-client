@@ -11,17 +11,23 @@ import { fill } from "@/core/context/fill";
 import { LawAdminApi } from "@/console/services/law.admin.api";
 import type { Golden, Promotion, RuleProposal } from "@/console/services/law.schemas";
 import { asRefusal, useLawLoad } from "@/console/features/law/hooks/useLawLoad";
-import { useLawCopy } from "@/console/features/law/hooks/useLawCopy";
+import { useLawCopy, type LawWords } from "@/console/features/law/hooks/useLawCopy";
 import { isIsoDate, promotable, type Notice } from "@/console/features/law/utils/law";
 
-function GoldenCases({ kindId, golden }: Readonly<{ kindId: string; golden: Golden }>) {
-  const { t, table } = useLawCopy();
+function caseColumns({ t }: LawWords): DataTableColumn<Golden["cases"][number]>[] {
   const k = t.kind;
   const forms = k.forms as Record<string, string>;
-  const columns: DataTableColumn<Golden["cases"][number]>[] = [
+  return [
     { id: "name", header: k.caseName, card: "title", cell: (c) => <code className="text-xs">{c.name}</code> },
     { id: "form", header: k.caseForm, value: (c) => forms[c.form] ?? c.form },
   ];
+}
+
+function GoldenCases({ kindId, golden }: Readonly<{ kindId: string; golden: Golden }>) {
+  const copy = useLawCopy();
+  const { t, table } = copy;
+  const k = t.kind;
+  const columns = caseColumns(copy);
   return (
     <section aria-label={fill(k.golden, { kind: kindId })} className="flex flex-col gap-2">
       <header className="flex flex-wrap items-center gap-2">
@@ -34,13 +40,22 @@ function GoldenCases({ kindId, golden }: Readonly<{ kindId: string; golden: Gold
   );
 }
 
+function approvedColumns({ t }: LawWords): DataTableColumn<RuleProposal>[] {
+  return [
+    { id: "ruleId", header: t.queue.rule, card: "title", cell: (p) => <code className="text-xs">{p.ruleId}</code> },
+    { id: "title", header: t.editor.title, value: (p) => p.rule.title },
+    { id: "revision", header: t.queue.revision, align: "end", value: (p) => p.proposalRevision },
+  ];
+}
+
 const promoteForm = createKrizakaForm({
   schema: z.object({ effectiveFrom: z.string().refine(isIsoDate, "law.date"), revisionNote: z.string() }),
   defaultValues: { effectiveFrom: "", revisionNote: "" },
 });
 
 function PromoteForm({ kindId, approved, onPromoted }: Readonly<{ kindId: string; approved: RuleProposal[]; onPromoted: () => void }>) {
-  const { t, refusal, locale, table } = useLawCopy();
+  const copy = useLawCopy();
+  const { t, refusal, locale, table } = copy;
   const k = t.kind;
   const [selected, setSelected] = React.useState<string[]>([]);
   const [notice, setNotice] = React.useState<Notice | null>(null);
@@ -62,11 +77,7 @@ function PromoteForm({ kindId, approved, onPromoted }: Readonly<{ kindId: string
       }
     },
   });
-  const columns: DataTableColumn<RuleProposal>[] = [
-    { id: "ruleId", header: t.queue.rule, card: "title", cell: (p) => <code className="text-xs">{p.ruleId}</code> },
-    { id: "title", header: t.editor.title, value: (p) => p.rule.title },
-    { id: "revision", header: t.queue.revision, align: "end", value: (p) => p.proposalRevision },
-  ];
+  const columns = approvedColumns(copy);
   return (
     <section aria-label={fill(k.promote, { kind: kindId })} className="flex flex-col gap-3">
       <h3 className="text-sm font-bold text-fg">{fill(k.promote, { kind: kindId })}</h3>

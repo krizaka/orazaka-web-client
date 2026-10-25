@@ -7,7 +7,7 @@ import { DataTable, type DataTableColumn } from "@krizaka/ui/data-table";
 import { LawAdminApi } from "@/console/services/law.admin.api";
 import type { ImportRow, Instrument } from "@/console/services/law.schemas";
 import { useLawLoad } from "@/console/features/law/hooks/useLawLoad";
-import { useLawCopy } from "@/console/features/law/hooks/useLawCopy";
+import { useLawCopy, type LawWords } from "@/console/features/law/hooks/useLawCopy";
 import { ArticleLookupForm } from "@/console/features/law/components/ArticleLookupForm";
 import { ManualImportForm } from "@/console/features/law/components/ManualImportForm";
 
@@ -15,18 +15,9 @@ const STATUS_TONE: Record<string, "neutral" | "success" | "danger"> = { RUNNING:
 const TITLE = { fr: "titleFr", en: "titleEn" } as const;
 const short = (hash: string | null | undefined) => (hash ? `${hash.slice(0, 12)}…` : "—");
 
-/** The corpus: its instruments, its imports with their hashes and counts, an article by point in time, a manual import. */
-export function CorpusPanel() {
-  const { t, locale, date, refusal, table } = useLawCopy();
+function instrumentColumns({ t, locale }: LawWords): DataTableColumn<Instrument>[] {
   const c = t.corpus;
-  const instruments = useLawLoad<Instrument[]>(LawAdminApi.instruments, []);
-  const loadImports = React.useCallback(() => LawAdminApi.imports(50), []);
-  const imports = useLawLoad<ImportRow[]>(loadImports, []);
-  const modes = c.modes as Record<string, string>;
-  const statuses = c.statuses as Record<string, string>;
-  const problem = instruments.refusal ?? imports.refusal;
-
-  const instrumentColumns: DataTableColumn<Instrument>[] = [
+  return [
     { id: "code", header: c.code, card: "title", sortable: true, cell: (i) => <code className="text-xs font-semibold">{i.code}</code> },
     { id: "title", header: c.titleCol, value: (i) => i[TITLE[locale]] ?? i.titleFr ?? i.titleEn ?? "—" },
     { id: "jurisdiction", header: c.jurisdiction },
@@ -34,7 +25,13 @@ export function CorpusPanel() {
     { id: "articles", header: c.articles, align: "end", sortable: true },
     { id: "versions", header: c.versions, align: "end", sortable: true },
   ];
-  const importColumns: DataTableColumn<ImportRow>[] = [
+}
+
+function importColumns({ t, date }: LawWords): DataTableColumn<ImportRow>[] {
+  const c = t.corpus;
+  const modes = c.modes as Record<string, string>;
+  const statuses = c.statuses as Record<string, string>;
+  return [
     { id: "startedAt", header: c.started, card: "title", sortable: true, value: (r) => r.startedAt, cell: (r) => date(r.startedAt, true) },
     { id: "sourceKey", header: c.source },
     { id: "mode", header: c.mode, value: (r) => modes[r.mode] ?? r.mode },
@@ -44,20 +41,34 @@ export function CorpusPanel() {
     { id: "consolidatedTo", header: c.consolidatedTo, value: (r) => (r.consolidatedTo ? date(r.consolidatedTo) : "—") },
     { id: "importedBy", header: c.importedBy, value: (r) => r.importedBy ?? "—" },
   ];
+}
+
+/** The corpus: its instruments, its imports with their hashes and counts, an article by point in time, a manual import. */
+export function CorpusPanel() {
+  const copy = useLawCopy();
+  const { t, refusal, table } = copy;
+  const c = t.corpus;
+  const instruments = useLawLoad<Instrument[]>(LawAdminApi.instruments, []);
+  const loadImports = React.useCallback(() => LawAdminApi.imports(50), []);
+  const imports = useLawLoad<ImportRow[]>(loadImports, []);
+  const problem = instruments.refusal ?? imports.refusal;
+
+  const instruments_ = instrumentColumns(copy);
+  const imports_ = importColumns(copy);
 
   return (
     <section className="flex flex-col gap-8">
       {problem && <Alert tone="warning">{refusal(problem)}</Alert>}
       <section aria-label={c.instruments} className="flex flex-col gap-2">
         <h2 className="text-lg font-bold text-fg">{c.instruments}</h2>
-        <DataTable caption={c.instruments} rows={instruments.data} columns={instrumentColumns} getRowId={(i) => `${i.jurisdiction}-${i.code}`} loading={instruments.isLoading} labels={table} />
+        <DataTable caption={c.instruments} rows={instruments.data} columns={instruments_} getRowId={(i) => `${i.jurisdiction}-${i.code}`} loading={instruments.isLoading} labels={table} />
       </section>
       <section aria-label={c.imports} className="flex flex-col gap-2">
         <h2 className="text-lg font-bold text-fg">{c.imports}</h2>
         <DataTable
           caption={c.imports}
           rows={imports.data}
-          columns={importColumns}
+          columns={imports_}
           getRowId={(r) => r.id}
           loading={imports.isLoading}
           defaultPageSize={10}

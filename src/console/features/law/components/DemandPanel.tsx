@@ -9,7 +9,7 @@ import { fill } from "@/core/context/fill";
 import { LawAdminApi } from "@/console/services/law.admin.api";
 import { LAW_LANGUAGES, type Demand, type Derivation } from "@/console/services/law.schemas";
 import { asRefusal, useLawLoad } from "@/console/features/law/hooks/useLawLoad";
-import { useLawCopy } from "@/console/features/law/hooks/useLawCopy";
+import { useLawCopy, type LawWords } from "@/console/features/law/hooks/useLawCopy";
 import { hasText, isIsoDate } from "@/console/features/law/utils/law";
 
 const UNKNOWN_KIND = "UNKNOWN";
@@ -63,18 +63,24 @@ function DerivationForm() {
   );
 }
 
-/** What people sent that no promoted ruleset checks yet (`kind_demand`), counted — and the derivation that answers it. */
-export function DemandPanel() {
-  const { t, date, refusal, table } = useLawCopy();
+function demandColumns({ t, date }: LawWords): DataTableColumn<Demand>[] {
   const d = t.demand;
-  const demand = useLawLoad<Demand[]>(LawAdminApi.demand, []);
-  const columns: DataTableColumn<Demand>[] = [
+  return [
     { id: "kindId", header: d.kind, card: "title", sortable: true, value: (r) => (r.kindId === UNKNOWN_KIND ? d.unknown : r.kindId), cell: (r) => (r.kindId === UNKNOWN_KIND ? d.unknown : <code className="text-xs">{r.kindId}</code>) },
     { id: "jurisdiction", header: d.jurisdiction },
     { id: "count", header: d.count, align: "end", sortable: true },
     { id: "firstSeen", header: d.firstSeen, value: (r) => r.firstSeen, cell: (r) => date(r.firstSeen, true) },
     { id: "lastSeen", header: d.lastSeen, sortable: true, value: (r) => r.lastSeen, cell: (r) => date(r.lastSeen, true) },
   ];
+}
+
+/** What people sent that no promoted ruleset checks yet (`kind_demand`), counted — and the derivation that answers it. */
+export function DemandPanel() {
+  const copy = useLawCopy();
+  const { t, refusal, table } = copy;
+  const d = t.demand;
+  const demand = useLawLoad<Demand[]>(LawAdminApi.demand, []);
+  const columns = demandColumns(copy);
   return (
     <section className="flex flex-col gap-8">
       <section aria-label={d.caption} className="flex flex-col gap-2">

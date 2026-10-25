@@ -2,7 +2,7 @@
 // refusal reads, the editor's round trip — and both languages say the same things.
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { lawCopy, type LawCopy } from "../core/copy/law.ts";
+import { lawCopy } from "../core/copy/law.ts";
 import { canApprove, canEdit, canReject, draftOf, isIsoDate, kindsOf, promotable, refusalKey, ruleOf } from "../features/law/utils/law.ts";
 import { proposal } from "../../__tests__/helpers/law-fixtures.ts";
 
@@ -71,7 +71,7 @@ function leaves(value: unknown, path = ""): Array<[string, string]> {
 test("French says what English says: the same keys, the same placeholders, no empty message", () => {
   const placeholders = (text: string) => [...text.matchAll(/\{(\w+)\}/g)].map((m) => m[1]).sort();
   const en = new Map(leaves(lawCopy.en));
-  const fr = new Map(leaves(lawCopy.fr satisfies LawCopy));
+  const fr = new Map(leaves(lawCopy.fr));
   assert.deepEqual([...fr.keys()].sort(), [...en.keys()].sort());
   for (const [key, text] of en) {
     assert.ok(text.length > 0 && (fr.get(key) ?? "").length > 0, `${key} is empty`);
