@@ -1,7 +1,7 @@
 /**
  * The console's navigation as data (Dev preview `admin.ux-review`): the operator's jobs, in five places —
  * what is happening (Supervision), what is running (Operations), who and what they hold (Accounts: People, Billing),
- * what is offered (Catalogue: Models, Studios), what was done (Audit). The bar shows the five; a group of two opens its
+ * what is offered (Catalogue: Models, Studios, Law — the rules the engine checks documents with, ADR-089 §8), what was done (Audit). The bar shows the five; a group of two opens its
  * two screens as tabs under the bar. Every route appears once (`sections.test.mts`).
  */
 export interface ConsoleSection {
@@ -38,6 +38,7 @@ export const CONSOLE_GROUPS: readonly ConsoleGroup[] = [
     children: [
       { id: "models", href: "/models" },
       { id: "studios", href: "/studios" },
+      { id: "law", href: "/law" },
     ],
   },
   { id: "audit", href: "/audit", children: [] },

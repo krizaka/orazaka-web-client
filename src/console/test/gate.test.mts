@@ -25,3 +25,9 @@ test("open: the BFF passes and a session reaches the console", () => {
   assert.equal(gate("/billing", true, open), "pass");
   assert.equal(gate("/billing", false, open), "login");
 });
+
+test("Law → Proposals (ADR-089 §8) is a console screen like the others: no operator session, no screen", () => {
+  assert.equal(gate("/law", false, open), "login");
+  assert.equal(gate("/law", true, open), "pass");
+  assert.equal(gate("/api/v1/admin/law/proposals", false, closed), "not-found");
+});
