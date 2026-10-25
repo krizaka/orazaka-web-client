@@ -13,7 +13,10 @@ import { KRIZAKA_URL, SITE_DESCRIPTION, SITE_NAME, SITE_TITLE, SITE_URL, siteJso
 /*
  * The typefaces are the files of @krizaka/fonts (SIL OFL 1.1), loaded by next/font/local: preloaded, fingerprinted and
  * served from the same origin — never fetched from Google at build. The app is a product, so it wears plain Krizaka UI
- * (`data-surface="product"` on <html>): the sans only — no Young Serif, no Courier Prime (those are the notebook's).
+ * (`data-surface="product"` on <html>): the text sans, and Plus Jakarta Sans for the titles (ADR-006, mapped to
+ * `--kz-font-product-display` in globals.css) — no Young Serif, no Courier Prime (those are the notebook's).
+ * The variables sit on <html>, where the tokens read them (`--kz-font-sans` / `--kz-font-product-display` are resolved there:
+ * on <body> they would be undefined and the text would fall back to the system face).
  * The arguments must be literals, relative to this file: scripts/link-fonts.mjs copies the faces to ./_fonts (git-ignored)
  * from wherever the package is installed (standalone on App Platform, hoisted in the workspace).
  */
@@ -21,6 +24,13 @@ const inter = localFont({
   src: "./_fonts/atkinson-hyperlegible-next-latin-wght.woff2",
   weight: "400 700",
   variable: "--font-inter",
+  display: "swap",
+});
+
+const productDisplay = localFont({
+  src: "./_fonts/plus-jakarta-sans-latin-wght.woff2",
+  weight: "500 800",
+  variable: "--font-product-display",
   display: "swap",
 });
 
@@ -62,7 +72,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" data-surface="product" suppressHydrationWarning>
+    <html lang="en" data-surface="product" className={cn(inter.variable, productDisplay.variable)} suppressHydrationWarning>
       <head>
         {/* The organisation's theme mechanism: applies the persisted mode and named theme before the first paint. */}
         <ThemeScript />
@@ -72,12 +82,7 @@ export default function RootLayout({
         </noscript>
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(siteJsonLd()).replace(/</g, "\\u003c") }} />
       </head>
-      <body
-        className={cn(
-          inter.variable,
-          "antialiased transition-colors duration-200"
-        )}
-      >
+      <body className="antialiased transition-colors duration-200">
         <PublicShell authFlags={readAuthFlags()} showDevNotice={!indexable()}>
           {children}
         </PublicShell>

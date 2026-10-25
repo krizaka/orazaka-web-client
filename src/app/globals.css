@@ -21,6 +21,12 @@
 @import "@krizaka/ui/tailwind.css";
 @import "@krizaka/orazaka-design-system/theme.css";
 
+/* The product register's titles (ADR-006): Plus Jakarta Sans, the face layout.tsx loads with next/font/local. @krizaka/tokens names
+   the family; this points the role at the loaded face (preloaded, fingerprinted), so no second download and no Google Fonts. */
+html[data-surface="product"] {
+  --kz-font-product-display: var(--font-product-display), system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+
 /* Phone recordings — the app was recorded in dark and in light (PhoneClip): the one that matches the page is shown. */
 html.light video[data-appearance="dark"],
 html:not(.light) video[data-appearance="light"] {

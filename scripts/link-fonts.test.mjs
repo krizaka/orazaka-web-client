@@ -32,8 +32,11 @@ test("the layout names the same files the script copies, relative to itself", ()
   assert.doesNotMatch(layout, /node_modules/);
 });
 
-test("a product wears plain Krizaka UI: the sans only, never the notebook's faces (Young Serif, Courier Prime)", () => {
-  assert.deepEqual(FACES, ["atkinson-hyperlegible-next-latin-wght.woff2"]);
+test("a product wears Krizaka UI 2027: the text sans and Plus Jakarta Sans for titles, never the notebook's faces (Young Serif, Courier Prime)", () => {
+  assert.deepEqual(FACES, ["atkinson-hyperlegible-next-latin-wght.woff2", "plus-jakarta-sans-latin-wght.woff2"]);
+  const css = readFileSync(new URL("../src/app/globals.css", import.meta.url), "utf8");
+  assert.match(css, /html\[data-surface="product"\]\s*\{[^}]*--kz-font-product-display:\s*var\(--font-product-display\)/);
+  assert.match(readFileSync(new URL("../src/app/layout.tsx", import.meta.url), "utf8"), /variable: "--font-product-display"/);
   const layout = readFileSync(new URL("../src/app/layout.tsx", import.meta.url), "utf8");
   assert.doesNotMatch(layout, /young-serif|courier-prime/);
   assert.match(layout, /<html[^>]*data-surface="product"/);
