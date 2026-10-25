@@ -17,6 +17,7 @@ export const consoleCopy = {
     audit: "Audit log",
     billing: "Billing & credits",
     studios: "Studios",
+    law: "Law",
     tasks: "Tasks",
     accounts: "Accounts",
     catalogue: "Catalogue",

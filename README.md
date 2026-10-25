@@ -127,6 +127,17 @@ The same app serves the operator console (usage, credits, prices, Studios, accou
 rewrites that host to the internal `/console` tree (`src/app/console/`, code in `src/console/`); on any other host
 `/console/**` is a 404. Nothing is shared with the public site: its own session cookie, signing key and sign-in flag.
 
+**Law → Proposals** (`/law`, under Catalogue — [ADR-089](https://github.com/krizaka/orazaka/blob/main/docs/adr/ADR-089-rules-from-the-law.md) §8)
+is where a rule derived from the law is reviewed before it reaches a pack: by kind, each proposal with its article quote
+beside the official URL, the rule, its fixtures and its vet report; **Approve** (a note), **Reject** (a reason),
+**Edit** (a new revision, vetted again), the kind's golden cases and **Promote** (the approved rules and the in-force
+date → the orazaka-packs pull request's link). Two more tabs: **Corpus** (instruments, imports with their hashes and
+counts, an article by point in time — metadata only — and a manual XML import, relayed multipart by the BFF) and
+**Demand** (`kind_demand`, and « Start a derivation »). It reads `/api/v1/admin/law/**` (ADMIN only, every write
+audited); every refusal is worded by its Problem `code`. Its words are in English and French
+(`src/console/core/copy/law.ts`), in the browser's language (`ConsoleLocale`); the tab and the filters are the URL
+(`?tab=`, `?status=`, `?kind=`).
+
 | Variable | Default | Effect |
 | --- | --- | --- |
 | `AUTH_ALLOWED_IPS` | empty | Comma-separated client addresses (DigitalOcean's `do-connecting-ip`) allowed on the admin host; any other gets 403, sign-in page included. In production an empty list lets nobody in. |
