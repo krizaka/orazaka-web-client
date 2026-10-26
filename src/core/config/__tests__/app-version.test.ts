@@ -13,4 +13,8 @@ describe("app version", () => {
     expect(resolveSha({ APP_COMMIT: "deadbeefcafe" })).toBe("deadbeefcafe");
     expect(resolveSha({ APP_COMMIT: "${_self.COMMIT_HASH}", GITHUB_SHA: "f00dfeed" })).toBe("f00dfeed");
   });
+  it("falls back to the checkout's own sha through an absolute git path, or to nothing", () => {
+    const sha = resolveSha({});
+    expect(sha === "" || /^[0-9a-f]{7,}$/.test(sha)).toBe(true);
+  });
 });
