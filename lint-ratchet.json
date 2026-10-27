@@ -16,8 +16,19 @@
     "localTableOrForm": 5,
     "retiredImport": 0,
     "routeStateSelection": 0,
-    "cognitiveComplexity": 10,
-    "pageTemplate": 33
+    "cognitiveComplexity": 16,
+    "sonar": 106,
+    "sonarjs/no-nested-conditional": 33,
+    "sonarjs/void-use": 3,
+    "sonarjs/no-nested-template-literals": 22,
+    "sonarjs/super-linear-regex": 21,
+    "sonarjs/redundant-type-aliases": 1,
+    "sonarjs/no-nested-assignment": 7,
+    "sonarjs/duplicates-in-character-class": 1,
+    "pageTemplate": 33,
+    "sonarjs/regex-complexity": 2,
+    "sonarjs/no-os-command-from-path": 15,
+    "sonarjs/no-hardcoded-passwords": 1
   },
   "stackGlobs": [
     "app/**/*.{js,jsx,mjs,ts,tsx,mts}",
@@ -25,6 +36,8 @@
     "src/**/*.{js,jsx,mjs,ts,tsx,mts}",
     "lib/**/*.{js,jsx,mjs,ts,tsx,mts}",
     "hooks/**/*.{js,jsx,mjs,ts,tsx,mts}",
-    "features/**/*.{js,jsx,mjs,ts,tsx,mts}"
+    "features/**/*.{js,jsx,mjs,ts,tsx,mts}",
+    "scripts/**/*.{js,jsx,mjs,ts,tsx,mts}",
+    "e2e/**/*.{js,jsx,mjs,ts,tsx,mts}"
   ]
 }
