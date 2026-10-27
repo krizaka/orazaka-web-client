@@ -12,6 +12,7 @@ minimumReleaseAgeExclude:
   - "@krizaka/tokens@3.65.0"
   - "@krizaka/ui@3.65.0"
   - "@krizaka/query@0.2.2"
+  - "@krizaka/config@0.9.1"
 onlyBuiltDependencies:
   - "@ast-grep/cli"
   - "@parcel/watcher"
