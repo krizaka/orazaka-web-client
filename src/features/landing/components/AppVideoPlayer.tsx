@@ -2,6 +2,7 @@
 
 import { cn } from "@krizaka/ui/cn";
 import { useState } from "react";
+import { VideoSources } from "@/core/clips/VideoSources";
 
 interface Props {
   poster: string;
@@ -21,8 +22,7 @@ export function AppVideoPlayer({ poster, webm, mp4, width, height, play, label }
     <div className={cn("relative overflow-hidden rounded-lg border border-border-default bg-surface-1", width >= height ? "aspect-video" : "aspect-[9/16]")}>
       {on ? (
         <video className="absolute inset-0 size-full object-cover" controls autoPlay muted loop playsInline poster={poster} aria-label={label}>
-          <source src={webm} type="video/webm" />
-          <source src={mp4} type="video/mp4" />
+          <VideoSources webm={webm} mp4={mp4} />
         </video>
       ) : (
         <button type="button" onClick={() => setOn(true)} className="group absolute inset-0 size-full cursor-pointer" aria-label={`${play}: ${label}`}>

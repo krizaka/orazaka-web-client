@@ -12,7 +12,7 @@
 import { mkdirSync, renameSync } from "node:fs";
 import path from "node:path";
 import { chromium } from "@playwright/test";
-import { RECORDED_DOCUMENT, RECORDED_QUESTION } from "./tour/eric.mjs";
+import { askRecordedQuestion } from "./tour/chat-journey.mjs";
 
 const args = process.argv.slice(2);
 const outDir = path.resolve(args[0] ?? "showcase-web");
@@ -75,13 +75,7 @@ await record(
     await page.goto(`${base}/chat`, { waitUntil: "load" });
     const box = page.locator("textarea").first();
     await box.waitFor();
-    await pause(page, 1400);
-    await box.click();
-    await box.pressSequentially(RECORDED_QUESTION, { delay: 9 });
-    await page.keyboard.insertText(`\n\n${RECORDED_DOCUMENT}`);
-    await pause(page, 900);
-    await page.getByRole("button", { name: /^Send/ }).click();
-    await page.waitForURL(/conversationId=/, { timeout: 30_000 });
+    await askRecordedQuestion(page);
     // The answer must grow the page; then the turn is over when the composer is editable again.
     const before = (await page.locator("main").first().innerText()).length;
     await page.waitForFunction((n) => (document.querySelector("main")?.innerText.length ?? 0) > n + 80, before, { timeout: 180_000, polling: 500 }).catch(() => {
