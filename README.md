@@ -40,6 +40,7 @@ session. Built on [`@krizaka/ui`](https://www.krizaka.com/docs/ui) and the Oraza
 
 ```bash
 npm install && npm run dev
+pre-commit install   # once: the gitleaks and zizmor hooks on each commit
 ```
 
 ## Position in the platform
