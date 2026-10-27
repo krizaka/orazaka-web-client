@@ -69,3 +69,18 @@ describe("proxy with sign-in open", () => {
     }
   });
 });
+
+describe("an address that does not exist (krizaka/orazaka#443)", () => {
+  it.each(["/nope", "/jobz", "/studio", "/settings-old", "/a/b/c"])("does not send a visitor of %s to the login page: Next answers 404", (path) => {
+    const envs: Record<string, string>[] = [{}, { AUTH_LOGIN_ENABLED: "true" }];
+    for (const env of envs) {
+      const res = call(path, env);
+      expect(res.headers.get("location")).toBeNull();
+      expect(res.headers.get("x-middleware-next")).toBe("1");
+    }
+  });
+
+  it.each(["/jobs/42", "/studios/image-generation", "/settings/profile"])("still sends a visitor of the app page %s to the login page", (path) => {
+    expect(call(path, { AUTH_LOGIN_ENABLED: "true" }).headers.get("location")).toBe("https://dev.orazaka.com/login");
+  });
+});

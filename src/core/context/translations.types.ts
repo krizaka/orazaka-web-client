@@ -4,6 +4,7 @@
  */
 
 import type { ClipsDictionary } from "./translations.clips";
+import type { NotFoundDictionary } from "./translations.notFound";
 import type { LandingDictionary } from "./translations.landing.types";
 import type { InsightsDictionary } from "./translations.insights";
 import type { JobsTableDictionary } from "./translations.jobsTable.types";
@@ -872,6 +873,8 @@ export interface TranslationDictionary {
   landing: LandingDictionary;
   /** The demo clips: alt, caption and captions. */
   clips: ClipsDictionary;
+  /** The 404 page. */
+  notFound: NotFoundDictionary;
   /** The Mobile section of the home page and /mobile. */
   mobile: MobileDictionary;
   /** /desktop (Orazaka for Mac) and the home page's "On your Mac" band. */
