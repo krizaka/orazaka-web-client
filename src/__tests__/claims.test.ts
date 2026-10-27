@@ -8,7 +8,7 @@ import path from "node:path";
  * validée » next to a law. Read from the sources of the pages (landing, desktop page), so the guard is the source itself.
  */
 const SRC = path.resolve(__dirname, "..");
-const PUBLIC_SOURCES = ["features/landing", "core/context/translations.desktop.ts", "app/_seo/seo.ts", "app/layout.tsx"];
+const PUBLIC_SOURCES = ["features/landing", "core/context/translations.desktop.ts", "core/context/translations.pricing.ts", "app/_seo/seo.ts", "app/layout.tsx"];
 
 function files(entry: string): string[] {
   const full = path.join(SRC, entry);
