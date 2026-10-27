@@ -1,0 +1,56 @@
+# The videos of the Download page (krizaka/.github#315): after "Dev preview live" is green on main (the deployed build carries the
+# commit), the showcase journeys are recorded on the dev environment as the demo persona, then the org's app-videos workflow
+# transcodes, uploads to Bunny and opens one PR. Never required, so it cannot block a merge (a stale video is caught by the page's guard).
+name: Download videos
+
+on:
+  workflow_run:
+    workflows: ["Dev preview live"]
+    types: [completed]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  showcase-web:
+    name: Showcase videos (web)
+    if: github.event_name == 'workflow_dispatch' || (github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.head_branch == 'main' && github.event.workflow_run.head_repository.full_name == github.repository)
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+          ref: ${{ github.event.workflow_run.head_sha || github.sha }}
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: 22
+      - run: npx --yes pnpm@10 install --frozen-lockfile --ignore-scripts
+      - run: ./node_modules/.bin/playwright install --with-deps chromium
+      - name: Record the journeys (the demo persona, off camera sign-in)
+        run: node scripts/showcase-web.mjs "$GITHUB_WORKSPACE/showcase-web" --base https://dev.orazaka.com
+        env:
+          ORAZAKA_USER_EMAIL: ${{ secrets.E2E_USER }}
+          ORAZAKA_USER_PASSWORD: ${{ secrets.E2E_PASSWORD }}
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: showcase-web
+          path: showcase-web
+          retention-days: 7
+
+  app-videos:
+    name: Download page videos
+    needs: [showcase-web]
+    permissions:
+      contents: write
+      pull-requests: write
+    uses: krizaka/.github/.github/workflows/app-videos.yml@4749d988b400b5a184f2e2216946c50f9d9b5e98 # main (krizaka/.github#316)
+    with:
+      product: orazaka
+      manifest: content/app-videos.json
+      artifacts: |
+        showcase-web
+    secrets: inherit
