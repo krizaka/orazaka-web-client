@@ -14,7 +14,7 @@ Next.js (App Router) client of the Orazaka platform with its mandatory BFF.
 
 [![CI](https://github.com/krizaka/orazaka-web-client/actions/workflows/ci.yml/badge.svg)](https://github.com/krizaka/orazaka-web-client/actions/workflows/ci.yml)
 [![OpenSSF Scorecard](https://api.scorecard.dev/projects/github.com/krizaka/orazaka-web-client/badge)](https://scorecard.dev/viewer/?uri=github.com/krizaka/orazaka-web-client)
-[![License: Apache-2.0](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE)
+[![License: FSL-1.1-ALv2](https://img.shields.io/badge/license-FSL--1.1--ALv2-blue.svg)](LICENSE.md)
 [![Orazaka](https://img.shields.io/badge/part%20of-Orazaka-f67e23)](https://github.com/krizaka/orazaka#repositories)
 [![Docs](https://img.shields.io/badge/docs-krizaka.com%2Fdocs%2Forazaka-f67e23)](https://www.krizaka.com/docs/orazaka)
 [![Quality Gate](https://sonarcloud.io/api/project_badges/measure?project=krizaka_orazaka-web-client&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=krizaka_orazaka-web-client) [![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=krizaka_orazaka-web-client&metric=security_rating)](https://sonarcloud.io/summary/new_code?id=krizaka_orazaka-web-client) [![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=krizaka_orazaka-web-client&metric=reliability_rating)](https://sonarcloud.io/summary/new_code?id=krizaka_orazaka-web-client) [![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=krizaka_orazaka-web-client&metric=sqale_rating)](https://sonarcloud.io/summary/new_code?id=krizaka_orazaka-web-client) [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=krizaka_orazaka-web-client&metric=coverage)](https://sonarcloud.io/summary/new_code?id=krizaka_orazaka-web-client)
@@ -28,7 +28,7 @@ Next.js (App Router) client of the Orazaka platform with its mandatory BFF.
   <br><sub>Recorded on this application: Eric answers a customer from his own returns policy, then generates the product photo — everything ran on one Mac. <a href="https://www.krizaka.com/en/products/orazaka/demos">More demos</a></sub>
 </p>
 
-**Layer:** Client application · **Version:** `1.0.0-SNAPSHOT` · **License:** Apache-2.0 ·
+**Layer:** Client application · **Version:** `1.0.0-SNAPSHOT` · **License:** FSL-1.1-ALv2 ·
 part of the [Orazaka platform](https://github.com/krizaka/orazaka) by [Krizaka](https://krizaka.com)
 
 ## What it provides
@@ -107,7 +107,11 @@ in the workspace is normative; the local [AGENTS.md](AGENTS.md) only scopes it t
 
 ## License
 
-Apache License 2.0 — see [LICENSE](LICENSE) and [NOTICE](NOTICE).
+[FSL-1.1-ALv2](LICENSE.md) (Functional Source License, Apache-2.0 future licence) © Technologies Krizaka Inc. — read,
+run, modify and self-host it for any purpose except offering a competing service; each version becomes Apache-2.0 two
+years after its release. Commits before the licence change remain [Apache-2.0](LICENSE-APACHE) — see [NOTICE](NOTICE)
+and [ADR-011](https://github.com/krizaka/.github/blob/main/docs/adr/ADR-011-licensing-libraries-open-products-fair-source.md).
+The Krizaka names and birds are not licensed: [trademark policy](https://github.com/krizaka/.github/blob/main/TRADEMARKS.md).
 
 ## Public site (www.orazaka.com) and the dev address
 
@@ -151,4 +155,4 @@ audited); every refusal is worded by its Problem `code`. Its words are in Englis
 
 ---
 
-<sub>A Krizaka product · [krizaka.com](https://www.krizaka.com) · Apache-2.0</sub>
+<sub>A Krizaka product · [krizaka.com](https://www.krizaka.com) · FSL-1.1-ALv2</sub>
