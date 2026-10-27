@@ -32,7 +32,7 @@ const createJestConfig = nextJest({
 
 const config = {
   testEnvironment: "jsdom",
-  setupFiles: ["<rootDir>/jest/setup.ts"],
+  setupFiles: ["<rootDir>/tests/setup.ts"],
   moduleNameMapper: {
     "^@/(.*)$": "<rootDir>/src/$1",
     // @krizaka/ui (re-exported by @krizaka/orazaka-design-system 2.x) exposes its entries under the `import`
