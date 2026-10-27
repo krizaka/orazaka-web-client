@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useQuery } from "@krizaka/query";
 import { Badge } from "@krizaka/ui/badge";
 import { DataTable, type DataTableColumn } from "@krizaka/ui/data-table";
 import { formatCredits, type CapabilityUsage } from "@krizaka/orazaka-shared";
@@ -51,20 +51,9 @@ const COLUMNS: DataTableColumn<CapabilityUsage>[] = [
  * ever switched on.
  */
 export function UsageScreen() {
-  const [rows, setRows] = useState<CapabilityUsage[] | null>(null);
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      BillingAdminApi.usageByCapability(30)
-        .then(setRows)
-        .catch((e: unknown) => {
-          setRows([]);
-          setError(e instanceof Error ? e.message : "Chargement impossible");
-        });
-    }, 0);
-    return () => clearTimeout(timer);
-  }, []);
+  const usage = useQuery({ queryKey: ["billing-usage-by-capability", 30], queryFn: () => BillingAdminApi.usageByCapability(30) });
+  const rows: CapabilityUsage[] | null = usage.isPending ? null : (usage.data ?? []);
+  const error = usage.error ? (usage.error instanceof Error ? usage.error.message : "Chargement impossible") : null;
 
   return (
     <section className="space-y-6">

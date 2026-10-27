@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { useQuery } from "@krizaka/query";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useAuth } from "@/core/hooks/useAuth";
 import { AppShell } from "@/components/layout/AppShell";
@@ -50,6 +51,7 @@ function JobsDashboardContent() {
     null,
   );
 
+  const [dismissedJobId, setDismissedJobId] = React.useState<string | null>(null);
   const [copiedId, setCopiedId] = React.useState<string | null>(null);
 
   React.useEffect(() => {
@@ -89,45 +91,24 @@ function JobsDashboardContent() {
     setModalType(type);
   };
 
-  // Auto-open modal when jobId is present in search parameters
-  React.useEffect(() => {
-    if (targetJobId) {
-      const foundJob =
-        liveJobs.find((j) => j.id === targetJobId) ||
-        pageJobs.find((j) => j.id === targetJobId);
-      if (foundJob) {
-        const timer = setTimeout(() => {
-          setSelectedJob(foundJob);
-          setModalType(
-            foundJob.status === JOB_STATUS.COMPLETED ? "result" : "payload",
-          );
-        }, 0);
-        return () => clearTimeout(timer);
-      } else {
-        getSession()
-          .then((session) => {
-            const headers: Record<string, string> = {};
-            if (session?.user?.id) {
-              headers["Authorization"] = `Bearer ${session.user.id}`;
-            }
-            return fetch(`/api/v1/jobs/${targetJobId}`, { headers });
-          })
-          .then((res) => {
-            if (res.ok) return res.json();
-            throw new Error("Job not found");
-          })
-          .then((job) => {
-            setSelectedJob(job);
-            setModalType(
-              job.status === JOB_STATUS.COMPLETED ? "result" : "payload",
-            );
-          })
-          .catch((err) => {
-            console.error("Failed to auto-load job details from URL:", err);
-          });
-      }
-    }
-  }, [targetJobId, liveJobs, pageJobs]);
+  // The job named by `?jobId=` opens by itself: from the lists when it is there, else read from the API. Closing it
+  // remembers the id, so a refreshed list never reopens what the operator dismissed.
+  const knownJob = targetJobId ? (liveJobs.find((j) => j.id === targetJobId) ?? pageJobs.find((j) => j.id === targetJobId)) : undefined;
+  const fetchedJob = useQuery({
+    queryKey: ["job", targetJobId],
+    enabled: Boolean(targetJobId) && !knownJob,
+    retry: false,
+    queryFn: async () => {
+      const session = await getSession();
+      const headers: Record<string, string> = session?.user?.id ? { Authorization: `Bearer ${session.user.id}` } : {};
+      const res = await fetch(`/api/v1/jobs/${targetJobId}`, { headers });
+      if (!res.ok) throw new Error("Job not found");
+      return (await res.json()) as Job;
+    },
+  });
+  const autoJob = targetJobId && dismissedJobId !== targetJobId ? (knownJob ?? fetchedJob.data ?? null) : null;
+  const shownJob = selectedJob ?? autoJob;
+  const shownType = selectedJob ? modalType : autoJob ? (autoJob.status === JOB_STATUS.COMPLETED ? "result" : "payload") : null;
 
   if (isLoading || !isAuthenticated) {
     return (
@@ -204,12 +185,13 @@ function JobsDashboardContent() {
 
       {/* JSON Payload Inspection Modal */}
       <JobModal
-        key={`${selectedJob?.id}-${modalType}`}
-        job={selectedJob}
-        modalType={modalType}
+        key={`${shownJob?.id}-${shownType}`}
+        job={shownJob}
+        modalType={shownType}
         onClose={() => {
           setSelectedJob(null);
           setModalType(null);
+          setDismissedJobId(targetJobId);
         }}
         copiedId={copiedId}
         onCopy={handleCopy}

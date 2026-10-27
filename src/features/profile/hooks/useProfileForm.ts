@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { useQuery } from "@krizaka/query";
 import { getSession } from "next-auth/react";
 import { useSettings } from "@/core/hooks/useSettings";
 import { type Appearance, toAppearance, useAppearance } from "@/core/hooks/useAppearance";
@@ -50,9 +51,6 @@ export function useProfileForm() {
 
   const [form, setForm] = React.useState<ProfileFormState>(EMPTY);
   const [baseline, setBaseline] = React.useState<ProfileFormState>(EMPTY);
-  const [availableThemes, setAvailableThemes] = React.useState<
-    { value: string; label: string }[]
-  >([]);
 
   // Hydrate from persisted settings once they resolve.
   React.useEffect(() => {
@@ -72,44 +70,28 @@ export function useProfileForm() {
     setForm(next);
   }, [settings]);
 
-  // Resolve accent options from the live model catalog, falling back to presets.
-  React.useEffect(() => {
-    let active = true;
-    const presets = THEME_ACCENTS.map((a) => {
+  // Accent options come from the live model catalog; the presets stand in until it answers or when it has no theme.
+  const catalog = useQuery({
+    queryKey: ["models-catalog", "theme"],
+    queryFn: async () => {
+      const session = await getSession();
+      const res = await fetch("/api/v1/models/catalog", {
+        headers: session?.user?.id ? { Authorization: `Bearer ${session.user.id}` } : {},
+      });
+      if (!res.ok) throw new Error("catalog unavailable");
+      return ((await res.json()) as { category: string; modelName: string; modelLabel: string }[])
+        .filter((m) => m.category === "theme")
+        .map((m) => ({ value: m.modelName, label: m.modelLabel }));
+    },
+  });
+  const availableThemes = React.useMemo(() => {
+    if (catalog.data && catalog.data.length > 0) return catalog.data;
+    if (catalog.isPending) return [];
+    return THEME_ACCENTS.map((a) => {
       const key = THEME_ACCENT_LABELS[a].split(".")[1] as keyof typeof t.settings;
       return { value: a, label: (t.settings[key] as string) || a };
     });
-    const load = async () => {
-      try {
-        const session = await getSession();
-        const res = await fetch("/api/v1/models/catalog", {
-          headers: session?.user?.id
-            ? { Authorization: `Bearer ${session.user.id}` }
-            : {},
-        });
-        if (!res.ok) throw new Error("catalog unavailable");
-        const themes = (await res.json()).filter(
-          (m: { category: string }) => m.category === "theme",
-        );
-        if (active && themes.length > 0) {
-          setAvailableThemes(
-            themes.map((m: { modelName: string; modelLabel: string }) => ({
-              value: m.modelName,
-              label: m.modelLabel,
-            })),
-          );
-          return;
-        }
-      } catch {
-        // Fall through to presets.
-      }
-      if (active) setAvailableThemes(presets);
-    };
-    load();
-    return () => {
-      active = false;
-    };
-  }, [t]);
+  }, [catalog.data, catalog.isPending, t]);
 
   const setField = React.useCallback(
     <K extends keyof ProfileFormState>(key: K, value: ProfileFormState[K]) => {

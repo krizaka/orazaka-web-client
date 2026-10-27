@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useQuery } from "@krizaka/query";
 import type { ComposerStudio } from "@krizaka/orazaka-shared";
 import { StudioApi } from "@/services/studio.api";
 
@@ -22,28 +22,10 @@ const REFRESH_MS = 10000;
  * @param locale - the caller's locale; label and icon come from the pack's own i18n
  */
 export function useComposerStudios(locale: string): ComposerStudio[] {
-  const [studios, setStudios] = useState<ComposerStudio[]>([]);
-
-  useEffect(() => {
-    let active = true;
-    const load = () => {
-      StudioApi.fetchComposerStudios(locale)
-        .then((row) => {
-          if (active) {
-            setStudios(row);
-          }
-        })
-        .catch((error) =>
-          console.error("Error loading the composer's Studios:", error),
-        );
-    };
-    load();
-    const interval = setInterval(load, REFRESH_MS);
-    return () => {
-      active = false;
-      clearInterval(interval);
-    };
-  }, [locale]);
-
-  return studios;
+  const studios = useQuery({
+    queryKey: ["composer-studios", locale],
+    queryFn: () => StudioApi.fetchComposerStudios(locale),
+    refetchInterval: REFRESH_MS,
+  });
+  return studios.data ?? [];
 }

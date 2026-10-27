@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { useQuery, useQueryClient } from "@krizaka/query";
 import { useTranslation } from "@/core/context/LocaleContext";
 import { useAuth } from "@/core/hooks/useAuth";
 
@@ -28,8 +29,6 @@ export function useMcpServers(fetchHeaders: () => Promise<Record<string, string>
   const { user } = useAuth();
   const isAdmin = user?.role === "admin";
 
-  const [servers, setServers] = React.useState<McpServerInfo[]>([]);
-  const [isLoadingServers, setIsLoadingServers] = React.useState(false);
   const [serverLabel, setServerLabel] = React.useState("");
   const [serverUrl, setServerUrl] = React.useState("");
   const [serverAuthToken, setServerAuthToken] = React.useState("");
@@ -39,30 +38,21 @@ export function useMcpServers(fetchHeaders: () => Promise<Record<string, string>
   const [serverMessage, setServerMessage] = React.useState<string | null>(null);
   const [isSavingServer, setIsSavingServer] = React.useState(false);
 
-  const loadServers = React.useCallback(async () => {
-    setIsLoadingServers(true);
-    try {
-      const headers = await fetchHeaders();
-      const endpoint = isAdmin
-        ? "/api/v1/mcp/servers/platform"
-        : "/api/v1/mcp/servers/user";
-      const res = await fetch(endpoint, { headers });
-      if (res.ok) setServers(await res.json());
-    } catch (err) {
-      console.error("Failed to load MCP servers:", err);
-    } finally {
-      setIsLoadingServers(false);
-    }
-  }, [isAdmin, fetchHeaders]);
-
-  React.useEffect(() => {
-    if (user) {
-      const initServers = async () => {
-        await loadServers();
-      };
-      initServers();
-    }
-  }, [user, loadServers]);
+  const queryClient = useQueryClient();
+  // The list is keyed by scope: the platform's servers for an admin, the user's own otherwise.
+  const serversQuery = useQuery({
+    queryKey: ["mcp-servers", isAdmin ? "platform" : "user"],
+    enabled: Boolean(user),
+    queryFn: async () => {
+      const endpoint = isAdmin ? "/api/v1/mcp/servers/platform" : "/api/v1/mcp/servers/user";
+      const res = await fetch(endpoint, { headers: await fetchHeaders() });
+      if (!res.ok) throw new Error(`mcp servers ${res.status}`);
+      return (await res.json()) as McpServerInfo[];
+    },
+  });
+  const servers = serversQuery.data ?? [];
+  const isLoadingServers = serversQuery.isFetching;
+  const loadServers = () => queryClient.invalidateQueries({ queryKey: ["mcp-servers"] });
 
   const handleSaveServer = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();

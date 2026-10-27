@@ -1,8 +1,12 @@
 import "@testing-library/jest-dom";
-import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { fireEvent, render as plainRender, screen, waitFor } from "@testing-library/react";
+import { queryWrapper } from "@/core/testing/queryWrapper";
 import type { Installation } from "@krizaka/orazaka-shared";
 import { ConsentNotice } from "@/features/studio/consent/ConsentNotice";
 import { StudioApi } from "@/services/studio.api";
+
+/** These screens read server state: every render gets a fresh query client. */
+const render = (ui: Parameters<typeof plainRender>[0], options?: Parameters<typeof plainRender>[1]) => plainRender(ui, { wrapper: queryWrapper(), ...options });
 
 jest.mock("@/core/context/LocaleContext", () => ({
   useTranslation: () => ({ t: jest.requireActual("@/core/context/translations").translations.en, locale: "en" }),

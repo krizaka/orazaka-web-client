@@ -82,8 +82,8 @@ importers:
         specifier: 0.51.0
         version: 0.51.0
       '@krizaka/config':
-        specifier: ^0.7.0
-        version: 0.7.0(eslint-config-next@16.4.2(@typescript-eslint/parser@8.72.0(eslint@10.13.0(jiti@2.7.0)(supports-color@8.1.1))(supports-color@8.1.1)(typescript@6.0.3))(eslint@10.13.0(jiti@2.7.0)(supports-color@8.1.1))(supports-color@8.1.1)(typescript@6.0.3))(eslint@10.13.0(jiti@2.7.0)(supports-color@8.1.1))(prettier@3.9.10)(supports-color@8.1.1)(typescript@6.0.3)
+        specifier: ^0.9.1
+        version: 0.9.1(eslint-config-next@16.4.2(@typescript-eslint/parser@8.72.0(eslint@10.13.0(jiti@2.7.0)(supports-color@8.1.1))(supports-color@8.1.1)(typescript@6.0.3))(eslint@10.13.0(jiti@2.7.0)(supports-color@8.1.1))(supports-color@8.1.1)(typescript@6.0.3))(eslint@10.13.0(jiti@2.7.0)(supports-color@8.1.1))(prettier@3.9.10)(supports-color@8.1.1)(typescript@6.0.3)
       '@playwright/test':
         specifier: ^1.50.0
         version: 1.64.1
@@ -941,8 +941,8 @@ packages:
       react-native-svg:
         optional: true
 
-  '@krizaka/config@0.7.0':
-    resolution: {integrity: sha512-iO2sdsS9ymsUHRO/2on9IOk7xch/HrBQomdxpU2wJMjmx4gvPS2KD8RUJtrtszbmDN/9uR5UN7iLe2uCdwxWpA==}
+  '@krizaka/config@0.9.1':
+    resolution: {integrity: sha512-lFlf0HtVCWoYmK3DH0oI6m1CIraAcWHY2kEDNK2t6em8IAvDuS1lNLq9JIjWU4/TfBJ8LKHp9B2iGlLQqfLK/w==}
     engines: {node: '>=22'}
     hasBin: true
     peerDependencies:
@@ -6250,9 +6250,10 @@ snapshots:
     optionalDependencies:
       react-dom: 19.2.4(react@19.2.4)
 
-  '@krizaka/config@0.7.0(eslint-config-next@16.4.2(@typescript-eslint/parser@8.72.0(eslint@10.13.0(jiti@2.7.0)(supports-color@8.1.1))(supports-color@8.1.1)(typescript@6.0.3))(eslint@10.13.0(jiti@2.7.0)(supports-color@8.1.1))(supports-color@8.1.1)(typescript@6.0.3))(eslint@10.13.0(jiti@2.7.0)(supports-color@8.1.1))(prettier@3.9.10)(supports-color@8.1.1)(typescript@6.0.3)':
+  '@krizaka/config@0.9.1(eslint-config-next@16.4.2(@typescript-eslint/parser@8.72.0(eslint@10.13.0(jiti@2.7.0)(supports-color@8.1.1))(supports-color@8.1.1)(typescript@6.0.3))(eslint@10.13.0(jiti@2.7.0)(supports-color@8.1.1))(supports-color@8.1.1)(typescript@6.0.3))(eslint@10.13.0(jiti@2.7.0)(supports-color@8.1.1))(prettier@3.9.10)(supports-color@8.1.1)(typescript@6.0.3)':
     dependencies:
       '@eslint/js': 10.0.1(eslint@10.13.0(jiti@2.7.0)(supports-color@8.1.1))
+      dependency-cruiser: 18.7.0
       eslint: 10.13.0(jiti@2.7.0)(supports-color@8.1.1)
       eslint-plugin-react-hooks: 7.1.1(eslint@10.13.0(jiti@2.7.0)(supports-color@8.1.1))(supports-color@8.1.1)
       eslint-plugin-simple-import-sort: 14.0.0(eslint@10.13.0(jiti@2.7.0)(supports-color@8.1.1))

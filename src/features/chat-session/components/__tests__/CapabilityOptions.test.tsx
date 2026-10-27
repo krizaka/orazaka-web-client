@@ -1,5 +1,6 @@
 import "@testing-library/jest-dom";
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
+import { queryWrapper } from "@/core/testing/queryWrapper";
 import { CapabilityOptions } from "@/features/chat-session/components/CapabilityOptions";
 import type { ComposerStudio } from "@krizaka/orazaka-shared";
 
@@ -55,6 +56,7 @@ const renderOpts = (studio: ComposerStudio, overrides = {}) =>
       t={t}
       {...overrides}
     />,
+    { wrapper: queryWrapper() },
   );
 
 afterEach(() => jest.restoreAllMocks());
@@ -109,5 +111,21 @@ describe("CapabilityOptions", () => {
     global.fetch = jest.fn().mockResolvedValue({ ok: false } as Response);
     renderOpts(imageAnalysis);
     expect(screen.getByText("Attach a file to analyze")).toBeInTheDocument();
+  });
+
+  test("shows the models of the capability now selected, never those of one it replaced (slow answer last)", async () => {
+    let answerImage!: (r: Response) => void;
+    const slowImage = new Promise<Response>((resolve) => (answerImage = resolve));
+    const catalog = (category: string, modelName: string) =>
+      ({ ok: true, json: async () => [{ modelName, modelLabel: modelName, category }] }) as unknown as Response;
+    global.fetch = jest.fn().mockReturnValueOnce(slowImage).mockResolvedValue(catalog("video", "fast-video"));
+    const video: ComposerStudio = { ...imageGen, capabilityKey: "orazaka.core.media.video" };
+    const view = renderOpts(imageGen);
+    view.rerender(<CapabilityOptions studio={video} options={{}} onChange={jest.fn()} attachment={null} onAttach={jest.fn()} t={t} />);
+    await waitFor(() => expect(screen.getByRole("option", { name: "fast-video" })).toBeInTheDocument());
+    answerImage(catalog("image", "slow-image"));
+    await new Promise((resolve) => setTimeout(resolve, 20));
+    expect(screen.queryByRole("option", { name: "slow-image" })).not.toBeInTheDocument();
+    expect(screen.getByRole("option", { name: "fast-video" })).toBeInTheDocument();
   });
 });
