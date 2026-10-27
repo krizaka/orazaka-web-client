@@ -7,7 +7,7 @@ import { useLook } from "@/core/clips/useLook";
 import { CLIPS, LANGS, clipFiles, type ClipId } from "@/core/clips/clips";
 
 /**
- * A demo recording in place of a paragraph: muted, looping, captioned (`<track>` in both languages, the page's first),
+ * A demo recording in place of a paragraph: muted, looping, captioned (`<track>` in both languages, off until the viewer turns one on: a default track is drawn over the screen),
  * its box reserved by the aspect ratio so nothing shifts. It loads its metadata only near the screen and plays only while
  * on it; under reduced motion or Save-Data the poster — the finished state — stands in.
  * Stand-in for the captioned loop block krizaka-ui#489 will ship: swap it there, then delete this file.
@@ -48,7 +48,7 @@ export function Clip({ id, priority = false, className }: Readonly<{ id: ClipId;
         <source src={files.webm} type="video/webm" />
         <source src={files.mp4} type="video/mp4" />
         {[locale, ...LANGS.filter((l) => l !== locale)].map((lang) => (
-          <track key={lang} kind="captions" srcLang={lang} label={lang === "fr" ? "Français" : "English"} src={`/captions/${id}/${lang}`} default={lang === locale} />
+          <track key={lang} kind="captions" srcLang={lang} label={lang === "fr" ? "Français" : "English"} src={`/captions/${id}/${lang}`} />
         ))}
       </video>
       <figcaption className="px-1 pt-2 font-mono text-xs text-fg-secondary">{copy.caption}</figcaption>

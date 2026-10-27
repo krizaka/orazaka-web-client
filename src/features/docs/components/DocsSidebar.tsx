@@ -1,5 +1,6 @@
 "use client";
 
+import { useId } from "react";
 import Link from "next/link";
 import { cn } from "@krizaka/ui/cn";
 import { useTranslation } from "@/core/context/LocaleContext";
@@ -9,6 +10,8 @@ import { FOLDED_JOURNEY, JOURNEY_IDS, pageHref, type NavItem } from "@/features/
 export function DocsSidebar({ items, current }: Readonly<{ items: readonly NavItem[]; current: string | null }>) {
   const { t } = useTranslation();
   const d = t.docs;
+  // The template draws the sidebar twice (desktop column, mobile disclosure): the ids that name a section are per copy.
+  const uid = useId();
   return (
     <nav aria-label={d.sidebarLabel} className="space-y-6 text-sm">
       <Link href="/docs" className={cn("block font-mono text-xs font-semibold hover:text-fg", current === null ? "text-fg-accent" : "text-fg-secondary")}>
@@ -52,8 +55,8 @@ export function DocsSidebar({ items, current }: Readonly<{ items: readonly NavIt
             {list}
           </details>
         ) : (
-          <section key={j} aria-labelledby={`nav-${j}`} className="space-y-1.5">
-            <h2 id={`nav-${j}`} className={heading}>
+          <section key={j} aria-labelledby={`${uid}-${j}`} className="space-y-1.5">
+            <h2 id={`${uid}-${j}`} className={heading}>
               {d.journeys[j].title}
             </h2>
             {list}
