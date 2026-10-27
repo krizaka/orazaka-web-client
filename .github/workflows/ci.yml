@@ -29,4 +29,4 @@ jobs:
     with:
       component: orazaka-web-client
       duplication: true
-    secrets: inherit
+    secrets: inherit # zizmor: ignore[secrets-inherit] the org's own component pipeline, pinned by SHA, needs the publish secrets

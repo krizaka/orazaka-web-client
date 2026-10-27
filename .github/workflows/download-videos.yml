@@ -4,7 +4,7 @@
 name: Download videos
 
 on:
-  workflow_run:
+  workflow_run: # zizmor: ignore[dangerous-triggers] the job runs only for a successful main run of this repository and checks out nothing from the triggering run
     workflows: ["Dev preview live"]
     types: [completed]
   workflow_dispatch:
@@ -53,4 +53,4 @@ jobs:
       manifest: content/app-videos.json
       artifacts: |
         showcase-web
-    secrets: inherit
+    secrets: inherit # zizmor: ignore[secrets-inherit] the org's own reusable workflow, pinned by SHA
