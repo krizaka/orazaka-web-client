@@ -59,3 +59,18 @@ test("the same workflow proves the console gate from outside: 403 on the admin h
   assert.match(wf, /admin\.orazaka\.com\/login[^\n]*\n?[^\n]*= 403/);
   assert.match(wf, /www\.orazaka\.com\/console[^\n]*= 404/);
 });
+
+test("the crawl also runs axe-core (WCAG 2.1 AA) through @krizaka/a11y-audit and ratchets it against a baseline", () => {
+  assert.match(crawl, /from "@krizaka\/a11y-audit"/);
+  assert.match(crawl, /auditA11y\(page\)/);
+  assert.match(crawl, /a11y-baseline\.json/);
+  assert.doesNotMatch(crawl, /from "axe-core"/, "apps never import axe-core");
+});
+
+test("a11y-baseline.json holds counts, and no serious or critical rule (those are fixed, not recorded)", () => {
+  const { rules } = JSON.parse(read("a11y-baseline.json"));
+  for (const [rule, { impact, count }] of Object.entries(rules)) {
+    assert.ok(Number.isInteger(count) && count > 0, `${rule}: a positive count`);
+    assert.ok(["minor", "moderate"].includes(impact), `${rule} is ${impact}: fix it, do not record it`);
+  }
+});
