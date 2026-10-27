@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useQuery } from "@krizaka/query";
 import { useTranslation } from "@/core/context/LocaleContext";
 import { StudioApi } from "@/services/studio.api";
 
@@ -18,15 +18,6 @@ export function useRegulated(studioKey: string): boolean {
 /** The key of the REGULATED pack a Studio belongs to (what "delete all my data" names), or `null`. */
 export function useRegulatedPack(studioKey: string): string | null {
   const { locale } = useTranslation();
-  const [regulated, setRegulated] = useState<string | null>(null);
-
-  useEffect(() => {
-    let live = true;
-    StudioApi.fetchPacks(null, locale)
-      .then((packs) => live && setRegulated(packs.find((pack) => pack.regulatoryClass === "REGULATED" && pack.studioKeys.includes(studioKey))?.packKey ?? null))
-      .catch(() => live && setRegulated(null));
-    return () => { live = false; };
-  }, [studioKey, locale]);
-
-  return regulated;
+  const packs = useQuery({ queryKey: ["studio-packs", locale], queryFn: () => StudioApi.fetchPacks(null, locale) });
+  return packs.data?.find((pack) => pack.regulatoryClass === "REGULATED" && pack.studioKeys.includes(studioKey))?.packKey ?? null;
 }

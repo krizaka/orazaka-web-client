@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useQuery } from "@krizaka/query";
 import { DataTable, type DataTableColumn } from "@krizaka/ui/data-table";
 import { StudioAdminApi, type StudioUsageRow } from "@/console/services/studio.admin.api";
 
@@ -13,23 +13,10 @@ import { StudioAdminApi, type StudioUsageRow } from "@/console/services/studio.a
  * only the products that already work.
  */
 export function StudioAnalyticsScreen() {
-  const [rows, setRows] = useState<StudioUsageRow[]>([]);
-  const [error, setError] = useState<string | null>(null);
-  const [isLoading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const timer = setTimeout(
-      () =>
-        void StudioAdminApi.analytics()
-          .then(setRows)
-          .catch((caught: unknown) =>
-            setError(caught instanceof Error ? caught.message : "Chargement impossible"),
-          )
-          .finally(() => setLoading(false)),
-      0,
-    );
-    return () => clearTimeout(timer);
-  }, []);
+  const usage = useQuery({ queryKey: ["studio-analytics"], queryFn: () => StudioAdminApi.analytics() });
+  const rows: StudioUsageRow[] = usage.data ?? [];
+  const isLoading = usage.isPending;
+  const error = usage.error ? (usage.error instanceof Error ? usage.error.message : "Chargement impossible") : null;
 
   if (isLoading) {
     return <p className="text-sm text-fg-muted">Chargement…</p>;

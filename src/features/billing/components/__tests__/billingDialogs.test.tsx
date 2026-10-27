@@ -1,9 +1,13 @@
 import "@testing-library/jest-dom";
-import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { fireEvent, render as plainRender, screen, waitFor } from "@testing-library/react";
+import { queryWrapper } from "@/core/testing/queryWrapper";
 import { translations } from "@/core/context/translations";
 import { CostConfirmDialog } from "@/features/billing/components/CostConfirmDialog";
 import { TopUpDialog } from "@/features/billing/components/TopUpDialog";
 import { LowBalanceBanner } from "@/features/billing/components/LowBalanceBanner";
+
+/** These screens read server state: every render gets a fresh query client. */
+const render: typeof plainRender = (ui, options) => plainRender(ui, { wrapper: queryWrapper(), ...options });
 
 const t = translations.en;
 

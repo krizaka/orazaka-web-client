@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { useQuery } from "@krizaka/query";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/core/hooks/useAuth";
 import { AppShell } from "@/components/layout/AppShell";
@@ -42,7 +43,19 @@ export default function AdminDashboardPage() {
     fetchWithAuth,
   } = useAdminModels();
 
-  const [activeSessions, setActiveSessions] = React.useState(0);
+  // Live connections, read every 5 s while an admin is signed in.
+  const connections = useQuery({
+    queryKey: ["jobs-active-connections"],
+    enabled: isAuthenticated && user?.role === "admin",
+    refetchInterval: 5000,
+    queryFn: async () => {
+      const res = await fetchWithAuth("/api/v1/jobs/active-connections");
+      if (!res.ok) throw new Error(`active connections ${res.status}`);
+      return (await res.json()) as number;
+    },
+  });
+  const activeSessions = connections.data ?? 0;
+
 
   const derivedMetrics = React.useMemo(() => {
     if (globalThis.window === undefined || !isAuthenticated) {
@@ -95,31 +108,6 @@ export default function AdminDashboardPage() {
     isDefault: false,
   });
   const [formMode, setFormMode] = React.useState<"create" | "edit">("create");
-
-  React.useEffect(() => {
-    if (
-      globalThis.window === undefined ||
-      !isAuthenticated ||
-      user?.role !== "admin"
-    )
-      return;
-
-    const pollConnections = async () => {
-      try {
-        const res = await fetchWithAuth("/api/v1/jobs/active-connections");
-        if (res.ok) {
-          const count = await res.json();
-          setActiveSessions(count);
-        }
-      } catch (err) {
-        console.error("Failed to fetch active connections:", err);
-      }
-    };
-
-    pollConnections();
-    const interval = setInterval(pollConnections, 5000);
-    return () => clearInterval(interval);
-  }, [isAuthenticated, user, fetchWithAuth]);
 
   React.useEffect(() => {
     if (!isLoading) {

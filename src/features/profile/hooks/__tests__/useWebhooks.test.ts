@@ -1,4 +1,5 @@
 import { act, renderHook, waitFor } from "@testing-library/react";
+import { queryWrapper } from "@/core/testing/queryWrapper";
 import { errorForStatus, isHttpsUrl, useWebhooks, type WebhookEndpoint } from "@/features/profile/hooks/useWebhooks";
 
 const headers = async () => ({ "Content-Type": "application/json" });
@@ -34,7 +35,7 @@ describe("useWebhooks", () => {
 
   it("lists the endpoints on mount", async () => {
     mockFetch().mockResolvedValue(reply(200, [endpoint]));
-    const { result } = renderHook(() => useWebhooks(headers));
+    const { result } = renderHook(() => useWebhooks(headers), { wrapper: queryWrapper() });
     await waitFor(() => expect(result.current.isLoading).toBe(false));
     expect(result.current.endpoints).toEqual([endpoint]);
   });
@@ -42,7 +43,7 @@ describe("useWebhooks", () => {
   it("shows the secret of a new endpoint once, and refuses a non-https address without calling the API", async () => {
     const fetchMock = mockFetch();
     fetchMock.mockResolvedValueOnce(reply(200, []));
-    const { result } = renderHook(() => useWebhooks(headers));
+    const { result } = renderHook(() => useWebhooks(headers), { wrapper: queryWrapper() });
     await waitFor(() => expect(result.current.isLoading).toBe(false));
 
     let ok = true;
@@ -66,7 +67,7 @@ describe("useWebhooks", () => {
   it("says when the limit is reached", async () => {
     const fetchMock = mockFetch();
     fetchMock.mockResolvedValueOnce(reply(200, [])).mockResolvedValueOnce(reply(409, { status: "too_many_webhooks" }));
-    const { result } = renderHook(() => useWebhooks(headers));
+    const { result } = renderHook(() => useWebhooks(headers), { wrapper: queryWrapper() });
     await waitFor(() => expect(result.current.isLoading).toBe(false));
     await act(async () => {
       await result.current.create("https://hooks.example.com/x", ["run.completed"]);
@@ -77,7 +78,7 @@ describe("useWebhooks", () => {
   it("rotates a secret and shows the new one", async () => {
     const fetchMock = mockFetch();
     fetchMock.mockResolvedValueOnce(reply(200, [endpoint])).mockResolvedValueOnce(reply(200, { secret: "whsec_new" }));
-    const { result } = renderHook(() => useWebhooks(headers));
+    const { result } = renderHook(() => useWebhooks(headers), { wrapper: queryWrapper() });
     await waitFor(() => expect(result.current.isLoading).toBe(false));
     await act(async () => {
       await result.current.rotate(endpoint);
@@ -89,7 +90,7 @@ describe("useWebhooks", () => {
   it("removes a deleted endpoint at once and opens an endpoint's log", async () => {
     const fetchMock = mockFetch();
     fetchMock.mockResolvedValueOnce(reply(200, [endpoint])).mockResolvedValueOnce(reply(200, [{ id: "d1", runId: "r1", event: "run.completed", status: "DELIVERED", attempts: 1, lastHttpStatus: 200, lastError: null, createdAt: "2026-10-20T00:00:00Z", deliveredAt: "2026-10-20T00:00:01Z" }])).mockResolvedValueOnce(reply(204));
-    const { result } = renderHook(() => useWebhooks(headers));
+    const { result } = renderHook(() => useWebhooks(headers), { wrapper: queryWrapper() });
     await waitFor(() => expect(result.current.isLoading).toBe(false));
 
     await act(async () => {
@@ -100,6 +101,6 @@ describe("useWebhooks", () => {
     await act(async () => {
       await result.current.remove(endpoint);
     });
-    expect(result.current.endpoints).toEqual([]);
+    await waitFor(() => expect(result.current.endpoints).toEqual([]));
   });
 });

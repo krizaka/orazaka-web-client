@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useQuery } from "@krizaka/query";
 import { Button } from "@krizaka/ui/button";
 import { Dialog } from "@krizaka/ui/dialog";
 import { useTranslation } from "@/core/context/LocaleContext";
@@ -27,22 +27,10 @@ export interface TopUpDialogProps {
 export function TopUpDialog({ open, onClose }: TopUpDialogProps) {
   const { t } = useTranslation();
   const money = useMoney();
-  const [plans, setPlans] = useState<Plan[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
-
-  useEffect(() => {
-    if (!open) {
-      return;
-    }
-    const timer = setTimeout(() => {
-      setIsLoading(true);
-      BillingApi.fetchPlans()
-        .then((loaded) => setPlans(loaded.filter((plan) => plan.isPublic && plan.isActive)))
-        .catch(() => setPlans([]))
-        .finally(() => setIsLoading(false));
-    }, 0);
-    return () => clearTimeout(timer);
-  }, [open]);
+  // The public plans are read once the dialog opens, and again only when they are stale.
+  const loaded = useQuery({ queryKey: ["billing-plans"], queryFn: () => BillingApi.fetchPlans(), enabled: open, retry: false });
+  const plans: Plan[] = (loaded.data ?? []).filter((plan) => plan.isPublic && plan.isActive);
+  const isLoading = open && loaded.isFetching;
 
   return (
     <Dialog.Root open={open} onOpenChange={(next) => !next && onClose()}>

@@ -1,5 +1,6 @@
 import "@testing-library/jest-dom";
 import { render, screen, waitFor } from "@testing-library/react";
+import { queryWrapper } from "@/core/testing/queryWrapper";
 import { McpServersSection } from "@/features/profile/components/McpServersSection";
 
 jest.mock("@/core/hooks/useAuth", () => ({
@@ -65,30 +66,30 @@ describe("McpServersSection", () => {
   const fetchHeaders = jest.fn().mockResolvedValue({});
 
   it("renders title and description", async () => {
-    render(<McpServersSection fetchHeaders={fetchHeaders} />);
+    render(<McpServersSection fetchHeaders={fetchHeaders} />, { wrapper: queryWrapper() });
     expect(screen.getByText("MCP Servers")).toBeInTheDocument();
     expect(screen.getByText("Configure Model Context Protocol servers")).toBeInTheDocument();
   });
 
   it("renders register button", () => {
-    render(<McpServersSection fetchHeaders={fetchHeaders} />);
+    render(<McpServersSection fetchHeaders={fetchHeaders} />, { wrapper: queryWrapper() });
     expect(screen.getByText("Register Server")).toBeInTheDocument();
   });
 
   it("renders server name input", () => {
-    render(<McpServersSection fetchHeaders={fetchHeaders} />);
+    render(<McpServersSection fetchHeaders={fetchHeaders} />, { wrapper: queryWrapper() });
     expect(screen.getByText("Server Name")).toBeInTheDocument();
   });
 
   it("shows no servers message after load", async () => {
-    render(<McpServersSection fetchHeaders={fetchHeaders} />);
+    render(<McpServersSection fetchHeaders={fetchHeaders} />, { wrapper: queryWrapper() });
     await waitFor(() => {
       expect(screen.getByText("No MCP servers configured")).toBeInTheDocument();
     });
   });
 
   it("renders transport type selector for admin", () => {
-    render(<McpServersSection fetchHeaders={fetchHeaders} />);
+    render(<McpServersSection fetchHeaders={fetchHeaders} />, { wrapper: queryWrapper() });
     expect(screen.getByText("Transport Type")).toBeInTheDocument();
   });
 });

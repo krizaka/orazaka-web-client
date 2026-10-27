@@ -1,7 +1,7 @@
 "use client";
 
 import { cn } from "@krizaka/ui/cn";
-import { useEffect, useState } from "react";
+import { useQuery } from "@krizaka/query";
 import { StudioAdminApi } from "@/console/services/studio.admin.api";
 import { useStudioAdmin } from "@/console/features/studio/hooks/useStudioAdmin";
 import { BlueprintEditor } from "@/console/features/studio/components/BlueprintEditor";
@@ -19,17 +19,10 @@ import { BlueprintVersionTable } from "@/console/features/studio/components/Blue
 export function StudioBuilderScreen() {
   const { studios, versions, selected, select, isLoading, error, reloadVersions } =
     useStudioAdmin();
-  const [featureKeys, setFeatureKeys] = useState<string[]>([]);
-
-  useEffect(() => {
-    // A best-effort list: the picker is a convenience, and the server is what actually
-    // refuses a step naming a capability that does not exist.
-    const timer = setTimeout(
-      () => void StudioAdminApi.featureKeys().then(setFeatureKeys).catch(() => setFeatureKeys([])),
-      0,
-    );
-    return () => clearTimeout(timer);
-  }, []);
+  // A best-effort list: the picker is a convenience, and the server is what actually
+  // refuses a step naming a capability that does not exist.
+  const featureKeysQuery = useQuery({ queryKey: ["studio-feature-keys"], queryFn: () => StudioAdminApi.featureKeys(), retry: false });
+  const featureKeys: string[] = featureKeysQuery.data ?? [];
 
   if (isLoading) {
     return <p className="text-sm text-fg-muted">Chargement du catalogue…</p>;

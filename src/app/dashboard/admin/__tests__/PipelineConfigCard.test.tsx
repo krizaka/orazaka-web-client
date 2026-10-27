@@ -1,6 +1,10 @@
 import "@testing-library/jest-dom";
-import { render, screen, fireEvent, act } from "@testing-library/react";
+import { render as plainRender, screen, fireEvent, act } from "@testing-library/react";
+import { queryWrapper } from "@/core/testing/queryWrapper";
 import { PipelineConfigCard } from "@/app/dashboard/admin/PipelineConfigCard";
+
+/** These screens read server state: every render gets a fresh query client. */
+const render: typeof plainRender = (ui, options) => plainRender(ui, { wrapper: queryWrapper(), ...options });
 
 const mockTranslations = {
   admin: {

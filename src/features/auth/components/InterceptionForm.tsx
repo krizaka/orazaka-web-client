@@ -25,22 +25,16 @@ export function InterceptionForm({
   const router = useRouter();
   const { data: session, update } = useSession();
   const { locale, t } = useTranslation();
-  const [formValues, setFormValues] = React.useState<Record<string, string>>(
-    {},
-  );
+  const [edits, setEdits] = React.useState<Record<string, string>>({});
   const [errorMsg, setErrorMsg] = React.useState<string | null>(null);
 
   const { schema, isLoading, error } = useInterceptionSchema(schemaId);
 
-  React.useEffect(() => {
-    if (schema?.fields) {
-      const defaults: Record<string, string> = {};
-      schema.fields.forEach((field) => {
-        defaults[field.name] = field.defaultValue || "";
-      });
-      Promise.resolve().then(() => setFormValues(defaults));
-    }
-  }, [schema]);
+  // The schema's defaults, with what the person typed laid over them: computed in render, never copied by an effect.
+  const formValues: Record<string, string> = {
+    ...Object.fromEntries((schema?.fields ?? []).map((field) => [field.name, field.defaultValue || ""])),
+    ...edits,
+  };
 
   const { resolve, isPending } = useResolveInterception({
     interceptionType,
@@ -61,7 +55,7 @@ export function InterceptionForm({
   });
 
   const handleInputChange = (fieldName: string, value: string) => {
-    setFormValues((prev) => ({ ...prev, [fieldName]: value }));
+    setEdits((prev) => ({ ...prev, [fieldName]: value }));
   };
 
   const handleSubmit = (e: React.SubmitEvent<HTMLFormElement>) => {

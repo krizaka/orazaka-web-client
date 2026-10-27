@@ -2,6 +2,7 @@
 
 import React, {
   createContext,
+  useCallback,
   useContext,
   useEffect,
   useMemo,
@@ -39,12 +40,11 @@ export function JobStreamProvider({
     jobsRef.current = jobs;
   }, [jobs]);
 
-  const [activeConversationId, setActiveConversationId] = useState<string>("");
-
-  useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setActiveConversationId("");
-  }, [user?.id, isAuthenticated]);
+  // The open conversation belongs to who is signed in: another identity starts with none (derived, not reset by an effect).
+  const identity = `${user?.id ?? ""}|${isAuthenticated}`;
+  const [active, setActive] = useState<{ identity: string; id: string }>({ identity, id: "" });
+  const activeConversationId = active.identity === identity ? active.id : "";
+  const setActiveConversationId = useCallback((id: string) => setActive({ identity, id }), [identity]);
 
   const {
     playgroundInputs,
@@ -210,7 +210,7 @@ export function JobStreamProvider({
     jobProgress,
   }), [
     jobs, activeJobsCount, lastJobs, fetchJobs,
-    activeConversationId, playgroundInputs, setPlaygroundInput,
+    activeConversationId, setActiveConversationId, playgroundInputs, setPlaygroundInput,
     playgroundResults, setPlaygroundResult, activeJobIdByNodeId,
     setActiveJobIdForNode, videoAnalysisJobId, chatInput, isChatStreaming,
     chatPipeline, chatStageProgress, chatRouting, startChatStream, stopChatStream,

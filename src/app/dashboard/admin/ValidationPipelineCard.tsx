@@ -4,6 +4,7 @@ import { useTranslation } from "@/core/context/LocaleContext";
 import { Switch } from "@krizaka/ui/switch";
 import { Button } from "@krizaka/ui/button";
 import * as React from "react";
+import { useQuery } from "@krizaka/query";
 import { Icon } from "@krizaka/orazaka-design-system";
 
 import { TIER_META, COLOR_CLASSES } from "@/app/dashboard/admin/validationPipeline.meta";
@@ -19,8 +20,7 @@ export function ValidationPipelineCard({
   fetchWithAuth,
 }: Readonly<ValidationPipelineCardProps>) {
   const { t } = useTranslation();
-  const [tiers, setTiers] = React.useState<ValidationTierConfig[]>([]);
-  const [loading, setLoading] = React.useState(true);
+  const [draft, setDraft] = React.useState<ValidationTierConfig[] | null>(null);
   const [saving, setSaving] = React.useState(false);
   const [dirty, setDirty] = React.useState(false);
   const [toast, setToast] = React.useState<{
@@ -36,27 +36,20 @@ export function ValidationPipelineCard({
     [],
   );
 
-  const loadConfig = React.useCallback(async () => {
-    setLoading(true);
-    try {
+  // The server's list, with the operator's unsaved edits laid over it (a draft) — never copied into state by an effect.
+  const config = useQuery({
+    queryKey: ["pipeline-validation"],
+    queryFn: async () => {
       const res = await fetchWithAuth("/api/v1/pipeline/validation");
-      if (!res.ok) throw new Error("Failed to load validation pipeline");
-      const data: ValidationTierConfig[] = await res.json();
-      setTiers(data);
-      setDirty(false);
-    } catch {
-      showToast("error", "Failed to load validation pipeline configuration.");
-    } finally {
-      setLoading(false);
-    }
-  }, [fetchWithAuth, showToast]);
-
-  React.useEffect(() => {
-    const init = async () => {
-      await loadConfig();
-    };
-    init();
-  }, [loadConfig]);
+      if (!res.ok) throw new Error("load");
+      return (await res.json()) as ValidationTierConfig[];
+    },
+    refetchOnWindowFocus: false,
+  });
+  const tiers = draft ?? config.data ?? [];
+  const setTiers = (next: ValidationTierConfig[] | ((prev: ValidationTierConfig[]) => ValidationTierConfig[])) => setDraft(typeof next === "function" ? next(tiers) : next);
+  const loading = config.isPending;
+  const shownToast = toast ?? (config.isError ? { type: "error" as const, message: "Failed to load validation pipeline configuration." } : null);
 
   const handleToggle = (idx: number) => {
     setTiers((prev) =>
@@ -112,21 +105,21 @@ export function ValidationPipelineCard({
       className="bg-surface-1/70 border border-border-subtle rounded-2xl p-6 shadow-sm relative"
     >
       {/* Toast */}
-      {toast && (
+      {shownToast && (
         <aside
           className={cn(
             "absolute top-4 right-4 z-10 flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium shadow-lg animate-in fade-in slide-in-from-top-2 duration-300",
-            toast.type === "success"
+            shownToast.type === "success"
               ? "bg-success/40 text-success border border-success"
               : "bg-danger/40 text-danger border border-danger"
           )}
         >
-          {toast.type === "success" ? (
+          {shownToast.type === "success" ? (
             <Icon name="checkCircle" className="w-4 h-4" />
           ) : (
             <Icon name="alertCircle" className="w-4 h-4" />
           )}
-          {toast.message}
+          {shownToast.message}
         </aside>
       )}
 

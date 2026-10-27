@@ -3,6 +3,7 @@
  * law API that records every call (method, path, query, body). Every test runs in both themes and both languages.
  */
 import { fireEvent, render, screen, within } from "@testing-library/react";
+import { queryWrapper } from "@/core/testing/queryWrapper";
 import { ThemeProvider } from "@krizaka/ui/theme";
 import { lawCopy, type LawCopy } from "@/console/core/copy/law";
 import { ConsoleLocaleProvider, type ConsoleLocale } from "@/console/core/providers/ConsoleLocale";
@@ -107,6 +108,7 @@ export function renderLaw(locale: ConsoleLocale, theme: "dark" | "light", search
         <LawScreen />
       </ConsoleLocaleProvider>
     </ThemeProvider>,
+    { wrapper: queryWrapper() },
   );
   return lawCopy[locale];
 }
