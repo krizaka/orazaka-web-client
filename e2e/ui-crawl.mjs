@@ -21,12 +21,13 @@
  *   E2E_USER=… E2E_PASSWORD=… OUT=/tmp/orazaka-crawl npm run test:ui-crawl
  *
  * Read-only: it opens pages, never submits anything but the sign-in form.
+ *
+ * The measures are the shared @krizaka/page-audit (krizaka-ui#747); this file holds the pages, the persona's sign-in and the output.
  */
-import { existsSync, mkdirSync } from "node:fs";
-import { join } from "node:path";
+import { mkdirSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 
-import { A11yCollector, auditPage as auditA11y, finish } from "@krizaka/a11y-audit";
+import { auditRoutes, routesFromSitemap } from "@krizaka/page-audit";
 
 const BASE = (process.env.E2E_BASE_URL || "https://dev.orazaka.com").replace(/\/$/, "");
 const OUT = process.env.OUT || "";
@@ -34,7 +35,8 @@ const USER = process.env.E2E_USER;
 const PASSWORD = process.env.E2E_PASSWORD;
 const PUBLIC_LIMIT = Number(process.env.CRAWL_PUBLIC_LIMIT || 14);
 const THEMES = ["dark", "light"];
-const VIEWPORTS = { desktop: { width: 1440, height: 900 }, phone: { width: 390, height: 844 } };
+/** Desktop and phone, each with its height; the audit measures them in the order given. */
+const VIEWPORTS = [{ width: 1440, height: 900 }, { width: 390, height: 844 }];
 const SIGNED_IN = ["/", "/studios", "/packs", "/chat", "/jobs", "/usage", "/automation", "/settings"];
 
 /** Console messages that are not Orazaka's (a blocked third-party beacon, a missing favicon). */
@@ -42,8 +44,6 @@ const IGNORED_CONSOLE = [/Download the React DevTools/i, /favicon/i, /Failed to 
 
 const A11Y_BASELINE = fileURLToPath(new URL("../a11y-baseline.json", import.meta.url));
 const A11Y_BASELINE_APP = fileURLToPath(new URL("../a11y-baseline.app.json", import.meta.url));
-const a11yPublic = new A11yCollector("orazaka-web-client");
-const a11yApp = new A11yCollector("orazaka-web-client-app");
 
 const say = (line) => process.stdout.write(`${line}\n`);
 
@@ -56,14 +56,12 @@ try {
   process.exit(2);
 }
 
-const sitemap = await fetch(`${BASE}/sitemap.xml`).then((r) => (r.ok ? r.text() : null), () => null);
-if (sitemap === null) {
+// A crawl as the route source: the site's own sitemap, the sections with a distinct layout first (home, docs, the Mac page), then the rest up to the limit.
+const picked = await routesFromSitemap(BASE, { first: ["/", "/docs", "/desktop"], limit: PUBLIC_LIMIT });
+if (picked === null) {
   console.error(`✗ Nothing answers at ${BASE}/sitemap.xml: set E2E_BASE_URL to a running Orazaka.`);
   process.exit(2);
 }
-// The sections with a distinct layout first (home, docs, the Mac page), then the rest up to the limit.
-const paths = [...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => new URL(m[1]).pathname || "/");
-const picked = [...new Set(["/", "/docs", "/desktop", ...paths])].slice(0, PUBLIC_LIMIT);
 const PAGES = [
   ...picked.map((url) => ({ name: url === "/" ? "home" : url.slice(1).replace(/\//g, "-"), url })),
   // The sign-in screen is the auth layout (no bar, no footer, by design); the signed-in app is the rail + header shell
@@ -93,112 +91,43 @@ if (USER && PASSWORD) {
   await context.close();
 }
 
-/** What the page itself says about its layout and family contract (run in the page). */
-function inspect(chrome) {
-  const problems = [];
-  const doc = document.documentElement;
-  if (doc.scrollWidth > doc.clientWidth + 1) problems.push(`horizontal scroll (${doc.scrollWidth}px in a ${doc.clientWidth}px viewport)`);
-  const clipped = (el) => {
-    for (let n = el; n && n !== document.body; n = n.parentElement) {
-      if (n.getAttribute("aria-hidden") === "true" || n.hasAttribute("inert")) return true;
-      if (n !== el && ["hidden", "clip", "auto", "scroll"].includes(getComputedStyle(n).overflowX)) return true;
-    }
-    return false;
-  };
-  const sticking = [...document.querySelectorAll("body *")].filter((el) => {
-    const box = el.getBoundingClientRect();
-    if (box.width === 0 || box.height === 0) return false;
-    const style = getComputedStyle(el);
-    if (style.visibility === "hidden" || style.display === "none" || style.position === "fixed") return false;
-    return box.right > doc.clientWidth + 1 && !clipped(el);
-  });
-  if (sticking.length > 0) problems.push(`never overflows: ${sticking.length} box(es) past the viewport (first: ${sticking[0].tagName.toLowerCase()}${sticking[0].className && typeof sticking[0].className === "string" ? `.${sticking[0].className.split(/\s+/)[0]}` : ""})`);
-  for (const box of document.querySelectorAll("main, aside, header, nav")) {
-    if (getComputedStyle(box).overflowX === "visible" && box.scrollWidth > box.clientWidth + 1 && box.clientWidth > 0) problems.push(`never overflows: <${box.tagName.toLowerCase()}> content wider than its box (${box.scrollWidth}px in ${box.clientWidth}px)`);
-  }
-  const topFooters = [...document.querySelectorAll("footer")].filter((f) => !f.closest("main, article, section, dialog, [role=dialog]"));
-  if (chrome === "public") {
-    if (topFooters.length !== 1) problems.push(`${topFooters.length} page footers (one « A Krizaka product » footer expected)`);
-    else if (!/krizaka/i.test(topFooters[0].textContent || "")) problems.push("the footer does not name Krizaka");
-  } else if (topFooters.length > 1) problems.push(`${topFooters.length} page footers (at most one)`);
-  if (chrome !== "auth" && !document.querySelector("nav")) problems.push("no <nav> landmark");
-  for (const img of document.querySelectorAll("img")) {
-    const box = img.getBoundingClientRect();
-    if (box.width > 8 && box.height > 8 && img.complete && img.naturalWidth === 0 && img.currentSrc) problems.push(`broken picture ${img.currentSrc.slice(0, 80)}`);
-  }
-  for (const el of document.querySelectorAll("main a[href], main button")) {
-    const box = el.getBoundingClientRect();
-    const style = getComputedStyle(el);
-    const visible = style.visibility !== "hidden" && style.display !== "none";
-    if (visible && box.width > 0 && box.height > 0 && box.height < 4) problems.push(`collapsed control ${(el.getAttribute("aria-label") || el.textContent || "").trim().slice(0, 30)}`);
-    else if (visible && box.width > 24 && box.height > 24 && !el.textContent?.trim() && !el.getAttribute("aria-label") && !el.getAttribute("aria-labelledby") && !el.querySelector("img, svg, video, picture, canvas")) problems.push("empty tile (a control with nothing in it)");
-  }
-  const hard = [...document.querySelectorAll("[style]")].filter((e) => /#[0-9a-f]{3,8}\b|rgba?\(/i.test(e.getAttribute("style") || "") && !/var\(/.test(e.getAttribute("style") || ""));
-  if (hard.length > 0) problems.push(`${hard.length} element(s) with a hard-coded colour in an inline style`);
-  return [...new Set(problems)];
-}
 
-async function crawl(p, theme, device, viewport) {
-  const context = await browser.newContext({ viewport, colorScheme: theme, reducedMotion: "reduce", ...(p.session ? { storageState: signedIn } : {}) });
-  await context.addInitScript((mode) => {
-    try {
-      localStorage.setItem("kz-theme", mode);
-    } catch {}
-  }, theme);
-  const consoleErrors = [];
-  try {
-    const page = await context.newPage();
-    page.on("console", (m) => m.type() === "error" && !IGNORED_CONSOLE.some((re) => re.test(m.text())) && consoleErrors.push(m.text().slice(0, 160)));
-    page.on("pageerror", (e) => consoleErrors.push(`uncaught: ${e.message.slice(0, 160)}`));
-    await page.goto(`${BASE}${p.url}`, { waitUntil: "networkidle", timeout: 60_000 }).catch(() => page.waitForLoadState("load"));
-    await page.waitForTimeout(500);
-    const problems = await page.evaluate(inspect, p.chrome ?? "public");
-    (p.session ? a11yApp : a11yPublic).add({ route: p.url, theme }, await auditA11y(page));
-    if (consoleErrors.length > 0) problems.push(...consoleErrors.slice(0, 3).map((m) => `console: ${m}`));
-    if (OUT) await page.screenshot({ path: join(OUT, `${p.name}.${theme}.${device}.png`), fullPage: false });
-    return problems;
-  } finally {
-    await context.close();
-  }
-}
+if (OUT) mkdirSync(OUT, { recursive: true });
 
-let failures = 0;
-let checked = 0;
-for (const [device, viewport] of Object.entries(VIEWPORTS)) {
-  for (const theme of THEMES) {
-    for (const p of PAGES) {
-      const label = `${p.name} · ${theme} · ${device}`;
-      let problems;
-      for (let attempt = 1; attempt <= 2 && !problems; attempt++) {
-        try {
-          problems = await crawl(p, theme, device, viewport);
-        } catch (error) {
-          if (attempt === 2) problems = [`could not be crawled: ${error.message.split("\n")[0]}`];
-        }
-      }
-      checked++;
-      if (problems.length === 0) say(`✓ ${label}`);
-      else {
-        failures++;
-        say(`✗ ${label}`);
-        for (const problem of problems) say(`    · ${problem}`);
-      }
-    }
-  }
-}
-await browser.close();
-const guards = [finish(a11yPublic, { baseline: A11Y_BASELINE })];
-// The signed-in screens are ratcheted once their baseline is recorded from a persona run (`--a11y-init`); until then they are only counted.
+let storageState;
 if (USER && PASSWORD) {
-  if (existsSync(A11Y_BASELINE_APP) || process.argv.includes("--a11y-init")) guards.push(finish(a11yApp, { baseline: A11Y_BASELINE_APP }));
-  else say(`· signed-in a11y baseline missing: counted, not enforced (${a11yApp.summary().join("; ") || "no violation"}); record it with E2E_USER, E2E_PASSWORD and --a11y-init`);
-}
-for (const guard of guards) {
-  for (const note of guard.notes) say(note);
-  if (guard.problems.length > 0) {
-    failures++;
-    for (const problem of guard.problems) say(`✗ ${problem}`);
+  const browser = await chromium.launch();
+  const context = await browser.newContext();
+  const page = await context.newPage();
+  await page.goto(`${BASE}/login`, { waitUntil: "networkidle" });
+  await page.fill('input[type="email"]', USER);
+  await page.fill('input[type="password"]', PASSWORD);
+  await page.keyboard.press("Enter");
+  await page.waitForURL((url) => !url.pathname.startsWith("/login"), { timeout: 30_000 }).catch(() => {});
+  if (new URL(page.url()).pathname.startsWith("/login")) {
+    console.error("✗ the persona could not sign in on the deployed site");
+    process.exit(2);
   }
+  storageState = await context.storageState();
+  await browser.close();
 }
-say(`\n${checked - failures}/${checked} screens clean${OUT ? `, captures in ${OUT}` : ""}`);
-process.exit(failures > 0 ? 1 : 0);
+
+// The signed-in screens are ratcheted once their baseline is recorded from a persona run (`--a11y-init`); until then the audit counts them only.
+const problems = await auditRoutes({
+  base: BASE,
+  routes: PAGES,
+  widths: VIEWPORTS,
+  themes: THEMES,
+  settleMs: 500,
+  attempts: 2,
+  shots: OUT || undefined,
+  ignoreConsole: IGNORED_CONSOLE,
+  launch: () => chromium.launch(),
+  session: storageState ? { storageState } : undefined,
+  a11y: { app: "orazaka-web-client", baseline: A11Y_BASELINE, widths: VIEWPORTS.map((v) => v.width), log: say, ...(USER && PASSWORD ? { session: { app: "orazaka-web-client-app", baseline: A11Y_BASELINE_APP } } : {}) },
+  // The family contract and the inline-colour rule of the old crawl, plus the audit's own layout measures (overflow, containment, boxes wider than their own).
+  checks: { landmarks: "public", boxes: true, pictures: true, emptyControls: true, hardColors: true },
+});
+for (const problem of problems) say(`✗ ${problem}`);
+say(`\n${problems.length === 0 ? "every screen clean" : `${problems.length} problem(s)`}${OUT ? `, captures in ${OUT}` : ""}`);
+process.exit(problems.length > 0 ? 1 : 0);

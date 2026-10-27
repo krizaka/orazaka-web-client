@@ -9,18 +9,23 @@ const crawl = read("e2e/ui-crawl.mjs");
 
 test("the crawl covers dark and light, phone and desktop", () => {
   assert.match(crawl, /THEMES = \["dark", "light"\]/);
-  assert.match(crawl, /desktop:/);
-  assert.match(crawl, /phone:/);
+  assert.match(crawl, /width: 1440, height: 900/);
+  assert.match(crawl, /width: 390, height: 844/);
 });
 
-test("it checks what the criterion asks: console errors, horizontal scroll, one footer, broken pictures, empty tiles, colours", () => {
-  for (const needle of ["pageerror", "horizontal scroll", "page footers", "broken picture", "empty tile", "hard-coded colour", "never overflows"]) {
+test("it checks what the criterion asks through the shared @krizaka/page-audit: console errors, horizontal scroll and containment, one footer, broken pictures, empty tiles, colours", () => {
+  assert.match(crawl, /from "@krizaka\/page-audit"/);
+  assert.match(crawl, /auditRoutes\(/);
+  // The checks the audit measures (scroll, boxes past the edge and wider than their own) are always on; these are the ones this crawl turns on.
+  for (const needle of ['landmarks: "public"', "boxes: true", "pictures: true", "emptyControls: true", "hardColors: true", "ignoreConsole: IGNORED_CONSOLE"]) {
     assert.ok(crawl.includes(needle), `missing: ${needle}`);
   }
+  assert.match(crawl, /chrome: "auth"/);
+  assert.match(crawl, /chrome: "app"/);
 });
 
 test("public screens come from the sitemap, signed-in screens need a persona (E2E_USER / E2E_PASSWORD)", () => {
-  assert.match(crawl, /sitemap\.xml/);
+  assert.match(crawl, /routesFromSitemap\(BASE/);
   assert.match(crawl, /E2E_USER/);
   assert.match(crawl, /E2E_PASSWORD/);
   for (const screen of ["/", "/studios", "/packs", "/chat", "/jobs"]) assert.ok(crawl.includes(`"${screen}"`), `signed-in screen ${screen}`);
@@ -60,10 +65,11 @@ test("the same workflow proves the console gate from outside: 403 on the admin h
   assert.match(wf, /www\.orazaka\.com\/console[^\n]*= 404/);
 });
 
-test("the crawl also runs axe-core (WCAG 2.1 AA) through @krizaka/a11y-audit and ratchets it against a baseline", () => {
-  assert.match(crawl, /from "@krizaka\/a11y-audit"/);
-  assert.match(crawl, /auditA11y\(page\)/);
+test("the crawl also runs axe-core (WCAG 2.1 AA) through the audit's a11y step and ratchets it against the baselines of this repo", () => {
+  assert.match(crawl, /a11y: \{ app: "orazaka-web-client", baseline: A11Y_BASELINE/);
+  assert.match(crawl, /app: "orazaka-web-client-app", baseline: A11Y_BASELINE_APP/);
   assert.match(crawl, /a11y-baseline\.json/);
+  assert.match(crawl, /a11y-baseline\.app\.json/);
   assert.doesNotMatch(crawl, /from "axe-core"/, "apps never import axe-core");
 });
 
