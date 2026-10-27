@@ -6,6 +6,7 @@
  * they are read from the GitHub release at build time.
  */
 import type { PhoneWords } from "./translations.landing.types";
+import { videosWords, type VideosWords } from "./translations.appVideos";
 
 type Locale = "en" | "fr";
 
@@ -21,7 +22,7 @@ export interface DesktopDictionary {
   /** The phone clip of the Download page (`PhoneSection`). */
   phone: PhoneWords;
   /** The videos the web journeys recorded (`AppVideosSection`, krizaka/.github#315); `items` is keyed by `<platform>-<flow>` of the manifest. */
-  videos: { title: string; lead: string; play: string; recorded: string; seconds: string; items: Record<string, { name: string; body: string }> };
+  videos: VideosWords;
   mobile: { title: string; soon: string; ios: { button: string; soon: string }; android: { button: string; soon: string } };
   download: {
     button: string;
@@ -61,17 +62,7 @@ export const desktop: Record<Locale, DesktopDictionary> = {
       title: "And the same Orazaka in your hand.",
       lead: "The phone app talks to the same platform as the Mac app and the web: a chat, the Studios, your jobs. Recorded on a real device.",
     },
-    videos: {
-      title: "See the app at work",
-      lead: "Each video is recorded by an automated journey on the dev environment, with a demo persona and demo data only.",
-      play: "Play",
-      recorded: "Recorded {date}",
-      seconds: "{seconds} s",
-      items: {
-        "web-chat": { name: "The chat", body: "A question asked with a pasted policy, answered from the text on screen." },
-        "web-studio": { name: "The Studios", body: "The catalogue by trade, then a Studio opened. Nothing is run." },
-      },
-    },
+    videos: videosWords("en"),
     mobile: {
       title: "On your phone",
       soon: "Coming to iPhone and Android",
@@ -159,17 +150,7 @@ export const desktop: Record<Locale, DesktopDictionary> = {
       title: "Et le même Orazaka dans votre main.",
       lead: "L'app mobile parle à la même plateforme que l'app Mac et le web : un chat, les Studios, vos tâches. Enregistrée sur un vrai appareil.",
     },
-    videos: {
-      title: "Voir l'app à l'œuvre",
-      lead: "Chaque vidéo est enregistrée par un parcours automatisé sur l'environnement de développement, avec un personnage de démonstration et des données de démonstration seulement.",
-      play: "Lire",
-      recorded: "Enregistrée le {date}",
-      seconds: "{seconds} s",
-      items: {
-        "web-chat": { name: "Le chat", body: "Une question posée avec une politique collée, répondue à partir du texte à l'écran." },
-        "web-studio": { name: "Les Studios", body: "Le catalogue par métier, puis un Studio ouvert. Rien n'est lancé." },
-      },
-    },
+    videos: videosWords("fr"),
     mobile: {
       title: "Sur votre téléphone",
       soon: "Bientôt sur iPhone et Android",
