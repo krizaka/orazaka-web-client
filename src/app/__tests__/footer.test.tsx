@@ -42,5 +42,8 @@ describe.each<[string, React.ReactElement]>([
     expect(footers[0].closest("main")).toBeNull();
     expect(footers[0]).toHaveTextContent(/Krizaka/);
     expect(screen.queryByRole("navigation", { name: /famil/i })).toBeNull();
+    // krizaka.com already holds the contact and open-source pages (krizaka/orazaka#443): the footer links them, nothing is duplicated here.
+    expect(screen.getByRole("link", { name: translations[locale].landing.footer.openSource })).toHaveAttribute("href", "https://www.krizaka.com/open-source");
+    expect(screen.getByRole("link", { name: translations[locale].landing.footer.contact })).toHaveAttribute("href", "https://www.krizaka.com/contact");
   });
 });

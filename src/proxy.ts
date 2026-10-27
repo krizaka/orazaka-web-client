@@ -13,37 +13,13 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { authClosed, isBackendPath, readAuthFlags } from "@/core/config/auth-flags";
 import { CLOSED_ROBOTS, devRedirect, indexable, isDevAddress, isDevHost, NOINDEX_HEADER } from "@/core/config/indexing";
+import { isAppPath, PUBLIC_PREFIXES } from "@/core/config/app-routes";
 import { SIGNED_OUT_REDIRECTS } from "@/core/config/redirects";
 import { SITE_URL } from "@/app/_seo/seo";
 import { consoleResponse } from "@/console/core/edge";
 import { isAdminHost, routeFor } from "@/console/core/config/host";
 /** The platform's liveness probe: answered on every host, before any gate. */
 const HEALTH_PATH = "/api/healthz";
-
-/**
- * Route prefixes that do NOT require authentication.
- */
-const PUBLIC_PREFIXES = [
-  "/login",
-  "/register",
-  "/api/",        // All API routes (auth, BFF proxy, etc.)
-  "/.well-known/", // Universal links / App Links files (app-links.json)
-  "/_next/",      // Next.js internals (static, image, RSC payloads, HMR)
-  "/favicon",
-  "/logo.svg",
-  "/privacy",
-  "/terms",
-  "/contact",
-  "/docs",
-  "/mobile",
-  "/desktop",
-  "/captions/", // the clips' WebVTT (src/app/captions)
-  // What search engines and AI assistants read (src/app/robots.ts, sitemap.ts, llms*.txt, opengraph-image.tsx).
-  "/robots.txt",
-  "/sitemap.xml",
-  "/llms",
-  "/opengraph-image",
-];
 
 /**
  * Checks whether a given pathname matches any public (unauthenticated) route prefix.
@@ -73,6 +49,8 @@ function route(request: NextRequest) {
     request.cookies.get("__Secure-next-auth.session-token")?.value;
 
   if (!sessionToken) {
+    // An address that is not a page of the app does not exist: Next answers 404 (src/app/not-found.tsx), not the login form.
+    if (!isAppPath(pathname) && !SIGNED_OUT_REDIRECTS.some((r) => r.source === pathname)) return NextResponse.next();
     const moved = SIGNED_OUT_REDIRECTS.find((r) => r.source === pathname);
     if (moved) return NextResponse.redirect(new URL(moved.destination, request.url), 308);
     const loginUrl = new URL("/login", request.url);
