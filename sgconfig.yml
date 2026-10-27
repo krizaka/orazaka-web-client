@@ -5,7 +5,5 @@
 ruleDirs:
   - node_modules/@krizaka/config/ast-grep/core
   - node_modules/@krizaka/config/ast-grep/web
-testConfigs:
-  - testDir: rule-tests
 languageGlobs:
   Tsx: ["*.ts", "*.mts"]
