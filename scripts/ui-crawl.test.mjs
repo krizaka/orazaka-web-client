@@ -14,7 +14,7 @@ test("the crawl covers dark and light, phone and desktop", () => {
 });
 
 test("it checks what the criterion asks: console errors, horizontal scroll, one footer, broken pictures, empty tiles, colours", () => {
-  for (const needle of ["pageerror", "horizontal scroll", "page footers", "broken picture", "empty tile", "hard-coded colour"]) {
+  for (const needle of ["pageerror", "horizontal scroll", "page footers", "broken picture", "empty tile", "hard-coded colour", "never overflows"]) {
     assert.ok(crawl.includes(needle), `missing: ${needle}`);
   }
 });

@@ -7,10 +7,10 @@ allowBuilds:
   unrs-resolver: true
 minimumReleaseAgeExclude:
   - "@krizaka/fonts@0.5.0"
-  - "@krizaka/intl@0.4.0"
-  - "@krizaka/tailwind@3.55.0"
-  - "@krizaka/tokens@3.55.0"
-  - "@krizaka/ui@3.55.0"
+  - "@krizaka/intl@0.4.0 || 0.4.1"
+  - "@krizaka/tailwind@3.65.0"
+  - "@krizaka/tokens@3.65.0"
+  - "@krizaka/ui@3.65.0"
   - "@krizaka/query@0.2.2"
 onlyBuiltDependencies:
   - "@ast-grep/cli"
