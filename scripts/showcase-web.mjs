@@ -6,7 +6,7 @@
 // Demo data only (Eric, Lumen Atelier: scripts/tour/eric.mjs). The sign-in is made OFF camera (nothing typed is filmed), any
 // e-mail on screen is hidden. A chat that gives no answer fails the run: no blank video is ever published.
 //
-//   ORAZAKA_USER_EMAIL=… ORAZAKA_USER_PASSWORD=… node scripts/showcase-web.mjs <out-dir> [--base https://dev.orazaka.com]
+//   ORAZAKA_USER_EMAIL=… ORAZAKA_USER_PASSWORD=… node scripts/showcase-web.mjs <out-dir> [--base https://www.orazaka.com]
 //
 // Writes <out-dir>/web-chat.webm and web-studio.webm (no audio), ready for the app-videos action.
 import { mkdirSync, renameSync } from "node:fs";
@@ -16,7 +16,8 @@ import { RECORDED_DOCUMENT, RECORDED_QUESTION } from "./tour/eric.mjs";
 
 const args = process.argv.slice(2);
 const outDir = path.resolve(args[0] ?? "showcase-web");
-const base = (args[args.indexOf("--base") + 1] || "https://dev.orazaka.com").replace(/\/$/, "");
+const baseAt = args.indexOf("--base");
+const base = (baseAt >= 0 && args[baseAt + 1] ? args[baseAt + 1] : "https://www.orazaka.com").replace(/\/$/, "");
 const persona = process.env.ORAZAKA_USER_EMAIL;
 const secret = process.env.ORAZAKA_USER_PASSWORD;
 if (!persona || !secret) throw new Error("ORAZAKA_USER_EMAIL and ORAZAKA_USER_PASSWORD are required (the demo persona, never a real account)");
@@ -81,11 +82,13 @@ await record(
     await pause(page, 900);
     await page.getByRole("button", { name: /^Send/ }).click();
     await page.waitForURL(/conversationId=/, { timeout: 30_000 });
-    // The turn is over when the composer is editable again; the answer must have grown the page.
+    // The answer must grow the page; then the turn is over when the composer is editable again.
     const before = (await page.locator("main").first().innerText()).length;
+    await page.waitForFunction((n) => (document.querySelector("main")?.innerText.length ?? 0) > n + 80, before, { timeout: 180_000, polling: 500 }).catch(() => {
+      throw new Error("the chat gave no answer: no video is published");
+    });
     await page.waitForFunction(() => document.querySelector("textarea")?.disabled === false, null, { timeout: 180_000, polling: 250 });
     await pause(page, 2200);
-    if ((await page.locator("main").first().innerText()).length <= before) throw new Error("the chat gave no answer: no video is published");
   },
   state,
 );
@@ -96,14 +99,16 @@ await record(
     await page.goto(`${base}/studios`, { waitUntil: "load" });
     await page.waitForLoadState("networkidle");
     await pause(page, 1600);
-    await page.getByRole("radio", { name: /^Legal$/ }).click();
+    await page.getByRole("radio", { name: /^Ready/ }).click();
     await pause(page, 2400);
-    await page.getByRole("radio", { name: /^All trades$/ }).click();
+    await page.getByRole("radio", { name: /^All/ }).click();
     await pause(page, 1200);
     await page.mouse.wheel(0, 520);
     await pause(page, 1800);
-    await page.getByText(/^Compliance Check$/).first().click();
-    await page.waitForURL(/\/studios\/compliance-check/);
+    await page.getByRole("heading", { name: /^Legal/ }).scrollIntoViewIfNeeded();
+    await pause(page, 1200);
+    await page.getByText(/^Document Authenticity$/).first().click();
+    await page.waitForURL(/\/studios\/[^/]+$/);
     await page.waitForLoadState("networkidle");
     await pause(page, 2600);
     await page.mouse.wheel(0, 400);

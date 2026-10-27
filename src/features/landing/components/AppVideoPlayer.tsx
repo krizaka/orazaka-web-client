@@ -1,5 +1,6 @@
 "use client";
 
+import { cn } from "@krizaka/ui/cn";
 import { useState } from "react";
 
 interface Props {
@@ -17,7 +18,7 @@ interface Props {
 export function AppVideoPlayer({ poster, webm, mp4, width, height, play, label }: Readonly<Props>) {
   const [on, setOn] = useState(false);
   return (
-    <div className="relative overflow-hidden rounded-lg border border-border-default bg-surface-1" style={{ aspectRatio: `${width} / ${height}` }}>
+    <div className={cn("relative overflow-hidden rounded-lg border border-border-default bg-surface-1", width >= height ? "aspect-video" : "aspect-[9/16]")}>
       {on ? (
         <video className="absolute inset-0 size-full object-cover" controls autoPlay muted loop playsInline poster={poster} aria-label={label}>
           <source src={webm} type="video/webm" />

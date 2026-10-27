@@ -21,7 +21,7 @@ export interface DesktopDictionary {
   /** The phone clip of the Download page (`PhoneSection`). */
   phone: PhoneWords;
   /** The videos the web journeys recorded (`AppVideosSection`, krizaka/.github#315); `items` is keyed by `<platform>-<flow>` of the manifest. */
-  videos: { title: string; lead: string; play: string; recorded: string; seconds: string; items: Record<string, Titled> };
+  videos: { title: string; lead: string; play: string; recorded: string; seconds: string; items: Record<string, { name: string; body: string }> };
   mobile: { title: string; soon: string; ios: { button: string; soon: string }; android: { button: string; soon: string } };
   download: {
     button: string;

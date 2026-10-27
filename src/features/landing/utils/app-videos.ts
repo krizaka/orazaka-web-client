@@ -1,4 +1,5 @@
-import manifest from "../../../../content/app-videos.json";
+import { subDays } from "date-fns";
+import manifest from "@/../content/app-videos.json";
 
 /**
  * The videos of the Download page: recorded by the web journeys (scripts/showcase-web.mjs, krizaka/.github#315, the `app-videos`
@@ -27,7 +28,6 @@ export const videoUrl = (path: string): string => `${manifest.cdn}/${path}`;
 
 /** The videos recorded more than MAX_AGE_DAYS before `now`. */
 export const staleVideos = (now: Date, videos: readonly AppVideo[] = APP_VIDEOS): AppVideo[] => {
-  const cutoff = new Date(now);
-  cutoff.setUTCDate(cutoff.getUTCDate() - MAX_AGE_DAYS);
+  const cutoff = subDays(now, MAX_AGE_DAYS);
   return videos.filter((v) => new Date(v.capturedAt) < cutoff);
 };
