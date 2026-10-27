@@ -1,9 +1,12 @@
 "use client";
 
 import * as React from "react";
+import { useQuery, useQueryClient } from "@krizaka/query";
 import { PROVIDERS } from "@/features/profile/components/AiProviderLogos";
 
 /** Card provider ids map to the backend provider names used by the credentials API. */
+const CREDENTIALS_KEY = ["credentials"] as const;
+
 const toBackendName = (id: string): string => (id === "claude" ? "anthropic" : id);
 const fromBackendName = (name: string): string =>
   name === "anthropic" ? "claude" : name;
@@ -48,42 +51,27 @@ interface UseAiProviders {
 export function useAiProviders(
   fetchHeaders: () => Promise<Record<string, string>>,
 ): UseAiProviders {
-  const [configured, setConfigured] = React.useState<Set<string>>(new Set());
-  const [isLoading, setIsLoading] = React.useState(true);
   const [modal, setModal] = React.useState<ProviderModalState>(CLOSED);
   const [draftKey, setDraftKey] = React.useState("");
   const [isRevealed, setIsRevealed] = React.useState(false);
   const [isSaving, setIsSaving] = React.useState(false);
   const [error, setError] = React.useState(false);
 
-  React.useEffect(() => {
-    let active = true;
-    (async () => {
-      try {
-        const res = await fetch("/api/v1/credentials", {
-          headers: await fetchHeaders(),
-        });
-        if (!res.ok) return;
-        const data: { providerName: string; configured: boolean }[] =
-          await res.json();
-        if (!active) return;
-        setConfigured(
-          new Set(
-            data
-              .filter((credential) => credential.configured)
-              .map((credential) => fromBackendName(credential.providerName)),
-          ),
-        );
-      } catch {
-        // Credentials are optional — fail silently.
-      } finally {
-        if (active) setIsLoading(false);
-      }
-    })();
-    return () => {
-      active = false;
-    };
-  }, [fetchHeaders]);
+  const queryClient = useQueryClient();
+  // Credentials are optional: a failed call leaves nothing configured.
+  const credentials = useQuery({
+    queryKey: CREDENTIALS_KEY,
+    queryFn: async () => {
+      const res = await fetch("/api/v1/credentials", { headers: await fetchHeaders() });
+      if (!res.ok) throw new Error(`credentials ${res.status}`);
+      const data: { providerName: string; configured: boolean }[] = await res.json();
+      return data.filter((credential) => credential.configured).map((credential) => fromBackendName(credential.providerName));
+    },
+  });
+  const configured = new Set(credentials.data ?? []);
+  const isLoading = credentials.isPending;
+  const setConfigured = (update: (prev: Set<string>) => Set<string>) =>
+    queryClient.setQueryData<string[]>(CREDENTIALS_KEY, (prev) => [...update(new Set(prev ?? []))]);
 
   const configuredIds = PROVIDERS.map((p) => p.id).filter((id) =>
     configured.has(id),

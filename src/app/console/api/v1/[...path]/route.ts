@@ -15,6 +15,7 @@
 import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/console/core/auth/auth-options";
+import { forwardedBody } from "@/console/core/config/bff-body";
 
 async function proxyRequest(req: Request, segments: string[], method: string) {
   const edgeUrl = process.env.ROUTER_URL || "http://localhost:8088";
@@ -32,15 +33,13 @@ async function proxyRequest(req: Request, segments: string[], method: string) {
     const { search } = new URL(req.url);
     const targetUrl = `${edgeUrl}/api/v1/${segments.join("/")}${search}`;
 
-    let body: BodyInit | undefined;
-    if (["POST", "PUT", "PATCH", "DELETE"].includes(method)) {
-      body = await req.text();
-    }
+    // A multipart upload (the law corpus' manual import) keeps its bytes and boundary; any other write is JSON.
+    const { body, contentType: sentType } = await forwardedBody(req, method);
 
     const response = await fetch(targetUrl, {
       method,
       headers: {
-        "Content-Type": "application/json",
+        "Content-Type": sentType,
         Authorization: `Bearer ${token}`,
       },
       body,

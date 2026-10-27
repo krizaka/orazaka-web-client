@@ -39,6 +39,7 @@ export default async function DocPage({ params }: Readonly<{ params: Promise<{ s
           intro={entry.intro}
           audience={entry.audience}
           generated={entry.generated}
+          clip={entry.clip}
           editUrl={editUrl(entry)}
           toc={tocOf([first, ...rest])}
           nav={navItems()}

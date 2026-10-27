@@ -14,7 +14,7 @@ test("the crawl covers dark and light, phone and desktop", () => {
 });
 
 test("it checks what the criterion asks: console errors, horizontal scroll, one footer, broken pictures, empty tiles, colours", () => {
-  for (const needle of ["pageerror", "horizontal scroll", "page footers", "broken picture", "empty tile", "hard-coded colour"]) {
+  for (const needle of ["pageerror", "horizontal scroll", "page footers", "broken picture", "empty tile", "hard-coded colour", "never overflows"]) {
     assert.ok(crawl.includes(needle), `missing: ${needle}`);
   }
 });
@@ -40,8 +40,8 @@ test("it is an npm script and a step of its own post-deploy workflow (a failing 
 
 test("the post-deploy workflow also runs the SEO family contract against the deployed site, indexed (seo.family)", () => {
   const wf = read(".github/workflows/dev-preview-live.yml");
-  assert.match(wf, /node scripts\/check-seo-family\.mjs --base https:\/\/dev\.orazaka\.com --host https:\/\/dev\.orazaka\.com(\s|$)/);
-  assert.ok(!/--index off/.test(wf), "dev.orazaka.com is indexed (AGENTS.md)");
+  assert.match(wf, /node scripts\/check-seo-family\.mjs --base https:\/\/www\.orazaka\.com --host https:\/\/www\.orazaka\.com(\s|$)/);
+  assert.ok(!/--index off/.test(wf), "www.orazaka.com is indexed (AGENTS.md)");
 });
 
 test("the console crawl covers every console screen in both themes and both viewports, and checks the DEV badge (admin.shell)", () => {
@@ -57,5 +57,20 @@ test("the console crawl covers every console screen in both themes and both view
 test("the same workflow proves the console gate from outside: 403 on the admin host, 404 on the public one (admin.gated)", () => {
   const wf = read(".github/workflows/dev-preview-live.yml");
   assert.match(wf, /admin\.orazaka\.com\/login[^\n]*\n?[^\n]*= 403/);
-  assert.match(wf, /dev\.orazaka\.com\/console[^\n]*= 404/);
+  assert.match(wf, /www\.orazaka\.com\/console[^\n]*= 404/);
+});
+
+test("the crawl also runs axe-core (WCAG 2.1 AA) through @krizaka/a11y-audit and ratchets it against a baseline", () => {
+  assert.match(crawl, /from "@krizaka\/a11y-audit"/);
+  assert.match(crawl, /auditA11y\(page\)/);
+  assert.match(crawl, /a11y-baseline\.json/);
+  assert.doesNotMatch(crawl, /from "axe-core"/, "apps never import axe-core");
+});
+
+test("a11y-baseline.json holds counts, and no serious or critical rule (those are fixed, not recorded)", () => {
+  const { rules } = JSON.parse(read("a11y-baseline.json"));
+  for (const [rule, { impact, count }] of Object.entries(rules)) {
+    assert.ok(Number.isInteger(count) && count > 0, `${rule}: a positive count`);
+    assert.ok(["minor", "moderate"].includes(impact), `${rule} is ${impact}: fix it, do not record it`);
+  }
 });

@@ -1,7 +1,7 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
-import { useQueryClient } from "@tanstack/react-query";
+import { useCallback, useEffect, useState } from "react";
+import { useQueries, useQueryClient } from "@krizaka/query";
 import { isTerminalRun, type Run, type RunArtefact } from "@krizaka/orazaka-shared";
 import type { ChatMessage } from "@/core/types/chat.types";
 import type { MediaKind } from "@/core/constants/capability.constants";
@@ -15,6 +15,10 @@ const POLL_MS = 4000;
 interface PendingRun {
   conversationId: string;
   messageId: string;
+}
+
+interface TrackedRun extends PendingRun {
+  runId: string;
 }
 
 /** How an artefact's declared type renders in a chat bubble. */
@@ -60,37 +64,37 @@ function contentOf(run: Run): { content: string; kind: MediaKind } {
 export function useComposerRunReconciler(userId: string, conversationId?: string) {
   const queryClient = useQueryClient();
   const { t } = useTranslation();
-  const pendingRef = useRef<Map<string, PendingRun>>(new Map());
-  const [tracked, setTracked] = useState(0);
+  const [tracked, setTracked] = useState<TrackedRun[]>([]);
+
+  const track = useCallback((run: TrackedRun) => {
+    setTracked((prev) => (prev.some((p) => p.runId === run.runId) ? prev : [...prev, run]));
+  }, []);
 
   const trackRun = useCallback(
     (runId: string, conversationId: string, messageId: string) => {
       if (!runId || !conversationId) return;
-      pendingRef.current.set(runId, { conversationId, messageId });
-      setTracked(pendingRef.current.size);
+      track({ runId, conversationId, messageId });
     },
-    [],
+    [track],
   );
 
+  // Picks up, from the open conversation's history, every placeholder still empty — whoever started it.
   useEffect(() => {
     if (!conversationId) return;
     const queryKey = ["chatMessages", userId, conversationId];
     const resume = () => {
       const messages = queryClient.getQueryData<ChatMessage[]>(queryKey) ?? [];
-      let added = false;
       for (const message of messages) {
-        if (message.kind !== "run-pending" || message.content || pendingRef.current.has(message.runId)) continue;
-        pendingRef.current.set(message.runId, { conversationId, messageId: message.id });
-        added = true;
+        if (message.kind !== "run-pending" || message.content) continue;
+        track({ runId: message.runId, conversationId, messageId: message.id });
       }
-      if (added) setTracked(pendingRef.current.size);
     };
     resume();
     const key = JSON.stringify(queryKey);
     return queryClient.getQueryCache().subscribe((event) => {
       if (JSON.stringify(event.query.queryKey) === key) resume();
     });
-  }, [queryClient, userId, conversationId]);
+  }, [queryClient, userId, conversationId, track]);
 
   const rewrite = useCallback(
     (ref: PendingRun, patch: { content: string; kind: MediaKind }) => {
@@ -109,30 +113,17 @@ export function useComposerRunReconciler(userId: string, conversationId?: string
     [queryClient, userId],
   );
 
-  useEffect(() => {
-    if (pendingRef.current.size === 0) return;
-
-    const settle = async () => {
-      for (const [runId, ref] of [...pendingRef.current]) {
-        let run: Run | null = null;
-        try {
-          run = await StudioApi.fetchRun(runId);
-        } catch {
-          // A missed read delays the bubble; the next tick tries again.
-          continue;
-        }
-        if (!run) continue;
-
-        if (run.status === "AWAITING_INPUT") {
-          // A one-step Studio has no approval step and cannot reach this — but a state
-          // the composer cannot render is worse than one it hands over, so the bubble
-          // says so and keeps its link to the run screen, where the answer is given.
-          rewrite(ref, { content: t.chat.awaitingInput, kind: "run-pending" });
-          pendingRef.current.delete(runId);
-          continue;
-        }
-        if (!isTerminalRun(run.status)) continue;
-
+  /** Reads a run and, once it has an end the composer can show, puts it in its bubble and stops following it. */
+  const follow = useCallback(
+    async (ref: TrackedRun): Promise<Run | null> => {
+      const run = await StudioApi.fetchRun(ref.runId);
+      if (!run) return null;
+      if (run.status === "AWAITING_INPUT") {
+        // A one-step Studio has no approval step and cannot reach this — but a state
+        // the composer cannot render is worse than one it hands over, so the bubble
+        // says so and keeps its link to the run screen, where the answer is given.
+        rewrite(ref, { content: t.chat.awaitingInput, kind: "run-pending" });
+      } else if (isTerminalRun(run.status)) {
         rewrite(
           ref,
           run.status === "SUCCEEDED"
@@ -142,15 +133,26 @@ export function useComposerRunReconciler(userId: string, conversationId?: string
                 kind: "text",
               },
         );
-        pendingRef.current.delete(runId);
+      } else {
+        return run;
       }
-      setTracked(pendingRef.current.size);
-    };
+      setTracked((prev) => prev.filter((p) => p.runId !== ref.runId));
+      return run;
+    },
+    [rewrite, t],
+  );
 
-    void settle();
-    const timer = setInterval(() => void settle(), POLL_MS);
-    return () => clearInterval(timer);
-  }, [tracked, rewrite, t]);
+  // One query per followed run, keyed by the run: a missed read delays the bubble, the next tick tries again.
+  useQueries({
+    queries: tracked.map((ref) => ({
+      queryKey: ["composer-run", ref.runId],
+      queryFn: () => follow(ref),
+      refetchInterval: POLL_MS,
+      refetchOnWindowFocus: false,
+      retry: false,
+      gcTime: 0,
+    })),
+  });
 
   return { trackRun };
 }

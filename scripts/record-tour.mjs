@@ -21,7 +21,8 @@ import { mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { setHours, setMinutes, startOfDay } from "date-fns";
-import { ERIC, PREPARED, RECORDED_DOCUMENT, RECORDED_QUESTION, RECORDED_VIDEO, RECORDED_VISUAL, RECORDED_VOICE, SHOWCASE_VISUAL } from "./tour/eric.mjs";
+import { ERIC, PREPARED, RECORDED_DOCUMENT, RECORDED_VIDEO, RECORDED_VISUAL, RECORDED_VOICE, SHOWCASE_VISUAL } from "./tour/eric.mjs";
+import { askRecordedQuestion } from "./tour/chat-journey.mjs";
 import { DEMO_LEASE } from "./tour/documents.mjs";
 
 const BASE = (process.env.ORAZAKA_URL || "http://localhost:3000").replace(/\/$/, "");
@@ -365,14 +366,7 @@ const CLIPS = {
     await page.locator("textarea").first().waitFor();
     await settle(page);
     return async () => {
-      await pause(page, 1400);
-      const box = page.locator("textarea").first();
-      await box.click();
-      await box.pressSequentially(RECORDED_QUESTION, { delay: 9 });
-      await page.keyboard.insertText(`\n\n${RECORDED_DOCUMENT}`); // the policy, pasted
-      await pause(page, 900);
-      await page.getByRole("button", { name: /^Send/ }).click();
-      await page.waitForURL(/conversationId=/, { timeout: 30_000 });
+      await askRecordedQuestion(page);
       await awaitAnswer(page, RECORDED_DOCUMENT.length);
       await pause(page, 2200);
     };

@@ -2,6 +2,7 @@
 
 import { Button } from "@krizaka/ui/button";
 import * as React from "react";
+import { useQuery } from "@krizaka/query";
 import { getSession } from "next-auth/react";
 import { Icon } from "@krizaka/orazaka-design-system";
 import type { ComposerStudio } from "@krizaka/orazaka-shared";
@@ -54,58 +55,44 @@ export function CapabilityOptions({
   const showSize = category === MODEL_CATEGORY.IMAGE && !needsAttachment;
   const showDuration = category === MODEL_CATEGORY.VIDEO && !needsAttachment;
 
-  const [models, setModels] = React.useState<ModelOption[]>([]);
-
-  React.useEffect(() => {
-    if (!category) {
-      // eslint-disable-next-line react-hooks/set-state-in-effect
-      setModels([]);
-      return;
-    }
-    let active = true;
-    const fallback: ModelOption[] = (FALLBACK_MODELS[category] ?? []).map((m) => ({
-      value: m,
-      label: m,
-      compatible: true,
-    }));
-    const load = async () => {
-      try {
-        const session = await getSession();
-        const res = await fetch("/api/v1/models/catalog", {
-          headers: session?.user?.id
-            ? { Authorization: `Bearer ${session.user.id}` }
-            : {},
-        });
-        if (!res.ok) throw new Error("catalog unavailable");
-        const data: {
-          modelName: string;
-          modelLabel: string;
-          category: string;
-          compatible?: boolean;
-          incompatibleReason?: string | null;
-          description?: string | null;
-          requiresReferenceImage?: boolean;
-        }[] = await res.json();
-        const filtered = data
-          .filter((m) => m.category === category)
-          .map((m) => ({
-            value: m.modelName,
-            label: m.modelLabel,
-            compatible: m.compatible !== false,
-            reason: m.incompatibleReason,
-            description: m.description,
-            requiresReferenceImage: m.requiresReferenceImage,
-          }));
-        if (active) setModels(filtered.length > 0 ? filtered : fallback);
-      } catch {
-        if (active) setModels(fallback);
-      }
-    };
-    load();
-    return () => {
-      active = false;
-    };
-  }, [category]);
+  // The catalogue's models of this capability; the fixed list stands in until it answers or when it has none.
+  const catalog = useQuery({
+    queryKey: ["models-catalog", category],
+    enabled: Boolean(category),
+    retry: false,
+    queryFn: async () => {
+      const session = await getSession();
+      const res = await fetch("/api/v1/models/catalog", {
+        headers: session?.user?.id ? { Authorization: `Bearer ${session.user.id}` } : {},
+      });
+      if (!res.ok) throw new Error("catalog unavailable");
+      const data: {
+        modelName: string;
+        modelLabel: string;
+        category: string;
+        compatible?: boolean;
+        incompatibleReason?: string | null;
+        description?: string | null;
+        requiresReferenceImage?: boolean;
+      }[] = await res.json();
+      return data
+        .filter((m) => m.category === category)
+        .map((m) => ({
+          value: m.modelName,
+          label: m.modelLabel,
+          compatible: m.compatible !== false,
+          reason: m.incompatibleReason,
+          description: m.description,
+          requiresReferenceImage: m.requiresReferenceImage,
+        }));
+    },
+  });
+  const models: ModelOption[] = React.useMemo(() => {
+    if (!category) return [];
+    if (catalog.data && catalog.data.length > 0) return catalog.data;
+    if (catalog.isPending) return [];
+    return (FALLBACK_MODELS[category] ?? []).map((m) => ({ value: m, label: m, compatible: true }));
+  }, [category, catalog.data, catalog.isPending]);
 
   if (!category) return null;
 

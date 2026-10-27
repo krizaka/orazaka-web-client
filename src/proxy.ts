@@ -12,39 +12,14 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { authClosed, isBackendPath, readAuthFlags } from "@/core/config/auth-flags";
-import { CLOSED_ROBOTS, devRedirect, indexable, isDevHost, NOINDEX_HEADER } from "@/core/config/indexing";
+import { CLOSED_ROBOTS, devRedirect, indexable, isDevAddress, isDevHost, NOINDEX_HEADER } from "@/core/config/indexing";
+import { isAppPath, PUBLIC_PREFIXES } from "@/core/config/app-routes";
+import { SIGNED_OUT_REDIRECTS } from "@/core/config/redirects";
 import { SITE_URL } from "@/app/_seo/seo";
 import { consoleResponse } from "@/console/core/edge";
 import { isAdminHost, routeFor } from "@/console/core/config/host";
 /** The platform's liveness probe: answered on every host, before any gate. */
 const HEALTH_PATH = "/api/healthz";
-
-/**
- * Route prefixes that do NOT require authentication.
- */
-const PUBLIC_PREFIXES = [
-  "/login",
-  "/register",
-  "/api/",        // All API routes (auth, BFF proxy, etc.)
-  "/.well-known/", // Universal links / App Links files (app-links.json)
-  "/_next/",      // Next.js internals (static, image, RSC payloads, HMR)
-  "/favicon",
-  "/logo.svg",
-  "/privacy",
-  "/terms",
-  "/contact",
-  "/features",
-  "/docs",
-  "/mobile",
-  "/gallery",
-  "/models",
-  "/desktop",
-  // What search engines and AI assistants read (src/app/robots.ts, sitemap.ts, llms*.txt, opengraph-image.tsx).
-  "/robots.txt",
-  "/sitemap.xml",
-  "/llms",
-  "/opengraph-image",
-];
 
 /**
  * Checks whether a given pathname matches any public (unauthenticated) route prefix.
@@ -74,6 +49,10 @@ function route(request: NextRequest) {
     request.cookies.get("__Secure-next-auth.session-token")?.value;
 
   if (!sessionToken) {
+    // An address that is not a page of the app does not exist: Next answers 404 (src/app/not-found.tsx), not the login form.
+    if (!isAppPath(pathname) && !SIGNED_OUT_REDIRECTS.some((r) => r.source === pathname)) return NextResponse.next();
+    const moved = SIGNED_OUT_REDIRECTS.find((r) => r.source === pathname);
+    if (moved) return NextResponse.redirect(new URL(moved.destination, request.url), 308);
     const loginUrl = new URL("/login", request.url);
     return NextResponse.redirect(loginUrl);
   }
@@ -108,8 +87,8 @@ export function proxy(request: NextRequest) {
     response = NextResponse.next();
   } else {
     const hostRoute = routeFor(host, pathname);
-    if (pathname === "/robots.txt" && isAdminHost(host)) {
-      // The console is never indexed: said here, for any address, before the network gate (a crawler must read it).
+    if (pathname === "/robots.txt" && (isAdminHost(host) || isDevAddress(host))) {
+      // The console and any dev.* address are never indexed: said here, before the network gate (a crawler must read it).
       return new NextResponse("User-agent: *\nDisallow: /\n", { status: 200, headers: { "content-type": "text/plain; charset=utf-8", "x-robots-tag": NOINDEX_HEADER } });
     }
     if (hostRoute.kind === "notFound") {
@@ -121,7 +100,7 @@ export function proxy(request: NextRequest) {
       response = route(request);
     }
   }
-  if (!indexable()) response.headers.set("x-robots-tag", NOINDEX_HEADER);
+  if (!indexable() || isDevAddress(host)) response.headers.set("x-robots-tag", NOINDEX_HEADER);
   return response;
 }
 

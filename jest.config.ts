@@ -23,6 +23,7 @@ function findPackage(name: string): string {
 }
 const markdown = findPackage("@tanstack/markdown");
 const highlight = findPackage("@tanstack/highlight");
+const query = path.dirname(resolveFromApp("@krizaka/query/package.json"));
 const pacer = path.dirname(resolveFromApp("@krizaka/pacer/package.json"));
 
 const createJestConfig = nextJest({
@@ -31,7 +32,7 @@ const createJestConfig = nextJest({
 
 const config = {
   testEnvironment: "jsdom",
-  setupFiles: ["<rootDir>/jest/setup.ts"],
+  setupFiles: ["<rootDir>/tests/setup.ts"],
   moduleNameMapper: {
     "^@/(.*)$": "<rootDir>/src/$1",
     // @krizaka/ui (re-exported by @krizaka/orazaka-design-system 2.x) exposes its entries under the `import`
@@ -47,6 +48,9 @@ const config = {
     "^@krizaka/intl/(.*)$": `${intl}/dist/$1.js`,
     // @krizaka/tokens (a dependency of @krizaka/ui 3.x's chunks): the same `import`-only exports.
     "^@krizaka/tokens/(.*)$": `${tokens}/dist/$1.js`,
+    // @krizaka/query (the nav bar of @krizaka/ui 3.55 reads it): the same `import`-only exports.
+    "^@krizaka/query$": `${query}/dist/index.js`,
+    "^@krizaka/query/(.*)$": `${query}/dist/$1.js`,
     // @krizaka/pacer (a dependency of @krizaka/ui's DataTable): the same `import`-only exports.
     "^@krizaka/pacer/(.*)$": `${pacer}/dist/$1.js`,
     // @tanstack/markdown and @tanstack/highlight (under @krizaka/ui's Markdown and CodeBlock): the same `import`-only exports.

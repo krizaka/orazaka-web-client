@@ -4,9 +4,11 @@
  * address of a page and the search. Pure — no file access (that is `docs.ts`, server side).
  */
 
-export const JOURNEY_IDS = ["start", "use", "run", "build", "mobile"] as const;
-export type JourneyId = (typeof JOURNEY_IDS)[number];
-export type GroupId = "integrate" | "internals";
+import type { ClipId } from "@/core/clips/clips";
+import { FOLDED_JOURNEY, GROUP_IDS, JOURNEY_IDS, type GroupId, type JourneyId } from "@/core/constants/docs-journeys";
+
+export { FOLDED_JOURNEY, GROUP_IDS, JOURNEY_IDS };
+export type { GroupId, JourneyId };
 
 export interface DocEntry {
   slug: string;
@@ -20,6 +22,8 @@ export interface DocEntry {
   source: string | null;
   /** Written from the code by `orazaka docs sync`. */
   generated: boolean;
+  /** A recording of `core/clips` shown under the title (null for none). */
+  clip: ClipId | null;
   /** The synced markdown (null for a page that is not a markdown file). */
   file: string | null;
 }
@@ -31,6 +35,9 @@ export function editUrl(entry: DocEntry): string | null {
   if (!entry.source) return null;
   return `${REPO}/${entry.generated ? "blob" : "edit"}/main/${entry.source}`;
 }
+
+/** The packs catalogue: the docs' `packs` section, featured on the hub and linked from the sidebar. */
+export const PACKS_SLUG = "packs";
 
 export const pageHref = (slug: string) => `/docs/${slug}`;
 

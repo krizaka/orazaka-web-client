@@ -1,28 +1,22 @@
 /**
  * The public bar of dev.orazaka.com as data — the product-site standard of every Krizaka product (addendum 2026-10-15,
  * docs/ux/information-architecture.md of the Orazaka workspace): the mark, then at most four entries grouped by the
- * visitor's question — **Product ▾** (what does it do?), **Platforms ▾** (where does it run?), **Docs** (how do I use
- * it?) — and Pricing when it exists. No entry stands alone that belongs to a group (no top-level Demo, Mobile or Mac).
+ * visitor's question — **Product ▾** (what is it, what does it install, where do I get it?) and **Docs** (how do I use
+ * it?) — and Pricing when it exists. Simplified for epic #231: the gallery, the models page, the feature tours and the
+ * platforms menu are gone (docs and the home hold what they said).
  * The bar, the mobile panel and the footer read this one list, in this order.
  */
 import type { ComponentType } from "react";
-import { AiIcon, DownloadIcon, GlobeIcon, LocalIcon, PackIcon, PlayIcon, ServerIcon, VideoIcon, type IconProps } from "@krizaka/icons";
-import { SHIPPED_ROUTES } from "@/features/landing/utils/nav-routes";
+import { LocalIcon, PlayIcon, type IconProps } from "@krizaka/icons";
 
 /** The words of an entry live in `t.landing.nav[id]` and its line in `t.landing.nav.menu[id]`. */
 export const NavEntryId = {
   How: "how",
-  Packs: "packs",
-  Models: "models",
-  Demo: "demo",
-  Web: "web",
-  Mobile: "mobile",
-  Desktop: "desktop",
-  SelfHost: "selfHost",
+  Download: "download",
 } as const;
 export type NavEntryId = (typeof NavEntryId)[keyof typeof NavEntryId];
 
-export const NavGroupId = { Product: "product", Platforms: "platforms" } as const;
+export const NavGroupId = { Product: "product" } as const;
 export type NavGroupId = (typeof NavGroupId)[keyof typeof NavGroupId];
 
 export interface NavEntry {
@@ -40,32 +34,16 @@ export interface NavGroup {
   entries: readonly NavEntry[];
 }
 
-/** Product ▾ — what Orazaka does (the home's « What it does »), its packs, the models and the proof (Demo: real runs, nothing staged). */
+/** Product ▾ — what Orazaka does (the home's « What it does »), and where to get it (the Mac app). */
 const PRODUCT: NavGroup = {
   id: NavGroupId.Product,
   entries: [
-    { id: NavEntryId.How, anchor: "features", Icon: PlayIcon, current: ["/features"] },
-    { id: NavEntryId.Packs, path: "/docs/packs", Icon: PackIcon },
-    { id: NavEntryId.Models, path: "/models", Icon: AiIcon, current: ["/models"] },
-    { id: NavEntryId.Demo, path: "/gallery", Icon: VideoIcon, current: ["/gallery"] },
+    { id: NavEntryId.How, anchor: "features", Icon: PlayIcon },
+    { id: NavEntryId.Download, path: "/desktop", Icon: LocalIcon, current: ["/desktop"] },
   ],
 };
 
-/** Platforms ▾ — where it runs: the browser, the phone, the Mac, your own servers. */
-const PLATFORMS: NavGroup = {
-  id: NavGroupId.Platforms,
-  entries: [
-    { id: NavEntryId.Web, anchor: "platforms", Icon: GlobeIcon },
-    { id: NavEntryId.Mobile, path: "/docs/mobile", Icon: DownloadIcon, current: ["/docs/mobile"] },
-    { id: NavEntryId.Desktop, path: "/desktop", Icon: LocalIcon, current: ["/desktop"] },
-    // « Self-host » reads the install guide until the /infrastructure page ships (no dead link either way).
-    SHIPPED_ROUTES.infrastructure
-      ? { id: NavEntryId.SelfHost, path: "/infrastructure", Icon: ServerIcon, current: ["/infrastructure", "/docs/self-hosting"] }
-      : { id: NavEntryId.SelfHost, path: "/docs/self-hosting", Icon: ServerIcon, current: ["/docs/self-hosting"] },
-  ],
-};
-
-export const NAV_GROUPS: readonly NavGroup[] = [PRODUCT, PLATFORMS];
+export const NAV_GROUPS: readonly NavGroup[] = [PRODUCT];
 
 /** Docs — a direct link: the documentation is a reading place, not a menu. */
 export const NAV_DOCS = { path: "/docs" } as const;

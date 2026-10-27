@@ -3,16 +3,16 @@
  * @description Shared type definitions for the internationalization dictionary.
  */
 
-import type { FeaturesDictionary, LandingDictionary } from "./translations.landing.types";
+import type { ClipsDictionary } from "./translations.clips";
+import type { NotFoundDictionary } from "./translations.notFound";
+import type { LandingDictionary } from "./translations.landing.types";
 import type { InsightsDictionary } from "./translations.insights";
 import type { JobsTableDictionary } from "./translations.jobsTable.types";
 import type { WebhooksDictionary } from "./translations.webhooks.types";
 import type { AutomationsDictionary } from "./translations.automations.types";
 import type { RunProgressDictionary } from "./translations.runProgress.types";
-import type { ModelsDictionary } from "./translations.models.types";
 import type { CatalogueDictionary, PlanDictionary } from "./translations.catalogue";
 import type { ConsentDictionary } from "./translations.consent";
-import type { GalleryDictionary } from "./translations.gallery";
 import type { MobileDictionary } from "./translations.mobile";
 import type { DesktopDictionary } from "./translations.desktop";
 import type { DocsDictionary } from "./translations.docs";
@@ -857,7 +857,6 @@ export interface TranslationDictionary {
   jobsTable: JobsTableDictionary;
   webhooks: WebhooksDictionary;
   runProgress: RunProgressDictionary;
-  models: ModelsDictionary;
   /** The ⌘K palette: its words (the entries reuse the sidebar's). */
   commandPalette: {
     label: string;
@@ -872,9 +871,10 @@ export interface TranslationDictionary {
   };
   /** The public home page (visitors without a session). */
   landing: LandingDictionary;
-  features: FeaturesDictionary;
-  /** The "Made here" gallery: the featured section of the home page and /gallery. */
-  gallery: GalleryDictionary;
+  /** The demo clips: alt, caption and captions. */
+  clips: ClipsDictionary;
+  /** The 404 page. */
+  notFound: NotFoundDictionary;
   /** The Mobile section of the home page and /mobile. */
   mobile: MobileDictionary;
   /** /desktop (Orazaka for Mac) and the home page's "On your Mac" band. */

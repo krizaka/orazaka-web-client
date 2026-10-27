@@ -1,6 +1,7 @@
 import type * as React from "react";
 import "@testing-library/jest-dom";
 import { fireEvent, render, screen, within } from "@testing-library/react";
+import { SessionContext } from "next-auth/react";
 import { ThemeProvider } from "@krizaka/ui/theme";
 import { translations, type Locale } from "@/core/context/translations";
 import { AuthFlagsProvider } from "@/core/context/AuthFlagsContext";
@@ -27,11 +28,17 @@ beforeAll(() => {
 
 const CLOSED: AuthFlags = { login: false, signup: false, github: false, google: false };
 
+type SessionValue = React.ContextType<typeof SessionContext>;
+const SIGNED_OUT = { data: null, status: "unauthenticated", update: async () => null };
+const mockSession = { current: SIGNED_OUT as SessionValue };
+
 function renderLanding(locale: Locale, page: React.ReactNode = <LandingPage />, flags: AuthFlags = CLOSED) {
   mockLocale = locale;
   return render(
     <AuthFlagsProvider flags={flags}>
-      <ThemeProvider>{page}</ThemeProvider>
+      <SessionContext.Provider value={mockSession.current}>
+        <ThemeProvider>{page}</ThemeProvider>
+      </SessionContext.Provider>
     </AuthFlagsProvider>,
   );
 }
@@ -41,37 +48,26 @@ const bar = () => document.querySelector("header[data-floating]") as HTMLElement
 const desktopNav = () => within(bar()).getAllByRole("navigation", { name: "Orazaka" })[0];
 
 describe("the information architecture of the public bar", () => {
-  it("is the product-site standard: Product ▾ · Platforms ▾ · Docs — at most four entries, no lone Demo/Mobile/Mac", () => {
+  it("is short (epic #231): Product ▾ (How it works · Download) · Docs; Packs lives in the docs", () => {
     const shape = NAV_GROUPS.map((g) => ({ group: g.id, entries: g.entries.map((e) => `${e.id} → ${e.anchor ? `#${e.anchor}` : e.path}`) }));
     expect(shape).toMatchInlineSnapshot(`
 [
   {
     "entries": [
       "how → #features",
-      "packs → /docs/packs",
-      "models → /models",
-      "demo → /gallery",
+      "download → /desktop",
     ],
     "group": "product",
-  },
-  {
-    "entries": [
-      "web → #platforms",
-      "mobile → /docs/mobile",
-      "desktop → /desktop",
-      "selfHost → /docs/self-hosting",
-    ],
-    "group": "platforms",
   },
 ]
 `);
     renderLanding("en", <LandingNav />);
     const top = [...desktopNav().querySelectorAll("[data-nav-item]")].map((el) => el.textContent?.trim());
-    expect(top).toEqual([nav.product, nav.platforms, nav.docs]);
-    expect(top.length).toBeLessThanOrEqual(4);
+    expect(top).toEqual([nav.product, nav.how, nav.download, nav.docs]);
+    expect(top.length).toBeLessThanOrEqual(5);
   });
 
-  it("is the family's floating bar, in the family's order: mark and name · sections · repository, theme, language, Sign in, Talk to us", () => {
+  it("is the family's floating bar, in the family's order: mark and name · sections · repository, theme, language, Sign in", () => {
     renderLanding("en", <LandingNav />);
     expect(bar().getAttribute("data-floating")).not.toBe("false");
     expect(within(bar()).getByRole("link", { name: nav.home })).toHaveTextContent("Orazaka");
@@ -79,9 +75,9 @@ describe("the information architecture of the public bar", () => {
       const el = within(bar()).getAllByRole(role, { name })[0];
       return [...bar().querySelectorAll("*")].indexOf(el);
     };
-    const positions = [order(nav.repo, "link"), order(translations.en.header.themeSystem, "button"), order(new RegExp(`^${nav.langLabel}`), "button"), order(nav.signIn, "link"), order(nav.talk, "link")];
+    const positions = [order(nav.repo, "link"), order(translations.en.header.themeSystem, "button"), order(new RegExp(`^${nav.langLabel}`), "button"), order(nav.signIn, "link")];
     expect(positions).toEqual([...positions].sort((a, b) => a - b));
-    expect(new Set(positions).size).toBe(5);
+    expect(new Set(positions).size).toBe(4);
   });
 
   it("keeps the version out of the bar (it is in the footer)", () => {
@@ -92,12 +88,9 @@ describe("the information architecture of the public bar", () => {
 
   it.each([
     ["/", null],
-    ["/models", "product"],
-    ["/gallery", "product"],
-    ["/features/absolute-privacy", "product"],
-    ["/desktop", "platforms"],
-    ["/docs/mobile", "platforms"],
-    ["/docs/self-hosting", "platforms"],
+    ["/desktop", "product"],
+    ["/docs/mobile", "docs"],
+    ["/docs/self-hosting", "docs"],
     ["/docs", "docs"],
     ["/docs/packs", "docs"],
   ])("lights one item at most on %s (%s)", (path, top) => {
@@ -105,7 +98,7 @@ describe("the information architecture of the public bar", () => {
     mockPath.current = path;
     renderLanding("en", <LandingNav onHome={path === "/"} />);
     const lit = [...desktopNav().querySelectorAll("[data-nav-item][data-active]")].map((el) => el.textContent?.trim());
-    expect(lit).toEqual(top ? [top === "docs" ? nav.docs : nav[top as "product" | "platforms"]] : []);
+    expect(lit).toEqual(top === "docs" ? [nav.docs] : top ? [nav.product, nav.download] : []);
     mockPath.current = "/";
   });
 
@@ -114,7 +107,7 @@ describe("the information architecture of the public bar", () => {
       const { container, unmount } = renderLanding(locale, <LandingNav />);
       let res = await axe.run(container, { rules: { region: { enabled: false } } });
       expect(res.violations.map((v) => v.id)).toEqual([]);
-      fireEvent.click(within(bar()).getByRole("button", { name: translations[locale].landing.nav.platforms }));
+      fireEvent.click(within(bar()).getByRole("button", { name: translations[locale].landing.nav.product }));
       res = await axe.run(container, { rules: { region: { enabled: false } } });
       expect(res.violations.map((v) => v.id)).toEqual([]);
       unmount();
@@ -127,11 +120,11 @@ describe("the mobile panel", () => {
     renderLanding("en", <LandingPage />, CLOSED);
     fireEvent.click(screen.getByRole("button", { name: nav.openMenu }));
     const groups = within(bar()).getAllByRole("group").filter((g) => g.getAttribute("aria-labelledby"));
-    expect(groups.map((g) => g.querySelector("p")?.textContent)).toEqual([nav.product, nav.platforms, nav.preferences]);
-    expect(within(groups[1]).getAllByRole("link").map((a) => a.textContent)).toEqual([nav.web, nav.mobile, nav.desktop, nav.selfHost]);
+    expect(groups.map((g) => g.querySelector("p")?.textContent)).toEqual([nav.product, nav.preferences]);
+    expect(within(groups[0]).getAllByRole("link").map((a) => a.textContent)).toEqual([nav.how, nav.download]);
     const panel = groups[0].closest("nav") as HTMLElement;
     const hrefs = [...panel.querySelectorAll("a")].map((a) => a.getAttribute("href"));
-    expect(hrefs).toEqual(["#features", "/docs/packs", "/models", "/gallery", "#platforms", "/docs/mobile", "/desktop", "/docs/self-hosting", "/docs", "#", "#", "/login", "https://www.krizaka.com/contact?topic=orazaka"]);
+    expect(hrefs).toEqual(["#features", "/desktop", "/docs", "#", "#", "/login"]);
     expect(hrefs).not.toContain("/infrastructure");
   });
 
@@ -175,5 +168,51 @@ describe("the footer", () => {
     const hrefs = [...footer.querySelectorAll("a")].map((a) => a.getAttribute("href"));
     for (const g of NAV_GROUPS) for (const e of g.entries) expect(hrefs).toContain(e.anchor ? `/#${e.anchor}` : e.path);
     expect(hrefs).toEqual(expect.arrayContaining(["/docs", "/docs/api", "/docs/cli"]));
+  });
+});
+
+describe("the one action of the bar: using the app", () => {
+  afterEach(() => {
+    mockSession.current = SIGNED_OUT as SessionValue;
+  });
+
+  it("is « Sign in » while sign-up is closed, with no « Talk to us » or Contact in the bar or the panel", () => {
+    renderLanding("en", <LandingNav />);
+    expect(within(bar()).getAllByRole("link", { name: nav.signIn })[0]).toHaveAttribute("href", "/login");
+    expect(within(bar()).queryByRole("link", { name: nav.tryIt })).toBeNull();
+    expect(within(bar()).queryByRole("link", { name: nav.openApp })).toBeNull();
+    expect(within(bar()).queryByText(/talk to us|contact/i)).toBeNull();
+  });
+
+  it("is « Try Orazaka » once sign-up is open, read from the flag", () => {
+    renderLanding("en", <LandingNav />, { ...CLOSED, login: true, signup: true });
+    expect(within(bar()).getAllByRole("link", { name: nav.tryIt })[0]).toHaveAttribute("href", "/register");
+  });
+
+  it("is « Open the app » with the avatar when signed in, and « Sign in » again once signed out or expired", () => {
+    mockSession.current = { data: { user: { name: "Oussama", email: "o@orazaka.io" }, expires: "2999-01-01" }, status: "authenticated", update: async () => null } as SessionValue;
+    const { unmount } = renderLanding("en", <LandingNav />);
+    expect(within(bar()).getAllByRole("link", { name: nav.openApp })[0]).toHaveAttribute("href", "/");
+    expect(within(bar()).queryByRole("link", { name: nav.signIn })).toBeNull();
+    expect(bar().querySelector("[data-slot=avatar], span[class*=rounded-full]")).not.toBeNull();
+    unmount();
+    mockSession.current = SIGNED_OUT as SessionValue;
+    renderLanding("en", <LandingNav />);
+    expect(within(bar()).getAllByRole("link", { name: nav.signIn }).length).toBeGreaterThan(0);
+    expect(within(bar()).queryByRole("link", { name: nav.openApp })).toBeNull();
+  });
+
+  it("keeps the signed-in avatar visible in the mobile bar and open panel", () => {
+    mockSession.current = { data: { user: { name: "Oussama", email: "o@orazaka.io" }, expires: "2999-01-01" }, status: "authenticated", update: async () => null } as SessionValue;
+    renderLanding("en", <LandingNav />);
+    fireEvent.click(within(bar()).getByRole("button", { name: nav.openMenu }));
+    const avatars = bar().querySelectorAll("span[class*=rounded-full]");
+    expect(avatars).toHaveLength(2);
+    expect(avatars[0]).not.toHaveClass("hidden");
+  });
+
+  it("puts Contact in the footer, pointing to krizaka.com/contact", () => {
+    renderLanding("en", <LandingPage />, CLOSED);
+    expect(within(screen.getByRole("contentinfo")).getByRole("link", { name: translations.en.landing.footer.contact })).toHaveAttribute("href", "https://www.krizaka.com/contact");
   });
 });

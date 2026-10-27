@@ -4,9 +4,10 @@ import * as React from "react";
 import Link from "next/link";
 import { PackIcon } from "@krizaka/icons";
 import { Button } from "@krizaka/ui/button";
+import { useRouteState } from "@krizaka/ui/router";
 import { useTranslation } from "@/core/context/LocaleContext";
 import { systemNow } from "@/core/jobs/systemClock";
-import { usageRows, usageSummary, type Period } from "@/core/jobs/usageStats";
+import { DEFAULT_PERIOD_KEY, PERIOD_KEYS, type Period, usageRows, usageSummary } from "@/core/jobs/usageStats";
 import { CreditsMeter } from "@/features/billing/components/CreditsMeter";
 import { usePlan } from "@/features/billing/hooks/usePlan";
 import { useWallet } from "@/features/billing/hooks/useWallet";
@@ -30,7 +31,8 @@ export function CreditsScreen() {
   const { plan } = usePlan();
   const { jobs, runs, isLoading, hasError } = useInsights();
   const { studios } = useStudios(null);
-  const [days, setDays] = React.useState<Period>(30);
+  const [periodKey] = useRouteState("period", { values: PERIOD_KEYS, default: DEFAULT_PERIOD_KEY });
+  const days = Number(periodKey) as Period;
   const studioLabel = React.useCallback((key: string) => studios.find((s) => s.studioKey === key)?.label ?? key, [studios]);
   const summary = React.useMemo(() => usageSummary(jobs, runs, days, systemNow()), [jobs, runs, days]);
   const period = React.useMemo(() => usageRows(jobs, runs, days, systemNow()), [jobs, runs, days]);
@@ -61,7 +63,7 @@ export function CreditsScreen() {
             <h2 id="usage-title" className="text-xs font-semibold text-fg-muted">{w.activityTitle}</h2>
             <p className="text-[13px] text-fg-secondary">{w.activityDesc}</p>
           </span>
-          <PeriodTabs value={days} onChange={setDays} />
+          <PeriodTabs />
         </header>
         <UsageKpis summary={summary} days={days} loading={isLoading} />
         <ActivityCharts summary={summary} jobs={period.jobs} days={days} loading={isLoading} error={hasError} />

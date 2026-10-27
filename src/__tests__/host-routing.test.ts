@@ -53,7 +53,7 @@ describe("public host", () => {
       expect(call("dev.orazaka.com", path, { ip: ALLOWED }).status).toBe(404);
     },
   );
-  it.each(["/", "/docs", "/login", "/features/privacy", "/api/healthz"])("is unaffected: %s passes", (path) => {
+  it.each(["/", "/docs", "/login", "/desktop", "/api/healthz"])("is unaffected: %s passes", (path) => {
     const res = call("dev.orazaka.com", path);
     expect(res.status).toBe(200);
     expect(res.headers.get("x-middleware-next")).toBe("1");

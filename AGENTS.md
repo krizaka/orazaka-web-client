@@ -42,7 +42,11 @@ with a message and, where safe, a `fix:`; written for Tsx and `.ts` is parsed as
   behaviour is identical — run `npm run lint && npm test` after, and land the result in a small pull request.
 - A rule is never silenced to get a PR green; fix the code, or (a business parameter that is a technical fact) justify it with `// @fixed:`.
 
-## One app, two hosts (dev.orazaka.com · admin.orazaka.com)
+## One app, three hosts (www.orazaka.com · dev.orazaka.com · admin.orazaka.com)
+
+`www.orazaka.com` is the public site (production: indexed, canonical, sitemap, `llms.txt`). `dev.orazaka.com` answers its
+pages with a 308 to www (only `/api/*`, `/.well-known/*`, `/robots.txt` and the health check stay) and is **never
+indexed** — nor is any `dev.*` address, by its name, whatever the configuration (`isDevAddress`, `src/core/config/indexing.ts`).
 
 The operator console (formerly the standalone `orazaka-web-admin` repository) lives here, served by **host routing**:
 `src/proxy.ts` → `src/console/core/config/host.ts` (`routeFor`, pure) rewrites `Host: admin.*` under `/console`
@@ -67,4 +71,28 @@ route outside `src/app/console`, never link `/console/...` (addresses on the adm
 The contract is defined once, in krizaka-com `AGENTS.md` §2.4, and checked here by `scripts/check-seo-family.mjs` (a copy of
 the same dependency-free file in every site's repository — keep the copies identical; its unit test sits beside it).
 
-dev.orazaka.com is **indexed** (`src/core/config/seo.ts`: origin, crawlers, JSON-LD, `llms.txt`/`llms-full.txt` rendered from the synced docs; `src/app/robots.ts`, `sitemap.ts`, `opengraph-image.tsx`). The language is chosen in the page (one URL per page), so there is no hreflang. The sign-in proxy (`src/proxy.ts`) must keep those files public. Tests: `src/__tests__/seo.test.ts`.
+www.orazaka.com is **indexed**; `dev.*` and `admin.*` never are — robots `Disallow: /`, `X-Robots-Tag: noindex` on every answer, and
+`noindex` in the pages when the deployment's own address (`APP_PUBLIC_URL`) is `dev.*` or `APP_SEARCH_INDEXING=off`
+(`src/core/config/indexing.ts`, `src/proxy.ts`). What is indexed is described in `src/app/_seo/seo.ts`: origin, crawlers, JSON-LD, `llms.txt`/`llms-full.txt` rendered from the synced docs; `src/app/robots.ts`, `sitemap.ts`, `opengraph-image.tsx`). The language is chosen in the page (one URL per page), so there is no hreflang. The sign-in proxy (`src/proxy.ts`) must keep those files public. Tests: `src/__tests__/seo.test.ts`.
+
+## Before you open or update a pull request (coding agents)
+
+These are the defects code review found most often on 2026-10-23. Check them yourself before you open or update a pull request:
+1. **Checks:** run the repository's full check (lint, typecheck, tests, build) and fix it. Never push a red check.
+2. **Concurrency:** any « count then insert » or « check then write » runs in one transaction with a lock, and has a concurrency test.
+3. **One gate:** a rule (limit, permission, validation) is enforced in the service, so no route can skip it. Test every route.
+4. **Errors:** a cleanup (ROLLBACK, DROP, close) never masks the original error. Rethrow it, or throw an `AggregateError` with the original first.
+5. **Validation:** validate the original input, never a truncated or pre-trimmed copy. Server and client reject the same inputs.
+6. **Accessibility:**
+   - every control has a unique label, and FR/EN pairs say their language;
+   - focus rings are never clipped by `overflow`;
+   - text never overflows its box at 360 px.
+7. **Naming:** environment variables follow `<CONTEXT>_<THING>` (`APP_`, `DATABASE_`, `AUTH_`, `MEDIA_`, `MAIL_`, `PAYMENTS_`, `AI_`…) and are declared once.
+8. **Words:** every user-facing string is in the FR and EN messages, and no colour is hard-coded.
+9. **Review threads:** answer every one. Fix it test-first, or reply with the reason, then resolve it.
+
+- **A bug means a missing guard** ([standard](https://github.com/krizaka/.github/blob/main/docs/standards/bug-means-missing-guard.md)): the fix PR first adds a guard that fails on `main`, then fixes the bug; the bug issue says why the guards missed it.
+
+- **Default media** (avatars, banners, logos): their URLs come from the Krizaka org JSON (`@krizaka/org`: `listDefaults(kind)`, `defaultFor(kind, seed)`) — never hard-coded or bundled in this repository; a folder is never given a person. [Standard](https://github.com/krizaka/.github/blob/main/docs/standards/default-media.md).
+
+**Repository layout:** the root follows [krizaka/.github `docs/standards/repo-layout.md`](https://github.com/krizaka/.github/blob/main/docs/standards/repo-layout.md); the CI guard `check-repo-layout` fails on a stray root file, and a justified extra is declared in `.repo-layout.json` with its why.

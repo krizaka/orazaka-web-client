@@ -2,6 +2,7 @@ import type { NextConfig } from "next";
 import fs from "node:fs";
 import path from "node:path";
 import { SECURITY_HEADERS } from "./src/core/config/security-headers";
+import { PUBLIC_REDIRECTS } from "./src/core/config/redirects";
 import pkg from "./package.json";
 import { formatVersion, resolveSha } from "./src/core/config/app-version";
 
@@ -55,30 +56,16 @@ const nextConfig: NextConfig = {
   async headers() {
     return [{ source: "/:path*", headers: SECURITY_HEADERS }];
   },
-  // The contact form of this app is a placeholder: the public site sends people to krizaka.com's.
+  // Moved and removed public addresses: src/core/config/redirects.ts (all 308, tested).
   async redirects() {
-    return [
-      { source: "/contact", destination: "https://www.krizaka.com/contact", permanent: false },
-      // The mobile guide is a section of the documentation; the docs' pages were renamed (slugs without underscores).
-      { source: "/mobile", destination: "/docs/mobile", permanent: true },
-      { source: "/docs/api_reference", destination: "/docs/api", permanent: true },
-      { source: "/docs/interface_contracts", destination: "/docs/interface-contracts", permanent: true },
-      { source: "/docs/worker_protocol", destination: "/docs/worker-protocol", permanent: true },
-      { source: "/docs/business_implementation", destination: "/docs/business-playbook", permanent: true },
-      { source: "/docs/use_cases", destination: "/docs/use-cases", permanent: true },
-      // The signed-in app's addresses say the section's name (docs/ux/information-architecture.md of the workspace).
-      { source: "/dashboard/jobs", destination: "/jobs", permanent: true },
-      // Not on admin.orazaka.com: /billing is a section of the operator console there (src/console), served by the proxy.
-      { source: "/billing", has: [{ type: "host", value: "(?!admin\\.).*" }], destination: "/usage", permanent: true },
-      { source: "/profile", destination: "/settings", permanent: true },
-    ];
+    return PUBLIC_REDIRECTS.map((r) => ({ ...r, has: r.has ? [...r.has] : undefined }));
   },
   // `next dev` would otherwise append its own block to AGENTS.md on every start; this repository's
   // AGENTS.md only scopes the workspace contract and must not drift (AGENTS.md §13).
   agentRules: false,
   // @krizaka/ui: the primitives the design system re-exports since 2.0 (ES modules) — listed so next/jest
   // transforms them like the design system itself.
-  transpilePackages: ["@krizaka/orazaka-design-system", "@krizaka/orazaka-shared", "@krizaka/ui", "@krizaka/charts", "@krizaka/tokens", "@krizaka/icons", "@krizaka/intl", "@krizaka/pacer", "@tanstack/pacer", "@tanstack/react-table", "@tanstack/table-core", "@tanstack/react-virtual", "@tanstack/virtual-core", "@tanstack/store", "@tanstack/react-store", "@tanstack/markdown", "@tanstack/highlight"],
+  transpilePackages: ["@krizaka/orazaka-design-system", "@krizaka/orazaka-shared", "@krizaka/ui", "@krizaka/query", "@krizaka/charts", "@krizaka/tokens", "@krizaka/icons", "@krizaka/intl", "@krizaka/pacer", "@tanstack/pacer", "@tanstack/react-table", "@tanstack/table-core", "@tanstack/react-virtual", "@tanstack/virtual-core", "@tanstack/store", "@tanstack/react-store", "@tanstack/markdown", "@tanstack/highlight"],
   turbopack: {
     root: path.resolve(__dirname, ".."),
   },

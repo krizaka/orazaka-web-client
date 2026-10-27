@@ -8,20 +8,15 @@ import { Tabs } from "@krizaka/ui/tabs";
 import { fill } from "@/core/context/fill";
 import { useTranslation } from "@/core/context/LocaleContext";
 import { systemNow } from "@/core/jobs/systemClock";
-import { PERIODS, type Period, usageCsv, usageJson } from "@/core/jobs/usageStats";
+import { DEFAULT_PERIOD_KEY, PERIOD_KEYS, PERIODS, usageCsv, usageJson } from "@/core/jobs/usageStats";
 import type { Job } from "@/core/types/jobs.types";
 
-interface PeriodTabsProps {
-  value: Period;
-  onChange: (period: Period) => void;
-}
-
-/** The period (7 / 30 / 90 days) that drives every figure and chart of the page. */
-export function PeriodTabs({ value, onChange }: Readonly<PeriodTabsProps>) {
+/** The period (7 / 30 / 90 days) that drives every figure and chart of the page: `?period=` in the URL, read with `useRouteState("period", …)`. */
+export function PeriodTabs() {
   const { t } = useTranslation();
   const u = t.insights.usage;
   return (
-    <Tabs.Root variant="segmented" value={String(value)} onValueChange={(next) => onChange(Number(next) as Period)}>
+    <Tabs.Root variant="segmented" routeKey="period" routeValues={PERIOD_KEYS} defaultValue={DEFAULT_PERIOD_KEY}>
       <Tabs.List aria-label={u.period}>
         {PERIODS.map((days) => (
           <Tabs.Trigger key={days} value={String(days)}>

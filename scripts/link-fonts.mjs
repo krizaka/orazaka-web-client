@@ -11,8 +11,8 @@ import { createRequire } from "node:module";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
-/** The Cahier faces (krizaka-ui ADR-004): Atkinson Hyperlegible Next (text), Courier Prime (mono, two weights), Young Serif (display). */
-export const FACES = ["atkinson-hyperlegible-next-latin-wght.woff2", "courier-prime-latin-400.woff2", "courier-prime-latin-700.woff2", "young-serif-latin-400.woff2"];
+/** The two faces of a product (Krizaka UI 2027, ADR-006): Atkinson Hyperlegible Next for the text and Plus Jakarta Sans for the titles (`--kz-font-product-display`). Young Serif and Courier Prime are the notebook's, for krizaka.com, the blog and ui.krizaka.com. */
+export const FACES = ["atkinson-hyperlegible-next-latin-wght.woff2", "plus-jakarta-sans-latin-wght.woff2"];
 
 /** Copies the faces of the package at `packageDir` into `target`; returns the files written. Throws when one is missing. */
 export function linkFonts(packageDir, target) {

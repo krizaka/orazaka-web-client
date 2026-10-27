@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { useQuery, useQueryClient } from "@krizaka/query";
 
 export const WEBHOOK_EVENTS = ["run.completed", "run.failed", "run.cancelled"] as const;
 export type WebhookEvent = (typeof WEBHOOK_EVENTS)[number];
@@ -39,6 +40,7 @@ export interface RevealedSecret {
 export type WebhookError = "none" | "url" | "limit" | "generic";
 
 const BASE = "/api/v1/studios/webhooks";
+const WEBHOOKS_KEY = ["webhooks"] as const;
 
 /** An https address with a host and no credentials — what the API accepts. */
 export function isHttpsUrl(value: string): boolean {
@@ -64,30 +66,24 @@ export function errorForStatus(status: number): WebhookError {
  * @param fetchHeaders - Async factory for authenticated request headers.
  */
 export function useWebhooks(fetchHeaders: () => Promise<Record<string, string>>) {
-  const [endpoints, setEndpoints] = React.useState<WebhookEndpoint[]>([]);
-  const [isLoading, setIsLoading] = React.useState(true);
   const [isSaving, setIsSaving] = React.useState(false);
   const [error, setError] = React.useState<WebhookError>("none");
   const [revealed, setRevealed] = React.useState<RevealedSecret | null>(null);
   const [log, setLog] = React.useState<{ endpoint: WebhookEndpoint; deliveries: WebhookDelivery[] } | null>(null);
 
-  const load = React.useCallback(async () => {
-    try {
+  const queryClient = useQueryClient();
+  // The list is optional: a failed call leaves it empty and the empty state explains what to do.
+  const list = useQuery({
+    queryKey: WEBHOOKS_KEY,
+    queryFn: async () => {
       const res = await fetch(BASE, { headers: await fetchHeaders() });
-      if (res.ok) setEndpoints((await res.json()) as WebhookEndpoint[]);
-    } catch {
-      // The list is optional — fail silently, the empty state explains what to do.
-    } finally {
-      setIsLoading(false);
-    }
-  }, [fetchHeaders]);
-
-  React.useEffect(() => {
-    const run = async () => {
-      await load();
-    };
-    run();
-  }, [load]);
+      if (!res.ok) throw new Error(`webhooks ${res.status}`);
+      return (await res.json()) as WebhookEndpoint[];
+    },
+  });
+  const endpoints = list.data ?? [];
+  const isLoading = list.isPending;
+  const load = () => queryClient.invalidateQueries({ queryKey: WEBHOOKS_KEY });
 
   const create = async (url: string, events: WebhookEvent[]): Promise<boolean> => {
     setError("none");
@@ -131,7 +127,7 @@ export function useWebhooks(fetchHeaders: () => Promise<Record<string, string>>)
   };
 
   const remove = async (endpoint: WebhookEndpoint) => {
-    setEndpoints((prev) => prev.filter((e) => e.id !== endpoint.id));
+    queryClient.setQueryData<WebhookEndpoint[]>(WEBHOOKS_KEY, (prev) => (prev ?? []).filter((e) => e.id !== endpoint.id));
     try {
       await fetch(`${BASE}/${endpoint.id}`, { method: "DELETE", headers: await fetchHeaders() });
     } catch {

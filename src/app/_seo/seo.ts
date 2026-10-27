@@ -11,8 +11,6 @@ function plainDoc(slug: string): string | undefined {
   const doc = readDoc(slug);
   return doc ? plainText(doc.body).trim() : undefined;
 }
-import { features } from "@/core/context/translations.features";
-import { MODELS } from "@/features/landing/utils/models";
 
 /** The public origin of this site (www.orazaka.com: the real app, sign-up closed; dev.orazaka.com sends its pages here). */
 export const SITE_URL = "https://www.orazaka.com";
@@ -36,11 +34,9 @@ export const CRAWLERS = [
 /** What a crawler may not walk into: the signed-in workspace, the BFF and the account forms. */
 export const PRIVATE_PATHS = ["/api/", "/dashboard", "/chat", "/jobs", "/usage", "/settings", "/interceptions", "/login", "/register", "/verify", "/forgot-password"];
 
-const FEATURE_IDS = Object.keys(features.en.pages) as (keyof typeof features.en.pages)[];
-
 /** Every public page, in the order of the sitemap. */
 export function publicPaths(): string[] {
-  return ["/", ...FEATURE_IDS.map((id) => `/features/${id}`), "/gallery", "/models", "/desktop", "/docs", ...listPages().map((d) => `/docs/${d.slug}`), "/privacy", "/terms"];
+  return ["/", "/desktop", "/docs", ...listPages().map((d) => `/docs/${d.slug}`), "/privacy", "/terms"];
 }
 
 const ORG = { "@type": "Organization", "@id": ORG_ID, name: "Krizaka", url: KRIZAKA_URL };
@@ -74,7 +70,6 @@ export function siteJsonLd() {
 const familySection = () => `## Publisher\n\n- [Krizaka](${KRIZAKA_URL}): the company that publishes Orazaka, an open-source software studio in Montréal\n\nSitemap: ${SITE_URL}/sitemap.xml\n`;
 
 export function llmsText(): string {
-  const pages = FEATURE_IDS.map((id) => `- [${features.en.pages[id].name}](${SITE_URL}/features/${id}): ${features.en.pages[id].lead}`);
   const docs = listPages().map((d) => `- [${d.title}](${SITE_URL}/docs/${d.slug}): ${d.intro}`);
   return `# ${SITE_NAME}
 
@@ -83,11 +78,10 @@ export function llmsText(): string {
 ## Key pages
 
 - [Home](${SITE_URL}/): what Orazaka is
-${pages.join("\n")}
 - [Mobile app](${SITE_URL}/docs/mobile): recordings and screenshots of the iOS and Android app
 - [Orazaka for Mac](${SITE_URL}/desktop): the Orazaka Desktop test build for Apple Silicon — what it does today, requirements, download
-- [Gallery](${SITE_URL}/gallery): images made with Orazaka
-- [Models](${SITE_URL}/models): the ${MODELS.length} models Orazaka supports — what each does, where it runs, its licence and context window
+- [Packs](${SITE_URL}/docs/packs): the catalogue of installable offers, what each pack adds to the Studios, and how to write one
+- [Models](${SITE_URL}/docs/models): the models Orazaka supports — what each does, where it runs, its licence and context window
 - [Talk to the team](${KRIZAKA_URL}/contact?topic=orazaka): the contact form lives on krizaka.com
 
 ## Documentation

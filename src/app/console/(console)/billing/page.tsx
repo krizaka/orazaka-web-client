@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import { Tabs } from "@krizaka/ui/tabs";
 import { PlansScreen } from "@/console/features/billing/components/PlansScreen";
 import { PacksScreen } from "@/console/features/billing/components/PacksScreen";
@@ -18,7 +17,7 @@ const TABS = [
   { id: "wallets", label: "Portefeuilles" },
 ] as const;
 
-type TabId = (typeof TABS)[number]["id"];
+const TAB_IDS = TABS.map((entry) => entry.id);
 
 /**
  * The billing console.
@@ -28,8 +27,6 @@ type TabId = (typeof TABS)[number]["id"];
  * wants to know that before changing anything.
  */
 export default function BillingPage() {
-  const [tab, setTab] = useState<TabId>("usage");
-
   return (
     <main className="mx-auto max-w-7xl space-y-8 px-4 py-8 sm:px-6">
       <header>
@@ -41,7 +38,7 @@ export default function BillingPage() {
         </p>
       </header>
 
-      <Tabs.Root value={tab} onValueChange={(value) => setTab(value as TabId)}>
+      <Tabs.Root routeKey="tab" routeValues={TAB_IDS}>
         <Tabs.List aria-label="Facturation" className="overflow-x-auto">
           {TABS.map((entry) => (
             <Tabs.Trigger key={entry.id} value={entry.id}>

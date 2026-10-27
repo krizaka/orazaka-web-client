@@ -11,8 +11,11 @@ import { fill } from "@/core/context/fill";
 import { LandingNav } from "@/features/landing/components/LandingNav";
 import { LandingFooter } from "@/features/landing/components/LandingFooter";
 import { CopyButton } from "@/features/landing/components/CopyButton";
+import { AppVideosSection } from "@/features/landing/components/AppVideosSection";
 import { DesktopCapture } from "@/features/landing/components/DesktopCapture";
+import { PhoneSection } from "@/features/landing/components/PhoneSection";
 import { SectionHeading } from "@/features/landing/components/SectionHeading";
+import type { StoreLinks } from "@/core/config/store-links";
 import { RELEASES_URL, type DesktopRelease } from "@/features/landing/utils/release";
 import "@/features/landing/landing.css";
 
@@ -26,9 +29,10 @@ const STEP_ICONS: ComponentType<IconProps>[] = [DownloadIcon, LocalIcon, CheckIc
  * `/desktop` — Orazaka for Mac, read in order: the promise and the app in its macOS window, one Download (its facts
  * quiet, the SHA-256 in a disclosure), the first launch of a build not yet signed by Apple in three steps (the
  * quarantine fallback folded), the two modes, the services « Start » brings up, what to do when something goes wrong.
+ * Under it, the phone apps: a store button per store whose URL is configured (`store-links.ts`), else one « coming soon » line.
  * The release is read at build time and passed in; without it the page links the releases page. Words: `t.desktop`.
  */
-export function DesktopPage({ release }: Readonly<{ release: DesktopDownload }>) {
+export function DesktopPage({ release, stores = { ios: null, android: null } }: Readonly<{ release: DesktopDownload; stores?: StoreLinks }>) {
   const { t } = useTranslation();
   const d = t.desktop;
 
@@ -82,6 +86,29 @@ export function DesktopPage({ release }: Readonly<{ release: DesktopDownload }>)
                   </Button>
                 </div>
               )}
+              <section aria-label={d.mobile.title} data-testid="desktop-mobile" className="space-y-2 border-t border-border-subtle pt-5">
+                {stores.ios && stores.android ? null : !stores.ios && !stores.android ? (
+                  <p className="text-sm text-fg-secondary">{d.mobile.soon}</p>
+                ) : (
+                  <p className="text-sm text-fg-secondary">{stores.ios ? d.mobile.android.soon : d.mobile.ios.soon}</p>
+                )}
+                <div className="flex flex-wrap gap-3">
+                  {stores.ios && (
+                    <Button asChild variant="secondary" size="md">
+                      <a href={stores.ios} target="_blank" rel="noopener noreferrer">
+                        {d.mobile.ios.button}
+                      </a>
+                    </Button>
+                  )}
+                  {stores.android && (
+                    <Button asChild variant="secondary" size="md">
+                      <a href={stores.android} target="_blank" rel="noopener noreferrer">
+                        {d.mobile.android.button}
+                      </a>
+                    </Button>
+                  )}
+                </div>
+              </section>
             </header>
             <DeviceFrame kind="desktop" title="Orazaka">
               <DesktopCapture alt={d.hero.captureAlt} sizes="(min-width: 1024px) 36rem, 92vw" className="h-full w-full object-cover object-top" />
@@ -129,6 +156,14 @@ export function DesktopPage({ release }: Readonly<{ release: DesktopDownload }>)
               ))}
             </ul>
           </article>
+        </SectionBackdrop>
+
+        <SectionBackdrop className="border-b border-border-subtle">
+          <AppVideosSection />
+        </SectionBackdrop>
+
+        <SectionBackdrop className="border-b border-border-subtle">
+          <PhoneSection id="phone-ask" words={d.phone} testId="desktop-phone" />
         </SectionBackdrop>
 
         <SectionBackdrop className="border-b border-border-subtle">

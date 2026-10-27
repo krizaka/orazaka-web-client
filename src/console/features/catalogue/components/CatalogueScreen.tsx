@@ -56,7 +56,7 @@ export function CatalogueScreen() {
         <Alert tone="warning" action={<Button variant="secondary" size="sm" onClick={data.reload}>{m.retry}</Button>}>{m.error}</Alert>
       )}
       {data.switchFailed && <Alert tone="danger">{m.toggleFailed}</Alert>}
-      <Tabs.Root defaultValue="models">
+      <Tabs.Root routeKey="tab" routeValues={["models", "providers", "capabilities"]}>
         <Tabs.List aria-label={m.title} className="overflow-x-auto">
           <Tabs.Trigger value="models">{m.tabs.models}</Tabs.Trigger>
           <Tabs.Trigger value="providers">{m.tabs.providers}</Tabs.Trigger>

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { EditIcon, MenuIcon } from "@krizaka/icons";
 import { IconButton } from "@krizaka/ui/button";
 
@@ -29,12 +29,10 @@ export function ChatHeader({
   t,
 }: Readonly<ChatHeaderProps>) {
   const [isEditing, setIsEditing] = useState(false);
-  const [editTitle, setEditTitle] = useState(threadTitle);
-
-  useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setEditTitle(threadTitle);
-  }, [threadTitle]);
+  // What the person typed, or nothing: the title shown is the thread's own until they edit it.
+  const [draft, setDraft] = useState<string | null>(null);
+  const editTitle = draft ?? threadTitle;
+  const setEditTitle = (value: string) => setDraft(value === threadTitle ? null : value);
 
   const handleSave = () => {
     setIsEditing(false);

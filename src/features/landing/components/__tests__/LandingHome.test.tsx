@@ -44,7 +44,7 @@ function renderLanding(locale: Locale, page: React.ReactNode = <LandingPage />, 
 /** A Section puts its id on its heading: the section is the heading's `section`. */
 const sectionOf = (id: string) => document.getElementById(id)!.closest("section") as HTMLElement;
 const MEASURED = { ok: 128, all: 143, models: 9, day: "2026-10-17" };
-const SECTION_IDS = ["features", "records", "platforms", "engine", "why", "faq"] as const;
+const SECTION_IDS = ["features", "records"] as const;
 
 describe("LandingPage", () => {
   it("states one promise in one line, one primary action and a quiet second one — no pill, no checkmark row", () => {
@@ -55,7 +55,7 @@ describe("LandingPage", () => {
     const actions = within(hero).getAllByRole("link");
     expect(actions.map((a) => a.textContent?.trim())).toEqual([translations.en.landing.cta.primary, h.secondary]);
     expect(actions[0]).toHaveAttribute("href", "/register");
-    expect(actions[1]).toHaveAttribute("href", "/gallery");
+    expect(actions[1]).toHaveAttribute("href", "#records");
     expect(hero.querySelector("ul, [data-testid='chat-showcase']")).toBeNull();
     expect(document.body.textContent).not.toMatch(/sovereign AI platform|next-gen/i);
   });
@@ -63,19 +63,19 @@ describe("LandingPage", () => {
   it("shows the real product in the hero: the recorded chat of the page's language and theme, poster first, never a mock chat", () => {
     renderLanding("en", <LandingPage measured={MEASURED} />);
     const look = document.documentElement.classList.contains("light") ? "light" : "dark";
-    const take = screen.getByTestId("hero-take") as HTMLVideoElement;
+    const take = screen.getByTestId("clip-take") as HTMLVideoElement;
     expect(take.muted).toBe(true);
     expect(take.loop).toBe(true);
     expect(take).not.toHaveAttribute("controls");
     expect(take).toHaveAttribute("poster", expect.stringMatching(new RegExp(`products/orazaka/home/take-en-${look}-poster\\.[0-9a-f]{10}\\.webp$`)));
     expect(take.querySelector("source[type='video/webm']")).toHaveAttribute("src", expect.stringMatching(new RegExp(`take-en-${look}\\.[0-9a-f]{10}\\.webm$`)));
     expect(take.querySelector("source[type='video/mp4']")).toHaveAttribute("src", expect.stringMatching(new RegExp(`take-en-${look}\\.[0-9a-f]{10}\\.mp4$`)));
-    expect(screen.getByText(translations.en.landing.hero.takeCaption)).toBeInTheDocument();
+    expect(screen.getByText(translations.en.clips.take.caption)).toBeInTheDocument();
   });
 
   it("follows the language: the French page films the French take", () => {
     renderLanding("fr", <LandingPage measured={MEASURED} />);
-    expect(screen.getByTestId("hero-take")).toHaveAttribute("poster", expect.stringMatching(/take-fr-(dark|light)-poster/));
+    expect(screen.getByTestId("clip-take")).toHaveAttribute("poster", expect.stringMatching(/take-fr-(dark|light)-poster/));
     expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent(translations.fr.landing.hero.title);
   });
 
@@ -86,7 +86,7 @@ describe("LandingPage", () => {
     expect(screen.getByText(labels.runs).closest("div")?.querySelector("dt")).not.toBeNull();
   });
 
-  it("tells the story in order: what it does, the proof, where it runs, the engine, the comparison, the questions", () => {
+  it("tells the story in order: what it does, then the one proof", () => {
     renderLanding("en", <LandingPage measured={MEASURED} />);
     const main = screen.getByRole("main");
     const els = SECTION_IDS.map((id) => document.getElementById(id));
@@ -96,14 +96,19 @@ describe("LandingPage", () => {
     expect(order).toEqual([...order].sort((a, b) => a - b));
   });
 
-  it("has three capabilities, each with a real screen of the app (never a fake chat)", () => {
+  it("has three capabilities, each a captioned clip of the real app (never a fake chat)", () => {
     renderLanding("en", <LandingPage measured={MEASURED} />);
     const features = sectionOf("features");
     const tiles = features.querySelectorAll("ul > li");
     expect(tiles).toHaveLength(3);
-    const shots = [...features.querySelectorAll("img")].map((i) => i.getAttribute("src"));
-    expect(shots).toHaveLength(3);
-    shots.forEach((src) => expect(src).toMatch(/products\/orazaka\/web\/step-(studio|results|workspace)-(dark|light)-poster\.[0-9a-f]{10}\.webp$/));
+    const clips = [...features.querySelectorAll("video")];
+    expect(clips.map((v) => v.getAttribute("data-testid"))).toEqual(["clip-studio", "clip-results", "clip-workspace"]);
+    clips.forEach((v) => {
+      expect(v.getAttribute("poster")).toMatch(/products\/orazaka\/web\/step-(studio|results|workspace)-(dark|light)-poster\.[0-9a-f]{10}\.webp$/);
+      expect(v.muted).toBe(true);
+      expect(v.loop).toBe(true);
+      expect(v.querySelectorAll("track[kind='captions']")).toHaveLength(2);
+    });
   });
 
   it("proves it with three run records — model, where it ran, time, cost and the run id — read from the comparison's data", () => {
@@ -117,53 +122,16 @@ describe("LandingPage", () => {
     expect(records).toHaveTextContent("2026-10-17");
   });
 
-  it("lists where it runs — Web, Mac, Mobile, CLI — as one quiet strip of links", () => {
+  it("is small: the sections of the epic #231 are gone (platforms strip, family, comparison, questions)", () => {
     renderLanding("en", <LandingPage measured={MEASURED} />);
-    const strip = sectionOf("platforms");
-    expect(within(strip).getAllByRole("link").map((a) => a.getAttribute("href"))).toEqual(["/login", "/desktop", "/docs/mobile", "/docs/cli"]);
+    for (const id of ["platforms", "engine", "why", "faq"]) expect(document.getElementById(id)).toBeNull();
+    expect(screen.queryByRole("table")).toBeNull();
+    expect(document.querySelector('script[type="application/ld+json"]')).toBeNull();
   });
 
-  it("names the products that run on Orazaka with the family's marks, and says « planned » where nothing is wired", () => {
+  it("closes with one call: the way in — no « Talk to us »", () => {
     renderLanding("en", <LandingPage measured={MEASURED} />);
-    const engine = sectionOf("engine");
-    const names = within(engine).getAllByRole("link").map((a) => a.getAttribute("href"));
-    expect(names).toEqual(["https://dev.orochia.com", "https://dev.yomizaka.com", "https://dev.kachizaka.com", "https://dev.akinaza.com", "https://dev.yasakia.com", "https://dev.yororis.com"]);
-    expect(within(engine).getAllByText(translations.en.landing.family.planned)).toHaveLength(3);
-    expect(engine.querySelectorAll("svg").length).toBeGreaterThanOrEqual(6);
-    // Orochia is named neutrally: its line is a use of the engine, never a creator or payout pitch.
-    expect(translations.en.landing.family.uses.orochia).toBe("search and recommendations");
-  });
-
-  it("compares the same questions for a cloud assistant and for Orazaka, row by row, with an icon each", () => {
-    renderLanding("en", <LandingPage measured={MEASURED} />);
-    const table = screen.getByRole("table", { name: translations.en.landing.compare.title });
-    const heads = within(table).getAllByRole("rowheader");
-    expect(heads).toHaveLength(translations.en.landing.compare.rows.length);
-    heads.forEach((h) => expect(h.querySelector("svg")).not.toBeNull());
-    expect(within(table).getAllByRole("columnheader").find((h) => h.hasAttribute("data-highlight"))).toHaveTextContent("Orazaka");
-  });
-
-  it("says only what the product does today: the estimate before a run, an agent's plan approved first", () => {
-    const rows = Object.fromEntries(translations.en.landing.compare.rows.map((r) => [r.id, r]));
-    expect(rows.pay.orazaka.detail).toMatch(/estimated cost before it runs/);
-    expect(rows.agents.orazaka.detail).toMatch(/plan.*approve/);
-    expect(JSON.stringify(translations.en.landing.compare)).not.toMatch(/each action asks first|credits you set/);
-  });
-
-  it("answers the questions in native disclosures, with the matching FAQPage structured data", () => {
-    renderLanding("en", <LandingPage measured={MEASURED} />);
-    const faq = screen.getByTestId("faq");
-    const items = translations.en.landing.faq.items;
-    expect(faq.querySelectorAll("details")).toHaveLength(items.length);
-    const ld = JSON.parse(document.querySelector('script[type="application/ld+json"]')!.textContent!);
-    expect(ld["@type"]).toBe("FAQPage");
-    expect(ld.mainEntity.map((q: { name: string }) => q.name)).toEqual(items.map((i) => i.q));
-  });
-
-  it("closes with one call: the way in, and Talk to us", () => {
-    renderLanding("en", <LandingPage measured={MEASURED} />);
-    const links = screen.getAllByRole("link", { name: translations.en.landing.nav.talk });
-    expect(links.map((a) => a.getAttribute("href"))).toEqual(expect.arrayContaining(["https://www.krizaka.com/contact?topic=orazaka"]));
+    expect(screen.queryByRole("link", { name: /talk to us/i })).toBeNull();
     expect(screen.getByText(translations.en.landing.cta.title)).toBeInTheDocument();
   });
 
@@ -186,13 +154,13 @@ describe("LandingPage while sign-in and sign-up are closed (the default)", () =>
     signIn.forEach((a) => expect(a).toHaveAttribute("href", "/login"));
   });
 
-  it("offers the documentation as the one action, and the demo as the quiet one", () => {
+  it("offers the documentation as the one action, and the recorded runs as the quiet one", () => {
     renderLanding("en", <LandingPage measured={MEASURED} />, CLOSED);
     const hero = screen.getByRole("heading", { level: 1 }).closest("header") as HTMLElement;
     const [primary, secondary] = within(hero).getAllByRole("link");
     expect(primary).toHaveTextContent(translations.en.landing.closed.heroPrimary);
     expect(primary).toHaveAttribute("href", "/docs");
-    expect(secondary).toHaveAttribute("href", "/gallery");
+    expect(secondary).toHaveAttribute("href", "#records");
   });
 
   it("keeps the Krizaka signature with the version in the footer", () => {
@@ -210,9 +178,10 @@ describe("LandingPage while sign-in and sign-up are closed (the default)", () =>
     expect(screen.queryByRole("navigation", { name: "Krizaka family" })).toBeNull();
     expect(bar).not.toHaveTextContent(/dev · v/);
     expect(within(bar).getByRole("link", { name: translations.en.landing.nav.repo })).toHaveAttribute("href", "https://github.com/krizaka/orazaka-web-client");
-    expect(within(bar).getAllByRole("link", { name: translations.en.landing.nav.talk })[0]).toHaveAttribute("href", "https://www.krizaka.com/contact?topic=orazaka");
+    expect(within(bar).getAllByRole("link", { name: translations.en.landing.nav.signIn })[0]).toHaveAttribute("href", "/login");
+    expect(within(bar).queryByRole("link", { name: /talk to us|contact/i })).toBeNull();
     const centre = within(bar).getByRole("navigation", { name: "Orazaka" });
-    expect(within(centre).getAllByRole("link").map((a) => a.getAttribute("href"))).toEqual(["/docs"]);
-    for (const name of [translations.en.landing.nav.product, translations.en.landing.nav.platforms]) expect(within(centre).getByRole("button", { name })).toBeInTheDocument();
+    expect(within(centre).getAllByRole("link").map((a) => a.getAttribute("href"))).toEqual(["#features", "/desktop", "/docs"]);
+    expect(within(centre).getAllByRole("button").map((b) => b.textContent)).toEqual([translations.en.landing.nav.product]);
   });
 });

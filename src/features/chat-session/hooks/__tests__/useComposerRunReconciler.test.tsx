@@ -1,5 +1,5 @@
 import { renderHook, waitFor } from "@testing-library/react";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { QueryClient, QueryClientProvider } from "@krizaka/query";
 import type { ReactNode } from "react";
 import { useComposerRunReconciler } from "@/features/chat-session/hooks/useComposerRunReconciler";
 import { StudioApi } from "@/services/studio.api";

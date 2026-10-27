@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import { Tabs } from "@krizaka/ui/tabs";
 import { StudioBuilderScreen } from "@/console/features/studio/components/StudioBuilderScreen";
 import { StudioAnalyticsScreen } from "@/console/features/studio/components/StudioAnalyticsScreen";
@@ -14,7 +13,6 @@ import { StudioAnalyticsScreen } from "@/console/features/studio/components/Stud
 export default function StudiosPage() {
   // Usage opens first, like the billing console: an operator arriving here usually wants to know
   // whether the Studios they already published are working before authoring another.
-  const [tab, setTab] = useState<"usage" | "builder">("usage");
 
   return (
     <main className="mx-auto max-w-7xl space-y-8 px-4 py-8 sm:px-6">
@@ -25,7 +23,7 @@ export default function StudiosPage() {
           publient sans déploiement.
         </p>
       </header>
-      <Tabs.Root value={tab} onValueChange={(value) => setTab(value as "usage" | "builder")}>
+      <Tabs.Root routeKey="tab" routeValues={["usage", "builder"]}>
         <Tabs.List aria-label="Studios">
           <Tabs.Trigger value="usage">Utilisation</Tabs.Trigger>
           <Tabs.Trigger value="builder">Éditeur</Tabs.Trigger>

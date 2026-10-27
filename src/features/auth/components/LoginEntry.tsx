@@ -3,7 +3,6 @@
 import * as React from "react";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import Link from "next/link";
 import { Alert } from "@krizaka/ui/alert";
 import { useAuthFlags } from "@/core/context/AuthFlagsContext";
 import { useTranslation } from "@/core/context/LocaleContext";
@@ -43,7 +42,7 @@ export function LoginForm() {
 
 /**
  * Sign-in while it is closed (`AUTH_LOGIN_ENABLED` off): the real screen of the app, disabled, under a calm banner that
- * says when it opens and points at the demo. Nothing here touches the session or the backend.
+ * says when it opens. Nothing here touches the session or the backend.
  */
 export function LoginPreview() {
   const { t } = useTranslation();
@@ -53,10 +52,7 @@ export function LoginPreview() {
       preview
       notice={
         <Alert tone="info" role="status">
-          {c.signInBanner}{" "}
-          <Link href="/gallery" className="font-medium underline underline-offset-4">
-            {c.heroSecondary}
-          </Link>
+          {c.signInBanner}
         </Alert>
       }
     />

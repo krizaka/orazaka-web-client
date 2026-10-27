@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { useQuery, useQueryClient } from "@krizaka/query";
 
 /** Listing metadata for an inbound API key (never carries the plaintext secret). */
 export interface ApiKeyInfo {
@@ -39,6 +40,8 @@ interface UseApiKeys {
   remove: (id: string) => Promise<void>;
 }
 
+const API_KEYS_KEY = ["api-keys"] as const;
+
 /**
  * Owns the inbound API-key list plus the create/reveal lifecycle for
  * {@link ApiKeysSection}. The API returns the plaintext secret exactly once (on
@@ -50,34 +53,25 @@ interface UseApiKeys {
 export function useApiKeys(
   fetchHeaders: () => Promise<Record<string, string>>,
 ): UseApiKeys {
-  const [keys, setKeys] = React.useState<ApiKeyInfo[]>([]);
-  const [isLoading, setIsLoading] = React.useState(true);
   const [isCreateOpen, setCreateOpen] = React.useState(false);
   const [draftName, setDraftName] = React.useState("");
   const [isSaving, setIsSaving] = React.useState(false);
   const [error, setError] = React.useState<CreateError>("none");
   const [generated, setGenerated] = React.useState<GeneratedKey | null>(null);
 
-  const load = React.useCallback(async () => {
-    try {
-      const res = await fetch("/api/v1/api-keys", {
-        headers: await fetchHeaders(),
-      });
-      if (!res.ok) return;
-      setKeys((await res.json()) as ApiKeyInfo[]);
-    } catch {
-      // Keys are optional — fail silently.
-    } finally {
-      setIsLoading(false);
-    }
-  }, [fetchHeaders]);
-
-  React.useEffect(() => {
-    const run = async () => {
-      await load();
-    };
-    run();
-  }, [load]);
+  const queryClient = useQueryClient();
+  // Keys are optional: a failed call leaves the list empty.
+  const list = useQuery({
+    queryKey: API_KEYS_KEY,
+    queryFn: async () => {
+      const res = await fetch("/api/v1/api-keys", { headers: await fetchHeaders() });
+      if (!res.ok) throw new Error(`api-keys ${res.status}`);
+      return (await res.json()) as ApiKeyInfo[];
+    },
+  });
+  const keys = list.data ?? [];
+  const isLoading = list.isPending;
+  const load = () => queryClient.invalidateQueries({ queryKey: API_KEYS_KEY });
 
   const canCreate = keys.length < MAX_API_KEYS;
 
@@ -127,7 +121,7 @@ export function useApiKeys(
   const dismissGenerated = () => setGenerated(null);
 
   const remove = async (id: string) => {
-    setKeys((prev) => prev.filter((key) => key.id !== id));
+    queryClient.setQueryData<ApiKeyInfo[]>(API_KEYS_KEY, (prev) => (prev ?? []).filter((key) => key.id !== id));
     try {
       await fetch(`/api/v1/api-keys/${id}`, {
         method: "DELETE",

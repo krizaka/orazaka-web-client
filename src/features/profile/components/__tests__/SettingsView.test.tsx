@@ -71,9 +71,11 @@ describe("SettingsView (sub-nav + one section per route)", () => {
 
   it("the section list never draws a scrollbar", () => {
     render(<SettingsView section="account" />);
-    const cls = screen.getByRole("navigation", { name: t.profile.navLabel }).className;
-    expect(cls).toContain("overflow-y-hidden");
-    expect(cls).toContain("[scrollbar-width:none]");
+    const nav = screen.getByRole("navigation", { name: t.profile.navLabel });
+    // @krizaka/ui 3.49: past a few sections the list is a menu (no scrolling row at all); else the row hides its scrollbar.
+    if (nav.querySelector("details")) return;
+    expect(nav.className).toContain("overflow-y-hidden");
+    expect(nav.className).toContain("[scrollbar-width:none]");
   });
 
   it("hides the workspace from non-admins and sends their /settings/workspace to account", () => {

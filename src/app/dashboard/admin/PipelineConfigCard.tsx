@@ -2,6 +2,7 @@
 
 import { Button } from "@krizaka/ui/button";
 import * as React from "react";
+import { useQuery } from "@krizaka/query";
 import { Icon } from "@krizaka/orazaka-design-system";
 import { useTranslation } from "@/core/context/LocaleContext";
 import { PipelineInterceptorRow } from "@/app/dashboard/admin/PipelineInterceptorRow";
@@ -17,10 +18,7 @@ export function PipelineConfigCard({ fetchWithAuth }: Readonly<PipelineConfigCar
   const { t } = useTranslation();
   const pl = t.admin.pipeline;
 
-  const [interceptors, setInterceptors] = React.useState<InterceptorConfig[]>(
-    [],
-  );
-  const [loading, setLoading] = React.useState(true);
+  const [draft, setDraft] = React.useState<InterceptorConfig[] | null>(null);
   const [saving, setSaving] = React.useState(false);
   const [toast, setToast] = React.useState<{
     type: "success" | "error";
@@ -37,27 +35,20 @@ export function PipelineConfigCard({ fetchWithAuth }: Readonly<PipelineConfigCar
     [],
   );
 
-  const loadConfig = React.useCallback(async () => {
-    setLoading(true);
-    try {
+  // The server's list, with the operator's unsaved edits laid over it (a draft) — never copied into state by an effect.
+  const config = useQuery({
+    queryKey: ["pipeline-interceptors"],
+    queryFn: async () => {
       const res = await fetchWithAuth("/api/v1/pipeline/interceptors");
-      if (!res.ok) throw new Error(pl.errorLoading);
-      const data: InterceptorConfig[] = await res.json();
-      setInterceptors(data);
-      setDirty(false);
-    } catch {
-      showToast("error", pl.errorLoading);
-    } finally {
-      setLoading(false);
-    }
-  }, [fetchWithAuth, pl, showToast]);
-
-  React.useEffect(() => {
-    const initConfig = async () => {
-      await loadConfig();
-    };
-    initConfig();
-  }, [loadConfig]);
+      if (!res.ok) throw new Error("load");
+      return (await res.json()) as InterceptorConfig[];
+    },
+    refetchOnWindowFocus: false,
+  });
+  const interceptors = draft ?? config.data ?? [];
+  const setInterceptors = (next: InterceptorConfig[] | ((prev: InterceptorConfig[]) => InterceptorConfig[])) => setDraft(typeof next === "function" ? next(interceptors) : next);
+  const loading = config.isPending;
+  const shownToast = toast ?? (config.isError ? { type: "error" as const, message: pl.errorLoading } : null);
 
   const handleDragStart = (idx: number) => setDragIdx(idx);
 
@@ -146,21 +137,21 @@ export function PipelineConfigCard({ fetchWithAuth }: Readonly<PipelineConfigCar
   return (
     <section className="bg-surface-1/70 border border-border-subtle rounded-2xl p-6 shadow-sm relative">
       {/* Toast */}
-      {toast && (
+      {shownToast && (
         <aside
           className={cn(
             "absolute top-4 right-4 z-10 flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium shadow-lg animate-in fade-in slide-in-from-top-2 duration-300",
-            toast.type === "success"
+            shownToast.type === "success"
               ? "bg-success/40 text-success border border-success"
               : "bg-danger/40 text-danger border border-danger"
           )}
         >
-          {toast.type === "success" ? (
+          {shownToast.type === "success" ? (
             <Icon name="checkCircle" className="w-4 h-4" />
           ) : (
             <Icon name="alertCircle" className="w-4 h-4" />
           )}
-          {toast.message}
+          {shownToast.message}
         </aside>
       )}
 

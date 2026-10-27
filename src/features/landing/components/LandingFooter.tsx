@@ -6,12 +6,11 @@ import { familyLabels } from "@krizaka/ui/sites";
 import { LocaleSwitch } from "@/components/LocaleSwitch";
 import { useTranslation } from "@/core/context/LocaleContext";
 import { APP_ENV, APP_VERSION } from "@/core/config/version";
-import { FEATURE_IDS } from "@/features/landing/components/features";
-import { NAV_DOCS, NAV_GROUPS, NavGroupId, entryHref } from "@/features/landing/utils/site-nav";
+import { NAV_DOCS, NAV_GROUPS, entryHref } from "@/features/landing/utils/site-nav";
 
 /**
  * The footer of the public pages (NAV-SYS) is @krizaka/ui's SiteFooter: the bar's groups as columns (`site-nav.ts`:
- * Product — with the feature pages —, Platforms, Docs), no family columns (a deployed product is independent), the publisher line « A Krizaka product », DEV · the version, Montréal. The legal pages
+ * Product, Docs), no family columns (a deployed product is independent), the publisher line « A Krizaka product », DEV · the version, Montréal. The legal pages
  * and the licence end the signature line. `withLanguage`: the pages that have no bar (privacy, terms, contact) carry the
  * language switch here.
  */
@@ -38,7 +37,10 @@ export function LandingFooter({ withLanguage = false }: Readonly<{ withLanguage?
             <Link href="/terms">{f.terms}</Link>
           </SiteFooter.Link>
           <SiteFooter.Link asChild>
-            <Link href="/contact">{f.contact}</Link>
+            <a href="https://www.krizaka.com/open-source">{f.openSource}</a>
+          </SiteFooter.Link>
+          <SiteFooter.Link asChild>
+            <a href="https://www.krizaka.com/contact">{f.contact}</a>
           </SiteFooter.Link>
           {withLanguage && <LocaleSwitch variant="inline" />}
         </>
@@ -51,12 +53,6 @@ export function LandingFooter({ withLanguage = false }: Readonly<{ withLanguage?
               <Link href={entryHref(e, false)}>{t.landing.nav[e.id]}</Link>
             </SiteFooter.Link>
           ))}
-          {g.id === NavGroupId.Product &&
-            FEATURE_IDS.map((id) => (
-              <SiteFooter.Link key={id} asChild>
-                <Link href={`/features/${id}`}>{t.features.pages[id].name}</Link>
-              </SiteFooter.Link>
-            ))}
         </SiteFooter.Column>
       ))}
       <SiteFooter.Column title={t.landing.nav.docs}>

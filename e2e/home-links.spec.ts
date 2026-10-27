@@ -3,7 +3,7 @@ import { test, expect } from "@playwright/test";
 /**
  * Every link of the public home leads to a real place: no 4xx/5xx, no login wall for public content, and a hash
  * always names an element that exists on its target page. Walks the links of the sections that sell the product
- * (What it does · Proof · Platforms · Engine · Models) and the bar, in English and French.
+ * (What it does · Proof) and the bar, in English and French.
  */
 for (const locale of ["en", "fr"] as const) {
   test.describe(`home links (${locale})`, () => {
@@ -28,18 +28,6 @@ for (const locale of ["en", "fr"] as const) {
       expect(problems).toEqual([]);
     });
 
-    test("the platforms strip leads to the app, the Mac page, the phone guide and the CLI", async ({ page }) => {
-      await page.goto("/");
-      const strip = page.locator("#platforms").locator("xpath=ancestor::section[1]");
-      await expect(strip.getByRole("link")).toHaveCount(4);
-      await strip.locator("a[href='/desktop']").click();
-      await expect(page).toHaveURL(/\/desktop$/, { timeout: 30_000 });
-      const download = page.locator("a[href$='.dmg']");
-      const releases = page.locator("a[href='https://github.com/krizaka/orazaka/releases']");
-      expect((await download.count()) + (await releases.count())).toBeGreaterThan(0);
-      await expect(page.getByRole("note")).toBeVisible();
-    });
-
     test("the proof is three run records, and its link leads to the measured runs", async ({ page }) => {
       await page.goto("/");
       const records = page.locator("#records").locator("xpath=ancestor::section[1]");
@@ -48,11 +36,10 @@ for (const locale of ["en", "fr"] as const) {
       await expect(page).toHaveURL(/\/docs\/measured-runs$/, { timeout: 30_000 });
     });
 
-    test("the Product menu reaches How it works, Packs, Models and the demo", async ({ page }) => {
+    test("the bar reaches How it works, Packs and the Mac download", async ({ page }) => {
       await page.goto("/");
-      await page.getByRole("navigation", { name: "Orazaka" }).getByRole("button").first().click();
-      for (const h of ["a[href='/models']", "a[href='/gallery']", "a[href='/docs/packs']", "a[href$='#features']"]) {
-        await expect(page.locator(`[data-radix-navigation-menu-viewport] ${h}, [role=menu] ${h}, header ${h}`).first()).toBeVisible();
+      for (const h of ["a[href='/docs/packs']", "a[href='/desktop']", "a[href$='#features']"]) {
+        await expect(page.locator(`header ${h}`).first()).toBeVisible();
       }
     });
   });

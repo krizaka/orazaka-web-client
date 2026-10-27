@@ -6,19 +6,23 @@ import { Button } from "@krizaka/ui/button";
 import { LandingPage as LandingTemplate } from "@krizaka/ui/landing-page";
 import { NumberTicker } from "@krizaka/ui/number-ticker";
 import { useTranslation } from "@/core/context/LocaleContext";
-import { DemoHashRedirect } from "@/features/landing/components/DemoHashRedirect";
-import { FeatureShot } from "@/features/landing/components/FeatureShot";
-import { HeroTake } from "@/features/landing/components/HeroTake";
-import { LandingCompare } from "@/features/landing/components/LandingCompare";
-import { LandingFamily } from "@/features/landing/components/LandingFamily";
-import { LandingFaq } from "@/features/landing/components/LandingFaq";
+import { Clip } from "@/core/clips/Clip";
+import type { ClipId } from "@/core/clips/clips";
 import { LandingFooter } from "@/features/landing/components/LandingFooter";
 import { LandingNav } from "@/features/landing/components/LandingNav";
-import { LandingPlatforms } from "@/features/landing/components/LandingPlatforms";
+import { PhoneSection } from "@/features/landing/components/PhoneSection";
 import { LandingRecords } from "@/features/landing/components/LandingRecords";
 import { useEntries } from "@/features/landing/components/useEntries";
+import type { LandingDictionary } from "@/core/context/translations.landing.types";
 import type { MeasuredRuns } from "@/features/landing/utils/measured-runs";
 import "@/features/landing/landing.css";
+
+/** The three capabilities, each shown by the clip of its screen. */
+const FEATURES = [
+  { id: "studios", size: "lg", clip: "studio" },
+  { id: "records", size: "sm", clip: "results" },
+  { id: "home", size: "sm", clip: "workspace" },
+] as const satisfies readonly { id: keyof LandingDictionary["features"]["items"]; size: "lg" | "sm"; clip: ClipId }[];
 
 const NO_RUNS: MeasuredRuns = { ok: 0, all: 0, models: 0, day: null };
 
@@ -40,14 +44,13 @@ export function LandingPage({ measured = NO_RUNS }: Readonly<{ measured?: Measur
   return (
     <>
       <LandingNav />
-      <DemoHashRedirect />
       <main id="main" className="bg-surface-0 text-fg">
         <LandingTemplate
           className="landing-home"
           title={h.title}
           lead={h.lead}
           visualLabel={h.visualLabel}
-          visual={<HeroTake />}
+          visual={<Clip id="take" priority />}
           actions={
             <>
               <Button asChild variant="primary" size="lg" className="w-full sm:w-auto">
@@ -57,7 +60,7 @@ export function LandingPage({ measured = NO_RUNS }: Readonly<{ measured?: Measur
                 </Link>
               </Button>
               <Button asChild variant="ghost" size="lg" className="w-full sm:w-auto">
-                <Link href="/gallery">{h.secondary}</Link>
+                <Link href="#records">{h.secondary}</Link>
               </Button>
             </>
           }
@@ -67,11 +70,7 @@ export function LandingPage({ measured = NO_RUNS }: Readonly<{ measured?: Measur
             { value: <NumberTicker value={0} locale={locale} />, label: t.landing.figures.telemetry },
           ]}
           featuresHeading={{ eyebrow: f.eyebrow, title: f.title, lead: f.lead }}
-          features={[
-            { id: "studios", size: "lg", title: f.items.studios.title, text: f.items.studios.text, visual: <FeatureShot id="studios" alt={f.items.studios.alt} /> },
-            { id: "records", size: "sm", title: f.items.records.title, text: f.items.records.text, visual: <FeatureShot id="records" alt={f.items.records.alt} /> },
-            { id: "home", size: "sm", title: f.items.home.title, text: f.items.home.text, visual: <FeatureShot id="home" alt={f.items.home.alt} /> },
-          ]}
+          features={FEATURES.map(({ id, size, clip }) => ({ id, size, title: f.items[id].title, text: f.items[id].text, visual: <Clip id={clip} /> }))}
           closing={{
             title: t.landing.cta.title,
             body: t.landing.cta.body,
@@ -80,18 +79,12 @@ export function LandingPage({ measured = NO_RUNS }: Readonly<{ measured?: Measur
                 <Button asChild variant="primary" size="lg">
                   <Link href={closing.href}>{closing.label}</Link>
                 </Button>
-                <Button asChild variant="ghost" size="lg">
-                  <a href="https://www.krizaka.com/contact?topic=orazaka">{t.landing.nav.talk}</a>
-                </Button>
               </>
             ),
           }}
         >
           <LandingRecords measured={measured} />
-          <LandingPlatforms />
-          <LandingFamily />
-          <LandingCompare />
-          <LandingFaq />
+          <PhoneSection id="phone-studio" words={t.landing.phone} testId="landing-phone" />
         </LandingTemplate>
       </main>
       <LandingFooter />

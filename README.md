@@ -14,9 +14,10 @@ Next.js (App Router) client of the Orazaka platform with its mandatory BFF.
 
 [![CI](https://github.com/krizaka/orazaka-web-client/actions/workflows/ci.yml/badge.svg)](https://github.com/krizaka/orazaka-web-client/actions/workflows/ci.yml)
 [![OpenSSF Scorecard](https://api.scorecard.dev/projects/github.com/krizaka/orazaka-web-client/badge)](https://scorecard.dev/viewer/?uri=github.com/krizaka/orazaka-web-client)
-[![License: Apache-2.0](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE)
+[![License: FSL-1.1-ALv2](https://img.shields.io/badge/license-FSL--1.1--ALv2-blue.svg)](LICENSE.md)
 [![Orazaka](https://img.shields.io/badge/part%20of-Orazaka-f67e23)](https://github.com/krizaka/orazaka#repositories)
 [![Docs](https://img.shields.io/badge/docs-krizaka.com%2Fdocs%2Forazaka-f67e23)](https://www.krizaka.com/docs/orazaka)
+[![Quality Gate](https://sonarcloud.io/api/project_badges/measure?project=krizaka_orazaka-web-client&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=krizaka_orazaka-web-client) [![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=krizaka_orazaka-web-client&metric=security_rating)](https://sonarcloud.io/summary/new_code?id=krizaka_orazaka-web-client) [![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=krizaka_orazaka-web-client&metric=reliability_rating)](https://sonarcloud.io/summary/new_code?id=krizaka_orazaka-web-client) [![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=krizaka_orazaka-web-client&metric=sqale_rating)](https://sonarcloud.io/summary/new_code?id=krizaka_orazaka-web-client) [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=krizaka_orazaka-web-client&metric=coverage)](https://sonarcloud.io/summary/new_code?id=krizaka_orazaka-web-client)
 
 [Documentation](https://www.krizaka.com/docs/orazaka) · [Demos](https://www.krizaka.com/en/products/orazaka/demos) · [Website](https://www.krizaka.com) · [Krizaka on GitHub](https://github.com/krizaka)
 
@@ -27,7 +28,7 @@ Next.js (App Router) client of the Orazaka platform with its mandatory BFF.
   <br><sub>Recorded on this application: Eric answers a customer from his own returns policy, then generates the product photo — everything ran on one Mac. <a href="https://www.krizaka.com/en/products/orazaka/demos">More demos</a></sub>
 </p>
 
-**Layer:** Client application · **Version:** `1.0.0-SNAPSHOT` · **License:** Apache-2.0 ·
+**Layer:** Client application · **Version:** `1.0.0-SNAPSHOT` · **License:** FSL-1.1-ALv2 ·
 part of the [Orazaka platform](https://github.com/krizaka/orazaka) by [Krizaka](https://krizaka.com)
 
 ## What it provides
@@ -39,6 +40,7 @@ session. Built on [`@krizaka/ui`](https://www.krizaka.com/docs/ui) and the Oraza
 
 ```bash
 npm install && npm run dev
+pre-commit install   # once: the gitleaks and zizmor hooks on each commit
 ```
 
 ## Position in the platform
@@ -106,11 +108,16 @@ in the workspace is normative; the local [AGENTS.md](AGENTS.md) only scopes it t
 
 ## License
 
-Apache License 2.0 — see [LICENSE](LICENSE) and [NOTICE](NOTICE).
+[FSL-1.1-ALv2](LICENSE.md) (Functional Source License, Apache-2.0 future licence) © Technologies Krizaka Inc. — read,
+run, modify and self-host it for any purpose except offering a competing service; each version becomes Apache-2.0 two
+years after its release. Commits before the licence change remain [Apache-2.0](LICENSE-APACHE) — see [NOTICE](NOTICE)
+and [ADR-012](https://github.com/krizaka/.github/blob/main/docs/adr/ADR-012-licensing-libraries-open-products-fair-source.md).
+The Krizaka names and birds are not licensed: [trademark policy](https://github.com/krizaka/.github/blob/main/TRADEMARKS.md).
 
-## Public development site (dev.orazaka.com)
+## Public site (www.orazaka.com) and the dev address
 
-The same app runs as a read-only public site: no sign-in, no sign-up, no call to the backend.
+The same app runs as a read-only public site: no sign-in, no sign-up, no call to the backend. `www.orazaka.com` is
+indexed; `dev.orazaka.com` sends its pages to www (308) and, like any `dev.*` address, is never indexed.
 
 | Variable | Default | Effect |
 | --- | --- | --- |
@@ -126,10 +133,22 @@ The same app serves the operator console (usage, credits, prices, Studios, accou
 rewrites that host to the internal `/console` tree (`src/app/console/`, code in `src/console/`); on any other host
 `/console/**` is a 404. Nothing is shared with the public site: its own session cookie, signing key and sign-in flag.
 
+**Law → Proposals** (`/law`, under Catalogue — [ADR-089](https://github.com/krizaka/orazaka/blob/main/docs/adr/ADR-089-rules-from-the-law.md) §8)
+is where a rule derived from the law is reviewed before it reaches a pack: by kind, each proposal with its article quote
+beside the official URL, the rule, its fixtures and its vet report; **Approve** (a note), **Reject** (a reason),
+**Edit** (a new revision, vetted again), the kind's golden cases and **Promote** (the approved rules and the in-force
+date → the orazaka-packs pull request's link). Two more tabs: **Corpus** (instruments, imports with their hashes and
+counts, an article by point in time — metadata only — and a manual XML import, relayed multipart by the BFF) and
+**Demand** (`kind_demand`, and « Start a derivation »). It reads `/api/v1/admin/law/**` (ADMIN only, every write
+audited); every refusal is worded by its Problem `code`. Its words are in English and French
+(`src/console/core/copy/law.ts`), in the browser's language (`ConsoleLocale`); the tab and the filters are the URL
+(`?tab=`, `?status=`, `?kind=`).
+
 | Variable | Default | Effect |
 | --- | --- | --- |
 | `AUTH_ALLOWED_IPS` | empty | Comma-separated client addresses (DigitalOcean's `do-connecting-ip`) allowed on the admin host; any other gets 403, sign-in page included. In production an empty list lets nobody in. |
 | `AUTH_CONSOLE_LOGIN_ENABLED` | `false` | Opens the console's sign-in (only `ROLE_ADMIN` signs in). Closed, its BFF routes answer 404. Independent of `AUTH_LOGIN_ENABLED`. |
+| `APP_STORE_IOS_URL` / `APP_STORE_ANDROID_URL` | unset | Store pages of the mobile apps, read at build (`src/core/config/store-links.ts`). Unset: the Download page says « Coming to iPhone and Android », no button. Set (an `apps.apple.com` / `play.google.com` https page only — never TestFlight or an APK): the store button appears by itself. |
 | `AUTH_CONSOLE_SECRET` | none | Signing key of the console's session (never the public site's `NEXTAUTH_SECRET`); unset in production, no console session can be opened. |
 | `AUTH_TRUST_HOST` | unset | `true` on the deployment: next-auth builds callback URLs from the requested Host (one `NEXTAUTH_URL` cannot name two hosts). |
 
@@ -137,4 +156,4 @@ rewrites that host to the internal `/console` tree (`src/app/console/`, code in 
 
 ---
 
-<sub>A Krizaka product · [krizaka.com](https://www.krizaka.com) · Apache-2.0</sub>
+<sub>A Krizaka product · [krizaka.com](https://www.krizaka.com) · FSL-1.1-ALv2</sub>

@@ -5,6 +5,8 @@
  */
 type Locale = "en" | "fr";
 
+import type { GroupId, JourneyId } from "@/core/constants/docs-journeys";
+
 export interface DocsJourneyCopy {
   title: string;
   blurb: string;
@@ -79,13 +81,14 @@ export interface DocsDictionary {
   searchEmpty: string;
   searchHint: string;
   journeysTitle: string;
-  journeys: Record<"start" | "use" | "run" | "build" | "mobile", DocsJourneyCopy>;
-  groups: { integrate: string; internals: string };
+  journeys: Record<JourneyId, DocsJourneyCopy>;
+  groups: Record<GroupId, string>;
   quickstartTitle: string;
+  /** The hub's entry block, right after the quickstart: what a pack is, and the way to the catalogue. */
+  packsEntry: { title: string; line: string; cta: string };
   popularTitle: string;
   modelsTitle: string;
   modelsLine: string;
-  updateLink: string;
   promiseLabel: string;
   promise: string;
   home: string;
@@ -108,28 +111,27 @@ export interface DocsDictionary {
 export const docs: Record<Locale, DocsDictionary> = {
   en: {
     meta: "Documentation — Orazaka",
-    metaDescription: "Orazaka's documentation by what you want to do: get started, use it, run it, build on it, and the mobile app. Generated from the code.",
+    metaDescription: "Orazaka's documentation on a short path: a five-minute quickstart, one page of concepts, short guides, and a generated reference.",
     eyebrow: "Documentation",
-    title: "Find your way: start, use, run, build.",
-    lead: "Orazaka's documentation follows what you came to do. The reference pages are generated from the code of the Orazaka repositories, so they cannot drift from what runs.",
+    title: "Quickstart, concepts, guides.",
+    lead: "Read the first two sections and you can run Orazaka. The reference is generated from the code, so it cannot drift from what runs.",
     searchLabel: "Search the documentation",
     searchPlaceholder: "Search: install, packs, API, backup…",
     searchEmpty: "Nothing matches. Try a shorter word, or pick a journey below.",
     searchHint: "Pages and their headings",
     journeysTitle: "Where do you want to go?",
     journeys: {
-      start: { title: "Get started", blurb: "What Orazaka is, and a running install on a Mac, a server or from source.", start: "Start here" },
-      use: { title: "Use it", blurb: "Work with what is installed: Studios and packs, jobs and schedules, the models it runs.", start: "Open Packs & Studios" },
-      run: { title: "Run it", blurb: "Operate it: administration, sign-in, security, updates and backups, licensing.", start: "Open Administration" },
-      build: { title: "Build on it", blurb: "Integrate and extend: the API, the CLI, tools and MCP, workers — then the architecture under it.", start: "Open the API reference" },
-      mobile: { title: "Mobile", blurb: "The iOS and Android app, in four steps and screen by screen.", start: "Follow the four steps" },
+      start: { title: "Start", blurb: "Five minutes to a running install, then the whole model on one page.", start: "Open the quickstart" },
+      guides: { title: "Guides", blurb: "One task each, short: install, run a Studio, decide what is refused, use the phone app.", start: "Run a Studio" },
+      packs: { title: "Packs", blurb: "The catalogue: what each pack installs, every manifest field, how to write and install one.", start: "Open the catalogue" },
+      reference: { title: "Reference", blurb: "Generated from the code: the API, the CLI, packs, models, architecture, policies.", start: "Open the API reference" },
     },
-    groups: { integrate: "Integrate", internals: "Under the hood" },
+    groups: { integrate: "Integrate", platform: "The platform", policies: "Policies and apps" },
     quickstartTitle: "From zero to a running stack",
+    packsEntry: { title: "Packs", line: "A pack is an installable offer, one per trade: the Studios, models and rules a job needs, in one install.", cta: "Browse the packs" },
     popularTitle: "Most read",
     modelsTitle: "Supported models",
     modelsLine: "Every model Orazaka supports: what it does, where it runs, its licence and context window.",
-    updateLink: "Update & back up",
     promiseLabel: "Our promise",
     promise: "Every reference page is generated from the code. If a page is wrong, the code is, or the generator is — and we fix it at the source, never in the page.",
     home: "Docs",
@@ -201,28 +203,27 @@ export const docs: Record<Locale, DocsDictionary> = {
   },
   fr: {
     meta: "Documentation — Orazaka",
-    metaDescription: "La documentation d'Orazaka selon ce que vous voulez faire : démarrer, l'utiliser, l'exploiter, construire dessus, et l'app mobile. Générée depuis le code.",
+    metaDescription: "La documentation d'Orazaka sur un chemin court : un démarrage en cinq minutes, une page de concepts, des guides courts et une référence générée.",
     eyebrow: "Documentation",
-    title: "Trouvez votre chemin : démarrer, utiliser, exploiter, construire.",
-    lead: "La documentation d'Orazaka suit ce que vous venez faire. Les pages de référence sont générées depuis le code des dépôts Orazaka : elles ne peuvent pas s'éloigner de ce qui tourne.",
+    title: "Démarrage, concepts, guides.",
+    lead: "Lisez les deux premières sections et vous pouvez faire tourner Orazaka. La référence est générée depuis le code : elle ne peut pas s'éloigner de ce qui tourne.",
     searchLabel: "Rechercher dans la documentation",
     searchPlaceholder: "Rechercher : installer, packs, API, sauvegarde…",
     searchEmpty: "Aucun résultat. Essayez un mot plus court, ou choisissez un parcours ci-dessous.",
     searchHint: "Pages et leurs titres",
     journeysTitle: "Où voulez-vous aller ?",
     journeys: {
-      start: { title: "Démarrer", blurb: "Ce qu'est Orazaka, et une installation qui tourne sur un Mac, un serveur ou depuis les sources.", start: "Commencer ici" },
-      use: { title: "L'utiliser", blurb: "Travailler avec ce qui est installé : Studios et packs, tâches et planifications, les modèles.", start: "Ouvrir Packs et Studios" },
-      run: { title: "L'exploiter", blurb: "Le faire tourner : administration, connexion, sécurité, mises à jour et sauvegardes, licence.", start: "Ouvrir l'administration" },
-      build: { title: "Construire dessus", blurb: "Intégrer et étendre : l'API, la CLI, les outils et MCP, les workers — puis l'architecture dessous.", start: "Ouvrir la référence API" },
-      mobile: { title: "Mobile", blurb: "L'app iOS et Android, en quatre étapes et écran par écran.", start: "Suivre les quatre étapes" },
+      start: { title: "Démarrer", blurb: "Cinq minutes pour une installation qui tourne, puis tout le modèle sur une page.", start: "Ouvrir le démarrage" },
+      guides: { title: "Guides", blurb: "Une tâche chacun, court : installer, lancer un Studio, décider ce qui est refusé, l'app mobile.", start: "Lancer un Studio" },
+      packs: { title: "Packs", blurb: "Le catalogue : ce que chaque pack installe, chaque champ du manifeste, comment en écrire et en installer un.", start: "Ouvrir le catalogue" },
+      reference: { title: "Référence", blurb: "Générée depuis le code : l'API, la CLI, les packs, les modèles, l'architecture, les politiques.", start: "Ouvrir la référence API" },
     },
-    groups: { integrate: "Intégrer", internals: "Sous le capot" },
+    groups: { integrate: "Intégrer", platform: "La plateforme", policies: "Politiques et apps" },
     quickstartTitle: "De zéro à une pile qui tourne",
+    packsEntry: { title: "Packs", line: "Un pack est une offre installable, une par métier : les Studios, modèles et règles d'un travail, en une installation.", cta: "Parcourir les packs" },
     popularTitle: "Les plus lues",
     modelsTitle: "Modèles pris en charge",
     modelsLine: "Chaque modèle qu'Orazaka prend en charge : ce qu'il fait, où il tourne, sa licence et sa fenêtre de contexte.",
-    updateLink: "Mettre à jour et sauvegarder",
     promiseLabel: "Notre promesse",
     promise: "Chaque page de référence est générée depuis le code. Si une page est fausse, le code l'est, ou le générateur — et on corrige à la source, jamais dans la page.",
     home: "Docs",

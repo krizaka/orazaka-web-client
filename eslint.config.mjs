@@ -2,10 +2,13 @@ import { defineConfig, globalIgnores } from "eslint/config";
 import nextVitals from "eslint-config-next/core-web-vitals";
 import nextTs from "eslint-config-next/typescript";
 import { krizakaUiRestrictedSyntax } from "@krizaka/config/eslint/krizaka-ui";
+import { krizakaStack } from "@krizaka/config/eslint/stack";
 
 const eslintConfig = defineConfig([
   ...nextVitals,
   ...nextTs,
+  // The stack rules, the React-effects rules and cognitive complexity (15): warnings while krizaka-ratchet freezes the debt.
+  ...krizakaStack({ effects: "warn", complexity: "warn", sonar: "warn" }),
   {
     files: ["**/*.{js,jsx,mjs,ts,tsx,mts,cts}"],
     rules: {

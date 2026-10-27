@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { useQuery } from "@krizaka/query";
 import { PauseIcon, PlayIcon } from "@krizaka/icons";
 import { IconButton } from "@krizaka/ui/button";
 import { cn } from "@krizaka/ui/cn";
@@ -44,16 +45,13 @@ interface AudioWaveformProps {
 export function AudioWaveform({ src, label, className }: Readonly<AudioWaveformProps>) {
   const { t } = useTranslation();
   const audio = React.useRef<HTMLAudioElement>(null);
-  const [peaks, setPeaks] = React.useState<number[] | null>(null);
-  const [failed, setFailed] = React.useState(false);
   const [playing, setPlaying] = React.useState(false);
   const [progress, setProgress] = React.useState(0);
 
-  React.useEffect(() => {
-    const abort = new AbortController();
-    peaksOf(src, abort.signal).then(setPeaks, () => !abort.signal.aborted && setFailed(true));
-    return () => abort.abort();
-  }, [src]);
+  // One decode per source; a new source cancels the one in flight (the query's signal) and shows its own result.
+  const decoded = useQuery({ queryKey: ["audio-peaks", src], queryFn: ({ signal }) => peaksOf(src, signal), retry: false, staleTime: Infinity });
+  const peaks = decoded.data ?? null;
+  const failed = decoded.isError;
 
   if (failed) {
     return (

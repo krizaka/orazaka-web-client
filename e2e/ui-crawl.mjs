@@ -5,9 +5,14 @@
  *
  *   - no console error and no uncaught page error;
  *   - no horizontal scroll (nothing cut at the side);
+ *   - the page never overflows (containment, krizaka-ui `parameters.contain`): no visible box sticks out past the
+ *     viewport or past the scroll container that holds it (a decorative aria-hidden layer or a clipped one may);
  *   - exactly one footer (« A Krizaka product ») and a navigation landmark;
  *   - no broken picture and no empty tile (a control that renders nothing);
- *   - no hard-coded colour in the inline styles of the page (the tokens are `var(--kz-*)`).
+ *   - no hard-coded colour in the inline styles of the page (the tokens are `var(--kz-*)`);
+ *   - axe-core (WCAG 2.1 AA, through @krizaka/a11y-audit) on every screen: a ratchet (`a11y-baseline.json` for the public
+ *     screens and the sign-in, `a11y-baseline.app.json` for the signed-in ones) counts the violations per rule — a new one
+ *     fails, the count only goes down (`--a11y-update` lowers it, `--a11y-init` records today's counts).
  *
  * Public screens come from the site's own sitemap.xml (a page added there is crawled); the signed-in screens need a
  * demo persona (E2E_USER / E2E_PASSWORD) and are skipped, said out loud, without one. A capture of each screen is saved
@@ -17,8 +22,11 @@
  *
  * Read-only: it opens pages, never submits anything but the sign-in form.
  */
-import { mkdirSync } from "node:fs";
+import { existsSync, mkdirSync } from "node:fs";
 import { join } from "node:path";
+import { fileURLToPath } from "node:url";
+
+import { A11yCollector, auditPage as auditA11y, finish } from "@krizaka/a11y-audit";
 
 const BASE = (process.env.E2E_BASE_URL || "https://dev.orazaka.com").replace(/\/$/, "");
 const OUT = process.env.OUT || "";
@@ -32,11 +40,17 @@ const SIGNED_IN = ["/", "/studios", "/packs", "/chat", "/jobs", "/usage", "/auto
 /** Console messages that are not Orazaka's (a blocked third-party beacon, a missing favicon). */
 const IGNORED_CONSOLE = [/Download the React DevTools/i, /favicon/i, /Failed to load resource.*(401|403|404)/i];
 
+const A11Y_BASELINE = fileURLToPath(new URL("../a11y-baseline.json", import.meta.url));
+const A11Y_BASELINE_APP = fileURLToPath(new URL("../a11y-baseline.app.json", import.meta.url));
+const a11yPublic = new A11yCollector("orazaka-web-client");
+const a11yApp = new A11yCollector("orazaka-web-client-app");
+
 const say = (line) => process.stdout.write(`${line}\n`);
 
 let chromium;
 try {
-  ({ chromium } = await import("playwright"));
+  // `playwright` is a transitive dependency of `@playwright/test`: a strict node_modules (pnpm) only exposes the latter.
+  ({ chromium } = await import("playwright").catch(() => import("@playwright/test")));
 } catch {
   console.error("✗ Playwright is missing: npm install, then npx playwright install chromium.");
   process.exit(2);
@@ -47,9 +61,9 @@ if (sitemap === null) {
   console.error(`✗ Nothing answers at ${BASE}/sitemap.xml: set E2E_BASE_URL to a running Orazaka.`);
   process.exit(2);
 }
-// The sections with a distinct layout first (home, gallery, models, docs, a feature), then the rest up to the limit.
+// The sections with a distinct layout first (home, docs, the Mac page), then the rest up to the limit.
 const paths = [...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => new URL(m[1]).pathname || "/");
-const picked = [...new Set(["/", "/gallery", "/models", "/docs", ...paths.filter((p) => p.startsWith("/features/")).slice(0, 1), ...paths])].slice(0, PUBLIC_LIMIT);
+const picked = [...new Set(["/", "/docs", "/desktop", ...paths])].slice(0, PUBLIC_LIMIT);
 const PAGES = [
   ...picked.map((url) => ({ name: url === "/" ? "home" : url.slice(1).replace(/\//g, "-"), url })),
   // The sign-in screen is the auth layout (no bar, no footer, by design); the signed-in app is the rail + header shell
@@ -84,6 +98,24 @@ function inspect(chrome) {
   const problems = [];
   const doc = document.documentElement;
   if (doc.scrollWidth > doc.clientWidth + 1) problems.push(`horizontal scroll (${doc.scrollWidth}px in a ${doc.clientWidth}px viewport)`);
+  const clipped = (el) => {
+    for (let n = el; n && n !== document.body; n = n.parentElement) {
+      if (n.getAttribute("aria-hidden") === "true" || n.hasAttribute("inert")) return true;
+      if (n !== el && ["hidden", "clip", "auto", "scroll"].includes(getComputedStyle(n).overflowX)) return true;
+    }
+    return false;
+  };
+  const sticking = [...document.querySelectorAll("body *")].filter((el) => {
+    const box = el.getBoundingClientRect();
+    if (box.width === 0 || box.height === 0) return false;
+    const style = getComputedStyle(el);
+    if (style.visibility === "hidden" || style.display === "none" || style.position === "fixed") return false;
+    return box.right > doc.clientWidth + 1 && !clipped(el);
+  });
+  if (sticking.length > 0) problems.push(`never overflows: ${sticking.length} box(es) past the viewport (first: ${sticking[0].tagName.toLowerCase()}${sticking[0].className && typeof sticking[0].className === "string" ? `.${sticking[0].className.split(/\s+/)[0]}` : ""})`);
+  for (const box of document.querySelectorAll("main, aside, header, nav")) {
+    if (getComputedStyle(box).overflowX === "visible" && box.scrollWidth > box.clientWidth + 1 && box.clientWidth > 0) problems.push(`never overflows: <${box.tagName.toLowerCase()}> content wider than its box (${box.scrollWidth}px in ${box.clientWidth}px)`);
+  }
   const topFooters = [...document.querySelectorAll("footer")].filter((f) => !f.closest("main, article, section, dialog, [role=dialog]"));
   if (chrome === "public") {
     if (topFooters.length !== 1) problems.push(`${topFooters.length} page footers (one « A Krizaka product » footer expected)`);
@@ -121,6 +153,7 @@ async function crawl(p, theme, device, viewport) {
     await page.goto(`${BASE}${p.url}`, { waitUntil: "networkidle", timeout: 60_000 }).catch(() => page.waitForLoadState("load"));
     await page.waitForTimeout(500);
     const problems = await page.evaluate(inspect, p.chrome ?? "public");
+    (p.session ? a11yApp : a11yPublic).add({ route: p.url, theme }, await auditA11y(page));
     if (consoleErrors.length > 0) problems.push(...consoleErrors.slice(0, 3).map((m) => `console: ${m}`));
     if (OUT) await page.screenshot({ path: join(OUT, `${p.name}.${theme}.${device}.png`), fullPage: false });
     return problems;
@@ -154,5 +187,18 @@ for (const [device, viewport] of Object.entries(VIEWPORTS)) {
   }
 }
 await browser.close();
+const guards = [finish(a11yPublic, { baseline: A11Y_BASELINE })];
+// The signed-in screens are ratcheted once their baseline is recorded from a persona run (`--a11y-init`); until then they are only counted.
+if (USER && PASSWORD) {
+  if (existsSync(A11Y_BASELINE_APP) || process.argv.includes("--a11y-init")) guards.push(finish(a11yApp, { baseline: A11Y_BASELINE_APP }));
+  else say(`· signed-in a11y baseline missing: counted, not enforced (${a11yApp.summary().join("; ") || "no violation"}); record it with E2E_USER, E2E_PASSWORD and --a11y-init`);
+}
+for (const guard of guards) {
+  for (const note of guard.notes) say(note);
+  if (guard.problems.length > 0) {
+    failures++;
+    for (const problem of guard.problems) say(`✗ ${problem}`);
+  }
+}
 say(`\n${checked - failures}/${checked} screens clean${OUT ? `, captures in ${OUT}` : ""}`);
 process.exit(failures > 0 ? 1 : 0);

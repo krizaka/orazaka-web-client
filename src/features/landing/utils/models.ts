@@ -1,6 +1,6 @@
 /**
  * @file models.ts
- * @description The models Orazaka supports, as /models and the home page show them. Data is `models.generated.json`
+ * @description The models Orazaka supports, as the signed-in screens name them. Data is `models.generated.json`
  * (scripts/sync-models.mjs, from the registry Orazaka's routing reads): nothing about a model is typed here. This file
  * only types it, filters it and picks the few the home page shows.
  */

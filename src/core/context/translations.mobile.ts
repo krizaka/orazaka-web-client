@@ -3,7 +3,7 @@
  * @description Copy of the Mobile section of the home page and of /docs/mobile — the steps of the Orazaka app, en and fr.
  * Each step says the person's goal, what the screen does for them, and three things to notice; each of those is
  * readable in the app's code (orazaka-mobile-client) and visible in the recording — nothing invented. Recorded on the
- * iOS 27 simulator, in dark and light, against dev.orazaka.com, signed in as the QA user.
+ * iOS 27 simulator, in dark and light, against dev.orazaka.com, signed in as the demo persona, Mira.
  */
 type Locale = "en" | "fr";
 
@@ -43,7 +43,7 @@ export const mobile: Record<Locale, MobileDictionary> = {
     title: "Orazaka in your pocket",
     lead: "The mobile app runs your work from anywhere — make an image from a sentence, ask the model, and see where your jobs stand — against the same edge, services and interceptor pipeline as the web client. This is the real app, not a mock-up. Press play; nothing starts by itself.",
     all: "Follow every step",
-    recordedOn: "Recorded on the iOS 27 simulator (iPhone 17), in dark and light, against dev.orazaka.com, signed in as the QA user. Typing is sped up and waits are cut — each cut says how long it was.",
+    recordedOn: "Recorded on the iOS 27 simulator (iPhone 17), in dark and light, against dev.orazaka.com, signed in as the demo persona, Mira. Typing is sped up and waits are cut — each cut says how long it was.",
     stepsTitle: "The steps",
     step: "Step",
     notice: "What to notice",
@@ -56,7 +56,7 @@ export const mobile: Record<Locale, MobileDictionary> = {
         goal: "Sign in to your workspace",
         short: "Sign in and land on the Studios.",
         purpose: "One screen, one account: you sign in with the same credentials as on the web and go straight to your Studios, with nothing to configure on the phone.",
-        alt: "The QA user types an e-mail and a password, taps Sign in and lands on the list of Studios.",
+        alt: "Mira types an e-mail and a password, taps Sign in and lands on the list of Studios.",
         notice: [
           "Sign in stays disabled until both the e-mail and the password are filled.",
           "No extra step after signing in: as soon as the session exists, the app swaps the sign-in screens for your Studios.",
@@ -103,7 +103,7 @@ export const mobile: Record<Locale, MobileDictionary> = {
     title: "Orazaka dans la poche",
     lead: "L'app mobile mène votre travail de n'importe où — faire une image à partir d'une phrase, interroger le modèle, voir où en sont vos jobs — face au même edge, aux mêmes services et à la même chaîne d'intercepteurs que le client web. C'est la vraie app, pas une maquette. Appuyez sur lecture ; rien ne démarre seul.",
     all: "Suivre chaque étape",
-    recordedOn: "Enregistré sur le simulateur iOS 27 (iPhone 17), en sombre et en clair, face à dev.orazaka.com, connecté en tant qu'utilisateur QA. La saisie est accélérée et les attentes coupées — chaque coupe dit sa durée.",
+    recordedOn: "Enregistré sur le simulateur iOS 27 (iPhone 17), en sombre et en clair, face à dev.orazaka.com, connecté en tant que la persona de démonstration, Mira. La saisie est accélérée et les attentes coupées — chaque coupe dit sa durée.",
     stepsTitle: "Les étapes",
     step: "Étape",
     notice: "À remarquer",
@@ -116,7 +116,7 @@ export const mobile: Record<Locale, MobileDictionary> = {
         goal: "Se connecter à son espace",
         short: "Se connecter et arriver sur les Studios.",
         purpose: "Un écran, un compte : vous vous connectez avec les mêmes identifiants que sur le web et vous arrivez directement sur vos Studios, sans rien à configurer sur le téléphone.",
-        alt: "L'utilisateur QA saisit un e-mail et un mot de passe, appuie sur Se connecter et arrive sur la liste des Studios.",
+        alt: "Mira saisit un e-mail et un mot de passe, appuie sur Se connecter et arrive sur la liste des Studios.",
         notice: [
           "Le bouton de connexion reste désactivé tant que l'e-mail et le mot de passe ne sont pas remplis.",
           "Pas d'étape en plus : dès que la session existe, l'app remplace les écrans de connexion par vos Studios.",
