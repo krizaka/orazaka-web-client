@@ -1,19 +1,17 @@
-import { RailNavBody, RailNavShell } from "@krizaka/ui/rail-nav";
-import { Sidebar } from "@/components/layout/Sidebar";
-import { Header } from "@/components/layout/Header";
+import { AppShell } from "@/components/layout/AppShell";
 
 /**
- * The application shell of the Studios, Packs and Automation sections: the same sidebar and header as
- * the dashboard, chat and profile, so moving between sections never drops the navigation.
+ * The application shell of the Studios, Packs and Automation sections: the same frame as the dashboard, chat and
+ * profile, so moving between sections never drops the navigation.
  */
-export default function ProtectedLayout({ children }: Readonly<{ children: React.ReactNode }>) {
+export default function ProtectedLayout({
+  children,
+}: Readonly<{ children: React.ReactNode }>) {
   return (
-    <RailNavShell className="flex h-screen overflow-hidden bg-surface-0 transition-colors duration-200">
-      <Sidebar />
-      <RailNavBody className="flex flex-1 flex-col overflow-hidden">
-        <Header />
-        <section className="flex-1 overflow-auto scrollbar-thin">{children}</section>
-      </RailNavBody>
-    </RailNavShell>
+    <AppShell>
+      <section className="flex-1 overflow-auto scrollbar-thin">
+        {children}
+      </section>
+    </AppShell>
   );
 }

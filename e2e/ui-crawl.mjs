@@ -5,6 +5,8 @@
  *
  *   - no console error and no uncaught page error;
  *   - no horizontal scroll (nothing cut at the side);
+ *   - the page never overflows (containment, krizaka-ui `parameters.contain`): no visible box sticks out past the
+ *     viewport or past the scroll container that holds it (a decorative aria-hidden layer or a clipped one may);
  *   - exactly one footer (« A Krizaka product ») and a navigation landmark;
  *   - no broken picture and no empty tile (a control that renders nothing);
  *   - no hard-coded colour in the inline styles of the page (the tokens are `var(--kz-*)`).
@@ -84,6 +86,24 @@ function inspect(chrome) {
   const problems = [];
   const doc = document.documentElement;
   if (doc.scrollWidth > doc.clientWidth + 1) problems.push(`horizontal scroll (${doc.scrollWidth}px in a ${doc.clientWidth}px viewport)`);
+  const clipped = (el) => {
+    for (let n = el; n && n !== document.body; n = n.parentElement) {
+      if (n.getAttribute("aria-hidden") === "true" || n.hasAttribute("inert")) return true;
+      if (n !== el && ["hidden", "clip", "auto", "scroll"].includes(getComputedStyle(n).overflowX)) return true;
+    }
+    return false;
+  };
+  const sticking = [...document.querySelectorAll("body *")].filter((el) => {
+    const box = el.getBoundingClientRect();
+    if (box.width === 0 || box.height === 0) return false;
+    const style = getComputedStyle(el);
+    if (style.visibility === "hidden" || style.display === "none" || style.position === "fixed") return false;
+    return box.right > doc.clientWidth + 1 && !clipped(el);
+  });
+  if (sticking.length > 0) problems.push(`never overflows: ${sticking.length} box(es) past the viewport (first: ${sticking[0].tagName.toLowerCase()}${sticking[0].className && typeof sticking[0].className === "string" ? `.${sticking[0].className.split(/\s+/)[0]}` : ""})`);
+  for (const box of document.querySelectorAll("main, aside, header, nav")) {
+    if (getComputedStyle(box).overflowX === "visible" && box.scrollWidth > box.clientWidth + 1 && box.clientWidth > 0) problems.push(`never overflows: <${box.tagName.toLowerCase()}> content wider than its box (${box.scrollWidth}px in ${box.clientWidth}px)`);
+  }
   const topFooters = [...document.querySelectorAll("footer")].filter((f) => !f.closest("main, article, section, dialog, [role=dialog]"));
   if (chrome === "public") {
     if (topFooters.length !== 1) problems.push(`${topFooters.length} page footers (one « A Krizaka product » footer expected)`);

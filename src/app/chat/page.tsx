@@ -2,9 +2,7 @@
 
 import React, { Suspense } from "react";
 import { ChatWindow } from "@/features/chat-session/components/ChatWindow";
-import { RailNav } from "@krizaka/ui/rail-nav";
-import { Sidebar } from "@/components/layout/Sidebar";
-import { Header } from "@/components/layout/Header";
+import { AppShell } from "@/components/layout/AppShell";
 import { useAuth } from "@/core/hooks/useAuth";
 import { useRouter, useSearchParams } from "next/navigation";
 
@@ -35,24 +33,18 @@ export default function ChatPage() {
   if (isLoading || !isAuthenticated) return null;
 
   return (
-    <RailNav.Shell className="flex h-screen w-screen overflow-hidden bg-surface-0">
-      <Sidebar />
-
-      <RailNav.Body className="flex flex-1 flex-col overflow-hidden min-w-0">
-        <Header />
-
-        <main className="flex-1 flex flex-col overflow-hidden bg-surface-0">
-          <Suspense
-            fallback={
-              <output className="p-6 text-fg-muted text-sm animate-pulse">
-                Loading chat...
-              </output>
-            }
-          >
-            <ChatContent />
-          </Suspense>
-        </main>
-      </RailNav.Body>
-    </RailNav.Shell>
+    <AppShell>
+      <main className="flex-1 flex flex-col overflow-hidden bg-surface-0">
+        <Suspense
+          fallback={
+            <output className="p-6 text-fg-muted text-sm animate-pulse">
+              Loading chat...
+            </output>
+          }
+        >
+          <ChatContent />
+        </Suspense>
+      </main>
+    </AppShell>
   );
 }

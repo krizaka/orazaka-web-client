@@ -3,9 +3,7 @@
 import * as React from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/core/hooks/useAuth";
-import { RailNav } from "@krizaka/ui/rail-nav";
-import { Sidebar } from "@/components/layout/Sidebar";
-import { Header } from "@/components/layout/Header";
+import { AppShell } from "@/components/layout/AppShell";
 import { useTranslation } from "@/core/context/LocaleContext";
 import type { CatalogModel } from "./CategoryCard";
 import { CategoryCard } from "./CategoryCard";
@@ -108,9 +106,7 @@ export default function AdminDashboardPage() {
 
     const pollConnections = async () => {
       try {
-        const res = await fetchWithAuth(
-          "/api/v1/jobs/active-connections",
-        );
+        const res = await fetchWithAuth("/api/v1/jobs/active-connections");
         if (res.ok) {
           const count = await res.json();
           setActiveSessions(count);
@@ -176,60 +172,65 @@ export default function AdminDashboardPage() {
   }
 
   return (
-    <RailNav.Shell className="flex h-screen overflow-hidden bg-surface-0 transition-colors duration-200">
-      <Sidebar />
+    <AppShell>
+      <main className="flex-1 overflow-auto p-6 scrollbar-thin ambient-grid bg-surface-0">
+        <section className="mx-auto max-w-5xl space-y-6 animate-in fade-in slide-in-from-bottom-3 duration-300">
+          <AdminToolbar
+            loadingModels={loadingModels}
+            errorMessage={errorMessage}
+            onRefresh={loadModels}
+            onAddModel={() => openModal("create")}
+            onClearError={() => setErrorMessage(null)}
+            t={t}
+          />
 
-      <RailNav.Body className="flex flex-col flex-1 overflow-hidden">
-        <Header />
-
-        <main className="flex-1 overflow-auto p-6 scrollbar-thin ambient-grid bg-surface-0">
-          <section className="mx-auto max-w-5xl space-y-6 animate-in fade-in slide-in-from-bottom-3 duration-300">
-            <AdminToolbar
-              loadingModels={loadingModels}
-              errorMessage={errorMessage}
-              onRefresh={loadModels}
-              onAddModel={() => openModal("create")}
-              onClearError={() => setErrorMessage(null)}
-              t={t}
+          <StatGrid minWidth={13}>
+            <Stat
+              label={t.dashboard.activeSessions}
+              value={metrics.activeSessions.toLocaleString()}
+              hint={t.dashboard.runningParallel}
             />
-
-            <StatGrid minWidth={13}>
-              <Stat label={t.dashboard.activeSessions} value={metrics.activeSessions.toLocaleString()} hint={t.dashboard.runningParallel} />
-              <Stat label={t.dashboard.tokensUsed} value={metrics.tokensUsed.toLocaleString()} hint={t.dashboard.estimatedCumulative} />
-              <Stat label={t.dashboard.memoryNodes} value={metrics.memoryNodes.toLocaleString()} hint={t.dashboard.contextSaved} />
-            </StatGrid>
-
-            <PipelineConfigCard fetchWithAuth={fetchWithAuth} />
-
-            <ValidationPipelineCard fetchWithAuth={fetchWithAuth} />
-
-            {loadingModels && models.length === 0 ? (
-              <div className="text-center py-20 text-fg-muted animate-pulse text-sm">
-                {t.admin.loadingModels}
-              </div>
-            ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {CATEGORIES.map((cat) => (
-                  <CategoryCard
-                    key={cat}
-                    category={cat}
-                    models={models.filter((m) => m.category === cat)}
-                    onEdit={(m) => openModal("edit", m)}
-                    onDelete={handleDelete}
-                  />
-                ))}
-              </div>
-            )}
-
-            <FeatureToggleCard
-              features={features}
-              onToggle={handleToggleFeature}
-              t={t}
+            <Stat
+              label={t.dashboard.tokensUsed}
+              value={metrics.tokensUsed.toLocaleString()}
+              hint={t.dashboard.estimatedCumulative}
             />
-          </section>
-        </main>
-      </RailNav.Body>
+            <Stat
+              label={t.dashboard.memoryNodes}
+              value={metrics.memoryNodes.toLocaleString()}
+              hint={t.dashboard.contextSaved}
+            />
+          </StatGrid>
 
+          <PipelineConfigCard fetchWithAuth={fetchWithAuth} />
+
+          <ValidationPipelineCard fetchWithAuth={fetchWithAuth} />
+
+          {loadingModels && models.length === 0 ? (
+            <div className="text-center py-20 text-fg-muted animate-pulse text-sm">
+              {t.admin.loadingModels}
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {CATEGORIES.map((cat) => (
+                <CategoryCard
+                  key={cat}
+                  category={cat}
+                  models={models.filter((m) => m.category === cat)}
+                  onEdit={(m) => openModal("edit", m)}
+                  onDelete={handleDelete}
+                />
+              ))}
+            </div>
+          )}
+
+          <FeatureToggleCard
+            features={features}
+            onToggle={handleToggleFeature}
+            t={t}
+          />
+        </section>
+      </main>
       <ModelDialog
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
@@ -242,6 +243,6 @@ export default function AdminDashboardPage() {
         setErrorMessage={setErrorMessage}
         providers={providers}
       />
-    </RailNav.Shell>
+    </AppShell>
   );
 }

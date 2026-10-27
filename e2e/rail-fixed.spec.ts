@@ -13,7 +13,7 @@ test("the rail does not move when the page scrolls", async ({ page }) => {
   await page.goto("/jobs");
   await page.waitForLoadState("networkidle");
 
-  const rail = page.locator("aside").first();
+  const rail = page.getByRole("navigation").first();
   const before = await rail.boundingBox();
   expect(before).not.toBeNull();
 
@@ -29,7 +29,7 @@ test("the rail does not move when the page scrolls", async ({ page }) => {
   expect(after!.y).toBeCloseTo(before!.y, 0);
   expect(after!.height).toBeCloseTo(before!.height, 0);
   // Its last item (the foot of the rail) is still on screen.
-  const last = await page.locator("aside a").last().boundingBox();
+  const last = await page.getByRole("navigation").first().locator("a").last().boundingBox();
   expect(last!.y).toBeGreaterThanOrEqual(0);
   expect(last!.y + last!.height).toBeLessThanOrEqual(800);
 });

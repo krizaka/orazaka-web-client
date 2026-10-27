@@ -21,7 +21,7 @@ for (const vp of widths) {
 
     const marks = page.locator("[data-brand-mark]:visible");
     await expect(marks).toHaveCount(1);
-    await expect(marks.first().locator("xpath=ancestor::*[self::aside or self::header][1]")).toHaveJSProperty("tagName", vp.name === "desktop" ? "ASIDE" : "HEADER");
+    await expect(marks.first().locator("xpath=ancestor::*[self::nav or self::header][1]")).toHaveJSProperty("tagName", vp.name === "desktop" ? "NAV" : "HEADER");
 
     if (vp.name === "desktop") {
       // The word « Orazaka » sits on the mark's line, right after the rail.
