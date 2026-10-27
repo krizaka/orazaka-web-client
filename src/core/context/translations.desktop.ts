@@ -6,6 +6,7 @@
  * they are read from the GitHub release at build time.
  */
 import type { PhoneWords } from "./translations.landing.types";
+import { videosWords, type VideosWords } from "./translations.appVideos";
 
 type Locale = "en" | "fr";
 
@@ -20,6 +21,8 @@ export interface DesktopDictionary {
   /** The phone apps: a store button only when its URL is configured (`APP_STORE_IOS_URL`, `APP_STORE_ANDROID_URL`), else « soon ». */
   /** The phone clip of the Download page (`PhoneSection`). */
   phone: PhoneWords;
+  /** The videos the web journeys recorded (`AppVideosSection`, krizaka/.github#315); `items` is keyed by `<platform>-<flow>` of the manifest. */
+  videos: VideosWords;
   mobile: { title: string; soon: string; ios: { button: string; soon: string }; android: { button: string; soon: string } };
   download: {
     button: string;
@@ -59,6 +62,7 @@ export const desktop: Record<Locale, DesktopDictionary> = {
       title: "And the same Orazaka in your hand.",
       lead: "The phone app talks to the same platform as the Mac app and the web: a chat, the Studios, your jobs. Recorded on a real device.",
     },
+    videos: videosWords("en"),
     mobile: {
       title: "On your phone",
       soon: "Coming to iPhone and Android",
@@ -146,6 +150,7 @@ export const desktop: Record<Locale, DesktopDictionary> = {
       title: "Et le même Orazaka dans votre main.",
       lead: "L'app mobile parle à la même plateforme que l'app Mac et le web : un chat, les Studios, vos tâches. Enregistrée sur un vrai appareil.",
     },
+    videos: videosWords("fr"),
     mobile: {
       title: "Sur votre téléphone",
       soon: "Bientôt sur iPhone et Android",

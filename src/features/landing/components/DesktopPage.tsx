@@ -11,6 +11,7 @@ import { fill } from "@/core/context/fill";
 import { LandingNav } from "@/features/landing/components/LandingNav";
 import { LandingFooter } from "@/features/landing/components/LandingFooter";
 import { CopyButton } from "@/features/landing/components/CopyButton";
+import { AppVideosSection } from "@/features/landing/components/AppVideosSection";
 import { DesktopCapture } from "@/features/landing/components/DesktopCapture";
 import { PhoneSection } from "@/features/landing/components/PhoneSection";
 import { SectionHeading } from "@/features/landing/components/SectionHeading";
@@ -155,6 +156,10 @@ export function DesktopPage({ release, stores = { ios: null, android: null } }: 
               ))}
             </ul>
           </article>
+        </SectionBackdrop>
+
+        <SectionBackdrop className="border-b border-border-subtle">
+          <AppVideosSection />
         </SectionBackdrop>
 
         <SectionBackdrop className="border-b border-border-subtle">

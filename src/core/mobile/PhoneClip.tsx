@@ -2,6 +2,7 @@
 
 import type { ClipId } from "@/core/mobile/mobile";
 import { APPEARANCES, clipUrls } from "@/core/mobile/mobile";
+import { VideoSources } from "@/core/clips/VideoSources";
 
 /**
  * One recording of the real app in a phone: the clip already carries its device frame (9:16), played in place on demand. The app was
@@ -27,8 +28,7 @@ export function PhoneClip({ id, label, alt, caption }: Readonly<{ id: ClipId; la
               data-appearance={appearance}
               className="block aspect-[1080/1920] w-full bg-surface-2 object-cover"
             >
-              <source src={u.webm} type="video/webm" />
-              <source src={u.mp4} type="video/mp4" />
+              <VideoSources webm={u.webm} mp4={u.mp4} />
             </video>
           );
         })}

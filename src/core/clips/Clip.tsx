@@ -4,6 +4,7 @@ import * as React from "react";
 import { cn } from "@krizaka/ui/cn";
 import { useTranslation } from "@/core/context/LocaleContext";
 import { useLook } from "@/core/clips/useLook";
+import { VideoSources } from "@/core/clips/VideoSources";
 import { CLIPS, LANGS, clipFiles, type ClipId } from "@/core/clips/clips";
 
 /**
@@ -45,8 +46,7 @@ export function Clip({ id, priority = false, className }: Readonly<{ id: ClipId;
         aria-label={copy.alt}
         data-testid={`clip-${id}`}
       >
-        <source src={files.webm} type="video/webm" />
-        <source src={files.mp4} type="video/mp4" />
+        <VideoSources webm={files.webm} mp4={files.mp4} />
         {[locale, ...LANGS.filter((l) => l !== locale)].map((lang) => (
           <track key={lang} kind="captions" srcLang={lang} label={lang === "fr" ? "Français" : "English"} src={`/captions/${id}/${lang}`} />
         ))}
