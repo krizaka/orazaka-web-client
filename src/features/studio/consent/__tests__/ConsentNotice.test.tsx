@@ -6,7 +6,7 @@ import { ConsentNotice } from "@/features/studio/consent/ConsentNotice";
 import { StudioApi } from "@/services/studio.api";
 
 /** These screens read server state: every render gets a fresh query client. */
-const render: typeof plainRender = (ui, options) => plainRender(ui, { wrapper: queryWrapper(), ...options });
+const render = (ui: Parameters<typeof plainRender>[0], options?: Parameters<typeof plainRender>[1]) => plainRender(ui, { wrapper: queryWrapper(), ...options });
 
 jest.mock("@/core/context/LocaleContext", () => ({
   useTranslation: () => ({ t: jest.requireActual("@/core/context/translations").translations.en, locale: "en" }),

@@ -7,7 +7,7 @@ import { TopUpDialog } from "@/features/billing/components/TopUpDialog";
 import { LowBalanceBanner } from "@/features/billing/components/LowBalanceBanner";
 
 /** These screens read server state: every render gets a fresh query client. */
-const render: typeof plainRender = (ui, options) => plainRender(ui, { wrapper: queryWrapper(), ...options });
+const render = (ui: Parameters<typeof plainRender>[0], options?: Parameters<typeof plainRender>[1]) => plainRender(ui, { wrapper: queryWrapper(), ...options });
 
 const t = translations.en;
 

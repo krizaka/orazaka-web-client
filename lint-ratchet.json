@@ -10,10 +10,13 @@
     "arbitraryVar": 0,
     "classNameTemplate": 0,
     "fetchInClientEffect": 0,
+    "asyncInEffect": 0,
+    "derivedStateInEffect": 1,
     "directTanstackImport": 22,
     "localTableOrForm": 5,
     "retiredImport": 0,
-    "routeStateSelection": 0
+    "routeStateSelection": 0,
+    "pageTemplate": 33
   },
   "stackGlobs": [
     "app/**/*.{js,jsx,mjs,ts,tsx,mts}",
