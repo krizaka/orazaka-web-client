@@ -5,6 +5,7 @@ import { ThemeProvider } from "@krizaka/ui/theme";
 import { translations, type Locale } from "@/core/context/translations";
 import { AuthFlagsProvider } from "@/core/context/AuthFlagsContext";
 import { PricingEditions, ENTERPRISE_URL } from "@/features/landing/components/PricingEditions";
+import type { PublicPrice } from "@/features/landing/utils/public-prices";
 import { publicPaths } from "@/app/_seo/seo";
 
 jest.mock("next/navigation", () => ({ usePathname: () => "/pricing", useRouter: () => ({ push: jest.fn() }) }));
@@ -15,12 +16,12 @@ jest.mock("@/core/context/LocaleContext", () => ({
 
 beforeAll(mockReducedMotion);
 
-function renderPage(locale: Locale) {
+function renderPage(locale: Locale, prices: PublicPrice[] = []) {
   mockLocale = locale;
   return render(
     <AuthFlagsProvider flags={{ login: false, signup: false, github: false, google: false }}>
       <ThemeProvider>
-        <PricingEditions />
+        <PricingEditions prices={prices} />
       </ThemeProvider>
     </AuthFlagsProvider>,
   );
@@ -54,6 +55,22 @@ describe.each(["en", "fr"] as const)("/pricing (%s)", (locale) => {
     renderPage(locale);
     const footer = screen.getAllByRole("contentinfo")[0];
     expect(within(footer).getByRole("link", { name: translations[locale].landing.footer.pricing })).toHaveAttribute("href", "/pricing");
+  });
+});
+
+describe("/pricing reads the price catalogue (krizaka/orazaka#417)", () => {
+  const entry = (over: Partial<PublicPrice>): PublicPrice => ({ key: "orazaka.business", unit: "year", amountCents: 290000, availability: "public", limits: {}, ...over });
+
+  it("shows a published price from the catalogue's cents, with its unit and taxes", () => {
+    const { container } = renderPage("en", [entry({})]);
+    expect(container.textContent?.replace(/\s/g, " ")).toContain("2,900.00");
+    expect(container.textContent).toContain(`${translations.en.pricing.units.year} · ${translations.en.pricing.plusTaxes}`);
+  });
+
+  it("keeps the edition's own words when the catalogue says preparing or internal", () => {
+    const { container } = renderPage("fr", [entry({ availability: "preparing", amountCents: null }), entry({ key: "orazaka.enterprise", availability: "internal" })]);
+    expect(container.textContent).not.toMatch(/[$€£]/);
+    expect(screen.getAllByText(translations.fr.pricing.business.soon).length).toBeGreaterThan(0);
   });
 });
 
