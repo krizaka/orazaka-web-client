@@ -1,5 +1,5 @@
 import "@testing-library/jest-dom";
-import { mockReducedMotion } from "@/features/landing/reduced-motion.testkit";
+import { mockReducedMotion } from "@/features/landing/utils/reduced-motion.testkit";
 import { render, screen, within } from "@testing-library/react";
 import { ThemeProvider } from "@krizaka/ui/theme";
 import { translations, type Locale } from "@/core/context/translations";

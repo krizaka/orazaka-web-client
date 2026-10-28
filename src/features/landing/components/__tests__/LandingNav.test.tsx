@@ -1,6 +1,6 @@
 import type * as React from "react";
 import "@testing-library/jest-dom";
-import { mockReducedMotion } from "@/features/landing/reduced-motion.testkit";
+import { mockReducedMotion } from "@/features/landing/utils/reduced-motion.testkit";
 import { fireEvent, render, screen, within } from "@testing-library/react";
 import { SessionContext } from "next-auth/react";
 import { ThemeProvider } from "@krizaka/ui/theme";
