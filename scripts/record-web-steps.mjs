@@ -2,7 +2,7 @@
 // account the phone recordings use), nothing staged and no new generation: the workspace, a Studio's page with its
 // estimate before the run, then what was already made. Dark and light, 1120×700, ≤ 7 s each, muted.
 //
-//   node scripts/record-web-steps.mjs <out dir>       # then: krizaka-com scripts/cdn-assets.mjs upload <out> --to products/orazaka/web
+//   node scripts/record-web-steps.mjs <out dir>       # then: krizaka-com scripts/cdn-assets.mjs upload <out> --to sites/orazaka/web
 //
 // Credentials come from the local QA store through secret.sh — never printed, never in a file here. A demo shows a
 // persona, never a QA name: the account itself carries the cast's name (krizaka/orazaka#473), and a take with « qa » on screen is refused.
