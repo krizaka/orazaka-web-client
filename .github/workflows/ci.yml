@@ -25,8 +25,9 @@ jobs:
       # The shared component pipeline publishes npm packages with provenance (OIDC): a reusable
       # workflow cannot be granted more than its caller holds, so its absence fails at startup.
       id-token: write
-    uses: krizaka/orazaka/.github/workflows/component.yml@73c905465a0fad85976c84ccbf2f0e95f21a17b1 # main (the pin orazaka-packs runs green on)
+    uses: krizaka/orazaka/.github/workflows/component.yml@566fdd8ce2d199ca5a89ff17cc0331a210c520d8 # main (with the sonar input)
     with:
       component: orazaka-web-client
       duplication: true
+      sonar: true            # CI analysis with the jest coverage of `validate` (krizaka/.github#377); automatic analysis is switched off
     secrets: inherit # zizmor: ignore[secrets-inherit] the org's own component pipeline, pinned by SHA, needs the publish secrets
