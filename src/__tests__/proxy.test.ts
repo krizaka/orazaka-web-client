@@ -1,7 +1,11 @@
 /** @jest-environment node */
 import { NextRequest } from "next/server";
+import { sessionHint } from "@krizaka/auth";
 import { proxy } from "@/proxy";
 import { publicPaths } from "@/app/_seo/seo";
+
+// @krizaka/auth ships ESM only (its own tests cover the cookie rules); here only what the proxy hands it is checked.
+jest.mock("@krizaka/auth", () => ({ sessionHint: jest.fn((response: Response) => response) }), { virtual: true });
 
 const call = (path: string, env: Record<string, string> = {}) => {
   const before = { ...process.env };
@@ -82,5 +86,23 @@ describe("an address that does not exist (krizaka/orazaka#443)", () => {
 
   it.each(["/jobs/42", "/studios/image-generation", "/settings/profile"])("still sends a visitor of the app page %s to the login page", (path) => {
     expect(call(path, { AUTH_LOGIN_ENABLED: "true" }).headers.get("location")).toBe("https://dev.orazaka.com/login");
+  });
+});
+
+// krizaka-ui#827: the bar's readable hint flag follows the next-auth cookie, so a signed-in person never sees « Sign in » while the session is read.
+describe("the bar's session hint follows the next-auth cookie (krizaka-ui#827)", () => {
+  const ask = (path: string, cookie?: string) => proxy(new NextRequest(`https://www.orazaka.com${path}`, { headers: { host: "www.orazaka.com", ...(cookie ? { cookie } : {}) } }));
+  const hintedWith = () => (sessionHint as jest.Mock).mock.calls.at(-1)?.[2];
+
+  it.each(["next-auth.session-token", "__Secure-next-auth.session-token"])("hands %s to the hint when it exists", (name) => {
+    ask("/pricing", `${name}=tok123`);
+    expect(hintedWith()).toMatchObject({ cookie: name });
+  });
+  it("falls back to the development name for a visitor with neither (the hint then clears itself)", () => {
+    ask("/pricing");
+    expect(hintedWith()).toMatchObject({ cookie: "next-auth.session-token" });
+  });
+  it("leaves the home for the page (it already decides on the server from the same cookie): no redirect", () => {
+    expect(ask("/", "next-auth.session-token=tok123").headers.get("location")).toBeNull();
   });
 });
