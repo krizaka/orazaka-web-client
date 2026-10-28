@@ -42,6 +42,7 @@
     "@krizaka/query": "^0.2.2",
     "@krizaka/tailwind": "^3.65.0",
     "@krizaka/tokens": "^3.65.0",
+    "@krizaka/auth": "^0.10.0",
     "@krizaka/ui": "^3.65.0",
     "@tanstack/react-query": "^5.100.11",
     "@tanstack/react-query-devtools": "^5.100.11",

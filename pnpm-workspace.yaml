@@ -15,6 +15,7 @@ minimumReleaseAgeExclude:
   - "@krizaka/config@0.9.1 || 0.10.0 || 0.11.0 || 0.11.1 || 0.12.0"
   - "@krizaka/a11y-audit@0.2.0"
   - "@krizaka/page-audit@0.3.1"
+  - "@krizaka/auth@0.10.0"
 onlyBuiltDependencies:
   - "@ast-grep/cli"
   - "@parcel/watcher"

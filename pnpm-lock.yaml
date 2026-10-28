@@ -11,6 +11,9 @@ importers:
       '@dagrejs/dagre':
         specifier: ^3.0.0
         version: 3.1.1
+      '@krizaka/auth':
+        specifier: ^0.10.0
+        version: 0.10.0(zod@4.6.7)
       '@krizaka/charts':
         specifier: ^0.6.0
         version: 0.6.0(@krizaka/ui@3.65.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
@@ -934,6 +937,18 @@ packages:
     resolution: {integrity: sha512-hRQwJuX3PCtJdc6M3KkT+WwyluV8WVW2pGenZIE/qNC7pcGpkrcIqwFb5gauu7JcJkhraekto/egOIX4QLfm1g==}
     engines: {node: '>=22'}
 
+  '@krizaka/auth@0.10.0':
+    resolution: {integrity: sha512-swQ9EkF1T8tweabekLfHjkACJZX9LJZslzAcQXezdIkOslvI5BHWUXbeP38cO2NPkDAXehn1UYHJ4QsgocCMvA==}
+    engines: {node: '>=22'}
+    peerDependencies:
+      vitest: '>=4'
+      zod: '>=3.23'
+    peerDependenciesMeta:
+      vitest:
+        optional: true
+      zod:
+        optional: true
+
   '@krizaka/charts@0.6.0':
     resolution: {integrity: sha512-NkfG0HNQ+QJQm5gwj+QbNotjnlXRk0XsBYBnFoHy5DtPsVUHteWDa0CSJWbKb6s4Zv3vYfMqBZEd2xqzNu3mAg==}
     engines: {node: '>=22'}
@@ -965,6 +980,10 @@ packages:
         optional: true
       prettier:
         optional: true
+
+  '@krizaka/db@0.2.0':
+    resolution: {integrity: sha512-m4gFEqeKd1B//UDjGaj/6YN0pXPWjKi2vH391Hl86K0pCemuVg57+AKx9b1pHzpLXm1SyBK4p/svmoi9o1gOgA==}
+    engines: {node: '>=22'}
 
   '@krizaka/fonts@0.5.0':
     resolution: {integrity: sha512-romnY4PqqOLvW/7ZYNzmUq1rTIM8ylmlUeZgB2YukNCp/PxlbSM4kc5ldm1SB6KHbt/rBOlkbQdkW9prhyVvqg==}
@@ -1060,6 +1079,12 @@ packages:
         optional: true
       pg:
         optional: true
+
+  '@krizaka/settings@0.5.0':
+    resolution: {integrity: sha512-O89KGjWvbC6p+FNgwIBRT5JGlH8a9Lual/VT7Jbk9/FhfwsDvQdzuahUsUh3FTfUXBPKMQJFhZoxTPlw0FdVgg==}
+    engines: {node: '>=22'}
+    peerDependencies:
+      zod: '>=3.23'
 
   '@krizaka/tailwind@2.10.0':
     resolution: {integrity: sha512-LZTufxgBnPcJ31LNtY6KEax6Fh9blavHZVsdluI5jT8q41Hr/oZjVuE6OcZlYqrbD+f3SGPCqFfyjrxixCE3Rw==}
@@ -6311,6 +6336,14 @@ snapshots:
     dependencies:
       axe-core: 4.11.0
 
+  '@krizaka/auth@0.10.0(zod@4.6.7)':
+    dependencies:
+      '@krizaka/db': 0.2.0
+      '@krizaka/settings': 0.5.0(zod@4.6.7)
+      date-fns: 4.4.0
+    optionalDependencies:
+      zod: 4.6.7
+
   '@krizaka/charts@0.6.0(@krizaka/ui@3.65.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)':
     dependencies:
       '@krizaka/intl': 0.2.1
@@ -6339,6 +6372,8 @@ snapshots:
       prettier: 3.9.10
     transitivePeerDependencies:
       - supports-color
+
+  '@krizaka/db@0.2.0': {}
 
   '@krizaka/fonts@0.5.0': {}
 
@@ -6420,6 +6455,11 @@ snapshots:
       - pg
 
   '@krizaka/realtime@0.2.1': {}
+
+  '@krizaka/settings@0.5.0(zod@4.6.7)':
+    dependencies:
+      '@krizaka/db': 0.2.0
+      zod: 4.6.7
 
   '@krizaka/tailwind@2.10.0(@krizaka/tokens@2.10.0)(@krizaka/ui@3.65.0)(tailwindcss@4.3.3)':
     dependencies:
