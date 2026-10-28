@@ -80,3 +80,16 @@ test("a11y-baseline.json holds counts, and no serious or critical rule (those ar
     assert.ok(["minor", "moderate"].includes(impact), `${rule} is ${impact}: fix it, do not record it`);
   }
 });
+
+test("a signed-in screen that shows « qa_user » fails the crawl: one shared regex, used by the crawl, the takes and the recordings", async () => {
+  const { QA_ON_SCREEN } = await import("./qa-on-screen.mjs");
+  for (const bad of ["Good morning, qa_user", "qa-user", "qa_admin", "Hello QA", "signed in as qa user"]) assert.match(bad, QA_ON_SCREEN, bad);
+  for (const ok of ["Good morning, Éric", "Mira Haddad", "Quality", "aqa"]) assert.doesNotMatch(ok, QA_ON_SCREEN, ok);
+  assert.match(crawl, /qaOnScreen\(page\)/);
+  assert.match(crawl, /problems\.push\(/);
+  for (const f of ["scripts/record-web-steps.mjs", "scripts/landing-take.mjs"]) {
+    const src = read(f);
+    assert.match(src, /from "\.\/qa-on-screen\.mjs"/, f);
+    assert.doesNotMatch(src, /qa_user\|/, `${f} keeps its own copy of the regex`);
+  }
+});

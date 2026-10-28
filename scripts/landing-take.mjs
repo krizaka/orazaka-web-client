@@ -13,6 +13,7 @@ import { mkdirSync, mkdtempSync, writeFileSync } from "node:fs";
 import { createRequire } from "node:module";
 import os from "node:os";
 import path from "node:path";
+import { qaOnScreen } from "./qa-on-screen.mjs";
 
 const require = createRequire(import.meta.url);
 const { chromium } = require("@playwright/test");
@@ -72,10 +73,9 @@ for (const locale of ["en", "fr"]) {
     });
     const page = await ctx.newPage();
     // Refuses the take if « qa » shows anywhere on screen (the visible text, the labels and the titles).
-    const qaOnScreen = () => page.evaluate(() => /\bqa[_\s-]|qa_user|\bqa\b/i.test(document.body.innerText + [...document.querySelectorAll("[aria-label],[title],[alt]")].map((e) => e.getAttribute("aria-label") + e.getAttribute("title") + e.getAttribute("alt")).join(" ")));
     await page.goto(`${BASE}/chat`, { waitUntil: "networkidle" });
     await page.waitForTimeout(800);
-    if (await qaOnScreen()) throw new Error(`${locale}/${theme}: « qa » is on screen — a demo shows a persona, never a QA name`);
+    if (await qaOnScreen(page)) throw new Error(`${locale}/${theme}: « qa » is on screen — a demo shows a persona, never a QA name`);
 
     const cdp = await ctx.newCDPSession(page);
     const frames = [];
@@ -97,7 +97,7 @@ for (const locale of ["en", "fr"]) {
     await page.waitForFunction(() => !/Answering|En train de répondre|Réponse en cours/i.test(document.body.innerText) && document.querySelectorAll('[class*="prose"], [data-role="assistant"], [data-testid*="assistant"]').length > 0, null, { timeout: 150_000 }).catch(() => {});
     const answered = Date.now() / 1000;
     await page.waitForTimeout(2600);
-    if (await qaOnScreen()) throw new Error(`${locale}/${theme}: « qa » is on screen at the end of the take`);
+    if (await qaOnScreen(page)) throw new Error(`${locale}/${theme}: « qa » is on screen at the end of the take`);
     await cdp.send("Page.stopScreencast");
     await ctx.close();
 
