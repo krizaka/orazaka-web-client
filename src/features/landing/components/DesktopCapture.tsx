@@ -7,11 +7,11 @@ const SMALL = 1120;
 
 /**
  * A screenshot of the real Orazaka Desktop control panel (taken from the 0.1.0 .dmg build), 1x and 2x WebP on the CDN
- * (`products/orazaka/home/desktop-panel-*.webp`). `eager` for a capture above the fold.
+ * (`sites/orazaka/home/desktop-panel-*.webp`). `eager` for a capture above the fold.
  */
 export function DesktopCapture({ alt, className, eager = false, sizes = "100vw" }: Readonly<{ alt: string; className?: string; eager?: boolean; sizes?: string }>) {
-  const big = mediaUrl(`products/orazaka/home/desktop-panel-${WIDTH}.webp`);
-  const small = mediaUrl(`products/orazaka/home/desktop-panel-${SMALL}.webp`);
+  const big = mediaUrl(`sites/orazaka/home/desktop-panel-${WIDTH}.webp`);
+  const small = mediaUrl(`sites/orazaka/home/desktop-panel-${SMALL}.webp`);
   return (
     // A plain <img> in a <picture>: next/image cannot give a srcset to a file that is already optimised on the CDN.
     <picture>

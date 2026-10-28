@@ -4,7 +4,7 @@ import { COMPARE_IMAGES, COMPARE_INSPIRATIONS, COMPARE_MODELS, imagesOf } from "
 
 describe("Compare models", () => {
   it("lists every image the media manifest publishes — no hand list — each with the record of its run", () => {
-    const published = mediaPaths("products/orazaka/compare/");
+    const published = mediaPaths("sites/orazaka/compare/");
     expect(published.length).toBeGreaterThanOrEqual(12);
     expect(COMPARE_IMAGES.map((image) => `${image.stem}.webp`).sort()).toEqual(published);
     for (const image of COMPARE_IMAGES) {
@@ -12,7 +12,7 @@ describe("Compare models", () => {
       expect(image.seconds).toBeGreaterThan(0);
       expect(image.width * image.height).toBeGreaterThan(0);
       expect(hasMedia(`${image.stem}.webp`)).toBe(true);
-      expect(image.src).toMatch(/^https:\/\/krizaka-assets\.b-cdn\.net\/site\/products\/orazaka\/compare\/[a-z0-9-]+--[a-z0-9-]+\.[0-9a-f]{10}\.webp$/);
+      expect(image.src).toMatch(/^https:\/\/krizaka-assets\.b-cdn\.net\/sites\/orazaka\/compare\/[a-z0-9-]+--[a-z0-9-]+\.[0-9a-f]{10}\.webp$/);
     }
   });
 

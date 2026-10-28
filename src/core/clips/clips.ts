@@ -34,18 +34,18 @@ export const CLIPS: Readonly<Record<ClipId, ClipSpec>> = {
   studio: { width: 1120, height: 700, aspect: "aspect-[1120/700]", seconds: 6, perLang: false },
   results: { width: 1120, height: 700, aspect: "aspect-[1120/700]", seconds: 5, perLang: false },
   // The phone app in a device frame, signed in as the demo persona (orazaka-mobile-client scripts/record-story.mjs, frame-clips.mjs).
-  "phone-studio": { width: 1080, height: 1920, aspect: "aspect-[1080/1920]", seconds: 19, perLang: false, base: "products/orazaka/mobile/studio-run" },
-  "phone-ask": { width: 1080, height: 1920, aspect: "aspect-[1080/1920]", seconds: 11, perLang: false, base: "products/orazaka/mobile/ask" },
+  "phone-studio": { width: 1080, height: 1920, aspect: "aspect-[1080/1920]", seconds: 19, perLang: false, base: "sites/orazaka/mobile/studio-run" },
+  "phone-ask": { width: 1080, height: 1920, aspect: "aspect-[1080/1920]", seconds: 11, perLang: false, base: "sites/orazaka/mobile/ask" },
 };
 
 export const isClipId = (id: string): id is ClipId => (CLIP_IDS as readonly string[]).includes(id);
 export const isLang = (lang: string): lang is Lang => (LANGS as readonly string[]).includes(lang);
 
-/** `products/orazaka/home/take-fr-dark` or `products/orazaka/web/step-studio-light`: the CDN path without extension. */
+/** `sites/orazaka/home/take-fr-dark` or `sites/orazaka/web/step-studio-light`: the CDN path without extension. */
 export function clipBase(id: ClipId, lang: Lang, look: Look): string {
   const { base } = CLIPS[id];
   if (base) return `${base}-${look}-916`;
-  return CLIPS[id].perLang ? `products/orazaka/home/${id}-${lang}-${look}` : `products/orazaka/web/step-${id}-${look}`;
+  return CLIPS[id].perLang ? `sites/orazaka/home/${id}-${lang}-${look}` : `sites/orazaka/web/step-${id}-${look}`;
 }
 
 export function clipFiles(id: ClipId, lang: Lang, look: Look) {
