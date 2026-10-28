@@ -72,27 +72,6 @@ const PAGES = [
 if (!(USER && PASSWORD)) say("· signed-in screens skipped: set E2E_USER and E2E_PASSWORD (a demo persona)");
 
 if (OUT) mkdirSync(OUT, { recursive: true });
-const browser = await chromium.launch();
-
-let signedIn;
-if (USER && PASSWORD) {
-  const context = await browser.newContext();
-  const page = await context.newPage();
-  await page.goto(`${BASE}/login`, { waitUntil: "networkidle" });
-  await page.fill('input[type="email"]', USER);
-  await page.fill('input[type="password"]', PASSWORD);
-  await page.keyboard.press("Enter");
-  await page.waitForURL((url) => !url.pathname.startsWith("/login"), { timeout: 30_000 }).catch(() => {});
-  if (new URL(page.url()).pathname.startsWith("/login")) {
-    console.error("✗ the persona could not sign in on the deployed site");
-    process.exit(2);
-  }
-  signedIn = await context.storageState();
-  await context.close();
-}
-
-
-if (OUT) mkdirSync(OUT, { recursive: true });
 
 let storageState;
 if (USER && PASSWORD) {
@@ -129,5 +108,6 @@ const problems = await auditRoutes({
   checks: { landmarks: "public", boxes: true, pictures: true, emptyControls: true, hardColors: true },
 });
 for (const problem of problems) say(`✗ ${problem}`);
-say(`\n${problems.length === 0 ? "every screen clean" : `${problems.length} problem(s)`}${OUT ? `, captures in ${OUT}` : ""}`);
+const verdict = problems.length === 0 ? "every screen clean" : `${problems.length} problem(s)`;
+say(`\n${verdict}${OUT ? `, captures in ${OUT}` : ""}`);
 process.exit(problems.length > 0 ? 1 : 0);
