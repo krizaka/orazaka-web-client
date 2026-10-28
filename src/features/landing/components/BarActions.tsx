@@ -22,8 +22,12 @@ export function BarActions({ placement }: Readonly<{ placement: "bar" | "panel" 
   // Read the provider directly: a page rendered without one (tests, error pages) is simply signed out.
   const session = useContext(SessionContext);
   const isAuthenticated = session?.status === "authenticated";
+  const loading = session?.status === "loading";
   const user = session?.data?.user;
   const panel = placement === "panel";
+
+  // Loading is neither state (krizaka-ui#800): a signed-in person never sees « Sign in » flash before the avatar. The place is reserved.
+  if (loading) return <span data-testid="bar-session" data-session="pending" aria-hidden="true" className="inline-block h-9 min-w-24" />;
 
   if (isAuthenticated) {
     const initial = ((user?.name || user?.email || "U")[0] ?? "U").toUpperCase();
