@@ -29,6 +29,8 @@ import { fileURLToPath } from "node:url";
 
 import { auditRoutes, routesFromSitemap } from "@krizaka/page-audit";
 
+import { qaOnScreen } from "../scripts/qa-on-screen.mjs";
+
 const BASE = (process.env.E2E_BASE_URL || "https://dev.orazaka.com").replace(/\/$/, "");
 const OUT = process.env.OUT || "";
 const USER = process.env.E2E_USER;
@@ -107,6 +109,20 @@ const problems = await auditRoutes({
   // The family contract and the inline-colour rule of the old crawl, plus the audit's own layout measures (overflow, containment, boxes wider than their own).
   checks: { landmarks: "public", boxes: true, pictures: true, emptyControls: true, hardColors: true },
 });
+
+// A demo shows a persona, never « qa_user » (krizaka/.github#356): every signed-in screen is read for a QA name.
+if (storageState) {
+  const browser = await chromium.launch();
+  const context = await browser.newContext({ storageState });
+  const page = await context.newPage();
+  for (const url of SIGNED_IN) {
+    await page.goto(`${BASE}${url}`, { waitUntil: "networkidle" });
+    await page.waitForTimeout(500);
+    const qa = await qaOnScreen(page);
+    if (qa) problems.push(`${url}: « ${qa} » is on a signed-in screen — the account must carry a persona's name (@krizaka/org cast)`);
+  }
+  await browser.close();
+}
 for (const problem of problems) say(`✗ ${problem}`);
 const verdict = problems.length === 0 ? "every screen clean" : `${problems.length} problem(s)`;
 say(`\n${verdict}${OUT ? `, captures in ${OUT}` : ""}`);
