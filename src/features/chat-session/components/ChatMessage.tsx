@@ -9,6 +9,7 @@ import { ChatMessage as ChatMessageType } from "@/core/types/chat.types";
 import { useTranslation } from "@/core/context/LocaleContext";
 
 import { cn } from "@krizaka/ui/cn";
+import { ControlBadge } from "./ControlBadge";
 import { GenUiAnswer, hasGenUi } from "./GenUiAnswer";
 
 interface Props {
@@ -220,6 +221,7 @@ export const ChatMessage: React.FC<Props> = ({ message, index = 0, streaming = f
             </figure>
           ) : null}
           {renderContent()}
+          {isUser ? null : <ControlBadge message={message} streaming={streaming} />}
           <span className="text-[10px] text-fg-muted block mt-2 text-right select-none tabular-nums">
             {format(message.timestamp, "HH:mm")}
           </span>
