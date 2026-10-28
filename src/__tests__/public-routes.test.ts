@@ -5,7 +5,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { PUBLIC_REDIRECTS, REMOVED_PUBLIC, SIGNED_OUT_REDIRECTS } from "@/core/config/redirects";
-import { NAV_DOCS, NAV_GROUPS } from "@/features/landing/utils/site-nav";
+import { NAV_DOCS, NAV_GROUPS, NAV_PAGES } from "@/features/landing/utils/site-nav";
 import { findPage } from "@/features/docs/utils/docs";
 import { publicPaths, llmsText } from "@/app/_seo/seo";
 import { JOURNEY_IDS } from "@/core/constants/docs-journeys";
@@ -51,6 +51,23 @@ describe("the bar", () => {
   });
 
   it("Docs resolves", () => expect(isPage(NAV_DOCS.path)).toBe(true));
+
+  it.each(NAV_PAGES.map((p) => [p.id, p.path] as const))("%s (%s) resolves and is in the sitemap", (_id, p) => {
+    expect(isPage(p)).toBe(true);
+    expect(publicPaths()).toContain(p);
+  });
+});
+
+describe("the lean public site (#290)", () => {
+  it("/docs/licensing answers 308 to /open-source, and the licence is no longer a published doc", () => {
+    expect(PUBLIC_REDIRECTS.find((r) => r.source === "/docs/licensing")).toMatchObject({ destination: "/open-source", permanent: true });
+    expect(findPage("licensing")).toBeNull();
+    expect(publicPaths()).not.toContain("/docs/licensing");
+  });
+
+  it("/contact answers 308 to krizaka.com/contact?topic=orazaka", () => {
+    expect(PUBLIC_REDIRECTS.find((r) => r.source === "/contact")).toMatchObject({ destination: "https://www.krizaka.com/contact?topic=orazaka", permanent: true });
+  });
 });
 
 describe("removed public addresses", () => {

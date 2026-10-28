@@ -24,6 +24,8 @@ export interface LandingDictionary {
     docs: string;
     product: string;
     download: string;
+    pricing: string;
+    openSource: string;
     /** One short line (≤ 45 characters: the menu shows one line) under each entry of the Product menu. */
     menu: Record<"how" | "download", string>;
     langLabel: string;

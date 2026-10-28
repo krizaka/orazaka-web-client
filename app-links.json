@@ -29,6 +29,7 @@
       "/models",
       "/desktop",
       "/pricing",
+      "/open-source",
       "/console",
       "/console/*",
       "/dashboard/*",

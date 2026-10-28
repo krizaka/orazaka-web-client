@@ -17,6 +17,7 @@ import type { ConsentDictionary } from "./translations.consent";
 import type { MobileDictionary } from "./translations.mobile";
 import type { DesktopDictionary } from "./translations.desktop";
 import type { PricingDictionary } from "./translations.pricing";
+import type { OpenSourceDictionary } from "./translations.openSource";
 import type { DocsDictionary } from "./translations.docs";
 
 export type Locale = "en" | "fr";
@@ -884,6 +885,8 @@ export interface TranslationDictionary {
   desktop: DesktopDictionary;
   /** /pricing (the editions of Orazaka). */
   pricing: PricingDictionary;
+  /** /open-source. */
+  openSource: OpenSourceDictionary;
   /** The documentation: hub, sidebar, article chrome, the text version of the schemas. */
   docs: DocsDictionary;
 }

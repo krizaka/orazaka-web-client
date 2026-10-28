@@ -16,6 +16,8 @@ export const landing: Record<Locale, LandingDictionary> = {
       docs: "Docs",
       product: "Product",
       download: "Download",
+      pricing: "Pricing",
+      openSource: "Open source",
       menu: {
         how: "What it does, on real screens.",
         download: "Orazaka Desktop for Apple Silicon.",
@@ -121,6 +123,8 @@ export const landing: Record<Locale, LandingDictionary> = {
       docs: "Docs",
       product: "Produit",
       download: "Télécharger",
+      pricing: "Tarifs",
+      openSource: "Open source",
       menu: {
         how: "Ce qu'il fait, sur de vrais écrans.",
         download: "Orazaka Desktop pour Apple Silicon.",
