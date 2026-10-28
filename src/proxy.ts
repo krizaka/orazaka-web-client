@@ -9,6 +9,7 @@
  * entrypoint is now named `proxy` (same request/response contract as before).
  */
 
+import { sessionHint } from "@krizaka/auth";
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { authClosed, isBackendPath, readAuthFlags } from "@/core/config/auth-flags";
@@ -18,6 +19,10 @@ import { SIGNED_OUT_REDIRECTS } from "@/core/config/redirects";
 import { SITE_URL } from "@/app/_seo/seo";
 import { consoleResponse } from "@/console/core/edge";
 import { isAdminHost, routeFor } from "@/console/core/config/host";
+/** The next-auth cookie of the session, by the name this deployment uses (`__Secure-` on https); it is only read, as a hint, never trusted (krizaka-ui#827). */
+const SESSION_COOKIES = ["__Secure-next-auth.session-token", "next-auth.session-token"] as const;
+const sessionCookieOf = (request: NextRequest) => SESSION_COOKIES.find((name) => request.cookies.has(name)) ?? SESSION_COOKIES[1];
+
 /** The platform's liveness probe: answered on every host, before any gate. */
 const HEALTH_PATH = "/api/healthz";
 
@@ -101,7 +106,8 @@ export function proxy(request: NextRequest) {
     }
   }
   if (!indexable() || isDevAddress(host)) response.headers.set("x-robots-tag", NOINDEX_HEADER);
-  return response;
+  // The bar's readable hint follows the session cookie, so a signed-in person never sees « Sign in » while the session is read (krizaka-ui#827).
+  return sessionHint(response, request, { cookie: sessionCookieOf(request), secure: process.env.NODE_ENV === "production" });
 }
 
 export const config = {
