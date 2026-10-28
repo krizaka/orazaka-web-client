@@ -129,6 +129,12 @@ const eslintConfig = defineConfig([
     files: ["src/console/test/**/*.mts"],
     rules: { "no-restricted-imports": "off" },
   },
+  {
+    // The UI crawl (a node script run by hand and by the e2e workflow, outside the app) shares the QA-name reader with
+    // the recording scripts, which live in scripts/: it is the only file that reaches over from e2e/ to scripts/.
+    files: ["e2e/ui-crawl.mjs"],
+    rules: { "no-restricted-imports": "off" },
+  },
   // Align globally ignored build directories
   globalIgnores([
     ".next/**",
