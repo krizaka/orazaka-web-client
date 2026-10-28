@@ -16,7 +16,7 @@ for (const [name, viewport] of [["desktop", { width: 1440, height: 900 }], ["pho
     await page.goto("/");
     await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
     const take = page.getByTestId("clip-take");
-    await expect(take).toHaveAttribute("poster", /products\/orazaka\/home\/take-en-(dark|light)-poster\.[0-9a-f]{10}\.webp$/);
+    await expect(take).toHaveAttribute("poster", /sites\/orazaka\/home\/take-en-(dark|light)-poster\.[0-9a-f]{10}\.webp$/);
     await expect(take).toHaveAttribute("width", "1140");
     await expect(take).toHaveAttribute("height", "960");
     const boxes = new Set<number>();
