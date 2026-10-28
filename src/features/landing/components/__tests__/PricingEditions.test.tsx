@@ -1,4 +1,5 @@
 import "@testing-library/jest-dom";
+import { mockReducedMotion } from "@/features/landing/reduced-motion.testkit";
 import { render, screen, within } from "@testing-library/react";
 import { ThemeProvider } from "@krizaka/ui/theme";
 import { translations, type Locale } from "@/core/context/translations";
@@ -12,12 +13,7 @@ jest.mock("@/core/context/LocaleContext", () => ({
   useTranslation: () => ({ t: translations[mockLocale], locale: mockLocale, setLocale: jest.fn() }),
 }));
 
-beforeAll(() => {
-  Object.defineProperty(window, "matchMedia", {
-    writable: true,
-    value: (query: string) => ({ matches: query.includes("reduce"), media: query, addEventListener: () => {}, removeEventListener: () => {}, addListener: () => {}, removeListener: () => {}, onchange: null, dispatchEvent: () => false }),
-  });
-});
+beforeAll(mockReducedMotion);
 
 function renderPage(locale: Locale) {
   mockLocale = locale;

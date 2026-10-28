@@ -1,4 +1,5 @@
 import "@testing-library/jest-dom";
+import { mockReducedMotion } from "@/features/landing/reduced-motion.testkit";
 import { render, screen, within } from "@testing-library/react";
 import { ThemeProvider } from "@krizaka/ui/theme";
 import { translations, type Locale } from "@/core/context/translations";
@@ -11,12 +12,7 @@ jest.mock("@/core/context/LocaleContext", () => ({
   useTranslation: () => ({ t: translations[mockLocale], locale: mockLocale, setLocale: jest.fn() }),
 }));
 
-beforeAll(() => {
-  Object.defineProperty(window, "matchMedia", {
-    writable: true,
-    value: (query: string) => ({ matches: query.includes("reduce"), media: query, addEventListener: () => {}, removeEventListener: () => {}, addListener: () => {}, removeListener: () => {}, onchange: null, dispatchEvent: () => false }),
-  });
-});
+beforeAll(mockReducedMotion);
 
 const SHA = "fb8a1570c2f1032bf6029e3eebaf711d77b2f6dfe7c706cd6d592b3bea8d834b";
 const release = {

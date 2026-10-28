@@ -1,4 +1,5 @@
 import "@testing-library/jest-dom";
+import { mockReducedMotion } from "@/features/landing/reduced-motion.testkit";
 import { render, screen } from "@testing-library/react";
 import { ThemeProvider } from "@krizaka/ui/theme";
 import { translations, type Locale } from "@/core/context/translations";
@@ -10,12 +11,7 @@ jest.mock("@/core/context/LocaleContext", () => ({
   useTranslation: () => ({ t: translations[mockLocale], locale: mockLocale, setLocale: jest.fn() }),
 }));
 
-beforeAll(() => {
-  Object.defineProperty(window, "matchMedia", {
-    writable: true,
-    value: (query: string) => ({ matches: query.includes("reduce"), media: query, addEventListener: () => {}, removeEventListener: () => {}, addListener: () => {}, removeListener: () => {}, onchange: null, dispatchEvent: () => false }),
-  });
-});
+beforeAll(mockReducedMotion);
 
 const IOS = "https://apps.apple.com/app/orazaka/id1234567890";
 const ANDROID = "https://play.google.com/store/apps/details?id=com.krizaka.orazaka";
