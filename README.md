@@ -154,6 +154,8 @@ audited); every refusal is worded by its Problem `code`. Its words are in Englis
 
 `ROUTER_URL` (the edge) is shared. They replace the standalone `orazaka-web-admin` app (now part of this repository); `npm run test:console` runs the console's logic tests, `src/__tests__/host-routing.test.ts` the host routing.
 
+`/pricing` reads krizaka-billing's public price catalogue (`GET /api/v1/billing/prices`) on the server, refreshed every 5 minutes, with `PAYMENTS_CATALOGUE_TOKEN` (a service credential, server-only). Without it, or when billing does not answer, the page shows no figure — prices are data (ADR-009), never typed here.
+
 ---
 
 <sub>A Krizaka product · [krizaka.com](https://www.krizaka.com) · FSL-1.1-ALv2</sub>
