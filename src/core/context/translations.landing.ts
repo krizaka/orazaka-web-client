@@ -87,6 +87,7 @@ export const landing: Record<Locale, LandingDictionary> = {
       title: "Bring AI in-house — not your data out.",
       body: "On your Mac, your servers or your phone. Tell us what you want to run on your own machines; a person answers.",
       primary: "Create your workspace",
+      quickstart: "Run it in five minutes",
     },
     closed: {
       title: "Orazaka is in development — sign-in is closed on this site",
@@ -103,6 +104,7 @@ export const landing: Record<Locale, LandingDictionary> = {
       terms: "Terms",
       contact: "Contact",
       openSource: "Open source",
+      pricing: "Pricing",
       license: "Open source · Apache-2.0",
       by: "A Krizaka product",
       product: "Product",
@@ -190,6 +192,7 @@ export const landing: Record<Locale, LandingDictionary> = {
       title: "Faites entrer l'IA — sans faire sortir vos données.",
       body: "Sur votre Mac, vos serveurs ou votre téléphone. Dites-nous ce que vous voulez faire tourner sur vos propres machines ; une personne répond.",
       primary: "Créer mon espace",
+      quickstart: "L'essayer en cinq minutes",
     },
     closed: {
       title: "Orazaka est en développement — la connexion est fermée sur ce site",
@@ -206,6 +209,7 @@ export const landing: Record<Locale, LandingDictionary> = {
       terms: "Conditions",
       contact: "Contact",
       openSource: "Open source",
+      pricing: "Tarifs",
       license: "Open source · Apache-2.0",
       by: "Un produit Krizaka",
       product: "Produit",

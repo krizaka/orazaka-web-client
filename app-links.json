@@ -28,6 +28,7 @@
       "/gallery",
       "/models",
       "/desktop",
+      "/pricing",
       "/console",
       "/console/*",
       "/dashboard/*",
