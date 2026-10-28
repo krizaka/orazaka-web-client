@@ -4,7 +4,7 @@ export type Word = readonly [en: string, fr: string];
 export const w = (en: string, fr: string): Word => [en, fr];
 
 /** The same tree with every `Word` replaced by its text in one language. */
-type Localised<T> = T extends Word ? string : T extends readonly (infer U)[] ? Localised<U>[] : { [K in keyof T]: Localised<T[K]> };
+export type Localised<T> = T extends Word ? string : T extends readonly (infer U)[] ? Localised<U>[] : { [K in keyof T]: Localised<T[K]> };
 
 const isWord = (node: unknown): node is Word => Array.isArray(node) && node.length === 2 && typeof node[0] === "string" && typeof node[1] === "string";
 
