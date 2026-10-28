@@ -52,6 +52,12 @@ describe("search engines and AI assistants (the Krizaka family contract)", () =>
     expect(res.headers.get("x-middleware-next")).toBe("1");
   });
 
+  it("the application's sameAs ties the product to its repository, the GitHub organisation, Maven Central and www", () => {
+    const app = (siteJsonLd()["@graph"] as { "@type": string; sameAs?: string[] }[]).find((n) => n["@type"] === "SoftwareApplication");
+    expect(app?.sameAs).toEqual(expect.arrayContaining(["https://github.com/krizaka/orazaka", "https://github.com/krizaka", "https://central.sonatype.com/namespace/com.krizaka", "https://www.krizaka.com"]));
+    expect(new Set(app?.sameAs).size).toBe(app?.sameAs?.length);
+  });
+
   describe("dev.* is never indexed, www is (orazaka-web-client#262)", () => {
     const at = (host: string, path: string) => proxy(new NextRequest(`https://${host}${path}`, { headers: { host } }));
     const keep = { dev: process.env.APP_DEV_HOST, flag: process.env.APP_SEARCH_INDEXING };

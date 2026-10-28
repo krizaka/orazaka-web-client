@@ -15,6 +15,9 @@ function plainDoc(slug: string): string | undefined {
 /** The public origin of this site (www.orazaka.com: the real app, sign-up closed; dev.orazaka.com sends its pages here). */
 export const SITE_URL = "https://www.orazaka.com";
 export const KRIZAKA_URL = "https://www.krizaka.com";
+/** Where else the product exists on the web: the organisation on GitHub and the Maven Central namespace of its libraries. */
+export const GITHUB_ORG_URL = "https://github.com/krizaka";
+export const MAVEN_NAMESPACE_URL = "https://central.sonatype.com/namespace/com.krizaka";
 export const REPO_URL = "https://github.com/krizaka/orazaka";
 /** The Krizaka Organization, defined by www.krizaka.com: every JSON-LD node of the family points back to it. */
 export const ORG_ID = `${KRIZAKA_URL}/#organization`;
@@ -58,7 +61,7 @@ export function siteJsonLd() {
         isAccessibleForFree: true,
         license: "https://www.apache.org/licenses/LICENSE-2.0",
         codeRepository: REPO_URL,
-        sameAs: [REPO_URL],
+        sameAs: [REPO_URL, GITHUB_ORG_URL, MAVEN_NAMESPACE_URL, KRIZAKA_URL],
         publisher: ORG,
         isPartOf: { "@id": `${SITE_URL}/#website` },
       },
