@@ -1,3 +1,5 @@
+import type { ControlStatus } from "@/core/utils/control";
+
 /**
  * User representation inside the chat session context.
  */
@@ -26,6 +28,8 @@ export interface BaseChatMessage {
    * was exchanged. `url` is a small inline preview persisted with the history.
    */
   attachment?: { assetId: string; name: string; url?: string };
+  /** Where the answer stands with the engine's control loop (assistant messages only). */
+  control?: ControlStatus;
 }
 
 export interface TextChatMessage extends BaseChatMessage {
