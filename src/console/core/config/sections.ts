@@ -22,6 +22,7 @@ export const CONSOLE_GROUPS: readonly ConsoleGroup[] = [
     children: [
       { id: "operations", href: "/operations" },
       { id: "tasks", href: "/tasks" },
+      { id: "engine", href: "/engine" },
     ],
   },
   {

@@ -19,6 +19,7 @@ export const consoleCopy = {
     studios: "Studios",
     law: "Law",
     tasks: "Tasks",
+    engine: "Engine",
     accounts: "Accounts",
     catalogue: "Catalogue",
     sections: "Sections of this part of the console",
