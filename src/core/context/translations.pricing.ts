@@ -6,6 +6,8 @@
  * « Entreprise » offer, reached through the contact form. No customer name, no unproven claim (no certification, no
  * hosting or uptime promise).
  */
+import { localise, w } from "./words";
+
 type Locale = "en" | "fr";
 
 interface Edition {
@@ -27,21 +29,6 @@ export interface PricingDictionary {
   enterprise: Edition & { cta: string };
   custom: { title: string; lead: string; items: string[]; cta: string };
   faq: { title: string; items: { question: string; answer: string }[] };
-}
-
-/** A message in both languages, side by side: the shape of the page is written once, below. */
-type Word = readonly [en: string, fr: string];
-const w = (en: string, fr: string): Word => [en, fr];
-
-/** The same tree with every `Word` replaced by its text in one language. */
-type Localised<T> = T extends Word ? string : T extends readonly (infer U)[] ? Localised<U>[] : { [K in keyof T]: Localised<T[K]> };
-
-const isWord = (node: unknown): node is Word => Array.isArray(node) && node.length === 2 && typeof node[0] === "string" && typeof node[1] === "string";
-
-function localise<T>(node: T, index: 0 | 1): Localised<T> {
-  if (isWord(node)) return node[index] as Localised<T>;
-  if (Array.isArray(node)) return node.map((item) => localise(item, index)) as Localised<T>;
-  return Object.fromEntries(Object.entries(node as object).map(([key, value]) => [key, localise(value, index)])) as Localised<T>;
 }
 
 const WORDS = {
