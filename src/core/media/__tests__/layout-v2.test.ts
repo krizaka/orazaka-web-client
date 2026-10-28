@@ -1,8 +1,8 @@
 /**
  * @jest-environment node
  */
-import { hasMedia, mediaPaths, mediaUrl } from "../cdn";
-import data from "../media.generated.json";
+import { hasMedia, mediaPaths, mediaUrl } from "@/core/media/cdn";
+import data from "@/core/media/media.generated.json";
 
 // Bunny layout v2 (ADR-014, krizaka/.github#368): media are `sites/<site>/<kind>/…` at the root of the zone.
 // The legacy `site/products/…` objects are deleted once released: nothing may name them again.
