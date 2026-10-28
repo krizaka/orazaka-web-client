@@ -5,13 +5,14 @@
 //   node scripts/record-web-steps.mjs <out dir>       # then: krizaka-com scripts/cdn-assets.mjs upload <out> --to products/orazaka/web
 //
 // Credentials come from the local QA store through secret.sh — never printed, never in a file here. A demo shows a
-// persona, never a QA name: the session's display name is « Eric » on the way in, and a take with « qa » on screen is refused.
+// persona, never a QA name: the account itself carries the cast's name (krizaka/orazaka#473), and a take with « qa » on screen is refused.
 import { chromium } from "@playwright/test";
 import { execFileSync, execSync } from "node:child_process";
 import { mkdirSync, mkdtempSync, readdirSync, rmSync } from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import sharp from "sharp";
+import { qaOnScreen } from "./qa-on-screen.mjs";
 
 const BASE = process.env.APP_BASE_URL ?? "https://www.orazaka.com";
 const OUT = path.resolve(process.argv[2] ?? "web-steps");
@@ -71,17 +72,12 @@ for (const theme of ["dark", "light"]) {
         localStorage.setItem("kz-theme", t);
       } catch {}
     }, theme);
-    await ctx.route("**/api/auth/session", async (route) => {
-      const res = await route.fetch();
-      const json = await res.json().catch(() => ({}));
-      await route.fulfill({ response: res, json: json?.user ? { ...json, user: { ...json.user, name: "Eric" } } : json });
-    });
     const page = await ctx.newPage();
     const t0 = Date.now();
     const act = await prepare(page);
     const start = (Date.now() - t0) / 1000 + 0.3;
     await act();
-    if (await page.evaluate(() => /\bqa[_\s-]|qa_user|\bqa\b/i.test(document.body.innerText))) throw new Error(`${id}/${theme}: « qa » is on screen — a demo shows a persona`);
+    if (await qaOnScreen(page)) throw new Error(`${id}/${theme}: « qa » is on screen — a demo shows a persona`);
     await ctx.close();
     const src = path.join(raw, readdirSync(raw).find((f) => f.endsWith(".webm")));
     const name = path.join(OUT, `step-${id}-${theme}`);
