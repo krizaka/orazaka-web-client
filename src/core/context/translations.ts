@@ -9,6 +9,7 @@ import { notFound } from "./translations.notFound";
 import { landing } from "./translations.landing";
 import { mobile } from "./translations.mobile";
 import { desktop } from "./translations.desktop";
+import { pricing } from "./translations.pricing";
 import { docs } from "./translations.docs";
 import { a11y, automation } from "./translations.automation";
 import { automations } from "./translations.automations";
@@ -947,6 +948,7 @@ export const translations: Record<Locale, TranslationDictionary> = {
     notFound: notFound.en,
     mobile: mobile.en,
     desktop: desktop.en,
+    pricing: pricing.en,
     docs: docs.en,
   },
   fr: {
@@ -1885,6 +1887,7 @@ export const translations: Record<Locale, TranslationDictionary> = {
     notFound: notFound.fr,
     mobile: mobile.fr,
     desktop: desktop.fr,
+    pricing: pricing.fr,
     docs: docs.fr,
   },
 };

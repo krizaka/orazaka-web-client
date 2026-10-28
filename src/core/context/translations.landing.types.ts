@@ -45,5 +45,5 @@ export interface LandingDictionary {
   phone: PhoneWords;
   cta: { title: string; body: string; primary: string; quickstart: string };
   closed: { title: string; body: string; docs: string; contact: string; home: string; heroPrimary: string; signInBanner: string };
-  footer: { devNotice: string; privacy: string; terms: string; contact: string; openSource: string; license: string; by: string; product: string; docs: string; api: string; cli: string; legal: string };
+  footer: { devNotice: string; privacy: string; terms: string; contact: string; openSource: string; pricing: string; license: string; by: string; product: string; docs: string; api: string; cli: string; legal: string };
 }
