@@ -37,9 +37,9 @@ const en = {
   failed: "The change was refused.",
 } as const;
 
-type Words = { -readonly [K in keyof typeof en]: (typeof en)[K] extends string ? string : { -readonly [P in keyof (typeof en)[K]]: string } };
+export type EngineWords = { -readonly [K in keyof typeof en]: (typeof en)[K] extends string ? string : { -readonly [P in keyof (typeof en)[K]]: string } };
 
-const fr: Words = {
+const fr: EngineWords = {
   title: "Moteur",
   lead: "Les réglages d'exécution du moteur. Un changement prend effet à la lecture suivante, sans redémarrage.",
   nav: "Moteur",
@@ -74,7 +74,6 @@ const fr: Words = {
 };
 
 export type EngineLocale = "en" | "fr";
-export type EngineWords = Words;
 export const engineCopy: Record<EngineLocale, EngineWords> = { en, fr };
 
 /** The words of a language, with `{n}`-style placeholders filled in. */

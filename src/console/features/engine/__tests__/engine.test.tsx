@@ -5,7 +5,7 @@ import { engineCopy } from "@/console/core/copy/engine";
 import type { RuntimeSetting } from "@/console/services/runtime-config.admin.api";
 
 const en = engineCopy.en;
-const button = (label: string, name: string) => within(screen.getByLabelText(label).closest("[role=group]")!).getByRole("button", { name });
+const button = (label: string, name: string) => within(screen.getByLabelText(label).closest("form")!).getByRole("button", { name });
 const setting = (over: Partial<RuntimeSetting> & { key: string }): RuntimeSetting => ({
   value: 1, type: "int", description: "A knob", default: 1, bounds: {}, ...over,
 });
@@ -97,7 +97,7 @@ describe("EngineScreen", () => {
     const input = await screen.findByLabelText("run.max_parallel");
     fireEvent.change(input, { target: { value: "6" } });
 
-    if (firstSubmit === "Enter") fireEvent.keyDown(input, { key: "Enter" });
+    if (firstSubmit === "Enter") fireEvent.submit(input.closest("form")!);
     else fireEvent.click(button("run.max_parallel", en.save));
     await waitFor(() => expect(fetchMock.mock.calls.filter(([, init]) => init?.method === "PUT")).toHaveLength(1));
 
@@ -105,7 +105,7 @@ describe("EngineScreen", () => {
     expect((button("run.max_parallel", en.saving) as HTMLButtonElement).disabled).toBe(true);
     expect((button("run.max_parallel", en.reset) as HTMLButtonElement).disabled).toBe(true);
     if (firstSubmit === "Enter") fireEvent.click(button("run.max_parallel", en.saving));
-    else fireEvent.keyDown(input, { key: "Enter" });
+    else fireEvent.submit(input.closest("form")!);
     expect(fetchMock.mock.calls.filter(([, init]) => init?.method === "PUT")).toHaveLength(1);
 
     resolvePut({ ok: true, json: async () => ({ ...SETTINGS[0], value: 6 }) } as Response);
@@ -144,7 +144,7 @@ describe("EngineScreen", () => {
     render(<EngineScreen locale="en" />);
     const input = await screen.findByLabelText("run.max_parallel");
     expect(screen.queryAllByRole("alert")).toHaveLength(0);
-    expect(input.closest("[role=group]")!.querySelectorAll("p")).toHaveLength(1);
+    expect(input.closest("form")!.querySelectorAll("p")).toHaveLength(1);
     expect(input.getAttribute("aria-describedby")).toBeNull();
 
     fireEvent.change(input, { target: { value: "99" } });

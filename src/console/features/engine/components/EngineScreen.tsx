@@ -26,7 +26,7 @@ export function EngineScreen({ locale }: Readonly<{ locale?: EngineLocale }>) {
       {engine.hasError && !engine.isLoading && (
         <Alert tone="warning" action={<Button variant="secondary" size="sm" onClick={engine.reload}>{words.retry}</Button>}>{words.error}</Alert>
       )}
-      {engine.isLoading && <p role="status" className="text-sm text-fg-secondary">{words.loading}</p>}
+      {engine.isLoading && <output className="text-sm text-fg-secondary">{words.loading}</output>}
       {groups.map(({ group, settings }) => (
         <section key={group} aria-labelledby={`engine-${group}`} className="flex flex-col gap-3">
           <h2 id={`engine-${group}`} className="text-lg font-semibold text-fg">{words.groups[group]}</h2>

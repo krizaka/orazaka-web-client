@@ -59,7 +59,13 @@ export function SettingCard({ setting, words, onSave }: Readonly<{ setting: Runt
 
   return (
     <Card.Root className="p-5">
-      <div role="group" className="flex flex-col gap-3" onKeyDown={(e) => e.key === "Enter" && e.target instanceof HTMLInputElement && dirty && void submit()}>
+      <form
+        className="flex flex-col gap-3"
+        onSubmit={(e) => {
+          e.preventDefault();
+          if (dirty) void submit();
+        }}
+      >
         <header className="flex flex-wrap items-center justify-between gap-2">
           <h3 className="font-mono text-sm font-semibold text-fg">{setting.key}</h3>
           <Badge tone="neutral">{setting.type}</Badge>
@@ -87,14 +93,14 @@ export function SettingCard({ setting, words, onSave }: Readonly<{ setting: Runt
           {/* Only when there is something to say: an empty Field.Error still draws its marker under every field. */}
           {error !== null && <Field.Error id={`${id}-msg`}>{error}</Field.Error>}
         </Field.Root>
-        {status === "saved" && <p role="status" className="text-sm text-success">{words.saved}</p>}
+        {status === "saved" && <output className="text-sm text-success">{words.saved}</output>}
         <footer className="flex flex-wrap gap-2">
-          <Button type="button" size="sm" onClick={() => void submit()} disabled={!dirty || status === "saving"}>{status === "saving" ? words.saving : words.save}</Button>
+          <Button type="submit" size="sm" disabled={!dirty || status === "saving"}>{status === "saving" ? words.saving : words.save}</Button>
           <Button type="button" size="sm" variant="secondary" onClick={() => change(draftOf(setting.default))} disabled={status === "saving"}>{words.reset}</Button>
           <Button type="button" size="sm" variant="ghost" aria-expanded={showHistory} onClick={() => setShowHistory((v) => !v)}>{showHistory ? words.hideHistory : words.history}</Button>
         </footer>
         {showHistory && <SettingHistory setting={setting} words={words} version={setting.value} />}
-      </div>
+      </form>
     </Card.Root>
   );
 }

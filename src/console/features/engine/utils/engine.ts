@@ -33,27 +33,37 @@ export function display(value: SettingValue | null | undefined, words: EngineWor
 
 export type Parsed = { ok: true; value: SettingValue } | { ok: false; error: string };
 
-/** What was typed, as the typed value the API takes — or the words of what is wrong (the server checks again). */
-export function parseDraft(setting: RuntimeSetting, draft: string, words: EngineWords): Parsed {
-  const { minimum, maximum, maxItems } = setting.bounds;
-  if (setting.type === "boolean") return { ok: true, value: draft === "true" };
-  if (setting.type === "int") {
-    const text = draft.trim();
-    if (!/^-?\d+$/.test(text)) return { ok: false, error: words.invalid.type };
-    const n = Number(text);
-    const low = minimum ?? undefined;
-    const high = maximum ?? undefined;
-    if (low !== undefined && high !== undefined && (n < low || n > high)) return { ok: false, error: fill(words.invalid.range, { min: low, max: high }) };
-    if (low !== undefined && n < low) return { ok: false, error: fill(words.invalid.min, { n: low }) };
-    if (high !== undefined && n > high) return { ok: false, error: fill(words.invalid.max, { n: high }) };
-    return { ok: true, value: n };
-  }
+/** An integer draft: a whole number inside the bounds, or the words of what is wrong. */
+function parseInteger(setting: RuntimeSetting, draft: string, words: EngineWords): Parsed {
+  const { minimum, maximum } = setting.bounds;
+  const text = draft.trim();
+  if (!/^-?\d+$/.test(text)) return { ok: false, error: words.invalid.type };
+  const n = Number(text);
+  const low = minimum ?? undefined;
+  const high = maximum ?? undefined;
+  const below = low !== undefined && n < low;
+  const above = high !== undefined && n > high;
+  if ((below || above) && low !== undefined && high !== undefined) return { ok: false, error: fill(words.invalid.range, { min: low, max: high }) };
+  if (below) return { ok: false, error: fill(words.invalid.min, { n: low }) };
+  if (above) return { ok: false, error: fill(words.invalid.max, { n: high }) };
+  return { ok: true, value: n };
+}
+
+/** A list draft, one item a line: no empty item, no duplicate, no more than the bound. */
+function parseList(setting: RuntimeSetting, draft: string, words: EngineWords): Parsed {
+  const { maxItems } = setting.bounds;
   const items = draft.split("\n").map((i) => i.trim());
   const filled = items.length === 1 && items[0] === "" ? [] : items;
-  if (filled.some((i) => i === "")) return { ok: false, error: words.invalid.empty };
+  if (filled.includes("")) return { ok: false, error: words.invalid.empty };
   if (new Set(filled).size !== filled.length) return { ok: false, error: words.invalid.duplicate };
   if (maxItems != null && filled.length > maxItems) return { ok: false, error: fill(words.invalid.items, { n: maxItems }) };
   return { ok: true, value: filled };
+}
+
+/** What was typed, as the typed value the API takes — or the words of what is wrong (the server checks again). */
+export function parseDraft(setting: RuntimeSetting, draft: string, words: EngineWords): Parsed {
+  if (setting.type === "boolean") return { ok: true, value: draft === "true" };
+  return setting.type === "int" ? parseInteger(setting, draft, words) : parseList(setting, draft, words);
 }
 
 /** The bounds of a setting as short phrases, for the line under its description. */
