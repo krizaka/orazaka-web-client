@@ -59,13 +59,7 @@ export function SettingCard({ setting, words, onSave }: Readonly<{ setting: Runt
 
   return (
     <Card.Root className="p-5">
-      <form
-        className="flex flex-col gap-3"
-        onSubmit={(e) => {
-          e.preventDefault();
-          if (dirty) void submit();
-        }}
-      >
+      <div data-setting={setting.key} className="flex flex-col gap-3">
         <header className="flex flex-wrap items-center justify-between gap-2">
           <h3 className="font-mono text-sm font-semibold text-fg">{setting.key}</h3>
           <Badge tone="neutral">{setting.type}</Badge>
@@ -85,7 +79,7 @@ export function SettingCard({ setting, words, onSave }: Readonly<{ setting: Runt
               {setting.type === "list" ? (
                 <Textarea id={id} rows={4} value={draft} invalid={error !== null} disabled={status === "saving"} aria-describedby={describedBy} onChange={(e) => change(e.target.value)} />
               ) : (
-                <Input id={id} inputMode="numeric" value={draft} invalid={error !== null} disabled={status === "saving"} aria-describedby={describedBy} onChange={(e) => change(e.target.value)} />
+                <Input id={id} inputMode="numeric" onKeyDown={(e) => e.key === "Enter" && dirty && void submit()} value={draft} invalid={error !== null} disabled={status === "saving"} aria-describedby={describedBy} onChange={(e) => change(e.target.value)} />
               )}
             </>
           )}
@@ -95,12 +89,12 @@ export function SettingCard({ setting, words, onSave }: Readonly<{ setting: Runt
         </Field.Root>
         {status === "saved" && <output className="text-sm text-success">{words.saved}</output>}
         <footer className="flex flex-wrap gap-2">
-          <Button type="submit" size="sm" disabled={!dirty || status === "saving"}>{status === "saving" ? words.saving : words.save}</Button>
+          <Button type="button" size="sm" onClick={() => void submit()} disabled={!dirty || status === "saving"}>{status === "saving" ? words.saving : words.save}</Button>
           <Button type="button" size="sm" variant="secondary" onClick={() => change(draftOf(setting.default))} disabled={status === "saving"}>{words.reset}</Button>
           <Button type="button" size="sm" variant="ghost" aria-expanded={showHistory} onClick={() => setShowHistory((v) => !v)}>{showHistory ? words.hideHistory : words.history}</Button>
         </footer>
         {showHistory && <SettingHistory setting={setting} words={words} version={setting.value} />}
-      </form>
+      </div>
     </Card.Root>
   );
 }

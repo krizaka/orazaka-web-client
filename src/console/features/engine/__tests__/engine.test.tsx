@@ -1,11 +1,12 @@
 import { fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import { EngineScreen } from "@/console/features/engine/components/EngineScreen";
 import { groupOf, groupSettings, parseDraft } from "@/console/features/engine/utils/engine";
+import { queryWrapper } from "@/core/testing/queryWrapper";
 import { engineCopy } from "@/console/core/copy/engine";
 import type { RuntimeSetting } from "@/console/services/runtime-config.admin.api";
 
 const en = engineCopy.en;
-const button = (label: string, name: string) => within(screen.getByLabelText(label).closest("form")!).getByRole("button", { name });
+const button = (label: string, name: string) => within(screen.getByLabelText(label).closest("[data-setting]")!).getByRole("button", { name });
 const setting = (over: Partial<RuntimeSetting> & { key: string }): RuntimeSetting => ({
   value: 1, type: "int", description: "A knob", default: 1, bounds: {}, ...over,
 });
@@ -54,7 +55,7 @@ describe("engine utils", () => {
 describe("EngineScreen", () => {
   it("lists the settings by group with description, value, default and bounds", async () => {
     mockFetch(() => ({ body: SETTINGS }));
-    render(<EngineScreen locale="en" />);
+    render(<EngineScreen locale="en" />, { wrapper: queryWrapper() });
     expect(await screen.findByText("Parallel runs")).toBeTruthy();
     expect(screen.getByRole("heading", { name: en.groups.run })).toBeTruthy();
     expect(screen.getByRole("heading", { name: en.groups.webhook })).toBeTruthy();
@@ -65,7 +66,7 @@ describe("EngineScreen", () => {
 
   it("speaks French", async () => {
     mockFetch(() => ({ body: SETTINGS }));
-    render(<EngineScreen locale="fr" />);
+    render(<EngineScreen locale="fr" />, { wrapper: queryWrapper() });
     expect(await screen.findByRole("heading", { name: engineCopy.fr.groups.webhook })).toBeTruthy();
   });
 
@@ -73,7 +74,7 @@ describe("EngineScreen", () => {
     const fetchMock = mockFetch((url, init) =>
       init?.method === "PUT" ? { body: { ...SETTINGS[0], value: 6 } } : { body: SETTINGS },
     );
-    render(<EngineScreen locale="en" />);
+    render(<EngineScreen locale="en" />, { wrapper: queryWrapper() });
     const input = await screen.findByLabelText("run.max_parallel");
     fireEvent.change(input, { target: { value: "6" } });
     fireEvent.click(button("run.max_parallel", en.save));
@@ -93,11 +94,11 @@ describe("EngineScreen", () => {
       return { ok: true, json: async () => SETTINGS } as Response;
     });
     global.fetch = fetchMock as unknown as typeof fetch;
-    render(<EngineScreen locale="en" />);
+    render(<EngineScreen locale="en" />, { wrapper: queryWrapper() });
     const input = await screen.findByLabelText("run.max_parallel");
     fireEvent.change(input, { target: { value: "6" } });
 
-    if (firstSubmit === "Enter") fireEvent.submit(input.closest("form")!);
+    if (firstSubmit === "Enter") fireEvent.keyDown(input, { key: "Enter" });
     else fireEvent.click(button("run.max_parallel", en.save));
     await waitFor(() => expect(fetchMock.mock.calls.filter(([, init]) => init?.method === "PUT")).toHaveLength(1));
 
@@ -105,7 +106,7 @@ describe("EngineScreen", () => {
     expect((button("run.max_parallel", en.saving) as HTMLButtonElement).disabled).toBe(true);
     expect((button("run.max_parallel", en.reset) as HTMLButtonElement).disabled).toBe(true);
     if (firstSubmit === "Enter") fireEvent.click(button("run.max_parallel", en.saving));
-    else fireEvent.submit(input.closest("form")!);
+    else fireEvent.keyDown(input, { key: "Enter" });
     expect(fetchMock.mock.calls.filter(([, init]) => init?.method === "PUT")).toHaveLength(1);
 
     resolvePut({ ok: true, json: async () => ({ ...SETTINGS[0], value: 6 }) } as Response);
@@ -116,7 +117,7 @@ describe("EngineScreen", () => {
     mockFetch((_url, init) =>
       init?.method === "PUT" ? { body: { ...SETTINGS[0], value: 6 } } : { body: SETTINGS },
     );
-    render(<EngineScreen locale="en" />);
+    render(<EngineScreen locale="en" />, { wrapper: queryWrapper() });
     const input = await screen.findByLabelText("run.max_parallel");
     fireEvent.change(input, { target: { value: "006" } });
     fireEvent.click(button("run.max_parallel", en.save));
@@ -130,7 +131,7 @@ describe("EngineScreen", () => {
     mockFetch((_url, init) =>
       init?.method === "PUT" ? { body: { ...list, value: ["a.example", "b.example"] } } : { body: [list] },
     );
-    render(<EngineScreen locale="en" />);
+    render(<EngineScreen locale="en" />, { wrapper: queryWrapper() });
     const input = await screen.findByLabelText("webhook.hosts");
     fireEvent.change(input, { target: { value: " a.example \n b.example " } });
     fireEvent.click(button("webhook.hosts", en.save));
@@ -141,10 +142,10 @@ describe("EngineScreen", () => {
 
   it("shows no error marker while nothing is wrong, and one alert once something is", async () => {
     mockFetch(() => ({ body: SETTINGS }));
-    render(<EngineScreen locale="en" />);
+    render(<EngineScreen locale="en" />, { wrapper: queryWrapper() });
     const input = await screen.findByLabelText("run.max_parallel");
     expect(screen.queryAllByRole("alert")).toHaveLength(0);
-    expect(input.closest("form")!.querySelectorAll("p")).toHaveLength(1);
+    expect(input.closest("[data-setting]")!.querySelectorAll("p")).toHaveLength(1);
     expect(input.getAttribute("aria-describedby")).toBeNull();
 
     fireEvent.change(input, { target: { value: "99" } });
@@ -158,7 +159,7 @@ describe("EngineScreen", () => {
     const fetchMock = mockFetch((url, init) =>
       init?.method === "PUT" ? { status: 400, body: { status: "invalid_request", message: "value must be at most 10" } } : { body: SETTINGS },
     );
-    render(<EngineScreen locale="en" />);
+    render(<EngineScreen locale="en" />, { wrapper: queryWrapper() });
     const input = await screen.findByLabelText("run.max_parallel");
     fireEvent.change(input, { target: { value: "99" } });
     fireEvent.click(button("run.max_parallel", en.save));
@@ -175,7 +176,7 @@ describe("EngineScreen", () => {
     const fetchMock = mockFetch((url) =>
       url.includes("/audit") ? { body: [{ at: "2026-10-01T10:00:00Z", actorId: "actor-42", key: "run.max_parallel", before: "2", after: "4" }] } : { body: SETTINGS },
     );
-    render(<EngineScreen locale="en" />);
+    render(<EngineScreen locale="en" />, { wrapper: queryWrapper() });
     await screen.findByText("Parallel runs");
     fireEvent.click(button("run.max_parallel", en.history));
     expect(await screen.findByText("actor-42")).toBeTruthy();
@@ -186,7 +187,7 @@ describe("EngineScreen", () => {
 
   it("offers a retry when the settings cannot be read", async () => {
     mockFetch(() => ({ status: 500, body: {} }));
-    render(<EngineScreen locale="en" />);
+    render(<EngineScreen locale="en" />, { wrapper: queryWrapper() });
     expect(await screen.findByText(en.error)).toBeTruthy();
   });
 });
