@@ -59,8 +59,8 @@ test("a change from a later day starts at the start of that day (UTC)", () => {
   assert.equal(effectiveInstant("2026-11-01", "2026-10-28", NOW), "2026-11-01T00:00:00.000Z");
 });
 
-test("a change from today starts a minute from now, never in the past", () => {
-  assert.equal(effectiveInstant("2026-10-28", "2026-10-28", NOW), "2026-10-28T15:01:00.000Z");
+test("a change from today starts two minutes from now, never in the past", () => {
+  assert.equal(effectiveInstant("2026-10-28", "2026-10-28", NOW), "2026-10-28T15:02:00.000Z");
 });
 
 test("a day before today is refused", () => {

@@ -1,3 +1,4 @@
+import { addMinutes } from "date-fns";
 import type { PriceEntryView, PriceFigures, PriceHistoryEntry, PricesView } from "@krizaka/ui/price-catalogue-editor";
 
 /**
@@ -66,11 +67,11 @@ export function toHistory(versions: AdminPrice[]): PriceHistoryEntry[] {
 }
 
 /**
- * The instant a change starts, from the day the admin picked (`YYYY-MM-DD`). Today means a minute from now — the
+ * The instant a change starts, from the day the admin picked (`YYYY-MM-DD`). Today means two minutes from now (the clock may be a minute old) — the
  * service refuses a start in the past — and a day before today is refused here with the same reason.
  */
 export function effectiveInstant(day: string, today: string, now: Date): string {
   if (day < today) throw new Error("A price change cannot start in the past.");
-  if (day === today) return new Date(now.getTime() + 60_000).toISOString();
+  if (day === today) return addMinutes(now, 2).toISOString();
   return new Date(`${day}T00:00:00Z`).toISOString();
 }

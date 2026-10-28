@@ -6,6 +6,7 @@ import { PriceCatalogueEditor, type PriceFigures } from "@krizaka/ui/price-catal
 import { pricesCopy, type PricesLocale } from "@/console/core/copy/prices";
 import { PricesAdminApi } from "@/console/services/prices.admin.api";
 import { effectiveInstant } from "@/console/features/billing/utils/prices";
+import { useNow } from "@/core/hooks/useNow";
 import { usePrices } from "@/console/features/billing/hooks/usePrices";
 
 const pageLocale = (): PricesLocale => (typeof document !== "undefined" && document.documentElement.lang.toLowerCase().startsWith("en") ? "en" : "fr");
@@ -16,11 +17,14 @@ export function PricesScreen({ locale }: Readonly<{ locale?: PricesLocale }>) {
   const words = pricesCopy[lang];
   const { prices, isLoading, hasError, reload, loadHistory, refresh } = usePrices();
 
+  // The clock moves a minute at a time: a start "today" is placed two minutes ahead, so it is never in the past for the service.
+  const clock = useNow(true, 60_000);
+  const today = clock.toISOString().slice(0, 10);
+
   const onSchedule = async (key: string, change: PriceFigures, day: string) => {
-    const now = new Date();
     let from: string;
     try {
-      from = effectiveInstant(day, now.toISOString().slice(0, 10), now);
+      from = effectiveInstant(day, today, clock);
     } catch (error) {
       return { ok: false as const, message: error instanceof Error ? error.message : "" };
     }
@@ -44,7 +48,7 @@ export function PricesScreen({ locale }: Readonly<{ locale?: PricesLocale }>) {
           prices={prices}
           words={words.editor}
           locale={lang === "fr" ? "fr-CA" : "en-CA"}
-          today={new Date().toISOString().slice(0, 10)}
+          today={today}
           onSchedule={onSchedule}
           loadHistory={loadHistory}
           headingLevel={3}
