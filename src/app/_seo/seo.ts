@@ -39,7 +39,7 @@ export const PRIVATE_PATHS = ["/api/", "/dashboard", "/chat", "/jobs", "/usage",
 
 /** Every public page, in the order of the sitemap. */
 export function publicPaths(): string[] {
-  return ["/", "/desktop", "/docs", ...listPages().map((d) => `/docs/${d.slug}`), "/privacy", "/terms"];
+  return ["/", "/desktop", "/pricing", "/docs", ...listPages().map((d) => `/docs/${d.slug}`), "/privacy", "/terms"];
 }
 
 const ORG = { "@type": "Organization", "@id": ORG_ID, name: "Krizaka", url: KRIZAKA_URL };
@@ -83,6 +83,7 @@ export function llmsText(): string {
 - [Home](${SITE_URL}/): what Orazaka is
 - [Mobile app](${SITE_URL}/docs/mobile): recordings and screenshots of the iOS and Android app
 - [Orazaka for Mac](${SITE_URL}/desktop): the Orazaka Desktop test build for Apple Silicon — what it does today, requirements, download
+- [Pricing and editions](${SITE_URL}/pricing): Community (open source, runs today), Business (soon), and Krizaka's Enterprise offer for anything custom
 - [Packs](${SITE_URL}/docs/packs): the catalogue of installable offers, what each pack adds to the Studios, and how to write one
 - [Models](${SITE_URL}/docs/models): the models Orazaka supports — what each does, where it runs, its licence and context window
 - [Talk to the team](${KRIZAKA_URL}/contact?topic=orazaka): the contact form lives on krizaka.com

@@ -1,5 +1,6 @@
 import type * as React from "react";
 import "@testing-library/jest-dom";
+import { mockReducedMotion } from "@/features/landing/utils/reduced-motion.testkit";
 import { fireEvent, render, screen, within } from "@testing-library/react";
 import { SessionContext } from "next-auth/react";
 import { ThemeProvider } from "@krizaka/ui/theme";
@@ -19,12 +20,7 @@ jest.mock("@/core/context/LocaleContext", () => ({
   useTranslation: () => ({ t: translations[mockLocale], locale: mockLocale, setLocale: jest.fn() }),
 }));
 
-beforeAll(() => {
-  Object.defineProperty(window, "matchMedia", {
-    writable: true,
-    value: (query: string) => ({ matches: query.includes("reduce"), media: query, addEventListener: () => {}, removeEventListener: () => {}, addListener: () => {}, removeListener: () => {}, onchange: null, dispatchEvent: () => false }),
-  });
-});
+beforeAll(mockReducedMotion);
 
 const CLOSED: AuthFlags = { login: false, signup: false, github: false, google: false };
 
