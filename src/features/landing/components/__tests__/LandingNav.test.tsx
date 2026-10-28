@@ -202,6 +202,15 @@ describe("the one action of the bar: using the app", () => {
     expect(within(bar()).queryByRole("link", { name: nav.openApp })).toBeNull();
   });
 
+  it("while next-auth is still loading the session the bar draws NEITHER state: a signed-in person never sees « Sign in » flash (krizaka-ui#800)", () => {
+    mockSession.current = { data: undefined, status: "loading", update: async () => null } as unknown as SessionValue;
+    renderLanding("en", <LandingNav />, { ...CLOSED, login: true, signup: true });
+    expect(within(bar()).queryByRole("link", { name: nav.signIn })).toBeNull();
+    expect(within(bar()).queryByRole("link", { name: nav.tryIt })).toBeNull();
+    expect(within(bar()).queryByRole("link", { name: nav.openApp })).toBeNull();
+    expect(bar().querySelector("[data-session=pending]")).not.toBeNull();
+  });
+
   it("keeps the signed-in avatar visible in the mobile bar and open panel", () => {
     mockSession.current = { data: { user: { name: "Oussama", email: "o@orazaka.io" }, expires: "2999-01-01" }, status: "authenticated", update: async () => null } as SessionValue;
     renderLanding("en", <LandingNav />);
