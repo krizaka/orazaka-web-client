@@ -1,8 +1,8 @@
 /**
  * @file translations.pricing.ts
  * @description The words of /pricing (the editions of Orazaka), en and fr (krizaka/orazaka#447). Prices are data
- * (ADR-009): they come from the price catalogue, never from here — and the catalogue holds no Orazaka plan yet, so no
- * edition carries a figure. Community is what runs today; Business is « soon »; anything custom is Krizaka's single
+ * (ADR-009): they come from the price catalogue (billing), never from here — an edition without a published price
+ * carries none of its own. Community is what runs today; Business is « soon »; anything custom is Krizaka's single
  * « Entreprise » offer, reached through the contact form. No customer name, no unproven claim (no certification, no
  * hosting or uptime promise).
  */
@@ -24,6 +24,9 @@ export interface PricingDictionary {
   title: string;
   lead: string;
   plansLabel: string;
+  /** The words of the catalogue's units (`year`, `month`…), read next to a price the catalogue holds. */
+  units: Record<string, string>;
+  plusTaxes: string;
   community: Edition & { download: string; source: string };
   business: Edition & { soon: string };
   enterprise: Edition & { cta: string };
@@ -40,6 +43,16 @@ const WORDS = {
   title: w("Start with Community. Talk to us for the rest.", "Commencez avec Community. Parlons-en pour le reste."),
   lead: w("Orazaka is open source: Community is the platform itself, and it runs today. No edition shows a price until it is published.", "Orazaka est libre : Community est la plateforme elle-même, et elle fonctionne aujourd'hui. Aucune édition n'affiche de prix tant qu'il n'est pas publié."),
   plansLabel: w("Editions", "Éditions"),
+  units: {
+    month: w("per month", "par mois"),
+    year: w("per year", "par an"),
+    once: w("once", "une fois"),
+    document: w("per document", "par document"),
+    order: w("per order", "par commande"),
+    pack: w("per pack", "par pack"),
+    hour: w("per hour", "par heure"),
+  },
+  plusTaxes: w("plus taxes", "plus taxes"),
   community: {
     name: w("Community", "Community"),
     price: w("Open source", "Libre"),
@@ -93,7 +106,7 @@ const WORDS = {
       },
       {
         question: w("Where are the prices?", "Où sont les prix ?"),
-        answer: w("A price appears here when it is published, read from Krizaka's price catalogue. None is published for Orazaka, so none is shown.", "Un prix apparaît ici lorsqu'il est publié, lu dans le catalogue de prix de Krizaka. Aucun n'est publié pour Orazaka, donc aucun n'est affiché."),
+        answer: w("A price appears here when it is published, read from Krizaka's price catalogue. An edition without a published price says so instead.", "Un prix apparaît ici lorsqu'il est publié, lu dans le catalogue de prix de Krizaka. Une édition sans prix publié le dit à la place."),
       },
       {
         question: w("When does Business arrive?", "Quand arrive Business ?"),
