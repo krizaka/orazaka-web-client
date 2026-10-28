@@ -191,7 +191,7 @@ describe("LandingPage while sign-in and sign-up are closed (the default)", () =>
     expect(within(bar).getAllByRole("link", { name: translations.en.landing.nav.signIn })[0]).toHaveAttribute("href", "/login");
     expect(within(bar).queryByRole("link", { name: /talk to us|contact/i })).toBeNull();
     const centre = within(bar).getByRole("navigation", { name: "Orazaka" });
-    expect(within(centre).getAllByRole("link").map((a) => a.getAttribute("href"))).toEqual(["#features", "/desktop", "/docs"]);
+    expect(within(centre).getAllByRole("link").map((a) => a.getAttribute("href"))).toEqual(["#features", "/desktop", "/docs", "/pricing", "/open-source"]);
     expect(within(centre).getAllByRole("button").map((b) => b.textContent)).toEqual([translations.en.landing.nav.product]);
   });
 });

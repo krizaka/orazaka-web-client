@@ -182,19 +182,6 @@
     "file": "security.md"
   },
   {
-    "slug": "licensing",
-    "journey": "reference",
-    "group": "policies",
-    "order": 3,
-    "title": "Licensing",
-    "intro": "What Apache-2.0 covers across the repositories, and where the proprietary line falls.",
-    "audience": "decision-maker",
-    "source": "docs/LICENSING.md",
-    "generated": false,
-    "clip": null,
-    "file": "licensing.md"
-  },
-  {
     "slug": "mobile",
     "journey": "guides",
     "order": 4,

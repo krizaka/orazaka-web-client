@@ -10,6 +10,7 @@ import { landing } from "./translations.landing";
 import { mobile } from "./translations.mobile";
 import { desktop } from "./translations.desktop";
 import { pricing } from "./translations.pricing";
+import { openSource } from "./translations.openSource";
 import { docs } from "./translations.docs";
 import { a11y, automation } from "./translations.automation";
 import { automations } from "./translations.automations";
@@ -951,6 +952,7 @@ export const translations: Record<Locale, TranslationDictionary> = {
     mobile: mobile.en,
     desktop: desktop.en,
     pricing: pricing.en,
+    openSource: openSource.en,
     docs: docs.en,
   },
   fr: {
@@ -1891,6 +1893,7 @@ export const translations: Record<Locale, TranslationDictionary> = {
     mobile: mobile.fr,
     desktop: desktop.fr,
     pricing: pricing.fr,
+    openSource: openSource.fr,
     docs: docs.fr,
   },
 };

@@ -4,7 +4,7 @@
  * top-level items, no mixed concepts in one menu, no orphan entry, one list for every surface.
  */
 import { APP_SECTIONS, AppSectionPlace, appSectionsFor } from "@/core/config/app-sections";
-import { NAV_DOCS, NAV_GROUPS } from "@/features/landing/utils/site-nav";
+import { NAV_DOCS, NAV_GROUPS, NAV_PAGES } from "@/features/landing/utils/site-nav";
 
 describe("the signed-in app", () => {
   const sections = appSectionsFor(true);
@@ -34,8 +34,9 @@ describe("the signed-in app", () => {
 });
 
 describe("the public bar", () => {
-  it("has at most four top-level items: two groups and Docs", () => {
-    expect(NAV_GROUPS.length + 1).toBeLessThanOrEqual(4);
+  it("has at most four top-level items: the Product menu, Docs, Pricing and Open source", () => {
+    expect(NAV_GROUPS.length + 1 + NAV_PAGES.length).toBeLessThanOrEqual(4);
+    expect(NAV_PAGES.map((p) => p.path)).toEqual(["/pricing", "/open-source"]);
     expect(NAV_DOCS.path).toBe("/docs");
   });
 
