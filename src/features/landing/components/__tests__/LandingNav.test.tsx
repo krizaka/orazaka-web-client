@@ -44,7 +44,7 @@ const bar = () => document.querySelector("header[data-floating]") as HTMLElement
 const desktopNav = () => within(bar()).getAllByRole("navigation", { name: "Orazaka" })[0];
 
 describe("the information architecture of the public bar", () => {
-  it("is short (epic #231): Product ▾ (How it works · Download) · Docs; Packs lives in the docs", () => {
+  it("is short (epic #231): Product ▾ (How it works · Download) · Docs · Pricing · Open source; Packs lives in the docs", () => {
     const shape = NAV_GROUPS.map((g) => ({ group: g.id, entries: g.entries.map((e) => `${e.id} → ${e.anchor ? `#${e.anchor}` : e.path}`) }));
     expect(shape).toMatchInlineSnapshot(`
 [
@@ -59,8 +59,8 @@ describe("the information architecture of the public bar", () => {
 `);
     renderLanding("en", <LandingNav />);
     const top = [...desktopNav().querySelectorAll("[data-nav-item]")].map((el) => el.textContent?.trim());
-    expect(top).toEqual([nav.product, nav.how, nav.download, nav.docs]);
-    expect(top.length).toBeLessThanOrEqual(5);
+    expect(top).toEqual([nav.product, nav.how, nav.download, nav.docs, nav.pricing, nav.openSource]);
+    expect(top.length).toBeLessThanOrEqual(6);
   });
 
   it("is the family's floating bar, in the family's order: mark and name · sections · repository, theme, language, Sign in", () => {
@@ -88,13 +88,15 @@ describe("the information architecture of the public bar", () => {
     ["/docs/mobile", "docs"],
     ["/docs/self-hosting", "docs"],
     ["/docs", "docs"],
+    ["/pricing", "pricing"],
+    ["/open-source", "openSource"],
     ["/docs/packs", "docs"],
   ])("lights one item at most on %s (%s)", (path, top) => {
     expect(navActive(path).top).toBe(top);
     mockPath.current = path;
     renderLanding("en", <LandingNav onHome={path === "/"} />);
     const lit = [...desktopNav().querySelectorAll("[data-nav-item][data-active]")].map((el) => el.textContent?.trim());
-    expect(lit).toEqual(top === "docs" ? [nav.docs] : top ? [nav.product, nav.download] : []);
+    expect(lit).toEqual(top === "docs" ? [nav.docs] : top === "pricing" ? [nav.pricing] : top === "openSource" ? [nav.openSource] : top ? [nav.product, nav.download] : []);
     mockPath.current = "/";
   });
 
@@ -120,7 +122,7 @@ describe("the mobile panel", () => {
     expect(within(groups[0]).getAllByRole("link").map((a) => a.textContent)).toEqual([nav.how, nav.download]);
     const panel = groups[0].closest("nav") as HTMLElement;
     const hrefs = [...panel.querySelectorAll("a")].map((a) => a.getAttribute("href"));
-    expect(hrefs).toEqual(["#features", "/desktop", "/docs", "#", "#", "/login"]);
+    expect(hrefs).toEqual(["#features", "/desktop", "/docs", "/pricing", "/open-source", "#", "#", "/login"]);
     expect(hrefs).not.toContain("/infrastructure");
   });
 

@@ -8,7 +8,7 @@ import { ThemeToggle } from "@krizaka/ui/theme";
 import { BarActions } from "@/features/landing/components/BarActions";
 import { useLanguageSwitch } from "@/components/LocaleSwitch";
 import { useTranslation } from "@/core/context/LocaleContext";
-import { NAV_DOCS, NAV_GROUPS, entryHref, navActive } from "@/features/landing/utils/site-nav";
+import { NAV_DOCS, NAV_GROUPS, NAV_PAGES, entryHref, navActive } from "@/features/landing/utils/site-nav";
 
 export { navActive } from "@/features/landing/utils/site-nav";
 
@@ -17,7 +17,7 @@ const REPO_URL = "https://github.com/krizaka/orazaka-web-client";
 /**
  * The bar of the public pages — the family's, the one of Yomizaka and the other products (`site-nav.ts`,
  * docs/ux/information-architecture.md of the workspace): a floating bar. Left: the Orazaka mark and name (home). Then
- * Product ▾ (what it does) · Platforms ▾ (where it runs) · Docs — one lit at a time, the page's own group (a group of
+ * Product ▾ (what it does · Download) · Docs · Pricing · Open source — one lit at a time, the page's own group (a group of
  * three or fewer entries will be inline once Krizaka UI's breakpoint-aware menu ships). Right: the repository, the
  * theme, the language, and the one action — using the app (BarActions). The version is in the footer, not here.
  * Below md: one panel with the same groups in the same order. `onHome` is false off the home page, where the anchors
@@ -58,6 +58,11 @@ export function LandingNav({ onHome = true }: Readonly<{ onHome?: boolean }>) {
           <NavBar.Link asChild active={active.top === "docs"}>
             <Link href={NAV_DOCS.path}>{n.docs}</Link>
           </NavBar.Link>
+          {NAV_PAGES.map((p) => (
+            <NavBar.Link key={p.id} asChild active={active.top === p.id}>
+              <Link href={p.path}>{n[p.id]}</Link>
+            </NavBar.Link>
+          ))}
         </NavBar.Items>
 
         <NavBar.Actions className="gap-1">
@@ -82,6 +87,11 @@ export function LandingNav({ onHome = true }: Readonly<{ onHome?: boolean }>) {
             <NavBar.MobileLink asChild active={active.top === "docs"}>
               <Link href={NAV_DOCS.path}>{n.docs}</Link>
             </NavBar.MobileLink>
+            {NAV_PAGES.map((p) => (
+              <NavBar.MobileLink key={p.id} asChild active={active.top === p.id}>
+                <Link href={p.path}>{n[p.id]}</Link>
+              </NavBar.MobileLink>
+            ))}
             <NavBar.MobilePreferences label={n.preferences}>
               <ThemeToggle variant="ghost" label={themeLabel} />
               <NavBar.Language {...language} />
