@@ -608,8 +608,8 @@ export const translations: Record<Locale, TranslationDictionary> = {
       },
     },
     auth: {
-      loginTitle: "Orazaka",
-      loginSubtitle: "Sign in to your workspace",
+      loginTitle: "Sign in",
+      loginSubtitle: "Open your workspace",
       emailLabel: "Email",
       passwordLabel: "Password",
       signInBtn: "Sign In",
@@ -1541,8 +1541,8 @@ export const translations: Record<Locale, TranslationDictionary> = {
       },
     },
     auth: {
-      loginTitle: "Orazaka",
-      loginSubtitle: "Connectez-vous à votre espace de travail",
+      loginTitle: "Connexion",
+      loginSubtitle: "Ouvrez votre espace de travail",
       emailLabel: "E-mail",
       passwordLabel: "Mot de passe",
       signInBtn: "Se connecter",

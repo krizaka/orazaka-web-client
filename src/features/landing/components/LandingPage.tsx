@@ -24,6 +24,9 @@ const FEATURES = [
   { id: "home", size: "sm", clip: "workspace" },
 ] as const satisfies readonly { id: keyof LandingDictionary["features"]["items"]; size: "lg" | "sm"; clip: ClipId }[];
 
+/** The closing call is the quickstart: the hero already carries the way in (sign-up or the docs), so the action is not said twice. */
+const QUICKSTART_HREF = "/docs/101";
+
 const NO_RUNS: MeasuredRuns = { ok: 0, all: 0, models: 0, day: null };
 
 /**
@@ -39,7 +42,6 @@ export function LandingPage({ measured = NO_RUNS }: Readonly<{ measured?: Measur
   const f = t.landing.features;
   const entries = useEntries();
   const primary = entries.primary(t.landing.cta.primary);
-  const closing = entries.primary(t.landing.cta.primary);
 
   return (
     <>
@@ -77,7 +79,7 @@ export function LandingPage({ measured = NO_RUNS }: Readonly<{ measured?: Measur
             actions: (
               <>
                 <Button asChild variant="primary" size="lg">
-                  <Link href={closing.href}>{closing.label}</Link>
+                  <Link href={QUICKSTART_HREF}>{t.landing.cta.quickstart}</Link>
                 </Button>
               </>
             ),

@@ -61,6 +61,7 @@ export interface InsightsDictionary {
     exportJson: string;
     exportFile: string;
     noCredits: string;
+    noCreditsLeft: string;
     noCreditsAction: string;
     recent: string;
     seeAll: string;
@@ -153,6 +154,7 @@ export const insights: Record<"en" | "fr", InsightsDictionary> = {
       exportJson: "Download JSON",
       exportFile: "orazaka-usage-{days}d",
       noCredits: "No credits yet",
+      noCreditsLeft: "No credits left this period",
       noCreditsAction: "Get credits",
       recent: "Latest creations",
       seeAll: "See all",
@@ -272,6 +274,7 @@ export const insights: Record<"en" | "fr", InsightsDictionary> = {
       exportJson: "Télécharger le JSON",
       exportFile: "orazaka-usage-{days}j",
       noCredits: "Pas encore de crédits",
+      noCreditsLeft: "Plus de crédits pour cette période",
       noCreditsAction: "Obtenir des crédits",
       recent: "Dernières créations",
       seeAll: "Tout voir",

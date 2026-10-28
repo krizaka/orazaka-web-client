@@ -135,6 +135,16 @@ describe("LandingPage", () => {
     expect(screen.getByText(translations.en.landing.cta.title)).toBeInTheDocument();
   });
 
+  it("never says the hero's action again at the end (krizaka/orazaka#443): the closing call is the quickstart", () => {
+    const { container } = renderLanding("en", <LandingPage measured={MEASURED} />);
+    const hero = screen.getByRole("heading", { level: 1 }).closest("header") as HTMLElement;
+    const heroHref = within(hero).getAllByRole("link")[0].getAttribute("href");
+    const closing = screen.getByRole("link", { name: translations.en.landing.cta.quickstart });
+    expect(closing).toHaveAttribute("href", "/docs/101");
+    expect(closing.getAttribute("href")).not.toBe(heroHref);
+    expect(container.querySelectorAll(`a[href="${heroHref}"]`).length).toBeLessThanOrEqual(3);
+  });
+
   it("speaks French when the visitor chose it", () => {
     renderLanding("fr", <LandingPage measured={MEASURED} />);
     expect(screen.getByText(translations.fr.landing.cta.title)).toBeInTheDocument();

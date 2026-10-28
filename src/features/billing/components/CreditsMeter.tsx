@@ -46,7 +46,7 @@ export function CreditsMeter({ wallet, available, plan, loading, href }: Readonl
             <Skeleton className="h-10 w-40" />
           ) : noCredits ? (
             <span className="flex flex-col gap-1">
-              <span className="font-display text-2xl font-bold tracking-tight text-fg">{t.insights.usage.noCredits}</span>
+              <span className="font-display text-2xl font-bold tracking-tight text-fg">{grant > 0 ? t.insights.usage.noCreditsLeft : t.insights.usage.noCredits}</span>
               <Link href="/packs" className="text-sm font-medium text-fg-accent underline-offset-4 hover:underline">
                 {t.insights.usage.noCreditsAction}
               </Link>
