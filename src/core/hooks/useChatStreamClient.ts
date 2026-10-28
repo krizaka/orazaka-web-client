@@ -5,10 +5,27 @@ import { useQueryClient } from "@tanstack/react-query";
 import type { ChatMessage } from "@/core/types/chat.types";
 import { useAuth } from "@/core/hooks/useAuth";
 import { parseRouting, type ChatRouting } from "@/core/utils/routing";
+import { parseControl, type ControlStatus } from "@/core/utils/control";
 import {
   isPipelineSchema,
   type ChatPipelineSchema,
 } from "@/core/types/pipeline.types";
+
+const ROLES_WITH_VERDICT: ReadonlySet<ChatMessage["role"]> = new Set(["assistant"]);
+
+/**
+ * Puts the engine's verdict on the answer being streamed. Only an assistant message carries one: when the
+ * final event (no text) arrives, the answer is already there and the verdict lands on it.
+ */
+export function withControl(
+  messages: ChatMessage[],
+  control: ControlStatus,
+): ChatMessage[] {
+  const last = messages.at(-1);
+  return last && ROLES_WITH_VERDICT.has(last.role)
+    ? [...messages.slice(0, -1), { ...last, control }]
+    : messages;
+}
 
 async function readChatStream(
   reader: ReadableStreamDefaultReader<Uint8Array>,
@@ -28,6 +45,8 @@ async function readChatStream(
   // Track the current SSE `event:` so we can route the `pipeline-ack` payload
   // (the real interceptor chain) separately from `message` content tokens.
   let currentEvent = "message";
+  // The verdict the engine last reported for this answer (PENDING on each chunk, then the final one).
+  let control: ControlStatus | null = null;
 
   while (true) {
     const { done, value } = await reader.read();
@@ -92,6 +111,7 @@ async function readChatStream(
             onPipeline(parsed);
             continue;
           }
+          control = parseControl(parsed.metadata) ?? control;
           chunk = parsed.content ?? parsed.text ?? "";
         } catch {
           // Fallback to raw string
@@ -112,6 +132,7 @@ async function readChatStream(
                         ...lastMsg,
                         content: accumulatedContent,
                         kind: "text" as const,
+                        ...(control ? { control } : {}),
                       },
                     ]
                   : [
@@ -122,6 +143,7 @@ async function readChatStream(
                         content: accumulatedContent,
                         timestamp: Date.now(),
                         kind: "text" as const,
+                        ...(control ? { control } : {}),
                       },
                     ];
               if (globalThis.window !== undefined) {
@@ -133,6 +155,19 @@ async function readChatStream(
               return updated;
             },
           );
+        } else if (control) {
+          // The final event repeats no text: it only carries the verdict.
+          const verdict = control;
+          queryClient.setQueryData<ChatMessage[]>(queryKey, (old = []) => {
+            const updated = withControl(old, verdict);
+            if (updated !== old && globalThis.window !== undefined) {
+              localStorage.setItem(
+                `orazaka_messages_${userId}_${convId}`,
+                JSON.stringify(updated),
+              );
+            }
+            return updated;
+          });
         }
       }
     }

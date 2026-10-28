@@ -18,6 +18,7 @@ import { insights } from "./translations.insights";
 import { jobsTable } from "./translations.jobsTable";
 import { webhooks } from "./translations.webhooks";
 import { runProgress } from "./translations.runProgress";
+import { control } from "./translations.control";
 import { catalogue, plan } from "./translations.catalogue";
 import { consent } from "./translations.consent";
 import { THEME_MODE } from "@/core/constants/http.constants";
@@ -932,6 +933,7 @@ export const translations: Record<Locale, TranslationDictionary> = {
     jobsTable: jobsTable.en,
     webhooks: webhooks.en,
     runProgress: runProgress.en,
+    control: control.en,
     commandPalette: {
       label: "Command palette",
       placeholder: "Search a page…",
@@ -1871,6 +1873,7 @@ export const translations: Record<Locale, TranslationDictionary> = {
     jobsTable: jobsTable.fr,
     webhooks: webhooks.fr,
     runProgress: runProgress.fr,
+    control: control.fr,
     commandPalette: {
       label: "Palette de commandes",
       placeholder: "Chercher une page…",
