@@ -6,6 +6,7 @@ import { PricingPage, type PricingPlan } from "@krizaka/ui/pricing-page";
 import { useTranslation } from "@/core/context/LocaleContext";
 import { LandingNav } from "@/features/landing/components/LandingNav";
 import { LandingFooter } from "@/features/landing/components/LandingFooter";
+import { inDevelopment } from "@/core/config/product-status";
 import { priceFor, type PublicPrice } from "@/features/landing/utils/public-prices";
 
 /** Where the Enterprise offer is reached: Krizaka's contact form, the Orazaka topic preselected (the offer has no page of its own yet). */
@@ -22,7 +23,8 @@ export function PricingEditions({ prices = [] }: Readonly<{ prices?: readonly Pu
   const { t, locale } = useTranslation();
   const p = t.pricing;
   const slot = (edition: "community" | "business" | "enterprise") => {
-    const shown = priceFor(prices, edition, locale);
+    // While Orazaka is in development no amount is public: a price nobody can pay is never shown (krizaka-com#468).
+    const shown = inDevelopment() ? undefined : priceFor(prices, edition, locale);
     return shown
       ? { price: shown.text, unit: `${p.units[shown.unit] ?? shown.unit} · ${p.plusTaxes}` }
       : { price: p[edition].price, unit: p[edition].unit };

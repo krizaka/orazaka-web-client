@@ -2,7 +2,7 @@
  * @file translations.pricing.ts
  * @description The words of /pricing (the editions of Orazaka), en and fr (krizaka/orazaka#447). Prices are data
  * (ADR-009): they come from the price catalogue (billing), never from here — an edition without a published price
- * carries none of its own. Community is what runs today; Business is « soon »; anything custom is Krizaka's single
+ * carries none of its own. Orazaka is in development: nothing is for sale and no price is shown. Community is the open-source platform; Business is « soon »; anything custom is Krizaka's single
  * « Entreprise » offer, reached through the contact form. No customer name, no unproven claim (no certification, no
  * hosting or uptime promise).
  */
@@ -41,7 +41,7 @@ const WORDS = {
   },
   eyebrow: w("Pricing and editions", "Tarifs et éditions"),
   title: w("Start with Community. Talk to us for the rest.", "Commencez avec Community. Parlons-en pour le reste."),
-  lead: w("Orazaka is open source: Community is the platform itself, and it runs today. No edition shows a price until it is published.", "Orazaka est libre : Community est la plateforme elle-même, et elle fonctionne aujourd'hui. Aucune édition n'affiche de prix tant qu'il n'est pas publié."),
+  lead: w("Orazaka is open source and in development: sign-up is closed and nothing is for sale yet. Community is the platform itself; no edition shows a price until it is published.", "Orazaka est libre et en développement : les inscriptions sont fermées et rien n'est encore en vente. Community est la plateforme elle-même ; aucune édition n'affiche de prix tant qu'il n'est pas publié."),
   plansLabel: w("Editions", "Éditions"),
   units: {
     month: w("per month", "par mois"),
@@ -106,7 +106,7 @@ const WORDS = {
       },
       {
         question: w("Where are the prices?", "Où sont les prix ?"),
-        answer: w("A price appears here when it is published, read from Krizaka's price catalogue. An edition without a published price says so instead.", "Un prix apparaît ici lorsqu'il est publié, lu dans le catalogue de prix de Krizaka. Une édition sans prix publié le dit à la place."),
+        answer: w("Orazaka is in development, so no edition has a price yet. Each edition says « Soon » or « On request » until a price is published.", "Orazaka est en développement : aucune édition n'a encore de prix. Chaque édition dit « Bientôt » ou « Sur demande » tant qu'un prix n'est pas publié."),
       },
       {
         question: w("When does Business arrive?", "Quand arrive Business ?"),
