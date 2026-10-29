@@ -61,10 +61,11 @@ describe.each(["en", "fr"] as const)("/pricing (%s)", (locale) => {
 describe("/pricing reads the price catalogue (krizaka/orazaka#417)", () => {
   const entry = (over: Partial<PublicPrice>): PublicPrice => ({ key: "orazaka.business", unit: "year", amountCents: 290000, availability: "public", limits: {}, ...over });
 
-  it("shows a published price from the catalogue's cents, with its unit and taxes", () => {
+  it("keeps a published catalogue price off the page while Orazaka is in development (krizaka-com#468)", () => {
     const { container } = renderPage("en", [entry({})]);
-    expect(container.textContent?.replace(/\s/g, " ")).toContain("2,900.00");
-    expect(container.textContent).toContain(`${translations.en.pricing.units.year} · ${translations.en.pricing.plusTaxes}`);
+    expect(container.textContent?.replace(/\s/g, " ")).not.toContain("2,900.00");
+    expect(container.textContent).not.toContain(`${translations.en.pricing.units.year} · ${translations.en.pricing.plusTaxes}`);
+    expect(container.textContent).toContain(translations.en.pricing.business.soon);
   });
 
   it("keeps the edition's own words when the catalogue says preparing or internal", () => {
