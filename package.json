@@ -10,7 +10,7 @@
     "prebuild": "node scripts/link-fonts.mjs",
     "build": "depcruise src --config .dependency-cruiser.cjs && next build",
     "start": "next start",
-    "lint": "eslint --max-warnings 955 && krizaka-server-client-boundary && krizaka-ratchet && ast-grep test --skip-snapshot-tests && krizaka-sg-ratchet",
+    "lint": "eslint --max-warnings 121 && krizaka-server-client-boundary && krizaka-ratchet && ast-grep test --skip-snapshot-tests && krizaka-sg-ratchet",
     "format": "prettier --write \"src/**/*.{ts,tsx,json,md}\"",
     "validate": "depcruise src --config .dependency-cruiser.cjs && npm run lint && npm run test:codemods && npm run test:deps && npm run check:deploy-build && npm run check:app-links && npm run test:scripts && npm run test:console && npm run test:coverage",
     "test": "jest",
