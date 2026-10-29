@@ -47,9 +47,12 @@ export const PREPARED = [
   },
 ];
 
-/** The recorded chat: a question typed, the policy pasted under it, an answer sourced on the policy. */
+/** The server tool the recorded chat is meant to call (orazaka-ai-engine#169): one ALREADY registered on dev, checked by videos-preflight.mjs before any paid run. */
+export const PROOF_TOOL = "searchKnowledge";
+
+/** The recorded chat: a question typed, the policy pasted under it, an answer sourced on the policy, then a search of the knowledge base (the tool call). */
 export const RECORDED_QUESTION =
-  "Ms Laurent wants to return her custom-glaze Halo lamp after 20 days. According to our policy, what do I tell her? Two sentences. Then check article 1457 of the Civil Code of Québec with your statute lookup and tell me in one line whether it changes the answer.";
+  "Ms Laurent wants to return her custom-glaze Halo lamp after 20 days. According to our policy, what do I tell her? Two sentences. Then search our knowledge base for any note on custom-glaze returns and tell me in one line whether it changes the answer.";
 export const RECORDED_DOCUMENT = RETURNS_POLICY;
 
 /** The recorded visual: a product shot for the shop, generated on this machine. */
