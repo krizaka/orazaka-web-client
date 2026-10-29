@@ -39,12 +39,16 @@ describe(`brand icons (${BRAND})`, () => {
   });
 
   it("each committed icon matches the CDN brand manifest", async () => {
-    const manifest = JSON.parse((await fetchRetry(`${CDN}/brand/manifest.json`)).toString("utf8")) as { files: { path: string; sha256: string }[] };
+    const manifest = JSON.parse((await fetchRetry(`${CDN}/brand/manifest.json`)).toString("utf8")) as {
+      files: { path: string; sha256: string }[];
+    };
     const hashes = Object.fromEntries(manifest.files.map((f) => [f.path, f.sha256]));
     for (const [file, dest] of Object.entries(ICONS)) {
       const expected = hashes[`brand/${BRAND}/${file}`];
       expect(expected).toBeTruthy();
-      const have = createHash("sha256").update(readFileSync(path.join(process.cwd(), dest))).digest("hex");
+      const have = createHash("sha256")
+        .update(readFileSync(path.join(process.cwd(), dest)))
+        .digest("hex");
       expect({ dest, have }).toEqual({ dest, have: expected });
     }
   }, 60_000);

@@ -26,7 +26,11 @@ export const consoleCopy = {
     open: "Open the menu",
     close: "Close the menu",
     signOut: "Sign out",
-    theme: { dark: "Dark theme — switch to light", light: "Light theme — follow the system", system: "System theme — switch to dark" },
+    theme: {
+      dark: "Dark theme — switch to light",
+      light: "Light theme — follow the system",
+      system: "System theme — switch to dark",
+    },
   },
   login: {
     title: "Operator sign-in",
@@ -34,7 +38,8 @@ export const consoleCopy = {
     email: "Email",
     password: "Password",
     submit: "Sign in",
-    refused: "Those credentials do not open the console — wrong password, or an account without the administrator role.",
+    refused:
+      "Those credentials do not open the console — wrong password, or an account without the administrator role.",
     unreachable: "The identity service did not answer. Is the platform running?",
   },
   supervision: {
@@ -83,7 +88,12 @@ export const consoleCopy = {
     loading: "Reading the services",
     dependencies: "Dependencies",
     dependenciesDesc: "What the conversation service needs to answer",
-    checks: { database: "Database", vector: "Vector index", ollama: "Local inference (Ollama)", provider: "Default provider" },
+    checks: {
+      database: "Database",
+      vector: "Vector index",
+      ollama: "Local inference (Ollama)",
+      provider: "Default provider",
+    },
     engines: "Media engines",
     video: "Video engine",
     image: "Image engine",
@@ -91,7 +101,14 @@ export const consoleCopy = {
     offline: "Offline",
     queue: "Queue depth",
     queueDesc: "The latest jobs of every workspace, by state",
-    states: { PENDING: "Waiting", PROCESSING: "Running", COMPLETED: "Done", FAILED: "Failed", CANCELLED: "Cancelled", DELETED: "Deleted" },
+    states: {
+      PENDING: "Waiting",
+      PROCESSING: "Running",
+      COMPLETED: "Done",
+      FAILED: "Failed",
+      CANCELLED: "Cancelled",
+      DELETED: "Deleted",
+    },
     failures: "Recent errors",
     failuresDesc: "Failed jobs, newest first",
     noFailures: "No failed job in the latest runs.",
@@ -156,7 +173,8 @@ export const consoleCopy = {
     withdraw: "Withdraw administrator role",
     exportData: "Export data (Law 25)",
     eraseTitle: "Erase this account",
-    eraseLead: "Law 25 erasure of what the identity service holds: the account, its keys and its profile. The records other services keep under the same id (jobs, wallets) are theirs to purge. The audit keeps the fact, not the person.",
+    eraseLead:
+      "Law 25 erasure of what the identity service holds: the account, its keys and its profile. The records other services keep under the same id (jobs, wallets) are theirs to purge. The audit keeps the fact, not the person.",
     eraseConfirm: "Type the account's e-mail to confirm",
     eraseSubmit: "Erase the account",
   },

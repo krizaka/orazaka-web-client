@@ -40,7 +40,11 @@ function RegisterPageContent() {
       }
     >
       {error && <Alert tone="danger">{error}</Alert>}
-      {success && <Alert tone="success" role="status">{success}</Alert>}
+      {success && (
+        <Alert tone="success" role="status">
+          {success}
+        </Alert>
+      )}
       <RegisterForm onSuccess={setSuccess} onError={setError} />
       {(flags.github || flags.google) && (
         <nav className="flex flex-col gap-3" aria-label={t.a11y.socialRegister}>

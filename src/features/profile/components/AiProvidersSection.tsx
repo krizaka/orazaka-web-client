@@ -20,9 +20,7 @@ interface AiProvidersSectionProps {
  * credentials with add / edit / delete actions. Adding or editing opens a modal
  * ({@link Dialog}); all data + lifecycle live in {@link useAiProviders}.
  */
-export function AiProvidersSection({
-  fetchHeaders,
-}: Readonly<AiProvidersSectionProps>) {
+export function AiProvidersSection({ fetchHeaders }: Readonly<AiProvidersSectionProps>) {
   const { t } = useTranslation();
   const {
     isLoading,
@@ -44,9 +42,7 @@ export function AiProvidersSection({
   } = useAiProviders(fetchHeaders);
 
   const canAdd = availableIds.length > 0;
-  const selected = modal.providerId
-    ? findProvider(modal.providerId)
-    : undefined;
+  const selected = modal.providerId ? findProvider(modal.providerId) : undefined;
   const pickable =
     modal.mode === "edit"
       ? PROVIDERS.filter((p) => p.id === modal.providerId)
@@ -80,7 +76,15 @@ export function AiProvidersSection({
               {configuredIds.map((id) => {
                 const provider = findProvider(id);
                 if (!provider) return null;
-                return <ProviderRow key={id} provider={provider} onEdit={() => openEdit(id)} onDelete={() => remove(id)} disabled={isSaving} />;
+                return (
+                  <ProviderRow
+                    key={id}
+                    provider={provider}
+                    onEdit={() => openEdit(id)}
+                    onDelete={() => remove(id)}
+                    disabled={isSaving}
+                  />
+                );
               })}
             </ul>
             {!canAdd && <p className="py-3 text-xs text-fg-muted">{t.providers.allConfigured}</p>}
@@ -88,16 +92,11 @@ export function AiProvidersSection({
         );
       })()}
 
-      <Dialog.Root
-        open={modal.mode !== "closed"}
-        onOpenChange={(next) => !next && closeModal()}
-      >
+      <Dialog.Root open={modal.mode !== "closed"} onOpenChange={(next) => !next && closeModal()}>
         <Dialog.Content closeLabel={t.providers.cancel}>
           <Dialog.Header>
             <Dialog.Title>
-              {modal.mode === "edit"
-                ? t.providers.editConnection
-                : t.providers.addConnection}
+              {modal.mode === "edit" ? t.providers.editConnection : t.providers.addConnection}
             </Dialog.Title>
             <Dialog.Description>{t.providers.modalSubtitle}</Dialog.Description>
           </Dialog.Header>

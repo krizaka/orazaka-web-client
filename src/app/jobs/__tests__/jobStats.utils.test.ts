@@ -128,9 +128,7 @@ describe("computeJobStats", () => {
   });
 
   it("handles jobs without timestamps gracefully", () => {
-    const jobs = [
-      createJob({ createdAt: undefined as never, updatedAt: undefined as never }),
-    ];
+    const jobs = [createJob({ createdAt: undefined as never, updatedAt: undefined as never })];
     const stats = computeJobStats(jobs);
     expect(stats.avgMs).toBe(0);
   });

@@ -24,7 +24,13 @@ export const JobsKpiSummary: React.FC<JobsKpiSummaryProps> = ({ jobs }) => {
 
   return (
     <StatGrid minWidth={11}>
-      <KpiStat label={t.jobs.kpiTotalJobs} value={stats.total} format="integer" hint={`${stats.completed} completed`} locale={intl} />
+      <KpiStat
+        label={t.jobs.kpiTotalJobs}
+        value={stats.total}
+        format="integer"
+        hint={`${stats.completed} completed`}
+        locale={intl}
+      />
       <KpiStat
         label={t.jobs.kpiSuccessRate}
         value={stats.total > 0 ? stats.completed / stats.total : 0}
@@ -32,10 +38,35 @@ export const JobsKpiSummary: React.FC<JobsKpiSummaryProps> = ({ jobs }) => {
         hint={`${stats.failed} failed`}
         locale={intl}
       />
-      <KpiStat label="Avg. Duration" value={stats.avgMs / 1000} format={SECONDS} good="down" hint={`max ${stats.maxDuration}`} locale={intl} />
-      <KpiStat label={t.jobs.kpiModelsUsed} value={stats.uniqueModels} format="integer" hint={stats.topModel || "—"} locale={intl} />
-      <KpiStat label={t.jobs.kpiCapabilities} value={stats.uniqueFeatures} format="integer" hint={stats.topFeature || "—"} locale={intl} />
-      <KpiStat label={t.jobs.kpiTotalInference} value={stats.totalMs / 1000} format={SECONDS} hint={`across ${stats.completed} jobs`} locale={intl} />
+      <KpiStat
+        label="Avg. Duration"
+        value={stats.avgMs / 1000}
+        format={SECONDS}
+        good="down"
+        hint={`max ${stats.maxDuration}`}
+        locale={intl}
+      />
+      <KpiStat
+        label={t.jobs.kpiModelsUsed}
+        value={stats.uniqueModels}
+        format="integer"
+        hint={stats.topModel || "—"}
+        locale={intl}
+      />
+      <KpiStat
+        label={t.jobs.kpiCapabilities}
+        value={stats.uniqueFeatures}
+        format="integer"
+        hint={stats.topFeature || "—"}
+        locale={intl}
+      />
+      <KpiStat
+        label={t.jobs.kpiTotalInference}
+        value={stats.totalMs / 1000}
+        format={SECONDS}
+        hint={`across ${stats.completed} jobs`}
+        locale={intl}
+      />
     </StatGrid>
   );
 };

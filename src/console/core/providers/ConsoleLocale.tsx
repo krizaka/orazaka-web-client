@@ -20,14 +20,18 @@ const subscribe = (onChange: () => void) => {
   globalThis.addEventListener?.("languagechange", onChange);
   return () => globalThis.removeEventListener?.("languagechange", onChange);
 };
-const browserLocale = () => localeFromLanguages(globalThis.navigator?.languages ?? [globalThis.navigator?.language ?? "en"]);
+const browserLocale = () =>
+  localeFromLanguages(globalThis.navigator?.languages ?? [globalThis.navigator?.language ?? "en"]);
 const serverLocale = (): ConsoleLocale => "en";
 
 /**
  * The console's language. Without `locale`, it follows the browser (`navigator.languages`, read without a hydration
  * mismatch: English on the server, the browser's after); tests and a future switch pass it.
  */
-export function ConsoleLocaleProvider({ locale, children }: Readonly<{ locale?: ConsoleLocale; children: React.ReactNode }>) {
+export function ConsoleLocaleProvider({
+  locale,
+  children,
+}: Readonly<{ locale?: ConsoleLocale; children: React.ReactNode }>) {
   const fromBrowser = React.useSyncExternalStore(subscribe, browserLocale, serverLocale);
   return <LocaleContext.Provider value={locale ?? fromBrowser}>{children}</LocaleContext.Provider>;
 }

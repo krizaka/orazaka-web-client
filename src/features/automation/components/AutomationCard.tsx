@@ -45,7 +45,14 @@ export function AutomationCard({
             <TrashIcon size={15} />
           </IconButton>
         </header>
-        <Button type="button" variant="ghost" size="sm" className="self-start" aria-expanded={open} onClick={() => setOpen(!open)}>
+        <Button
+          type="button"
+          variant="ghost"
+          size="sm"
+          className="self-start"
+          aria-expanded={open}
+          onClick={() => setOpen(!open)}
+        >
           {open ? a.hideDetails : a.showDetails}
         </Button>
         {open && (

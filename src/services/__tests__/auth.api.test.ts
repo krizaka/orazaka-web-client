@@ -92,9 +92,7 @@ describe("AuthApi", () => {
     it("throws when verification fails", async () => {
       mockFetch.mockResolvedValueOnce({ ok: false, status: 400 });
 
-      await expect(AuthApi.verifyEmail("invalid-token")).rejects.toThrow(
-        "Invalid or expired verification token.",
-      );
+      await expect(AuthApi.verifyEmail("invalid-token")).rejects.toThrow("Invalid or expired verification token.");
     });
   });
 });

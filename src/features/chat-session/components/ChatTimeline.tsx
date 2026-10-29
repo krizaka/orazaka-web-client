@@ -34,9 +34,7 @@ export const ChatTimeline: React.FC<Props> = ({
   if (isLoadingMessages) {
     return (
       <div className="h-full flex items-center justify-center">
-        <span className="text-fg-muted text-[13px] animate-pulse">
-          {t.chat.loadingMessages}
-        </span>
+        <span className="text-fg-muted text-[13px] animate-pulse">{t.chat.loadingMessages}</span>
       </div>
     );
   }
@@ -61,11 +59,7 @@ export const ChatTimeline: React.FC<Props> = ({
         );
       })}
       {(isGenerating || isImagePending || isSpeechPending) && (
-        <ThinkingPipeline
-          t={t}
-          chatPipeline={chatPipeline}
-          completedStageIds={completedStageIds}
-        />
+        <ThinkingPipeline t={t} chatPipeline={chatPipeline} completedStageIds={completedStageIds} />
       )}
       <div ref={messagesEndRef} />
       {error && (

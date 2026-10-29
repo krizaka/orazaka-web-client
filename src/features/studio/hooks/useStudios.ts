@@ -51,10 +51,7 @@ export function useStudios(profession: string | null): StudiosState {
     return () => clearTimeout(timer);
   }, [load]);
 
-  const professions = useMemo(
-    () => Array.from(new Set(studios.map((studio) => studio.profession))).sort(),
-    [studios],
-  );
+  const professions = useMemo(() => Array.from(new Set(studios.map((studio) => studio.profession))).sort(), [studios]);
 
   const visible = useMemo(
     () => (profession ? studios.filter((studio) => studio.profession === profession) : studios),

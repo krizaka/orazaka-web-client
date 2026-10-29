@@ -19,11 +19,22 @@ export interface Catalogue {
 
 /** The registry's three lists, read in parallel (one failing never blanks the others), and the capability switch. */
 export function useCatalogue(): Catalogue {
-  const [state, setState] = useState({ models: [] as ModelEntry[], providers: [] as string[], capabilities: [] as Capability[], isLoading: true, hasError: false, switchFailed: false });
+  const [state, setState] = useState({
+    models: [] as ModelEntry[],
+    providers: [] as string[],
+    capabilities: [] as Capability[],
+    isLoading: true,
+    hasError: false,
+    switchFailed: false,
+  });
 
   const load = useCallback(async () => {
     setState((s) => ({ ...s, isLoading: true }));
-    const [models, providers, capabilities] = await Promise.allSettled([PlatformAdminApi.models(), PlatformAdminApi.providers(), PlatformAdminApi.capabilities()]);
+    const [models, providers, capabilities] = await Promise.allSettled([
+      PlatformAdminApi.models(),
+      PlatformAdminApi.providers(),
+      PlatformAdminApi.capabilities(),
+    ]);
     setState({
       models: models.status === "fulfilled" ? models.value : [],
       providers: providers.status === "fulfilled" ? providers.value : [],
@@ -45,7 +56,11 @@ export function useCatalogue(): Catalogue {
       const saved = await PlatformAdminApi.setCapability(featureKey, enabled);
       setState((s) => ({ ...s, capabilities: withCapability(s.capabilities, featureKey, saved.enabled) }));
     } catch {
-      setState((s) => ({ ...s, switchFailed: true, capabilities: withCapability(s.capabilities, featureKey, !enabled) }));
+      setState((s) => ({
+        ...s,
+        switchFailed: true,
+        capabilities: withCapability(s.capabilities, featureKey, !enabled),
+      }));
     }
   }, []);
 

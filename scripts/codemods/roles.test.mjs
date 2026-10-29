@@ -5,19 +5,29 @@ import { rewriteClasses, rewriteVariables, transformJsx, transformStrings } from
 
 test("1.x arbitrary utilities become role utilities", () => {
   assert.equal(
-    rewriteClasses("bg-[var(--surface-1)] text-[var(--text-secondary)] border-[var(--border-subtle)] hover:text-[var(--accent)]"),
+    rewriteClasses(
+      "bg-[var(--surface-1)] text-[var(--text-secondary)] border-[var(--border-subtle)] hover:text-[var(--accent)]",
+    ),
     "bg-surface-1 text-fg-secondary border-border-subtle hover:text-accent",
   );
   assert.equal(rewriteClasses("focus-visible:ring-[var(--accent)]"), "focus-visible:ring-ring");
   assert.equal(rewriteClasses("text-[var(--status-error)] bg-[var(--accent)]/20"), "text-danger bg-accent/20");
-  assert.equal(rewriteClasses("shadow-[var(--accent-glow)] shadow-[var(--accent)]/[0.05]"), "shadow-(--orazaka-accent-glow) shadow-accent/5");
-  assert.equal(rewriteClasses("rounded-[var(--radius-md)] p-[var(--space-card)] text-[var(--text-sm)]"), "rounded-md p-(--orazaka-space-card) text-sm");
+  assert.equal(
+    rewriteClasses("shadow-[var(--accent-glow)] shadow-[var(--accent)]/[0.05]"),
+    "shadow-(--orazaka-accent-glow) shadow-accent/5",
+  );
+  assert.equal(
+    rewriteClasses("rounded-[var(--radius-md)] p-[var(--space-card)] text-[var(--text-sm)]"),
+    "rounded-md p-(--orazaka-space-card) text-sm",
+  );
   assert.equal(rewriteClasses("bg-[color-mix(in_srgb,var(--surface-1)_88%,transparent)]"), "bg-surface-1/88");
 });
 
 test("the kit's 2.x compatibility utilities become roles", () => {
   assert.equal(
-    rewriteClasses("text-text-primary bg-status-error/10 bg-card-bg border-card-border text-foreground/70 bg-background"),
+    rewriteClasses(
+      "text-text-primary bg-status-error/10 bg-card-bg border-card-border text-foreground/70 bg-background",
+    ),
     "text-fg bg-danger/10 bg-surface-1 border-border-subtle text-fg/70 bg-surface-0",
   );
 });
@@ -30,7 +40,10 @@ test("dark: goes — the dark value wins on the same property, the others stay",
 });
 
 test("1.x variables become --kz-* (style objects, SVG, CSS)", () => {
-  assert.equal(rewriteVariables("fill: var(--accent); stroke: var(--border-subtle)"), "fill: var(--kz-accent); stroke: var(--kz-border-subtle)");
+  assert.equal(
+    rewriteVariables("fill: var(--accent); stroke: var(--border-subtle)"),
+    "fill: var(--kz-accent); stroke: var(--kz-border-subtle)",
+  );
   assert.equal(rewriteVariables("var(--status-error) var(--chip-color)"), "var(--kz-danger) var(--chip-color)");
 });
 

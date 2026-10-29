@@ -20,10 +20,7 @@ export interface CostEstimateState {
  * @param capability - the capability about to run, or `null` to skip the lookup
  * @param modelName - the resolved model, when the user has chosen one
  */
-export function useCostEstimate(
-  capability: string | null,
-  modelName?: string | null,
-): CostEstimateState {
+export function useCostEstimate(capability: string | null, modelName?: string | null): CostEstimateState {
   const [estimate, setEstimate] = useState<CostEstimate | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 

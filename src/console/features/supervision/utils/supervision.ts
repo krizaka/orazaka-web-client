@@ -32,7 +32,11 @@ export function byCapability(rows: readonly CapabilityUsage[]) {
 
 /** The heaviest consumers, an actor written short (its id's first block — the console holds no names). */
 export function consumers(rows: readonly ActorConsumption[]) {
-  return rows.map((row) => ({ actor: `${row.actorId.split("-")[0]}…`, credits: row.creditsCharged, events: row.events }));
+  return rows.map((row) => ({
+    actor: `${row.actorId.split("-")[0]}…`,
+    credits: row.creditsCharged,
+    events: row.events,
+  }));
 }
 
 /** A UTC day: the server renders the first paint, the browser hydrates it, and the two must name the same days. */
@@ -40,7 +44,12 @@ const dayKey = (date: Date) => date.toISOString().slice(0, 10);
 
 /** The jobs of each of the last `days` days by outcome, oldest first, empty days included. */
 export function jobsPerDay(jobs: readonly JobRecord[], days: number, now: Date = new Date()) {
-  const rows = Array.from({ length: days }, (_, i) => ({ day: dayKey(subDays(now, days - 1 - i)), completed: 0, failed: 0, running: 0 }));
+  const rows = Array.from({ length: days }, (_, i) => ({
+    day: dayKey(subDays(now, days - 1 - i)),
+    completed: 0,
+    failed: 0,
+    running: 0,
+  }));
   const index = new Map(rows.map((row) => [row.day, row]));
   for (const job of jobs) {
     const row = index.get(dayKey(parseISO(job.createdAt)));

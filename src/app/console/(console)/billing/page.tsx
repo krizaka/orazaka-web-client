@@ -34,9 +34,7 @@ export default function BillingPage() {
   return (
     <main className="mx-auto max-w-7xl space-y-8 px-4 py-8 sm:px-6">
       <header>
-        <h1 className="font-display text-3xl font-bold tracking-tight text-fg">
-          Facturation &amp; crédits
-        </h1>
+        <h1 className="font-display text-3xl font-bold tracking-tight text-fg">Facturation &amp; crédits</h1>
         <p className="text-sm text-fg-muted">
           Tout ce qui est commercial vit en base et s’édite ici — jamais dans le code.
         </p>

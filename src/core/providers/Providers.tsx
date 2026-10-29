@@ -40,24 +40,24 @@ export function Providers({ children, authFlags }: Readonly<ProvidersProps>) {
   const sessionProps = authFlags.login ? {} : { session: null, refetchOnWindowFocus: false, refetchInterval: 0 };
   return (
     <AuthFlagsProvider flags={authFlags}>
-    <ThemeProvider defaultMode="system">
-      <SessionProvider {...sessionProps}>
-        <QueryProvider>
-          <LocaleProvider>
-            <TenantProvider>
-              <JobStreamProvider>
-                <AppCommandPalette />
-                <MotionObserver />
-                <AppCharts>
-                  <PageTransition>{children}</PageTransition>
-                </AppCharts>
-                <AppToaster />
-              </JobStreamProvider>
-            </TenantProvider>
-          </LocaleProvider>
-        </QueryProvider>
-      </SessionProvider>
-    </ThemeProvider>
+      <ThemeProvider defaultMode="system">
+        <SessionProvider {...sessionProps}>
+          <QueryProvider>
+            <LocaleProvider>
+              <TenantProvider>
+                <JobStreamProvider>
+                  <AppCommandPalette />
+                  <MotionObserver />
+                  <AppCharts>
+                    <PageTransition>{children}</PageTransition>
+                  </AppCharts>
+                  <AppToaster />
+                </JobStreamProvider>
+              </TenantProvider>
+            </LocaleProvider>
+          </QueryProvider>
+        </SessionProvider>
+      </ThemeProvider>
     </AuthFlagsProvider>
   );
 }

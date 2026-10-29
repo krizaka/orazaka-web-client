@@ -44,9 +44,11 @@ export function StudioDetail({ studioKey }: Readonly<StudioDetailProps>) {
     return <StudioLoadError onRetry={notFound ? undefined : reload} />;
   }
 
-
   // Run where the Studio is open to this person, unless it still has its settings to ask (« Set up » comes first).
-  const canRun = !studio.locked && studio.latestVersion !== null && (installation !== undefined || studio.kind === PackKindSchema.enum.TOOLKIT || !hasSettings);
+  const canRun =
+    !studio.locked &&
+    studio.latestVersion !== null &&
+    (installation !== undefined || studio.kind === PackKindSchema.enum.TOOLKIT || !hasSettings);
 
   return (
     <div className="flex flex-col gap-6">
@@ -70,9 +72,7 @@ export function StudioDetail({ studioKey }: Readonly<StudioDetailProps>) {
       </header>
 
       {studio.description && (
-        <p className="max-w-2xl text-sm leading-relaxed text-fg-secondary">
-          {studio.description}
-        </p>
+        <p className="max-w-2xl text-sm leading-relaxed text-fg-secondary">{studio.description}</p>
       )}
 
       {studio.estimatedCredits > 0 && (
@@ -101,9 +101,7 @@ export function StudioDetail({ studioKey }: Readonly<StudioDetailProps>) {
         }}
       />
 
-      {canRun && (
-        <StudioRunPanel studio={studio} installation={installation} />
-      )}
+      {canRun && <StudioRunPanel studio={studio} installation={installation} />}
 
       <StudioVersionList versions={versions} />
     </div>

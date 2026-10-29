@@ -41,7 +41,9 @@ export function RunTimeline({ steps }: Readonly<RunTimelineProps>) {
   const now = useNow(running);
   // A step's job the live stream does not know yet (the run was started elsewhere — a composer, the API): load the
   // jobs once, so the stream follows it (its progress, its ETA, its toasts).
-  const unknownJob = steps.some((step) => step.status === "RUNNING" && step.jobId && !jobs.some((j) => j.id === step.jobId));
+  const unknownJob = steps.some(
+    (step) => step.status === "RUNNING" && step.jobId && !jobs.some((j) => j.id === step.jobId),
+  );
   useEffect(() => {
     if (unknownJob) void refreshJobs();
   }, [unknownJob, refreshJobs]);
@@ -66,7 +68,13 @@ export function RunTimeline({ steps }: Readonly<RunTimelineProps>) {
       content:
         status === "current" ? (
           <>
-            <Progress size="sm" label={step.stepId} value={typeof percent === "number" && percent > 0 ? percent : undefined} eta={eta} className="w-72 max-w-full" />
+            <Progress
+              size="sm"
+              label={step.stepId}
+              value={typeof percent === "number" && percent > 0 ? percent : undefined}
+              eta={eta}
+              className="w-72 max-w-full"
+            />
             <RunStepLive step={step} job={job} now={now} />
           </>
         ) : status === "error" && step.error ? (
@@ -80,7 +88,11 @@ export function RunTimeline({ steps }: Readonly<RunTimelineProps>) {
   return (
     <section className="flex flex-col gap-3">
       <h2 className="text-xs font-semibold text-fg-muted">{t.studio.runSteps}</h2>
-      <Stepper steps={items} labels={t.insights.queue.steps} className="rounded-xl border border-border-default bg-surface-1 p-5" />
+      <Stepper
+        steps={items}
+        labels={t.insights.queue.steps}
+        className="rounded-xl border border-border-default bg-surface-1 p-5"
+      />
     </section>
   );
 }

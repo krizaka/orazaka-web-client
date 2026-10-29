@@ -24,11 +24,7 @@ export interface JobStreamContextType {
   chatStageProgress: string[];
   /** The routing of the last answer (from the stream's `routing` event), or null when the engine has not said. */
   chatRouting: ChatRouting | null;
-  startChatStream: (
-    conversationId: string,
-    prompt: string,
-    assetIds?: string[],
-  ) => void;
+  startChatStream: (conversationId: string, prompt: string, assetIds?: string[]) => void;
   stopChatStream: () => void;
   videoAnalysisIsUploading: boolean;
   setVideoAnalysisIsUploading: (val: boolean) => void;

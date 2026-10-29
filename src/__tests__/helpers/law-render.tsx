@@ -39,11 +39,40 @@ export const APPROVED_ID = "33333333-3333-4333-8333-333333333333";
 /** What the service answers by default: a queue of one proposal, an approved one for the kind, the corpus and the demand. */
 export function defaultRoutes(): Record<string, Route> {
   return {
-    "GET /proposals": (url) => ({ body: url.searchParams.get("status") === "APPROVED" ? [proposal({ id: APPROVED_ID, status: "APPROVED" })] : [proposal()] }),
-    "GET /kinds/qc-visit-notice/golden": () => ({
-      body: { kindId: "qc-visit-notice", required: 3, documents: 4, compliant: 1, defective: 2, blank: 1, met: true, cases: [{ name: "fr-compliant", form: "FILLED" }, { name: "fr-blank", form: "BLANK" }] },
+    "GET /proposals": (url) => ({
+      body:
+        url.searchParams.get("status") === "APPROVED"
+          ? [proposal({ id: APPROVED_ID, status: "APPROVED" })]
+          : [proposal()],
     }),
-    "GET /instruments": () => ({ body: [{ jurisdiction: "QC", code: "CCQ-1991", titleFr: "Code civil du Québec", titleEn: "Civil Code of Québec", sourceKey: "donnees-quebec", articles: 3170, versions: 3204 }] }),
+    "GET /kinds/qc-visit-notice/golden": () => ({
+      body: {
+        kindId: "qc-visit-notice",
+        required: 3,
+        documents: 4,
+        compliant: 1,
+        defective: 2,
+        blank: 1,
+        met: true,
+        cases: [
+          { name: "fr-compliant", form: "FILLED" },
+          { name: "fr-blank", form: "BLANK" },
+        ],
+      },
+    }),
+    "GET /instruments": () => ({
+      body: [
+        {
+          jurisdiction: "QC",
+          code: "CCQ-1991",
+          titleFr: "Code civil du Québec",
+          titleEn: "Civil Code of Québec",
+          sourceKey: "donnees-quebec",
+          articles: 3170,
+          versions: 3204,
+        },
+      ],
+    }),
     "GET /imports": () => ({
       body: [
         {
@@ -65,8 +94,20 @@ export function defaultRoutes(): Record<string, Route> {
     }),
     "GET /demand": () => ({
       body: [
-        { jurisdiction: "QC", kindId: "qc-sublet-notice", count: 12, firstSeen: "2026-10-01T09:00:00Z", lastSeen: "2026-10-24T16:00:00Z" },
-        { jurisdiction: "QC", kindId: "UNKNOWN", count: 3, firstSeen: "2026-10-02T09:00:00Z", lastSeen: "2026-10-23T16:00:00Z" },
+        {
+          jurisdiction: "QC",
+          kindId: "qc-sublet-notice",
+          count: 12,
+          firstSeen: "2026-10-01T09:00:00Z",
+          lastSeen: "2026-10-24T16:00:00Z",
+        },
+        {
+          jurisdiction: "QC",
+          kindId: "UNKNOWN",
+          count: 3,
+          firstSeen: "2026-10-02T09:00:00Z",
+          lastSeen: "2026-10-23T16:00:00Z",
+        },
       ],
     }),
   };

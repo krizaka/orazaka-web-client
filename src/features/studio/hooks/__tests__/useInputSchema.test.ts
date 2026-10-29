@@ -22,10 +22,16 @@ describe("useInputSchema", () => {
   it("marks the image input as an image picker, not a text line", () => {
     const schema = JSON.stringify({
       type: "object",
-      properties: { image: { type: "string", format: "asset:image", maxLength: 120, title: "x" }, prompt: { type: "string" } },
+      properties: {
+        image: { type: "string", format: "asset:image", maxLength: 120, title: "x" },
+        prompt: { type: "string" },
+      },
     });
     const { result } = renderHook(() => useInputSchema(schema));
-    expect(result.current.map((f) => [f.key, f.assetKind])).toEqual([["image", "image"], ["prompt", null]]);
+    expect(result.current.map((f) => [f.key, f.assetKind])).toEqual([
+      ["image", "image"],
+      ["prompt", null],
+    ]);
   });
 });
 
@@ -42,8 +48,22 @@ describe("useInputSchema — closed sets are choices, not text", () => {
         "x-options": { source: "models", category: "image" },
         default: "sd-hosted",
         oneOf: [
-          { const: "sd-hosted", title: "SD hosted", description: "Hosted.", "x-meta": { runsOn: "cloud", speed: "fast", typicalSeconds: 8, priceCents: 8, available: true } },
-          { const: "flux", title: "FLUX", "x-meta": { runsOn: "local", available: false, unavailableReason: "FLUX is not running", unavailableCode: null } },
+          {
+            const: "sd-hosted",
+            title: "SD hosted",
+            description: "Hosted.",
+            "x-meta": { runsOn: "cloud", speed: "fast", typicalSeconds: 8, priceCents: 8, available: true },
+          },
+          {
+            const: "flux",
+            title: "FLUX",
+            "x-meta": {
+              runsOn: "local",
+              available: false,
+              unavailableReason: "FLUX is not running",
+              unavailableCode: null,
+            },
+          },
         ],
       },
       seed: { type: "string", "x-control": "seed", "x-advanced": true },
@@ -56,8 +76,36 @@ describe("useInputSchema — closed sets are choices, not text", () => {
   it("reads a labelled oneOf as choices with the catalogue facts a picker shows", () => {
     const model = field("model");
     expect(model.choices).toEqual([
-      { value: "sd-hosted", label: "SD hosted", hint: "Hosted.", facts: [], meta: { runsOn: "cloud", speed: "fast", typicalSeconds: 8, priceCents: 8, available: true, unavailableReason: null, unavailableCode: null } },
-      { value: "flux", label: "FLUX", hint: null, facts: [], meta: { runsOn: "local", speed: null, typicalSeconds: null, priceCents: null, available: false, unavailableReason: "FLUX is not running", unavailableCode: null } },
+      {
+        value: "sd-hosted",
+        label: "SD hosted",
+        hint: "Hosted.",
+        facts: [],
+        meta: {
+          runsOn: "cloud",
+          speed: "fast",
+          typicalSeconds: 8,
+          priceCents: 8,
+          available: true,
+          unavailableReason: null,
+          unavailableCode: null,
+        },
+      },
+      {
+        value: "flux",
+        label: "FLUX",
+        hint: null,
+        facts: [],
+        meta: {
+          runsOn: "local",
+          speed: null,
+          typicalSeconds: null,
+          priceCents: null,
+          available: false,
+          unavailableReason: "FLUX is not running",
+          unavailableCode: null,
+        },
+      },
     ]);
     expect(model.defaultValue).toBe("sd-hosted");
     expect(model.fedByCatalogue).toBe(true);
@@ -72,7 +120,12 @@ describe("useInputSchema — closed sets are choices, not text", () => {
 
   it("reads the seed control and the static enum", () => {
     expect(field("seed")).toMatchObject({ control: "seed", advanced: true, choices: null });
-    expect(field("size")).toMatchObject({ type: "enum", options: ["1024x1024", "512x512"], defaultValue: "1024x1024", advanced: false });
+    expect(field("size")).toMatchObject({
+      type: "enum",
+      options: ["1024x1024", "512x512"],
+      defaultValue: "1024x1024",
+      advanced: false,
+    });
     expect(field("prompt")).toMatchObject({ control: null, advanced: false, fedByCatalogue: false });
   });
 });
@@ -87,8 +140,16 @@ describe("useInputSchema — the words come from the pack, in the page's languag
         title: "Format",
         description: "9:16 : la vidéo verticale.",
         "x-i18n": {
-          en: { title: "Frame", description: "9:16 is vertical video.", options: { "9:16": "Vertical 9:16", "16:9": "Wide 16:9" } },
-          fr: { title: "Cadre", description: "9:16 : la vidéo verticale.", options: { "9:16": "Vertical 9:16", "16:9": "Large 16:9" } },
+          en: {
+            title: "Frame",
+            description: "9:16 is vertical video.",
+            options: { "9:16": "Vertical 9:16", "16:9": "Wide 16:9" },
+          },
+          fr: {
+            title: "Cadre",
+            description: "9:16 : la vidéo verticale.",
+            options: { "9:16": "Vertical 9:16", "16:9": "Large 16:9" },
+          },
         },
       },
       model: {
@@ -97,12 +158,32 @@ describe("useInputSchema — the words come from the pack, in the page's languag
         description: "x".repeat(900),
         "x-options": { source: "models", category: "video", facts: { ltx: ["1216×704", "5 s"] } },
         "x-i18n": {
-          en: { title: "Model", description: "Auto picks the best one.", options: { ltx: { label: "LTX-Video · fast", hint: "Image or text to video." } } },
-          fr: { title: "Modèle", description: "Auto choisit le meilleur.", options: { ltx: { label: "LTX-Video · rapide", hint: "Image ou texte vers vidéo." } } },
+          en: {
+            title: "Model",
+            description: "Auto picks the best one.",
+            options: { ltx: { label: "LTX-Video · fast", hint: "Image or text to video." } },
+          },
+          fr: {
+            title: "Modèle",
+            description: "Auto choisit le meilleur.",
+            options: { ltx: { label: "LTX-Video · rapide", hint: "Image ou texte vers vidéo." } },
+          },
         },
-        oneOf: [{ const: "ltx", title: "LTX-Video 0.9.8 13B distilled (720p, GPU)", description: "A very long catalogue sentence. ".repeat(10), "x-meta": { available: true } }],
+        oneOf: [
+          {
+            const: "ltx",
+            title: "LTX-Video 0.9.8 13B distilled (720p, GPU)",
+            description: "A very long catalogue sentence. ".repeat(10),
+            "x-meta": { available: true },
+          },
+        ],
       },
-      legacy: { type: "string", enum: ["a", "b"], title: "Ancien", description: "Une phrase courte. " + "Puis un long paragraphe qui n'en finit plus. ".repeat(8) },
+      legacy: {
+        type: "string",
+        enum: ["a", "b"],
+        title: "Ancien",
+        description: "Une phrase courte. " + "Puis un long paragraphe qui n'en finit plus. ".repeat(8),
+      },
     },
   });
   const read = (locale: "en" | "fr") => renderHook(() => useInputSchema(schema, locale)).result.current;
@@ -110,14 +191,21 @@ describe("useInputSchema — the words come from the pack, in the page's languag
   it("titles, helpers and option labels follow the language", () => {
     const en = read("en")[0];
     const fr = read("fr")[0];
-    expect([en.title, en.description, en.optionLabels, en.wordedByPack]).toEqual(["Frame", "9:16 is vertical video.", { "9:16": "Vertical 9:16", "16:9": "Wide 16:9" }, true]);
+    expect([en.title, en.description, en.optionLabels, en.wordedByPack]).toEqual([
+      "Frame",
+      "9:16 is vertical video.",
+      { "9:16": "Vertical 9:16", "16:9": "Wide 16:9" },
+      true,
+    ]);
     expect([fr.title, fr.optionLabels?.["16:9"]]).toEqual(["Cadre", "Large 16:9"]);
   });
 
   it("a model takes the pack's short label and hint (not the catalogue's paragraph) and its neutral facts", () => {
     const model = read("en")[1];
     expect(model.title).toBe("Model");
-    expect(model.choices).toMatchObject([{ value: "ltx", label: "LTX-Video · fast", hint: "Image or text to video.", facts: ["1216×704", "5 s"] }]);
+    expect(model.choices).toMatchObject([
+      { value: "ltx", label: "LTX-Video · fast", hint: "Image or text to video.", facts: ["1216×704", "5 s"] },
+    ]);
     expect(read("fr")[1].choices?.[0]).toMatchObject({ label: "LTX-Video · rapide" });
   });
 

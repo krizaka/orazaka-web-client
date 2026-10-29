@@ -76,8 +76,7 @@ export const accentMap: Record<string, AccentClasses> = {
     ring: "focus:ring-border-subtle focus-visible:ring-border-subtle",
     bgSoft: "bg-surface-0/20",
     textBright: "text-fg-secondary",
-    accentGradient:
-      "from-surface-3 to-surface-3",
+    accentGradient: "from-surface-3 to-surface-3",
     textOn: "text-fg",
   },
 };
@@ -93,9 +92,7 @@ interface TenantContextType {
 /**
  * Context container for holding active tenant metadata.
  */
-const TenantContext = React.createContext<TenantContextType | undefined>(
-  undefined,
-);
+const TenantContext = React.createContext<TenantContextType | undefined>(undefined);
 
 /**
  * TenantProvider component wrapping context injection.
@@ -105,9 +102,7 @@ const TenantContext = React.createContext<TenantContextType | undefined>(
  * @param props.children - Child nodes to be injected inside the provider wrapper.
  * @returns The context Provider rendering element.
  */
-export function TenantProvider({
-  children,
-}: Readonly<{ children: React.ReactNode }>) {
+export function TenantProvider({ children }: Readonly<{ children: React.ReactNode }>) {
   const { settings } = useSettings();
 
   const themeAccent = settings?.themeAccent || "zinc";
@@ -147,11 +142,7 @@ export function TenantProvider({
     };
   }, [themeAccent, themeName, themeTagline, themeLayout, tenantId]);
 
-  return (
-    <TenantContext.Provider value={contextValue}>
-      {children}
-    </TenantContext.Provider>
-  );
+  return <TenantContext.Provider value={contextValue}>{children}</TenantContext.Provider>;
 }
 
 /**

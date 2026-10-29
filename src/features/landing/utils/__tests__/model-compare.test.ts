@@ -12,7 +12,9 @@ describe("Compare models", () => {
       expect(image.seconds).toBeGreaterThan(0);
       expect(image.width * image.height).toBeGreaterThan(0);
       expect(hasMedia(`${image.stem}.webp`)).toBe(true);
-      expect(image.src).toMatch(/^https:\/\/krizaka-assets\.b-cdn\.net\/sites\/orazaka\/compare\/[a-z0-9-]+--[a-z0-9-]+\.[0-9a-f]{10}\.webp$/);
+      expect(image.src).toMatch(
+        /^https:\/\/krizaka-assets\.b-cdn\.net\/sites\/orazaka\/compare\/[a-z0-9-]+--[a-z0-9-]+\.[0-9a-f]{10}\.webp$/,
+      );
     }
   });
 
@@ -26,14 +28,17 @@ describe("Compare models", () => {
 
   it("gives every inspiration the same prompt for every model, and no brand or copyrighted name", () => {
     for (const locale of ["en", "fr"] as const) expect(translations[locale].landing.records.prompt.trim()).toBeTruthy();
-    for (const inspiration of COMPARE_INSPIRATIONS) expect(inspiration.prompt).not.toMatch(/iron man|marvel|snk|king of fighters/i);
+    for (const inspiration of COMPARE_INSPIRATIONS)
+      expect(inspiration.prompt).not.toMatch(/iron man|marvel|snk|king of fighters/i);
     expect(new Set(COMPARE_INSPIRATIONS.map((item) => item.id)).size).toBe(COMPARE_INSPIRATIONS.length);
   });
 
   it("returns an inspiration's images in the order of the models, and each model once", () => {
     for (const inspiration of COMPARE_INSPIRATIONS) {
       const images = imagesOf(inspiration.id);
-      expect(images.map((image) => COMPARE_MODELS.indexOf(image.model))).toEqual([...images.map((image) => COMPARE_MODELS.indexOf(image.model))].sort((a, b) => a - b));
+      expect(images.map((image) => COMPARE_MODELS.indexOf(image.model))).toEqual(
+        [...images.map((image) => COMPARE_MODELS.indexOf(image.model))].sort((a, b) => a - b),
+      );
       expect(new Set(images.map((image) => image.model.id)).size).toBe(images.length);
     }
   });

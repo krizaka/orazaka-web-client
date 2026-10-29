@@ -17,7 +17,17 @@ export interface HubJourney {
 }
 
 /** `/docs` — the hub on @krizaka/ui's template: search first, then the five journeys, the quick start, the most read pages. */
-export function DocsHub({ index, journeys, quickstart, popular }: Readonly<{ index: SearchEntry[]; journeys: HubJourney[]; quickstart: string; popular: { href: string; title: string; journey: JourneyId }[] }>) {
+export function DocsHub({
+  index,
+  journeys,
+  quickstart,
+  popular,
+}: Readonly<{
+  index: SearchEntry[];
+  journeys: HubJourney[];
+  quickstart: string;
+  popular: { href: string; title: string; journey: JourneyId }[];
+}>) {
   const { t } = useTranslation();
   const d = t.docs;
   return (
@@ -41,12 +51,28 @@ export function DocsHub({ index, journeys, quickstart, popular }: Readonly<{ ind
         title: d.quickstartTitle,
         children: (
           <>
-            <CodeBlock code={quickstart} language="bash" file={d.diagrams.terminal} copyLabel={d.copy} copiedLabel={d.copied} />
-            <LinkCard linkAs={Link} href={pageHref(PACKS_SLUG)} icon={<PackIcon size={24} />} title={d.packsEntry.title} description={d.packsEntry.line} cta={d.packsEntry.cta} />
+            <CodeBlock
+              code={quickstart}
+              language="bash"
+              file={d.diagrams.terminal}
+              copyLabel={d.copy}
+              copiedLabel={d.copied}
+            />
+            <LinkCard
+              linkAs={Link}
+              href={pageHref(PACKS_SLUG)}
+              icon={<PackIcon size={24} />}
+              title={d.packsEntry.title}
+              description={d.packsEntry.line}
+              cta={d.packsEntry.cta}
+            />
           </>
         ),
       }}
-      popular={{ title: d.popularTitle, items: popular.map((p) => ({ href: p.href, title: p.title, meta: d.journeys[p.journey].title })) }}
+      popular={{
+        title: d.popularTitle,
+        items: popular.map((p) => ({ href: p.href, title: p.title, meta: d.journeys[p.journey].title })),
+      }}
       promise={{ label: d.promiseLabel, text: d.promise }}
     />
   );

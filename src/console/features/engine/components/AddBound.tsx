@@ -9,11 +9,7 @@ import { parseRounds } from "@/console/features/engine/utils/featureTools";
 import type { Range, Save } from "./BoundRow";
 
 /** Adds the bound of a feature that has none yet. */
-export function AddBound({
-  range,
-  words,
-  onSave,
-}: Readonly<{ range: Range; words: FeatureToolsWords; onSave: Save }>) {
+export function AddBound({ range, words, onSave }: Readonly<{ range: Range; words: FeatureToolsWords; onSave: Save }>) {
   const [key, setKey] = React.useState("");
   const [rounds, setRounds] = React.useState("");
   const [error, setError] = React.useState<string | null>(null);
@@ -69,17 +65,10 @@ export function AddBound({
               setError(null);
             }}
           />
-          {error !== null && (
-            <Field.Error id="bound-new-msg">{error}</Field.Error>
-          )}
+          {error !== null && <Field.Error id="bound-new-msg">{error}</Field.Error>}
         </Field.Root>
         <footer>
-          <Button
-            type="button"
-            size="sm"
-            onClick={() => void submit()}
-            disabled={busy}
-          >
+          <Button type="button" size="sm" onClick={() => void submit()} disabled={busy}>
             {words.add}
           </Button>
         </footer>

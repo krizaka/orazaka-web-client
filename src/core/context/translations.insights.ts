@@ -191,7 +191,12 @@ export const insights: Record<"en" | "fr", InsightsDictionary> = {
       run: "Loading the run",
       slow: "Still loading — the engine is busy",
     },
-    pagination: { nav: "Pages of your jobs", page: "Page {page}", compact: "Page {page} of {count}", pageSize: "Rows per page" },
+    pagination: {
+      nav: "Pages of your jobs",
+      page: "Page {page}",
+      compact: "Page {page} of {count}",
+      pageSize: "Rows per page",
+    },
     charts: {
       showData: "Show data",
       hideData: "Hide data",
@@ -292,7 +297,8 @@ export const insights: Record<"en" | "fr", InsightsDictionary> = {
       perPeriod: "{grant} crédits accordés à chaque période",
       getCredits: "Obtenir des crédits",
       seeUsage: "Crédits et usage",
-      noTokens: "Le nombre de tokens n'est pas encore remonté par tâche : les graphiques montrent les tâches, les exécutions et les délais, qui le sont.",
+      noTokens:
+        "Le nombre de tokens n'est pas encore remonté par tâche : les graphiques montrent les tâches, les exécutions et les délais, qui le sont.",
     },
     queue: {
       etaSeconds: "Environ {s} s restantes",
@@ -311,7 +317,12 @@ export const insights: Record<"en" | "fr", InsightsDictionary> = {
       run: "Chargement de l'exécution",
       slow: "Toujours en cours — le moteur est occupé",
     },
-    pagination: { nav: "Pages de vos tâches", page: "Page {page}", compact: "Page {page} sur {count}", pageSize: "Lignes par page" },
+    pagination: {
+      nav: "Pages de vos tâches",
+      page: "Page {page}",
+      compact: "Page {page} sur {count}",
+      pageSize: "Lignes par page",
+    },
     charts: {
       showData: "Voir les données",
       hideData: "Masquer les données",

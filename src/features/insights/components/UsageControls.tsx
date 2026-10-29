@@ -58,8 +58,16 @@ export function UsageExport({ jobs, runs, days }: Readonly<UsageExportProps>) {
         </Button>
       </DropdownMenu.Trigger>
       <DropdownMenu.Content align="end">
-        <DropdownMenu.Item onSelect={() => download(`${file}.csv`, usageCsv(jobs, runs, days, systemNow()), "text/csv;charset=utf-8")}>{u.exportCsv}</DropdownMenu.Item>
-        <DropdownMenu.Item onSelect={() => download(`${file}.json`, usageJson(jobs, runs, days, systemNow()), "application/json")}>{u.exportJson}</DropdownMenu.Item>
+        <DropdownMenu.Item
+          onSelect={() => download(`${file}.csv`, usageCsv(jobs, runs, days, systemNow()), "text/csv;charset=utf-8")}
+        >
+          {u.exportCsv}
+        </DropdownMenu.Item>
+        <DropdownMenu.Item
+          onSelect={() => download(`${file}.json`, usageJson(jobs, runs, days, systemNow()), "application/json")}
+        >
+          {u.exportJson}
+        </DropdownMenu.Item>
       </DropdownMenu.Content>
     </DropdownMenu.Root>
   );

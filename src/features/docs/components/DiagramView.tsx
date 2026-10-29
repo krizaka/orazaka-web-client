@@ -27,7 +27,16 @@ export function DiagramView({ data }: Readonly<{ data: DiagramData }>) {
     case "architecture":
       return <Architecture data={data} l={l} />;
     case "cli-replay":
-      return <CodeBlock code={data.code} language="bash" file={l.terminal} copyLabel={t.docs.copy} copiedLabel={t.docs.copied} className="my-5" />;
+      return (
+        <CodeBlock
+          code={data.code}
+          language="bash"
+          file={l.terminal}
+          copyLabel={t.docs.copy}
+          copiedLabel={t.docs.copied}
+          className="my-5"
+        />
+      );
     case "cli-journey":
       return <CliJourney data={data} l={l} />;
     case "pack-index":
@@ -53,7 +62,10 @@ function Figure({ title, children }: Readonly<{ title: string; children: ReactNo
 
 const rowGrid = "grid grid-cols-[2rem_1fr] gap-x-2 text-sm leading-relaxed text-fg-secondary";
 
-function Sequence({ block, l }: Readonly<{ block: Extract<DiagramData, { kind: "sequence" }>["block"]; l: DocsDiagramLabels }>) {
+function Sequence({
+  block,
+  l,
+}: Readonly<{ block: Extract<DiagramData, { kind: "sequence" }>["block"]; l: DocsDiagramLabels }>) {
   const label = (key: string) => block.participants.find((p) => p.key === key)?.label ?? key;
   return (
     <Figure title={l.sequence}>
@@ -83,9 +95,9 @@ function Sequence({ block, l }: Readonly<{ block: Extract<DiagramData, { kind: "
                     {it.branch.kind} {it.branch.condition}
                   </span>
                 )}
-                <span className={mono}>{label(it.from)}</span>{" "}
-                <span aria-hidden>{it.reply ? "⇠" : "→"}</span>
-                <span className="sr-only"> {it.reply ? l.reply : "→"} </span> <span className={mono}>{label(it.to)}</span>
+                <span className={mono}>{label(it.from)}</span> <span aria-hidden>{it.reply ? "⇠" : "→"}</span>
+                <span className="sr-only"> {it.reply ? l.reply : "→"} </span>{" "}
+                <span className={mono}>{label(it.to)}</span>
                 <span className="text-fg-muted">: </span>
                 {it.text}
               </span>
@@ -134,8 +146,12 @@ function Pipeline({ data, l }: Readonly<{ data: Extract<DiagramData, { kind: "pi
   );
 }
 
-function States({ block, l }: Readonly<{ block: Extract<DiagramData, { kind: "states" }>["block"]; l: DocsDiagramLabels }>) {
-  const name = (id: string) => (id === "start" ? l.initial : id === "end" ? l.final : (block.states.find((s) => s.id === id)?.label ?? id));
+function States({
+  block,
+  l,
+}: Readonly<{ block: Extract<DiagramData, { kind: "states" }>["block"]; l: DocsDiagramLabels }>) {
+  const name = (id: string) =>
+    id === "start" ? l.initial : id === "end" ? l.final : (block.states.find((s) => s.id === id)?.label ?? id);
   return (
     <Figure title={l.states}>
       <ol className="m-0 list-none space-y-1.5 p-0">
@@ -152,7 +168,10 @@ function States({ block, l }: Readonly<{ block: Extract<DiagramData, { kind: "st
   );
 }
 
-function Architecture({ data, l }: Readonly<{ data: Extract<DiagramData, { kind: "architecture" }>; l: DocsDiagramLabels }>) {
+function Architecture({
+  data,
+  l,
+}: Readonly<{ data: Extract<DiagramData, { kind: "architecture" }>; l: DocsDiagramLabels }>) {
   const { focus } = data;
   if (!focus) {
     return (

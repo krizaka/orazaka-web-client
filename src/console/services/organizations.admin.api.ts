@@ -28,5 +28,7 @@ export const OrganizationsAdminApi = {
   list: async (): Promise<Organization[]> => z.array(OrganizationSchema).parse(await read("/api/v1/organizations")),
 
   serviceKeys: async (organizationId: string): Promise<ServiceKey[]> =>
-    z.array(ServiceKeySchema).parse(await read(`/api/v1/organizations/${encodeURIComponent(organizationId)}/service-keys`)),
+    z
+      .array(ServiceKeySchema)
+      .parse(await read(`/api/v1/organizations/${encodeURIComponent(organizationId)}/service-keys`)),
 };

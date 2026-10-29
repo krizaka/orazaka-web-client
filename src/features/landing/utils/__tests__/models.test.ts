@@ -1,12 +1,37 @@
-import { capabilitiesOf, featured, filterModels, filtersHref, MODELS, providerCount, readFilters, type ModelEntry } from "@/features/landing/utils/models";
+import {
+  capabilitiesOf,
+  featured,
+  filterModels,
+  filtersHref,
+  MODELS,
+  providerCount,
+  readFilters,
+  type ModelEntry,
+} from "@/features/landing/utils/models";
 
-const CAPS = ["chat", "reasoning", "vision", "code", "embeddings", "image", "video", "speech-to-text", "text-to-speech", "music", "video-to-audio"];
+const CAPS = [
+  "chat",
+  "reasoning",
+  "vision",
+  "code",
+  "embeddings",
+  "image",
+  "video",
+  "speech-to-text",
+  "text-to-speech",
+  "music",
+  "video-to-audio",
+];
 
 describe("the registry the site shows (models.generated.json)", () => {
   it("is not empty and every model carries what the page prints", () => {
     expect(MODELS.length).toBeGreaterThan(0);
     for (const m of MODELS) {
-      expect([m.id, m.name, m.vendor, m.family, m.runtime, m.licence.name].every((v) => typeof v === "string" && v.trim().length > 0)).toBe(true);
+      expect(
+        [m.id, m.name, m.vendor, m.family, m.runtime, m.licence.name].every(
+          (v) => typeof v === "string" && v.trim().length > 0,
+        ),
+      ).toBe(true);
       expect(m.capabilities.length).toBeGreaterThan(0);
       for (const c of m.capabilities) expect(CAPS).toContain(c);
       expect(["local", "provider"]).toContain(m.runsOn);
@@ -35,8 +60,20 @@ describe("the registry the site shows (models.generated.json)", () => {
 });
 
 const sample = (over: Partial<ModelEntry>): ModelEntry => ({
-  id: "x", name: "X", vendor: "V", family: "F", capabilities: ["chat"], runsOn: "local", runtime: "Ollama", openWeights: true,
-  licence: { name: "Apache-2.0", url: null }, commercialUse: "yes", contextWindow: 1000, status: "available", lastVerified: null, ...over,
+  id: "x",
+  name: "X",
+  vendor: "V",
+  family: "F",
+  capabilities: ["chat"],
+  runsOn: "local",
+  runtime: "Ollama",
+  openWeights: true,
+  licence: { name: "Apache-2.0", url: null },
+  commercialUse: "yes",
+  contextWindow: 1000,
+  status: "available",
+  lastVerified: null,
+  ...over,
 });
 
 describe("filters", () => {
@@ -49,17 +86,28 @@ describe("filters", () => {
   it("filters by capability (any of) and by where it runs", () => {
     expect(filterModels(models, { capabilities: [], runsOn: null }).map((m) => m.id)).toEqual(["a", "b", "c"]);
     expect(filterModels(models, { capabilities: ["chat"], runsOn: null }).map((m) => m.id)).toEqual(["a", "b"]);
-    expect(filterModels(models, { capabilities: ["chat", "image"], runsOn: "local" }).map((m) => m.id)).toEqual(["a", "c"]);
+    expect(filterModels(models, { capabilities: ["chat", "image"], runsOn: "local" }).map((m) => m.id)).toEqual([
+      "a",
+      "c",
+    ]);
     expect(filterModels(models, { capabilities: ["reasoning"], runsOn: "local" })).toEqual([]);
   });
 
   it("reads the address and ignores what it does not know", () => {
-    expect(readFilters(new URLSearchParams("cap=chat,telepathy,chat&where=local"), models)).toEqual({ capabilities: ["chat"], runsOn: "local" });
-    expect(readFilters(new URLSearchParams("cap=video&where=mars"), models)).toEqual({ capabilities: [], runsOn: null });
+    expect(readFilters(new URLSearchParams("cap=chat,telepathy,chat&where=local"), models)).toEqual({
+      capabilities: ["chat"],
+      runsOn: "local",
+    });
+    expect(readFilters(new URLSearchParams("cap=video&where=mars"), models)).toEqual({
+      capabilities: [],
+      runsOn: null,
+    });
   });
 
   it("writes the address back, and the empty filter is /models", () => {
-    expect(filtersHref({ capabilities: ["chat", "code"], runsOn: "provider" })).toBe("/models?cap=chat%2Ccode&where=provider");
+    expect(filtersHref({ capabilities: ["chat", "code"], runsOn: "provider" })).toBe(
+      "/models?cap=chat%2Ccode&where=provider",
+    );
     expect(filtersHref({ capabilities: [], runsOn: null })).toBe("/models");
   });
 
@@ -85,7 +133,12 @@ describe("the home page's selection", () => {
       sample({ id: "fine-tune", family: "Qwen 2.5 (unfiltered)" }),
       sample({ id: "base", family: "Qwen 2.5" }),
       sample({ id: "restricted", family: "Q", licence: { name: "Community Licence", url: null } }),
-      sample({ id: "vision-default", capabilities: ["vision"], status: "default", licence: { name: "Custom", url: null } }),
+      sample({
+        id: "vision-default",
+        capabilities: ["vision"],
+        status: "default",
+        licence: { name: "Custom", url: null },
+      }),
     ];
     expect(featured(rows, 6).map((m) => m.id)).toEqual(["base", "vision-default"]);
     expect(featured(rows, 1).map((m) => m.id)).toEqual(["base"]);

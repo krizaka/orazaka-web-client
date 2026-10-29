@@ -45,7 +45,10 @@ const desktopNav = () => within(bar()).getAllByRole("navigation", { name: "Oraza
 
 describe("the information architecture of the public bar", () => {
   it("is short (epic #231): Product ▾ (How it works · Download) · Docs · Pricing · Open source; Packs lives in the docs", () => {
-    const shape = NAV_GROUPS.map((g) => ({ group: g.id, entries: g.entries.map((e) => `${e.id} → ${e.anchor ? `#${e.anchor}` : e.path}`) }));
+    const shape = NAV_GROUPS.map((g) => ({
+      group: g.id,
+      entries: g.entries.map((e) => `${e.id} → ${e.anchor ? `#${e.anchor}` : e.path}`),
+    }));
     expect(shape).toMatchInlineSnapshot(`
 [
   {
@@ -71,7 +74,12 @@ describe("the information architecture of the public bar", () => {
       const el = within(bar()).getAllByRole(role, { name })[0];
       return [...bar().querySelectorAll("*")].indexOf(el);
     };
-    const positions = [order(nav.repo, "link"), order(translations.en.header.themeSystem, "button"), order(new RegExp(`^${nav.langLabel}`), "button"), order(nav.signIn, "link")];
+    const positions = [
+      order(nav.repo, "link"),
+      order(translations.en.header.themeSystem, "button"),
+      order(new RegExp(`^${nav.langLabel}`), "button"),
+      order(nav.signIn, "link"),
+    ];
     expect(positions).toEqual([...positions].sort((a, b) => a - b));
     expect(new Set(positions).size).toBe(4);
   });
@@ -96,7 +104,17 @@ describe("the information architecture of the public bar", () => {
     mockPath.current = path;
     renderLanding("en", <LandingNav onHome={path === "/"} />);
     const lit = [...desktopNav().querySelectorAll("[data-nav-item][data-active]")].map((el) => el.textContent?.trim());
-    expect(lit).toEqual(top === "docs" ? [nav.docs] : top === "pricing" ? [nav.pricing] : top === "openSource" ? [nav.openSource] : top ? [nav.product, nav.download] : []);
+    expect(lit).toEqual(
+      top === "docs"
+        ? [nav.docs]
+        : top === "pricing"
+          ? [nav.pricing]
+          : top === "openSource"
+            ? [nav.openSource]
+            : top
+              ? [nav.product, nav.download]
+              : [],
+    );
     mockPath.current = "/";
   });
 
@@ -117,9 +135,15 @@ describe("the mobile panel", () => {
   it("has the bar's groups in the same order, every destination once, no dead link, then Docs", () => {
     renderLanding("en", <LandingPage />, CLOSED);
     fireEvent.click(screen.getByRole("button", { name: nav.openMenu }));
-    const groups = within(bar()).getAllByRole("group").filter((g) => g.getAttribute("aria-labelledby"));
+    const groups = within(bar())
+      .getAllByRole("group")
+      .filter((g) => g.getAttribute("aria-labelledby"));
     expect(groups.map((g) => g.querySelector("p")?.textContent)).toEqual([nav.product, nav.preferences]);
-    expect(within(groups[0]).getAllByRole("link").map((a) => a.textContent)).toEqual([nav.how, nav.download]);
+    expect(
+      within(groups[0])
+        .getAllByRole("link")
+        .map((a) => a.textContent),
+    ).toEqual([nav.how, nav.download]);
     const panel = groups[0].closest("nav") as HTMLElement;
     const hrefs = [...panel.querySelectorAll("a")].map((a) => a.getAttribute("href"));
     expect(hrefs).toEqual(["#features", "/desktop", "/docs", "/pricing", "/open-source", "#", "#", "/login"]);
@@ -188,7 +212,11 @@ describe("the one action of the bar: using the app", () => {
   });
 
   it("is « Open the app » with the avatar when signed in, and « Sign in » again once signed out or expired", () => {
-    mockSession.current = { data: { user: { name: "Oussama", email: "o@orazaka.io" }, expires: "2999-01-01" }, status: "authenticated", update: async () => null } as SessionValue;
+    mockSession.current = {
+      data: { user: { name: "Oussama", email: "o@orazaka.io" }, expires: "2999-01-01" },
+      status: "authenticated",
+      update: async () => null,
+    } as SessionValue;
     const { unmount } = renderLanding("en", <LandingNav />);
     expect(within(bar()).getAllByRole("link", { name: nav.openApp })[0]).toHaveAttribute("href", "/");
     expect(within(bar()).queryByRole("link", { name: nav.signIn })).toBeNull();
@@ -210,7 +238,11 @@ describe("the one action of the bar: using the app", () => {
   });
 
   it("keeps the signed-in avatar visible in the mobile bar and open panel", () => {
-    mockSession.current = { data: { user: { name: "Oussama", email: "o@orazaka.io" }, expires: "2999-01-01" }, status: "authenticated", update: async () => null } as SessionValue;
+    mockSession.current = {
+      data: { user: { name: "Oussama", email: "o@orazaka.io" }, expires: "2999-01-01" },
+      status: "authenticated",
+      update: async () => null,
+    } as SessionValue;
     renderLanding("en", <LandingNav />);
     fireEvent.click(within(bar()).getByRole("button", { name: nav.openMenu }));
     const avatars = bar().querySelectorAll("span[class*=rounded-full]");
@@ -220,6 +252,8 @@ describe("the one action of the bar: using the app", () => {
 
   it("puts Contact in the footer, pointing to krizaka.com/contact", () => {
     renderLanding("en", <LandingPage />, CLOSED);
-    expect(within(screen.getByRole("contentinfo")).getByRole("link", { name: translations.en.landing.footer.contact })).toHaveAttribute("href", "https://www.krizaka.com/contact");
+    expect(
+      within(screen.getByRole("contentinfo")).getByRole("link", { name: translations.en.landing.footer.contact }),
+    ).toHaveAttribute("href", "https://www.krizaka.com/contact");
   });
 });

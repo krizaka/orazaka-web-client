@@ -16,7 +16,12 @@ const UNKNOWN_KIND = "UNKNOWN";
 const required = z.string().refine(hasText, "law.required");
 
 const deriveForm = createKrizakaForm({
-  schema: z.object({ jurisdiction: required, kindId: required, asOf: z.string().refine(isIsoDate, "law.date"), language: z.enum(LAW_LANGUAGES) }),
+  schema: z.object({
+    jurisdiction: required,
+    kindId: required,
+    asOf: z.string().refine(isIsoDate, "law.date"),
+    language: z.enum(LAW_LANGUAGES),
+  }),
   defaultValues: { jurisdiction: "QC", kindId: "", asOf: "", language: "fr" },
 });
 
@@ -50,13 +55,23 @@ function DerivationForm() {
           <form.TextField name="kindId" label={d.kindId} autoComplete="off" />
         </section>
         <form.DateField name="asOf" label={d.asOf} entry="parts" labels={t.dateParts} />
-        <form.Select name="language" label={d.language} options={LAW_LANGUAGES.map((value) => ({ value, label: t.languages[value] }))} />
+        <form.Select
+          name="language"
+          label={d.language}
+          options={LAW_LANGUAGES.map((value) => ({ value, label: t.languages[value] }))}
+        />
         <form.Submit variant="primary">{d.deriveSubmit}</form.Submit>
       </form.Form>
       {problem && <Alert tone="danger">{problem}</Alert>}
       {run && (
         <Alert tone="success">
-          {fill(d.derived, { runId: run.runId, outcome: outcomes[run.outcome] ?? run.outcome, proposals: run.proposals, rejected: run.rejected, credits: run.creditsSpent })}
+          {fill(d.derived, {
+            runId: run.runId,
+            outcome: outcomes[run.outcome] ?? run.outcome,
+            proposals: run.proposals,
+            rejected: run.rejected,
+            credits: run.creditsSpent,
+          })}
         </Alert>
       )}
     </section>
@@ -66,11 +81,24 @@ function DerivationForm() {
 function demandColumns({ t, date }: LawWords): DataTableColumn<Demand>[] {
   const d = t.demand;
   return [
-    { id: "kindId", header: d.kind, card: "title", sortable: true, value: (r) => (r.kindId === UNKNOWN_KIND ? d.unknown : r.kindId), cell: (r) => (r.kindId === UNKNOWN_KIND ? d.unknown : <code className="text-xs">{r.kindId}</code>) },
+    {
+      id: "kindId",
+      header: d.kind,
+      card: "title",
+      sortable: true,
+      value: (r) => (r.kindId === UNKNOWN_KIND ? d.unknown : r.kindId),
+      cell: (r) => (r.kindId === UNKNOWN_KIND ? d.unknown : <code className="text-xs">{r.kindId}</code>),
+    },
     { id: "jurisdiction", header: d.jurisdiction },
     { id: "count", header: d.count, align: "end", sortable: true },
     { id: "firstSeen", header: d.firstSeen, value: (r) => r.firstSeen, cell: (r) => date(r.firstSeen, true) },
-    { id: "lastSeen", header: d.lastSeen, sortable: true, value: (r) => r.lastSeen, cell: (r) => date(r.lastSeen, true) },
+    {
+      id: "lastSeen",
+      header: d.lastSeen,
+      sortable: true,
+      value: (r) => r.lastSeen,
+      cell: (r) => date(r.lastSeen, true),
+    },
   ];
 }
 
@@ -87,7 +115,14 @@ export function DemandPanel() {
         <h2 className="text-lg font-bold text-fg">{d.caption}</h2>
         <p className="text-sm text-fg-secondary">{d.lead}</p>
         {demand.refusal && <Alert tone="warning">{refusal(demand.refusal)}</Alert>}
-        <DataTable caption={d.caption} rows={demand.data} columns={columns} getRowId={(r) => `${r.jurisdiction}-${r.kindId}`} loading={demand.isLoading} labels={table} />
+        <DataTable
+          caption={d.caption}
+          rows={demand.data}
+          columns={columns}
+          getRowId={(r) => `${r.jurisdiction}-${r.kindId}`}
+          loading={demand.isLoading}
+          labels={table}
+        />
       </section>
       <DerivationForm />
     </section>

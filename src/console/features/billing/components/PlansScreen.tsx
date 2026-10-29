@@ -53,8 +53,8 @@ export function PlansScreen() {
         <div>
           <h2 className="text-lg font-semibold text-fg">Offres</h2>
           <p className="text-sm text-fg-muted">
-            Prix, dotation mensuelle et matrice de droits. Une offre retirée reste
-            visible ici : des abonnements y font encore référence.
+            Prix, dotation mensuelle et matrice de droits. Une offre retirée reste visible ici : des abonnements y font
+            encore référence.
           </p>
         </div>
         <Button
@@ -91,12 +91,9 @@ export function PlansScreen() {
                 {!plan.isActive && <Badge variant="warning">retirée</Badge>}
               </header>
               <p className="text-sm text-fg">
-                {money(plan.priceCents, plan.currency)} ·{" "}
-                {formatCredits(plan.monthlyCreditGrant)} crédits / mois
+                {money(plan.priceCents, plan.currency)} · {formatCredits(plan.monthlyCreditGrant)} crédits / mois
               </p>
-              <p className="text-xs text-fg-muted">
-                {plan.entitlements.length} droits
-              </p>
+              <p className="text-xs text-fg-muted">{plan.entitlements.length} droits</p>
               <Button size="sm" variant="ghost" onClick={() => setEditing(plan)}>
                 Modifier
               </Button>
@@ -105,14 +102,7 @@ export function PlansScreen() {
         ))}
       </div>
 
-      {editing && (
-        <PlanEditor
-          plan={editing}
-          onChange={setEditing}
-          onSave={save}
-          onCancel={() => setEditing(null)}
-        />
-      )}
+      {editing && <PlanEditor plan={editing} onChange={setEditing} onSave={save} onCancel={() => setEditing(null)} />}
     </section>
   );
 }
@@ -164,9 +154,7 @@ function PlanEditor({
             label="Crédits / mois"
             type="number"
             value={String(plan.monthlyCreditGrant)}
-            onChange={(e) =>
-              onChange({ ...plan, monthlyCreditGrant: Number(e.target.value) })
-            }
+            onChange={(e) => onChange({ ...plan, monthlyCreditGrant: Number(e.target.value) })}
           />
           <BillingField
             label="Palier de débit"
@@ -181,9 +169,7 @@ function PlanEditor({
             <div key={index} className="grid gap-2 sm:grid-cols-3">
               <Input
                 value={entitlement.key}
-                onChange={(e) =>
-                  setEntitlement(index, { ...entitlement, key: e.target.value })
-                }
+                onChange={(e) => setEntitlement(index, { ...entitlement, key: e.target.value })}
               />
               <Input
                 value={entitlement.valueType}
@@ -196,9 +182,7 @@ function PlanEditor({
               />
               <Input
                 value={entitlement.value}
-                onChange={(e) =>
-                  setEntitlement(index, { ...entitlement, value: e.target.value })
-                }
+                onChange={(e) => setEntitlement(index, { ...entitlement, value: e.target.value })}
               />
             </div>
           ))}
@@ -208,10 +192,7 @@ function PlanEditor({
             onClick={() =>
               onChange({
                 ...plan,
-                entitlements: [
-                  ...plan.entitlements,
-                  { key: "", valueType: "boolean", value: "true" },
-                ],
+                entitlements: [...plan.entitlements, { key: "", valueType: "boolean", value: "true" }],
               })
             }
           >

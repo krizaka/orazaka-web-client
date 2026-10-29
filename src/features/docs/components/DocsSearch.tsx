@@ -13,7 +13,11 @@ export function DocsSearch({ index }: Readonly<{ index: readonly SearchEntry[] }
   const router = useRouter();
   const [query, setQuery] = useState("");
   const hits = useMemo(() => searchDocs(index, query), [index, query]);
-  const suggestions = hits.map((h) => ({ value: `${pageHref(h.slug)}${h.id ? `#${h.id}` : ""}`, label: h.label, meta: d.journeys[h.meta as keyof typeof d.journeys]?.title }));
+  const suggestions = hits.map((h) => ({
+    value: `${pageHref(h.slug)}${h.id ? `#${h.id}` : ""}`,
+    label: h.label,
+    meta: d.journeys[h.meta as keyof typeof d.journeys]?.title,
+  }));
   return (
     <div>
       <SearchField

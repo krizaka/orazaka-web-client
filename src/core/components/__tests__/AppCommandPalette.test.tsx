@@ -55,6 +55,10 @@ describe("AppCommandPalette", () => {
     render(<AppCommandPalette />);
     await open();
     const words = screen.getAllByRole("option").map((o) => o.textContent);
-    expect(words).toEqual(["home", "studios", "chat", "jobs", "packs", "usage", "settings"].map((id) => expect.stringContaining(t.appNav[id as keyof typeof t.appNav])));
+    expect(words).toEqual(
+      ["home", "studios", "chat", "jobs", "packs", "usage", "settings"].map((id) =>
+        expect.stringContaining(t.appNav[id as keyof typeof t.appNav]),
+      ),
+    );
   });
 });

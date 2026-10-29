@@ -67,22 +67,35 @@ describe("LandingPage", () => {
     expect(take.muted).toBe(true);
     expect(take.loop).toBe(true);
     expect(take).not.toHaveAttribute("controls");
-    expect(take).toHaveAttribute("poster", expect.stringMatching(new RegExp(`sites/orazaka/home/take-en-${look}-poster\\.[0-9a-f]{10}\\.webp$`)));
-    expect(take.querySelector("source[type='video/webm']")).toHaveAttribute("src", expect.stringMatching(new RegExp(`take-en-${look}\\.[0-9a-f]{10}\\.webm$`)));
-    expect(take.querySelector("source[type='video/mp4']")).toHaveAttribute("src", expect.stringMatching(new RegExp(`take-en-${look}\\.[0-9a-f]{10}\\.mp4$`)));
+    expect(take).toHaveAttribute(
+      "poster",
+      expect.stringMatching(new RegExp(`sites/orazaka/home/take-en-${look}-poster\\.[0-9a-f]{10}\\.webp$`)),
+    );
+    expect(take.querySelector("source[type='video/webm']")).toHaveAttribute(
+      "src",
+      expect.stringMatching(new RegExp(`take-en-${look}\\.[0-9a-f]{10}\\.webm$`)),
+    );
+    expect(take.querySelector("source[type='video/mp4']")).toHaveAttribute(
+      "src",
+      expect.stringMatching(new RegExp(`take-en-${look}\\.[0-9a-f]{10}\\.mp4$`)),
+    );
     expect(screen.getByText(translations.en.clips.take.caption)).toBeInTheDocument();
   });
 
   it("follows the language: the French page films the French take", () => {
     renderLanding("fr", <LandingPage measured={MEASURED} />);
-    expect(screen.getByTestId("clip-take")).toHaveAttribute("poster", expect.stringMatching(/take-fr-(dark|light)-poster/));
+    expect(screen.getByTestId("clip-take")).toHaveAttribute(
+      "poster",
+      expect.stringMatching(/take-fr-(dark|light)-poster/),
+    );
     expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent(translations.fr.landing.hero.title);
   });
 
   it("counts its figures from the measured runs it is given, never from a typed number", () => {
     renderLanding("en", <LandingPage measured={MEASURED} />);
     const labels = translations.en.landing.figures;
-    for (const label of [labels.runs, labels.models, labels.telemetry]) expect(screen.getByText(label)).toBeInTheDocument();
+    for (const label of [labels.runs, labels.models, labels.telemetry])
+      expect(screen.getByText(label)).toBeInTheDocument();
     expect(screen.getByText(labels.runs).closest("div")?.querySelector("dt")).not.toBeNull();
   });
 
@@ -104,7 +117,9 @@ describe("LandingPage", () => {
     const clips = [...features.querySelectorAll("video")];
     expect(clips.map((v) => v.getAttribute("data-testid"))).toEqual(["clip-studio", "clip-results", "clip-workspace"]);
     clips.forEach((v) => {
-      expect(v.getAttribute("poster")).toMatch(/sites\/orazaka\/web\/step-(studio|results|workspace)-(dark|light)-poster\.[0-9a-f]{10}\.webp$/);
+      expect(v.getAttribute("poster")).toMatch(
+        /sites\/orazaka\/web\/step-(studio|results|workspace)-(dark|light)-poster\.[0-9a-f]{10}\.webp$/,
+      );
       expect(v.muted).toBe(true);
       expect(v.loop).toBe(true);
       expect(v.querySelectorAll("track[kind='captions']")).toHaveLength(2);
@@ -118,7 +133,9 @@ describe("LandingPage", () => {
     expect(items).toHaveLength(3);
     expect(records).toHaveTextContent("Stable Diffusion 3.5 Large");
     items.forEach((li) => expect(li.querySelector("dd.font-mono")?.getAttribute("title")).toMatch(/^[0-9a-f-]{36}$/));
-    expect(within(records).getByRole("link", { name: new RegExp(translations.en.landing.records.more) })).toHaveAttribute("href", "/docs/measured-runs");
+    expect(
+      within(records).getByRole("link", { name: new RegExp(translations.en.landing.records.more) }),
+    ).toHaveAttribute("href", "/docs/measured-runs");
     expect(records).toHaveTextContent("2026-10-17");
   });
 
@@ -178,7 +195,10 @@ describe("LandingPage while sign-in and sign-up are closed (the default)", () =>
     const footer = screen.getByTestId("app-version");
     expect(footer).toHaveTextContent("A Krizaka product");
     expect(footer).toHaveTextContent(/v\S+/);
-    expect(within(footer).getByRole("link", { name: /A Krizaka product/ })).toHaveAttribute("href", "https://www.krizaka.com");
+    expect(within(footer).getByRole("link", { name: /A Krizaka product/ })).toHaveAttribute(
+      "href",
+      "https://www.krizaka.com",
+    );
     expect(within(footer).queryByRole("navigation", { name: "Krizaka family" })).toBeNull();
   });
 
@@ -187,11 +207,25 @@ describe("LandingPage while sign-in and sign-up are closed (the default)", () =>
     const bar = document.querySelector("header[data-floating]") as HTMLElement;
     expect(screen.queryByRole("navigation", { name: "Krizaka family" })).toBeNull();
     expect(bar).not.toHaveTextContent(/dev · v/);
-    expect(within(bar).getByRole("link", { name: translations.en.landing.nav.repo })).toHaveAttribute("href", "https://github.com/krizaka/orazaka-web-client");
-    expect(within(bar).getAllByRole("link", { name: translations.en.landing.nav.signIn })[0]).toHaveAttribute("href", "/login");
+    expect(within(bar).getByRole("link", { name: translations.en.landing.nav.repo })).toHaveAttribute(
+      "href",
+      "https://github.com/krizaka/orazaka-web-client",
+    );
+    expect(within(bar).getAllByRole("link", { name: translations.en.landing.nav.signIn })[0]).toHaveAttribute(
+      "href",
+      "/login",
+    );
     expect(within(bar).queryByRole("link", { name: /talk to us|contact/i })).toBeNull();
     const centre = within(bar).getByRole("navigation", { name: "Orazaka" });
-    expect(within(centre).getAllByRole("link").map((a) => a.getAttribute("href"))).toEqual(["#features", "/desktop", "/docs", "/pricing", "/open-source"]);
-    expect(within(centre).getAllByRole("button").map((b) => b.textContent)).toEqual([translations.en.landing.nav.product]);
+    expect(
+      within(centre)
+        .getAllByRole("link")
+        .map((a) => a.getAttribute("href")),
+    ).toEqual(["#features", "/desktop", "/docs", "/pricing", "/open-source"]);
+    expect(
+      within(centre)
+        .getAllByRole("button")
+        .map((b) => b.textContent),
+    ).toEqual([translations.en.landing.nav.product]);
   });
 });

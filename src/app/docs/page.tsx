@@ -2,7 +2,15 @@ import type { Metadata } from "next";
 import { LandingNav } from "@/features/landing/components/LandingNav";
 import { LandingFooter } from "@/features/landing/components/LandingFooter";
 import { DocsHub, type HubJourney } from "@/features/docs/components/DocsHub";
-import { JOURNEY_IDS, findPage, pageHref, pagesOf, readDoc, searchIndex, splitSegments } from "@/features/docs/utils/docs";
+import {
+  JOURNEY_IDS,
+  findPage,
+  pageHref,
+  pagesOf,
+  readDoc,
+  searchIndex,
+  splitSegments,
+} from "@/features/docs/utils/docs";
 import { docs } from "@/core/context/translations.docs";
 
 export const metadata: Metadata = { title: docs.en.meta, description: docs.en.metaDescription };
@@ -18,9 +26,15 @@ function quickstart(): string {
 export default function DocsHubPage() {
   const journeys: HubJourney[] = JOURNEY_IDS.filter((id) => id !== "packs").map((id) => {
     const pages = pagesOf(id);
-    return { id, href: pageHref(pages[0].slug), links: pages.slice(0, 4).map((p) => ({ href: pageHref(p.slug), label: p.title })) };
+    return {
+      id,
+      href: pageHref(pages[0].slug),
+      links: pages.slice(0, 4).map((p) => ({ href: pageHref(p.slug), label: p.title })),
+    };
   });
-  const popular = ["101", "concepts", "studio-guide", "api"].map((s) => findPage(s)!).map((p) => ({ href: pageHref(p.slug), title: p.title, journey: p.journey }));
+  const popular = ["101", "concepts", "studio-guide", "api"]
+    .map((s) => findPage(s)!)
+    .map((p) => ({ href: pageHref(p.slug), title: p.title, journey: p.journey }));
   return (
     <>
       <LandingNav onHome={false} />

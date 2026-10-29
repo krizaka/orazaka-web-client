@@ -61,9 +61,7 @@ export function useMcpServers(fetchHeaders: () => Promise<Record<string, string>
     setServerMessage(null);
     try {
       const headers = await fetchHeaders();
-      const endpoint = isAdmin
-        ? "/api/v1/mcp/servers/platform"
-        : "/api/v1/mcp/servers/user";
+      const endpoint = isAdmin ? "/api/v1/mcp/servers/platform" : "/api/v1/mcp/servers/user";
       const body = (() => {
         if (isAdmin) {
           return {
@@ -115,13 +113,9 @@ export function useMcpServers(fetchHeaders: () => Promise<Record<string, string>
     setServerMessage(null);
     try {
       const headers = await fetchHeaders();
-      const endpoint = isAdmin
-        ? `/api/v1/mcp/servers/platform/${id}`
-        : `/api/v1/mcp/servers/user/${id}`;
+      const endpoint = isAdmin ? `/api/v1/mcp/servers/platform/${id}` : `/api/v1/mcp/servers/user/${id}`;
       const res = await fetch(endpoint, { method: "DELETE", headers });
-      setServerMessage(
-        res.ok ? t.settings.mcpDeleteSuccess : t.settings.mcpDeleteError,
-      );
+      setServerMessage(res.ok ? t.settings.mcpDeleteSuccess : t.settings.mcpDeleteError);
       if (res.ok) loadServers();
     } catch {
       setServerMessage(t.settings.mcpDeleteError);

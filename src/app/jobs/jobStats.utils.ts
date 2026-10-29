@@ -29,10 +29,7 @@ export function computeJobStats(jobs: Job[]): JobStats {
   jobs.forEach((j) => {
     if (j.status === JOB_STATUS.COMPLETED && j.createdAt && j.updatedAt) {
       try {
-        const diff = differenceInMilliseconds(
-          parseISO(j.updatedAt),
-          parseISO(j.createdAt),
-        );
+        const diff = differenceInMilliseconds(parseISO(j.updatedAt), parseISO(j.createdAt));
         if (diff >= 0) durations.push(diff);
       } catch {
         /* ignore */

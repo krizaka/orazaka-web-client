@@ -26,7 +26,9 @@ export function UsageKpis({ summary, days, loading }: Readonly<UsageKpisProps>) 
   if (loading) {
     return (
       <StatGrid minWidth={13}>
-        {[0, 1, 2, 3].map((i) => <Skeleton key={i} className="h-28 w-full" />)}
+        {[0, 1, 2, 3].map((i) => (
+          <Skeleton key={i} className="h-28 w-full" />
+        ))}
       </StatGrid>
     );
   }
@@ -34,7 +36,17 @@ export function UsageKpis({ summary, days, loading }: Readonly<UsageKpisProps>) 
   const hint = fill(u.kpiPeriodHint, { days });
   return (
     <StatGrid minWidth={13}>
-      <KpiStat label={u.kpiJobs} value={current.jobs} previous={previous.jobs} data={jobsPerDay} categories={perDay.map((d) => d.day)} variant="bar" hint={hint} format="integer" locale={INTL_LOCALES[locale]} />
+      <KpiStat
+        label={u.kpiJobs}
+        value={current.jobs}
+        previous={previous.jobs}
+        data={jobsPerDay}
+        categories={perDay.map((d) => d.day)}
+        variant="bar"
+        hint={hint}
+        format="integer"
+        locale={INTL_LOCALES[locale]}
+      />
       <KpiStat
         label={u.kpiSuccess}
         value={current.successRate ?? 0}
@@ -52,7 +64,14 @@ export function UsageKpis({ summary, days, loading }: Readonly<UsageKpisProps>) 
         hint={current.medianSeconds === null ? u.timeInsightNone : u.kpiTimeHint}
         locale={INTL_LOCALES[locale]}
       />
-      <KpiStat label={u.kpiRuns} value={current.runs} previous={previous.runs} hint={hint} format="integer" locale={INTL_LOCALES[locale]} />
+      <KpiStat
+        label={u.kpiRuns}
+        value={current.runs}
+        previous={previous.runs}
+        hint={hint}
+        format="integer"
+        locale={INTL_LOCALES[locale]}
+      />
     </StatGrid>
   );
 }

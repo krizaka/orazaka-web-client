@@ -36,47 +36,35 @@ const textareaField = {
 
 describe("InterceptionFormField", () => {
   it("renders text input with label", () => {
-    render(
-      <InterceptionFormField field={textField} value="" onChange={jest.fn()} locale="en" />,
-    );
+    render(<InterceptionFormField field={textField} value="" onChange={jest.fn()} locale="en" />);
     expect(screen.getByText("Full Name")).toBeInTheDocument();
     expect(screen.getByPlaceholderText("Enter your name")).toBeInTheDocument();
   });
 
   it("shows required indicator", () => {
-    render(
-      <InterceptionFormField field={textField} value="" onChange={jest.fn()} locale="en" />,
-    );
+    render(<InterceptionFormField field={textField} value="" onChange={jest.fn()} locale="en" />);
     expect(screen.getByText("* required")).toBeInTheDocument();
   });
 
   it("shows French required indicator", () => {
-    render(
-      <InterceptionFormField field={textField} value="" onChange={jest.fn()} locale="fr" />,
-    );
+    render(<InterceptionFormField field={textField} value="" onChange={jest.fn()} locale="fr" />);
     expect(screen.getByText("* requis")).toBeInTheDocument();
   });
 
   it("renders select with options", () => {
-    render(
-      <InterceptionFormField field={selectField} value="en" onChange={jest.fn()} locale="en" />,
-    );
+    render(<InterceptionFormField field={selectField} value="en" onChange={jest.fn()} locale="en" />);
     expect(screen.getByText("English")).toBeInTheDocument();
     expect(screen.getByText("Français")).toBeInTheDocument();
   });
 
   it("renders textarea", () => {
-    render(
-      <InterceptionFormField field={textareaField} value="" onChange={jest.fn()} locale="en" />,
-    );
+    render(<InterceptionFormField field={textareaField} value="" onChange={jest.fn()} locale="en" />);
     expect(screen.getByPlaceholderText("Tell us about yourself")).toBeInTheDocument();
   });
 
   it("calls onChange on text input", () => {
     const onChange = jest.fn();
-    render(
-      <InterceptionFormField field={textField} value="" onChange={onChange} locale="en" />,
-    );
+    render(<InterceptionFormField field={textField} value="" onChange={onChange} locale="en" />);
     fireEvent.change(screen.getByPlaceholderText("Enter your name"), { target: { value: "John" } });
     expect(onChange).toHaveBeenCalledWith("John");
   });

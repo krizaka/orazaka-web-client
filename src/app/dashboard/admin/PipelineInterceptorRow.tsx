@@ -45,7 +45,7 @@ export function PipelineInterceptorRow({
           if (dragIdx === idx) return "border-warning bg-warning/20 shadow-lg scale-[1.01]";
           if (item.enabled) return "border-border-subtle bg-surface-0 hover:border-border-subtle";
           return "border-border-subtle bg-surface-1/50 opacity-60";
-        })()
+        })(),
       )}
     >
       {/* Drag handle */}
@@ -61,18 +61,10 @@ export function PipelineInterceptorRow({
       {/* Label & description */}
       <article className="flex-1 min-w-0">
         <header className="flex items-center gap-2">
-          <span className="text-sm font-semibold text-fg truncate">
-            {item.displayLabel}
-          </span>
-          <span className="text-fg-muted font-mono text-fg-secondary hidden sm:inline">
-            {item.interceptorKey}
-          </span>
+          <span className="text-sm font-semibold text-fg truncate">{item.displayLabel}</span>
+          <span className="text-fg-muted font-mono text-fg-secondary hidden sm:inline">{item.interceptorKey}</span>
         </header>
-        {item.description && (
-          <p className="text-fg-muted text-fg-secondary truncate mt-0.5">
-            {item.description}
-          </p>
-        )}
+        {item.description && <p className="text-fg-muted text-fg-secondary truncate mt-0.5">{item.description}</p>}
       </article>
 
       {/* Disabled badge */}
@@ -83,7 +75,12 @@ export function PipelineInterceptorRow({
       )}
 
       {/* Toggle */}
-      <Switch size="sm" checked={item.enabled} onCheckedChange={() => onToggle(idx)} label={`${enabledLabel} ${item.displayLabel}`} />
+      <Switch
+        size="sm"
+        checked={item.enabled}
+        onCheckedChange={() => onToggle(idx)}
+        label={`${enabledLabel} ${item.displayLabel}`}
+      />
     </li>
   );
 }

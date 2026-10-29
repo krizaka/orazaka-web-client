@@ -35,7 +35,11 @@ describe.each<Locale>(["en", "fr"])("the mobile apps on the Download page (%s)",
     expect(screen.getByText(m.soon)).toBeInTheDocument();
     expect(screen.queryByRole("link", { name: m.ios.button })).toBeNull();
     expect(screen.queryByRole("link", { name: m.android.button })).toBeNull();
-    expect(document.querySelector("a[href*='apple.com'], a[href*='play.google.com'], a[href*='testflight'], a[href$='.apk']")).toBeNull();
+    expect(
+      document.querySelector(
+        "a[href*='apple.com'], a[href*='play.google.com'], a[href*='testflight'], a[href$='.apk']",
+      ),
+    ).toBeNull();
   });
 
   it("is the same without any configuration passed", () => {
@@ -59,7 +63,8 @@ describe.each<Locale>(["en", "fr"])("the mobile apps on the Download page (%s)",
 });
 
 it("has the same words in English and French", () => {
-  const shape = (v: unknown): unknown => (v && typeof v === "object" ? Object.fromEntries(Object.entries(v).map(([k, x]) => [k, shape(x)])) : typeof v);
+  const shape = (v: unknown): unknown =>
+    v && typeof v === "object" ? Object.fromEntries(Object.entries(v).map(([k, x]) => [k, shape(x)])) : typeof v;
   expect(shape(translations.fr.desktop.mobile)).toEqual(shape(translations.en.desktop.mobile));
   expect(translations.fr.desktop.mobile.soon).toBe("Bientôt sur iPhone et Android");
   expect(translations.en.desktop.mobile.soon).toBe("Coming to iPhone and Android");

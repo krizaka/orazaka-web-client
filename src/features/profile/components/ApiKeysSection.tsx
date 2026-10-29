@@ -5,12 +5,7 @@ import { Button, Icon } from "@krizaka/orazaka-design-system";
 import { Dialog } from "@krizaka/ui/dialog";
 import { useTranslation } from "@/core/context/LocaleContext";
 import { MAX_API_KEYS, useApiKeys } from "@/features/profile/hooks/useApiKeys";
-import {
-  ApiKeyRow,
-  ApiKeysEmptyState,
-  CreateApiKeyForm,
-  RevealKeyPanel,
-} from "./ApiKeysParts";
+import { ApiKeyRow, ApiKeysEmptyState, CreateApiKeyForm, RevealKeyPanel } from "./ApiKeysParts";
 
 import { SettingsSection } from "@krizaka/ui/settings-layout";
 
@@ -24,9 +19,7 @@ interface ApiKeysSectionProps {
  * then surfaced once through a reveal dialog. All data + lifecycle live in
  * {@link useApiKeys}.
  */
-export function ApiKeysSection({
-  fetchHeaders,
-}: Readonly<ApiKeysSectionProps>) {
+export function ApiKeysSection({ fetchHeaders }: Readonly<ApiKeysSectionProps>) {
   const { t } = useTranslation();
   const {
     isLoading,
@@ -53,7 +46,14 @@ export function ApiKeysSection({
       description={t.apiKeys.subtitle}
       footer={
         keys.length > 0 ? (
-          <Button type="button" size="sm" variant="secondary" onClick={openCreate} disabled={!canCreate} className="gap-1.5">
+          <Button
+            type="button"
+            size="sm"
+            variant="secondary"
+            onClick={openCreate}
+            disabled={!canCreate}
+            className="gap-1.5"
+          >
             <Icon name="plus" size={15} />
             {t.apiKeys.create}
           </Button>
@@ -81,10 +81,7 @@ export function ApiKeysSection({
         );
       })()}
 
-      <Dialog.Root
-        open={isCreateOpen}
-        onOpenChange={(next) => !next && closeCreate()}
-      >
+      <Dialog.Root open={isCreateOpen} onOpenChange={(next) => !next && closeCreate()}>
         <Dialog.Content closeLabel={t.apiKeys.cancel}>
           <Dialog.Header>
             <Dialog.Title>{t.apiKeys.create}</Dialog.Title>
@@ -103,20 +100,13 @@ export function ApiKeysSection({
         </Dialog.Content>
       </Dialog.Root>
 
-      <Dialog.Root
-        open={generated !== null}
-        onOpenChange={(next) => !next && dismissGenerated()}
-      >
+      <Dialog.Root open={generated !== null} onOpenChange={(next) => !next && dismissGenerated()}>
         <Dialog.Content closeLabel={t.apiKeys.done}>
           <Dialog.Header>
             <Dialog.Title>{t.apiKeys.revealTitle}</Dialog.Title>
             <Dialog.Description>{generated?.name}</Dialog.Description>
           </Dialog.Header>
-          <Dialog.Body>
-            {generated && (
-              <RevealKeyPanel generated={generated} onDone={dismissGenerated} />
-            )}
-          </Dialog.Body>
+          <Dialog.Body>{generated && <RevealKeyPanel generated={generated} onDone={dismissGenerated} />}</Dialog.Body>
         </Dialog.Content>
       </Dialog.Root>
     </SettingsSection>

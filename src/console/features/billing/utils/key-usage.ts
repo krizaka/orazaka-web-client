@@ -33,5 +33,7 @@ export function groupByAccount(keys: ServiceKey[], consumers: ActorConsumption[]
       creditsCharged: usage?.creditsCharged ?? 0,
     });
   }
-  return [...accounts.values()].sort((a, b) => b.creditsCharged - a.creditsCharged || a.account.localeCompare(b.account));
+  return [...accounts.values()].sort(
+    (a, b) => b.creditsCharged - a.creditsCharged || a.account.localeCompare(b.account),
+  );
 }

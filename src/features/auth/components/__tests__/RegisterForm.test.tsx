@@ -40,7 +40,6 @@ jest.mock("@krizaka/orazaka-design-system", () => ({
   ),
 }));
 
-
 describe("RegisterForm", () => {
   const onSuccess = jest.fn();
   const onError = jest.fn();

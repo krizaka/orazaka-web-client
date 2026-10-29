@@ -34,12 +34,21 @@ export function ActivityCharts({ summary, jobs, days, loading, error }: Readonly
   const { current, previous } = summary;
   const change = formatChange(changeOf(current.jobs, previous.jobs), tag);
   const perDayInsight =
-    current.jobs === 0 ? w.usage.jobsInsightNone : change ? fill(w.usage.jobsInsight, { jobs: current.jobs, change }) : fill(w.usage.jobsInsightFlat, { jobs: current.jobs });
+    current.jobs === 0
+      ? w.usage.jobsInsightNone
+      : change
+        ? fill(w.usage.jobsInsight, { jobs: current.jobs, change })
+        : fill(w.usage.jobsInsightFlat, { jobs: current.jobs });
   const top = kinds[0];
 
   return (
     <section className="grid gap-4 lg:grid-cols-[1.6fr_1fr]">
-      <ChartCard title={w.jobsPerDay} insight={perDayInsight} description={fill(w.jobsPerDayDesc, { days })} footer={w.usage.source}>
+      <ChartCard
+        title={w.jobsPerDay}
+        insight={perDayInsight}
+        description={fill(w.jobsPerDayDesc, { days })}
+        footer={w.usage.source}
+      >
         <BarChart
           data={current.jobs === 0 ? [] : summary.perDay}
           x="day"
@@ -58,7 +67,13 @@ export function ActivityCharts({ summary, jobs, days, loading, error }: Readonly
           error={error}
         />
       </ChartCard>
-      <ChartCard title={w.byKind} insight={top ? fill(w.usage.kindInsight, { kind: top.label.toLowerCase(), count: top.count }) : w.usage.kindInsightNone} description={w.byKindDesc}>
+      <ChartCard
+        title={w.byKind}
+        insight={
+          top ? fill(w.usage.kindInsight, { kind: top.label.toLowerCase(), count: top.count }) : w.usage.kindInsightNone
+        }
+        description={w.byKindDesc}
+      >
         <DonutChart
           data={kinds}
           label="label"

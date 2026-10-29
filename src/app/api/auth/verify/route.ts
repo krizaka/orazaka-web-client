@@ -8,8 +8,7 @@
 
 import { NextResponse } from "next/server";
 
-const ROUTER_URL =
-  process.env.ROUTER_URL || process.env.GATEWAY_URL || "http://localhost:8080";
+const ROUTER_URL = process.env.ROUTER_URL || process.env.GATEWAY_URL || "http://localhost:8080";
 
 export async function POST(req: Request) {
   try {

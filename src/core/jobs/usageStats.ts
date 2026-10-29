@@ -63,7 +63,10 @@ function totalsOf(jobs: readonly Job[], runs: readonly Run[], range: [Date, Date
   const inRange = jobs.filter((job) => within(job.createdAt, range));
   const completed = inRange.filter((job) => job.status === COMPLETED).length;
   const failed = inRange.filter((job) => job.status === FAILED).length;
-  const seconds = inRange.map(jobDuration).filter((ms): ms is number => ms !== null).map((ms) => ms / 1000);
+  const seconds = inRange
+    .map(jobDuration)
+    .filter((ms): ms is number => ms !== null)
+    .map((ms) => ms / 1000);
   const mid = median(seconds);
   return {
     jobs: inRange.length,
@@ -111,9 +114,12 @@ export function usageCsv(jobs: readonly Job[], runs: readonly Run[], days: numbe
   const out = [line(["type", "id", "started_at", "name", "kind", "status", "seconds"])];
   for (const job of rows.jobs) {
     const ms = jobDuration(job);
-    out.push(line(["job", job.id, job.createdAt, job.featureKey, jobKind(job), job.status, ms === null ? "" : ms / 1000]));
+    out.push(
+      line(["job", job.id, job.createdAt, job.featureKey, jobKind(job), job.status, ms === null ? "" : ms / 1000]),
+    );
   }
-  for (const run of rows.runs) out.push(line(["studio_run", run.id, run.startedAt, run.studioKey, "studio", run.status, ""]));
+  for (const run of rows.runs)
+    out.push(line(["studio_run", run.id, run.startedAt, run.studioKey, "studio", run.status, ""]));
   return `﻿${out.join("\n")}\n`;
 }
 
@@ -125,8 +131,20 @@ export function usageJson(jobs: readonly Job[], runs: readonly Run[], days: numb
     {
       period: { days, to: formatISO(now, { representation: "date" }) },
       totals: current,
-      jobs: rows.jobs.map((job) => ({ id: job.id, startedAt: job.createdAt, name: job.featureKey, kind: jobKind(job), status: job.status, seconds: jobDuration(job) === null ? null : (jobDuration(job) as number) / 1000 })),
-      runs: rows.runs.map((run) => ({ id: run.id, startedAt: run.startedAt, studio: run.studioKey, status: run.status })),
+      jobs: rows.jobs.map((job) => ({
+        id: job.id,
+        startedAt: job.createdAt,
+        name: job.featureKey,
+        kind: jobKind(job),
+        status: job.status,
+        seconds: jobDuration(job) === null ? null : (jobDuration(job) as number) / 1000,
+      })),
+      runs: rows.runs.map((run) => ({
+        id: run.id,
+        startedAt: run.startedAt,
+        studio: run.studioKey,
+        status: run.status,
+      })),
     },
     null,
     2,
@@ -139,5 +157,9 @@ export const changeOf = (now: number, before: number): number | null => (before 
 /** A change written as the reader writes it (`+24 %`, `−8 %`), or null when it cannot be said. */
 export function formatChange(ratio: number | null, locale: string): string | null {
   if (ratio === null) return null;
-  return new Intl.NumberFormat(locale, { style: "percent", maximumFractionDigits: 0, signDisplay: "exceptZero" }).format(ratio);
+  return new Intl.NumberFormat(locale, {
+    style: "percent",
+    maximumFractionDigits: 0,
+    signDisplay: "exceptZero",
+  }).format(ratio);
 }

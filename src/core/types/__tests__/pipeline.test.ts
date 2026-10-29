@@ -9,17 +9,13 @@ describe("humanizeInterceptor", () => {
   test("strips the Interceptor suffix and splits camelCase", () => {
     expect(humanizeInterceptor("SemanticRouterInterceptor")).toBe("Semantic Router");
     expect(humanizeInterceptor("TranslationInterceptor")).toBe("Translation");
-    expect(humanizeInterceptor("ClosedLoopValidationInterceptor")).toBe(
-      "Closed Loop Validation",
-    );
+    expect(humanizeInterceptor("ClosedLoopValidationInterceptor")).toBe("Closed Loop Validation");
   });
 });
 
 describe("isPipelineSchema", () => {
   test("accepts an object with coreInterceptorIds array", () => {
-    expect(
-      isPipelineSchema({ pipelineId: "default", coreInterceptorIds: [] }),
-    ).toBe(true);
+    expect(isPipelineSchema({ pipelineId: "default", coreInterceptorIds: [] })).toBe(true);
   });
 
   test("rejects chat content payloads and non-objects", () => {

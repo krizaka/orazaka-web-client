@@ -20,8 +20,17 @@ import { githubConfigured, googleConfigured, providerOffered, parseFlag } from "
 const signup = parseFlag(process.env.AUTH_SIGNUP_ENABLED);
 /** OAuth providers exist only when configured and when this site accepts new accounts (the gateway provisions on first sign-in). */
 const oauthProviders = [
-  ...(providerOffered(githubConfigured(process.env), signup) ? [GithubProvider({ clientId: process.env.GITHUB_ID as string, clientSecret: process.env.GITHUB_SECRET as string })] : []),
-  ...(providerOffered(googleConfigured(process.env), signup) ? [GoogleProvider({ clientId: process.env.GOOGLE_CLIENT_ID as string, clientSecret: process.env.GOOGLE_CLIENT_SECRET as string })] : []),
+  ...(providerOffered(githubConfigured(process.env), signup)
+    ? [GithubProvider({ clientId: process.env.GITHUB_ID as string, clientSecret: process.env.GITHUB_SECRET as string })]
+    : []),
+  ...(providerOffered(googleConfigured(process.env), signup)
+    ? [
+        GoogleProvider({
+          clientId: process.env.GOOGLE_CLIENT_ID as string,
+          clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
+        }),
+      ]
+    : []),
 ];
 
 /** Exchanges the provider's credential for a gateway session (JIT provisioning) and carries it in the JWT. */
@@ -96,10 +105,7 @@ export const authOptions: NextAuthOptions = {
           // through as `user.id` and replayed verbatim as the Bearer token by the BFF proxies.
           const data = await res.json();
           if (data && data.token) {
-            const role =
-              data.authorities && data.authorities.includes("ROLE_ADMIN")
-                ? "admin"
-                : "user";
+            const role = data.authorities && data.authorities.includes("ROLE_ADMIN") ? "admin" : "user";
             return {
               id: data.token,
               name: data.username,
@@ -109,10 +115,7 @@ export const authOptions: NextAuthOptions = {
             };
           }
         } catch (error) {
-          console.error(
-            "NextAuth authorize error calling gateway login:",
-            error,
-          );
+          console.error("NextAuth authorize error calling gateway login:", error);
         }
         return null;
       },

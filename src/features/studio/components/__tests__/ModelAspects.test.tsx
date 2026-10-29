@@ -14,13 +14,36 @@ const schema = JSON.stringify({
   required: ["prompt"],
   properties: {
     prompt: { type: "string", title: "Prompt", maxLength: 2000 },
-    aspect: { type: "string", enum: ["9:16", "16:9", "1:1"], default: "9:16", title: "Format", "x-i18n": { en: { title: "Format", options: { "9:16": "Vertical 9:16", "16:9": "Wide 16:9", "1:1": "Square 1:1" } }, fr: { title: "Format", options: { "9:16": "Vertical 9:16", "16:9": "Large 16:9", "1:1": "Carré 1:1" } } } },
+    aspect: {
+      type: "string",
+      enum: ["9:16", "16:9", "1:1"],
+      default: "9:16",
+      title: "Format",
+      "x-i18n": {
+        en: { title: "Format", options: { "9:16": "Vertical 9:16", "16:9": "Wide 16:9", "1:1": "Square 1:1" } },
+        fr: { title: "Format", options: { "9:16": "Vertical 9:16", "16:9": "Large 16:9", "1:1": "Carré 1:1" } },
+      },
+    },
     model: {
       type: "string",
       title: "Model",
       default: "wan-hosted",
-      "x-options": { source: "models", category: "video", aspectField: "aspect", aspects: { "wan-hosted": ["16:9"], "wan-gpu": ["9:16", "16:9", "1:1"] } },
-      "x-i18n": { en: { title: "Model", options: { "wan-hosted": { label: "Wan hosted", hint: "h" }, "wan-gpu": { label: "Wan GPU", hint: "g" } } }, fr: { title: "Modèle", options: { "wan-hosted": { label: "Wan hébergé", hint: "h" }, "wan-gpu": { label: "Wan GPU", hint: "g" } } } },
+      "x-options": {
+        source: "models",
+        category: "video",
+        aspectField: "aspect",
+        aspects: { "wan-hosted": ["16:9"], "wan-gpu": ["9:16", "16:9", "1:1"] },
+      },
+      "x-i18n": {
+        en: {
+          title: "Model",
+          options: { "wan-hosted": { label: "Wan hosted", hint: "h" }, "wan-gpu": { label: "Wan GPU", hint: "g" } },
+        },
+        fr: {
+          title: "Modèle",
+          options: { "wan-hosted": { label: "Wan hébergé", hint: "h" }, "wan-gpu": { label: "Wan GPU", hint: "g" } },
+        },
+      },
       oneOf: [
         { const: "wan-hosted", title: "Wan hosted", "x-meta": { runsOn: "cloud", available: true } },
         { const: "wan-gpu", title: "Wan GPU", "x-meta": { runsOn: "local", available: true } },
@@ -31,7 +54,15 @@ const schema = JSON.stringify({
 
 const setup = () => {
   const onSubmit = jest.fn();
-  render(<RunForm studioKey="test-studio" inputSchema={schema} estimatedCredits={1} isSubmitting={false} onSubmit={onSubmit} />);
+  render(
+    <RunForm
+      studioKey="test-studio"
+      inputSchema={schema}
+      estimatedCredits={1}
+      isSubmitting={false}
+      onSubmit={onSubmit}
+    />,
+  );
   return onSubmit;
 };
 

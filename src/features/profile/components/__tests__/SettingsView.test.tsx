@@ -23,23 +23,45 @@ jest.mock("@/core/context/LocaleContext", () => ({
 }));
 jest.mock("@/features/profile/hooks/useProfile", () => ({
   useProfile: () => ({
-    profile: { id: "user-123", username: "testadmin", email: "admin@orazaka.io", authorities: mockAuthorities, preferences: {} },
+    profile: {
+      id: "user-123",
+      username: "testadmin",
+      email: "admin@orazaka.io",
+      authorities: mockAuthorities,
+      preferences: {},
+    },
     isLoading: false,
     error: null,
   }),
 }));
 jest.mock("@/features/profile/hooks/useProfileForm", () => ({
   useProfileForm: () => ({
-    form: {}, setField: jest.fn(), setLanguage: jest.fn(), setTheme: jest.fn(), availableThemes: [],
-    isLoading: false, isUpdating: false, isDirty: mockDirty, save: mockSave, discard: mockDiscard,
+    form: {},
+    setField: jest.fn(),
+    setLanguage: jest.fn(),
+    setTheme: jest.fn(),
+    availableThemes: [],
+    isLoading: false,
+    isUpdating: false,
+    isDirty: mockDirty,
+    save: mockSave,
+    discard: mockDiscard,
   }),
 }));
 jest.mock("@/features/profile/components/AccountTab", () => ({ AccountTab: () => <div data-testid="AccountTab" /> }));
-jest.mock("@/features/profile/components/AppearanceTab", () => ({ AppearanceTab: () => <div data-testid="AppearanceTab" /> }));
-jest.mock("@/features/profile/components/WorkspaceTab", () => ({ WorkspaceTab: () => <div data-testid="WorkspaceTab" /> }));
-jest.mock("@/features/profile/components/IntegrationsTab", () => ({ IntegrationsTab: () => <div data-testid="IntegrationsTab" /> }));
+jest.mock("@/features/profile/components/AppearanceTab", () => ({
+  AppearanceTab: () => <div data-testid="AppearanceTab" />,
+}));
+jest.mock("@/features/profile/components/WorkspaceTab", () => ({
+  WorkspaceTab: () => <div data-testid="WorkspaceTab" />,
+}));
+jest.mock("@/features/profile/components/IntegrationsTab", () => ({
+  IntegrationsTab: () => <div data-testid="IntegrationsTab" />,
+}));
 jest.mock("@/features/profile/components/ApiKeysTab", () => ({ ApiKeysTab: () => <div data-testid="ApiKeysTab" /> }));
-jest.mock("@/features/profile/components/WebhooksTab", () => ({ WebhooksTab: () => <div data-testid="WebhooksTab" /> }));
+jest.mock("@/features/profile/components/WebhooksTab", () => ({
+  WebhooksTab: () => <div data-testid="WebhooksTab" />,
+}));
 
 const t = translations.en;
 
@@ -81,7 +103,9 @@ describe("SettingsView (sub-nav + one section per route)", () => {
   it("hides the workspace from non-admins and sends their /settings/workspace to account", () => {
     mockAuthorities = ["ROLE_USER"];
     render(<SettingsView section="workspace" />);
-    expect(screen.getByRole("navigation", { name: t.profile.navLabel }).querySelector('a[href="/settings/workspace"]')).toBeNull();
+    expect(
+      screen.getByRole("navigation", { name: t.profile.navLabel }).querySelector('a[href="/settings/workspace"]'),
+    ).toBeNull();
     expect(mockReplace).toHaveBeenCalledWith("/settings/account");
   });
 

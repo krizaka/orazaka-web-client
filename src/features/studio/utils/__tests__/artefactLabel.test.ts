@@ -2,7 +2,13 @@ import { artefactLabel, attachArtefactLabels } from "@/features/studio/utils/art
 
 type Artefact = Parameters<typeof artefactLabel>[0];
 
-const artefact = { key: "image", label: "Votre image", type: "IMAGE", value: "x", labels: { en: "Your image", fr: "Votre image" } } as Artefact;
+const artefact = {
+  key: "image",
+  label: "Votre image",
+  type: "IMAGE",
+  value: "x",
+  labels: { en: "Your image", fr: "Votre image" },
+} as Artefact;
 
 describe("artefactLabel", () => {
   it("shows the label in the page's language when the pack wrote it", () => {
@@ -19,8 +25,17 @@ describe("artefactLabel", () => {
 
 describe("attachArtefactLabels", () => {
   it("puts back the per-language labels the shared schema strips when it parses a run", () => {
-    const parsed = { id: "r", outputs: [{ key: "image", label: "Votre image", type: "IMAGE", value: "x" }, { key: "seed", label: "Graine", type: "TEXT", value: "1" }] };
-    const raw = { id: "r", outputs: [{ key: "image", labels: { en: "Your image", fr: "Votre image" } }, { key: "seed" }] };
+    const parsed = {
+      id: "r",
+      outputs: [
+        { key: "image", label: "Votre image", type: "IMAGE", value: "x" },
+        { key: "seed", label: "Graine", type: "TEXT", value: "1" },
+      ],
+    };
+    const raw = {
+      id: "r",
+      outputs: [{ key: "image", labels: { en: "Your image", fr: "Votre image" } }, { key: "seed" }],
+    };
     const merged = attachArtefactLabels(parsed, raw);
     expect(artefactLabel(merged.outputs[0] as Artefact, "en")).toBe("Your image");
     expect(artefactLabel(merged.outputs[1] as Artefact, "en")).toBe("Graine");

@@ -5,8 +5,16 @@ import { z } from "zod";
  * the BFF (`/api/v1/**`, AGENTS.md §8): the most tool rounds a feature key may run in a turn, and the models each
  * feature routes to (read only). Responses are parsed: a screen that misreads a bound would show a wrong limit.
  */
-export const ToolBoundSchema = z.object({ featureKey: z.string(), maxToolRounds: z.number().int(), isDefault: z.boolean() });
-export const ToolBoundsSchema = z.object({ min: z.number().int(), max: z.number().int(), bounds: z.array(ToolBoundSchema) });
+export const ToolBoundSchema = z.object({
+  featureKey: z.string(),
+  maxToolRounds: z.number().int(),
+  isDefault: z.boolean(),
+});
+export const ToolBoundsSchema = z.object({
+  min: z.number().int(),
+  max: z.number().int(),
+  bounds: z.array(ToolBoundSchema),
+});
 export const FeatureRouteSchema = z.object({ featureKey: z.string(), models: z.array(z.string()) });
 
 export type ToolBound = z.infer<typeof ToolBoundSchema>;
@@ -26,7 +34,10 @@ export class FeatureToolsRefusal extends Error {
 const BASE = "/api/v1/models/admin";
 
 async function call(path: string, init?: RequestInit): Promise<unknown> {
-  const response = await fetch(path, { ...init, headers: { "Content-Type": "application/json", ...(init?.headers ?? {}) } });
+  const response = await fetch(path, {
+    ...init,
+    headers: { "Content-Type": "application/json", ...(init?.headers ?? {}) },
+  });
   if (!response.ok) {
     const detail = (await response.json().catch(() => null)) as { detail?: unknown; message?: unknown } | null;
     const text = [detail?.detail, detail?.message].find((v): v is string => typeof v === "string");
@@ -41,7 +52,12 @@ export const FeatureToolsApi = {
 
   /** Sets the bound of a feature; it applies on the next turn, with no restart. */
   save: async (featureKey: string, maxToolRounds: number): Promise<ToolBound> =>
-    ToolBoundSchema.parse(await call(`${BASE}/feature-tool-bounds/${encodeURIComponent(featureKey)}`, { method: "PUT", body: JSON.stringify({ maxToolRounds }) })),
+    ToolBoundSchema.parse(
+      await call(`${BASE}/feature-tool-bounds/${encodeURIComponent(featureKey)}`, {
+        method: "PUT",
+        body: JSON.stringify({ maxToolRounds }),
+      }),
+    ),
 
   /** Removes a feature's own bound so it follows the default row. */
   remove: async (featureKey: string): Promise<void> => {

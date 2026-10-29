@@ -24,7 +24,10 @@ interface ReadOptions {
 }
 
 /** The switches the page and the file route obey: the admin's setting when the edge answers, the environment default otherwise. */
-export async function readDownloads({ vars = process.env, fetcher = fetch }: ReadOptions = {}): Promise<DownloadSwitches> {
+export async function readDownloads({
+  vars = process.env,
+  fetcher = fetch,
+}: ReadOptions = {}): Promise<DownloadSwitches> {
   const fallback = readDownloadsFromEnv(vars);
   const configured = vars.ROUTER_URL || vars.GATEWAY_URL || "";
   const edge = configured.endsWith("/") ? configured.slice(0, -1) : configured;

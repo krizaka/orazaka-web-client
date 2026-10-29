@@ -50,9 +50,7 @@ const API_KEYS_KEY = ["api-keys"] as const;
  *
  * @param fetchHeaders - Async factory for authenticated request headers.
  */
-export function useApiKeys(
-  fetchHeaders: () => Promise<Record<string, string>>,
-): UseApiKeys {
+export function useApiKeys(fetchHeaders: () => Promise<Record<string, string>>): UseApiKeys {
   const [isCreateOpen, setCreateOpen] = React.useState(false);
   const [draftName, setDraftName] = React.useState("");
   const [isSaving, setIsSaving] = React.useState(false);

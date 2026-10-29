@@ -58,9 +58,7 @@ describe("ResultDisplay", () => {
 
   it("renders a raw URL as pre block", () => {
     render(<ResultDisplay payload="https://example.com/result" />);
-    expect(
-      screen.getByText("https://example.com/result"),
-    ).toBeInTheDocument();
+    expect(screen.getByText("https://example.com/result")).toBeInTheDocument();
   });
 
   it("renders an image when URL ends with .png", () => {
@@ -115,46 +113,30 @@ describe("ResultDisplay", () => {
   });
 
   it("renders content from object payload with format=mp4", () => {
-    render(
-      <ResultDisplay
-        payload={{ url: "https://example.com/clip.mp4", format: "mp4" }}
-      />,
-    );
+    render(<ResultDisplay payload={{ url: "https://example.com/clip.mp4", format: "mp4" }} />);
     const video = document.querySelector("video");
     expect(video).toBeInTheDocument();
   });
 
   it("renders content from object payload with format=png", () => {
-    render(
-      <ResultDisplay
-        payload={{ url: "https://example.com/img.png", format: "png" }}
-      />,
-    );
+    render(<ResultDisplay payload={{ url: "https://example.com/img.png", format: "png" }} />);
     const img = screen.getByAltText("Orazaka Framework Local AI Generation");
     expect(img).toBeInTheDocument();
   });
 
   it("renders content from object payload with format=mp3", () => {
-    render(
-      <ResultDisplay
-        payload={{ url: "https://example.com/audio.mp3", format: "mp3" }}
-      />,
-    );
+    render(<ResultDisplay payload={{ url: "https://example.com/audio.mp3", format: "mp3" }} />);
     const audio = document.querySelector("audio");
     expect(audio).toBeInTheDocument();
   });
 
   it("renders text content when no URL is provided", () => {
-    render(
-      <ResultDisplay payload={{ content: "Some text content" }} />,
-    );
+    render(<ResultDisplay payload={{ content: "Some text content" }} />);
     expect(screen.getByText("Some text content")).toBeInTheDocument();
   });
 
   it("renders analysis content when no URL is provided", () => {
-    render(
-      <ResultDisplay payload={{ analysis: "Analysis result here" }} />,
-    );
+    render(<ResultDisplay payload={{ analysis: "Analysis result here" }} />);
     expect(screen.getByText("Analysis result here")).toBeInTheDocument();
   });
 

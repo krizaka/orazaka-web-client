@@ -14,13 +14,24 @@ import type { TabKey } from "./JobModalParts";
 import { JOB_STATUS } from "@/core/constants/http.constants";
 
 /** A JSON block with its copy button (the @krizaka/ui icon button). */
-function JsonBlock({ text, copied, onCopy, label }: Readonly<{ text: string; copied: boolean; onCopy: () => void; label: string }>) {
+function JsonBlock({
+  text,
+  copied,
+  onCopy,
+  label,
+}: Readonly<{ text: string; copied: boolean; onCopy: () => void; label: string }>) {
   return (
     <section className="relative">
       <pre className="scrollbar-thin max-h-96 overflow-auto rounded-xl border border-border-subtle bg-surface-2 p-4 font-mono text-[11px] leading-relaxed text-fg">
         {text}
       </pre>
-      <IconButton variant="secondary" size="sm" className="absolute right-2 top-2 w-8 px-0" label={label} onClick={onCopy}>
+      <IconButton
+        variant="secondary"
+        size="sm"
+        className="absolute right-2 top-2 w-8 px-0"
+        label={label}
+        onClick={onCopy}
+      >
         {copied ? <CheckIcon size={14} className="text-fg-success" /> : <CopyIcon size={14} />}
       </IconButton>
     </section>
@@ -48,7 +59,9 @@ export const JobModal: React.FC<JobModalProps> = ({ job, modalType, onClose, cop
           <StatusPill status={job.status} />
           <div className="flex min-w-0 flex-col">
             <Dialog.Title className="text-base">{jobLabel(t, job)}</Dialog.Title>
-            <Dialog.Description className="truncate font-mono text-[11px]">{job.featureKey} · {job.id}</Dialog.Description>
+            <Dialog.Description className="truncate font-mono text-[11px]">
+              {job.featureKey} · {job.id}
+            </Dialog.Description>
           </div>
           <span className="ml-auto">
             <LiveElapsed createdAt={job.createdAt} updatedAt={job.updatedAt} isLive={isLive} />
@@ -64,9 +77,13 @@ export const JobModal: React.FC<JobModalProps> = ({ job, modalType, onClose, cop
           {/* @ephemeral: the result / payload switch of an open job modal, gone with the modal */}
           <Tabs.Root value={activeTab} onValueChange={(value) => setActiveTab(value as TabKey)} className="gap-4">
             <Tabs.List aria-label={jobLabel(t, job)}>
-              {job.status === JOB_STATUS.COMPLETED && <Tabs.Trigger value="result">{t.jobs.resultModalTitle}</Tabs.Trigger>}
+              {job.status === JOB_STATUS.COMPLETED && (
+                <Tabs.Trigger value="result">{t.jobs.resultModalTitle}</Tabs.Trigger>
+              )}
               <Tabs.Trigger value="payload">{t.jobs.payloadModalTitle}</Tabs.Trigger>
-              {job.status === JOB_STATUS.FAILED && job.errorMessage && <Tabs.Trigger value="error">{t.jobs.errorDetails}</Tabs.Trigger>}
+              {job.status === JOB_STATUS.FAILED && job.errorMessage && (
+                <Tabs.Trigger value="error">{t.jobs.errorDetails}</Tabs.Trigger>
+              )}
             </Tabs.List>
 
             <Tabs.Content value="result" className="flex flex-col gap-4">
@@ -74,17 +91,34 @@ export const JobModal: React.FC<JobModalProps> = ({ job, modalType, onClose, cop
                 <ResultDisplay payload={job.result} />
               </section>
               <details className="text-[11px] text-fg-muted">
-                <summary className="cursor-pointer select-none font-semibold hover:text-fg-secondary">{t.showcase.jobs.rawJson}</summary>
+                <summary className="cursor-pointer select-none font-semibold hover:text-fg-secondary">
+                  {t.showcase.jobs.rawJson}
+                </summary>
                 <div className="mt-2">
-                  <JsonBlock text={result} copied={copiedId === "modal-json"} onCopy={() => onCopy(result, "modal-json")} label={t.a11y.copy} />
+                  <JsonBlock
+                    text={result}
+                    copied={copiedId === "modal-json"}
+                    onCopy={() => onCopy(result, "modal-json")}
+                    label={t.a11y.copy}
+                  />
                 </div>
               </details>
             </Tabs.Content>
             <Tabs.Content value="payload">
-              <JsonBlock text={payload} copied={copiedId === "modal-json"} onCopy={() => onCopy(payload, "modal-json")} label={t.a11y.copy} />
+              <JsonBlock
+                text={payload}
+                copied={copiedId === "modal-json"}
+                onCopy={() => onCopy(payload, "modal-json")}
+                label={t.a11y.copy}
+              />
             </Tabs.Content>
             <Tabs.Content value="error">
-              <JsonBlock text={job.errorMessage ?? ""} copied={copiedId === "modal-json"} onCopy={() => onCopy(job.errorMessage ?? "", "modal-json")} label={t.a11y.copy} />
+              <JsonBlock
+                text={job.errorMessage ?? ""}
+                copied={copiedId === "modal-json"}
+                onCopy={() => onCopy(job.errorMessage ?? "", "modal-json")}
+                label={t.a11y.copy}
+              />
             </Tabs.Content>
           </Tabs.Root>
         </Dialog.Body>

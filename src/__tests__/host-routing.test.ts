@@ -39,7 +39,13 @@ describe("routeFor (pure)", () => {
     expect(routeFor("admin.orazaka.com", "/console/studios")).toEqual({ kind: "notFound" });
   });
   it("answers 404 for /console on any other host", () => {
-    for (const p of ["/console", "/console/", "/console/users", "/console/api/v1/billing/plans", "/console/api/auth/session"]) {
+    for (const p of [
+      "/console",
+      "/console/",
+      "/console/users",
+      "/console/api/v1/billing/plans",
+      "/console/api/auth/session",
+    ]) {
       expect(routeFor("dev.orazaka.com", p)).toEqual({ kind: "notFound" });
     }
     expect(routeFor("dev.orazaka.com", "/consoles")).toEqual({ kind: "next" });
@@ -47,12 +53,16 @@ describe("routeFor (pure)", () => {
 });
 
 describe("public host", () => {
-  it.each(["/console", "/console/users", "/console/login", "/console/api/v1/billing/plans", "/console/api/auth/session", "/console/robots.txt"])(
-    "never serves the admin tree: 404 on %s",
-    (path) => {
-      expect(call("dev.orazaka.com", path, { ip: ALLOWED }).status).toBe(404);
-    },
-  );
+  it.each([
+    "/console",
+    "/console/users",
+    "/console/login",
+    "/console/api/v1/billing/plans",
+    "/console/api/auth/session",
+    "/console/robots.txt",
+  ])("never serves the admin tree: 404 on %s", (path) => {
+    expect(call("dev.orazaka.com", path, { ip: ALLOWED }).status).toBe(404);
+  });
   it.each(["/", "/docs", "/login", "/desktop", "/api/healthz"])("is unaffected: %s passes", (path) => {
     const res = call("dev.orazaka.com", path);
     expect(res.status).toBe(200);
@@ -71,7 +81,10 @@ describe("admin host", () => {
     }
   });
   it("refuses everybody in production when the allow-list is empty, and when the edge sends no address", () => {
-    expect(call("admin.orazaka.com", "/login", { ip: ALLOWED, env: { AUTH_ALLOWED_IPS: "", NODE_ENV: "production" } }).status).toBe(403);
+    expect(
+      call("admin.orazaka.com", "/login", { ip: ALLOWED, env: { AUTH_ALLOWED_IPS: "", NODE_ENV: "production" } })
+        .status,
+    ).toBe(403);
     expect(call("admin.orazaka.com", "/login", { env: { NODE_ENV: "production" } }).status).toBe(403);
   });
   it("lets an allowed address reach the console: the login page is rewritten under /console", () => {
@@ -86,16 +99,25 @@ describe("admin host", () => {
     expect(res.headers.get("location")).toBe("https://admin.orazaka.com/login?callbackUrl=%2Fstudios");
   });
   it("accepts only the console's own session cookie, not the public host's", () => {
-    expect(call("admin.orazaka.com", "/studios", { ip: ALLOWED, cookie: "next-auth.session-token=x" }).status).toBe(307);
+    expect(call("admin.orazaka.com", "/studios", { ip: ALLOWED, cookie: "next-auth.session-token=x" }).status).toBe(
+      307,
+    );
     const res = call("admin.orazaka.com", "/studios", { ip: ALLOWED, cookie: "orazaka-admin.session-token=x" });
     expect(rewritten(res)).toContain("/console/studios");
   });
   it("rewrites the BFF routes under /console too, and answers 404 while the console sign-in is closed", () => {
-    expect(rewritten(call("admin.orazaka.com", "/api/v1/billing/plans", { ip: ALLOWED }))).toContain("/console/api/v1/billing/plans");
-    expect(call("admin.orazaka.com", "/api/v1/billing/plans", { ip: ALLOWED, env: { AUTH_CONSOLE_LOGIN_ENABLED: "false" } }).status).toBe(404);
+    expect(rewritten(call("admin.orazaka.com", "/api/v1/billing/plans", { ip: ALLOWED }))).toContain(
+      "/console/api/v1/billing/plans",
+    );
+    expect(
+      call("admin.orazaka.com", "/api/v1/billing/plans", { ip: ALLOWED, env: { AUTH_CONSOLE_LOGIN_ENABLED: "false" } })
+        .status,
+    ).toBe(404);
   });
   it("is not opened or closed by the public site's flag (separate flag)", () => {
-    expect(call("admin.orazaka.com", "/api/auth/session", { ip: ALLOWED, env: { AUTH_LOGIN_ENABLED: "false" } }).status).toBe(200);
+    expect(
+      call("admin.orazaka.com", "/api/auth/session", { ip: ALLOWED, env: { AUTH_LOGIN_ENABLED: "false" } }).status,
+    ).toBe(200);
   });
   it("answers 404 for an explicit /console path; the public SEO files are looked for under /console, where they do not exist", () => {
     expect(call("admin.orazaka.com", "/console/users", { ip: ALLOWED }).status).toBe(404);

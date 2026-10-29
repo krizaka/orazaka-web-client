@@ -15,7 +15,10 @@ import { RuleEditor } from "@/console/features/law/components/RuleEditor";
 
 const approveForm = createKrizakaForm({ schema: z.object({ note: z.string() }), defaultValues: { note: "" } });
 // The reason as typed is what is sent: the check reads the original, the server refuses a blank one as well.
-const rejectForm = createKrizakaForm({ schema: z.object({ reason: z.string().refine(hasText, "law.reason") }), defaultValues: { reason: "" } });
+const rejectForm = createKrizakaForm({
+  schema: z.object({ reason: z.string().refine(hasText, "law.reason") }),
+  defaultValues: { reason: "" },
+});
 
 interface ActionProps {
   proposal: RuleProposal;
@@ -38,7 +41,9 @@ function ApproveForm({ proposal, onDone }: Readonly<ActionProps>) {
   return (
     <form.Form aria-label={`${a.approve} ${proposal.ruleId}`} className="flex flex-col gap-2">
       <form.TextArea name="note" label={a.approveNote} rows={2} />
-      <form.Submit variant="primary" size="sm">{a.approve}</form.Submit>
+      <form.Submit variant="primary" size="sm">
+        {a.approve}
+      </form.Submit>
     </form.Form>
   );
 }
@@ -61,7 +66,9 @@ function RejectForm({ proposal, onDone }: Readonly<ActionProps>) {
   return (
     <form.Form aria-label={`${a.reject} ${proposal.ruleId}`} className="flex flex-col gap-2">
       <form.TextArea name="reason" label={a.rejectReason} rows={2} />
-      <form.Submit variant="danger" size="sm">{a.reject}</form.Submit>
+      <form.Submit variant="danger" size="sm">
+        {a.reject}
+      </form.Submit>
     </form.Form>
   );
 }
@@ -72,7 +79,9 @@ function EditDialog({ proposal, onDone }: Readonly<ActionProps>) {
   const [open, setOpen] = React.useState(false);
   return (
     <Dialog.Root open={open} onOpenChange={setOpen}>
-      <Button variant="secondary" size="sm" onClick={() => setOpen(true)}>{a.edit}</Button>
+      <Button variant="secondary" size="sm" onClick={() => setOpen(true)}>
+        {a.edit}
+      </Button>
       <Dialog.Content closeLabel={a.cancel}>
         <Dialog.Header>
           <Dialog.Title>{fill(a.editTitle, { ruleId: proposal.ruleId })}</Dialog.Title>

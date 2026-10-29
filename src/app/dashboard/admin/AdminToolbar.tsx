@@ -35,9 +35,7 @@ export const AdminToolbar: React.FC<AdminToolbarProps> = ({
           <Icon name="sliders" className="h-8 w-8 text-warning" />
           {t.admin.title}
         </h2>
-        <p className="text-fg-secondary text-sm">
-          {t.admin.subtitle}
-        </p>
+        <p className="text-fg-secondary text-sm">{t.admin.subtitle}</p>
       </div>
       <div className="flex items-center space-x-2">
         <Button
@@ -45,9 +43,7 @@ export const AdminToolbar: React.FC<AdminToolbarProps> = ({
           onClick={onRefresh}
           className="rounded-xl flex items-center space-x-2 text-sm font-semibold border-border-subtle transition-colors hover:bg-surface-1"
         >
-          <Icon name="refresh"
-            className={cn("w-4 h-4", loadingModels ? "animate-spin" : "")}
-          />
+          <Icon name="refresh" className={cn("w-4 h-4", loadingModels ? "animate-spin" : "")} />
           <span>{t.admin.refresh}</span>
         </Button>
         <Button
@@ -64,7 +60,13 @@ export const AdminToolbar: React.FC<AdminToolbarProps> = ({
       <div className="p-4 bg-danger/20 border border-danger/50 rounded-2xl flex items-start gap-3 text-danger">
         <Icon name="warning" className="h-5 w-5 flex-shrink-0 mt-0.5" />
         <div className="text-sm font-medium flex-1">{errorMessage}</div>
-        <IconButton variant="ghost" size="sm" className="h-6 w-6 px-0" onClick={onClearError} label={t.a11y.closeDetails}>
+        <IconButton
+          variant="ghost"
+          size="sm"
+          className="h-6 w-6 px-0"
+          onClick={onClearError}
+          label={t.a11y.closeDetails}
+        >
           <Icon name="close" className="h-4 w-4" />
         </IconButton>
       </div>

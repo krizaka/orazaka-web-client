@@ -43,17 +43,13 @@ describe("AppearanceOption", () => {
   });
 
   it("shows checkmark when active", () => {
-    const { container } = render(
-      <Option {...defaultProps} isActive={true} />,
-    );
+    const { container } = render(<Option {...defaultProps} isActive={true} />);
     const mark = container.querySelector("mark");
     expect(mark).toBeInTheDocument();
   });
 
   it("does not show checkmark when not active", () => {
-    const { container } = render(
-      <Option {...defaultProps} isActive={false} />,
-    );
+    const { container } = render(<Option {...defaultProps} isActive={false} />);
     const mark = container.querySelector("mark");
     expect(mark).not.toBeInTheDocument();
   });

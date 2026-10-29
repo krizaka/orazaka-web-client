@@ -6,8 +6,21 @@ const report = {
   source: "Loi n° 89-462",
   summary: { byVerdict: { PASS: 1, FAIL: 1 } },
   findings: [
-    { ruleId: "R-1", title: "Parties identified", verdict: "PASS", explanation: "The landlord is named.", citation: "art. 3" },
-    { ruleId: "R-5", title: "Deposit capped", verdict: "FAIL", explanation: "Two months.", evidenceSpan: { quote: "deposit of 1 960 €" }, citation: "art. 22" },
+    {
+      ruleId: "R-1",
+      title: "Parties identified",
+      verdict: "PASS",
+      explanation: "The landlord is named.",
+      citation: "art. 3",
+    },
+    {
+      ruleId: "R-5",
+      title: "Deposit capped",
+      verdict: "FAIL",
+      explanation: "Two months.",
+      evidenceSpan: { quote: "deposit of 1 960 €" },
+      citation: "art. 22",
+    },
   ],
 };
 

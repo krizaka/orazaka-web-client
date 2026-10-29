@@ -99,10 +99,7 @@ export function usePacks(locale: string, errorMessage: string): PacksState {
     [errorMessage, load],
   );
 
-  const ownedKeys = useMemo(
-    () => new Set(held.map((subscription) => subscription.packKey)),
-    [held],
-  );
+  const ownedKeys = useMemo(() => new Set(held.map((subscription) => subscription.packKey)), [held]);
 
   return {
     packs,

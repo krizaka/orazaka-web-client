@@ -32,7 +32,15 @@ export function WebhooksSection({ fetchHeaders }: Readonly<WebhooksSectionProps>
 
   const columns = React.useMemo<DataTableColumn<WebhookEndpoint>[]>(
     () => [
-      { id: "url", header: w.columns.url, type: "title", filter: "text", sortable: true, value: (e) => e.url, cell: (e) => <code className="break-all font-mono text-xs">{e.url}</code> },
+      {
+        id: "url",
+        header: w.columns.url,
+        type: "title",
+        filter: "text",
+        sortable: true,
+        value: (e) => e.url,
+        cell: (e) => <code className="break-all font-mono text-xs">{e.url}</code>,
+      },
       {
         id: "events",
         header: w.columns.events,
@@ -55,7 +63,11 @@ export function WebhooksSection({ fetchHeaders }: Readonly<WebhooksSectionProps>
         type: "date",
         sortable: true,
         value: (e) => new Date(e.createdAt),
-        cell: (e) => <time dateTime={e.createdAt}>{formatDistanceToNow(new Date(e.createdAt), { addSuffix: true, locale: dateLocale })}</time>,
+        cell: (e) => (
+          <time dateTime={e.createdAt}>
+            {formatDistanceToNow(new Date(e.createdAt), { addSuffix: true, locale: dateLocale })}
+          </time>
+        ),
       },
       {
         id: "actions",
@@ -173,7 +185,9 @@ export function WebhooksSection({ fetchHeaders }: Readonly<WebhooksSectionProps>
             <Dialog.Title>{w.revealTitle}</Dialog.Title>
             <Dialog.Description>{hook.revealed?.url}</Dialog.Description>
           </Dialog.Header>
-          <Dialog.Body>{hook.revealed && <RevealSecret secret={hook.revealed.secret} onDone={hook.dismissRevealed} />}</Dialog.Body>
+          <Dialog.Body>
+            {hook.revealed && <RevealSecret secret={hook.revealed.secret} onDone={hook.dismissRevealed} />}
+          </Dialog.Body>
         </Dialog.Content>
       </Dialog.Root>
 

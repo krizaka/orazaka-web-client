@@ -29,7 +29,16 @@ export function BarActions({ placement }: Readonly<{ placement: "bar" | "panel" 
 
   // Loading is neither state (krizaka-ui#800): a signed-in person never sees « Sign in » flash before the avatar. The place is reserved.
   // With the proxy's hint (a session cookie exists, krizaka-ui#827) the reserved place is the account's own size.
-  if (loading) return <span data-testid="bar-session" data-session="pending" data-hint={hinted ? "signed-in" : undefined} aria-hidden="true" className={hinted ? "inline-block size-9 rounded-full bg-surface-2" : "inline-block h-9 min-w-24"} />;
+  if (loading)
+    return (
+      <span
+        data-testid="bar-session"
+        data-session="pending"
+        data-hint={hinted ? "signed-in" : undefined}
+        aria-hidden="true"
+        className={hinted ? "inline-block size-9 rounded-full bg-surface-2" : "inline-block h-9 min-w-24"}
+      />
+    );
 
   if (isAuthenticated) {
     const initial = ((user?.name || user?.email || "U")[0] ?? "U").toUpperCase();
@@ -41,7 +50,12 @@ export function BarActions({ placement }: Readonly<{ placement: "bar" | "panel" 
           defaultAvatar={{ brand: "orazaka", seed: user?.id ?? user?.email ?? user?.name ?? undefined }}
           fallback={initial}
         />
-        <Button asChild variant="primary" size={panel ? "md" : "sm"} className={panel ? "mt-2 w-full font-bold" : "ml-1 hidden font-bold md:inline-flex"}>
+        <Button
+          asChild
+          variant="primary"
+          size={panel ? "md" : "sm"}
+          className={panel ? "mt-2 w-full font-bold" : "ml-1 hidden font-bold md:inline-flex"}
+        >
           <Link href="/">{n.openApp}</Link>
         </Button>
       </>

@@ -35,9 +35,7 @@ describe("ChatMessage", () => {
   });
 
   it("renders the brand mark (no 'AI' text) for assistant messages", () => {
-    const { container } = render(
-      <ChatMessage message={{ ...baseMsg, role: "assistant" }} />,
-    );
+    const { container } = render(<ChatMessage message={{ ...baseMsg, role: "assistant" }} />);
     expect(screen.queryByText("AI")).not.toBeInTheDocument();
     expect(container.querySelector("svg")).toBeInTheDocument();
   });
@@ -49,9 +47,7 @@ describe("ChatMessage", () => {
   });
 
   it("renders image content for image kind", () => {
-    render(
-      <ChatMessage message={{ ...baseMsg, kind: "image", content: "data:image/png;base64,abc" }} />,
-    );
+    render(<ChatMessage message={{ ...baseMsg, kind: "image", content: "data:image/png;base64,abc" }} />);
     const img = screen.getByAltText("Generated Asset");
     expect(img).toBeInTheDocument();
     expect(img).toHaveAttribute("src", "data:image/png;base64,abc");
@@ -81,9 +77,7 @@ describe("ChatMessage", () => {
 
     it("shows the degraded badge with its explanation", () => {
       render(
-        <ChatMessage
-          message={{ ...answer, control: { state: "degraded", badge: "verification_unavailable" } }}
-        />,
+        <ChatMessage message={{ ...answer, control: { state: "degraded", badge: "verification_unavailable" } }} />,
       );
       const badge = screen.getByTestId("chat-control-unavailable");
       expect(badge).toHaveTextContent("Verification unavailable");

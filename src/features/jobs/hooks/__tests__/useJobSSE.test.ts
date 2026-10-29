@@ -76,10 +76,9 @@ describe("useJobSSE", () => {
       onJobEvent: jest.fn(),
       getJobs: jest.fn().mockReturnValue([]),
     };
-    const { rerender } = renderHook(
-      ({ auth, active }) => useJobSSE(auth, active, callbacks),
-      { initialProps: { auth: true, active: true } }
-    );
+    const { rerender } = renderHook(({ auth, active }) => useJobSSE(auth, active, callbacks), {
+      initialProps: { auth: true, active: true },
+    });
     expect(MockEventSource.instances).toHaveLength(1);
     const es = MockEventSource.instances[0];
 
@@ -181,7 +180,10 @@ describe("useJobSSE", () => {
     renderHook(() => useJobSSE(true, true, callbacks));
     const es = MockEventSource.instances[0];
     act(() => {
-      es.dispatchEvent("job-progress", JSON.stringify({ jobId: "j1", progress: 40, phase: "generating", step: 4, steps: 10 }));
+      es.dispatchEvent(
+        "job-progress",
+        JSON.stringify({ jobId: "j1", progress: 40, phase: "generating", step: 4, steps: 10 }),
+      );
     });
     expect(callbacks.onJobProgress).toHaveBeenCalledWith("j1", 40, { phase: "generating", step: 4, steps: 10 });
   });
@@ -191,9 +193,7 @@ describe("useJobSSE", () => {
       onJobUpdate: jest.fn(),
       onJobProgress: jest.fn(),
       onJobEvent: jest.fn(),
-      getJobs: jest.fn().mockReturnValue([
-        { id: "j2", status: "PROCESSING" }
-      ]),
+      getJobs: jest.fn().mockReturnValue([{ id: "j2", status: "PROCESSING" }]),
     };
     renderHook(() => useJobSSE(true, true, callbacks));
     const es = MockEventSource.instances[0];
@@ -216,7 +216,11 @@ describe("useJobSSE", () => {
     act(() => {
       es.dispatchEvent("job-progress", JSON.stringify({ jobId: "j1", progress: 50 }));
     });
-    expect(callbacks.onJobProgress).toHaveBeenCalledWith("j1", 50, { phase: undefined, step: undefined, steps: undefined });
+    expect(callbacks.onJobProgress).toHaveBeenCalledWith("j1", 50, {
+      phase: undefined,
+      step: undefined,
+      steps: undefined,
+    });
   });
 
   it("handles JSON parsing errors gracefully", () => {
@@ -229,7 +233,7 @@ describe("useJobSSE", () => {
     renderHook(() => useJobSSE(true, true, callbacks));
     const es = MockEventSource.instances[0];
     const consoleErrorSpy = jest.spyOn(console, "error").mockImplementation(() => {});
-    
+
     act(() => {
       es.dispatchEvent("job-status", "invalid json");
       es.dispatchEvent("job-progress", "invalid json");
@@ -265,7 +269,7 @@ describe("useJobSSE", () => {
     }
 
     expect(es.close).toHaveBeenCalled();
-    
+
     // Fast forward reconnect timer
     act(() => {
       jest.advanceTimersByTime(2000);

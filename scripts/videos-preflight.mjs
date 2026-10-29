@@ -31,7 +31,11 @@ export function toolVerdict(tools, name) {
   if (!Array.isArray(tools)) return { ok: false, message: "the engine's tool list is not an array" };
   const names = tools.map((t) => t?.name).filter(Boolean);
   const tool = tools.find((t) => t?.name === name);
-  if (!tool) return { ok: false, message: `the tool ${name} is not offered to the persona (offered: ${names.join(", ") || "none"})` };
+  if (!tool)
+    return {
+      ok: false,
+      message: `the tool ${name} is not offered to the persona (offered: ${names.join(", ") || "none"})`,
+    };
   let schema = tool.inputSchema;
   try {
     if (typeof schema === "string") schema = JSON.parse(schema);
@@ -39,14 +43,18 @@ export function toolVerdict(tools, name) {
     return { ok: false, message: `the tool ${name} has an unreadable input schema` };
   }
   if (!schema?.required?.includes?.("query") || schema?.properties?.query?.type !== "string") {
-    return { ok: false, message: `the tool ${name} does not take a required string \`query\` (the recorded prompt gives it one)` };
+    return {
+      ok: false,
+      message: `the tool ${name} does not take a required string \`query\` (the recorded prompt gives it one)`,
+    };
   }
   return { ok: true, message: `the tool ${name} is offered (offered: ${names.join(", ")})` };
 }
 
 /** The persona's API sign-in. @returns {{ ok: boolean, message: string }} */
 export function loginVerdict(status, hasToken) {
-  if (status !== 200) return { ok: false, message: `the persona sign-in on the edge answered HTTP ${status} (expected 200)` };
+  if (status !== 200)
+    return { ok: false, message: `the persona sign-in on the edge answered HTTP ${status} (expected 200)` };
   if (!hasToken) return { ok: false, message: "the persona sign-in on the edge answered 200 without a token" };
   return { ok: true, message: "the persona signs in on the edge" };
 }
@@ -54,7 +62,8 @@ export function loginVerdict(status, hasToken) {
 /** The persona's web sign-in (the same check as orazaka's dev-persona-smoke). @returns {{ ok: boolean, message: string }} */
 export function webVerdict(status, session, email) {
   if (status !== 200) return { ok: false, message: `the web sign-in answered HTTP ${status} (expected 200)` };
-  if (session?.user?.email?.toLowerCase() !== email.toLowerCase()) return { ok: false, message: "the web sign-in gave no session for the persona (the web cannot reach the router?)" };
+  if (session?.user?.email?.toLowerCase() !== email.toLowerCase())
+    return { ok: false, message: "the web sign-in gave no session for the persona (the web cannot reach the router?)" };
   return { ok: true, message: "the persona signs in on the web" };
 }
 
@@ -66,17 +75,29 @@ export function webVerdict(status, session, email) {
  * @returns {{ ok: boolean, message: string }}
  */
 export function rollbackVerdict(deployments, required) {
-  if (!deployments) return { ok: !required, message: `rollback guard NOT VERIFIED (no DigitalOcean access)${required ? ": refused" : ""}` };
+  if (!deployments)
+    return {
+      ok: !required,
+      message: `rollback guard NOT VERIFIED (no DigitalOcean access)${required ? ": refused" : ""}`,
+    };
   const active = deployments.find((d) => d.phase === "ACTIVE");
   if (!active) return { ok: false, message: "no ACTIVE deployment" };
-  if (/rollback/i.test(active.cause)) return { ok: false, message: `dev runs an automated rollback (${active.id.slice(0, 8)})` };
-  const failedAfter = deployments.find((d) => d.phase === "ERROR" && Date.parse(d.created_at) > Date.parse(active.created_at));
-  if (failedAfter) return { ok: false, message: `deployment ${failedAfter.id.slice(0, 8)} failed after the active one (${active.id.slice(0, 8)})` };
+  if (/rollback/i.test(active.cause))
+    return { ok: false, message: `dev runs an automated rollback (${active.id.slice(0, 8)})` };
+  const failedAfter = deployments.find(
+    (d) => d.phase === "ERROR" && Date.parse(d.created_at) > Date.parse(active.created_at),
+  );
+  if (failedAfter)
+    return {
+      ok: false,
+      message: `deployment ${failedAfter.id.slice(0, 8)} failed after the active one (${active.id.slice(0, 8)})`,
+    };
   return { ok: true, message: `the active deployment ${active.id.slice(0, 8)} is not a rollback` };
 }
 
 const PROOF_REPO = "krizaka/orazaka-conversation-service";
-const PROOF_TEST = "src/test/java/com/krizaka/orazaka/conversationservice/infrastructure/adapter/rest/ToolCallStreamPathTest.java";
+const PROOF_TEST =
+  "src/test/java/com/krizaka/orazaka/conversationservice/infrastructure/adapter/rest/ToolCallStreamPathTest.java";
 
 /**
  * The free proof that a streamed turn emits a `tool-call` event (orazaka-ai-engine#169): three paid runs came back without one,
@@ -87,16 +108,28 @@ const PROOF_TEST = "src/test/java/com/krizaka/orazaka/conversationservice/infras
  */
 export function toolPathVerdict({ ciConclusion, proofCommittedAt, coreDeployedAt }, required) {
   if (!proofCommittedAt) {
-    return { ok: false, message: "the tool-call proof (ToolCallStreamPathTest) is not on main of conversation-service" };
+    return {
+      ok: false,
+      message: "the tool-call proof (ToolCallStreamPathTest) is not on main of conversation-service",
+    };
   }
   if (ciConclusion !== "success") {
-    return { ok: false, message: `conversation-service CI on main is ${ciConclusion ?? "unreadable"}, not success: the tool-call proof is not green` };
+    return {
+      ok: false,
+      message: `conversation-service CI on main is ${ciConclusion ?? "unreadable"}, not success: the tool-call proof is not green`,
+    };
   }
   if (!coreDeployedAt) {
-    return { ok: !required, message: `tool-call proof green on main; the build dev runs NOT VERIFIED (no DigitalOcean access)${required ? ": refused" : ""}` };
+    return {
+      ok: !required,
+      message: `tool-call proof green on main; the build dev runs NOT VERIFIED (no DigitalOcean access)${required ? ": refused" : ""}`,
+    };
   }
   if (Date.parse(coreDeployedAt) < Date.parse(proofCommittedAt)) {
-    return { ok: false, message: `dev's core was deployed (${coreDeployedAt}) before the tool-call proof (${proofCommittedAt}): redeploy first` };
+    return {
+      ok: false,
+      message: `dev's core was deployed (${coreDeployedAt}) before the tool-call proof (${proofCommittedAt}): redeploy first`,
+    };
   }
   return { ok: true, message: "the tool-call proof is green on main and dev runs a build made after it" };
 }
@@ -105,7 +138,9 @@ export function toolPathVerdict({ ciConclusion, proofCommittedAt, coreDeployedAt
 async function toolPathFacts(coreDeployedAt) {
   const get = async (path) => {
     try {
-      const res = await fetch(`https://api.github.com/repos/${PROOF_REPO}/${path}`, { headers: { Accept: "application/vnd.github+json" } });
+      const res = await fetch(`https://api.github.com/repos/${PROOF_REPO}/${path}`, {
+        headers: { Accept: "application/vnd.github+json" },
+      });
       return res.ok ? await res.json() : null;
     } catch {
       return null;
@@ -164,7 +199,12 @@ async function deployments(token) {
     const id = apps.apps?.find((a) => a.spec?.name === APP_NAME)?.id;
     if (!id) return null;
     const list = await (await fetch(`${DO_API}/apps/${id}/deployments?per_page=10`, { headers })).json();
-    return (list.deployments ?? []).map((d) => ({ id: d.id, created_at: d.created_at, cause: d.cause ?? "", phase: d.phase }));
+    return (list.deployments ?? []).map((d) => ({
+      id: d.id,
+      created_at: d.created_at,
+      cause: d.cause ?? "",
+      phase: d.phase,
+    }));
   } catch {
     return null;
   }
@@ -177,22 +217,33 @@ async function main(args) {
   const pass = process.env.ORAZAKA_USER_PASSWORD;
   if (!email || !pass) throw new Error("ORAZAKA_USER_EMAIL and ORAZAKA_USER_PASSWORD are required (the demo persona)");
   const checks = {};
-  const res = await fetch(`${base}/edge/api/v1/auth/login`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ email, password: pass }) });
+  const res = await fetch(`${base}/edge/api/v1/auth/login`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email, password: pass }),
+  });
   const body = res.ok ? await res.json().catch(() => ({})) : {};
   checks["edge sign-in"] = loginVerdict(res.status, Boolean(body.token));
   if (body.token) {
     const list = await fetch(`${base}/edge/api/v1/mcp/tools`, { headers: { Authorization: `Bearer ${body.token}` } });
-    checks[`tool ${PROOF_TOOL}`] = list.ok ? toolVerdict(await list.json().catch(() => null), PROOF_TOOL) : { ok: false, message: `the tool list answered HTTP ${list.status}` };
+    checks[`tool ${PROOF_TOOL}`] = list.ok
+      ? toolVerdict(await list.json().catch(() => null), PROOF_TOOL)
+      : { ok: false, message: `the tool list answered HTTP ${list.status}` };
   } else {
     checks[`tool ${PROOF_TOOL}`] = { ok: false, message: "not checked (no sign-in)" };
   }
-  checks["web sign-in"] = await webSignIn(base, email, pass).catch((e) => ({ ok: false, message: `the web sign-in failed: ${e.message}` }));
+  checks["web sign-in"] = await webSignIn(base, email, pass).catch((e) => ({
+    ok: false,
+    message: `the web sign-in failed: ${e.message}`,
+  }));
   const deployed = await deployments(process.env.DIGITALOCEAN_ACCESS_TOKEN);
   checks["rollback guard"] = rollbackVerdict(deployed, args.includes("--require-rollback-guard"));
   const activeAt = deployed?.find((d) => d.phase === "ACTIVE")?.created_at ?? null;
   checks["tool-call proof"] = toolPathVerdict(await toolPathFacts(activeAt), args.includes("--require-tool-proof"));
   const r = report(checks);
-  process.stdout.write(`${r.lines.join("\n")}\n${r.ok ? "preflight green: a paid run may start" : "preflight RED: no paid step runs"}\n`);
+  process.stdout.write(
+    `${r.lines.join("\n")}\n${r.ok ? "preflight green: a paid run may start" : "preflight RED: no paid step runs"}\n`,
+  );
   if (!r.ok) process.exitCode = 1;
 }
 

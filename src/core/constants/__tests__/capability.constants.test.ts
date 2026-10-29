@@ -27,9 +27,7 @@ describe("resolveProviderFromFeature", () => {
   });
 
   test("resolves image provider", () => {
-    expect(resolveProviderFromFeature("ai.image.generate")).toBe(
-      "localai-image",
-    );
+    expect(resolveProviderFromFeature("ai.image.generate")).toBe("localai-image");
   });
 
   test("resolves speech provider", () => {
@@ -86,21 +84,15 @@ describe("resolveDefaultModel", () => {
   });
 
   test("resolves video analysis to whisper", () => {
-    expect(resolveDefaultModel("media.video.analysis")).toBe(
-      DEFAULT_MODEL.AUDIO_TRANSCRIPTION,
-    );
+    expect(resolveDefaultModel("media.video.analysis")).toBe(DEFAULT_MODEL.AUDIO_TRANSCRIPTION);
   });
 
   test("resolves video model", () => {
-    expect(resolveDefaultModel("media.video.generate")).toBe(
-      DEFAULT_MODEL.VIDEO,
-    );
+    expect(resolveDefaultModel("media.video.generate")).toBe(DEFAULT_MODEL.VIDEO);
   });
 
   test("resolves audio model", () => {
-    expect(resolveDefaultModel("media.audio")).toBe(
-      DEFAULT_MODEL.AUDIO_TRANSCRIPTION,
-    );
+    expect(resolveDefaultModel("media.audio")).toBe(DEFAULT_MODEL.AUDIO_TRANSCRIPTION);
   });
 
   test("resolves vision model", () => {

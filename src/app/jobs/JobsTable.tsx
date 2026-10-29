@@ -11,14 +11,29 @@ import { fill } from "@/core/context/fill";
 import { useTranslation } from "@/core/context/LocaleContext";
 import { jobLabel, jobMediaUrl } from "@/core/jobs/jobMedia";
 import { JOB_STATUS } from "@/core/constants/http.constants";
-import { formatDuration, jobFacts, modelOf, promptOf, studioOf, wallTimeMs, whereRan } from "@/features/jobs/utils/jobFacts";
+import {
+  formatDuration,
+  jobFacts,
+  modelOf,
+  promptOf,
+  studioOf,
+  wallTimeMs,
+  whereRan,
+} from "@/features/jobs/utils/jobFacts";
 import type { Job, JobStatus } from "@/core/types/jobs.types";
 import { JobDetail } from "./JobDetail";
 import { MODEL_NAMES } from "./modelNames";
 import { JobThumb } from "./JobThumb";
 
 const PAGE_SIZES = [10, 20, 50] as const;
-const TONE: Record<JobStatus, "neutral" | "accent" | "success" | "danger"> = { PENDING: "neutral", PROCESSING: "accent", COMPLETED: "success", FAILED: "danger", CANCELLED: "neutral", DELETED: "neutral" };
+const TONE: Record<JobStatus, "neutral" | "accent" | "success" | "danger"> = {
+  PENDING: "neutral",
+  PROCESSING: "accent",
+  COMPLETED: "success",
+  FAILED: "danger",
+  CANCELLED: "neutral",
+  DELETED: "neutral",
+};
 
 export interface JobsTableProps {
   jobs: Job[];
@@ -41,7 +56,19 @@ export interface JobsTableProps {
  * model (always a name), where it ran, the status, the real wall time, and what leaves the row as the table narrows goes to
  * its detail — grouped facts in words and units. Filters (search, status, model, where), sort, and the page the server sent.
  */
-export function JobsTable({ jobs, loading, totalElements, currentPage, pageSize, onPageChange, onPageSizeChange, onOpenModal, copiedId, onCopy, onDelete }: Readonly<JobsTableProps>) {
+export function JobsTable({
+  jobs,
+  loading,
+  totalElements,
+  currentPage,
+  pageSize,
+  onPageChange,
+  onPageSizeChange,
+  onOpenModal,
+  copiedId,
+  onCopy,
+  onDelete,
+}: Readonly<JobsTableProps>) {
   const { t, locale } = useTranslation();
   const d = t.jobsTable;
   const dateLocale = locale === "fr" ? fr : enUS;
@@ -51,7 +78,14 @@ export function JobsTable({ jobs, loading, totalElements, currentPage, pageSize,
     const model = (j: Job) => modelOf(j, MODEL_NAMES) ?? d.modelAuto;
     const where = (j: Job) => whereRan(j) ?? d.whereUnknown;
     return [
-      { id: "preview", header: d.columns.preview, priority: 1, hideable: false, width: 84, cell: (j) => <JobThumb job={j} /> },
+      {
+        id: "preview",
+        header: d.columns.preview,
+        priority: 1,
+        hideable: false,
+        width: 84,
+        cell: (j) => <JobThumb job={j} />,
+      },
       {
         id: "task",
         header: d.columns.task,
@@ -63,8 +97,27 @@ export function JobsTable({ jobs, loading, totalElements, currentPage, pageSize,
         cell: (j) => jobLabel(t, j),
         subtitle: (j) => studioOf(j) ?? j.id.slice(0, 8),
       },
-      { id: "model", header: d.columns.model, priority: 2, filter: "facet", sortable: true, type: "text", nowrap: true, value: model, cell: (j) => <span className="font-medium">{model(j)}</span> },
-      { id: "where", header: d.columns.where, priority: 3, filter: "facet", sortable: true, type: "text", nowrap: true, value: where },
+      {
+        id: "model",
+        header: d.columns.model,
+        priority: 2,
+        filter: "facet",
+        sortable: true,
+        type: "text",
+        nowrap: true,
+        value: model,
+        cell: (j) => <span className="font-medium">{model(j)}</span>,
+      },
+      {
+        id: "where",
+        header: d.columns.where,
+        priority: 3,
+        filter: "facet",
+        sortable: true,
+        type: "text",
+        nowrap: true,
+        value: where,
+      },
       {
         id: "status",
         header: d.columns.status,
@@ -86,7 +139,10 @@ export function JobsTable({ jobs, loading, totalElements, currentPage, pageSize,
         align: "end",
         sortable: true,
         value: (j) => wallTimeMs(j),
-        cell: (j) => (j.status === JOB_STATUS.PENDING || j.status === JOB_STATUS.PROCESSING ? d.running : formatDuration(wallTimeMs(j) ?? 0)),
+        cell: (j) =>
+          j.status === JOB_STATUS.PENDING || j.status === JOB_STATUS.PROCESSING
+            ? d.running
+            : formatDuration(wallTimeMs(j) ?? 0),
       },
       {
         id: "credits",
@@ -103,7 +159,11 @@ export function JobsTable({ jobs, loading, totalElements, currentPage, pageSize,
         type: "date",
         sortable: true,
         value: (j) => new Date(j.createdAt),
-        cell: (j) => <time dateTime={j.createdAt} title={j.createdAt}>{formatDistanceToNow(new Date(j.createdAt), { addSuffix: true, locale: dateLocale })}</time>,
+        cell: (j) => (
+          <time dateTime={j.createdAt} title={j.createdAt}>
+            {formatDistanceToNow(new Date(j.createdAt), { addSuffix: true, locale: dateLocale })}
+          </time>
+        ),
       },
       {
         id: "actions",
@@ -116,7 +176,12 @@ export function JobsTable({ jobs, loading, totalElements, currentPage, pageSize,
           const url = jobMediaUrl(j);
           return (
             <span className="inline-flex items-center gap-0.5">
-              <IconButton variant="ghost" size="sm" label={j.status === JOB_STATUS.COMPLETED ? d.actions.open : d.actions.payload} onClick={() => onOpenModal(j, j.status === JOB_STATUS.COMPLETED ? "result" : "payload")}>
+              <IconButton
+                variant="ghost"
+                size="sm"
+                label={j.status === JOB_STATUS.COMPLETED ? d.actions.open : d.actions.payload}
+                onClick={() => onOpenModal(j, j.status === JOB_STATUS.COMPLETED ? "result" : "payload")}
+              >
                 <EyeIcon size={15} />
               </IconButton>
               {url && (
@@ -126,7 +191,12 @@ export function JobsTable({ jobs, loading, totalElements, currentPage, pageSize,
                   </a>
                 </IconButton>
               )}
-              <IconButton variant="ghost" size="sm" label={copiedId === j.id ? d.actions.copied : d.actions.copyId} onClick={() => onCopy(j.id, j.id)}>
+              <IconButton
+                variant="ghost"
+                size="sm"
+                label={copiedId === j.id ? d.actions.copied : d.actions.copyId}
+                onClick={() => onCopy(j.id, j.id)}
+              >
                 {copiedId === j.id ? <CheckIcon size={15} /> : <CopyIcon size={15} />}
               </IconButton>
               {onDelete && (
@@ -173,7 +243,14 @@ export function JobsTable({ jobs, loading, totalElements, currentPage, pageSize,
         removeFilter: (label) => fill(d.removeFilter, { label }),
         activeFilter: (header, value) => fill(d.activeFilter, { header, value }),
         search: (header) => fill(d.search, { header }),
-        pagination: { nav: t.insights.pagination.nav, previous: t.jobs.previous, next: t.jobs.next, page: (page) => fill(t.insights.pagination.page, { page }), compact: (page, pageCount) => fill(t.insights.pagination.compact, { page, count: pageCount }), pageSize: t.insights.pagination.pageSize },
+        pagination: {
+          nav: t.insights.pagination.nav,
+          previous: t.jobs.previous,
+          next: t.jobs.next,
+          page: (page) => fill(t.insights.pagination.page, { page }),
+          compact: (page, pageCount) => fill(t.insights.pagination.compact, { page, count: pageCount }),
+          pageSize: t.insights.pagination.pageSize,
+        },
       }}
     />
   );

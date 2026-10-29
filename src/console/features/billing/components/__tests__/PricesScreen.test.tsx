@@ -5,8 +5,15 @@ import { pricesCopy } from "@/console/core/copy/prices";
 import { queryWrapper } from "@/core/testing/queryWrapper";
 
 const ENTRY = {
-  versionId: "v1", key: "orazaka.business", unit: "year", amountCents: 290000, currency: "CAD", taxes: "plus-taxes",
-  availability: "preparing", limits: {}, effectiveFrom: "2026-10-01T00:00:00Z",
+  versionId: "v1",
+  key: "orazaka.business",
+  unit: "year",
+  amountCents: 290000,
+  currency: "CAD",
+  taxes: "plus-taxes",
+  availability: "preparing",
+  limits: {},
+  effectiveFrom: "2026-10-01T00:00:00Z",
 };
 
 function mockFetch(handler: (url: string) => { status?: number; body: unknown }) {

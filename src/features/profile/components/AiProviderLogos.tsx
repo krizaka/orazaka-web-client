@@ -20,13 +20,7 @@ const ClaudeIcon = () => (
 );
 
 const OpenAIIcon = () => (
-  <svg
-    viewBox="0 0 24 24"
-    className="h-full w-full"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-  >
+  <svg viewBox="0 0 24 24" className="h-full w-full" fill="none" stroke="currentColor" strokeWidth="2">
     <circle cx="12" cy="12" r="9" />
     <circle cx="12" cy="12" r="3" />
     <line x1="12" y1="3" x2="12" y2="9" />
@@ -49,19 +43,10 @@ const GroqIcon = () => (
 
 const OllamaIcon = () => (
   <svg viewBox="0 0 24 24" className="h-full w-full" fill="currentColor">
-    <path
-      d="M12 4C8 4 5 7 5 10c0 2 1 3 2 4l-1 5h12l-1-5c1-1 2-2 2-4 0-3-3-6-7-6z"
-      opacity="0.2"
-    />
+    <path d="M12 4C8 4 5 7 5 10c0 2 1 3 2 4l-1 5h12l-1-5c1-1 2-2 2-4 0-3-3-6-7-6z" opacity="0.2" />
     <circle cx="9.5" cy="10" r="1.5" />
     <circle cx="14.5" cy="10" r="1.5" />
-    <path
-      d="M9 14c0 0 1.5 2 3 2s3-2 3-2"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.5"
-      strokeLinecap="round"
-    />
+    <path d="M9 14c0 0 1.5 2 3 2s3-2 3-2" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
   </svg>
 );
 
@@ -93,17 +78,12 @@ export const findProvider = (id: string): ProviderConfig | undefined =>
   PROVIDERS.find((provider) => provider.id === id);
 
 /** Small rounded brand-glyph badge, tinted via `currentColor`. */
-export function ProviderGlyph({
-  provider,
-  active = false,
-}: Readonly<{ provider: ProviderConfig; active?: boolean }>) {
+export function ProviderGlyph({ provider, active = false }: Readonly<{ provider: ProviderConfig; active?: boolean }>) {
   return (
     <span
       className={cn(
         "inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-md border p-2 transition-colors",
-        active
-          ? "border-accent bg-accent-soft text-accent"
-          : "border-border-subtle bg-surface-2 text-fg-secondary"
+        active ? "border-accent bg-accent-soft text-accent" : "border-border-subtle bg-surface-2 text-fg-secondary",
       )}
     >
       {provider.icon}

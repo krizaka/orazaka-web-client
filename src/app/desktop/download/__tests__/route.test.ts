@@ -5,7 +5,16 @@ import { loadDesktopRelease } from "@/features/landing/utils/release";
 jest.mock("@/features/landing/utils/release", () => ({ loadDesktopRelease: jest.fn() }));
 const load = loadDesktopRelease as jest.Mock;
 
-const dmg = { tag: "desktop-v1", version: "1", prerelease: true, publishedAt: null, pageUrl: "x", dmg: { name: "O.dmg", url: "https://example.test/O.dmg", bytes: 1 }, shaUrl: null, sha256: null };
+const dmg = {
+  tag: "desktop-v1",
+  version: "1",
+  prerelease: true,
+  publishedAt: null,
+  pageUrl: "x",
+  dmg: { name: "O.dmg", url: "https://example.test/O.dmg", bytes: 1 },
+  shaUrl: null,
+  sha256: null,
+};
 
 afterEach(() => {
   delete process.env.APP_DOWNLOADS_MAC_ENABLED;

@@ -19,12 +19,24 @@ export function hasGenUi(content: string): boolean {
  * prose through the chat's markdown, the surfaces through Krizaka UI — every message validated, nothing outside the
  * catalog drawn, the text itself when nothing valid arrived. What was refused is logged, never shown.
  */
-export function GenUiAnswer({ content, streaming, renderProse }: Readonly<{ content: string; streaming: boolean; renderProse: (prose: string) => React.ReactNode }>) {
+export function GenUiAnswer({
+  content,
+  streaming,
+  renderProse,
+}: Readonly<{ content: string; streaming: boolean; renderProse: (prose: string) => React.ReactNode }>) {
   const { t, locale } = useTranslation();
   const onError = React.useCallback((error: string) => console.warn("[genui] refused:", error), []);
   return (
     <div className="flex min-w-[min(36rem,70vw)] flex-col gap-3" data-testid="genui-answer">
-      <GenUiStream text={content} catalog={CATALOG} streaming={streaming} renderProse={renderProse} labels={t.chat.genui} locale={locale} onError={onError} />
+      <GenUiStream
+        text={content}
+        catalog={CATALOG}
+        streaming={streaming}
+        renderProse={renderProse}
+        labels={t.chat.genui}
+        locale={locale}
+        onError={onError}
+      />
     </div>
   );
 }

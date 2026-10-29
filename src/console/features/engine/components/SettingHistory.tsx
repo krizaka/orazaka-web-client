@@ -14,10 +14,22 @@ const historyColumns = (words: EngineWords): DataTableColumn<RuntimeAuditEntry>[
 ];
 
 /** The change history of one setting, newest first — actor ids only, never names. `version` re-reads it after a save. */
-export function SettingHistory({ setting, words, version }: Readonly<{ setting: RuntimeSetting; words: EngineWords; version: unknown }>) {
+export function SettingHistory({
+  setting,
+  words,
+  version,
+}: Readonly<{ setting: RuntimeSetting; words: EngineWords; version: unknown }>) {
   const { entries, isLoading, hasError } = useAudit(setting.key, version);
   const columns = historyColumns(words);
   if (hasError) return <Alert tone="warning">{words.historyError}</Alert>;
   if (!isLoading && entries.length === 0) return <p className="text-sm text-fg-secondary">{words.historyEmpty}</p>;
-  return <DataTable caption={`${words.history} — ${setting.key}`} rows={entries} columns={columns} getRowId={(e) => `${e.at}|${e.actorId ?? ""}`} loading={isLoading} />;
+  return (
+    <DataTable
+      caption={`${words.history} — ${setting.key}`}
+      rows={entries}
+      columns={columns}
+      getRowId={(e) => `${e.at}|${e.actorId ?? ""}`}
+      loading={isLoading}
+    />
+  );
 }

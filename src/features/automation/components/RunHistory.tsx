@@ -49,13 +49,22 @@ export function RunHistory({ automationId }: Readonly<{ automationId: string }>)
           </Badge>
         ),
       },
-      { id: "trigger", header: r.columns.trigger, priority: 2, value: (run) => (run.trigger ? r.trigger[run.trigger] : "—") },
+      {
+        id: "trigger",
+        header: r.columns.trigger,
+        priority: 2,
+        value: (run) => (run.trigger ? r.trigger[run.trigger] : "—"),
+      },
       {
         id: "started",
         header: r.columns.started,
         type: "date",
         value: (run) => new Date(run.startedAt),
-        cell: (run) => <time dateTime={run.startedAt}>{formatDistanceToNow(new Date(run.startedAt), { addSuffix: true, locale: dateLocale })}</time>,
+        cell: (run) => (
+          <time dateTime={run.startedAt}>
+            {formatDistanceToNow(new Date(run.startedAt), { addSuffix: true, locale: dateLocale })}
+          </time>
+        ),
       },
       {
         id: "duration",
@@ -76,7 +85,8 @@ export function RunHistory({ automationId }: Readonly<{ automationId: string }>)
         value: (run) => run.errorMessage ?? run.errorCode ?? "",
         cell: (run) => {
           if (run.status === STATUS.skipped_budget) return r.skippedBudget;
-          if (run.errorMessage ?? run.errorCode) return <span className="text-danger">{run.errorMessage ?? run.errorCode}</span>;
+          if (run.errorMessage ?? run.errorCode)
+            return <span className="text-danger">{run.errorMessage ?? run.errorCode}</span>;
           return run.studioRunId ? <code className="font-mono text-xs">{run.studioRunId.slice(0, 8)}</code> : "—";
         },
       },

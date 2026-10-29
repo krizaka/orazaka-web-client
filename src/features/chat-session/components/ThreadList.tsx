@@ -43,9 +43,7 @@ export const ThreadList: React.FC<Props> = ({
   return (
     <div className="flex flex-col h-full bg-surface-1 border-r border-border-subtle">
       <div className="p-4 border-b border-border-subtle flex items-center justify-between">
-        <h2 className="text-sm font-semibold text-fg">
-          {t.chat.memoryBlocks}
-        </h2>
+        <h2 className="text-sm font-semibold text-fg">{t.chat.memoryBlocks}</h2>
         <Button id="btn-new-block" variant="secondary" size="sm" onClick={onCreateThread}>
           <PlusIcon size={14} />
           {t.chat.newBlock}
@@ -61,7 +59,7 @@ export const ThreadList: React.FC<Props> = ({
                 "group w-full relative flex items-center justify-between rounded-lg transition-colors duration-150 text-sm border",
                 isActive
                   ? "bg-surface-2 border-border-default text-fg font-semibold"
-                  : "bg-transparent border-transparent text-fg-secondary hover:bg-surface-2"
+                  : "bg-transparent border-transparent text-fg-secondary hover:bg-surface-2",
               )}
             >
               <Button

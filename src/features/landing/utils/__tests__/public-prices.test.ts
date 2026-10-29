@@ -1,6 +1,13 @@
 import { loadPublicPrices, priceFor, type PublicPrice } from "@/features/landing/utils/public-prices";
 
-const p = (over: Partial<PublicPrice>): PublicPrice => ({ key: "orazaka.business", unit: "year", amountCents: 290000, availability: "public", limits: {}, ...over });
+const p = (over: Partial<PublicPrice>): PublicPrice => ({
+  key: "orazaka.business",
+  unit: "year",
+  amountCents: 290000,
+  availability: "public",
+  limits: {},
+  ...over,
+});
 const flat = (s: string | undefined) => (s ?? "").replace(/\s/g, " ");
 
 describe("priceFor", () => {

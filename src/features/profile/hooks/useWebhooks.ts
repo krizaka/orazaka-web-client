@@ -7,7 +7,11 @@ export const WEBHOOK_EVENTS = ["run.completed", "run.failed", "run.cancelled"] a
 export type WebhookEvent = (typeof WEBHOOK_EVENTS)[number];
 
 /** The key of an event's words in the dictionary (a dictionary key cannot hold a dot). */
-export const EVENT_WORD = { "run.completed": "completed", "run.failed": "failed", "run.cancelled": "cancelled" } as const;
+export const EVENT_WORD = {
+  "run.completed": "completed",
+  "run.failed": "failed",
+  "run.cancelled": "cancelled",
+} as const;
 
 /** An endpoint as the API lists it — never carries the signing secret. */
 export interface WebhookEndpoint {
@@ -127,7 +131,9 @@ export function useWebhooks(fetchHeaders: () => Promise<Record<string, string>>)
   };
 
   const remove = async (endpoint: WebhookEndpoint) => {
-    queryClient.setQueryData<WebhookEndpoint[]>(WEBHOOKS_KEY, (prev) => (prev ?? []).filter((e) => e.id !== endpoint.id));
+    queryClient.setQueryData<WebhookEndpoint[]>(WEBHOOKS_KEY, (prev) =>
+      (prev ?? []).filter((e) => e.id !== endpoint.id),
+    );
     try {
       await fetch(`${BASE}/${endpoint.id}`, { method: "DELETE", headers: await fetchHeaders() });
     } catch {

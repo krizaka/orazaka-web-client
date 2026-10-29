@@ -17,11 +17,11 @@ const eslintConfig = defineConfig([
       "@typescript-eslint/no-unused-vars": ["error", { argsIgnorePattern: "^_" }],
       "react-hooks/exhaustive-deps": "error",
       "@next/next/no-img-element": "error",
-      
+
       // --- PRODUCTION HYPER-GOVERNANCE ---
       "no-console": ["error", { allow: ["warn", "error"] }], // Disallow raw debug logs in production pipelines
       "no-debugger": "error", // Block left-over development debugging breakpoints
-      
+
       "no-restricted-syntax": [
         "error",
         // 0. The four Krizaka UI rules (@krizaka/config), strict: no raw palette colour, no `light:`, no arbitrary
@@ -33,7 +33,7 @@ const eslintConfig = defineConfig([
           message:
             "Traditional TypeScript enums are strictly banned in Orazaka. Use 'export const MyValues = [...] as const' paired with 'export type MyType = typeof MyValues[number]' to maintain pure, tree-shakable, structural Type-Safe compliance.",
         },
-        
+
         // 2. Krizaka UI Invariant: Banning generic deep HTML structures (Div Soup)
         {
           selector:
@@ -41,7 +41,7 @@ const eslintConfig = defineConfig([
           message:
             "Deeply nested generic <div> structures are banned in Orazaka. Use semantic HTML5 elements (<main>, <section>, <article>, <header>, <footer>) to ensure structural accessibility.",
         },
-        
+
         // 3. Temporal Invariant: Forbidding mutation of native Date instances
         {
           selector:
@@ -49,7 +49,7 @@ const eslintConfig = defineConfig([
           message:
             "Mutating native JavaScript Date instances via set* methods is strictly forbidden in Orazaka. Use date-fns instead to preserve immutability.",
         },
-        
+
         // 4. Naming Invariant [ERR-104]: Forbidding redundant prefixes
         {
           selector:
@@ -86,7 +86,7 @@ const eslintConfig = defineConfig([
             "Hardcoded Tailwind palette color classes are banned in Orazaka — they break theme switching and dark mode. Use the role utilities of @krizaka/tailwind: text-fg / text-fg-secondary / text-fg-muted, bg-surface-{0..3}, border-border-{subtle,default,strong}, {text,bg,border}-{success,warning,danger,info}, *-accent, text-on-accent (opacity modifiers like /10 are supported).",
         },
       ],
-      
+
       // --- IMPORTS AND ARCHITECTURAL BOUNDARIES ---
       "no-restricted-imports": [
         "error",
@@ -117,10 +117,7 @@ const eslintConfig = defineConfig([
     // (AGENTS §8). Extract sub-components / hooks / types / constants past the cap.
     files: ["**/*.tsx"],
     rules: {
-      "max-lines": [
-        "error",
-        { max: 250, skipBlankLines: false, skipComments: false },
-      ],
+      "max-lines": ["error", { max: 250, skipBlankLines: false, skipComments: false }],
     },
   },
   {

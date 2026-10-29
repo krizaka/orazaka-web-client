@@ -37,8 +37,8 @@ describe("product status (one source)", () => {
   describe.each(["en", "fr"] as const)("public copy (%s)", (locale: Locale) => {
     it.each(PUBLIC_SECTIONS)("%s makes no availability, buy or sign-up claim", (section) => {
       if (!inDevelopment()) return;
-      const hits = leaves((translations[locale] as unknown as Record<string, unknown>)[section], section).filter(([, text]) =>
-        FORBIDDEN.some((re) => re.test(text)),
+      const hits = leaves((translations[locale] as unknown as Record<string, unknown>)[section], section).filter(
+        ([, text]) => FORBIDDEN.some((re) => re.test(text)),
       );
       expect(hits).toEqual([]);
     });

@@ -59,23 +59,40 @@ function json(source: string, what: string): unknown {
 
 export function parsePack(source: string): PackData {
   const p = json(source, "pack") as Partial<PackData>;
-  if (!p || typeof p.key !== "string" || typeof p.title !== "string" || !Array.isArray(p.studios) || !Array.isArray(p.rulesets)) {
+  if (
+    !p ||
+    typeof p.key !== "string" ||
+    typeof p.title !== "string" ||
+    !Array.isArray(p.studios) ||
+    !Array.isArray(p.rulesets)
+  ) {
     throw new Error("pack: expected { key, title, studios[], rulesets[] }");
   }
-  for (const s of p.studios) if (typeof s.key !== "string" || typeof s.label !== "string" || !Array.isArray(s.inputs)) throw new Error(`pack ${p.key}: a Studio lacks key, label or inputs`);
+  for (const s of p.studios)
+    if (typeof s.key !== "string" || typeof s.label !== "string" || !Array.isArray(s.inputs))
+      throw new Error(`pack ${p.key}: a Studio lacks key, label or inputs`);
   return p as PackData;
 }
 
 export function parsePackIndex(source: string): PackIndexItem[] {
   const items = json(source, "pack-index");
-  if (!Array.isArray(items) || items.some((i) => typeof i?.key !== "string" || typeof i?.title !== "string")) throw new Error("pack-index: expected [{ key, title, … }]");
+  if (!Array.isArray(items) || items.some((i) => typeof i?.key !== "string" || typeof i?.title !== "string"))
+    throw new Error("pack-index: expected [{ key, title, … }]");
   return items as PackIndexItem[];
 }
 
 /** The slug the markdown renderer gives a pack's `###` heading — where the index cards lead. */
-export const packAnchor = (title: string): string => title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
+export const packAnchor = (title: string): string =>
+  title
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
 
 /** Filters the index by tier and category (null = all). */
-export function filterPacks(items: readonly PackIndexItem[], tier: string | null, category: string | null): PackIndexItem[] {
+export function filterPacks(
+  items: readonly PackIndexItem[],
+  tier: string | null,
+  category: string | null,
+): PackIndexItem[] {
   return items.filter((i) => (!tier || i.tier === tier) && (!category || i.category === category));
 }

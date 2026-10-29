@@ -14,7 +14,8 @@ function* walk(dir: string): Generator<string> {
     if (statSync(path).isDirectory()) {
       if (name === "node_modules" || name === "__tests__" || name === "e2e") continue;
       yield* walk(path);
-    } else if (!/\.(test|spec)\.[tj]sx?$/.test(name) && /\.(tsx?|jsx?|mjs|json|md|mdx|txt|html|css)$/.test(name)) yield path;
+    } else if (!/\.(test|spec)\.[tj]sx?$/.test(name) && /\.(tsx?|jsx?|mjs|json|md|mdx|txt|html|css)$/.test(name))
+      yield path;
   }
 }
 

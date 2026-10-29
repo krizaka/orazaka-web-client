@@ -16,13 +16,27 @@ const schema = JSON.stringify({
   required: ["prompt"],
   properties: {
     prompt: { type: "string", title: "Ce qui doit se passer à l'écran" },
-    image: { type: "string", format: "asset:image", maxLength: 120, title: "Image d'amorce (facultatif)", description: "Choisissez…" },
+    image: {
+      type: "string",
+      format: "asset:image",
+      maxLength: 120,
+      title: "Image d'amorce (facultatif)",
+      description: "Choisissez…",
+    },
   },
 });
 
 const setup = () => {
   const onSubmit = jest.fn();
-  const view = render(<RunForm studioKey="video-generation" inputSchema={schema} estimatedCredits={3} isSubmitting={false} onSubmit={onSubmit} />);
+  const view = render(
+    <RunForm
+      studioKey="video-generation"
+      inputSchema={schema}
+      estimatedCredits={3}
+      isSubmitting={false}
+      onSubmit={onSubmit}
+    />,
+  );
   return { onSubmit, ...view };
 };
 const photo = () => new File(["x"], "me.png", { type: "image/png" });
@@ -113,9 +127,28 @@ const imageSchema = JSON.stringify({
       "x-options": { source: "models", category: "image" },
       default: "sd-hosted",
       oneOf: [
-        { const: "sd-hosted", title: "Stable Diffusion 3.5 Large", description: "Hosted by a provider.", "x-meta": { runsOn: "cloud", speed: "fast", typicalSeconds: 8, priceCents: 8, available: true } },
-        { const: "flux", title: "FLUX.2 [klein] 4B", "x-meta": { runsOn: "local", speed: "balanced", typicalSeconds: 62, available: false, unavailableReason: "FLUX.2 is not running" } },
-        { const: "z-image", title: "Z-Image Turbo", "x-meta": { runsOn: "local", speed: "slow", typicalSeconds: 157, available: true } },
+        {
+          const: "sd-hosted",
+          title: "Stable Diffusion 3.5 Large",
+          description: "Hosted by a provider.",
+          "x-meta": { runsOn: "cloud", speed: "fast", typicalSeconds: 8, priceCents: 8, available: true },
+        },
+        {
+          const: "flux",
+          title: "FLUX.2 [klein] 4B",
+          "x-meta": {
+            runsOn: "local",
+            speed: "balanced",
+            typicalSeconds: 62,
+            available: false,
+            unavailableReason: "FLUX.2 is not running",
+          },
+        },
+        {
+          const: "z-image",
+          title: "Z-Image Turbo",
+          "x-meta": { runsOn: "local", speed: "slow", typicalSeconds: 157, available: true },
+        },
       ],
     },
   },
@@ -123,7 +156,15 @@ const imageSchema = JSON.stringify({
 
 const setupImage = (schemaText = imageSchema) => {
   const onSubmit = jest.fn();
-  const view = render(<RunForm studioKey="image-generation" inputSchema={schemaText} estimatedCredits={3} isSubmitting={false} onSubmit={onSubmit} />);
+  const view = render(
+    <RunForm
+      studioKey="image-generation"
+      inputSchema={schemaText}
+      estimatedCredits={3}
+      isSubmitting={false}
+      onSubmit={onSubmit}
+    />,
+  );
   return { onSubmit, ...view };
 };
 const openMore = () => fireEvent.click(screen.getByText("More options"));
@@ -141,7 +182,9 @@ describe("RunForm — closed sets are chosen from a list, never typed", () => {
     openMore();
     fireEvent.click(screen.getByRole("combobox", { name: /Modèle|Model/ }));
     // The option says what it is in a line; the facts are chips, for the model in view only.
-    expect(screen.getByRole("option", { name: /Stable Diffusion 3.5 Large/ })).toHaveTextContent("Hosted by a provider.");
+    expect(screen.getByRole("option", { name: /Stable Diffusion 3.5 Large/ })).toHaveTextContent(
+      "Hosted by a provider.",
+    );
     expect(screen.getByRole("list", { name: /About this model/ })).not.toHaveTextContent("Free"); // the model in view: cloud, priced
   });
 
@@ -157,7 +200,10 @@ describe("RunForm — closed sets are chosen from a list, never typed", () => {
   it("starts on « Automatic » naming the model that will run, and sends no model", () => {
     const { onSubmit } = setupImage();
     openMore();
-    expect(screen.getByRole("combobox", { name: /Modèle|Model/ })).toHaveAttribute("placeholder", "Automatic · Stable Diffusion 3.5 Large");
+    expect(screen.getByRole("combobox", { name: /Modèle|Model/ })).toHaveAttribute(
+      "placeholder",
+      "Automatic · Stable Diffusion 3.5 Large",
+    );
     fireEvent.change(screen.getByLabelText(/What you want to see/), { target: { value: "a fox" } });
     fireEvent.click(screen.getByRole("button", { name: "Run" }));
     expect(onSubmit).toHaveBeenCalledWith({ prompt: "a fox", size: "1024x1024" });
@@ -203,7 +249,15 @@ describe("RunForm — closed sets are chosen from a list, never typed", () => {
   it("when the list could not be loaded, the model says so out loud — never a blank select or a text box", () => {
     const unloaded = JSON.stringify({
       type: "object",
-      properties: { prompt: { type: "string" }, model: { type: "string", title: "Modèle", "x-advanced": true, "x-options": { source: "models", category: "image" } } },
+      properties: {
+        prompt: { type: "string" },
+        model: {
+          type: "string",
+          title: "Modèle",
+          "x-advanced": true,
+          "x-options": { source: "models", category: "image" },
+        },
+      },
     });
     const error = jest.spyOn(console, "error").mockImplementation(() => undefined);
     const { container } = setupImage(unloaded);
@@ -219,7 +273,10 @@ describe("RunForm — closed sets are chosen from a list, never typed", () => {
   it("an empty catalogue list is the same visible error, and is logged", () => {
     const empty = JSON.stringify({
       type: "object",
-      properties: { prompt: { type: "string" }, model: { type: "string", title: "Model", "x-options": { source: "models", category: "chat" }, oneOf: [] } },
+      properties: {
+        prompt: { type: "string" },
+        model: { type: "string", title: "Model", "x-options": { source: "models", category: "chat" }, oneOf: [] },
+      },
     });
     const error = jest.spyOn(console, "error").mockImplementation(() => undefined);
     setupImage(empty);

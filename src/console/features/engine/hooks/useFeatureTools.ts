@@ -2,7 +2,12 @@
 
 import { useCallback } from "react";
 import { useQuery, useQueryClient } from "@krizaka/query";
-import { FeatureToolsApi, FeatureToolsRefusal, type FeatureRoute, type ToolBounds } from "@/console/services/feature-tools.admin.api";
+import {
+  FeatureToolsApi,
+  FeatureToolsRefusal,
+  type FeatureRoute,
+  type ToolBounds,
+} from "@/console/services/feature-tools.admin.api";
 
 const BOUNDS_KEY = ["engine", "feature-tool-bounds"] as const;
 const ROUTES_KEY = ["engine", "feature-routes"] as const;

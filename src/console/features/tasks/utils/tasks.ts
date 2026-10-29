@@ -28,14 +28,40 @@ export function openTasks(audit: readonly AuditRow[], jobs: readonly JobRecord[]
   const tasks: OperatorTask[] = [];
   for (const line of audit) {
     if (line.outcome === "ok" || now - Date.parse(line.at) > ACTION_WINDOW) continue;
-    const mended = audit.some((other) => other.outcome === "ok" && other.source === line.source && other.action === line.action && other.targetId === line.targetId && other.at > line.at);
+    const mended = audit.some(
+      (other) =>
+        other.outcome === "ok" &&
+        other.source === line.source &&
+        other.action === line.action &&
+        other.targetId === line.targetId &&
+        other.at > line.at,
+    );
     if (mended) continue;
-    tasks.push({ key: line.key, kind: "action", at: line.at, title: line.action, why: line.detail ? `${line.outcome}: ${line.detail}` : line.outcome, requestId: line.requestId, source: line.source });
+    tasks.push({
+      key: line.key,
+      kind: "action",
+      at: line.at,
+      title: line.action,
+      why: line.detail ? `${line.outcome}: ${line.detail}` : line.outcome,
+      requestId: line.requestId,
+      source: line.source,
+    });
   }
   for (const job of jobs) {
     if (job.status !== FAILED || now - Date.parse(job.updatedAt) > JOB_WINDOW) continue;
-    const error = typeof (job.result as Record<string, unknown> | null)?.error === "string" ? String((job.result as Record<string, unknown>).error) : "failed";
-    tasks.push({ key: `job:${job.id}`, kind: "job", at: job.updatedAt, title: job.featureKey, why: error, requestId: "", source: "jobs" });
+    const error =
+      typeof (job.result as Record<string, unknown> | null)?.error === "string"
+        ? String((job.result as Record<string, unknown>).error)
+        : "failed";
+    tasks.push({
+      key: `job:${job.id}`,
+      kind: "job",
+      at: job.updatedAt,
+      title: job.featureKey,
+      why: error,
+      requestId: "",
+      source: "jobs",
+    });
   }
   return tasks.sort((a, b) => (a.at < b.at ? 1 : a.at > b.at ? -1 : 0));
 }

@@ -12,7 +12,10 @@ const WORDS = {
   ),
   back: w("Engine settings", "Réglages du moteur"),
   link: w("Tool rounds per feature", "Tours d'outils par fonction"),
-  error: w("The bounds could not be read: the conversation service may be starting.", "Les bornes n'ont pas pu être lues : le service de conversation démarre peut-être."),
+  error: w(
+    "The bounds could not be read: the conversation service may be starting.",
+    "Les bornes n'ont pas pu être lues : le service de conversation démarre peut-être.",
+  ),
   retry: w("Retry", "Réessayer"),
   loading: w("Reading the bounds", "Lecture des bornes"),
   boundsTitle: w("Bounds", "Bornes"),
@@ -31,11 +34,20 @@ const WORDS = {
   invalidKey: w("Enter the feature key.", "Saisissez la clé de la fonction."),
   failed: w("The change was refused.", "Le changement a été refusé."),
   routesTitle: w("Feature routes", "Routes des fonctions"),
-  routesLead: w("The models each feature routes to, best first. Read only.", "Les modèles vers lesquels chaque fonction est routée, du meilleur au suivant. Lecture seule."),
-  routesEmpty: w("No feature has a route of its own: each follows its category default.", "Aucune fonction n'a de route propre : chacune suit le défaut de sa catégorie."),
+  routesLead: w(
+    "The models each feature routes to, best first. Read only.",
+    "Les modèles vers lesquels chaque fonction est routée, du meilleur au suivant. Lecture seule.",
+  ),
+  routesEmpty: w(
+    "No feature has a route of its own: each follows its category default.",
+    "Aucune fonction n'a de route propre : chacune suit le défaut de sa catégorie.",
+  ),
   routesError: w("The routes could not be read.", "Les routes n'ont pas pu être lues."),
 } as const;
 
 export type FeatureToolsWords = Localised<typeof WORDS>;
 export type FeatureToolsLocale = "en" | "fr";
-export const featureToolsCopy: Record<FeatureToolsLocale, FeatureToolsWords> = { en: localise(WORDS, 0), fr: localise(WORDS, 1) };
+export const featureToolsCopy: Record<FeatureToolsLocale, FeatureToolsWords> = {
+  en: localise(WORDS, 0),
+  fr: localise(WORDS, 1),
+};

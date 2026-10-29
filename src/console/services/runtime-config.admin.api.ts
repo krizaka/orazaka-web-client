@@ -43,10 +43,16 @@ export class RuntimeConfigRefusal extends Error {
 const BASE = "/api/v1/studios/admin/runtime-config";
 
 async function call(path: string, init?: RequestInit): Promise<unknown> {
-  const response = await fetch(path, { ...init, headers: { "Content-Type": "application/json", ...(init?.headers ?? {}) } });
+  const response = await fetch(path, {
+    ...init,
+    headers: { "Content-Type": "application/json", ...(init?.headers ?? {}) },
+  });
   if (!response.ok) {
     const detail = (await response.json().catch(() => null)) as { message?: unknown } | null;
-    throw new RuntimeConfigRefusal(response.status, typeof detail?.message === "string" ? detail.message : `${response.status}`);
+    throw new RuntimeConfigRefusal(
+      response.status,
+      typeof detail?.message === "string" ? detail.message : `${response.status}`,
+    );
   }
   return response.json();
 }
@@ -57,7 +63,9 @@ export const RuntimeConfigApi = {
 
   /** Sets one value; it applies on the next read, with no restart. */
   update: async (key: string, value: SettingValue): Promise<RuntimeSetting> =>
-    RuntimeSettingSchema.parse(await call(`${BASE}/${encodeURIComponent(key)}`, { method: "PUT", body: JSON.stringify({ value }) })),
+    RuntimeSettingSchema.parse(
+      await call(`${BASE}/${encodeURIComponent(key)}`, { method: "PUT", body: JSON.stringify({ value }) }),
+    ),
 
   /** The change history of one key, newest first (actor ids only). */
   audit: async (key: string, limit = 50): Promise<RuntimeAuditEntry[]> =>

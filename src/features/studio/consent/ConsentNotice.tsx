@@ -97,7 +97,11 @@ export function ConsentNotice({ studioKey, installation, onChanged }: Readonly<C
   };
 
   if (erased) {
-    return <p role="status" className="max-w-2xl text-xs text-fg-secondary">{t.consent.erased}</p>;
+    return (
+      <p role="status" className="max-w-2xl text-xs text-fg-secondary">
+        {t.consent.erased}
+      </p>
+    );
   }
 
   if (!installation || installation.status === "REVOKED") {
@@ -107,18 +111,32 @@ export function ConsentNotice({ studioKey, installation, onChanged }: Readonly<C
   return (
     <div className="flex flex-wrap items-center gap-3 text-xs text-fg-secondary">
       <span>{t.consent.givenTitle}</span>
-      <Button variant="ghost" size="sm" onClick={() => setAsking(true)}>{t.consent.withdraw}</Button>
-      <Button variant="ghost" size="sm" onClick={() => setErasing(true)}>{t.consent.erase}</Button>
+      <Button variant="ghost" size="sm" onClick={() => setAsking(true)}>
+        {t.consent.withdraw}
+      </Button>
+      <Button variant="ghost" size="sm" onClick={() => setErasing(true)}>
+        {t.consent.erase}
+      </Button>
       <Dialog.Root open={erasing} onOpenChange={(next) => !next && !busy && setErasing(false)}>
         <Dialog.Content closeLabel={t.consent.close}>
           <Dialog.Header>
             <Dialog.Title>{t.consent.eraseTitle}</Dialog.Title>
             <Dialog.Description>{t.consent.eraseBody}</Dialog.Description>
           </Dialog.Header>
-          {failed && <Dialog.Body><p role="alert" className="text-xs text-fg-danger">{failed}</p></Dialog.Body>}
+          {failed && (
+            <Dialog.Body>
+              <p role="alert" className="text-xs text-fg-danger">
+                {failed}
+              </p>
+            </Dialog.Body>
+          )}
           <Dialog.Footer>
-            <Button variant="ghost" size="sm" onClick={() => setErasing(false)} disabled={busy}>{t.consent.keep}</Button>
-            <Button size="sm" onClick={() => void eraseAll()} loading={busy}>{busy ? t.consent.erasing : t.consent.eraseConfirm}</Button>
+            <Button variant="ghost" size="sm" onClick={() => setErasing(false)} disabled={busy}>
+              {t.consent.keep}
+            </Button>
+            <Button size="sm" onClick={() => void eraseAll()} loading={busy}>
+              {busy ? t.consent.erasing : t.consent.eraseConfirm}
+            </Button>
           </Dialog.Footer>
         </Dialog.Content>
       </Dialog.Root>
@@ -128,10 +146,20 @@ export function ConsentNotice({ studioKey, installation, onChanged }: Readonly<C
             <Dialog.Title>{t.consent.withdrawTitle}</Dialog.Title>
             <Dialog.Description>{t.consent.withdrawBody}</Dialog.Description>
           </Dialog.Header>
-          {failed && <Dialog.Body><p role="alert" className="text-xs text-fg-danger">{failed}</p></Dialog.Body>}
+          {failed && (
+            <Dialog.Body>
+              <p role="alert" className="text-xs text-fg-danger">
+                {failed}
+              </p>
+            </Dialog.Body>
+          )}
           <Dialog.Footer>
-            <Button variant="ghost" size="sm" onClick={() => setAsking(false)} disabled={busy}>{t.consent.keep}</Button>
-            <Button size="sm" onClick={() => void withdraw()} loading={busy}>{busy ? t.consent.withdrawing : t.consent.withdrawConfirm}</Button>
+            <Button variant="ghost" size="sm" onClick={() => setAsking(false)} disabled={busy}>
+              {t.consent.keep}
+            </Button>
+            <Button size="sm" onClick={() => void withdraw()} loading={busy}>
+              {busy ? t.consent.withdrawing : t.consent.withdrawConfirm}
+            </Button>
           </Dialog.Footer>
         </Dialog.Content>
       </Dialog.Root>

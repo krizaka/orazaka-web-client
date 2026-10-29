@@ -31,7 +31,22 @@ export interface DocArticleProps {
 }
 
 /** A documentation article on @krizaka/ui's template: sidebar by journey · breadcrumb, title, lead, facts · the reading column · contents; previous and next. */
-export function DocArticle({ slug, journey, title, intro, audience, generated, editUrl, toc, nav, previous, next, words, clip, children }: Readonly<DocArticleProps>) {
+export function DocArticle({
+  slug,
+  journey,
+  title,
+  intro,
+  audience,
+  generated,
+  editUrl,
+  toc,
+  nav,
+  previous,
+  next,
+  words,
+  clip,
+  children,
+}: Readonly<DocArticleProps>) {
   const { t, locale } = useTranslation();
   const d = t.docs;
   const first = nav.find((n) => n.journey === journey);

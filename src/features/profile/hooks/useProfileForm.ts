@@ -93,12 +93,9 @@ export function useProfileForm() {
     });
   }, [catalog.data, catalog.isPending, t]);
 
-  const setField = React.useCallback(
-    <K extends keyof ProfileFormState>(key: K, value: ProfileFormState[K]) => {
-      setForm((prev) => ({ ...prev, [key]: value }));
-    },
-    [],
-  );
+  const setField = React.useCallback(<K extends keyof ProfileFormState>(key: K, value: ProfileFormState[K]) => {
+    setForm((prev) => ({ ...prev, [key]: value }));
+  }, []);
 
   /** Language changes apply to the live locale immediately (still persisted on save). */
   const setLanguage = React.useCallback(
@@ -119,10 +116,7 @@ export function useProfileForm() {
   );
 
   const isDirty = React.useMemo(
-    () =>
-      (Object.keys(form) as (keyof ProfileFormState)[]).some(
-        (k) => form[k] !== baseline[k],
-      ),
+    () => (Object.keys(form) as (keyof ProfileFormState)[]).some((k) => form[k] !== baseline[k]),
     [form, baseline],
   );
 

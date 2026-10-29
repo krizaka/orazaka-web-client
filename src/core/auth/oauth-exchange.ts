@@ -30,7 +30,10 @@ export interface OAuthExchangeBody {
 export const isOAuthProvider = (id: string): id is OAuthProvider => (OAUTH_PROVIDERS as readonly string[]).includes(id);
 
 /** The body to send, or `null` when the account is not an OAuth one we serve or carries no usable credential. */
-export function buildOAuthExchangeBody(account: Account | null | undefined, user: Pick<User, "email" | "name">): OAuthExchangeBody | null {
+export function buildOAuthExchangeBody(
+  account: Account | null | undefined,
+  user: Pick<User, "email" | "name">,
+): OAuthExchangeBody | null {
   if (!account || !isOAuthProvider(account.provider)) return null;
   const idToken = CREDENTIAL[account.provider](account)?.trim();
   if (!idToken) return null;

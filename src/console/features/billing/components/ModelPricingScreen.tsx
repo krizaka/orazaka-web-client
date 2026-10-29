@@ -42,10 +42,7 @@ export function ModelPricingScreen() {
 
   const load = useCallback(async () => {
     try {
-      const [catalogue, pricebook] = await Promise.all([
-        BillingAdminApi.listModels(),
-        BillingAdminApi.listRates(),
-      ]);
+      const [catalogue, pricebook] = await Promise.all([BillingAdminApi.listModels(), BillingAdminApi.listRates()]);
       setModels(catalogue);
       setRates(pricebook);
     } catch (e) {
@@ -61,12 +58,8 @@ export function ModelPricingScreen() {
   const rows = useMemo(() => {
     const decorated = models.map((model) => {
       const capability = capabilityForModelCategory(model.category);
-      const own = rates.find(
-        (rate) => rate.capability === capability && rate.modelName === model.modelName,
-      );
-      const fallback = rates.find(
-        (rate) => rate.capability === capability && rate.modelName === null,
-      );
+      const own = rates.find((rate) => rate.capability === capability && rate.modelName === model.modelName);
+      const fallback = rates.find((rate) => rate.capability === capability && rate.modelName === null);
       return { model, capability, own, fallback, priced: isModelPriced(model, rates) };
     });
     // Unpriced first: these are the models that currently refuse every request.
@@ -158,13 +151,10 @@ export function ModelPricingScreen() {
   return (
     <section className="space-y-6">
       <header>
-        <h2 className="text-lg font-semibold text-fg">
-          Tarification par modèle
-        </h2>
+        <h2 className="text-lg font-semibold text-fg">Tarification par modèle</h2>
         <p className="text-sm text-fg-muted">
-          Un modèle sans tarif ni tarif par défaut est refusé à la réservation : la
-          capacité cesse de fonctionner pour ce modèle. Les modèles non tarifés sont
-          affichés en premier.
+          Un modèle sans tarif ni tarif par défaut est refusé à la réservation : la capacité cesse de fonctionner pour
+          ce modèle. Les modèles non tarifés sont affichés en premier.
         </p>
       </header>
 

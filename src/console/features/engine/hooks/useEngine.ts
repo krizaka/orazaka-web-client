@@ -2,7 +2,13 @@
 
 import { useCallback } from "react";
 import { useQuery, useQueryClient } from "@krizaka/query";
-import { RuntimeConfigApi, RuntimeConfigRefusal, type RuntimeAuditEntry, type RuntimeSetting, type SettingValue } from "@/console/services/runtime-config.admin.api";
+import {
+  RuntimeConfigApi,
+  RuntimeConfigRefusal,
+  type RuntimeAuditEntry,
+  type RuntimeSetting,
+  type SettingValue,
+} from "@/console/services/runtime-config.admin.api";
 import { withSetting } from "@/console/features/engine/utils/engine";
 
 export interface Engine {
@@ -34,11 +40,25 @@ export function useEngine(): Engine {
     [client],
   );
 
-  return { settings: query.data ?? [], isLoading: query.isPending, hasError: query.isError, reload: () => void query.refetch(), save };
+  return {
+    settings: query.data ?? [],
+    isLoading: query.isPending,
+    hasError: query.isError,
+    reload: () => void query.refetch(),
+    save,
+  };
 }
 
 /** The change history of one key, read when its panel opens; `version` (the setting's value) re-reads it after a save. */
-export function useAudit(key: string, version: unknown): { entries: RuntimeAuditEntry[]; isLoading: boolean; hasError: boolean } {
-  const query = useQuery({ queryKey: ["engine", "audit", key, version], queryFn: () => RuntimeConfigApi.audit(key), retry: false, gcTime: 0 });
+export function useAudit(
+  key: string,
+  version: unknown,
+): { entries: RuntimeAuditEntry[]; isLoading: boolean; hasError: boolean } {
+  const query = useQuery({
+    queryKey: ["engine", "audit", key, version],
+    queryFn: () => RuntimeConfigApi.audit(key),
+    retry: false,
+    gcTime: 0,
+  });
   return { entries: query.data ?? [], isLoading: query.isPending, hasError: query.isError };
 }

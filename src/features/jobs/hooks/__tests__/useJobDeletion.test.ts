@@ -16,7 +16,16 @@ jest.mock("@krizaka/ui/toast", () => ({
   toast: { warning: (...a: unknown[]) => warning(...a), error: (...a: unknown[]) => error(...a) },
 }));
 
-const job = (status: Job["status"]): Job => ({ id: "j1", userId: "u", featureKey: "orazaka.core.media.video", status, payload: {}, result: {}, createdAt: "2026-10-16T10:00:00Z", updatedAt: "2026-10-16T10:01:00Z" });
+const job = (status: Job["status"]): Job => ({
+  id: "j1",
+  userId: "u",
+  featureKey: "orazaka.core.media.video",
+  status,
+  payload: {},
+  result: {},
+  createdAt: "2026-10-16T10:00:00Z",
+  updatedAt: "2026-10-16T10:01:00Z",
+});
 
 beforeEach(() => {
   jest.clearAllMocks();

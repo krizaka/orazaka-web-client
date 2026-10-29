@@ -36,13 +36,10 @@ export const MODEL_CATEGORY = {
 } as const;
 
 /** Union type derived from MODEL_CATEGORY values. */
-export type ModelCategoryValue =
-  (typeof MODEL_CATEGORY)[keyof typeof MODEL_CATEGORY];
+export type ModelCategoryValue = (typeof MODEL_CATEGORY)[keyof typeof MODEL_CATEGORY];
 
 /** All category values as an iterable array — use in admin dropdowns and filters. */
-export const CATEGORY_VALUES: readonly ModelCategoryValue[] = Object.values(
-  MODEL_CATEGORY,
-) as ModelCategoryValue[];
+export const CATEGORY_VALUES: readonly ModelCategoryValue[] = Object.values(MODEL_CATEGORY) as ModelCategoryValue[];
 
 /** Admin-specific categories extending MODEL_CATEGORY with theme/code. */
 export const CATEGORIES = [...CATEGORY_VALUES, "theme", "code"] as const;
@@ -91,14 +88,9 @@ const CATEGORY_RESOLUTION_RULES: readonly {
 ];
 
 /** Resolves the model catalog category a capability draws its model list from. */
-export function resolveModelCategory(
-  featureId: string,
-): ModelCategoryValue | null {
+export function resolveModelCategory(featureId: string): ModelCategoryValue | null {
   const lower = featureId.toLowerCase();
-  return (
-    CATEGORY_RESOLUTION_RULES.find((r) => lower.includes(r.keyword))?.category ??
-    null
-  );
+  return CATEGORY_RESOLUTION_RULES.find((r) => lower.includes(r.keyword))?.category ?? null;
 }
 
 // ─── Media Kind ──────────────────────────────────────────────────────────────
@@ -196,14 +188,7 @@ export const DEFAULT_VOICE = "ryan";
 // Selectable values surfaced per capability. Declared here as the single source
 // so no option literal is inlined in components.
 
-export const SPEECH_VOICES = [
-  "alloy",
-  "echo",
-  "onyx",
-  "nova",
-  "shimmer",
-  "ryan",
-] as const;
+export const SPEECH_VOICES = ["alloy", "echo", "onyx", "nova", "shimmer", "ryan"] as const;
 export const IMAGE_SIZES = ["512x512", "768x768", "1024x1024", "1024x1792"] as const;
 export const VIDEO_DURATIONS = [3, 5, 8, 10] as const;
 
@@ -215,41 +200,17 @@ export const DEFAULT_PROVIDER = "ollama";
 // Used when the backend catalog is unavailable. Keyed by MODEL_CATEGORY.
 
 export const FALLBACK_MODELS: Record<string, readonly string[]> = {
-  [MODEL_CATEGORY.SPEECH]: [
-    "piper-en-low",
-    DEFAULT_MODEL.SPEECH,
-    "piper-fr-medium",
-    "tts-1",
-  ],
-  [MODEL_CATEGORY.IMAGE]: [
-    DEFAULT_MODEL.IMAGE,
-    "sd-1.5-apple-coreml",
-    "stable-diffusion-xl",
-  ],
-  [MODEL_CATEGORY.VIDEO]: [
-    DEFAULT_MODEL.VIDEO,
-    "animatediff-lightning-mps",
-    "apple-coreml-video-pipeline",
-  ],
-  [MODEL_CATEGORY.VISION]: [
-    "llava:latest",
-    "llava:v1.6",
-    "bakllava:latest",
-    DEFAULT_MODEL.VISION,
-  ],
-  [MODEL_CATEGORY.AUDIO]: [
-    DEFAULT_MODEL.AUDIO_TRANSCRIPTION,
-    "whisper-tiny-en",
-  ],
+  [MODEL_CATEGORY.SPEECH]: ["piper-en-low", DEFAULT_MODEL.SPEECH, "piper-fr-medium", "tts-1"],
+  [MODEL_CATEGORY.IMAGE]: [DEFAULT_MODEL.IMAGE, "sd-1.5-apple-coreml", "stable-diffusion-xl"],
+  [MODEL_CATEGORY.VIDEO]: [DEFAULT_MODEL.VIDEO, "animatediff-lightning-mps", "apple-coreml-video-pipeline"],
+  [MODEL_CATEGORY.VISION]: ["llava:latest", "llava:v1.6", "bakllava:latest", DEFAULT_MODEL.VISION],
+  [MODEL_CATEGORY.AUDIO]: [DEFAULT_MODEL.AUDIO_TRANSCRIPTION, "whisper-tiny-en"],
 };
 
 // ─── Commercial Provider Defaults ────────────────────────────────────────────
 // Default model per commercial provider when the catalog has no entries.
 
-export const COMMERCIAL_DEFAULTS: Record<
-  string,
-  Partial<Record<string, string>> & { default: string }
-> = {
+export const COMMERCIAL_DEFAULTS: Record<string, Partial<Record<string, string>> & { default: string }> = {
   gemini: { default: "gemini-1.5-flash" },
   anthropic: { default: "claude-3-5-sonnet-latest" },
   openai: {

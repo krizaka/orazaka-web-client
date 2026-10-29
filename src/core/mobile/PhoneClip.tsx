@@ -11,7 +11,12 @@ import { VideoSources } from "@/core/clips/VideoSources";
  * alone until play is pressed. `alt` is the text alternative of the recording; the caption under it is optional (a step
  * explains itself beside the phone).
  */
-export function PhoneClip({ id, label, alt, caption }: Readonly<{ id: ClipId; label: string; alt: string; caption?: string }>) {
+export function PhoneClip({
+  id,
+  label,
+  alt,
+  caption,
+}: Readonly<{ id: ClipId; label: string; alt: string; caption?: string }>) {
   return (
     <figure className="flex w-full min-w-0 flex-col gap-3">
       <div className="mx-auto w-full max-w-[15rem] overflow-hidden rounded-2xl">
