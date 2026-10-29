@@ -1,8 +1,10 @@
 "use client";
 
 import * as React from "react";
+import Link from "next/link";
 import { Alert } from "@krizaka/ui/alert";
 import { Button } from "@krizaka/ui/button";
+import { featureToolsCopy } from "@/console/core/copy/featureTools";
 import { engineCopy, type EngineLocale } from "@/console/core/copy/engine";
 import { useEngine } from "@/console/features/engine/hooks/useEngine";
 import { groupSettings } from "@/console/features/engine/utils/engine";
@@ -22,6 +24,7 @@ export function EngineScreen({ locale }: Readonly<{ locale?: EngineLocale }>) {
       <header className="flex flex-col gap-1">
         <h1 className="font-display text-3xl font-bold tracking-tight text-fg">{words.title}</h1>
         <p className="max-w-3xl text-sm text-fg-secondary">{words.lead}</p>
+        <Link href="/console/engine/tools" className="text-sm text-fg underline underline-offset-4">{featureToolsCopy[locale ?? pageLocale()].link}</Link>
       </header>
       {engine.hasError && !engine.isLoading && (
         <Alert tone="warning" action={<Button variant="secondary" size="sm" onClick={engine.reload}>{words.retry}</Button>}>{words.error}</Alert>
