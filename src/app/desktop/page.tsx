@@ -17,7 +17,7 @@ export const metadata: Metadata = {
 export const dynamic = "force-dynamic";
 
 export default async function Page() {
-  const { macEnabled } = readDownloads();
+  const { macEnabled } = await readDownloads();
   const release = macEnabled ? await loadDesktopRelease() : null;
   return <DesktopPage release={release} stores={readStoreLinks()} downloadEnabled={macEnabled} />;
 }

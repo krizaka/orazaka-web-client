@@ -16,6 +16,7 @@ const WORDS = {
     webhook: w("Webhooks", "Webhooks"),
     retention: w("Retention", "Rétention"),
     marketplace: w("Marketplace", "Marketplace"),
+    downloads: w("Downloads (public site)", "Téléchargements (site public)"),
     other: w("Other", "Autres"),
   },
   current: w("Current value", "Valeur actuelle"),

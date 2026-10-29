@@ -31,6 +31,7 @@ describe("engine utils", () => {
   it("groups by key prefix, routing and unknown prefixes falling to other", () => {
     expect(groupOf("run.x")).toBe("run");
     expect(groupOf("marketplace.y")).toBe("marketplace");
+    expect(groupOf("downloads.mac-enabled")).toBe("downloads");
     expect(groupOf("routing.z")).toBe("other");
     expect(groupSettings([setting({ key: "retention.b" }), setting({ key: "run.a" })]).map((g) => g.group)).toEqual(["run", "retention"]);
   });

@@ -25,6 +25,10 @@ const markdown = findPackage("@tanstack/markdown");
 const highlight = findPackage("@tanstack/highlight");
 const query = path.dirname(resolveFromApp("@krizaka/query/package.json"));
 const pacer = path.dirname(resolveFromApp("@krizaka/pacer/package.json"));
+// @krizaka/settings (findTypedPrices, orazaka#417) and its @krizaka/db are ES modules only: mapped to their files here,
+// compiled to CommonJS by the transform (both are in `transpilePackages` of next.config.ts, which next/jest reads).
+const settings = path.dirname(resolveFromApp("@krizaka/settings/package.json"));
+const db = path.dirname(createRequire(path.join(settings, "package.json")).resolve("@krizaka/db/package.json"));
 
 const createJestConfig = nextJest({
   dir: "./",
@@ -54,6 +58,8 @@ const config = {
     "^@krizaka/query/(.*)$": `${query}/dist/$1.js`,
     // @krizaka/pacer (a dependency of @krizaka/ui's DataTable): the same `import`-only exports.
     "^@krizaka/pacer/(.*)$": `${pacer}/dist/$1.js`,
+    "^@krizaka/settings$": `${settings}/dist/index.js`,
+    "^@krizaka/db$": `${db}/dist/index.js`,
     // @tanstack/markdown and @tanstack/highlight (under @krizaka/ui's Markdown and CodeBlock): the same `import`-only exports.
     "^@tanstack/markdown/(.*)$": `${markdown}/dist/$1.js`,
     "^@tanstack/highlight/(.*)$": `${highlight}/dist/$1.js`,
