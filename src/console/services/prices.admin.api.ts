@@ -23,7 +23,9 @@ const BASE = "/api/v1/billing/prices/admin";
 
 async function read(path: string): Promise<AdminPrice[]> {
   const response = await fetch(path);
-  if (!response.ok) throw new Error(`${response.status} ${response.statusText}`);
+  if (!response.ok) {
+    throw new Error(`${response.status} ${response.statusText}`);
+  }
   return z.array(AdminPriceSchema).parse(await response.json());
 }
 
