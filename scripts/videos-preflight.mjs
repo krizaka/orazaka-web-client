@@ -8,6 +8,10 @@
 //   3. the persona signs in on the web (NextAuth through ROUTER_URL: a booting core shows here while the edge may still answer);
 //   4. dev is not on an automated rollback (the old image would not have the fixes): read from the DigitalOcean app when a token
 //      is given (DIGITALOCEAN_ACCESS_TOKEN), otherwise reported as NOT VERIFIED, and refused with --require-rollback-guard.
+//   5. the tool-call path is proved free: conversation-service's ToolCallStreamPathTest (a streamed turn through the real engine,
+//      the seeded pipeline with RAG, the real tool loop and the real SSE relay, ending in a `tool-call` event) is green on main,
+//      and dev's core was deployed after the commit that last changed it (read from the DigitalOcean app; with
+//      --require-tool-proof an unreadable deploy time refuses).
 //
 //   ORAZAKA_USER_EMAIL=… ORAZAKA_USER_PASSWORD=… node scripts/videos-preflight.mjs [--base https://www.orazaka.com] [--require-rollback-guard]
 //
@@ -69,6 +73,51 @@ export function rollbackVerdict(deployments, required) {
   const failedAfter = deployments.find((d) => d.phase === "ERROR" && Date.parse(d.created_at) > Date.parse(active.created_at));
   if (failedAfter) return { ok: false, message: `deployment ${failedAfter.id.slice(0, 8)} failed after the active one (${active.id.slice(0, 8)})` };
   return { ok: true, message: `the active deployment ${active.id.slice(0, 8)} is not a rollback` };
+}
+
+const PROOF_REPO = "krizaka/orazaka-conversation-service";
+const PROOF_TEST = "src/test/java/com/krizaka/orazaka/conversationservice/infrastructure/adapter/rest/ToolCallStreamPathTest.java";
+
+/**
+ * The free proof that a streamed turn emits a `tool-call` event (orazaka-ai-engine#169): three paid runs came back without one,
+ * so no paid run starts until this test is green on main and dev runs a build made after it.
+ * @param {{ ciConclusion: string | null, proofCommittedAt: string | null, coreDeployedAt: string | null }} facts
+ * @param {boolean} required refuse when the deploy time could not be read
+ * @returns {{ ok: boolean, message: string }}
+ */
+export function toolPathVerdict({ ciConclusion, proofCommittedAt, coreDeployedAt }, required) {
+  if (!proofCommittedAt) {
+    return { ok: false, message: "the tool-call proof (ToolCallStreamPathTest) is not on main of conversation-service" };
+  }
+  if (ciConclusion !== "success") {
+    return { ok: false, message: `conversation-service CI on main is ${ciConclusion ?? "unreadable"}, not success: the tool-call proof is not green` };
+  }
+  if (!coreDeployedAt) {
+    return { ok: !required, message: `tool-call proof green on main; the build dev runs NOT VERIFIED (no DigitalOcean access)${required ? ": refused" : ""}` };
+  }
+  if (Date.parse(coreDeployedAt) < Date.parse(proofCommittedAt)) {
+    return { ok: false, message: `dev's core was deployed (${coreDeployedAt}) before the tool-call proof (${proofCommittedAt}): redeploy first` };
+  }
+  return { ok: true, message: "the tool-call proof is green on main and dev runs a build made after it" };
+}
+
+/** What the GitHub API says about the proof; null fields when it cannot be read. */
+async function toolPathFacts(coreDeployedAt) {
+  const get = async (path) => {
+    try {
+      const res = await fetch(`https://api.github.com/repos/${PROOF_REPO}/${path}`, { headers: { Accept: "application/vnd.github+json" } });
+      return res.ok ? await res.json() : null;
+    } catch {
+      return null;
+    }
+  };
+  const commits = await get(`commits?sha=main&per_page=1&path=${encodeURIComponent(PROOF_TEST)}`);
+  const runs = await get("actions/runs?branch=main&event=push&status=completed&per_page=1");
+  return {
+    proofCommittedAt: commits?.[0]?.commit?.committer?.date ?? null,
+    ciConclusion: runs?.workflow_runs?.[0]?.conclusion ?? null,
+    coreDeployedAt,
+  };
 }
 
 /**
@@ -138,7 +187,10 @@ async function main(args) {
     checks[`tool ${PROOF_TOOL}`] = { ok: false, message: "not checked (no sign-in)" };
   }
   checks["web sign-in"] = await webSignIn(base, email, pass).catch((e) => ({ ok: false, message: `the web sign-in failed: ${e.message}` }));
-  checks["rollback guard"] = rollbackVerdict(await deployments(process.env.DIGITALOCEAN_ACCESS_TOKEN), args.includes("--require-rollback-guard"));
+  const deployed = await deployments(process.env.DIGITALOCEAN_ACCESS_TOKEN);
+  checks["rollback guard"] = rollbackVerdict(deployed, args.includes("--require-rollback-guard"));
+  const activeAt = deployed?.find((d) => d.phase === "ACTIVE")?.created_at ?? null;
+  checks["tool-call proof"] = toolPathVerdict(await toolPathFacts(activeAt), args.includes("--require-tool-proof"));
   const r = report(checks);
   process.stdout.write(`${r.lines.join("\n")}\n${r.ok ? "preflight green: a paid run may start" : "preflight RED: no paid step runs"}\n`);
   if (!r.ok) process.exitCode = 1;
