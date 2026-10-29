@@ -86,10 +86,18 @@ const PROOF_TEST = "src/test/java/com/krizaka/orazaka/conversationservice/infras
  * @returns {{ ok: boolean, message: string }}
  */
 export function toolPathVerdict({ ciConclusion, proofCommittedAt, coreDeployedAt }, required) {
-  if (!proofCommittedAt) return { ok: false, message: "the tool-call proof (ToolCallStreamPathTest) is not on main of conversation-service" };
-  if (ciConclusion !== "success") return { ok: false, message: `conversation-service CI on main is ${ciConclusion ?? "unreadable"}, not success: the tool-call proof is not green` };
-  if (!coreDeployedAt) return { ok: !required, message: `tool-call proof green on main; the build dev runs NOT VERIFIED (no DigitalOcean access)${required ? ": refused" : ""}` };
-  if (Date.parse(coreDeployedAt) < Date.parse(proofCommittedAt)) return { ok: false, message: `dev's core was deployed (${coreDeployedAt}) before the tool-call proof (${proofCommittedAt}): redeploy first` };
+  if (!proofCommittedAt) {
+    return { ok: false, message: "the tool-call proof (ToolCallStreamPathTest) is not on main of conversation-service" };
+  }
+  if (ciConclusion !== "success") {
+    return { ok: false, message: `conversation-service CI on main is ${ciConclusion ?? "unreadable"}, not success: the tool-call proof is not green` };
+  }
+  if (!coreDeployedAt) {
+    return { ok: !required, message: `tool-call proof green on main; the build dev runs NOT VERIFIED (no DigitalOcean access)${required ? ": refused" : ""}` };
+  }
+  if (Date.parse(coreDeployedAt) < Date.parse(proofCommittedAt)) {
+    return { ok: false, message: `dev's core was deployed (${coreDeployedAt}) before the tool-call proof (${proofCommittedAt}): redeploy first` };
+  }
   return { ok: true, message: "the tool-call proof is green on main and dev runs a build made after it" };
 }
 
