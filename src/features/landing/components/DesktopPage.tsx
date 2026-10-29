@@ -1,96 +1,26 @@
 "use client";
 
 import type { ComponentType } from "react";
-import { CheckIcon, DownloadIcon, ExternalIcon, LocalIcon, type IconProps } from "@krizaka/icons";
+import { CheckIcon, DownloadIcon, LocalIcon, type IconProps } from "@krizaka/icons";
 import { Button } from "@krizaka/ui/button";
 import { CodeBlock } from "@krizaka/ui/code-block";
 import { SectionBackdrop } from "@krizaka/ui/section-backdrop";
 import { DeviceFrame } from "@krizaka/ui/step-showcase";
 import { useTranslation } from "@/core/context/LocaleContext";
-import { fill } from "@/core/context/fill";
 import { LandingNav } from "@/features/landing/components/LandingNav";
 import { LandingFooter } from "@/features/landing/components/LandingFooter";
-import { CopyButton } from "@/features/landing/components/CopyButton";
 import { AppVideosSection } from "@/features/landing/components/AppVideosSection";
 import { DesktopCapture } from "@/features/landing/components/DesktopCapture";
 import { PhoneSection } from "@/features/landing/components/PhoneSection";
 import { SectionHeading } from "@/features/landing/components/SectionHeading";
+import { DownloadBlock } from "@/features/landing/components/DesktopDownloadBlock";
+import type { DesktopDownload } from "@/features/landing/components/DesktopDownloadBlock";
 import type { StoreLinks } from "@/core/config/store-links";
-import { RELEASES_URL, type DesktopRelease } from "@/features/landing/utils/release";
+
 import "@/features/landing/landing.css";
 
-export type DesktopDownload = (DesktopRelease & { sha256: string | null }) | null;
-
-const megabytes = (bytes: number) => `${(bytes / 1_000_000).toFixed(1)} MB`;
 /** The small visual of each first-launch step, in order. */
 const STEP_ICONS: ComponentType<IconProps>[] = [DownloadIcon, LocalIcon, CheckIcon];
-
-function DownloadBlock({ release, downloadEnabled }: Readonly<{ release: DesktopDownload; downloadEnabled: boolean }>) {
-  const { t } = useTranslation();
-  const d = t.desktop;
-  if (!downloadEnabled) {
-    return (
-      <div className="space-y-3">
-        <Button variant="primary" size="lg" className="font-bold" disabled>
-          <DownloadIcon size={18} />
-          {d.download.button}
-        </Button>
-        <p role="note" className="text-sm text-fg-secondary">
-          {d.download.disabled}
-        </p>
-      </div>
-    );
-  }
-  if (release) {
-    return (
-      <div className="space-y-3">
-        <Button asChild variant="primary" size="lg" className="font-bold">
-          <a href="/desktop/download">
-            <DownloadIcon size={18} />
-            {d.download.button}
-          </a>
-        </Button>
-        <p className="text-sm text-fg-secondary">
-          {fill(d.download.facts, { size: megabytes(release.dmg.bytes) })} ·{" "}
-          <span data-testid="desktop-version">{fill(d.download.version, { version: release.version })}</span>
-        </p>
-        <p role="note" className="text-sm text-fg-secondary">
-          {d.download.testBuild}
-        </p>
-        {release.sha256 && (
-          <details className="group text-sm">
-            <summary className="cursor-pointer font-medium text-fg-accent">{d.download.verify}</summary>
-            <div className="mt-2 space-y-2 text-fg-secondary">
-              <p>{d.download.verifyBody}</p>
-              <p className="flex flex-wrap items-center gap-2">
-                <code data-testid="desktop-sha" className="break-all font-mono text-xs text-fg">
-                  {release.sha256}
-                </code>
-                <CopyButton
-                  text={release.sha256}
-                  label={d.download.shaCopy}
-                  done={d.download.shaCopied}
-                  failed={d.download.shaCopyFailed}
-                />
-              </p>
-            </div>
-          </details>
-        )}
-      </div>
-    );
-  }
-  return (
-    <div className="flex flex-wrap items-center gap-4">
-      <p className="text-sm text-fg-secondary">{d.download.unreadable}</p>
-      <Button asChild variant="secondary" size="md" shape="pill">
-        <a href={RELEASES_URL} target="_blank" rel="noopener noreferrer">
-          {d.download.releases}
-          <ExternalIcon size={16} />
-        </a>
-      </Button>
-    </div>
-  );
-}
 
 /**
  * `/desktop` — Orazaka for Mac, read in order: the promise and the app in its macOS window, one Download (its facts
@@ -267,3 +197,5 @@ export function DesktopPage({
     </>
   );
 }
+
+export type { DesktopDownload } from "@/features/landing/components/DesktopDownloadBlock";

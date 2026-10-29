@@ -20,36 +20,13 @@ import {
   wallTimeMs,
   whereRan,
 } from "@/features/jobs/utils/jobFacts";
-import type { Job, JobStatus } from "@/core/types/jobs.types";
+import type { Job } from "@/core/types/jobs.types";
 import { JobDetail } from "./JobDetail";
 import { MODEL_NAMES } from "./modelNames";
 import { JobThumb } from "./JobThumb";
+import { PAGE_SIZES, TONE, type JobsTableProps } from "./jobsTableShape";
 
-const PAGE_SIZES = [10, 20, 50] as const;
-const TONE: Record<JobStatus, "neutral" | "accent" | "success" | "danger"> = {
-  PENDING: "neutral",
-  PROCESSING: "accent",
-  COMPLETED: "success",
-  FAILED: "danger",
-  CANCELLED: "neutral",
-  DELETED: "neutral",
-};
-
-export interface JobsTableProps {
-  jobs: Job[];
-  loading: boolean;
-  totalElements: number;
-  /** From 0. */
-  currentPage: number;
-  pageSize: number;
-  onPageChange: (page: number) => void;
-  onPageSizeChange: (size: number) => void;
-  onOpenModal: (job: Job, type: "payload" | "result") => void;
-  copiedId: string | null;
-  onCopy: (text: string, id: string) => void;
-  /** Deletes a task and its result (orazaka-web-client#86). The action shows only when the page provides it. */
-  onDelete?: (job: Job) => void;
-}
+export type { JobsTableProps } from "./jobsTableShape";
 
 /**
  * The tasks, one line each, on the kit's responsive DataTable (cards on a phone): a preview, the task and its Studio, the

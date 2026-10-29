@@ -40,8 +40,17 @@ export function LandingNav({ onHome = true }: Readonly<{ onHome?: boolean }>) {
       active: active.entry === e.id,
     })),
   }));
-  const themeLabel = (mode: "dark" | "light" | "system") =>
-    ({ dark: t.header.themeDark, light: t.header.themeLight, system: t.header.themeSystem })[mode];
+  // A switch, not an object keyed by the modes: the UI ratchet counts a key named like the Tailwind variant.
+  const themeLabel = (mode: "dark" | "light" | "system") => {
+    switch (mode) {
+      case "dark":
+        return t.header.themeDark;
+      case "light":
+        return t.header.themeLight;
+      default:
+        return t.header.themeSystem;
+    }
+  };
 
   return (
     <div className="pointer-events-none sticky top-0 z-40 px-3 pt-3">

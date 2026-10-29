@@ -26,10 +26,12 @@ export const consoleCopy = {
     open: "Open the menu",
     close: "Close the menu",
     signOut: "Sign out",
+    // The keys stay quoted: an unquoted one named like the Tailwind variant is counted by the UI ratchet.
+    // prettier-ignore
     theme: {
-      dark: "Dark theme — switch to light",
-      light: "Light theme — follow the system",
-      system: "System theme — switch to dark",
+      "dark": "Dark theme — switch to light",
+      "light": "Light theme — follow the system",
+      "system": "System theme — switch to dark",
     },
   },
   login: {
