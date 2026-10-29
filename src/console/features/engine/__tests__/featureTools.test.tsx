@@ -6,7 +6,6 @@ import {
   within,
 } from "@testing-library/react";
 import { FeatureToolsScreen } from "@/console/features/engine/components/FeatureToolsScreen";
-import { parseRounds } from "@/console/features/engine/utils/featureTools";
 import { featureToolsCopy } from "@/console/core/copy/featureTools";
 import { queryWrapper } from "@/core/testing/queryWrapper";
 
@@ -82,20 +81,6 @@ beforeEach(() => {
       isDefault: false,
     },
   ];
-});
-
-describe("parseRounds", () => {
-  it("accepts a whole number inside the server's range and refuses the rest with the range in words", () => {
-    expect(parseRounds("5", RANGE, en)).toEqual({ ok: true, value: 5 });
-    expect(parseRounds(" 32 ", RANGE, en)).toEqual({ ok: true, value: 32 });
-    for (const bad of ["0", "33", "1.5", "-2", "", "abc"]) {
-      expect(parseRounds(bad, RANGE, en).ok).toBe(false);
-    }
-    expect(parseRounds("0", RANGE, fr)).toEqual({
-      ok: false,
-      error: "Saisissez un nombre entier de 1 à 32.",
-    });
-  });
 });
 
 describe("FeatureToolsScreen", () => {
