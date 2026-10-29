@@ -5,7 +5,7 @@ import { llmsFullText, llmsText } from "@/app/_seo/seo";
 
 // NAV-INDEP: once deployed, Orazaka is an independent product — no link to, nor mention of, another product's domain.
 // Krizaka is its publisher and appears in the footer ("A Krizaka product" -> www.krizaka.com), nothing else.
-const OTHER_PRODUCTS = /(?:[a-z0-9-]+\.)*(?:orochia|yasakia|yazakia|yororis)\.com/i;
+const OTHER_PRODUCTS = /(?:[a-z0-9-]+\.)*(?:yomizaka|akinaza)\.com/i;
 
 function* walk(dir: string): Generator<string> {
   if (!existsSync(dir)) return;

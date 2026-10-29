@@ -18,9 +18,9 @@ describe("groupByAccount (orazaka#372)", () => {
   });
 
   it("shows an account the ledger does not know as zero, and ignores consumers outside the organization", () => {
-    const rows = groupByAccount([key("k1", "u-yasakia", "svc_yasakia")], [{ actorId: "someone-else", events: 99, creditsCharged: 999 }]);
+    const rows = groupByAccount([key("k1", "u-akinaza", "svc_akinaza")], [{ actorId: "someone-else", events: 99, creditsCharged: 999 }]);
     expect(rows).toHaveLength(1);
-    expect(rows[0]).toMatchObject({ account: "svc_yasakia", events: 0, creditsCharged: 0 });
+    expect(rows[0]).toMatchObject({ account: "svc_akinaza", events: 0, creditsCharged: 0 });
   });
 
   it("breaks a tie by account name, so the order is stable", () => {
