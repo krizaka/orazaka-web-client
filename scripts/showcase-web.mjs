@@ -76,7 +76,7 @@ await record(
     page.on("response", async (response) => {
       if (!(response.headers()["content-type"] ?? "").includes("text/event-stream")) return;
       const body = await response.text().catch(() => "");
-      if (body) appendFileSync(path.join(outDir, "chat-sse.txt"), `# ${response.url().replace(/[?#].*$/, "")}\n${body}\n`);
+      if (body) appendFileSync(path.join(outDir, "chat-sse.txt"), `# ${new URL(response.url(), "http://x").pathname}\n${body}\n`);
     });
     await page.goto(`${base}/chat`, { waitUntil: "load" });
     const box = page.locator("textarea").first();
