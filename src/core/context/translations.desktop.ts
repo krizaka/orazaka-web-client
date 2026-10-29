@@ -29,6 +29,8 @@ export interface DesktopDictionary {
     /** `{size}` is the .dmg's size. */
     facts: string;
     testBuild: string;
+    /** Shown instead of the facts while the Mac download is switched off (`APP_DOWNLOADS_MAC_ENABLED`). */
+    disabled: string;
     version: string;
     verify: string;
     verifyBody: string;
@@ -72,6 +74,7 @@ export const desktop: Record<Locale, DesktopDictionary> = {
     download: {
       button: "Download for Mac",
       facts: "Apple Silicon · macOS 14+ · {size}",
+      disabled: "In testing — not distributed yet.",
       testBuild: "A test build: not yet signed by Apple — the first launch takes one extra step.",
       version: "Version {version}",
       verify: "Verify the download",
@@ -160,6 +163,7 @@ export const desktop: Record<Locale, DesktopDictionary> = {
     download: {
       button: "Télécharger pour Mac",
       facts: "Apple Silicon · macOS 14+ · {size}",
+      disabled: "En test — pas encore distribuée.",
       testBuild: "Une version de test : pas encore signée par Apple — le premier lancement demande une étape de plus.",
       version: "Version {version}",
       verify: "Vérifier le téléchargement",
