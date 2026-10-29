@@ -9,7 +9,7 @@
 //   ORAZAKA_USER_EMAIL=… ORAZAKA_USER_PASSWORD=… node scripts/showcase-web.mjs <out-dir> [--base https://www.orazaka.com]
 //
 // Writes <out-dir>/web-chat.webm and web-studio.webm (no audio), ready for the app-videos action.
-import { mkdirSync, renameSync } from "node:fs";
+import { appendFileSync, mkdirSync, renameSync } from "node:fs";
 import path from "node:path";
 import { chromium } from "@playwright/test";
 import { askRecordedQuestion } from "./tour/chat-journey.mjs";
@@ -72,6 +72,12 @@ const state = await session();
 await record(
   "web-chat",
   async (page) => {
+    // The proof of a server tool run (orazaka-ai-engine#169): the turn's event stream, kept beside the video (the `tool-call` event).
+    page.on("response", async (response) => {
+      if (!(response.headers()["content-type"] ?? "").includes("text/event-stream")) return;
+      const body = await response.text().catch(() => "");
+      if (body) appendFileSync(path.join(outDir, "chat-sse.txt"), `# ${response.url().replace(/[?#].*$/, "")}\n${body}\n`);
+    });
     await page.goto(`${base}/chat`, { waitUntil: "load" });
     const box = page.locator("textarea").first();
     await box.waitFor();

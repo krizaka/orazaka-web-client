@@ -49,7 +49,7 @@ export const PREPARED = [
 
 /** The recorded chat: a question typed, the policy pasted under it, an answer sourced on the policy. */
 export const RECORDED_QUESTION =
-  "Ms Laurent wants to return her custom-glaze Halo lamp after 20 days. According to our policy, what do I tell her? Two sentences.";
+  "Ms Laurent wants to return her custom-glaze Halo lamp after 20 days. According to our policy, what do I tell her? Two sentences. Then check article 1457 of the Civil Code of Québec with your statute lookup and tell me in one line whether it changes the answer.";
 export const RECORDED_DOCUMENT = RETURNS_POLICY;
 
 /** The recorded visual: a product shot for the shop, generated on this machine. */
