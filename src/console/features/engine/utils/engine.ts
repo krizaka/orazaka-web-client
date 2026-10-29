@@ -1,10 +1,10 @@
 import type { RuntimeSetting, SettingValue } from "@/console/services/runtime-config.admin.api";
 import { fill, type EngineWords } from "@/console/core/copy/engine";
 
-export const ENGINE_GROUPS = ["run", "webhook", "retention", "marketplace", "other"] as const;
+export const ENGINE_GROUPS = ["run", "webhook", "retention", "marketplace", "downloads", "other"] as const;
 export type EngineGroup = (typeof ENGINE_GROUPS)[number];
 
-/** The group of a key, by its prefix (`run.*`, `webhook.*`, `retention.*`, `marketplace.*`); `routing.*` is not this screen's. */
+/** The group of a key, by its prefix (`run.*`, `webhook.*`, `retention.*`, `marketplace.*`, `downloads.*`); `routing.*` is not this screen's. */
 export function groupOf(key: string): EngineGroup {
   const prefix = key.split(".")[0];
   return (ENGINE_GROUPS as readonly string[]).includes(prefix) && prefix !== "other" ? (prefix as EngineGroup) : "other";
