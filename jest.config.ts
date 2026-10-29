@@ -35,6 +35,7 @@ const config = {
   setupFiles: ["<rootDir>/tests/setup.ts"],
   moduleNameMapper: {
     "^@/(.*)$": "<rootDir>/src/$1",
+    "^@krizaka/auth$": "<rootDir>/tests/auth-stub.ts",
     // @krizaka/ui (re-exported by @krizaka/orazaka-design-system 2.x) exposes its entries under the `import`
     // condition only, which Jest's CommonJS resolver does not read: map them to their files.
     "^@krizaka/ui$": `${ui}/dist/index.js`,

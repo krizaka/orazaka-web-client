@@ -155,7 +155,7 @@ export const desktop: Record<Locale, DesktopDictionary> = {
       title: "Sur votre téléphone",
       soon: "Bientôt sur iPhone et Android",
       ios: { button: "Télécharger sur l'App Store", soon: "iPhone : bientôt" },
-      android: { button: "Disponible sur Google Play", soon: "Android : bientôt" },
+      android: { button: "Obtenir sur Google Play", soon: "Android : bientôt" },
     },
     download: {
       button: "Télécharger pour Mac",

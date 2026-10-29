@@ -1,6 +1,6 @@
 {
   "product": "orazaka",
-  "cdn": "https://krizaka-assets.b-cdn.net/site",
+  "cdn": "https://krizaka-assets.b-cdn.net",
   "videos": [
     {
       "platform": "web",
@@ -8,9 +8,9 @@
       "seconds": 10.9,
       "capturedAt": "2026-10-27T15:33:37.695Z",
       "files": {
-        "webm": "products/orazaka/download/web-chat.641c053cd5.webm",
-        "mp4": "products/orazaka/download/web-chat.5671ee6826.mp4",
-        "poster": "products/orazaka/download/web-chat.499d8a2523.jpg"
+        "webm": "sites/orazaka/download/web-chat.641c053cd5.webm",
+        "mp4": "sites/orazaka/download/web-chat.5671ee6826.mp4",
+        "poster": "sites/orazaka/download/web-chat.499d8a2523.jpg"
       }
     },
     {
@@ -19,9 +19,9 @@
       "seconds": 19,
       "capturedAt": "2026-10-27T15:33:54.323Z",
       "files": {
-        "webm": "products/orazaka/download/web-studio.7737f82201.webm",
-        "mp4": "products/orazaka/download/web-studio.cd8b941628.mp4",
-        "poster": "products/orazaka/download/web-studio.3b8454bbf9.jpg"
+        "webm": "sites/orazaka/download/web-studio.7737f82201.webm",
+        "mp4": "sites/orazaka/download/web-studio.cd8b941628.mp4",
+        "poster": "sites/orazaka/download/web-studio.3b8454bbf9.jpg"
       }
     }
   ]

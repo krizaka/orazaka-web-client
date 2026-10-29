@@ -1,8 +1,8 @@
 /**
  * The public bar of dev.orazaka.com as data — the product-site standard of every Krizaka product (addendum 2026-10-15,
  * docs/ux/information-architecture.md of the Orazaka workspace): the mark, then at most four entries grouped by the
- * visitor's question — **Product ▾** (what is it, what does it install, where do I get it?) and **Docs** (how do I use
- * it?) — and Pricing when it exists. Simplified for epic #231: the gallery, the models page, the feature tours and the
+ * visitor's question — **Product ▾** (what is it, what does it install, where do I get it?), **Docs** (how do I use
+ * it?), then **Pricing** and **Open source** as direct links (#290). Simplified for epic #231: the gallery, the models page, the feature tours and the
  * platforms menu are gone (docs and the home hold what they said).
  * The bar, the mobile panel and the footer read this one list, in this order.
  */
@@ -48,6 +48,13 @@ export const NAV_GROUPS: readonly NavGroup[] = [PRODUCT];
 /** Docs — a direct link: the documentation is a reading place, not a menu. */
 export const NAV_DOCS = { path: "/docs" } as const;
 
+/** Pricing and Open source — direct links after Docs (the words are `t.landing.nav[id]`). */
+export const NAV_PAGES = [
+  { id: "pricing", path: "/pricing" },
+  { id: "openSource", path: "/open-source" },
+] as const;
+export type NavPageId = (typeof NAV_PAGES)[number]["id"];
+
 const under = (pathname: string, base: string) => pathname === base || pathname.startsWith(`${base}/`);
 
 /** The entry the page belongs to, if a group holds it. */
@@ -64,10 +71,12 @@ export function currentEntry(pathname: string | null | undefined): { group: NavG
  * Where the visitor is, as the bar shows it — at most one top-level item lit: the group holding the page, else Docs for
  * the rest of /docs, else nothing (the home, whose sections are anchors).
  */
-export function navActive(pathname: string | null | undefined): { top: NavGroupId | "docs" | null; entry: NavEntryId | null } {
+export function navActive(pathname: string | null | undefined): { top: NavGroupId | "docs" | NavPageId | null; entry: NavEntryId | null } {
   const hit = currentEntry(pathname);
   if (hit) return { top: hit.group, entry: hit.entry };
   if (under(pathname ?? "", NAV_DOCS.path)) return { top: "docs", entry: null };
+  const page = NAV_PAGES.find((n) => under(pathname ?? "", n.path));
+  if (page) return { top: page.id, entry: null };
   return { top: null, entry: null };
 }
 

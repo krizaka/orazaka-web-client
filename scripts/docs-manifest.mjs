@@ -43,7 +43,6 @@ export const DOCS = [
   { slug: "architecture", journey: "reference", group: "platform", order: 6, source: "docs/_generated/ARCHITECTURE.md", generated: true, title: "Architecture", intro: "The module map, dependencies, runtime flows, interceptor pipeline and messaging topology.", audience: "developer" },
   { slug: "auth", journey: "reference", group: "policies", order: 1, source: "docs/AUTH.md", title: "Authentication and sessions", intro: "How identity, sessions and access control work, flow by flow.", audience: "operator" },
   { slug: "security", journey: "reference", group: "policies", order: 2, source: "SECURITY.md", title: "Security policy", intro: "How to report a vulnerability and which versions get fixes.", audience: "operator" },
-  { slug: "licensing", journey: "reference", group: "policies", order: 3, source: "docs/LICENSING.md", title: "Licensing", intro: "What Apache-2.0 covers across the repositories, and where the proprietary line falls.", audience: "decision-maker" },
 ];
 
 /** The pages that are not a markdown file of the source: the hub links them, the sidebar lists them. */

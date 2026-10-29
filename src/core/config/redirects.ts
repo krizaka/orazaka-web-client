@@ -48,6 +48,8 @@ export const REMOVED_DOCS: readonly { source: string; destination: string }[] = 
   { source: "/docs/jobs", destination: "/docs/architecture" },
   { source: "/docs/admin", destination: "/docs/self-hosting" },
   { source: "/docs/mobile-guide", destination: "/docs/mobile" },
+  // The licence line moved to /open-source (krizaka/orazaka-web-client#290).
+  { source: "/docs/licensing", destination: "/open-source" },
 ];
 
 /** Older renames, kept (their targets are the pages that stay). */
@@ -66,7 +68,7 @@ const RENAMED: readonly { source: string; destination: string }[] = [
 
 export const PUBLIC_REDIRECTS: readonly Redirect[] = [
   // The contact form lives on krizaka.com.
-  { source: "/contact", destination: "https://www.krizaka.com/contact", permanent: false },
+  { source: "/contact", destination: "https://www.krizaka.com/contact?topic=orazaka", permanent: true },
   ...[...REMOVED_PUBLIC, ...REMOVED_DOCS, ...RENAMED].map((r) => ({ ...r, permanent: true })),
   // Not on admin.orazaka.com: /billing is a section of the operator console there (src/console), served by the proxy.
   { source: "/billing", has: [{ type: "host", value: "(?!admin\\.).*" }], destination: "/usage", permanent: true },

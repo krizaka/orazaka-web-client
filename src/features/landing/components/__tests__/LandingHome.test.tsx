@@ -67,7 +67,7 @@ describe("LandingPage", () => {
     expect(take.muted).toBe(true);
     expect(take.loop).toBe(true);
     expect(take).not.toHaveAttribute("controls");
-    expect(take).toHaveAttribute("poster", expect.stringMatching(new RegExp(`products/orazaka/home/take-en-${look}-poster\\.[0-9a-f]{10}\\.webp$`)));
+    expect(take).toHaveAttribute("poster", expect.stringMatching(new RegExp(`sites/orazaka/home/take-en-${look}-poster\\.[0-9a-f]{10}\\.webp$`)));
     expect(take.querySelector("source[type='video/webm']")).toHaveAttribute("src", expect.stringMatching(new RegExp(`take-en-${look}\\.[0-9a-f]{10}\\.webm$`)));
     expect(take.querySelector("source[type='video/mp4']")).toHaveAttribute("src", expect.stringMatching(new RegExp(`take-en-${look}\\.[0-9a-f]{10}\\.mp4$`)));
     expect(screen.getByText(translations.en.clips.take.caption)).toBeInTheDocument();
@@ -104,7 +104,7 @@ describe("LandingPage", () => {
     const clips = [...features.querySelectorAll("video")];
     expect(clips.map((v) => v.getAttribute("data-testid"))).toEqual(["clip-studio", "clip-results", "clip-workspace"]);
     clips.forEach((v) => {
-      expect(v.getAttribute("poster")).toMatch(/products\/orazaka\/web\/step-(studio|results|workspace)-(dark|light)-poster\.[0-9a-f]{10}\.webp$/);
+      expect(v.getAttribute("poster")).toMatch(/sites\/orazaka\/web\/step-(studio|results|workspace)-(dark|light)-poster\.[0-9a-f]{10}\.webp$/);
       expect(v.muted).toBe(true);
       expect(v.loop).toBe(true);
       expect(v.querySelectorAll("track[kind='captions']")).toHaveLength(2);
@@ -191,7 +191,7 @@ describe("LandingPage while sign-in and sign-up are closed (the default)", () =>
     expect(within(bar).getAllByRole("link", { name: translations.en.landing.nav.signIn })[0]).toHaveAttribute("href", "/login");
     expect(within(bar).queryByRole("link", { name: /talk to us|contact/i })).toBeNull();
     const centre = within(bar).getByRole("navigation", { name: "Orazaka" });
-    expect(within(centre).getAllByRole("link").map((a) => a.getAttribute("href"))).toEqual(["#features", "/desktop", "/docs"]);
+    expect(within(centre).getAllByRole("link").map((a) => a.getAttribute("href"))).toEqual(["#features", "/desktop", "/docs", "/pricing", "/open-source"]);
     expect(within(centre).getAllByRole("button").map((b) => b.textContent)).toEqual([translations.en.landing.nav.product]);
   });
 });

@@ -9,10 +9,12 @@
  * @see {@link http://localhost:8080/api/v1/auth/login} - Upstream credentials auth endpoint.
  */
 
-import type { NextAuthOptions } from "next-auth";
+import type { Account, NextAuthOptions, User } from "next-auth";
+import type { JWT } from "next-auth/jwt";
 import GithubProvider from "next-auth/providers/github";
 import GoogleProvider from "next-auth/providers/google";
 import CredentialsProvider from "next-auth/providers/credentials";
+import { buildOAuthExchangeBody, isOAuthProvider } from "@/core/auth/oauth-exchange";
 import { githubConfigured, googleConfigured, providerOffered, parseFlag } from "@/core/config/auth-flags";
 
 const signup = parseFlag(process.env.AUTH_SIGNUP_ENABLED);
@@ -21,6 +23,33 @@ const oauthProviders = [
   ...(providerOffered(githubConfigured(process.env), signup) ? [GithubProvider({ clientId: process.env.GITHUB_ID as string, clientSecret: process.env.GITHUB_SECRET as string })] : []),
   ...(providerOffered(googleConfigured(process.env), signup) ? [GoogleProvider({ clientId: process.env.GOOGLE_CLIENT_ID as string, clientSecret: process.env.GOOGLE_CLIENT_SECRET as string })] : []),
 ];
+
+/** Exchanges the provider's credential for a gateway session (JIT provisioning) and carries it in the JWT. */
+async function provisionOAuthUser(jwt: JWT, account: Account, user: User): Promise<void> {
+  const exchange = buildOAuthExchangeBody(account, user);
+  if (!exchange) {
+    console.error("OAuth sign-in without a usable credential for provider:", account.provider);
+    return;
+  }
+  try {
+    const gatewayUrl = process.env.ROUTER_URL || process.env.GATEWAY_URL || "http://localhost:8080";
+    const response = await fetch(`${gatewayUrl}/api/v1/auth/oauth`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(exchange),
+    });
+    if (!response.ok) {
+      console.error("Failed to JIT provision OAuth user:", response.statusText);
+      return;
+    }
+    const dbUser = await response.json();
+    jwt.id = dbUser.token;
+    jwt.role = "user";
+    jwt.activeInterceptions = dbUser.active_interceptions || [];
+  } catch (error) {
+    console.error("Error during JIT provisioning:", error);
+  }
+}
 
 /**
  * NextAuth options defining authentication providers, custom callbacks, pages routing,
@@ -95,35 +124,8 @@ export const authOptions: NextAuthOptions = {
   callbacks: {
     async jwt({ token, user, account, trigger, session }) {
       if (user) {
-        if (
-          account &&
-          (account.provider === "github" || account.provider === "google")
-        ) {
-          try {
-            const gatewayUrl =
-              process.env.ROUTER_URL || process.env.GATEWAY_URL || "http://localhost:8080";
-            const response = await fetch(`${gatewayUrl}/api/v1/auth/oauth`, {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({
-                email: user.email,
-                username: user.name || user.email?.split("@")[0],
-              }),
-            });
-            if (response.ok) {
-              const dbUser = await response.json();
-              token.id = dbUser.token;
-              token.role = "user";
-              token.activeInterceptions = dbUser.active_interceptions || [];
-            } else {
-              console.error(
-                "Failed to JIT provision OAuth user:",
-                response.statusText,
-              );
-            }
-          } catch (error) {
-            console.error("Error during JIT provisioning:", error);
-          }
+        if (account && isOAuthProvider(account.provider)) {
+          await provisionOAuthUser(token, account, user);
         } else {
           token.role = user.role;
           token.id = user.id;
