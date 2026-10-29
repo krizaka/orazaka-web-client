@@ -6,6 +6,7 @@ import { PacksScreen } from "@/console/features/billing/components/PacksScreen";
 import { ModelPricingScreen } from "@/console/features/billing/components/ModelPricingScreen";
 import { PricebookScreen } from "@/console/features/billing/components/PricebookScreen";
 import { KeyUsageScreen } from "@/console/features/billing/components/KeyUsageScreen";
+import { PricesScreen } from "@/console/features/billing/components/PricesScreen";
 import { UsageScreen } from "@/console/features/billing/components/UsageScreen";
 import { WalletScreen } from "@/console/features/billing/components/WalletScreen";
 
@@ -15,6 +16,7 @@ const TABS = [
   { id: "models", label: "Tarifs par modèle" },
   { id: "pricebook", label: "Tarifs par capacité" },
   { id: "plans", label: "Offres" },
+  { id: "prices", label: "Catalogue de prix" },
   { id: "packs", label: "Packs métier" },
   { id: "wallets", label: "Portefeuilles" },
 ] as const;
@@ -62,6 +64,9 @@ export default function BillingPage() {
         </Tabs.Content>
         <Tabs.Content value="plans">
           <PlansScreen />
+        </Tabs.Content>
+        <Tabs.Content value="prices">
+          <PricesScreen />
         </Tabs.Content>
         <Tabs.Content value="packs">
           <PacksScreen />
