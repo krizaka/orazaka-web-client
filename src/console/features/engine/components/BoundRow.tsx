@@ -8,32 +8,40 @@ import { Field, Input } from "@krizaka/ui/field";
 import { fill } from "@/console/core/copy/engine";
 import type { FeatureToolsWords } from "@/console/core/copy/featureTools";
 import { parseRounds } from "@/console/features/engine/utils/featureTools";
-import type { ToolBound } from "@/console/services/feature-tools.admin.api";
 
 export type Range = { min: number; max: number };
-export type Save = (featureKey: string, rounds: number) => Promise<string | null>;
+/** Which bound a row edits: the tool rounds of a turn, or the answers of a structured-output call. */
+export type BoundKind = "tools" | "structured";
+export type Save = (
+  featureKey: string,
+  rounds: number,
+) => Promise<string | null>;
 
-/** One bound, edited in place: the rounds typed are checked against the server's range before they are sent. */
+/** One bound, edited in place: the number typed is checked against the server's range before it is sent. */
 export function BoundRow({
   bound,
+  value,
+  kind = "tools",
   range,
   words,
   onSave,
   onRemove,
 }: Readonly<{
-  bound: ToolBound;
+  bound: { featureKey: string; isDefault: boolean };
+  value: number;
+  kind?: BoundKind;
   range: Range;
   words: FeatureToolsWords;
   onSave: Save;
   onRemove: (featureKey: string) => Promise<string | null>;
 }>) {
-  const [draft, setDraft] = React.useState(String(bound.maxToolRounds));
+  const [draft, setDraft] = React.useState(String(value));
   const [error, setError] = React.useState<string | null>(null);
   const [status, setStatus] = React.useState<"idle" | "saving" | "saved">(
     "idle",
   );
-  const id = `bound-${bound.featureKey}`;
-  const dirty = draft !== String(bound.maxToolRounds);
+  const id = `${kind === "tools" ? "bound" : kind}-${bound.featureKey}`;
+  const dirty = draft !== String(value);
 
   const submit = async () => {
     const parsed = parseRounds(draft, range, words);
@@ -55,7 +63,13 @@ export function BoundRow({
 
   return (
     <Card.Root className="p-5">
-      <div data-bound={bound.featureKey} className="flex flex-col gap-3">
+      <div
+        data-bound={kind === "tools" ? bound.featureKey : undefined}
+        data-structured-bound={
+          kind === "structured" ? bound.featureKey : undefined
+        }
+        className="flex flex-col gap-3"
+      >
         <header className="flex flex-wrap items-center justify-between gap-2">
           <h3 className="font-mono text-sm font-semibold text-fg">
             {bound.isDefault ? words.defaultRow : bound.featureKey}

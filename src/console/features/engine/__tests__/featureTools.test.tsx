@@ -40,6 +40,7 @@ function mockServer() {
     if (url.endsWith("/feature-routes")) {
       return reply(200, ROUTES);
     }
+    if (url.endsWith("/feature-structured-bounds")) return reply(200, { min: 1, max: 5, bounds: [] });
     if (url.endsWith("/feature-tool-bounds")) {
       return reply(200, { ...RANGE, bounds });
     }

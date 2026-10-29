@@ -2,15 +2,19 @@ import { z } from "zod";
 
 /**
  * Stateless adapter for the per-feature engine settings of the conversation service (orazaka-ai-engine#169), through
- * the BFF (`/api/v1/**`, AGENTS.md §8): the most tool rounds a feature key may run in a turn, and the models each
+ * the BFF (`/api/v1/**`, AGENTS.md §8): the most tool rounds a feature key may run in a turn, the most answers a structured-output call may ask for (#172), and the models each
  * feature routes to (read only). Responses are parsed: a screen that misreads a bound would show a wrong limit.
  */
 export const ToolBoundSchema = z.object({ featureKey: z.string(), maxToolRounds: z.number().int(), isDefault: z.boolean() });
 export const ToolBoundsSchema = z.object({ min: z.number().int(), max: z.number().int(), bounds: z.array(ToolBoundSchema) });
+export const StructuredBoundSchema = z.object({ featureKey: z.string(), maxAttempts: z.number().int(), isDefault: z.boolean() });
+export const StructuredBoundsSchema = z.object({ min: z.number().int(), max: z.number().int(), bounds: z.array(StructuredBoundSchema) });
 export const FeatureRouteSchema = z.object({ featureKey: z.string(), models: z.array(z.string()) });
 
 export type ToolBound = z.infer<typeof ToolBoundSchema>;
 export type ToolBounds = z.infer<typeof ToolBoundsSchema>;
+export type StructuredBound = z.infer<typeof StructuredBoundSchema>;
+export type StructuredBounds = z.infer<typeof StructuredBoundsSchema>;
 export type FeatureRoute = z.infer<typeof FeatureRouteSchema>;
 
 /** A refusal of the server (400 `invalid-request`): its message is shown next to the field. */
@@ -46,6 +50,18 @@ export const FeatureToolsApi = {
   /** Removes a feature's own bound so it follows the default row. */
   remove: async (featureKey: string): Promise<void> => {
     await call(`${BASE}/feature-tool-bounds/${encodeURIComponent(featureKey)}`, { method: "DELETE" });
+  },
+
+  /** Every structured-output bound (the default row `*` first) and the range the server accepts. */
+  structuredBounds: async (): Promise<StructuredBounds> => StructuredBoundsSchema.parse(await call(`${BASE}/feature-structured-bounds`)),
+
+  /** Sets the most answers a feature's structured calls may ask for; it applies on the next call. */
+  saveStructured: async (featureKey: string, maxAttempts: number): Promise<StructuredBound> =>
+    StructuredBoundSchema.parse(await call(`${BASE}/feature-structured-bounds/${encodeURIComponent(featureKey)}`, { method: "PUT", body: JSON.stringify({ maxAttempts }) })),
+
+  /** Removes a feature's own structured bound so it follows the default row. */
+  removeStructured: async (featureKey: string): Promise<void> => {
+    await call(`${BASE}/feature-structured-bounds/${encodeURIComponent(featureKey)}`, { method: "DELETE" });
   },
 
   /** The feature routes: each feature key with its models, best first. */
