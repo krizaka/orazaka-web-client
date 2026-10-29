@@ -25,6 +25,67 @@ const megabytes = (bytes: number) => `${(bytes / 1_000_000).toFixed(1)} MB`;
 /** The small visual of each first-launch step, in order. */
 const STEP_ICONS: ComponentType<IconProps>[] = [DownloadIcon, LocalIcon, CheckIcon];
 
+function DownloadBlock({ release, downloadEnabled }: Readonly<{ release: DesktopDownload; downloadEnabled: boolean }>) {
+  const { t } = useTranslation();
+  const d = t.desktop;
+  if (!downloadEnabled) {
+    return (
+        <div className="space-y-3">
+          <Button variant="primary" size="lg" className="font-bold" disabled>
+            <DownloadIcon size={18} />
+            {d.download.button}
+          </Button>
+          <p role="note" className="text-sm text-fg-secondary">
+            {d.download.disabled}
+          </p>
+        </div>
+    );
+  }
+  if (release) {
+    return (
+        <div className="space-y-3">
+          <Button asChild variant="primary" size="lg" className="font-bold">
+            <a href="/desktop/download">
+              <DownloadIcon size={18} />
+              {d.download.button}
+            </a>
+          </Button>
+          <p className="text-sm text-fg-secondary">
+            {fill(d.download.facts, { size: megabytes(release.dmg.bytes) })} · <span data-testid="desktop-version">{fill(d.download.version, { version: release.version })}</span>
+          </p>
+          <p role="note" className="text-sm text-fg-secondary">
+            {d.download.testBuild}
+          </p>
+          {release.sha256 && (
+            <details className="group text-sm">
+              <summary className="cursor-pointer font-medium text-fg-accent">{d.download.verify}</summary>
+              <div className="mt-2 space-y-2 text-fg-secondary">
+                <p>{d.download.verifyBody}</p>
+                <p className="flex flex-wrap items-center gap-2">
+                  <code data-testid="desktop-sha" className="break-all font-mono text-xs text-fg">
+                    {release.sha256}
+                  </code>
+                  <CopyButton text={release.sha256} label={d.download.shaCopy} done={d.download.shaCopied} failed={d.download.shaCopyFailed} />
+                </p>
+              </div>
+            </details>
+          )}
+        </div>
+    );
+  }
+  return (
+        <div className="flex flex-wrap items-center gap-4">
+          <p className="text-sm text-fg-secondary">{d.download.unreadable}</p>
+          <Button asChild variant="secondary" size="md" shape="pill">
+            <a href={RELEASES_URL} target="_blank" rel="noopener noreferrer">
+              {d.download.releases}
+              <ExternalIcon size={16} />
+            </a>
+          </Button>
+        </div>
+  );
+}
+
 /**
  * `/desktop` — Orazaka for Mac, read in order: the promise and the app in its macOS window, one Download (its facts
  * quiet, the SHA-256 in a disclosure), the first launch of a build not yet signed by Apple in three steps (the
@@ -46,56 +107,7 @@ export function DesktopPage({ release, stores = { ios: null, android: null }, do
               <p className="font-mono text-xs font-semibold text-fg-accent">{d.hero.eyebrow}</p>
               <h1 className="font-display text-[2.5rem] font-extrabold leading-[1.04] tracking-tight text-balance text-fg sm:text-6xl">{d.hero.title}</h1>
               <p className="text-lg leading-relaxed text-pretty text-fg-secondary">{d.hero.lead}</p>
-              {!downloadEnabled ? (
-                <div className="space-y-3">
-                  <Button variant="primary" size="lg" className="font-bold" disabled>
-                    <DownloadIcon size={18} />
-                    {d.download.button}
-                  </Button>
-                  <p role="note" className="text-sm text-fg-secondary">
-                    {d.download.disabled}
-                  </p>
-                </div>
-              ) : release ? (
-                <div className="space-y-3">
-                  <Button asChild variant="primary" size="lg" className="font-bold">
-                    <a href="/desktop/download">
-                      <DownloadIcon size={18} />
-                      {d.download.button}
-                    </a>
-                  </Button>
-                  <p className="text-sm text-fg-secondary">
-                    {fill(d.download.facts, { size: megabytes(release.dmg.bytes) })} · <span data-testid="desktop-version">{fill(d.download.version, { version: release.version })}</span>
-                  </p>
-                  <p role="note" className="text-sm text-fg-secondary">
-                    {d.download.testBuild}
-                  </p>
-                  {release.sha256 && (
-                    <details className="group text-sm">
-                      <summary className="cursor-pointer font-medium text-fg-accent">{d.download.verify}</summary>
-                      <div className="mt-2 space-y-2 text-fg-secondary">
-                        <p>{d.download.verifyBody}</p>
-                        <p className="flex flex-wrap items-center gap-2">
-                          <code data-testid="desktop-sha" className="break-all font-mono text-xs text-fg">
-                            {release.sha256}
-                          </code>
-                          <CopyButton text={release.sha256} label={d.download.shaCopy} done={d.download.shaCopied} failed={d.download.shaCopyFailed} />
-                        </p>
-                      </div>
-                    </details>
-                  )}
-                </div>
-              ) : (
-                <div className="flex flex-wrap items-center gap-4">
-                  <p className="text-sm text-fg-secondary">{d.download.unreadable}</p>
-                  <Button asChild variant="secondary" size="md" shape="pill">
-                    <a href={RELEASES_URL} target="_blank" rel="noopener noreferrer">
-                      {d.download.releases}
-                      <ExternalIcon size={16} />
-                    </a>
-                  </Button>
-                </div>
-              )}
+              <DownloadBlock release={release} downloadEnabled={downloadEnabled} />
               <section aria-label={d.mobile.title} data-testid="desktop-mobile" className="space-y-2 border-t border-border-subtle pt-5">
                 {stores.ios && stores.android ? null : !stores.ios && !stores.android ? (
                   <p className="text-sm text-fg-secondary">{d.mobile.soon}</p>
