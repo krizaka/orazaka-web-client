@@ -32,7 +32,7 @@ const STEP_ICONS: ComponentType<IconProps>[] = [DownloadIcon, LocalIcon, CheckIc
  * Under it, the phone apps: a store button per store whose URL is configured (`store-links.ts`), else one « coming soon » line.
  * The release is read at build time and passed in; without it the page links the releases page. Words: `t.desktop`.
  */
-export function DesktopPage({ release, stores = { ios: null, android: null } }: Readonly<{ release: DesktopDownload; stores?: StoreLinks }>) {
+export function DesktopPage({ release, stores = { ios: null, android: null }, downloadEnabled = false }: Readonly<{ release: DesktopDownload; stores?: StoreLinks; downloadEnabled?: boolean }>) {
   const { t } = useTranslation();
   const d = t.desktop;
 
@@ -46,10 +46,20 @@ export function DesktopPage({ release, stores = { ios: null, android: null } }: 
               <p className="font-mono text-xs font-semibold text-fg-accent">{d.hero.eyebrow}</p>
               <h1 className="font-display text-[2.5rem] font-extrabold leading-[1.04] tracking-tight text-balance text-fg sm:text-6xl">{d.hero.title}</h1>
               <p className="text-lg leading-relaxed text-pretty text-fg-secondary">{d.hero.lead}</p>
-              {release ? (
+              {!downloadEnabled ? (
+                <div className="space-y-3">
+                  <Button variant="primary" size="lg" className="font-bold" disabled>
+                    <DownloadIcon size={18} />
+                    {d.download.button}
+                  </Button>
+                  <p role="note" className="text-sm text-fg-secondary">
+                    {d.download.disabled}
+                  </p>
+                </div>
+              ) : release ? (
                 <div className="space-y-3">
                   <Button asChild variant="primary" size="lg" className="font-bold">
-                    <a href={release.dmg.url}>
+                    <a href="/desktop/download">
                       <DownloadIcon size={18} />
                       {d.download.button}
                     </a>
