@@ -78,8 +78,9 @@ test("the same workflow proves the console gate from outside: 403 on the admin h
 });
 
 test("the crawl also runs axe-core (WCAG 2.1 AA) through the audit's a11y step and ratchets it against the baselines of this repo", () => {
-  assert.match(crawl, /a11y: \{ app: "orazaka-web-client", baseline: A11Y_BASELINE/);
-  assert.match(crawl, /app: "orazaka-web-client-app", baseline: A11Y_BASELINE_APP/);
+  const flat = crawl.replace(/\s+/g, " "); // the layout (Prettier) is not what is checked
+  assert.match(flat, /a11y: \{ app: "orazaka-web-client", baseline: A11Y_BASELINE/);
+  assert.match(flat, /app: "orazaka-web-client-app", baseline: A11Y_BASELINE_APP/);
   assert.match(crawl, /a11y-baseline\.json/);
   assert.match(crawl, /a11y-baseline\.app\.json/);
   assert.doesNotMatch(crawl, /from "axe-core"/, "apps never import axe-core");
