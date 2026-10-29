@@ -19,4 +19,9 @@ describe("the download videos workflow", () => {
   it("never writes a secret to GITHUB_ENV", () => {
     assert.doesNotMatch(code, /GITHUB_ENV/);
   });
+  it("signs in with the persona secrets by name, never a literal or the QA account", () => {
+    assert.match(code, /ORAZAKA_USER_EMAIL: \$\{\{ secrets\.E2E_USER \}\}/);
+    assert.match(code, /ORAZAKA_USER_PASSWORD: \$\{\{ secrets\.E2E_PASSWORD \}\}/);
+    assert.doesNotMatch(code, /qa_user|qa\+user/);
+  });
 });
