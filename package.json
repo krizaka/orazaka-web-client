@@ -41,6 +41,7 @@
     "@krizaka/orazaka-design-system": "^3.4.0",
     "@krizaka/orazaka-shared": "^1.4.0",
     "@krizaka/query": "^0.2.2",
+    "@krizaka/settings": "0.5.2",
     "@krizaka/tailwind": "^3.71.0",
     "@krizaka/tokens": "^3.71.0",
     "@krizaka/ui": "^3.71.0",
