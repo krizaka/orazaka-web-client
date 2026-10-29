@@ -71,7 +71,11 @@ export function toHistory(versions: AdminPrice[]): PriceHistoryEntry[] {
  * service refuses a start in the past — and a day before today is refused here with the same reason.
  */
 export function effectiveInstant(day: string, today: string, now: Date): string {
-  if (day < today) throw new Error("A price change cannot start in the past.");
-  if (day === today) return addMinutes(now, 2).toISOString();
+  if (day < today) {
+    throw new Error("A price change cannot start in the past.");
+  }
+  if (day === today) {
+    return addMinutes(now, 2).toISOString();
+  }
   return new Date(`${day}T00:00:00Z`).toISOString();
 }

@@ -29,7 +29,9 @@ export function PricesScreen({ locale }: Readonly<{ locale?: PricesLocale }>) {
       return { ok: false as const, message: error instanceof Error ? error.message : "" };
     }
     const result = await PricesAdminApi.schedule(key, change, from);
-    if (result.ok) await refresh();
+    if (result.ok) {
+      await refresh();
+    }
     return result;
   };
 

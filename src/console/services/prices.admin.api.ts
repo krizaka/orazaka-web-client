@@ -41,7 +41,9 @@ export const PricesAdminApi = {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ unit: change.unit, amountCents: change.amountCents, availability: change.availability, limits: change.limits, effectiveFrom }),
     });
-    if (response.ok) return { ok: true };
+    if (response.ok) {
+      return { ok: true };
+    }
     const message = await response.text().catch(() => "");
     return { ok: false, message: message || `${response.status}` };
   },
