@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { describe, it } from "node:test";
-import { loginVerdict, report, rollbackVerdict, toolVerdict, webVerdict } from "./videos-preflight.mjs";
+import { loginVerdict, report, rollbackVerdict, toolPathVerdict, toolVerdict, webVerdict } from "./videos-preflight.mjs";
 
 const knowledge = { name: "searchKnowledge", inputSchema: JSON.stringify({ type: "object", properties: { query: { type: "string" } }, required: ["query"] }) };
 const poster = { name: "analyzePoster", inputSchema: "{}" };
@@ -69,5 +69,28 @@ describe("the download videos workflow runs the preflight before any paid step",
     assert.match(code, /node scripts\/videos-preflight\.mjs/);
     assert.match(code, /needs: \[preflight\]/);
     assert.ok(code.indexOf("preflight:") < code.indexOf("showcase-web:"));
+  });
+});
+
+describe("the free proof that a streamed turn emits a tool-call event", () => {
+  const proof = "2026-10-29T18:00:00Z";
+  it("is green when CI on main is green and dev was deployed after the proof", () => {
+    assert.equal(toolPathVerdict({ ciConclusion: "success", proofCommittedAt: proof, coreDeployedAt: "2026-10-29T19:00:00Z" }, true).ok, true);
+  });
+  it("is red when the proof is not on main, or main's CI is not green", () => {
+    assert.equal(toolPathVerdict({ ciConclusion: "success", proofCommittedAt: null, coreDeployedAt: null }, false).ok, false);
+    assert.equal(toolPathVerdict({ ciConclusion: "failure", proofCommittedAt: proof, coreDeployedAt: "2026-10-29T19:00:00Z" }, false).ok, false);
+    assert.equal(toolPathVerdict({ ciConclusion: null, proofCommittedAt: proof, coreDeployedAt: "2026-10-29T19:00:00Z" }, false).ok, false);
+  });
+  it("is red when dev's core is older than the proof (the paid runs ran on builds made before the fixes)", () => {
+    const v = toolPathVerdict({ ciConclusion: "success", proofCommittedAt: proof, coreDeployedAt: "2026-10-29T17:00:00Z" }, false);
+    assert.equal(v.ok, false);
+    assert.match(v.message, /redeploy first/);
+  });
+  it("reports an unreadable deploy time, and refuses it with --require-tool-proof", () => {
+    const facts = { ciConclusion: "success", proofCommittedAt: proof, coreDeployedAt: null };
+    assert.equal(toolPathVerdict(facts, false).ok, true);
+    assert.match(toolPathVerdict(facts, false).message, /NOT VERIFIED/);
+    assert.equal(toolPathVerdict(facts, true).ok, false);
   });
 });
