@@ -8,7 +8,7 @@ const eslintConfig = defineConfig([
   ...nextVitals,
   ...nextTs,
   // The stack rules, the React-effects rules and cognitive complexity (15): warnings while krizaka-ratchet freezes the debt.
-  ...krizakaStack({ effects: "warn", complexity: "warn", sonar: "warn" }),
+  ...krizakaStack({ effects: "warn", complexity: "warn", sonar: "warn", codeRules: "warn" }),
   {
     files: ["**/*.{js,jsx,mjs,ts,tsx,mts,cts}"],
     rules: {
