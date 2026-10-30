@@ -165,12 +165,12 @@ export function splitSegments(body: string): Segment[] {
 
 // ── Contents ─────────────────────────────────────────────────────────────────────────────────────
 
-const plain = (nodes: readonly InlineNode[]): string =>
-  nodes
-    .map((n) =>
-      "value" in n && typeof n.value === "string" ? n.value : "children" in n ? plain(n.children as InlineNode[]) : "",
-    )
-    .join("");
+const plain = (nodes: readonly InlineNode[]): string => nodes.map(textOf).join("");
+
+function textOf(n: InlineNode): string {
+  if ("value" in n && typeof n.value === "string") return n.value;
+  return "children" in n ? plain(n.children as InlineNode[]) : "";
+}
 
 /**
  * The `##` headings of the markdown segments — the id `Markdown` gives each, and its words — plus a pack's `###`

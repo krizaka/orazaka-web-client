@@ -27,4 +27,4 @@ export const hasMedia = (path: string): boolean => path in FILES;
 export const mediaPaths = (prefix: string): string[] =>
   Object.keys(FILES)
     .filter((path) => path.startsWith(prefix))
-    .sort();
+    .sort((a, b) => a.localeCompare(b));

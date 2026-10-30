@@ -34,7 +34,7 @@ export function useChatActions({ activeConversationId }: UseChatActionsProps) {
   const userId = user?.id || user?.email || "anonymous";
   const { trackRun } = useComposerRunReconciler(userId, activeConversationId);
 
-  const [selectedStudio, setSelectedFeature] = useState<ComposerStudio | null>(null);
+  const [selectedStudio, setSelectedStudio] = useState<ComposerStudio | null>(null);
   const [selectedOptions, setSelectedOptions] = useState<ComposerRunOptions>({});
   const [attachment, setAttachment] = useState<{
     assetId: string;
@@ -157,7 +157,7 @@ export function useChatActions({ activeConversationId }: UseChatActionsProps) {
           assetId: attachment?.assetId,
           options: selectedOptions,
         });
-        setSelectedFeature(null);
+        setSelectedStudio(null);
         setSelectedOptions({});
       } else {
         let finalPrompt = trimmed;
@@ -180,7 +180,7 @@ export function useChatActions({ activeConversationId }: UseChatActionsProps) {
       // Stage (don't immediately run) when there's no prompt yet, or when the
       // capability needs an asset the user hasn't attached — so options/attach show.
       if (!chatInput.trim() || requiresAttachment(studio)) {
-        setSelectedFeature(studio);
+        setSelectedStudio(studio);
         setSelectedOptions({});
         setIsPlusMenuOpen(false);
         return;
@@ -212,7 +212,7 @@ export function useChatActions({ activeConversationId }: UseChatActionsProps) {
         options: selectedOptions,
         conversationId,
       });
-      setSelectedFeature(null);
+      setSelectedStudio(null);
       setSelectedOptions({});
       setAttachment(null);
       return true;
@@ -226,14 +226,14 @@ export function useChatActions({ activeConversationId }: UseChatActionsProps) {
   );
 
   const clearStudio = useCallback(() => {
-    setSelectedFeature(null);
+    setSelectedStudio(null);
     setSelectedOptions({});
   }, []);
 
   return {
     userId,
     selectedStudio,
-    setSelectedFeature,
+    setSelectedFeature: setSelectedStudio,
     selectedOptions,
     updateOptions,
     clearStudio,

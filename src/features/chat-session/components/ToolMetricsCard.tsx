@@ -63,12 +63,7 @@ export function parseToolMetrics(raw: string): ToolMetricsPayload | null {
     const jsonMatch = raw.match(/```(?:json)?\s*(\{[\s\S]*?"type"\s*:\s*"tool_metrics"[\s\S]*?\})\s*```/);
     const toParse = jsonMatch ? jsonMatch[1] : raw;
     const parsed = JSON.parse(toParse);
-    if (
-      parsed &&
-      parsed.type === "tool_metrics" &&
-      typeof parsed.toolName === "string" &&
-      typeof parsed.data === "object"
-    ) {
+    if (parsed?.type === "tool_metrics" && typeof parsed.toolName === "string" && typeof parsed.data === "object") {
       return parsed as ToolMetricsPayload;
     }
   } catch {

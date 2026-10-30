@@ -26,7 +26,7 @@ export const isDevHost = (
 export const isDevAddress = (
   host: string | null | undefined,
   env: Record<string, string | undefined> = process.env,
-): boolean => /^dev\./.test(bare(host)) || isDevHost(host, env);
+): boolean => bare(host).startsWith("dev.") || isDevHost(host, env);
 function hostOf(url: string | undefined): string {
   try {
     return url ? new URL(url).host : "";

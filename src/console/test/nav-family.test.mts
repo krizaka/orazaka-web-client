@@ -19,7 +19,10 @@ test("the footer is @krizaka/ui's SiteFooter in app mode: one slim line, no fami
 });
 
 test("the build names its environment, dev by default", () => {
-  assert.match(readFileSync(new URL("../../../next.config.ts", import.meta.url), "utf8"), /NEXT_PUBLIC_APP_ENV[^\n]*\|\| "dev"/);
+  assert.match(
+    readFileSync(new URL("../../../next.config.ts", import.meta.url), "utf8"),
+    /NEXT_PUBLIC_APP_ENV[^\n]*\|\| "dev"/,
+  );
 });
 
 test("the environment badge shows on a phone too: the kit hides it below 640 px, the console overrides that", () => {

@@ -18,7 +18,7 @@ interface InterceptionPageProps {
  * Page routing component for active user interceptions.
  * Renders the dynamic layout form matching the target schema configuration.
  */
-export default async function InterceptionPage({ params }: InterceptionPageProps) {
+export default async function InterceptionPage({ params }: Readonly<InterceptionPageProps>) {
   const { schemaId } = await params;
 
   return (

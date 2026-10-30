@@ -13,6 +13,11 @@ export interface StudiosState {
   reload: () => void;
 }
 
+/** The distinct professions of the catalogue, alphabetical (the filter tabs' order). */
+export function professionsOf(studios: readonly Pick<StudioSummary, "profession">[]): string[] {
+  return Array.from(new Set(studios.map((studio) => studio.profession))).sort((a, b) => a.localeCompare(b));
+}
+
 /**
  * The Studio catalogue for the signed-in user.
  *
@@ -51,7 +56,7 @@ export function useStudios(profession: string | null): StudiosState {
     return () => clearTimeout(timer);
   }, [load]);
 
-  const professions = useMemo(() => Array.from(new Set(studios.map((studio) => studio.profession))).sort(), [studios]);
+  const professions = useMemo(() => professionsOf(studios), [studios]);
 
   const visible = useMemo(
     () => (profession ? studios.filter((studio) => studio.profession === profession) : studios),

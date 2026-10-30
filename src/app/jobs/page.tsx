@@ -104,13 +104,8 @@ function JobsDashboardContent() {
   });
   const autoJob = targetJobId && dismissedJobId !== targetJobId ? (knownJob ?? fetchedJob.data ?? null) : null;
   const shownJob = selectedJob ?? autoJob;
-  const shownType = selectedJob
-    ? modalType
-    : autoJob
-      ? autoJob.status === JOB_STATUS.COMPLETED
-        ? "result"
-        : "payload"
-      : null;
+  const autoType = autoJob?.status === JOB_STATUS.COMPLETED ? "result" : "payload";
+  const shownType = selectedJob ? modalType : autoJob ? autoType : null;
 
   if (isLoading || !isAuthenticated) {
     return (

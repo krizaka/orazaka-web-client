@@ -8,11 +8,9 @@ export function refusalMessage(code: string | null, status: number): string {
     case "CONFIRM_MISMATCH":
       return "The e-mail typed does not match the account.";
     default:
-      return status === 403
-        ? "Only an administrator can do this."
-        : status === 404
-          ? "This account no longer exists."
-          : "The identity service refused the change.";
+      if (status === 403) return "Only an administrator can do this.";
+      if (status === 404) return "This account no longer exists.";
+      return "The identity service refused the change.";
   }
 }
 

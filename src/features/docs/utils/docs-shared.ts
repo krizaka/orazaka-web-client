@@ -79,7 +79,7 @@ export function searchDocs(
         hits.push({ score: 2, slug: e.slug, id: h.id, label: `${e.title} › ${h.label}`, meta: e.journey });
     }
   }
-  return hits
+  return [...hits]
     .sort((a, b) => b.score - a.score)
     .slice(0, limit)
     .map(({ score: _score, ...rest }) => rest);

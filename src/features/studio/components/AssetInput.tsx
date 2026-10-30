@@ -129,7 +129,8 @@ export function AssetInput({
     cancel: (name) => fill(t.studio.asset.cancel, { name }),
     remove: (name) => fill(t.studio.asset.remove, { name }),
     status: (status) =>
-      status === "done" ? t.studio.asset.done : status === "error" ? t.studio.asset.error : t.studio.asset.uploading,
+      ({ done: t.studio.asset.done, error: t.studio.asset.error })[status as "done" | "error"] ??
+      t.studio.asset.uploading,
   };
 
   return (

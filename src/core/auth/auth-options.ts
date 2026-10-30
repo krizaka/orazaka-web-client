@@ -105,7 +105,7 @@ export const authOptions: NextAuthOptions = {
           // through as `user.id` and replayed verbatim as the Bearer token by the BFF proxies.
           const data = await res.json();
           if (data && data.token) {
-            const role = data.authorities && data.authorities.includes("ROLE_ADMIN") ? "admin" : "user";
+            const role = data.authorities?.includes("ROLE_ADMIN") ? "admin" : "user";
             return {
               id: data.token,
               name: data.username,

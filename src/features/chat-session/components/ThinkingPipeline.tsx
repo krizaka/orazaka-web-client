@@ -22,6 +22,19 @@ const DotIndicator: React.FC = () => (
   </section>
 );
 
+/** Where the pipeline stands: the steps, how many are done, and the one to show (the first unfinished, else the last). */
+export function pipelineProgress(chatPipeline: Props["chatPipeline"], done: ReadonlySet<string>) {
+  const steps = chatPipeline ? toPipelineSteps(chatPipeline) : [];
+  const total = steps.length;
+  const doneCount = steps.filter((s) => done.has(s.id)).length;
+  const activeIndex = steps.findIndex((s) => !done.has(s.id));
+  const allDone = activeIndex === -1;
+  // Surface a single step: the first unfinished one, or the last step once the
+  // whole chain has completed (so the trace ends on a final state, not blank).
+  const current = total > 0 ? steps[allDone ? total - 1 : activeIndex] : null;
+  return { steps, total, doneCount, allDone, current };
+}
+
 /**
  * Streaming "thinking" trace for the chat. While the assistant is generating, it
  * surfaces the REAL interceptor chain that processed the request — pushed by the
@@ -34,14 +47,7 @@ const DotIndicator: React.FC = () => (
 export const ThinkingPipeline: React.FC<Props> = ({ t, chatPipeline, completedStageIds }) => {
   const reduce = useReducedMotion();
   const done = React.useMemo(() => new Set(completedStageIds ?? []), [completedStageIds]);
-  const steps = chatPipeline ? toPipelineSteps(chatPipeline) : [];
-  const total = steps.length;
-  const doneCount = steps.filter((s) => done.has(s.id)).length;
-  const activeIndex = steps.findIndex((s) => !done.has(s.id));
-  const allDone = activeIndex === -1;
-  // Surface a single step: the first unfinished one, or the last step once the
-  // whole chain has completed (so the trace ends on a final state, not blank).
-  const current = total > 0 ? steps[allDone ? total - 1 : activeIndex] : null;
+  const { total, doneCount, allDone, current } = pipelineProgress(chatPipeline, done);
 
   return (
     <div className="flex items-start gap-3 animate-in fade-in slide-in-from-left-3 duration-300">

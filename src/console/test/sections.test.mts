@@ -6,12 +6,26 @@ import { CONSOLE_GROUPS, activeGroup, consoleRoutes } from "../core/config/secti
 
 test("five places at most: what is happening, what is running, who and what they hold, what is offered, what was done", () => {
   assert.ok(CONSOLE_GROUPS.length <= 5, `${CONSOLE_GROUPS.length} top-level sections`);
-  assert.deepEqual(CONSOLE_GROUPS.map((g) => g.id), ["supervision", "operations", "accounts", "catalogue", "audit"]);
+  assert.deepEqual(
+    CONSOLE_GROUPS.map((g) => g.id),
+    ["supervision", "operations", "accounts", "catalogue", "audit"],
+  );
 });
 
 test("every screen of the console is reachable exactly once", () => {
   const routes = consoleRoutes();
-  assert.deepEqual([...routes].sort(), ["/", "/audit", "/billing", "/engine", "/law", "/models", "/operations", "/studios", "/tasks", "/users"]);
+  assert.deepEqual([...routes].sort(), [
+    "/",
+    "/audit",
+    "/billing",
+    "/engine",
+    "/law",
+    "/models",
+    "/operations",
+    "/studios",
+    "/tasks",
+    "/users",
+  ]);
   assert.equal(new Set(routes).size, routes.length);
 });
 
@@ -20,7 +34,8 @@ test("a menu of two never mixes concepts: operations hold the running platform a
   assert.deepEqual(children("operations"), ["operations", "tasks", "engine"]);
   assert.deepEqual(children("accounts"), ["users", "billing"]);
   assert.deepEqual(children("catalogue"), ["models", "studios", "law"]);
-  for (const g of CONSOLE_GROUPS) assert.ok(g.children.length === 0 || g.children.length >= 2, "a group of one is a link");
+  for (const g of CONSOLE_GROUPS)
+    assert.ok(g.children.length === 0 || g.children.length >= 2, "a group of one is a link");
 });
 
 test("the section lit is the one the page belongs to, the home only on `/` itself", () => {

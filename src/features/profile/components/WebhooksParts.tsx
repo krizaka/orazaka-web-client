@@ -51,8 +51,8 @@ export function CreateWebhookForm({
       await onSubmit(values.url.trim(), eventsOf(values));
     },
   });
-  const message =
-    error === "limit" ? w.limitReached : error === "url" ? w.invalidUrl : error === "generic" ? w.createError : null;
+  const messages: Record<string, string> = { limit: w.limitReached, url: w.invalidUrl, generic: w.createError };
+  const message = (error && messages[error]) || null;
   return (
     <form.Form aria-label={w.create}>
       <form.TextField name="url" label={w.urlLabel} type="url" placeholder={w.urlPlaceholder} autoComplete="off" />

@@ -94,7 +94,7 @@ export default function RootLayout({
         </noscript>
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(siteJsonLd()).replace(/</g, "\\u003c") }}
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(siteJsonLd()).replace(/</g, String.raw`\u003c`) }}
         />
       </head>
       <body className="antialiased transition-colors duration-200">

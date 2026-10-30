@@ -34,10 +34,7 @@ export class FeatureToolsRefusal extends Error {
 const BASE = "/api/v1/models/admin";
 
 async function call(path: string, init?: RequestInit): Promise<unknown> {
-  const response = await fetch(path, {
-    ...init,
-    headers: { "Content-Type": "application/json", ...(init?.headers ?? {}) },
-  });
+  const response = await fetch(path, { ...init, headers: { "Content-Type": "application/json", ...init?.headers } });
   if (!response.ok) {
     const detail = (await response.json().catch(() => null)) as { detail?: unknown; message?: unknown } | null;
     const text = [detail?.detail, detail?.message].find((v): v is string => typeof v === "string");
