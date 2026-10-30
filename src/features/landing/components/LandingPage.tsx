@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { ForwardIcon } from "@krizaka/icons";
+import { DevelopmentStatus } from "@/components/DevelopmentStatus";
 import { Button } from "@krizaka/ui/button";
 import { LandingPage as LandingTemplate } from "@krizaka/ui/landing-page";
 import { NumberTicker } from "@krizaka/ui/number-ticker";
@@ -64,6 +65,7 @@ export function LandingPage({ measured = NO_RUNS }: Readonly<{ measured?: Measur
               <Button asChild variant="ghost" size="lg" className="w-full sm:w-auto">
                 <Link href="#records">{h.secondary}</Link>
               </Button>
+              <DevelopmentStatus className="basis-full" />
             </>
           }
           proofs={[

@@ -48,4 +48,18 @@ describe("AuthScreen", () => {
     expect(contact).toHaveAttribute("href", "/contact");
     expect(contact).toHaveAttribute("data-prefetch", "false");
   });
+
+  it("says Orazaka is in development, like Yomizaka and Akinaza, and shows the duck where they show their bird (orazaka#516)", () => {
+    const { container } = render(
+      <AuthScreen title="Orazaka">
+        <span />
+      </AuthScreen>,
+    );
+    expect(screen.getByTestId("development-status")).toHaveTextContent(t.landing.status.development);
+    expect(t.landing.status.development).toMatch(/^In development/);
+    expect(translations.fr.landing.status.development).toMatch(/^En développement/);
+    expect(
+      container.querySelector('[data-bird="duck"], [data-testid="mascot-duck"], svg[aria-label*="duck" i]'),
+    ).not.toBeNull();
+  });
 });

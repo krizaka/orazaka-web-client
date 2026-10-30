@@ -38,6 +38,7 @@ export const landing: Record<Locale, LandingDictionary> = {
       secondary: "See it run",
       visualLabel: "dev.orazaka.com · chat",
     },
+    status: { development: "In development: still being tested, not ready for the public." },
     figures: {
       runs: "runs measured on real hardware, each with its record",
       models: "models measured, on a Mac or hosted",
@@ -145,6 +146,7 @@ export const landing: Record<Locale, LandingDictionary> = {
       secondary: "Le voir tourner",
       visualLabel: "dev.orazaka.com · chat",
     },
+    status: { development: "En développement : encore en test, pas prête pour le public." },
     figures: {
       runs: "runs mesurés sur du vrai matériel, chacun avec sa fiche",
       models: "modèles mesurés, sur un Mac ou hébergés",
