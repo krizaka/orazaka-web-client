@@ -8,7 +8,7 @@ import { landing } from "@/core/context/translations.landing";
 // eslint-disable-next-line no-restricted-imports -- the shared family guard lives in scripts/, outside src/
 import { auditRobots } from "../../scripts/check-seo-family.mjs";
 
-const withFlag = <T,>(value: string | undefined, run: () => T): T => {
+const withFlag = <T>(value: string | undefined, run: () => T): T => {
   const before = process.env.APP_SEARCH_INDEXING;
   if (value === undefined) delete process.env.APP_SEARCH_INDEXING;
   else process.env.APP_SEARCH_INDEXING = value;
@@ -29,7 +29,15 @@ describe("APP_SEARCH_INDEXING — one flag closes the deployment to search engin
 
   it("off: noindex on every response — pages, login, the BFF (404 or not), robots", () => {
     withFlag("off", () => {
-      for (const path of ["/", "/docs", "/login", "/dashboard", "/api/v1/profile", "/api/auth/session", "/robots.txt"]) {
+      for (const path of [
+        "/",
+        "/docs",
+        "/login",
+        "/dashboard",
+        "/api/v1/profile",
+        "/api/auth/session",
+        "/robots.txt",
+      ]) {
         expect(`${path} ${ask(path).headers.get("x-robots-tag")}`).toBe(`${path} ${NOINDEX_HEADER}`);
       }
     });
@@ -57,29 +65,43 @@ describe("APP_SEARCH_INDEXING — one flag closes the deployment to search engin
 });
 
 describe("dev.orazaka.com sends its pages to www; the BFF, auth and .well-known stay (epic krizaka/.github#119)", () => {
-  const withEnv = async <T,>(run: () => T | Promise<T>): Promise<T> => {
+  const withEnv = async <T>(run: () => T | Promise<T>): Promise<T> => {
     const keep = { dev: process.env.APP_DEV_HOST, url: process.env.APP_PUBLIC_URL };
     process.env.APP_DEV_HOST = "dev.orazaka.com";
     process.env.APP_PUBLIC_URL = "https://www.orazaka.com";
     try {
       return await run();
     } finally {
-      for (const [k, v] of [["APP_DEV_HOST", keep.dev], ["APP_PUBLIC_URL", keep.url]] as const) {
+      for (const [k, v] of [
+        ["APP_DEV_HOST", keep.dev],
+        ["APP_PUBLIC_URL", keep.url],
+      ] as const) {
         if (v === undefined) delete process.env[k];
         else process.env[k] = v;
       }
     }
   };
-  const dev = (path: string, method = "GET") => proxy(new NextRequest(`https://dev.orazaka.com${path}`, { method, headers: { host: "dev.orazaka.com" } }));
-  const www = (path: string) => proxy(new NextRequest(`https://www.orazaka.com${path}`, { headers: { host: "www.orazaka.com" } }));
+  const dev = (path: string, method = "GET") =>
+    proxy(new NextRequest(`https://dev.orazaka.com${path}`, { method, headers: { host: "dev.orazaka.com" } }));
+  const www = (path: string) =>
+    proxy(new NextRequest(`https://www.orazaka.com${path}`, { headers: { host: "www.orazaka.com" } }));
 
   it("knows the dev host and what stays", () => {
     expect(isDevHost("dev.orazaka.com", { APP_DEV_HOST: "dev.orazaka.com" })).toBe(true);
     expect(isDevHost("www.orazaka.com", { APP_DEV_HOST: "dev.orazaka.com" })).toBe(false);
     expect(isDevHost("dev.orazaka.com", {})).toBe(false);
-    expect(devRedirect("GET", "/studios/1", "?a=b", "https://www.orazaka.com")).toBe("https://www.orazaka.com/studios/1?a=b");
+    expect(devRedirect("GET", "/studios/1", "?a=b", "https://www.orazaka.com")).toBe(
+      "https://www.orazaka.com/studios/1?a=b",
+    );
     expect(devRedirect("POST", "/login", "", "https://www.orazaka.com")).toBeNull();
-    for (const keep of ["/api/auth/callback/credentials", "/api/v1/profile", "/.well-known/assetlinks.json", "/api/healthz", "/robots.txt"]) expect(`${keep} ${devRedirect("GET", keep, "", "https://www.orazaka.com")}`).toBe(`${keep} null`);
+    for (const keep of [
+      "/api/auth/callback/credentials",
+      "/api/v1/profile",
+      "/.well-known/assetlinks.json",
+      "/api/healthz",
+      "/robots.txt",
+    ])
+      expect(`${keep} ${devRedirect("GET", keep, "", "https://www.orazaka.com")}`).toBe(`${keep} null`);
   });
 
   it("dev: a page answers 308 to the same path on www, noindex, even with the flag on", async () => {

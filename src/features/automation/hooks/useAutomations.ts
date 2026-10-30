@@ -40,7 +40,10 @@ export function useAutomationMutations() {
 
 /** The triggers of one automation, read when its detail is open. */
 export function useTriggers(automationId: string) {
-  return useQuery({ queryKey: automationKeys.triggers(automationId), queryFn: () => AutomationApi.triggers(automationId) });
+  return useQuery({
+    queryKey: automationKeys.triggers(automationId),
+    queryFn: () => AutomationApi.triggers(automationId),
+  });
 }
 
 /**
@@ -51,13 +54,23 @@ export function useTriggerMutations(automationId: string) {
   const client = useQueryClient();
   const refresh = () => client.invalidateQueries({ queryKey: automationKeys.triggers(automationId) });
   return {
-    add: useMutation({ mutationFn: (trigger: NewTrigger) => AutomationApi.addTrigger(automationId, trigger), onSuccess: refresh }),
-    setEnabled: useMutation({
-      mutationFn: ({ id, enabled }: { id: string; enabled: boolean }) => AutomationApi.setTriggerEnabled(automationId, id, enabled),
+    add: useMutation({
+      mutationFn: (trigger: NewTrigger) => AutomationApi.addTrigger(automationId, trigger),
       onSuccess: refresh,
     }),
-    rotate: useMutation({ mutationFn: (id: string) => AutomationApi.rotateTrigger(automationId, id), onSuccess: refresh }),
-    remove: useMutation({ mutationFn: (id: string) => AutomationApi.removeTrigger(automationId, id), onSuccess: refresh }),
+    setEnabled: useMutation({
+      mutationFn: ({ id, enabled }: { id: string; enabled: boolean }) =>
+        AutomationApi.setTriggerEnabled(automationId, id, enabled),
+      onSuccess: refresh,
+    }),
+    rotate: useMutation({
+      mutationFn: (id: string) => AutomationApi.rotateTrigger(automationId, id),
+      onSuccess: refresh,
+    }),
+    remove: useMutation({
+      mutationFn: (id: string) => AutomationApi.removeTrigger(automationId, id),
+      onSuccess: refresh,
+    }),
   };
 }
 
@@ -69,8 +82,7 @@ export function useAutomationRuns(automationId: string) {
   return useQuery({
     queryKey: automationKeys.runs(automationId),
     queryFn: () => AutomationApi.runs(automationId),
-    refetchInterval: (query) =>
-      query.state.data?.some((run) => IN_FLIGHT.has(run.status)) ? 3000 : false,
+    refetchInterval: (query) => (query.state.data?.some((run) => IN_FLIGHT.has(run.status)) ? 3000 : false),
   });
 }
 

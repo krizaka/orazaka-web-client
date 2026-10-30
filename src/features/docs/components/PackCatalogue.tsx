@@ -8,7 +8,19 @@ import { filterPacks, packAnchor, type PackData, type PackIndexItem } from "@/fe
 const chip = "rounded-sm border border-border-subtle bg-surface-2 px-2.5 py-0.5 font-mono text-xs text-fg";
 const label = "font-mono text-[0.7rem] font-semibold text-fg-muted";
 
-function Chips({ name, values, current, onPick, all }: Readonly<{ name: string; values: string[]; current: string | null; onPick: (v: string | null) => void; all: string }>) {
+function Chips({
+  name,
+  values,
+  current,
+  onPick,
+  all,
+}: Readonly<{
+  name: string;
+  values: string[];
+  current: string | null;
+  onPick: (v: string | null) => void;
+  all: string;
+}>) {
   return (
     <div role="group" aria-label={name} className="flex flex-wrap items-center gap-1.5">
       <span className={label}>{name}</span>
@@ -40,7 +52,9 @@ export function PackIndexView({ items }: Readonly<{ items: PackIndexItem[] }>) {
     <section aria-label={p.findLabel} className="not-prose my-6 space-y-4">
       <div className="space-y-2">
         <Chips name={p.tier} values={tiers} current={tier} onPick={setTier} all={p.all} />
-        {categories.length > 1 && <Chips name={p.category} values={categories} current={category} onPick={setCategory} all={p.all} />}
+        {categories.length > 1 && (
+          <Chips name={p.category} values={categories} current={category} onPick={setCategory} all={p.all} />
+        )}
         <p role="status" aria-live="polite" className="text-xs text-fg-secondary">
           {p.found.replace("{count}", String(shown.length)).replace("{total}", String(items.length))}
         </p>
@@ -51,11 +65,20 @@ export function PackIndexView({ items }: Readonly<{ items: PackIndexItem[] }>) {
         <ul className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
           {shown.map((i) => (
             <li key={i.key}>
-              <a href={`#${packAnchor(i.title)}`} className="flex h-full flex-col gap-2 rounded-2xl border border-border-default bg-surface-1/85 p-4 transition-colors hover:border-accent focus-visible:outline-2 focus-visible:outline-accent">
+              <a
+                href={`#${packAnchor(i.title)}`}
+                className="flex h-full flex-col gap-2 rounded-2xl border border-border-default bg-surface-1/85 p-4 transition-colors hover:border-accent focus-visible:outline-2 focus-visible:outline-accent"
+              >
                 <span className="font-display text-base font-bold text-fg">{i.title}</span>
                 {i.tagline && <span className="line-clamp-2 text-sm text-fg-secondary">{i.tagline}</span>}
                 <span className="mt-auto font-mono text-xs text-fg-muted">
-                  {[i.tier, i.studios === 1 ? p.studiosOne : p.studios.replace("{count}", String(i.studios)), i.category].filter(Boolean).join(" · ")}
+                  {[
+                    i.tier,
+                    i.studios === 1 ? p.studiosOne : p.studios.replace("{count}", String(i.studios)),
+                    i.category,
+                  ]
+                    .filter(Boolean)
+                    .join(" · ")}
                 </span>
               </a>
             </li>
@@ -70,7 +93,11 @@ export function PackIndexView({ items }: Readonly<{ items: PackIndexItem[] }>) {
 export function PackView({ pack }: Readonly<{ pack: PackData }>) {
   const { t } = useTranslation();
   const p = t.docs.packs;
-  const notes = [pack.controls.scopeGuard && p.guard, pack.controls.consent && p.consent, pack.controls.safety && p.safety].filter(Boolean) as string[];
+  const notes = [
+    pack.controls.scopeGuard && p.guard,
+    pack.controls.consent && p.consent,
+    pack.controls.safety && p.safety,
+  ].filter(Boolean) as string[];
   return (
     <div className="not-prose my-6 space-y-6" data-pack={pack.key}>
       <div className="space-y-3">
@@ -80,16 +107,29 @@ export function PackView({ pack }: Readonly<{ pack: PackData }>) {
           <li className={chip}>
             <span className="font-semibold">{pack.key}</span> {pack.version}
           </li>
-          {pack.tier && <li className={chip}>{p.tierFact} {pack.tier}</li>}
+          {pack.tier && (
+            <li className={chip}>
+              {p.tierFact} {pack.tier}
+            </li>
+          )}
           {pack.kind && <li className={chip}>{pack.kind}</li>}
           {pack.distribution && <li className={chip}>{pack.distribution}</li>}
-          {pack.regulatoryClass && <li className={chip}>{p.regulatoryFact} {pack.regulatoryClass}</li>}
+          {pack.regulatoryClass && (
+            <li className={chip}>
+              {p.regulatoryFact} {pack.regulatoryClass}
+            </li>
+          )}
           {pack.workers.map((w) => (
-            <li key={w} className={chip}>{p.workerFact} {w}</li>
+            <li key={w} className={chip}>
+              {p.workerFact} {w}
+            </li>
           ))}
         </ul>
         {notes.length > 0 && (
-          <div role="note" className="max-w-3xl rounded-xl border border-border-subtle bg-surface-2/60 px-4 py-3 text-sm leading-relaxed text-fg-secondary">
+          <div
+            role="note"
+            className="max-w-3xl rounded-xl border border-border-subtle bg-surface-2/60 px-4 py-3 text-sm leading-relaxed text-fg-secondary"
+          >
             {notes.map((n) => (
               <p key={n}>{n}</p>
             ))}

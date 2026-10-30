@@ -44,9 +44,7 @@ function StudioVersionRow({ version }: Readonly<StudioVersionRowProps>) {
   return (
     <li className="flex flex-col gap-1 px-4 py-3">
       <div className="flex items-center justify-between gap-3">
-        <span className="text-[12px] font-semibold text-fg">
-          {version.version}
-        </span>
+        <span className="text-[12px] font-semibold text-fg">{version.version}</span>
         <span className="hud-label text-[10px] text-fg-muted">
           {version.publishedAt ? format(new Date(version.publishedAt), "dd MMM yyyy") : ""}
         </span>

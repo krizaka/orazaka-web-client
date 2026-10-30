@@ -7,7 +7,16 @@ jest.mock("@/core/hooks/useAuth", () => ({
 }));
 jest.mock("@/core/context/LocaleContext", () => ({
   useTranslation: () => ({
-    t: { dashboard: { welcome: "Welcome", greeting: { morning: "Good morning, {name}", afternoon: "Good afternoon, {name}", evening: "Good evening, {name}" } } },
+    t: {
+      dashboard: {
+        welcome: "Welcome",
+        greeting: {
+          morning: "Good morning, {name}",
+          afternoon: "Good afternoon, {name}",
+          evening: "Good evening, {name}",
+        },
+      },
+    },
   }),
 }));
 

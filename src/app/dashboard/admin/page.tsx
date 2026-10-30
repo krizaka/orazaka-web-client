@@ -16,10 +16,7 @@ import { AdminToolbar } from "./AdminToolbar";
 import { FeatureToggleCard } from "./FeatureToggleCard";
 import { useThreadManagement } from "@/features/chat-session/hooks/useThreadManagement";
 import { useAdminModels } from "./useAdminModels";
-import {
-  CATEGORIES,
-  MODEL_CATEGORY,
-} from "@/core/constants/capability.constants";
+import { CATEGORIES, MODEL_CATEGORY } from "@/core/constants/capability.constants";
 
 export default function AdminDashboardPage() {
   const router = useRouter();
@@ -56,7 +53,6 @@ export default function AdminDashboardPage() {
   });
   const activeSessions = connections.data ?? 0;
 
-
   const derivedMetrics = React.useMemo(() => {
     if (globalThis.window === undefined || !isAuthenticated) {
       return { tokensUsed: 0, memoryNodes: 0 };
@@ -67,9 +63,7 @@ export default function AdminDashboardPage() {
 
     if (threads && Array.isArray(threads)) {
       threads.forEach((thread: { conversationId: string }) => {
-        const storedMessagesStr = localStorage.getItem(
-          `orazaka_messages_${userId}_${thread.conversationId}`,
-        );
+        const storedMessagesStr = localStorage.getItem(`orazaka_messages_${userId}_${thread.conversationId}`);
         if (storedMessagesStr) {
           try {
             const messages = JSON.parse(storedMessagesStr);
@@ -94,10 +88,7 @@ export default function AdminDashboardPage() {
     };
   }, [isAuthenticated, threads, userId]);
 
-  const metrics = React.useMemo(
-    () => ({ activeSessions, ...derivedMetrics }),
-    [activeSessions, derivedMetrics],
-  );
+  const metrics = React.useMemo(() => ({ activeSessions, ...derivedMetrics }), [activeSessions, derivedMetrics]);
 
   const [isModalOpen, setIsModalOpen] = React.useState(false);
   const [formModel, setFormModel] = React.useState<CatalogModel>({
@@ -152,9 +143,7 @@ export default function AdminDashboardPage() {
   if (isLoading || !isAuthenticated || user?.role !== "admin") {
     return (
       <section className="flex min-h-screen items-center justify-center bg-surface-0">
-        <span className="text-fg-muted text-sm animate-pulse">
-          {t.admin.loadingCredentials}
-        </span>
+        <span className="text-fg-muted text-sm animate-pulse">{t.admin.loadingCredentials}</span>
       </section>
     );
   }
@@ -195,9 +184,7 @@ export default function AdminDashboardPage() {
           <ValidationPipelineCard fetchWithAuth={fetchWithAuth} />
 
           {loadingModels && models.length === 0 ? (
-            <div className="text-center py-20 text-fg-muted animate-pulse text-sm">
-              {t.admin.loadingModels}
-            </div>
+            <div className="text-center py-20 text-fg-muted animate-pulse text-sm">{t.admin.loadingModels}</div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {CATEGORIES.map((cat) => (
@@ -212,11 +199,7 @@ export default function AdminDashboardPage() {
             </div>
           )}
 
-          <FeatureToggleCard
-            features={features}
-            onToggle={handleToggleFeature}
-            t={t}
-          />
+          <FeatureToggleCard features={features} onToggle={handleToggleFeature} t={t} />
         </section>
       </main>
       <ModelDialog

@@ -42,9 +42,7 @@ export function InterceptionFormField({
       <label className="text-sm font-medium text-fg-secondary flex items-center justify-between">
         <span>{field.label}</span>
         {field.required && (
-          <span className="text-xs text-danger font-normal">
-            {locale === "fr" ? "* requis" : "* required"}
-          </span>
+          <span className="text-xs text-danger font-normal">{locale === "fr" ? "* requis" : "* required"}</span>
         )}
       </label>
 
@@ -78,11 +76,7 @@ export function InterceptionFormField({
           className="flex h-10 w-full rounded-xl border border-border-subtle/60 bg-surface-1/30 px-3 py-2 text-sm transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-border-subtle disabled:cursor-not-allowed disabled:opacity-50 focus:ring-success focus-visible:ring-border-subtle text-fg"
         >
           {field.options?.map((opt) => (
-            <option
-              key={opt.value}
-              value={opt.value}
-              className="bg-surface-0 text-fg"
-            >
+            <option key={opt.value} value={opt.value} className="bg-surface-0 text-fg">
               {opt.label}
             </option>
           ))}

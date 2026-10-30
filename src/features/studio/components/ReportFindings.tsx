@@ -27,7 +27,9 @@ interface Report {
 export function asReport(value: string): Report | null {
   try {
     const parsed = JSON.parse(value) as Partial<Report>;
-    return Array.isArray(parsed.findings) && parsed.findings.every((f) => f && typeof f.verdict === "string") ? (parsed as Report) : null;
+    return Array.isArray(parsed.findings) && parsed.findings.every((f) => f && typeof f.verdict === "string")
+      ? (parsed as Report)
+      : null;
   } catch {
     return null;
   }
@@ -72,7 +74,9 @@ export function ReportFindings({ report }: Readonly<{ report: Report }>) {
                 </p>
                 {f.explanation && <p className="text-[13px] text-fg-secondary">{f.explanation}</p>}
                 {f.evidenceSpan?.quote && (
-                  <blockquote className="border-l-2 border-accent/60 pl-3 text-[12px] italic text-fg-secondary">« {f.evidenceSpan.quote} »</blockquote>
+                  <blockquote className="border-l-2 border-accent/60 pl-3 text-[12px] italic text-fg-secondary">
+                    « {f.evidenceSpan.quote} »
+                  </blockquote>
                 )}
                 {f.citation && <p className="text-[11px] text-fg-muted">{f.citation}</p>}
               </div>

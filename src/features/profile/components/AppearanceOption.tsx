@@ -74,7 +74,10 @@ function Preview({ value }: Readonly<{ value: Appearance }>) {
   return (
     <>
       <MiniApp light />
-      <span data-island="theme-dark" className="theme-dark absolute inset-0 block [clip-path:polygon(55%_0,100%_0,100%_100%,45%_100%)]">
+      <span
+        data-island="theme-dark"
+        className="theme-dark absolute inset-0 block [clip-path:polygon(55%_0,100%_0,100%_100%,45%_100%)]"
+      >
         <MiniApp />
       </span>
     </>
@@ -86,7 +89,15 @@ function Preview({ value }: Readonly<{ value: Appearance }>) {
  * holding a miniature of the app drawn in the theme it offers (its tokens, read through the kit's islands), the
  * animated border of the chosen one and hover guidance. The group ({@link AppearancePicker}) owns the choice.
  */
-export function AppearanceOption({ value, label, desc, icon, isActive, pulse, clickToApplyLabel }: Readonly<AppearanceOptionProps>) {
+export function AppearanceOption({
+  value,
+  label,
+  desc,
+  icon,
+  isActive,
+  pulse,
+  clickToApplyLabel,
+}: Readonly<AppearanceOptionProps>) {
   return (
     <RadioGroup.Card
       value={value}
@@ -105,7 +116,14 @@ export function AppearanceOption({ value, label, desc, icon, isActive, pulse, cl
         <Preview value={value} />
         {isActive && (
           <mark className="theme-check-pop absolute right-1 top-1 flex h-[18px] w-[18px] items-center justify-center rounded-sm bg-success shadow-md">
-            <svg aria-hidden className="h-2.5 w-2.5 text-on-accent" fill="none" viewBox="0 0 24 24" strokeWidth={3} stroke="currentColor">
+            <svg
+              aria-hidden
+              className="h-2.5 w-2.5 text-on-accent"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth={3}
+              stroke="currentColor"
+            >
               <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
             </svg>
           </mark>

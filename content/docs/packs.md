@@ -1333,54 +1333,54 @@ Kept off the shelf (`catalog.status: DRAFT`): `echo-toolkit` — installable for
 
 ## The reference packs (`orazaka-packs`)
 
-| Pack | Version | Studios |
-|:---|:---|:---|
-| `data-analytics` | 1.6.0 | `data-driven-ui` · `video-understanding` · `creator-suggestions` |
-| `document-validation` | 1.7.3 | `document-authenticity` · `compliance-check` |
-| `echo-toolkit` | 1.2.0 | `echo-reverse` |
-| `media-safety` | 1.2.0 | `media-safety` |
-| `message-authenticity` | 1.3.0 | `message-authenticity` |
-| `orazaka-media` | 1.13.0 | `image-generation` · `art-golden-hour` · `art-miniature` · `art-still-life` · `art-montreal-night` · `video-generation` · `cinematic-treatment` · `cinematic-critique` · `cinematic-script` · `cinematic-cut` · `video-with-sound` · `video-sound` · `speech-synthesis` · `image-analysis` · `audio-analysis` · `video-analysis` |
-| `outbound-prospection` | 1.3.0 | `outbound-prospection` · `lead-research` · `followup-sequences` |
-| `profile-photo-check` | 1.2.0 | `profile-photo-check` |
-| `realestate-studio` | 1.3.0 | `realestate-reels` |
-| `trade-showcase` | 1.2.0 | `trade-showcase` |
-| `bien-etre` | 1.6.0 | `guided-journaling` · `session-preparation` · `mood-tracking` · `session-summary` |
+| Pack                   | Version | Studios                                                                                                                                                                                                                                                                                                                          |
+| :--------------------- | :------ | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `data-analytics`       | 1.6.0   | `data-driven-ui` · `video-understanding` · `creator-suggestions`                                                                                                                                                                                                                                                                 |
+| `document-validation`  | 1.7.3   | `document-authenticity` · `compliance-check`                                                                                                                                                                                                                                                                                     |
+| `echo-toolkit`         | 1.2.0   | `echo-reverse`                                                                                                                                                                                                                                                                                                                   |
+| `media-safety`         | 1.2.0   | `media-safety`                                                                                                                                                                                                                                                                                                                   |
+| `message-authenticity` | 1.3.0   | `message-authenticity`                                                                                                                                                                                                                                                                                                           |
+| `orazaka-media`        | 1.13.0  | `image-generation` · `art-golden-hour` · `art-miniature` · `art-still-life` · `art-montreal-night` · `video-generation` · `cinematic-treatment` · `cinematic-critique` · `cinematic-script` · `cinematic-cut` · `video-with-sound` · `video-sound` · `speech-synthesis` · `image-analysis` · `audio-analysis` · `video-analysis` |
+| `outbound-prospection` | 1.3.0   | `outbound-prospection` · `lead-research` · `followup-sequences`                                                                                                                                                                                                                                                                  |
+| `profile-photo-check`  | 1.2.0   | `profile-photo-check`                                                                                                                                                                                                                                                                                                            |
+| `realestate-studio`    | 1.3.0   | `realestate-reels`                                                                                                                                                                                                                                                                                                               |
+| `trade-showcase`       | 1.2.0   | `trade-showcase`                                                                                                                                                                                                                                                                                                                 |
+| `bien-etre`            | 1.6.0   | `guided-journaling` · `session-preparation` · `mood-tracking` · `session-summary`                                                                                                                                                                                                                                                |
 
 ## From the terminal
 
-| Command | What it does |
-|:---|:---|
-| `orazaka pack validate <directory>` | Check a bundle's manifest, and whether this platform can run it |
-| `orazaka pack install <directory>` | Install a bundle: capabilities, billing and catalogue, or none of them |
-| `orazaka pack publish <directory>` | Put an installed bundle's pack and Studios on the shelf |
-| `orazaka pack list [directory]` | List the bundles this deployment's pack sources offer |
-| `orazaka studio list` | Browse the Studio catalogue |
-| `orazaka studio installed` | List the Studios you have installed |
-| `orazaka studio install <studioKey>` | Install a Studio into your workspace |
-| `orazaka studio run <target>` | Run an installed Studio — or, with --studio, a toolkit Studio by its key |
-| `orazaka studio logs <runId>` | Show a run's per-step state and results |
+| Command                              | What it does                                                             |
+| :----------------------------------- | :----------------------------------------------------------------------- |
+| `orazaka pack validate <directory>`  | Check a bundle's manifest, and whether this platform can run it          |
+| `orazaka pack install <directory>`   | Install a bundle: capabilities, billing and catalogue, or none of them   |
+| `orazaka pack publish <directory>`   | Put an installed bundle's pack and Studios on the shelf                  |
+| `orazaka pack list [directory]`      | List the bundles this deployment's pack sources offer                    |
+| `orazaka studio list`                | Browse the Studio catalogue                                              |
+| `orazaka studio installed`           | List the Studios you have installed                                      |
+| `orazaka studio install <studioKey>` | Install a Studio into your workspace                                     |
+| `orazaka studio run <target>`        | Run an installed Studio — or, with --studio, a toolkit Studio by its key |
+| `orazaka studio logs <runId>`        | Show a run's per-step state and results                                  |
 
 ## Manifest fields
 
 From `pack.schema.json` — the schema `orazaka pack validate` checks against.
 
-| Field | Required | Values | Meaning |
-|:---|:---|:---|:---|
-| `apiVersion` | yes | — | Manifest grammar version. |
-| `key` | yes | — | The bundle's stable identity. |
-| `version` | yes | — | — |
-| `tier` | — | `DATA` · `CAPABILITY` · `WORKER` | What the pack needs from the platform. |
-| `distribution` | — | `OSS` · `CLOUD` · `PARTNER` | Where the pack may be obtained. |
-| `regulatoryClass` | — | `STANDARD` · `SENSITIVE` · `REGULATED` | Drives the seven controls of phase I. |
-| `kind` | — | `VERTICAL` · `TOOLKIT` | How the pack reaches the user (ADR-061). |
-| `requires` | — | — | What must already be true of the platform for this pack to run. |
-| `catalog` | — | — | The shelf entry: a `pack` row, its category and its bundling of Studios. |
-| `pricing` | — | — | What the pack costs and what buying it grants — the billing_pack half. |
-| `studios` | yes | — | The Studios this bundle ships. |
-| `scopeGuard` | — | — | The domain this pack REFUSES to answer in. |
-| `consent` | — | — | The versioned consent a REGULATED pack requires before it may be installed. |
-| `safety` | — | — | A REGULATED pack's crisis handling. |
+| Field             | Required | Values                                 | Meaning                                                                     |
+| :---------------- | :------- | :------------------------------------- | :-------------------------------------------------------------------------- |
+| `apiVersion`      | yes      | —                                      | Manifest grammar version.                                                   |
+| `key`             | yes      | —                                      | The bundle's stable identity.                                               |
+| `version`         | yes      | —                                      | —                                                                           |
+| `tier`            | —        | `DATA` · `CAPABILITY` · `WORKER`       | What the pack needs from the platform.                                      |
+| `distribution`    | —        | `OSS` · `CLOUD` · `PARTNER`            | Where the pack may be obtained.                                             |
+| `regulatoryClass` | —        | `STANDARD` · `SENSITIVE` · `REGULATED` | Drives the seven controls of phase I.                                       |
+| `kind`            | —        | `VERTICAL` · `TOOLKIT`                 | How the pack reaches the user (ADR-061).                                    |
+| `requires`        | —        | —                                      | What must already be true of the platform for this pack to run.             |
+| `catalog`         | —        | —                                      | The shelf entry: a `pack` row, its category and its bundling of Studios.    |
+| `pricing`         | —        | —                                      | What the pack costs and what buying it grants — the billing_pack half.      |
+| `studios`         | yes      | —                                      | The Studios this bundle ships.                                              |
+| `scopeGuard`      | —        | —                                      | The domain this pack REFUSES to answer in.                                  |
+| `consent`         | —        | —                                      | The versioned consent a REGULATED pack requires before it may be installed. |
+| `safety`          | —        | —                                      | A REGULATED pack's crisis handling.                                         |
 
 ## Writing a pack
 
@@ -1415,17 +1415,17 @@ is fine.
 
 ```yaml
 apiVersion: orazaka.dev/v1
-key: my-pack                          # kebab-case, globally unique
-version: 1.0.0                        # semver
-tier: DATA                            # DATA | CAPABILITY | WORKER
-distribution: OSS                     # OSS | CLOUD | PARTNER
-regulatoryClass: STANDARD             # STANDARD | SENSITIVE | REGULATED
+key: my-pack # kebab-case, globally unique
+version: 1.0.0 # semver
+tier: DATA # DATA | CAPABILITY | WORKER
+distribution: OSS # OSS | CLOUD | PARTNER
+regulatoryClass: STANDARD # STANDARD | SENSITIVE | REGULATED
 
 requires:
-  capabilities: []                    # empty for DATA: you reuse orazaka.core.*
+  capabilities: [] # empty for DATA: you reuse orazaka.core.*
 
 catalog:
-  categoryKey: business-compliance     # business-compliance | creativity-media | wellbeing | data-analytics (closed list)
+  categoryKey: business-compliance # business-compliance | creativity-media | wellbeing | data-analytics (closed list)
   iconKey: sparkles
 
 pricing:
@@ -1436,8 +1436,8 @@ studios:
   - key: my-studio
     profession: general
     iconKey: studio
-    pricing: FREE                     # FREE | INCLUDED | PAID
-    entitlementKey: studio.my-studio  # by convention studio.<key>
+    pricing: FREE # FREE | INCLUDED | PAID
+    entitlementKey: studio.my-studio # by convention studio.<key>
     blueprint: studios/my-studio/blueprint.json
 ```
 
@@ -1467,23 +1467,23 @@ platform owes you the rest.
 ```yaml
 regulatoryClass: SENSITIVE
 
-scopeGuard:                           # REQUIRED once regulatoryClass is not STANDARD
-  refusedTerms:                       # the domain your pack does NOT serve
+scopeGuard: # REQUIRED once regulatoryClass is not STANDARD
+  refusedTerms: # the domain your pack does NOT serve
     - conseil juridique
     - avocat
-  refusal: >-                         # what a refused turn is told, verbatim
+  refusal: >- # what a refused turn is told, verbatim
     Je rédige et relis des documents. Je ne donne pas de conseil juridique —
     pour cela, adressez-vous à un professionnel du droit.
 ```
 
 What you get:
 
-| Control | What the engine does | What you declare |
-|:---|:---|:---|
-| Data class | every run, input and artefact is stamped `SENSITIVE`; it is excluded from analytics and never used for training | nothing |
-| Shortened retention | runs are purged after 30 days instead of the platform's 180 | nothing; an installation may set `retentionDays` in its config to go **lower**, never higher |
-| Audit log | `RUN_STARTED` and a terminal row per run, append-only, `UPDATE` and `DELETE` refused by the database | nothing |
-| Scope guard | a turn naming a refused term is stopped before any inference, and answered with your sentence | `scopeGuard` |
+| Control             | What the engine does                                                                                            | What you declare                                                                             |
+| :------------------ | :-------------------------------------------------------------------------------------------------------------- | :------------------------------------------------------------------------------------------- |
+| Data class          | every run, input and artefact is stamped `SENSITIVE`; it is excluded from analytics and never used for training | nothing                                                                                      |
+| Shortened retention | runs are purged after 30 days instead of the platform's 180                                                     | nothing; an installation may set `retentionDays` in its config to go **lower**, never higher |
+| Audit log           | `RUN_STARTED` and a terminal row per run, append-only, `UPDATE` and `DELETE` refused by the database            | nothing                                                                                      |
+| Scope guard         | a turn naming a refused term is stopped before any inference, and answered with your sentence                   | `scopeGuard`                                                                                 |
 
 The publish gate is code, not a checklist: a pack that declares a regulatory class above `STANDARD`
 without a `scopeGuard` **fails to install**, naming the missing key. A second condition is not yours
@@ -1494,7 +1494,7 @@ not stated a domain, and a legal-drafting Studio with no scope guard is one that
 questions.
 
 `refusedTerms` is matched on whole words, accent- and case-insensitively, against the turn as the
-user wrote it. Name the *domain you decline*, not every phrasing of it — the list is a declaration,
+user wrote it. Name the _domain you decline_, not every phrasing of it — the list is a declaration,
 not a filter, and the engine never adds terms of its own.
 
 ### 3. The blueprint
@@ -1509,18 +1509,25 @@ not a filter, and the engine never adds terms of its own.
     "studioKey": "my-studio",
     "version": "1.0.0",
     "steps": [
-      { "id": "brief", "kind": "CAPABILITY",
+      {
+        "id": "brief",
+        "kind": "CAPABILITY",
         "featureKey": "orazaka.core.chat.completion",
         "dependsOn": [],
         "inputs": { "prompt": "Write about {{inputs.subject}}." },
-        "out": "brief", "onError": "FAIL", "maxAttempts": 1, "timeout": "PT2M" }
+        "out": "brief",
+        "onError": "FAIL",
+        "maxAttempts": 1,
+        "timeout": "PT2M"
+      }
     ],
-    "outputs": [
-      { "key": "brief", "label": "Your brief", "from": "{{steps.brief.content}}", "type": "TEXT" }
-    ]
+    "outputs": [{ "key": "brief", "label": "Your brief", "from": "{{steps.brief.content}}", "type": "TEXT" }]
   },
-  "inputSchema": { "type": "object", "required": ["subject"],
-                   "properties": { "subject": { "type": "string", "title": "Subject" } } },
+  "inputSchema": {
+    "type": "object",
+    "required": ["subject"],
+    "properties": { "subject": { "type": "string", "title": "Subject" } }
+  },
   "configSchema": { "type": "object", "properties": {} }
 }
 ```
@@ -1533,19 +1540,19 @@ human), `CONNECTOR` (calls out), `KNOWLEDGE`. **`onError`**: `FAIL` | `SKIP` | `
 `SKIP` needs a written `skipRationale`, which a fitness function checks.
 
 **Templates.** `{{inputs.x}}`, `{{config.x}}`, `{{steps.<out>}}`, `{{item}}` inside a `forEach`. A
-template that is *exactly one placeholder* over a list stays a list; anywhere else it renders as
+template that is _exactly one placeholder_ over a list stays a list; anywhere else it renders as
 text. That is what lets a step take a list of asset ids.
 
 **Closed sets are chosen, never typed.** A field whose values are a known set is a list in every client
 (web, phone), so a person cannot type a value that does not exist (`tests/closed-sets.test.mjs` refuses it):
 
-| You write | The client draws |
-| :--- | :--- |
-| `"enum": ["9:16", "16:9"]` | a select (readable names come from the client's messages) |
-| `"oneOf": [{ "const": "9:16", "title": "Vertical" }, …]` | a select with your labels |
+| You write                                                  | The client draws                                                                                                                                                                                                                                     |
+| :--------------------------------------------------------- | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `"enum": ["9:16", "16:9"]`                                 | a select (readable names come from the client's messages)                                                                                                                                                                                            |
+| `"oneOf": [{ "const": "9:16", "title": "Vertical" }, …]`   | a select with your labels                                                                                                                                                                                                                            |
 | `"x-options": { "source": "models", "category": "image" }` | a searchable picker fed by the model catalogue (`orazaka_models`): label, local or cloud, speed, typical time, price, availability and the default that will run. **Never list the models yourself** — a hand-kept `enum` drifts from the catalogue. |
-| `"x-control": "seed"` | a number with a « random » switch (nothing is sent while it is on) |
-| `"x-advanced": true` | folded under « More options » — model, seed and things to avoid are advanced; the field the Studio is about is not |
+| `"x-control": "seed"`                                      | a number with a « random » switch (nothing is sent while it is on)                                                                                                                                                                                   |
+| `"x-advanced": true`                                       | folded under « More options » — model, seed and things to avoid are advanced; the field the Studio is about is not                                                                                                                                   |
 
 **Every select speaks both languages (`x-i18n`).** A field that is a list carries its words in English and French, so a
 client never shows the blueprint's French on an English page: `"x-i18n": {"en": {"title", "description", "options"},
@@ -1565,7 +1572,7 @@ that predate it. The same test refuses a field without them, an English word tha
 The Studio service writes the catalogue's list into the schema it serves (`oneOf` of `const`/`title`, the facts in
 `x-meta`) and refuses, before any credit is held, a value that is not in it.
 
-**`estimatedCredits` is a hold, not a price.** Size it for your blueprint's *worst legal input* —
+**`estimatedCredits` is a hold, not a price.** Size it for your blueprint's _worst legal input_ —
 the maximum `forEach` fan-out, every optional step firing. It is released, not charged: a run
 settles what it measured.
 
@@ -1605,9 +1612,9 @@ Declare it in the manifest —
 ```yaml
 requires:
   capabilities:
-    - key: orazaka.echo.text.reverse   # your namespace, your key
+    - key: orazaka.echo.text.reverse # your namespace, your key
       label: Reverse text
-      routingKey: job.echo.reverse     # job.<family>.<action>
+      routingKey: job.echo.reverse # job.<family>.<action>
       handlerKey: echo.reverse
       billableCapability: CHAT
       billableUnit: KILOTOKEN
@@ -1646,7 +1653,7 @@ version, with a warning naming what to rename — so an older `.env` keeps worki
 
 **Re-installing at the same blueprint version keeps the stored one.** A `PUBLISHED` blueprint
 version is immutable by design — shipping a change means shipping a new version. `pack install`
-still says *"Installed"*, and your edit is not what runs. Bump `version` in the blueprint (and in
+still says _"Installed"_, and your edit is not what runs. Bump `version` in the blueprint (and in
 `definition.version`) every time you change it. The installer logs what it kept, so check the
 studio service's log if a change seems to have no effect.
 

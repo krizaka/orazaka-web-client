@@ -12,7 +12,15 @@ import { boundsText, display, draftOf, parseDraft } from "@/console/features/eng
 import { SettingHistory } from "./SettingHistory";
 
 /** One setting: its description, current value, default and bounds, edited in place with validation, and its history. */
-export function SettingCard({ setting, words, onSave }: Readonly<{ setting: RuntimeSetting; words: EngineWords; onSave: (key: string, value: SettingValue) => Promise<string | null> }>) {
+export function SettingCard({
+  setting,
+  words,
+  onSave,
+}: Readonly<{
+  setting: RuntimeSetting;
+  words: EngineWords;
+  onSave: (key: string, value: SettingValue) => Promise<string | null>;
+}>) {
   const [draft, setDraft] = React.useState(draftOf(setting.value));
   const draftRef = React.useRef(draft);
   const inFlight = React.useRef(false);
@@ -66,20 +74,53 @@ export function SettingCard({ setting, words, onSave }: Readonly<{ setting: Runt
         </header>
         <p className="text-sm text-fg-secondary">{setting.description}</p>
         <dl className="flex flex-wrap gap-x-6 gap-y-1 text-xs text-fg-muted">
-          <div><dt className="inline">{words.current}: </dt><dd className="inline text-fg">{display(setting.value, words)}</dd></div>
-          <div><dt className="inline">{words.defaultValue}: </dt><dd className="inline text-fg">{display(setting.default, words)}</dd></div>
-          {bounds && <div><dt className="inline">{words.bounds}: </dt><dd className="inline text-fg">{bounds}</dd></div>}
+          <div>
+            <dt className="inline">{words.current}: </dt>
+            <dd className="inline text-fg">{display(setting.value, words)}</dd>
+          </div>
+          <div>
+            <dt className="inline">{words.defaultValue}: </dt>
+            <dd className="inline text-fg">{display(setting.default, words)}</dd>
+          </div>
+          {bounds && (
+            <div>
+              <dt className="inline">{words.bounds}: </dt>
+              <dd className="inline text-fg">{bounds}</dd>
+            </div>
+          )}
         </dl>
         <Field.Root>
           {setting.type === "boolean" ? (
-            <Switch label={setting.key} checked={draft === "true"} disabled={status === "saving"} onCheckedChange={(on) => change(String(on))} />
+            <Switch
+              label={setting.key}
+              checked={draft === "true"}
+              disabled={status === "saving"}
+              onCheckedChange={(on) => change(String(on))}
+            />
           ) : (
             <>
               <Field.Label htmlFor={id}>{setting.key}</Field.Label>
               {setting.type === "list" ? (
-                <Textarea id={id} rows={4} value={draft} invalid={error !== null} disabled={status === "saving"} aria-describedby={describedBy} onChange={(e) => change(e.target.value)} />
+                <Textarea
+                  id={id}
+                  rows={4}
+                  value={draft}
+                  invalid={error !== null}
+                  disabled={status === "saving"}
+                  aria-describedby={describedBy}
+                  onChange={(e) => change(e.target.value)}
+                />
               ) : (
-                <Input id={id} inputMode="numeric" onKeyDown={(e) => e.key === "Enter" && dirty && void submit()} value={draft} invalid={error !== null} disabled={status === "saving"} aria-describedby={describedBy} onChange={(e) => change(e.target.value)} />
+                <Input
+                  id={id}
+                  inputMode="numeric"
+                  onKeyDown={(e) => e.key === "Enter" && dirty && void submit()}
+                  value={draft}
+                  invalid={error !== null}
+                  disabled={status === "saving"}
+                  aria-describedby={describedBy}
+                  onChange={(e) => change(e.target.value)}
+                />
               )}
             </>
           )}
@@ -89,9 +130,27 @@ export function SettingCard({ setting, words, onSave }: Readonly<{ setting: Runt
         </Field.Root>
         {status === "saved" && <output className="text-sm text-success">{words.saved}</output>}
         <footer className="flex flex-wrap gap-2">
-          <Button type="button" size="sm" onClick={() => void submit()} disabled={!dirty || status === "saving"}>{status === "saving" ? words.saving : words.save}</Button>
-          <Button type="button" size="sm" variant="secondary" onClick={() => change(draftOf(setting.default))} disabled={status === "saving"}>{words.reset}</Button>
-          <Button type="button" size="sm" variant="ghost" aria-expanded={showHistory} onClick={() => setShowHistory((v) => !v)}>{showHistory ? words.hideHistory : words.history}</Button>
+          <Button type="button" size="sm" onClick={() => void submit()} disabled={!dirty || status === "saving"}>
+            {status === "saving" ? words.saving : words.save}
+          </Button>
+          <Button
+            type="button"
+            size="sm"
+            variant="secondary"
+            onClick={() => change(draftOf(setting.default))}
+            disabled={status === "saving"}
+          >
+            {words.reset}
+          </Button>
+          <Button
+            type="button"
+            size="sm"
+            variant="ghost"
+            aria-expanded={showHistory}
+            onClick={() => setShowHistory((v) => !v)}
+          >
+            {showHistory ? words.hideHistory : words.history}
+          </Button>
         </footer>
         {showHistory && <SettingHistory setting={setting} words={words} version={setting.value} />}
       </div>

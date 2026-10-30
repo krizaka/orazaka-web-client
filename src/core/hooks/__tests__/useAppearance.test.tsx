@@ -8,7 +8,12 @@ const wrapper = ({ children }: { children: React.ReactNode }) => <ThemeProvider>
 beforeAll(() => {
   Object.defineProperty(window, "matchMedia", {
     writable: true,
-    value: (query: string) => ({ matches: true, media: query, addEventListener: jest.fn(), removeEventListener: jest.fn() }),
+    value: (query: string) => ({
+      matches: true,
+      media: query,
+      addEventListener: jest.fn(),
+      removeEventListener: jest.fn(),
+    }),
   });
 });
 

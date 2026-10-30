@@ -10,7 +10,13 @@ import { ActivityCharts } from "@/console/features/supervision/components/Activi
 import { SupervisionKpis } from "@/console/features/supervision/components/SupervisionKpis";
 import { UsageCharts } from "@/console/features/supervision/components/UsageCharts";
 import { useSupervision } from "@/console/features/supervision/hooks/useSupervision";
-import { byCapability, consumers, jobsPerDay, latencyByCapability, usageTotals } from "@/console/features/supervision/utils/supervision";
+import {
+  byCapability,
+  consumers,
+  jobsPerDay,
+  latencyByCapability,
+  usageTotals,
+} from "@/console/features/supervision/utils/supervision";
 
 const KPI_SKELETON = (
   <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
@@ -56,7 +62,12 @@ export function SupervisionScreen() {
       )}
 
       <LoadingRegion loading={data.isLoading} skeleton={KPI_SKELETON} label={s.loading} slowLabel={s.slow}>
-        <SupervisionKpis requests={totals.requests} credits={totals.credits} refusalRate={totals.refusalRate} connections={data.connections} />
+        <SupervisionKpis
+          requests={totals.requests}
+          credits={totals.credits}
+          refusalRate={totals.refusalRate}
+          connections={data.connections}
+        />
       </LoadingRegion>
 
       <UsageCharts capabilities={capabilities} top={top} loading={data.isLoading} error={data.hasError} />

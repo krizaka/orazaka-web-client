@@ -14,9 +14,16 @@ const job = (id: string, day: number, status: Job["status"], minutes = 1): Job =
   createdAt: iso(day, 10, 0),
   updatedAt: iso(day, 10, minutes),
 });
-const run = (id: string, day: number, status = "COMPLETED"): Run => ({ id, studioKey: "=cmd|' /C calc'!A0", status, startedAt: iso(day) }) as unknown as Run;
+const run = (id: string, day: number, status = "COMPLETED"): Run =>
+  ({ id, studioKey: "=cmd|' /C calc'!A0", status, startedAt: iso(day) }) as unknown as Run;
 
-const jobs = [job("a", 15, "COMPLETED", 2), job("b", 14, "COMPLETED", 4), job("c", 14, "FAILED"), job("d", 6, "COMPLETED", 1), job("old", 1, "COMPLETED")];
+const jobs = [
+  job("a", 15, "COMPLETED", 2),
+  job("b", 14, "COMPLETED", 4),
+  job("c", 14, "FAILED"),
+  job("d", 6, "COMPLETED", 1),
+  job("old", 1, "COMPLETED"),
+];
 
 describe("usageSummary", () => {
   it("counts the period and the one before it, and the median time to a result", () => {

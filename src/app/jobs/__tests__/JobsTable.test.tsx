@@ -10,16 +10,42 @@ jest.mock("@/core/context/LocaleContext", () => {
 });
 
 const video: Job = {
-  id: "job-video-1", userId: "u", featureKey: "orazaka.core.media.video", status: "COMPLETED",
-  createdAt: "2026-10-16T10:00:00Z", updatedAt: "2026-10-16T10:02:47Z",
+  id: "job-video-1",
+  userId: "u",
+  featureKey: "orazaka.core.media.video",
+  status: "COMPLETED",
+  createdAt: "2026-10-16T10:00:00Z",
+  updatedAt: "2026-10-16T10:02:47Z",
   payload: { prompt: "A heron", model: "wan2.2-ti2v-5b", width: 1280, height: 704, frames: 121, fps: 24 },
-  result: { url: "/clip.mp4", durationMs: 768, metrics: { gpu: "NVIDIA H100 80GB HBM3", provider: "runpod", gpu_allocated_mb: 29800, inference_time_sec: 167.7 } },
+  result: {
+    url: "/clip.mp4",
+    durationMs: 768,
+    metrics: { gpu: "NVIDIA H100 80GB HBM3", provider: "runpod", gpu_allocated_mb: 29800, inference_time_sec: 167.7 },
+  },
 };
-const failed: Job = { id: "job-text-2", userId: "u", featureKey: "orazaka.core.chat", status: "FAILED", createdAt: "2026-10-16T10:30:00Z", updatedAt: "2026-10-16T10:30:04Z", payload: {}, result: {}, errorMessage: "Provider timeout" };
+const failed: Job = {
+  id: "job-text-2",
+  userId: "u",
+  featureKey: "orazaka.core.chat",
+  status: "FAILED",
+  createdAt: "2026-10-16T10:30:00Z",
+  updatedAt: "2026-10-16T10:30:04Z",
+  payload: {},
+  result: {},
+  errorMessage: "Provider timeout",
+};
 
 const base: JobsTableProps = {
-  jobs: [video, failed], loading: false, totalElements: 2, currentPage: 0, pageSize: 10,
-  onPageChange: jest.fn(), onPageSizeChange: jest.fn(), onOpenModal: jest.fn(), copiedId: null, onCopy: jest.fn(),
+  jobs: [video, failed],
+  loading: false,
+  totalElements: 2,
+  currentPage: 0,
+  pageSize: 10,
+  onPageChange: jest.fn(),
+  onPageSizeChange: jest.fn(),
+  onOpenModal: jest.fn(),
+  copiedId: null,
+  onCopy: jest.fn(),
 };
 
 describe("JobsTable", () => {
@@ -68,6 +94,7 @@ describe("jobsTable words", () => {
   it("has a label for every fact id, in English and French", () => {
     const en = Object.keys(translations.en.jobsTable.facts).sort();
     expect(Object.keys(translations.fr.jobsTable.facts).sort()).toEqual(en);
-    for (const l of ["en", "fr"] as const) for (const v of Object.values(translations[l].jobsTable.facts)) expect(v).not.toBe("");
+    for (const l of ["en", "fr"] as const)
+      for (const v of Object.values(translations[l].jobsTable.facts)) expect(v).not.toBe("");
   });
 });

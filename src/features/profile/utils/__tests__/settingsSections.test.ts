@@ -1,4 +1,11 @@
-import { SETTINGS_SECTIONS, isSettingsSection, legacyTabTarget, resolveSection, settingsHref, visibleSections } from "@/features/profile/utils/settingsSections";
+import {
+  SETTINGS_SECTIONS,
+  isSettingsSection,
+  legacyTabTarget,
+  resolveSection,
+  settingsHref,
+  visibleSections,
+} from "@/features/profile/utils/settingsSections";
 
 describe("settings sections: the URL is the state", () => {
   it("has one route per section", () => {

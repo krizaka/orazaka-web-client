@@ -19,7 +19,10 @@ export async function POST(req: Request) {
       body: await req.text(),
     });
     const text = await response.text();
-    return new NextResponse(text || null, { status: response.status, headers: { "Content-Type": response.headers.get("content-type") || "application/json" } });
+    return new NextResponse(text || null, {
+      status: response.status,
+      headers: { "Content-Type": response.headers.get("content-type") || "application/json" },
+    });
   } catch {
     return NextResponse.json({ error: "Sign-up is unavailable" }, { status: 502 });
   }

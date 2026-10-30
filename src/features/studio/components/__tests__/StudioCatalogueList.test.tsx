@@ -11,18 +11,64 @@ jest.mock("@/core/context/LocaleContext", () => ({
 }));
 
 const studio = (key: string, over: Partial<StudioSummary>): StudioSummary => ({
-  studioKey: key, label: key, tagline: null, profession: "general", iconKey: "studio", heroAssetId: null,
-  pricing: "INCLUDED", kind: "TOOLKIT", latestVersion: "1.0.0", locked: false, lockedReason: "NONE", packKey: null, ...over,
+  studioKey: key,
+  label: key,
+  tagline: null,
+  profession: "general",
+  iconKey: "studio",
+  heroAssetId: null,
+  pricing: "INCLUDED",
+  kind: "TOOLKIT",
+  latestVersion: "1.0.0",
+  locked: false,
+  lockedReason: "NONE",
+  packKey: null,
+  ...over,
 });
 const packs: CataloguePack[] = [
-  { packKey: "orazaka-media", label: "Media", access: "INCLUDED", owned: false, priceCents: 0, studioKeys: ["image-generation"] },
-  { packKey: "data-analytics", label: "Data & analytics", access: "BUYABLE", owned: false, priceCents: 4900, studioKeys: ["creator-suggestions"] },
+  {
+    packKey: "orazaka-media",
+    label: "Media",
+    access: "INCLUDED",
+    owned: false,
+    priceCents: 0,
+    studioKeys: ["image-generation"],
+  },
+  {
+    packKey: "data-analytics",
+    label: "Data & analytics",
+    access: "BUYABLE",
+    owned: false,
+    priceCents: 4900,
+    studioKeys: ["creator-suggestions"],
+  },
 ];
 const catalogue = [
   studio("image-generation", { label: "Image generation", tagline: "A picture from a sentence." }),
-  studio("creator-suggestions", { label: "Creator suggestions", profession: "creative", kind: "VERTICAL", pricing: "PAID", locked: true, lockedReason: "REQUIRES_PURCHASE", packKey: "data-analytics" }),
-  studio("media-safety", { label: "Media safety", kind: "VERTICAL", pricing: "FREE", locked: true, lockedReason: "REQUIRES_PLAN" }),
-  studio("document-authenticity", { label: "Document authenticity", profession: "legal", kind: "VERTICAL", pricing: "PAID", locked: true, lockedReason: "UNKNOWN" }),
+  studio("creator-suggestions", {
+    label: "Creator suggestions",
+    profession: "creative",
+    kind: "VERTICAL",
+    pricing: "PAID",
+    locked: true,
+    lockedReason: "REQUIRES_PURCHASE",
+    packKey: "data-analytics",
+  }),
+  studio("media-safety", {
+    label: "Media safety",
+    kind: "VERTICAL",
+    pricing: "FREE",
+    locked: true,
+    lockedReason: "REQUIRES_PLAN",
+  }),
+  studio("document-authenticity", {
+    label: "Document authenticity",
+    profession: "legal",
+    kind: "VERTICAL",
+    pricing: "PAID",
+    locked: true,
+    lockedReason: "UNKNOWN",
+  }),
 ];
 
 function renderList(onGetPack = jest.fn()) {
@@ -39,7 +85,11 @@ describe("StudioCatalogueList", () => {
 
   it("puts each Studio under its trade's heading, one list per trade", () => {
     renderList();
-    expect(screen.getAllByRole("heading", { level: 2 }).map((h) => h.textContent)).toEqual(["Creative1", "Legal1", "General2"]);
+    expect(screen.getAllByRole("heading", { level: 2 }).map((h) => h.textContent)).toEqual([
+      "Creative1",
+      "Legal1",
+      "General2",
+    ]);
     expect(screen.getByRole("list", { name: "Studios in General" })).toBeInTheDocument();
   });
 
@@ -59,7 +109,10 @@ describe("StudioCatalogueList", () => {
 
   it("sends a Studio of another plan to the plans, and offers nothing when billing could not check", () => {
     renderList();
-    expect(screen.getByRole("link", { name: "See the plans that include Media safety" })).toHaveAttribute("href", "/packs");
+    expect(screen.getByRole("link", { name: "See the plans that include Media safety" })).toHaveAttribute(
+      "href",
+      "/packs",
+    );
     const legal = screen.getByRole("list", { name: "Studios in Legal" });
     expect(within(legal).queryByRole("button")).not.toBeInTheDocument();
     expect(within(legal).getByText(/We could not check it right now/)).toBeInTheDocument();
@@ -67,7 +120,8 @@ describe("StudioCatalogueList", () => {
 
   it("shows each state in words", () => {
     renderList();
-    for (const word of ["Ready", "Needs a pack", "Not on your plan", "Not checked"]) expect(screen.getByText(word)).toBeInTheDocument();
+    for (const word of ["Ready", "Needs a pack", "Not on your plan", "Not checked"])
+      expect(screen.getByText(word)).toBeInTheDocument();
   });
 
   it("speaks French when the reader does", () => {

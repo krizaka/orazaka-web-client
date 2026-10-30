@@ -17,9 +17,7 @@ import { useTranslation } from "@/core/context/LocaleContext";
  */
 export function StudioLoading() {
   const { t } = useTranslation();
-  return (
-    <Loader variant="block" label={t.dashboard.loading} className="py-6" />
-  );
+  return <Loader variant="block" label={t.dashboard.loading} className="py-6" />;
 }
 
 interface StudioLoadErrorProps {

@@ -10,7 +10,9 @@ test.skip(!process.env.E2E_BASE_URL, "live smoke: set E2E_BASE_URL to a deployed
 test("live: the home loads and every link of the bar leads to a page", async ({ page, request }) => {
   await page.goto("/", { waitUntil: "networkidle" });
   await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
-  const hrefs = await page.$$eval("header a[href^='/']", (as) => [...new Set(as.map((a) => (a.getAttribute("href") ?? "").split("#")[0]))]);
+  const hrefs = await page.$$eval("header a[href^='/']", (as) => [
+    ...new Set(as.map((a) => (a.getAttribute("href") ?? "").split("#")[0])),
+  ]);
   expect(hrefs.length).toBeGreaterThan(2);
   for (const href of hrefs.filter(Boolean)) {
     const res = await request.get(href);

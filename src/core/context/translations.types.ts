@@ -62,7 +62,21 @@ export interface TranslationDictionary {
     emptyContent: string;
   };
   /** The signed-in app's sections (core/config/app-sections.ts) and the user menu — the same words on web, mobile and Mac. */
-  appNav: Record<"label" | "home" | "chat" | "studios" | "jobs" | "packs" | "usage" | "settings" | "admin" | "account" | "language" | "signOut", string>;
+  appNav: Record<
+    | "label"
+    | "home"
+    | "chat"
+    | "studios"
+    | "jobs"
+    | "packs"
+    | "usage"
+    | "settings"
+    | "admin"
+    | "account"
+    | "language"
+    | "signOut",
+    string
+  >;
   header: {
     profile: string;
     logout: string;
@@ -962,7 +976,14 @@ export interface ShowcaseDictionary {
     close: string;
   };
   media: { play: string; pause: string; local: string };
-  dashboard: { studios: string; studiosDesc: string; creations: string; creationsDesc: string; latestCreations: string; seeAll: string };
+  dashboard: {
+    studios: string;
+    studiosDesc: string;
+    creations: string;
+    creationsDesc: string;
+    latestCreations: string;
+    seeAll: string;
+  };
   chat: { approvePlan: string; adjustPlan: string; thinking: string; reasoning: string };
   notifications: { emptyTitle: string; emptyBody: string; running: string; done: string; failed: string };
 }

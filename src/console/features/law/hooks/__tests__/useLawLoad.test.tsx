@@ -23,7 +23,10 @@ describe("useLawLoad", () => {
     const b = deferred<string>();
     const loadA = () => a.promise;
     const loadB = () => b.promise;
-    const { result, rerender } = renderHook(({ load }) => useLawLoad<string>(load, ""), { wrapper: queryWrapper(), initialProps: { load: loadA } });
+    const { result, rerender } = renderHook(({ load }) => useLawLoad<string>(load, ""), {
+      wrapper: queryWrapper(),
+      initialProps: { load: loadA },
+    });
     rerender({ load: loadB });
     await act(async () => b.resolve("B"));
     await waitFor(() => expect(result.current.data).toBe("B"));

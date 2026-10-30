@@ -17,7 +17,9 @@ const PACKS_DOCS = "/docs/packs";
  * Addresses that are a page of the signed-in app: a config redirect would also hit a session, so the proxy answers 308
  * only to a visitor without one (`/packs` is « Plan & packs » once signed in).
  */
-export const SIGNED_OUT_REDIRECTS: readonly { source: string; destination: string }[] = [{ source: "/packs", destination: PACKS_DOCS }];
+export const SIGNED_OUT_REDIRECTS: readonly { source: string; destination: string }[] = [
+  { source: "/packs", destination: PACKS_DOCS },
+];
 
 /** Removed on 2026-10-21 (#231): feature tours, the gallery, the models catalogue, three marketing or stub docs. */
 export const REMOVED_PUBLIC: readonly { source: string; destination: string }[] = [
@@ -38,7 +40,14 @@ export const REMOVED_PUBLIC: readonly { source: string; destination: string }[] 
  * architecture reference. They stay generated on GitHub; the reading path no longer carries them.
  */
 const CONCEPTS_PAGES = ["glossary", "core"] as const;
-const ARCHITECTURE_PAGES = ["interceptors", "interface-contracts", "business", "repositories", "governance", "adrs"] as const;
+const ARCHITECTURE_PAGES = [
+  "interceptors",
+  "interface-contracts",
+  "business",
+  "repositories",
+  "governance",
+  "adrs",
+] as const;
 export const REMOVED_DOCS: readonly { source: string; destination: string }[] = [
   ...CONCEPTS_PAGES.map((slug) => ({ source: `/docs/${slug}`, destination: "/docs/concepts" })),
   ...ARCHITECTURE_PAGES.map((slug) => ({ source: `/docs/${slug}`, destination: "/docs/architecture" })),

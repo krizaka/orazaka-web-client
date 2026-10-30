@@ -8,7 +8,16 @@ jest.mock("@/core/context/LocaleContext", () => {
   return { useTranslation: () => ({ t: translations.en, locale: "en" }) };
 });
 
-const job: Job = { id: "j1", userId: "u", featureKey: "orazaka.core.media.video", status: "COMPLETED", payload: {}, result: {}, createdAt: "2026-10-16T10:00:00Z", updatedAt: "2026-10-16T10:01:00Z" };
+const job: Job = {
+  id: "j1",
+  userId: "u",
+  featureKey: "orazaka.core.media.video",
+  status: "COMPLETED",
+  payload: {},
+  result: {},
+  createdAt: "2026-10-16T10:00:00Z",
+  updatedAt: "2026-10-16T10:01:00Z",
+};
 
 describe("JobDeleteDialog", () => {
   it("asks by name, and confirming calls back", () => {

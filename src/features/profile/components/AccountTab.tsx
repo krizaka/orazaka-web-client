@@ -38,7 +38,11 @@ export function AccountTab({ profile, t }: Readonly<AccountTabProps>) {
         <SettingsRow
           label={
             <span className="flex items-center gap-3">
-              <Avatar size="md" defaultAvatar={{ brand: "orazaka", seed }} fallback={(profile.username || "U")[0].toUpperCase()} />
+              <Avatar
+                size="md"
+                defaultAvatar={{ brand: "orazaka", seed }}
+                fallback={(profile.username || "U")[0].toUpperCase()}
+              />
               <span className="flex min-w-0 flex-col">
                 <span className="truncate text-sm font-medium text-fg">{profile.username}</span>
                 <span className="truncate text-sm font-normal text-fg-secondary">{profile.email}</span>
@@ -55,7 +59,10 @@ export function AccountTab({ profile, t }: Readonly<AccountTabProps>) {
         </SettingsRow>
         <SettingsRow label={t.profile.planLabel} description={t.profile.planHelp}>
           <span className="text-fg-secondary">{planName(profile, t)}</span>
-          <a className="text-fg-accent underline-offset-2 hover:underline" href="https://www.krizaka.com/contact?topic=orazaka">
+          <a
+            className="text-fg-accent underline-offset-2 hover:underline"
+            href="https://www.krizaka.com/contact?topic=orazaka"
+          >
             {t.profile.planLink}
           </a>
         </SettingsRow>
@@ -69,7 +76,12 @@ export function AccountTab({ profile, t }: Readonly<AccountTabProps>) {
         </SettingsRow>
       </SettingsSection>
 
-      <SettingsSection variant="flat" id="advanced" title={t.profile.advancedTitle} description={t.profile.advancedDesc}>
+      <SettingsSection
+        variant="flat"
+        id="advanced"
+        title={t.profile.advancedTitle}
+        description={t.profile.advancedDesc}
+      >
         <SettingsRow label={t.profile.userId} description={t.profile.accountIdHelp}>
           <CopyableField value={profile.id} />
         </SettingsRow>

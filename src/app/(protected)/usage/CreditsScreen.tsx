@@ -33,7 +33,10 @@ export function CreditsScreen() {
   const { studios } = useStudios(null);
   const [periodKey] = useRouteState("period", { values: PERIOD_KEYS, default: DEFAULT_PERIOD_KEY });
   const days = Number(periodKey) as Period;
-  const studioLabel = React.useCallback((key: string) => studios.find((s) => s.studioKey === key)?.label ?? key, [studios]);
+  const studioLabel = React.useCallback(
+    (key: string) => studios.find((s) => s.studioKey === key)?.label ?? key,
+    [studios],
+  );
   const summary = React.useMemo(() => usageSummary(jobs, runs, days, systemNow()), [jobs, runs, days]);
   const period = React.useMemo(() => usageRows(jobs, runs, days, systemNow()), [jobs, runs, days]);
 
@@ -60,7 +63,9 @@ export function CreditsScreen() {
       <section className="flex flex-col gap-4" aria-labelledby="usage-title">
         <header className="flex flex-col gap-3 px-1 sm:flex-row sm:items-end sm:justify-between">
           <span className="flex flex-col gap-1">
-            <h2 id="usage-title" className="text-xs font-semibold text-fg-muted">{w.activityTitle}</h2>
+            <h2 id="usage-title" className="text-xs font-semibold text-fg-muted">
+              {w.activityTitle}
+            </h2>
             <p className="text-[13px] text-fg-secondary">{w.activityDesc}</p>
           </span>
           <PeriodTabs />

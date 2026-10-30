@@ -18,7 +18,11 @@ jest.mock("next/link", () => {
 });
 
 jest.mock("@/core/context/LocaleContext", () => ({
-  useTranslation: () => ({ t: jest.requireActual("@/core/context/translations").translations.en, locale: "en", setLocale: jest.fn() }),
+  useTranslation: () => ({
+    t: jest.requireActual("@/core/context/translations").translations.en,
+    locale: "en",
+    setLocale: jest.fn(),
+  }),
 }));
 
 describe("AuthScreen", () => {

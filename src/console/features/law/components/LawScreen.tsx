@@ -23,7 +23,9 @@ export function LawScreen() {
       <Tabs.Root routeKey="tab" routeValues={TABS} defaultValue="proposals">
         <Tabs.List aria-label={t.tabs.label} className="overflow-x-auto">
           {TABS.map((tab) => (
-            <Tabs.Trigger key={tab} value={tab}>{t.tabs[tab]}</Tabs.Trigger>
+            <Tabs.Trigger key={tab} value={tab}>
+              {t.tabs[tab]}
+            </Tabs.Trigger>
           ))}
         </Tabs.List>
         <Tabs.Content value="proposals">

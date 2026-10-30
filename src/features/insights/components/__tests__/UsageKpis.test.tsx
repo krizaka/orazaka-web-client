@@ -17,7 +17,16 @@ const en = insights.en;
 
 // jsdom lays nothing out and has no observers: the kit's figures and charts read them.
 beforeAll(() => {
-  window.matchMedia = ((query: string) => ({ matches: false, media: query, addEventListener: () => {}, removeEventListener: () => {}, addListener: () => {}, removeListener: () => {}, onchange: null, dispatchEvent: () => false })) as typeof window.matchMedia;
+  window.matchMedia = ((query: string) => ({
+    matches: false,
+    media: query,
+    addEventListener: () => {},
+    removeEventListener: () => {},
+    addListener: () => {},
+    removeListener: () => {},
+    onchange: null,
+    dispatchEvent: () => false,
+  })) as typeof window.matchMedia;
   class Observer {
     observe() {}
     unobserve() {}
@@ -28,7 +37,16 @@ beforeAll(() => {
 const NOW = new Date();
 const job = (id: string, daysAgo: number, status: Job["status"]): Job => {
   const at = new Date(NOW.getFullYear(), NOW.getMonth(), NOW.getDate() - daysAgo, 10, 0, 0);
-  return { id, userId: "u", featureKey: "image.flux", status, payload: {}, result: {}, createdAt: at.toISOString(), updatedAt: new Date(at.getTime() + 120_000).toISOString() };
+  return {
+    id,
+    userId: "u",
+    featureKey: "image.flux",
+    status,
+    payload: {},
+    result: {},
+    createdAt: at.toISOString(),
+    updatedAt: new Date(at.getTime() + 120_000).toISOString(),
+  };
 };
 const jobs = [job("a", 0, "COMPLETED"), job("b", 1, "COMPLETED"), job("c", 1, "FAILED"), job("d", 9, "COMPLETED")];
 

@@ -1,7 +1,6 @@
 "use client";
 
 import * as React from "react";
-import { formatDistanceToNow } from "date-fns";
 import { enUS, fr } from "date-fns/locale";
 import { CheckIcon, CopyIcon, DownloadIcon, EyeIcon, TrashIcon } from "@krizaka/icons";
 import { Badge } from "@krizaka/ui/badge";
@@ -11,37 +10,46 @@ import { fill } from "@/core/context/fill";
 import { useTranslation } from "@/core/context/LocaleContext";
 import { jobLabel, jobMediaUrl } from "@/core/jobs/jobMedia";
 import { JOB_STATUS } from "@/core/constants/http.constants";
-import { formatDuration, jobFacts, modelOf, promptOf, studioOf, wallTimeMs, whereRan } from "@/features/jobs/utils/jobFacts";
-import type { Job, JobStatus } from "@/core/types/jobs.types";
+import {
+  formatDuration,
+  jobFacts,
+  modelOf,
+  promptOf,
+  studioOf,
+  wallTimeMs,
+  whereRan,
+} from "@/features/jobs/utils/jobFacts";
+import { timeAgoCell } from "@/core/components/timeAgo";
+import type { Job } from "@/core/types/jobs.types";
 import { JobDetail } from "./JobDetail";
 import { MODEL_NAMES } from "./modelNames";
 import { JobThumb } from "./JobThumb";
+import { PAGE_SIZES, TONE, type JobsTableProps } from "./jobsTableShape";
 
-const PAGE_SIZES = [10, 20, 50] as const;
-const TONE: Record<JobStatus, "neutral" | "accent" | "success" | "danger"> = { PENDING: "neutral", PROCESSING: "accent", COMPLETED: "success", FAILED: "danger", CANCELLED: "neutral", DELETED: "neutral" };
+export type { JobsTableProps } from "./jobsTableShape";
 
-export interface JobsTableProps {
-  jobs: Job[];
-  loading: boolean;
-  totalElements: number;
-  /** From 0. */
-  currentPage: number;
-  pageSize: number;
-  onPageChange: (page: number) => void;
-  onPageSizeChange: (size: number) => void;
-  onOpenModal: (job: Job, type: "payload" | "result") => void;
-  copiedId: string | null;
-  onCopy: (text: string, id: string) => void;
-  /** Deletes a task and its result (orazaka-web-client#86). The action shows only when the page provides it. */
-  onDelete?: (job: Job) => void;
-}
+const previewCell = (j: Job) => <JobThumb job={j} />;
+
+const modelCell = (name: string) => <span className="font-medium">{name}</span>;
 
 /**
  * The tasks, one line each, on the kit's responsive DataTable (cards on a phone): a preview, the task and its Studio, the
  * model (always a name), where it ran, the status, the real wall time, and what leaves the row as the table narrows goes to
  * its detail — grouped facts in words and units. Filters (search, status, model, where), sort, and the page the server sent.
  */
-export function JobsTable({ jobs, loading, totalElements, currentPage, pageSize, onPageChange, onPageSizeChange, onOpenModal, copiedId, onCopy, onDelete }: Readonly<JobsTableProps>) {
+export function JobsTable({
+  jobs,
+  loading,
+  totalElements,
+  currentPage,
+  pageSize,
+  onPageChange,
+  onPageSizeChange,
+  onOpenModal,
+  copiedId,
+  onCopy,
+  onDelete,
+}: Readonly<JobsTableProps>) {
   const { t, locale } = useTranslation();
   const d = t.jobsTable;
   const dateLocale = locale === "fr" ? fr : enUS;
@@ -51,7 +59,14 @@ export function JobsTable({ jobs, loading, totalElements, currentPage, pageSize,
     const model = (j: Job) => modelOf(j, MODEL_NAMES) ?? d.modelAuto;
     const where = (j: Job) => whereRan(j) ?? d.whereUnknown;
     return [
-      { id: "preview", header: d.columns.preview, priority: 1, hideable: false, width: 84, cell: (j) => <JobThumb job={j} /> },
+      {
+        id: "preview",
+        header: d.columns.preview,
+        priority: 1,
+        hideable: false,
+        width: 84,
+        cell: previewCell,
+      },
       {
         id: "task",
         header: d.columns.task,
@@ -63,8 +78,27 @@ export function JobsTable({ jobs, loading, totalElements, currentPage, pageSize,
         cell: (j) => jobLabel(t, j),
         subtitle: (j) => studioOf(j) ?? j.id.slice(0, 8),
       },
-      { id: "model", header: d.columns.model, priority: 2, filter: "facet", sortable: true, type: "text", nowrap: true, value: model, cell: (j) => <span className="font-medium">{model(j)}</span> },
-      { id: "where", header: d.columns.where, priority: 3, filter: "facet", sortable: true, type: "text", nowrap: true, value: where },
+      {
+        id: "model",
+        header: d.columns.model,
+        priority: 2,
+        filter: "facet",
+        sortable: true,
+        type: "text",
+        nowrap: true,
+        value: model,
+        cell: (j) => modelCell(model(j)),
+      },
+      {
+        id: "where",
+        header: d.columns.where,
+        priority: 3,
+        filter: "facet",
+        sortable: true,
+        type: "text",
+        nowrap: true,
+        value: where,
+      },
       {
         id: "status",
         header: d.columns.status,
@@ -86,7 +120,10 @@ export function JobsTable({ jobs, loading, totalElements, currentPage, pageSize,
         align: "end",
         sortable: true,
         value: (j) => wallTimeMs(j),
-        cell: (j) => (j.status === JOB_STATUS.PENDING || j.status === JOB_STATUS.PROCESSING ? d.running : formatDuration(wallTimeMs(j) ?? 0)),
+        cell: (j) =>
+          j.status === JOB_STATUS.PENDING || j.status === JOB_STATUS.PROCESSING
+            ? d.running
+            : formatDuration(wallTimeMs(j) ?? 0),
       },
       {
         id: "credits",
@@ -103,7 +140,7 @@ export function JobsTable({ jobs, loading, totalElements, currentPage, pageSize,
         type: "date",
         sortable: true,
         value: (j) => new Date(j.createdAt),
-        cell: (j) => <time dateTime={j.createdAt} title={j.createdAt}>{formatDistanceToNow(new Date(j.createdAt), { addSuffix: true, locale: dateLocale })}</time>,
+        cell: (j) => timeAgoCell(j.createdAt, dateLocale),
       },
       {
         id: "actions",
@@ -116,7 +153,12 @@ export function JobsTable({ jobs, loading, totalElements, currentPage, pageSize,
           const url = jobMediaUrl(j);
           return (
             <span className="inline-flex items-center gap-0.5">
-              <IconButton variant="ghost" size="sm" label={j.status === JOB_STATUS.COMPLETED ? d.actions.open : d.actions.payload} onClick={() => onOpenModal(j, j.status === JOB_STATUS.COMPLETED ? "result" : "payload")}>
+              <IconButton
+                variant="ghost"
+                size="sm"
+                label={j.status === JOB_STATUS.COMPLETED ? d.actions.open : d.actions.payload}
+                onClick={() => onOpenModal(j, j.status === JOB_STATUS.COMPLETED ? "result" : "payload")}
+              >
                 <EyeIcon size={15} />
               </IconButton>
               {url && (
@@ -126,7 +168,12 @@ export function JobsTable({ jobs, loading, totalElements, currentPage, pageSize,
                   </a>
                 </IconButton>
               )}
-              <IconButton variant="ghost" size="sm" label={copiedId === j.id ? d.actions.copied : d.actions.copyId} onClick={() => onCopy(j.id, j.id)}>
+              <IconButton
+                variant="ghost"
+                size="sm"
+                label={copiedId === j.id ? d.actions.copied : d.actions.copyId}
+                onClick={() => onCopy(j.id, j.id)}
+              >
                 {copiedId === j.id ? <CheckIcon size={15} /> : <CopyIcon size={15} />}
               </IconButton>
               {onDelete && (
@@ -173,7 +220,14 @@ export function JobsTable({ jobs, loading, totalElements, currentPage, pageSize,
         removeFilter: (label) => fill(d.removeFilter, { label }),
         activeFilter: (header, value) => fill(d.activeFilter, { header, value }),
         search: (header) => fill(d.search, { header }),
-        pagination: { nav: t.insights.pagination.nav, previous: t.jobs.previous, next: t.jobs.next, page: (page) => fill(t.insights.pagination.page, { page }), compact: (page, pageCount) => fill(t.insights.pagination.compact, { page, count: pageCount }), pageSize: t.insights.pagination.pageSize },
+        pagination: {
+          nav: t.insights.pagination.nav,
+          previous: t.jobs.previous,
+          next: t.jobs.next,
+          page: (page) => fill(t.insights.pagination.page, { page }),
+          compact: (page, pageCount) => fill(t.insights.pagination.compact, { page, count: pageCount }),
+          pageSize: t.insights.pagination.pageSize,
+        },
       }}
     />
   );

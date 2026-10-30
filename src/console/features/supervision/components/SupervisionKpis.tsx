@@ -19,7 +19,12 @@ export function SupervisionKpis({ requests, credits, refusalRate, connections }:
   const cards = [
     { label: k.requests, hint: k.requestsHint, value: requests, format: undefined },
     { label: k.credits, hint: k.creditsHint, value: credits, format: undefined },
-    { label: k.refusals, hint: k.refusalsHint, value: refusalRate, format: { style: "percent", maximumFractionDigits: 1 } as const },
+    {
+      label: k.refusals,
+      hint: k.refusalsHint,
+      value: refusalRate,
+      format: { style: "percent", maximumFractionDigits: 1 } as const,
+    },
     { label: k.live, hint: k.liveHint, value: connections, format: undefined },
   ];
   return (
@@ -29,7 +34,11 @@ export function SupervisionKpis({ requests, credits, refusalRate, connections }:
           <GlowCard glow="border" className="flex h-full flex-col gap-2 rounded-xl p-5">
             <span className="text-xs font-semibold text-fg-muted">{card.label}</span>
             <span className="font-display text-3xl font-bold tracking-tight text-fg">
-              {card.value === null ? "—" : <NumberTicker value={card.value} locale="en-US" format={card.format} trigger="change" align="start" />}
+              {card.value === null ? (
+                "—"
+              ) : (
+                <NumberTicker value={card.value} locale="en-US" format={card.format} trigger="change" align="start" />
+              )}
             </span>
             <span className="text-xs text-fg-secondary">{card.hint}</span>
           </GlowCard>

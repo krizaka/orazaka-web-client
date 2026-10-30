@@ -122,20 +122,20 @@ describe("ModelDialog", () => {
   it("calls setErrorMessage(null) when error close clicked", () => {
     const { container } = render(<ModelDialog {...defaultProps} errorMessage="Some error" />);
     expect(screen.getByText("Some error")).toBeInTheDocument();
-    
+
     // Find the button inside the error banner container
     const errorBanner = container.querySelector(".bg-danger\\/5");
     expect(errorBanner).not.toBeNull();
     const clearErrorBtn = errorBanner!.querySelector("button");
     expect(clearErrorBtn).not.toBeNull();
-    
+
     fireEvent.click(clearErrorBtn!);
     expect(defaultProps.setErrorMessage).toHaveBeenCalledWith(null);
   });
 
   it("calls setFormModel when inputs are changed", () => {
     render(<ModelDialog {...defaultProps} />);
-    
+
     // Test modelName change
     const nameInput = screen.getByPlaceholderText("Placeholder Model Name");
     fireEvent.change(nameInput, { target: { value: "new-name" } });
@@ -164,7 +164,7 @@ describe("ModelDialog", () => {
 
   it("calls setFormModel when a category is selected", () => {
     render(<ModelDialog {...defaultProps} />);
-    
+
     // Click on Video category button
     const videoCategoryBtn = screen.getByText("Video");
     fireEvent.click(videoCategoryBtn);
@@ -187,7 +187,7 @@ describe("ModelDialog", () => {
     expect(screen.getByRole("checkbox")).toBeDisabled();
     expect(screen.getByRole("combobox")).toBeDisabled();
     expect(screen.getByText("Cancel")).toBeDisabled();
-    
+
     // Category Selector buttons should be disabled
     const categoryBtns = screen.getAllByRole("button");
     categoryBtns.forEach((btn) => {
@@ -200,7 +200,7 @@ describe("ModelDialog", () => {
 
   it("shows tooltip text on focus (Radix tooltip)", async () => {
     render(<ModelDialog {...defaultProps} />);
-    
+
     // Find a help button (tooltip trigger)
     const helpBtns = screen.getAllByLabelText("Help");
     expect(helpBtns.length).toBeGreaterThan(0);

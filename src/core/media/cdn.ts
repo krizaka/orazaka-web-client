@@ -6,7 +6,15 @@
  */
 import data from "./media.generated.json";
 
-export const MEDIA_CDN_URL = (process.env.NEXT_PUBLIC_MEDIA_CDN_URL || "https://krizaka-assets.b-cdn.net").replace(/\/+$/, "");
+const withoutTrailingSlashes = (url: string): string => {
+  let end = url.length;
+  while (end > 0 && url[end - 1] === "/") end -= 1;
+  return url.slice(0, end);
+};
+
+export const MEDIA_CDN_URL = withoutTrailingSlashes(
+  process.env.NEXT_PUBLIC_MEDIA_CDN_URL || "https://krizaka-assets.b-cdn.net",
+);
 
 const FILES: Record<string, string> = data.files;
 
@@ -21,4 +29,7 @@ export function mediaUrl(path: string): string {
 export const hasMedia = (path: string): boolean => path in FILES;
 
 /** Every file the manifest knows under a prefix, sorted: what a page lists when it is data-driven (`sites/orazaka/video/`). */
-export const mediaPaths = (prefix: string): string[] => Object.keys(FILES).filter((path) => path.startsWith(prefix)).sort((a, b) => a.localeCompare(b));
+export const mediaPaths = (prefix: string): string[] =>
+  Object.keys(FILES)
+    .filter((path) => path.startsWith(prefix))
+    .sort((a, b) => a.localeCompare(b));

@@ -72,9 +72,7 @@ describe("CapabilityOptions", () => {
     } as unknown as Response);
 
     renderOpts(imageGen);
-    await waitFor(() =>
-      expect(screen.getByRole("option", { name: "SDXL Turbo" })).toBeInTheDocument(),
-    );
+    await waitFor(() => expect(screen.getByRole("option", { name: "SDXL Turbo" })).toBeInTheDocument());
     // The audio model is filtered out (wrong category).
     expect(screen.queryByRole("option", { name: "Whisper" })).not.toBeInTheDocument();
     // Image generation also exposes a Size field.
@@ -84,23 +82,19 @@ describe("CapabilityOptions", () => {
   test("falls back to preset models when the catalog is unavailable", async () => {
     global.fetch = jest.fn().mockResolvedValue({ ok: false } as Response);
     renderOpts(imageGen);
-    await waitFor(() =>
-      expect(screen.getByRole("option", { name: "sdxl-turbo-gguf" })).toBeInTheDocument(),
-    );
+    await waitFor(() => expect(screen.getByRole("option", { name: "sdxl-turbo-gguf" })).toBeInTheDocument());
   });
 
   test("calls onChange when a model is selected", async () => {
     global.fetch = jest.fn().mockResolvedValue({
       ok: true,
-      json: jest.fn().mockResolvedValue([
-        { modelName: "sdxl-turbo-gguf", modelLabel: "SDXL Turbo", category: "image" },
-      ]),
+      json: jest
+        .fn()
+        .mockResolvedValue([{ modelName: "sdxl-turbo-gguf", modelLabel: "SDXL Turbo", category: "image" }]),
     } as unknown as Response);
     const onChange = jest.fn();
     renderOpts(imageGen, { onChange });
-    await waitFor(() =>
-      expect(screen.getByRole("option", { name: "SDXL Turbo" })).toBeInTheDocument(),
-    );
+    await waitFor(() => expect(screen.getByRole("option", { name: "SDXL Turbo" })).toBeInTheDocument());
     fireEvent.change(screen.getAllByRole("combobox")[0], {
       target: { value: "sdxl-turbo-gguf" },
     });
@@ -121,7 +115,16 @@ describe("CapabilityOptions", () => {
     global.fetch = jest.fn().mockReturnValueOnce(slowImage).mockResolvedValue(catalog("video", "fast-video"));
     const video: ComposerStudio = { ...imageGen, capabilityKey: "orazaka.core.media.video" };
     const view = renderOpts(imageGen);
-    view.rerender(<CapabilityOptions studio={video} options={{}} onChange={jest.fn()} attachment={null} onAttach={jest.fn()} t={t} />);
+    view.rerender(
+      <CapabilityOptions
+        studio={video}
+        options={{}}
+        onChange={jest.fn()}
+        attachment={null}
+        onAttach={jest.fn()}
+        t={t}
+      />,
+    );
     await waitFor(() => expect(screen.getByRole("option", { name: "fast-video" })).toBeInTheDocument());
     answerImage(catalog("image", "slow-image"));
     await new Promise((resolve) => setTimeout(resolve, 20));

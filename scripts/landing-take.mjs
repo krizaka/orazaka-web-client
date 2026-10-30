@@ -51,13 +51,22 @@ await auth.close();
 const evidence = {};
 for (const locale of ["en", "fr"]) {
   for (const theme of ["dark", "light"]) {
-    const ctx = await browser.newContext({ viewport: VIEWPORT, deviceScaleFactor: SCALE, colorScheme: theme, storageState, locale });
-    await ctx.addInitScript(([t, l]) => {
-      try {
-        localStorage.setItem("kz-theme", t);
-        localStorage.setItem("orazaka_language", l);
-      } catch {}
-    }, [theme, locale]);
+    const ctx = await browser.newContext({
+      viewport: VIEWPORT,
+      deviceScaleFactor: SCALE,
+      colorScheme: theme,
+      storageState,
+      locale,
+    });
+    await ctx.addInitScript(
+      ([t, l]) => {
+        try {
+          localStorage.setItem("kz-theme", t);
+          localStorage.setItem("orazaka_language", l);
+        } catch {}
+      },
+      [theme, locale],
+    );
     // The take is in the language asked, whatever the QA profile says: the profile's answer is rewritten on the way in (nothing is saved).
     await ctx.route("**/api/v1/profile", async (route) => {
       if (route.request().method() !== "GET") return route.continue();
@@ -69,13 +78,17 @@ for (const locale of ["en", "fr"]) {
     await ctx.route("**/api/auth/session", async (route) => {
       const res = await route.fetch();
       const json = await res.json().catch(() => ({}));
-      await route.fulfill({ response: res, json: json?.user ? { ...json, user: { ...json.user, name: PERSONA } } : json });
+      await route.fulfill({
+        response: res,
+        json: json?.user ? { ...json, user: { ...json.user, name: PERSONA } } : json,
+      });
     });
     const page = await ctx.newPage();
     // Refuses the take if « qa » shows anywhere on screen (the visible text, the labels and the titles).
     await page.goto(`${BASE}/chat`, { waitUntil: "networkidle" });
     await page.waitForTimeout(800);
-    if (await qaOnScreen(page)) throw new Error(`${locale}/${theme}: « qa » is on screen — a demo shows a persona, never a QA name`);
+    if (await qaOnScreen(page))
+      throw new Error(`${locale}/${theme}: « qa » is on screen — a demo shows a persona, never a QA name`);
 
     const cdp = await ctx.newCDPSession(page);
     const frames = [];
@@ -83,7 +96,13 @@ for (const locale of ["en", "fr"]) {
       frames.push({ at: f.metadata.timestamp ?? Date.now() / 1000, data: f.data });
       void cdp.send("Page.screencastFrameAck", { sessionId: f.sessionId }).catch(() => {});
     });
-    await cdp.send("Page.startScreencast", { format: "jpeg", quality: 85, maxWidth: 1140, maxHeight: 960, everyNthFrame: 1 });
+    await cdp.send("Page.startScreencast", {
+      format: "jpeg",
+      quality: 85,
+      maxWidth: 1140,
+      maxHeight: 960,
+      everyNthFrame: 1,
+    });
     await page.waitForTimeout(900);
     const box = page.getByRole("textbox").last();
     await box.click();
@@ -94,7 +113,15 @@ for (const locale of ["en", "fr"]) {
     const sent = Date.now() / 1000;
     await page.keyboard.press("Enter");
     // The answer is in once the « Answering… » state is gone and a second message bubble holds text.
-    await page.waitForFunction(() => !/Answering|En train de répondre|Réponse en cours/i.test(document.body.innerText) && document.querySelectorAll('[class*="prose"], [data-role="assistant"], [data-testid*="assistant"]').length > 0, null, { timeout: 150_000 }).catch(() => {});
+    await page
+      .waitForFunction(
+        () =>
+          !/Answering|En train de répondre|Réponse en cours/i.test(document.body.innerText) &&
+          document.querySelectorAll('[class*="prose"], [data-role="assistant"], [data-testid*="assistant"]').length > 0,
+        null,
+        { timeout: 150_000 },
+      )
+      .catch(() => {});
     const answered = Date.now() / 1000;
     await page.waitForTimeout(2600);
     if (await qaOnScreen(page)) throw new Error(`${locale}/${theme}: « qa » is on screen at the end of the take`);
@@ -126,14 +153,68 @@ for (const locale of ["en", "fr"]) {
     const listFile = path.join(dir, "frames.txt");
     writeFileSync(listFile, list.join("\n"));
     const name = path.join(OUT, `take-${locale}-${theme}`);
-    const common = ["-y", "-loglevel", "error", "-f", "concat", "-safe", "0", "-i", listFile, "-r", "30", "-vf", "scale=1140:960:flags=lanczos", "-an"];
-    execFileSync("ffmpeg", [...common, "-c:v", "libvpx-vp9", "-crf", "30", "-b:v", "0", "-row-mt", "1", `${name}.webm`]);
-    execFileSync("ffmpeg", [...common, "-c:v", "libx264", "-crf", "22", "-preset", "slow", "-pix_fmt", "yuv420p", "-movflags", "+faststart", `${name}.mp4`]);
+    const common = [
+      "-y",
+      "-loglevel",
+      "error",
+      "-f",
+      "concat",
+      "-safe",
+      "0",
+      "-i",
+      listFile,
+      "-r",
+      "30",
+      "-vf",
+      "scale=1140:960:flags=lanczos",
+      "-an",
+    ];
+    execFileSync("ffmpeg", [
+      ...common,
+      "-c:v",
+      "libvpx-vp9",
+      "-crf",
+      "30",
+      "-b:v",
+      "0",
+      "-row-mt",
+      "1",
+      `${name}.webm`,
+    ]);
+    execFileSync("ffmpeg", [
+      ...common,
+      "-c:v",
+      "libx264",
+      "-crf",
+      "22",
+      "-preset",
+      "slow",
+      "-pix_fmt",
+      "yuv420p",
+      "-movflags",
+      "+faststart",
+      `${name}.mp4`,
+    ]);
     // The poster is the finished answer: what a visitor without video sees is the real moment, not an empty page.
-    execFileSync("ffmpeg", ["-y", "-loglevel", "error", "-sseof", "-0.3", "-i", `${name}.mp4`, "-frames:v", "1", `${name}-poster.png`]);
+    execFileSync("ffmpeg", [
+      "-y",
+      "-loglevel",
+      "error",
+      "-sseof",
+      "-0.3",
+      "-i",
+      `${name}.mp4`,
+      "-frames:v",
+      "1",
+      `${name}-poster.png`,
+    ]);
     const sharp = require("sharp");
     await sharp(`${name}-poster.png`).webp({ quality: 84 }).toFile(`${name}-poster.webp`);
-    evidence[`${locale}-${theme}`] = { seconds: +(secs - (L - L / factor)).toFixed(1), typingFps: +fps.toFixed(1), speedUp: +factor.toFixed(2) };
+    evidence[`${locale}-${theme}`] = {
+      seconds: +(secs - (L - L / factor)).toFixed(1),
+      typingFps: +fps.toFixed(1),
+      speedUp: +factor.toFixed(2),
+    };
     process.stdout.write(`${locale}/${theme} ✓ ${fps.toFixed(0)} fps, ${evidence[`${locale}-${theme}`].seconds} s\n`);
   }
 }

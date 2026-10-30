@@ -21,11 +21,7 @@ async function signInAsAdminPersona(page: Page) {
     },
     secret: SIGNING_KEY,
   });
-  await page
-    .context()
-    .addCookies([
-      { name: "orazaka-admin.session-token", value: token, url: CONSOLE },
-    ]);
+  await page.context().addCookies([{ name: "orazaka-admin.session-token", value: token, url: CONSOLE }]);
 }
 
 async function stubAdminApi(page: Page): Promise<string[]> {
@@ -60,12 +56,9 @@ async function stubAdminApi(page: Page): Promise<string[]> {
     }
     const key = decodeURIComponent(url.split("/feature-tool-bounds/")[1]);
     if (request.method() === "PUT") {
-      const n = (request.postDataJSON() as { maxToolRounds: number })
-        .maxToolRounds;
+      const n = (request.postDataJSON() as { maxToolRounds: number }).maxToolRounds;
       writes.push(`PUT ${key} ${n}`);
-      bounds = bounds.map((b) =>
-        b.featureKey === key ? { ...b, maxToolRounds: n } : b,
-      );
+      bounds = bounds.map((b) => (b.featureKey === key ? { ...b, maxToolRounds: n } : b));
       return json(200, { featureKey: key, maxToolRounds: n, isDefault: false });
     }
     return route.fulfill({ status: 204 });
@@ -78,9 +71,7 @@ for (const theme of ["dark", "light"] as const) {
     { name: "desktop", width: 1280, height: 900 },
     { name: "phone", width: 390, height: 844 },
   ]) {
-    test(`an administrator reads, refuses and saves a tool bound (${theme}, ${viewport.name})`, async ({
-      page,
-    }) => {
+    test(`an administrator reads, refuses and saves a tool bound (${theme}, ${viewport.name})`, async ({ page }) => {
       await page.setViewportSize({
         width: viewport.width,
         height: viewport.height,
@@ -103,9 +94,7 @@ for (const theme of ["dark", "light"] as const) {
       ).toBeVisible();
       const bound = page.locator('[data-bound="agent.code.issue-to-pr"]');
       await expect(bound.getByLabel("Rounds")).toHaveValue("3");
-      await expect(
-        page.locator('[data-route="agent.code.issue-to-pr"]'),
-      ).toContainText("qwen2.5-coder:7b");
+      await expect(page.locator('[data-route="agent.code.issue-to-pr"]')).toContainText("qwen2.5-coder:7b");
 
       await bound.getByLabel("Rounds").fill("99");
       await bound.getByRole("button", { name: "Save" }).click();
@@ -118,9 +107,7 @@ for (const theme of ["dark", "light"] as const) {
       expect(writes).toEqual(["PUT agent.code.issue-to-pr 5"]);
 
       const overflow = await page.evaluate(
-        () =>
-          document.documentElement.scrollWidth -
-          document.documentElement.clientWidth,
+        () => document.documentElement.scrollWidth - document.documentElement.clientWidth,
       );
       expect(overflow).toBeLessThanOrEqual(0);
       if (process.env.OUT) {

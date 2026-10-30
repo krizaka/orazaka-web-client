@@ -15,12 +15,12 @@ GitHub security advisory with the fixed release, and credit you unless you prefe
 
 ## Supported versions
 
-| Version | Supported |
-|---|---|
-| The latest Orazaka release (one version for the whole bundle) | yes |
-| The previous minor release | security fixes for 90 days after the next minor |
-| `main` | yes (development) |
-| Anything older | no — update with `orazaka update` |
+| Version                                                       | Supported                                       |
+| ------------------------------------------------------------- | ----------------------------------------------- |
+| The latest Orazaka release (one version for the whole bundle) | yes                                             |
+| The previous minor release                                    | security fixes for 90 days after the next minor |
+| `main`                                                        | yes (development)                               |
+| Anything older                                                | no — update with `orazaka update`               |
 
 ## In scope
 

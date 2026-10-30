@@ -79,9 +79,8 @@ export function PacksScreen() {
         <div>
           <h2 className="text-lg font-semibold text-fg">Packs métier</h2>
           <p className="text-sm text-fg-muted">
-            Le prix et les droits d’un bundle acheté en plus d’une offre. Son nom, sa catégorie et
-            son icône vivent dans le catalogue (contexte Studio). Un pack retiré reste acquis à ceux
-            qui l’ont acheté.
+            Le prix et les droits d’un bundle acheté en plus d’une offre. Son nom, sa catégorie et son icône vivent dans
+            le catalogue (contexte Studio). Un pack retiré reste acquis à ceux qui l’ont acheté.
           </p>
         </div>
         <Button onClick={() => setEditing(blankPack())}>Nouveau pack</Button>
@@ -105,12 +104,7 @@ export function PacksScreen() {
       )}
 
       {editing && (
-        <PackEditor
-          pack={editing}
-          onChange={setEditing}
-          onSave={() => void save()}
-          onCancel={() => setEditing(null)}
-        />
+        <PackEditor pack={editing} onChange={setEditing} onSave={() => void save()} onCancel={() => setEditing(null)} />
       )}
     </section>
   );
@@ -133,8 +127,7 @@ function PackTile({
           {!pack.isActive && <Badge variant="warning">retiré</Badge>}
         </header>
         <p className="text-sm text-fg">
-          {money(pack.priceCents)} · {formatCredits(pack.includedCredits)} crédits
-          inclus
+          {money(pack.priceCents)} · {formatCredits(pack.includedCredits)} crédits inclus
         </p>
         <p className="text-xs text-fg-muted">{pack.entitlements.length} droits</p>
         <div className="flex gap-2">

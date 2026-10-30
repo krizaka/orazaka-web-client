@@ -6,18 +6,28 @@ import { ConsentNotice } from "@/features/studio/consent/ConsentNotice";
 import { StudioApi } from "@/services/studio.api";
 
 /** These screens read server state: every render gets a fresh query client. */
-const render = (ui: Parameters<typeof plainRender>[0], options?: Parameters<typeof plainRender>[1]) => plainRender(ui, { wrapper: queryWrapper(), ...options });
+const render = (ui: Parameters<typeof plainRender>[0], options?: Parameters<typeof plainRender>[1]) =>
+  plainRender(ui, { wrapper: queryWrapper(), ...options });
 
 jest.mock("@/core/context/LocaleContext", () => ({
   useTranslation: () => ({ t: jest.requireActual("@/core/context/translations").translations.en, locale: "en" }),
 }));
-jest.mock("@/services/studio.api", () => ({ StudioApi: { fetchPacks: jest.fn(), uninstall: jest.fn(), eraseWellbeingData: jest.fn() } }));
+jest.mock("@/services/studio.api", () => ({
+  StudioApi: { fetchPacks: jest.fn(), uninstall: jest.fn(), eraseWellbeingData: jest.fn() },
+}));
 
-const pack = (regulatoryClass: string) => [{ packKey: "bien-etre", regulatoryClass, studioKeys: ["guided-journaling"] }, { packKey: "other", regulatoryClass: "REGULATED", studioKeys: ["not-this-one"] }] as never;
+const pack = (regulatoryClass: string) =>
+  [
+    { packKey: "bien-etre", regulatoryClass, studioKeys: ["guided-journaling"] },
+    { packKey: "other", regulatoryClass: "REGULATED", studioKeys: ["not-this-one"] },
+  ] as never;
 const installation = { id: "inst-1", status: "ACTIVE" } as Installation;
 
 describe("ConsentNotice (before the click, and the way out)", () => {
-  beforeEach(() => { jest.clearAllMocks(); sessionStorage.clear(); });
+  beforeEach(() => {
+    jest.clearAllMocks();
+    sessionStorage.clear();
+  });
 
   it("says before the click that a REGULATED Studio asks for consent", async () => {
     jest.mocked(StudioApi.fetchPacks).mockResolvedValue(pack("REGULATED"));
@@ -27,21 +37,29 @@ describe("ConsentNotice (before the click, and the way out)", () => {
 
   it("says nothing for a Studio that asks no consent", async () => {
     jest.mocked(StudioApi.fetchPacks).mockResolvedValue(pack("STANDARD"));
-    const { container } = render(<ConsentNotice studioKey="guided-journaling" installation={undefined} onChanged={jest.fn()} />);
+    const { container } = render(
+      <ConsentNotice studioKey="guided-journaling" installation={undefined} onChanged={jest.fn()} />,
+    );
     await waitFor(() => expect(StudioApi.fetchPacks).toHaveBeenCalled());
     expect(container).toBeEmptyDOMElement();
   });
 
   it("says nothing for a Studio of no regulated pack, even if another pack is regulated", async () => {
-    jest.mocked(StudioApi.fetchPacks).mockResolvedValue([{ packKey: "other", regulatoryClass: "REGULATED", studioKeys: ["not-this-one"] }] as never);
-    const { container } = render(<ConsentNotice studioKey="guided-journaling" installation={undefined} onChanged={jest.fn()} />);
+    jest
+      .mocked(StudioApi.fetchPacks)
+      .mockResolvedValue([{ packKey: "other", regulatoryClass: "REGULATED", studioKeys: ["not-this-one"] }] as never);
+    const { container } = render(
+      <ConsentNotice studioKey="guided-journaling" installation={undefined} onChanged={jest.fn()} />,
+    );
     await waitFor(() => expect(StudioApi.fetchPacks).toHaveBeenCalled());
     expect(container).toBeEmptyDOMElement();
   });
 
   it("says nothing when the pack is not known or the catalogue does not answer", async () => {
     jest.mocked(StudioApi.fetchPacks).mockRejectedValue(new Error("down"));
-    const { container } = render(<ConsentNotice studioKey="guided-journaling" installation={installation} onChanged={jest.fn()} />);
+    const { container } = render(
+      <ConsentNotice studioKey="guided-journaling" installation={installation} onChanged={jest.fn()} />,
+    );
     await waitFor(() => expect(StudioApi.fetchPacks).toHaveBeenCalled());
     expect(container).toBeEmptyDOMElement();
   });
@@ -71,7 +89,9 @@ describe("ConsentNotice (before the click, and the way out)", () => {
 
   it("deletes all the wellbeing data after a confirmation: the pack is erased, nothing before the click", async () => {
     jest.mocked(StudioApi.fetchPacks).mockResolvedValue(pack("REGULATED"));
-    jest.mocked(StudioApi.eraseWellbeingData).mockResolvedValue({ packKey: "bien-etre", entries: 2, installations: 1, jobs: 2 });
+    jest
+      .mocked(StudioApi.eraseWellbeingData)
+      .mockResolvedValue({ packKey: "bien-etre", entries: 2, installations: 1, jobs: 2 });
     const onChanged = jest.fn();
     render(<ConsentNotice studioKey="guided-journaling" installation={installation} onChanged={onChanged} />);
 

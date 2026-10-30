@@ -10,9 +10,7 @@ jest.mock("@/core/context/LocaleContext", () => ({
 const PLAN = { label: "Free", monthlyCreditGrant: 500 } as never;
 
 function renderMeter(plan: never | null) {
-  return render(
-    <CreditsMeter wallet={null} available={0} plan={plan} loading={false} href="/credits" />,
-  );
+  return render(<CreditsMeter wallet={null} available={0} plan={plan} loading={false} href="/credits" />);
 }
 
 describe("CreditsMeter with nothing left", () => {

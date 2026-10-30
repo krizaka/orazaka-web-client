@@ -29,9 +29,7 @@ export function BoundRow({
 }>) {
   const [draft, setDraft] = React.useState(String(bound.maxToolRounds));
   const [error, setError] = React.useState<string | null>(null);
-  const [status, setStatus] = React.useState<"idle" | "saving" | "saved">(
-    "idle",
-  );
+  const [status, setStatus] = React.useState<"idle" | "saving" | "saved">("idle");
   const id = `bound-${bound.featureKey}`;
   const dirty = draft !== String(bound.maxToolRounds);
 
@@ -79,20 +77,11 @@ export function BoundRow({
             }}
           />
           <Field.Hint>{fill(words.range, range)}</Field.Hint>
-          {error !== null && (
-            <Field.Error id={`${id}-msg`}>{error}</Field.Error>
-          )}
+          {error !== null && <Field.Error id={`${id}-msg`}>{error}</Field.Error>}
         </Field.Root>
-        {status === "saved" && (
-          <output className="text-sm text-success">{words.saved}</output>
-        )}
+        {status === "saved" && <output className="text-sm text-success">{words.saved}</output>}
         <footer className="flex flex-wrap gap-2">
-          <Button
-            type="button"
-            size="sm"
-            onClick={() => void submit()}
-            disabled={!dirty || status === "saving"}
-          >
+          <Button type="button" size="sm" onClick={() => void submit()} disabled={!dirty || status === "saving"}>
             {status === "saving" ? words.saving : words.save}
           </Button>
           {!bound.isDefault && (

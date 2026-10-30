@@ -30,7 +30,6 @@ interface CapabilityOptionsProps {
   t: TranslationDictionary;
 }
 
-
 /**
  * CapabilityOptions — per-capability controls shown above the composer when a
  * capability is selected: a model dropdown (catalog-by-category → FALLBACK_MODELS)
@@ -49,9 +48,7 @@ export function CapabilityOptions({
   // Declared by the pack, not read off a path: the Studio says its one input holds an
   // asset, and the attach affordance follows that (ADR-068 §3).
   const needsAttachment = studio.inputKind === "ASSET";
-  const showVoice =
-    category === MODEL_CATEGORY.SPEECH ||
-    (category === MODEL_CATEGORY.AUDIO && !needsAttachment);
+  const showVoice = category === MODEL_CATEGORY.SPEECH || (category === MODEL_CATEGORY.AUDIO && !needsAttachment);
   const showSize = category === MODEL_CATEGORY.IMAGE && !needsAttachment;
   const showDuration = category === MODEL_CATEGORY.VIDEO && !needsAttachment;
 
@@ -102,77 +99,70 @@ export function CapabilityOptions({
     <section className="flex flex-col gap-2.5 border-b border-border-subtle pb-2.5">
       <div className="flex flex-wrap items-end gap-2.5">
         <CapabilityField
-            label={t.chat.optModel}
-            value={options.model ?? ""}
-            onChange={(e) => onChange({ model: e.target.value || undefined })}
-          >
-            <option value="">{t.chat.optAuto}</option>
-            {models.map((m) => (
-              <option
-                key={m.value}
-                value={m.value}
-                disabled={!m.compatible}
-                title={m.reason ?? undefined}
-              >
-                {m.compatible ? m.label : `${m.label} (incompatible)`}
-              </option>
-            ))}
-          </CapabilityField>
+          label={t.chat.optModel}
+          value={options.model ?? ""}
+          onChange={(e) => onChange({ model: e.target.value || undefined })}
+        >
+          <option value="">{t.chat.optAuto}</option>
+          {models.map((m) => (
+            <option key={m.value} value={m.value} disabled={!m.compatible} title={m.reason ?? undefined}>
+              {m.compatible ? m.label : `${m.label} (incompatible)`}
+            </option>
+          ))}
+        </CapabilityField>
 
         {showVoice && (
           <CapabilityField
             label={t.chat.optVoice}
             value={options.voice ?? ""}
-              onChange={(e) => onChange({ voice: e.target.value || undefined })}
-            >
-              <option value="">{t.chat.optAuto}</option>
-              {SPEECH_VOICES.map((v) => (
-                <option key={v} value={v}>
-                  {v}
-                </option>
-              ))}
-            </CapabilityField>
+            onChange={(e) => onChange({ voice: e.target.value || undefined })}
+          >
+            <option value="">{t.chat.optAuto}</option>
+            {SPEECH_VOICES.map((v) => (
+              <option key={v} value={v}>
+                {v}
+              </option>
+            ))}
+          </CapabilityField>
         )}
 
         {showSize && (
           <CapabilityField
             label={t.chat.optSize}
             value={options.size ?? ""}
-              onChange={(e) => onChange({ size: e.target.value || undefined })}
-            >
-              <option value="">{t.chat.optAuto}</option>
-              {IMAGE_SIZES.map((s) => (
-                <option key={s} value={s}>
-                  {s}
-                </option>
-              ))}
-            </CapabilityField>
+            onChange={(e) => onChange({ size: e.target.value || undefined })}
+          >
+            <option value="">{t.chat.optAuto}</option>
+            {IMAGE_SIZES.map((s) => (
+              <option key={s} value={s}>
+                {s}
+              </option>
+            ))}
+          </CapabilityField>
         )}
 
         {showDuration && (
           <CapabilityField
             label={t.chat.optDuration}
             value={options.durationSeconds != null ? String(options.durationSeconds) : ""}
-              onChange={(e) =>
-                onChange({
-                  durationSeconds: e.target.value ? Number(e.target.value) : undefined,
-                })
-              }
-            >
-              <option value="">{t.chat.optAuto}</option>
-              {VIDEO_DURATIONS.map((d) => (
-                <option key={d} value={d}>
-                  {d}s
-                </option>
-              ))}
-            </CapabilityField>
+            onChange={(e) =>
+              onChange({
+                durationSeconds: e.target.value ? Number(e.target.value) : undefined,
+              })
+            }
+          >
+            <option value="">{t.chat.optAuto}</option>
+            {VIDEO_DURATIONS.map((d) => (
+              <option key={d} value={d}>
+                {d}s
+              </option>
+            ))}
+          </CapabilityField>
         )}
       </div>
 
       {selectedModel?.description && (
-        <p className="text-[11px] leading-snug text-fg-muted">
-          {selectedModel.description}
-        </p>
+        <p className="text-[11px] leading-snug text-fg-muted">{selectedModel.description}</p>
       )}
 
       {needsAttachment && (
@@ -201,4 +191,3 @@ export function CapabilityOptions({
     </section>
   );
 }
-

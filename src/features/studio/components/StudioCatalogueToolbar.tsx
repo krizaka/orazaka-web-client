@@ -5,10 +5,7 @@ import { Select } from "@krizaka/ui/field";
 import { SearchField } from "@krizaka/ui/search-field";
 import { useTranslation } from "@/core/context/LocaleContext";
 import { fill } from "@/core/context/fill";
-import {
-  CatalogueView,
-  type CatalogueQuery,
-} from "@/features/studio/catalogue/catalogue.types";
+import { CatalogueView, type CatalogueQuery } from "@/features/studio/catalogue/catalogue.types";
 
 interface StudioCatalogueToolbarProps {
   query: CatalogueQuery;
@@ -18,11 +15,7 @@ interface StudioCatalogueToolbarProps {
   onChange: (next: Partial<CatalogueQuery>) => void;
 }
 
-const VIEWS = [
-  CatalogueView.All,
-  CatalogueView.Ready,
-  CatalogueView.More,
-] as const;
+const VIEWS = [CatalogueView.All, CatalogueView.Ready, CatalogueView.More] as const;
 const ALL_TRADES = "";
 
 /**
@@ -64,8 +57,7 @@ export function StudioCatalogueToolbar({
         >
           {VIEWS.map((view) => (
             <Chip key={view} value={view}>
-              {c.views[view]}{" "}
-              <span className="tabular-nums text-fg-muted">{counts[view]}</span>
+              {c.views[view]} <span className="tabular-nums text-fg-muted">{counts[view]}</span>
             </Chip>
           ))}
         </Chip.Group>
@@ -74,9 +66,7 @@ export function StudioCatalogueToolbar({
             aria-label={c.tradeLabel}
             className="h-8 w-full text-xs"
             value={query.trade ?? ALL_TRADES}
-            onChange={(event) =>
-              onChange({ trade: event.target.value || null })
-            }
+            onChange={(event) => onChange({ trade: event.target.value || null })}
           >
             <option value={ALL_TRADES}>{c.allTrades}</option>
             {trades.map((trade) => (

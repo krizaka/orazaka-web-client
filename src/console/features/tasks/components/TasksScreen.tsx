@@ -17,13 +17,26 @@ const columns: DataTableColumn<OperatorTask>[] = [
   { id: "at", header: t.when, sortable: true, value: (r) => r.at, cell: (r) => r.at.replace("T", " ").slice(0, 19) },
   { id: "kind", header: t.kind, filter: "facet", value: (r) => r.kind, cell: (r) => <Badge>{r.kind}</Badge> },
   { id: "source", header: t.service, filter: "facet", value: (r) => r.source },
-  { id: "title", header: t.what, card: "title", value: (r) => r.title, cell: (r) => <span className="font-mono text-xs">{r.title}</span> },
+  {
+    id: "title",
+    header: t.what,
+    card: "title",
+    value: (r) => r.title,
+    cell: (r) => <span className="font-mono text-xs">{r.title}</span>,
+  },
   { id: "why", header: t.why, value: (r) => r.why },
   {
     id: "request",
     header: t.request,
     value: (r) => r.requestId,
-    cell: (r) => (r.requestId ? <Link className="font-mono text-[11px] underline" href="/audit" title={t.followRequest}>{r.requestId}</Link> : "—"),
+    cell: (r) =>
+      r.requestId ? (
+        <Link className="font-mono text-[11px] underline" href="/audit" title={t.followRequest}>
+          {r.requestId}
+        </Link>
+      ) : (
+        "—"
+      ),
   },
 ];
 
@@ -43,7 +56,21 @@ export function TasksScreen() {
         <p className="max-w-3xl text-sm text-fg-secondary">{t.lead}</p>
       </header>
       {failed && !loading && (
-        <Alert tone="warning" action={<Button variant="secondary" size="sm" onClick={() => { void audit.reload(); operations.reload(); }}>{t.retry}</Button>}>
+        <Alert
+          tone="warning"
+          action={
+            <Button
+              variant="secondary"
+              size="sm"
+              onClick={() => {
+                void audit.reload();
+                operations.reload();
+              }}
+            >
+              {t.retry}
+            </Button>
+          }
+        >
           {t.error}
         </Alert>
       )}

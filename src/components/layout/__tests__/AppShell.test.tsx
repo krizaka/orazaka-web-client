@@ -15,13 +15,9 @@ const mockUser = {
 };
 const t = translations.en;
 
-jest.mock(
-  "next/link",
-  () =>
-    ({ children, ...props }: { children: React.ReactNode; href: string }) => (
-      <a {...props}>{children}</a>
-    ),
-);
+jest.mock("next/link", () => ({ children, ...props }: { children: React.ReactNode; href: string }) => (
+  <a {...props}>{children}</a>
+));
 jest.mock("next/navigation", () => ({ usePathname: () => "/jobs" }));
 jest.mock("@/core/hooks/useAuth", () => ({
   useAuth: () => ({
@@ -72,18 +68,13 @@ describe("AppShell (the shared AppFrame)", () => {
     render(<AppShell>page</AppShell>);
     openMenu();
     const menu = screen.getByRole("menu");
-    expect(
-      within(menu).getByRole("menuitem", { name: t.profile.title }),
-    ).toHaveAttribute("href", "/settings/account");
-    expect(
-      within(menu).getByRole("menuitem", { name: t.appNav.settings }),
-    ).toHaveAttribute("href", "/settings/appearance");
-    expect(
-      within(menu).getByRole("menuitem", { name: t.appNav.admin }),
-    ).toHaveAttribute("href", "/dashboard/admin");
-    expect(within(menu).getAllByRole("menuitem").at(-1)).toHaveTextContent(
-      t.appNav.signOut,
+    expect(within(menu).getByRole("menuitem", { name: t.profile.title })).toHaveAttribute("href", "/settings/account");
+    expect(within(menu).getByRole("menuitem", { name: t.appNav.settings })).toHaveAttribute(
+      "href",
+      "/settings/appearance",
     );
+    expect(within(menu).getByRole("menuitem", { name: t.appNav.admin })).toHaveAttribute("href", "/dashboard/admin");
+    expect(within(menu).getAllByRole("menuitem").at(-1)).toHaveTextContent(t.appNav.signOut);
   });
 
   it("offers Administration to an admin only", () => {

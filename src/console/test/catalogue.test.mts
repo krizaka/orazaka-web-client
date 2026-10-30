@@ -8,11 +8,20 @@ const model = (modelName: string, category: string, providerName: string | null 
   ({ modelName, category, providerName, compatible: true, isDefault: false }) as never;
 
 test("a provider's categories read in alphabetical order, whatever their case", () => {
-  const [summary] = providerSummaries([model("a", "video"), model("b", "Image"), model("c", "audio"), model("d", "video")], ["ollama"]);
+  const [summary] = providerSummaries(
+    [model("a", "video"), model("b", "Image"), model("c", "audio"), model("d", "video")],
+    ["ollama"],
+  );
   assert.deepEqual(summary.categories, ["audio", "Image", "video"]);
 });
 
 test("providers are ranked by how many models they carry, then by name; models without one are unassigned", () => {
-  const summaries = providerSummaries([model("a", "chat", "b"), model("b", "chat", "a"), model("c", "chat", null)], ["a", "b"]);
-  assert.deepEqual(summaries.map((s) => s.provider), ["a", "b", "unassigned"]);
+  const summaries = providerSummaries(
+    [model("a", "chat", "b"), model("b", "chat", "a"), model("c", "chat", null)],
+    ["a", "b"],
+  );
+  assert.deepEqual(
+    summaries.map((s) => s.provider),
+    ["a", "b", "unassigned"],
+  );
 });

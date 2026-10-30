@@ -25,12 +25,7 @@ interface CategoryCardProps {
   onDelete: (id: number) => void;
 }
 
-export function CategoryCard({
-  category,
-  models,
-  onEdit,
-  onDelete,
-}: Readonly<CategoryCardProps>) {
+export function CategoryCard({ category, models, onEdit, onDelete }: Readonly<CategoryCardProps>) {
   const { t } = useTranslation();
 
   const getCategoryLabel = React.useCallback(
@@ -68,21 +63,14 @@ export function CategoryCard({
         </span>
       </h3>
       {models.length === 0 ? (
-        <p className="text-sm text-fg-secondary py-8 text-center italic">
-          {t.admin.noModels}
-        </p>
+        <p className="text-sm text-fg-secondary py-8 text-center italic">{t.admin.noModels}</p>
       ) : (
         <ul className="divide-y divide-border-subtle">
           {models.map((model) => (
-            <li
-              key={model.id}
-              className="py-3 flex items-center justify-between group first:pt-0 last:pb-0"
-            >
+            <li key={model.id} className="py-3 flex items-center justify-between group first:pt-0 last:pb-0">
               <article className="space-y-1 pr-4 flex-1 min-w-0">
                 <header className="flex items-center gap-2">
-                  <h4 className="text-sm font-bold text-fg truncate">
-                    {model.modelLabel}
-                  </h4>
+                  <h4 className="text-sm font-bold text-fg truncate">{model.modelLabel}</h4>
                   {model.isDefault && (
                     <span className="text-[10px] bg-warning/20 text-warning font-bold px-2 py-0.5 rounded-sm flex items-center gap-1 shrink-0">
                       <Icon name="checkCircle" className="h-2.5 w-2.5" />
@@ -90,9 +78,7 @@ export function CategoryCard({
                     </span>
                   )}
                 </header>
-                <p className="text-xs text-fg-muted font-mono truncate">
-                  {model.modelName}
-                </p>
+                <p className="text-xs text-fg-muted font-mono truncate">{model.modelName}</p>
                 {model.options && (
                   <footer className="text-[10px] text-warning font-semibold bg-warning/5 px-1.5 py-0.5 rounded inline-block">
                     {t.admin.optionsPrefix}
@@ -101,10 +87,22 @@ export function CategoryCard({
                 )}
               </article>
               <section className="flex items-center gap-1.5 shrink-0 opacity-80 group-hover:opacity-100 transition-opacity">
-                <IconButton variant="ghost" size="sm" className="w-8 px-0" onClick={() => onEdit(model)} label={t.admin.editModelTitle}>
+                <IconButton
+                  variant="ghost"
+                  size="sm"
+                  className="w-8 px-0"
+                  onClick={() => onEdit(model)}
+                  label={t.admin.editModelTitle}
+                >
                   <Icon name="edit" className="h-4 w-4" />
                 </IconButton>
-                <IconButton variant="ghost" size="sm" className="w-8 px-0 hover:text-fg-danger" onClick={() => model.id && onDelete(model.id)} label={t.admin.deleteModelTitle}>
+                <IconButton
+                  variant="ghost"
+                  size="sm"
+                  className="w-8 px-0 hover:text-fg-danger"
+                  onClick={() => model.id && onDelete(model.id)}
+                  label={t.admin.deleteModelTitle}
+                >
                   <Icon name="trash" className="h-4 w-4" />
                 </IconButton>
               </section>

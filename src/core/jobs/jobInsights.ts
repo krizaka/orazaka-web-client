@@ -83,11 +83,15 @@ export function timeToResultByKind(jobs: readonly Job[]): { kind: JobKind; secon
  */
 export function remainingFor(job: Job, history: readonly Job[], now: Date = new Date()): number | null {
   const typical = median(
-    history.filter((other) => other.featureKey === job.featureKey).map(jobDuration).filter((ms): ms is number => ms !== null),
+    history
+      .filter((other) => other.featureKey === job.featureKey)
+      .map(jobDuration)
+      .filter((ms): ms is number => ms !== null),
   );
   if (typical === null) return null;
   const elapsed = Math.max(0, differenceInMilliseconds(now, parseISO(job.createdAt)));
-  const progress = typeof job.progress === "number" && job.progress > 0 && job.progress < 100 ? job.progress / 100 : null;
+  const progress =
+    typeof job.progress === "number" && job.progress > 0 && job.progress < 100 ? job.progress / 100 : null;
   const left = progress !== null ? (elapsed / progress) * (1 - progress) : typical - elapsed;
   return Math.max(1000, Math.round(left));
 }
@@ -107,6 +111,7 @@ export function runsByStudio(runs: readonly Run[]): { studioKey: string; runs: n
 /** A time left in words (“About 40 s left”, “About 2 min left”), rounded the way a person says it. */
 export function formatEta(ms: number, words: { etaSeconds: string; etaMinutes: string }): string {
   const seconds = Math.max(1, Math.round(ms / 1000));
-  if (seconds < 60) return words.etaSeconds.replace("{s}", String(seconds < 10 ? seconds : Math.round(seconds / 5) * 5));
+  if (seconds < 60)
+    return words.etaSeconds.replace("{s}", String(seconds < 10 ? seconds : Math.round(seconds / 5) * 5));
   return words.etaMinutes.replace("{m}", String(Math.round(seconds / 60)));
 }

@@ -37,10 +37,7 @@ export const getStoredThreads = (userId: string): ChatThread[] => {
  * @param {string} userId - The active authenticated user ID.
  * @param {ChatThread[]} threads - The list of threads to serialize and save.
  */
-export const saveStoredThreads = (
-  userId: string,
-  threads: ChatThread[],
-): void => {
+export const saveStoredThreads = (userId: string, threads: ChatThread[]): void => {
   if (globalThis.window === undefined) return;
   localStorage.setItem(`orazaka_threads_${userId}`, JSON.stringify(threads));
 };
@@ -64,17 +61,11 @@ export function useThreadManagement() {
           return getStoredThreads(userId);
         }
         const data = await res.json();
-        const backendThreads = data.map(
-          (session: {
-            id: string;
-            title: string;
-            updatedAt: string | number;
-          }) => ({
-            conversationId: session.id,
-            title: session.title,
-            updatedAt: parseISO(session.updatedAt as string).getTime(),
-          }),
-        );
+        const backendThreads = data.map((session: { id: string; title: string; updatedAt: string | number }) => ({
+          conversationId: session.id,
+          title: session.title,
+          updatedAt: parseISO(session.updatedAt as string).getTime(),
+        }));
         saveStoredThreads(userId, backendThreads);
         return backendThreads;
       } catch (e) {
@@ -108,9 +99,7 @@ export function useThreadManagement() {
       };
     },
     onSuccess: (newThread) => {
-      const cached =
-        queryClient.getQueryData<ChatThread[]>(queryKey) ||
-        getStoredThreads(userId);
+      const cached = queryClient.getQueryData<ChatThread[]>(queryKey) || getStoredThreads(userId);
       const updatedThreads = [newThread, ...cached];
       saveStoredThreads(userId, updatedThreads);
       queryClient.setQueryData<ChatThread[]>(queryKey, updatedThreads);
@@ -119,13 +108,7 @@ export function useThreadManagement() {
   });
 
   const renameThreadMutation = useMutation({
-    mutationFn: async ({
-      id,
-      title,
-    }: {
-      id: string;
-      title: string;
-    }): Promise<ChatThread> => {
+    mutationFn: async ({ id, title }: { id: string; title: string }): Promise<ChatThread> => {
       const res = await fetch(`/api/v1/chat/sessions/${id}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
@@ -140,12 +123,8 @@ export function useThreadManagement() {
       };
     },
     onSuccess: (updatedThread) => {
-      const cached =
-        queryClient.getQueryData<ChatThread[]>(queryKey) ||
-        getStoredThreads(userId);
-      const updatedThreads = cached.map((t) =>
-        t.conversationId === updatedThread.conversationId ? updatedThread : t,
-      );
+      const cached = queryClient.getQueryData<ChatThread[]>(queryKey) || getStoredThreads(userId);
+      const updatedThreads = cached.map((t) => (t.conversationId === updatedThread.conversationId ? updatedThread : t));
       saveStoredThreads(userId, updatedThreads);
       queryClient.setQueryData<ChatThread[]>(queryKey, updatedThreads);
       queryClient.invalidateQueries({ queryKey });
@@ -160,9 +139,7 @@ export function useThreadManagement() {
       if (!res.ok) throw new Error("Failed to delete thread");
     },
     onSuccess: (_, id) => {
-      const cached =
-        queryClient.getQueryData<ChatThread[]>(queryKey) ||
-        getStoredThreads(userId);
+      const cached = queryClient.getQueryData<ChatThread[]>(queryKey) || getStoredThreads(userId);
       const updatedThreads = cached.filter((t) => t.conversationId !== id);
       saveStoredThreads(userId, updatedThreads);
       localStorage.removeItem(`orazaka_messages_${userId}_${id}`);

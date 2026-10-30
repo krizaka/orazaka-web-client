@@ -7,11 +7,44 @@ import type { FactId } from "@/core/types/jobFacts.types";
 
 export interface JobsTableDictionary {
   caption: string;
-  columns: { preview: string; task: string; model: string; where: string; status: string; time: string; credits: string; created: string; actions: string };
-  status: { PENDING: string; PROCESSING: string; COMPLETED: string; FAILED: string; CANCELLED: string; DELETED: string };
-  sections: { output: string; generation: string; hardware: string; timing: string; other: string; prompt: string; error: string };
+  columns: {
+    preview: string;
+    task: string;
+    model: string;
+    where: string;
+    status: string;
+    time: string;
+    credits: string;
+    created: string;
+    actions: string;
+  };
+  status: {
+    PENDING: string;
+    PROCESSING: string;
+    COMPLETED: string;
+    FAILED: string;
+    CANCELLED: string;
+    DELETED: string;
+  };
+  sections: {
+    output: string;
+    generation: string;
+    hardware: string;
+    timing: string;
+    other: string;
+    prompt: string;
+    error: string;
+  };
   facts: Record<FactId, string>;
-  actions: { open: string; payload: string; download: string; copyId: string; copied: string; delete: string; copyError: string };
+  actions: {
+    open: string;
+    payload: string;
+    download: string;
+    copyId: string;
+    copied: string;
+    delete: string;
+    copyError: string;
+  };
   modelAuto: string;
   whereUnknown: string;
   running: string;

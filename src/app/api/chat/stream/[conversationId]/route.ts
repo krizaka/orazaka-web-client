@@ -21,10 +21,7 @@ import { proxyEventStream } from "@/core/server/sse-proxy";
  * @param context.params - A promise resolving to parameters containing the conversationId.
  * @returns A promise resolving to a Response object containing the active EventStream or an HTTP error code.
  */
-export async function POST(
-  req: NextRequest,
-  { params }: { params: Promise<{ conversationId: string }> },
-) {
+export async function POST(req: NextRequest, { params }: { params: Promise<{ conversationId: string }> }) {
   const { conversationId } = await params;
   return proxyEventStream(req, {
     path: `/api/v1/chat/stream/${conversationId}`,

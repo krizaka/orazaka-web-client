@@ -110,7 +110,11 @@ function choicesOf(
   words: PackWords | null,
   facts: Record<string, unknown> | undefined,
 ): Choice[] | null {
-  if (!Array.isArray(oneOf) || oneOf.length === 0 || !oneOf.every((entry) => entry && typeof entry === "object" && "const" in entry)) {
+  if (
+    !Array.isArray(oneOf) ||
+    oneOf.length === 0 ||
+    !oneOf.every((entry) => entry && typeof entry === "object" && "const" in entry)
+  ) {
     return null;
   }
   return (oneOf as RawChoice[]).map((entry) => {
@@ -144,12 +148,16 @@ function choicesOf(
 
 /** An enum's value → label map, as the pack wrote it for the language (a model's `{ label, hint }` is read by its choices). */
 function enumLabels(words: PackWords | null): Record<string, string> | null {
-  const entries = Object.entries(words?.options ?? {}).filter((entry): entry is [string, string] => typeof entry[1] === "string");
+  const entries = Object.entries(words?.options ?? {}).filter(
+    (entry): entry is [string, string] => typeof entry[1] === "string",
+  );
   return entries.length > 0 ? Object.fromEntries(entries) : null;
 }
 
 /** The per-model aspects a model field declares, or null. */
-function aspectsOf(options: { aspectField?: string; aspects?: Record<string, unknown> } | undefined): InputField["aspectsByModel"] {
+function aspectsOf(
+  options: { aspectField?: string; aspects?: Record<string, unknown> } | undefined,
+): InputField["aspectsByModel"] {
   if (!options?.aspectField || !options.aspects || typeof options.aspects !== "object") {
     return null;
   }
@@ -163,7 +171,11 @@ function aspectsOf(options: { aspectField?: string; aspects?: Record<string, unk
 }
 
 /** A pack's helper is already one line; a list field's older one is cut to a line; a text field's guidance stays whole. */
-function shortHelperOf(text: string | null, writtenByPack: boolean, spec: { enum?: unknown; oneOf?: unknown; "x-options"?: unknown }): string | null {
+function shortHelperOf(
+  text: string | null,
+  writtenByPack: boolean,
+  spec: { enum?: unknown; oneOf?: unknown; "x-options"?: unknown },
+): string | null {
   const isList = Array.isArray(spec.enum) || Boolean(spec["x-options"]) || Array.isArray(spec.oneOf);
   return writtenByPack || !isList ? text : shortHelper(text);
 }
@@ -175,7 +187,10 @@ export type AssetKind = "image" | "video" | "audio";
  * `format: "asset-id"` read with its `contentMediaType` (`image/*`). A blueprint published before the pack
  * declared anything still has `image` as its starting image: that key alone is read as an image.
  */
-export function assetKindOf(key: string, spec: { format?: string; contentMediaType?: string; type?: string }): AssetKind | null {
+export function assetKindOf(
+  key: string,
+  spec: { format?: string; contentMediaType?: string; type?: string },
+): AssetKind | null {
   if (spec.type && spec.type !== "string") {
     return null;
   }
@@ -229,7 +244,12 @@ export function useInputSchema(inputSchema: string | null, locale: Locale = "en"
           default?: unknown;
           "x-control"?: string;
           "x-advanced"?: boolean;
-          "x-options"?: { source?: string; facts?: Record<string, unknown>; aspectField?: string; aspects?: Record<string, unknown> };
+          "x-options"?: {
+            source?: string;
+            facts?: Record<string, unknown>;
+            aspectField?: string;
+            aspects?: Record<string, unknown>;
+          };
           "x-i18n"?: unknown;
         };
         const words = wordsFor(spec["x-i18n"], locale);

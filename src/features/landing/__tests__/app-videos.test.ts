@@ -18,13 +18,16 @@ describe("the download page's videos (krizaka/.github#315)", () => {
     }
   });
 
-  it.each(["en", "fr"] as const)("each video has its words in %s (the words may come first: the automated manifest pull request must pass)", (locale) => {
-    const items = desktop[locale].videos.items;
-    for (const v of APP_VIDEOS) {
-      expect(items[videoId(v)]?.name).toBeTruthy();
-      expect(items[videoId(v)]?.body).toBeTruthy();
-    }
-  });
+  it.each(["en", "fr"] as const)(
+    "each video has its words in %s (the words may come first: the automated manifest pull request must pass)",
+    (locale) => {
+      const items = desktop[locale].videos.items;
+      for (const v of APP_VIDEOS) {
+        expect(items[videoId(v)]?.name).toBeTruthy();
+        expect(items[videoId(v)]?.body).toBeTruthy();
+      }
+    },
+  );
 
   it("the page reads the manifest only: no address of a video is typed in it", () => {
     const section = read("src/features/landing/components/AppVideosSection.tsx");
@@ -38,7 +41,13 @@ describe("the download page's videos (krizaka/.github#315)", () => {
 
   it("staleVideos tells a fresh recording from an old one", () => {
     const now = new Date("2026-11-20T00:00:00Z");
-    const v = (capturedAt: string) => ({ platform: "web", flow: "x", seconds: 5, capturedAt, files: { webm: "", mp4: "", poster: "" } });
+    const v = (capturedAt: string) => ({
+      platform: "web",
+      flow: "x",
+      seconds: 5,
+      capturedAt,
+      files: { webm: "", mp4: "", poster: "" },
+    });
     expect(staleVideos(now, [v("2026-11-07T00:00:01Z")])).toEqual([]);
     expect(staleVideos(now, [v("2026-11-05T00:00:00Z")])).toHaveLength(1);
   });
@@ -46,7 +55,9 @@ describe("the download page's videos (krizaka/.github#315)", () => {
   it("the words say nothing of stores or availability", () => {
     for (const locale of ["en", "fr"] as const) {
       const { title, lead, play, recorded, seconds } = desktop[locale].videos;
-      expect([title, lead, play, recorded, seconds].join(" ")).not.toMatch(/App Store|Google Play|TestFlight|disponible|available/i);
+      expect([title, lead, play, recorded, seconds].join(" ")).not.toMatch(
+        /App Store|Google Play|TestFlight|disponible|available/i,
+      );
     }
   });
 });

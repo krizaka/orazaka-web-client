@@ -42,9 +42,7 @@ export const InterceptionApi = {
    * @returns The parsed schema descriptor with field definitions.
    */
   fetchSchema: async (schemaId: string): Promise<SchemaDescriptor> => {
-    const schema = await restRequest<SchemaDescriptor>(
-      `/api/v1/interceptions/${encodeURIComponent(schemaId)}`,
-    );
+    const schema = await restRequest<SchemaDescriptor>(`/api/v1/interceptions/${encodeURIComponent(schemaId)}`);
     if (!schema) throw new Error("No schema returned from server.");
     return schema;
   },
@@ -58,15 +56,11 @@ export const InterceptionApi = {
    * @param responses - The form response key-value map.
    * @returns The resolved status from the server.
    */
-  resolve: async (
-    interceptionType: string,
-    schemaId: string,
-    responses: Record<string, string>,
-  ): Promise<boolean> => {
-    const data = await restRequest<{ resolved: boolean }>(
-      "/api/v1/interceptions/resolve",
-      { method: "POST", body: { interceptionType, schemaId, responses } },
-    );
+  resolve: async (interceptionType: string, schemaId: string, responses: Record<string, string>): Promise<boolean> => {
+    const data = await restRequest<{ resolved: boolean }>("/api/v1/interceptions/resolve", {
+      method: "POST",
+      body: { interceptionType, schemaId, responses },
+    });
     return data?.resolved ?? false;
   },
 } as const;

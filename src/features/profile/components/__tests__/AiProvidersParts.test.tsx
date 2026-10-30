@@ -1,9 +1,6 @@
 import "@testing-library/jest-dom";
 import { render, screen, fireEvent } from "@testing-library/react";
-import {
-  ProviderRow,
-  ProviderEmptyState,
-} from "@/features/profile/components/AiProvidersParts";
+import { ProviderRow, ProviderEmptyState } from "@/features/profile/components/AiProvidersParts";
 import { ProviderConnectionForm } from "@/features/profile/components/AiProviderConnectionForm";
 import { PROVIDERS } from "@/features/profile/components/AiProviderLogos";
 
@@ -105,13 +102,7 @@ describe("ProviderConnectionForm (add)", () => {
   it("disables save until a provider and key are present", () => {
     const { rerender } = render(<ProviderConnectionForm {...baseProps} />);
     expect(screen.getByText("Save Credentials")).toBeDisabled();
-    rerender(
-      <ProviderConnectionForm
-        {...baseProps}
-        selected={gemini}
-        draftKey="AIza123"
-      />,
-    );
+    rerender(<ProviderConnectionForm {...baseProps} selected={gemini} draftKey="AIza123" />);
     expect(screen.getByText("Save Credentials")).not.toBeDisabled();
   });
 
@@ -156,13 +147,6 @@ describe("ProviderConnectionForm (edit)", () => {
 
 describe("PROVIDERS catalogue", () => {
   it("has the 6 expected providers in order", () => {
-    expect(PROVIDERS.map((p) => p.id)).toEqual([
-      "gemini",
-      "claude",
-      "openai",
-      "mistral",
-      "groq",
-      "ollama",
-    ]);
+    expect(PROVIDERS.map((p) => p.id)).toEqual(["gemini", "claude", "openai", "mistral", "groq", "ollama"]);
   });
 });

@@ -7,12 +7,15 @@ for (const theme of ["dark", "light"] as const) {
   for (const locale of ["en", "fr"] as const) {
     test(`the home does not overflow sideways (${theme}, ${locale})`, async ({ page }) => {
       test.setTimeout(120_000);
-      await page.addInitScript(([t, l]) => {
-        try {
-          localStorage.setItem("kz-theme", t);
-          localStorage.setItem("orazaka_language", l);
-        } catch {}
-      }, [theme, locale]);
+      await page.addInitScript(
+        ([t, l]) => {
+          try {
+            localStorage.setItem("kz-theme", t);
+            localStorage.setItem("orazaka_language", l);
+          } catch {}
+        },
+        [theme, locale],
+      );
       const problems: string[] = [];
       for (const width of WIDTHS) {
         await page.setViewportSize({ width, height: 900 });
@@ -36,7 +39,8 @@ for (const theme of ["dark", "light"] as const) {
             .map((el) => `${el.tagName.toLowerCase()}.${String(el.className).split(" ").slice(0, 3).join(".")}`);
           return { scroll: doc.scrollWidth, client: doc.clientWidth, wide };
         });
-        if (result.scroll > result.client) problems.push(`@${width}: scrollWidth ${result.scroll} > ${result.client} (${result.wide.join(", ")})`);
+        if (result.scroll > result.client)
+          problems.push(`@${width}: scrollWidth ${result.scroll} > ${result.client} (${result.wide.join(", ")})`);
         else if (result.wide.length) problems.push(`@${width}: elements past the edge (${result.wide.join(", ")})`);
       }
       expect(problems).toEqual([]);

@@ -1,11 +1,12 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import { Badge, Button, Input } from "@krizaka/orazaka-design-system";
+import { Badge, Button } from "@krizaka/orazaka-design-system";
 import { Card } from "@krizaka/ui/card";
-import { formatCredits, type Entitlement, type Plan } from "@krizaka/orazaka-shared";
+import { formatCredits, type Plan } from "@krizaka/orazaka-shared";
 import { BILLING_CURRENCY, money } from "@/console/features/billing/utils/money";
 import { BillingField } from "./BillingField";
+import { EntitlementRows } from "./EntitlementRows";
 import { BillingAdminApi } from "@/console/services/billing.admin.api";
 
 /**
@@ -53,8 +54,8 @@ export function PlansScreen() {
         <div>
           <h2 className="text-lg font-semibold text-fg">Offres</h2>
           <p className="text-sm text-fg-muted">
-            Prix, dotation mensuelle et matrice de droits. Une offre retirée reste
-            visible ici : des abonnements y font encore référence.
+            Prix, dotation mensuelle et matrice de droits. Une offre retirée reste visible ici : des abonnements y font
+            encore référence.
           </p>
         </div>
         <Button
@@ -91,12 +92,9 @@ export function PlansScreen() {
                 {!plan.isActive && <Badge variant="warning">retirée</Badge>}
               </header>
               <p className="text-sm text-fg">
-                {money(plan.priceCents, plan.currency)} ·{" "}
-                {formatCredits(plan.monthlyCreditGrant)} crédits / mois
+                {money(plan.priceCents, plan.currency)} · {formatCredits(plan.monthlyCreditGrant)} crédits / mois
               </p>
-              <p className="text-xs text-fg-muted">
-                {plan.entitlements.length} droits
-              </p>
+              <p className="text-xs text-fg-muted">{plan.entitlements.length} droits</p>
               <Button size="sm" variant="ghost" onClick={() => setEditing(plan)}>
                 Modifier
               </Button>
@@ -105,14 +103,7 @@ export function PlansScreen() {
         ))}
       </div>
 
-      {editing && (
-        <PlanEditor
-          plan={editing}
-          onChange={setEditing}
-          onSave={save}
-          onCancel={() => setEditing(null)}
-        />
-      )}
+      {editing && <PlanEditor plan={editing} onChange={setEditing} onSave={save} onCancel={() => setEditing(null)} />}
     </section>
   );
 }
@@ -128,12 +119,6 @@ function PlanEditor({
   onSave: () => void;
   onCancel: () => void;
 }) {
-  const setEntitlement = (index: number, next: Entitlement) => {
-    const entitlements = [...plan.entitlements];
-    entitlements[index] = next;
-    onChange({ ...plan, entitlements });
-  };
-
   return (
     <Card.Root className="p-5">
       <div className="space-y-4">
@@ -164,9 +149,7 @@ function PlanEditor({
             label="Crédits / mois"
             type="number"
             value={String(plan.monthlyCreditGrant)}
-            onChange={(e) =>
-              onChange({ ...plan, monthlyCreditGrant: Number(e.target.value) })
-            }
+            onChange={(e) => onChange({ ...plan, monthlyCreditGrant: Number(e.target.value) })}
           />
           <BillingField
             label="Palier de débit"
@@ -177,46 +160,10 @@ function PlanEditor({
 
         <div className="space-y-2">
           <p className="text-sm font-medium text-fg">Droits</p>
-          {plan.entitlements.map((entitlement, index) => (
-            <div key={index} className="grid gap-2 sm:grid-cols-3">
-              <Input
-                value={entitlement.key}
-                onChange={(e) =>
-                  setEntitlement(index, { ...entitlement, key: e.target.value })
-                }
-              />
-              <Input
-                value={entitlement.valueType}
-                onChange={(e) =>
-                  setEntitlement(index, {
-                    ...entitlement,
-                    valueType: e.target.value as Entitlement["valueType"],
-                  })
-                }
-              />
-              <Input
-                value={entitlement.value}
-                onChange={(e) =>
-                  setEntitlement(index, { ...entitlement, value: e.target.value })
-                }
-              />
-            </div>
-          ))}
-          <Button
-            size="sm"
-            variant="ghost"
-            onClick={() =>
-              onChange({
-                ...plan,
-                entitlements: [
-                  ...plan.entitlements,
-                  { key: "", valueType: "boolean", value: "true" },
-                ],
-              })
-            }
-          >
-            Ajouter un droit
-          </Button>
+          <EntitlementRows
+            entitlements={plan.entitlements}
+            onChange={(entitlements) => onChange({ ...plan, entitlements })}
+          />
         </div>
 
         <div className="flex justify-end gap-2">

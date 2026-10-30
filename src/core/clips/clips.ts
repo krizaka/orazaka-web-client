@@ -34,8 +34,22 @@ export const CLIPS: Readonly<Record<ClipId, ClipSpec>> = {
   studio: { width: 1120, height: 700, aspect: "aspect-[1120/700]", seconds: 6, perLang: false },
   results: { width: 1120, height: 700, aspect: "aspect-[1120/700]", seconds: 5, perLang: false },
   // The phone app in a device frame, signed in as the demo persona (orazaka-mobile-client scripts/record-story.mjs, frame-clips.mjs).
-  "phone-studio": { width: 1080, height: 1920, aspect: "aspect-[1080/1920]", seconds: 19, perLang: false, base: "sites/orazaka/mobile/studio-run" },
-  "phone-ask": { width: 1080, height: 1920, aspect: "aspect-[1080/1920]", seconds: 11, perLang: false, base: "sites/orazaka/mobile/ask" },
+  "phone-studio": {
+    width: 1080,
+    height: 1920,
+    aspect: "aspect-[1080/1920]",
+    seconds: 19,
+    perLang: false,
+    base: "sites/orazaka/mobile/studio-run",
+  },
+  "phone-ask": {
+    width: 1080,
+    height: 1920,
+    aspect: "aspect-[1080/1920]",
+    seconds: 11,
+    perLang: false,
+    base: "sites/orazaka/mobile/ask",
+  },
 };
 
 export const isClipId = (id: string): id is ClipId => (CLIP_IDS as readonly string[]).includes(id);

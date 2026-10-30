@@ -12,7 +12,9 @@ function parseInputs(text: string): Record<string, unknown> | null {
   if (text.trim() === "") return {};
   try {
     const value: unknown = JSON.parse(text);
-    return value !== null && typeof value === "object" && !Array.isArray(value) ? (value as Record<string, unknown>) : null;
+    return value !== null && typeof value === "object" && !Array.isArray(value)
+      ? (value as Record<string, unknown>)
+      : null;
   } catch {
     return null;
   }

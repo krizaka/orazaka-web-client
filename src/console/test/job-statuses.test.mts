@@ -10,7 +10,8 @@ import { QUEUE_STATES } from "../features/operations/utils/operations.ts";
 const statuses = JobStatusSchema.options as readonly string[];
 
 test("every job state has a label", () => {
-  for (const status of statuses) assert.ok((consoleCopy.operations.states as Record<string, string>)[status], `no label for ${status}`);
+  for (const status of statuses)
+    assert.ok((consoleCopy.operations.states as Record<string, string>)[status], `no label for ${status}`);
 });
 
 test("every job state has a queue counter, and is counted", () => {

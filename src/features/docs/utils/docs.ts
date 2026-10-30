@@ -6,7 +6,16 @@
  */
 import fs from "node:fs";
 import path from "node:path";
-import { GROUP_IDS, JOURNEY_IDS, REPO, type DocEntry, type GroupId, type JourneyId, type NavItem, type SearchEntry } from "@/features/docs/utils/docs-shared";
+import {
+  GROUP_IDS,
+  JOURNEY_IDS,
+  REPO,
+  type DocEntry,
+  type GroupId,
+  type JourneyId,
+  type NavItem,
+  type SearchEntry,
+} from "@/features/docs/utils/docs-shared";
 import { parseSource, type BlockNode, type InlineNode } from "@krizaka/ui/markdown";
 
 export { JOURNEY_IDS, REPO, editUrl, pageHref, searchDocs } from "@/features/docs/utils/docs-shared";
@@ -18,7 +27,10 @@ const read = <T>(name: string): T => JSON.parse(fs.readFileSync(path.join(DIR, n
 export function listPages(): DocEntry[] {
   const groupRank = (g: GroupId | null) => (g ? GROUP_IDS.indexOf(g) : -1);
   return read<DocEntry[]>("index.json").sort(
-    (a, b) => JOURNEY_IDS.indexOf(a.journey) - JOURNEY_IDS.indexOf(b.journey) || groupRank(a.group) - groupRank(b.group) || a.order - b.order,
+    (a, b) =>
+      JOURNEY_IDS.indexOf(a.journey) - JOURNEY_IDS.indexOf(b.journey) ||
+      groupRank(a.group) - groupRank(b.group) ||
+      a.order - b.order,
   );
 }
 
@@ -52,7 +64,11 @@ export function neighbours(slug: string): { previous: DocEntry | null; next: Doc
 const SCHEME = /^([a-z][a-z0-9+.-]*:|#|\/)/i;
 
 /** Resolves `href`, written in the source file `from` (a path of the Orazaka repository), to its place on this site. */
-export function resolveLink(href: string, from: string, sources: Readonly<Record<string, string>>): { href: string; internal: boolean } | null {
+export function resolveLink(
+  href: string,
+  from: string,
+  sources: Readonly<Record<string, string>>,
+): { href: string; internal: boolean } | null {
   if (SCHEME.test(href)) return { href, internal: !/^[a-z][a-z0-9+.-]*:/i.test(href) };
   const [rawPath, fragment] = href.split("#");
   const target = path.posix.normalize(path.posix.join(path.posix.dirname(from), rawPath));
@@ -74,16 +90,22 @@ export function prepareBody(body: string, from: string | null, sources: Readonly
     if (/^ {0,3}(```|~~~)/.test(line)) fence = !fence;
     if (fence || /^ {0,3}(```|~~~)/.test(line)) return line;
     return line
-      .replace(/(!?)\[([^\]]*)\]\(([^)\s]+)((?:\s+"[^"]*")?)\)/g, (m, bang: string, text: string, href: string, title: string) => {
-        if (bang) {
-          if (/^[a-z][a-z0-9+.-]*:/i.test(href)) return m;
-          const target = path.posix.normalize(path.posix.join(path.posix.dirname(origin), href));
-          return `![${text}](https://raw.githubusercontent.com/krizaka/orazaka/main/${target})`;
-        }
-        const r = resolveLink(href, origin, sources);
-        return r ? `[${text}](${r.href}${title})` : text;
-      })
-      .replace(/^(\s*>\s*)\[!(NOTE|TIP|IMPORTANT|WARNING|CAUTION)\]\s*$/i, (_m, lead: string, kind: string) => `${lead}**${kind[0]}${kind.slice(1).toLowerCase()}.**`);
+      .replace(
+        /(!?)\[([^\]]{0,300})\]\(([^)\s]{1,500})(\s+"[^"]{0,300}")?\)/g,
+        (m, bang: string, text: string, href: string, title: string | undefined) => {
+          if (bang) {
+            if (/^[a-z][a-z0-9+.-]*:/i.test(href)) return m;
+            const target = path.posix.normalize(path.posix.join(path.posix.dirname(origin), href));
+            return `![${text}](https://raw.githubusercontent.com/krizaka/orazaka/main/${target})`;
+          }
+          const r = resolveLink(href, origin, sources);
+          return r ? `[${text}](${r.href}${title ?? ""})` : text;
+        },
+      )
+      .replace(
+        /^(\s*>\s*)\[!(NOTE|TIP|IMPORTANT|WARNING|CAUTION)\]\s*$/i,
+        (_m, lead: string, kind: string) => `${lead}**${kind[0]}${kind.slice(1).toLowerCase()}.**`,
+      );
   });
   return out.join("\n").replace(/^(\s*>\s*\*\*[A-Za-z]+\.\*\*)\n\s*>\s*/gm, "$1 ");
 }
@@ -94,7 +116,17 @@ export function sourcesMap(): Record<string, string> {
 
 // ── Segments: markdown and diagram fences ────────────────────────────────────────────────────────
 
-export const DIAGRAM_LANGS = ["architecture", "pipeline", "sequence", "states", "cli-replay", "cli-journey", "cli-commands", "pack-index", "pack"] as const;
+export const DIAGRAM_LANGS = [
+  "architecture",
+  "pipeline",
+  "sequence",
+  "states",
+  "cli-replay",
+  "cli-journey",
+  "cli-commands",
+  "pack-index",
+  "pack",
+] as const;
 export type DiagramLang = (typeof DIAGRAM_LANGS)[number];
 export type Segment = { kind: "markdown"; text: string } | { kind: "diagram"; lang: DiagramLang; source: string };
 
@@ -133,8 +165,7 @@ export function splitSegments(body: string): Segment[] {
 
 // ── Contents ─────────────────────────────────────────────────────────────────────────────────────
 
-const plain = (nodes: readonly InlineNode[]): string =>
-  nodes.map(textOf).join("");
+const plain = (nodes: readonly InlineNode[]): string => nodes.map(textOf).join("");
 
 function textOf(n: InlineNode): string {
   if ("value" in n && typeof n.value === "string") return n.value;
@@ -175,7 +206,6 @@ export function searchIndex(): SearchEntry[] {
     return { slug: d.slug, title: d.title, intro: d.intro, journey: d.journey, headings };
   });
 }
-
 
 export function navItems(): NavItem[] {
   return listPages().map(({ slug, title, journey, group }) => ({ slug, title, journey, group }));

@@ -6,7 +6,11 @@ export interface SseProxy {
   /** Gateway path after the base URL, e.g. `/api/v1/code`. */
   path: string;
   /** The JSON sent upstream, from the prompt, the model and the whole client body. */
-  payload: (parts: { prompt: string; model: string | undefined; body: Record<string, unknown> }) => Record<string, unknown>;
+  payload: (parts: {
+    prompt: string;
+    model: string | undefined;
+    body: Record<string, unknown>;
+  }) => Record<string, unknown>;
   /** How errors are named in the log and in the 500 answer (`SSE <log> Proxy Error`, `BFF SSE <log> Proxy Error`). */
   log: string;
 }

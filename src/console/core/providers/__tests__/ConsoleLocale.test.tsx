@@ -17,10 +17,18 @@ describe("ConsoleLocale", () => {
 
   it("follows the browser without a locale, the given one with it", () => {
     const languages = jest.spyOn(navigator, "languages", "get").mockReturnValue(["fr-CA"]);
-    const { unmount } = render(<ConsoleLocaleProvider><Probe /></ConsoleLocaleProvider>);
+    const { unmount } = render(
+      <ConsoleLocaleProvider>
+        <Probe />
+      </ConsoleLocaleProvider>,
+    );
     expect(screen.getByText("fr")).toBeInTheDocument();
     unmount();
-    render(<ConsoleLocaleProvider locale="en"><Probe /></ConsoleLocaleProvider>);
+    render(
+      <ConsoleLocaleProvider locale="en">
+        <Probe />
+      </ConsoleLocaleProvider>,
+    );
     expect(screen.getByText("en")).toBeInTheDocument();
     languages.mockRestore();
   });

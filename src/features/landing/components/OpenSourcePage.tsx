@@ -23,7 +23,8 @@ export const LICENSING_URL = `${REPO_URL}/blob/main/docs/LICENSING.md`;
 export function OpenSourcePage({ repos }: Readonly<{ repos: readonly ListedRepo[] | null }>) {
   const { t, locale } = useTranslation();
   const o = t.openSource;
-  const date = (iso: string | null) => (iso ? new Intl.DateTimeFormat(locale, { dateStyle: "medium" }).format(new Date(iso)) : "");
+  const date = (iso: string | null) =>
+    iso ? new Intl.DateTimeFormat(locale, { dateStyle: "medium" }).format(new Date(iso)) : "";
 
   return (
     <>

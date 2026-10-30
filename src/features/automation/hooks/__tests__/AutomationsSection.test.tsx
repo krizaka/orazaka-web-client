@@ -140,8 +140,24 @@ describe("AutomationsSection", () => {
 
   it("lists the runs of an automation with their state", async () => {
     api.runs.mockResolvedValue([
-      { id: "r1", automationId: "a1", trigger: "webhook", status: "succeeded", startedAt: "2026-10-20T12:00:01Z", finishedAt: "2026-10-20T12:00:06Z", studioRunId: "5a3c0c1e-0000" },
-      { id: "r2", automationId: "a1", trigger: "schedule", status: "failed", errorCode: "studio_refused_402", errorMessage: "the engine refused the run (402)", startedAt: "2026-10-20T11:00:00Z" },
+      {
+        id: "r1",
+        automationId: "a1",
+        trigger: "webhook",
+        status: "succeeded",
+        startedAt: "2026-10-20T12:00:01Z",
+        finishedAt: "2026-10-20T12:00:06Z",
+        studioRunId: "5a3c0c1e-0000",
+      },
+      {
+        id: "r2",
+        automationId: "a1",
+        trigger: "schedule",
+        status: "failed",
+        errorCode: "studio_refused_402",
+        errorMessage: "the engine refused the run (402)",
+        startedAt: "2026-10-20T11:00:00Z",
+      },
     ]);
     renderSection();
     await screen.findByText(automation.name);

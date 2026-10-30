@@ -34,10 +34,14 @@ export function useJobToasts(): JobToasts {
     const name = (job: Job) => jobLabel(t, job);
     return {
       started: (job) => {
-        progressToast(fill(q.started, { name: name(job) }), { id: job.id, value: Math.max(0, (job.progress ?? 0) / 100) });
+        progressToast(fill(q.started, { name: name(job) }), {
+          id: job.id,
+          value: Math.max(0, (job.progress ?? 0) / 100),
+        });
       },
       progressed: (job, percent) => {
-        if (percent > 0 && percent < 100) progressToast(fill(q.started, { name: name(job) }), { id: job.id, value: percent / 100 });
+        if (percent > 0 && percent < 100)
+          progressToast(fill(q.started, { name: name(job) }), { id: job.id, value: percent / 100 });
       },
       completed: (job) => {
         toast.dismiss(job.id);
@@ -52,7 +56,9 @@ export function useJobToasts(): JobToasts {
       },
       failed: (job) => {
         toast.dismiss(job.id);
-        toast.error(fill(q.failed, { name: name(job), reason: job.errorMessage || q.unknownError }), { duration: 8000 });
+        toast.error(fill(q.failed, { name: name(job), reason: job.errorMessage || q.unknownError }), {
+          duration: 8000,
+        });
       },
     };
   }, [t, router]);

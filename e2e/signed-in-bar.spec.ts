@@ -11,7 +11,8 @@ const SIGN_IN = 'header a[href="/login"], nav a[href="/login"]';
 const watchSignInLink = () => {
   (window as unknown as { __sawSignIn: boolean }).__sawSignIn = false;
   const look = () => {
-    if (document.querySelector('header a[href="/login"], nav a[href="/login"]')) (window as unknown as { __sawSignIn: boolean }).__sawSignIn = true;
+    if (document.querySelector('header a[href="/login"], nav a[href="/login"]'))
+      (window as unknown as { __sawSignIn: boolean }).__sawSignIn = true;
   };
   new MutationObserver(look).observe(document, { childList: true, subtree: true });
   document.addEventListener("DOMContentLoaded", look);
@@ -23,15 +24,26 @@ test("signed out, a public page offers « Sign in » (so the next check means so
   await expect(page.locator(SIGN_IN).first()).toBeVisible();
 });
 
-test("signed in, the bar never draws « Sign in », even while the session answers slowly", async ({ page, context, baseURL }) => {
+test("signed in, the bar never draws « Sign in », even while the session answers slowly", async ({
+  page,
+  context,
+  baseURL,
+}) => {
   await context.addCookies([{ name: "next-auth.session-token", value: "e2e-token", url: baseURL! }]);
   await page.addInitScript(watchSignInLink);
   await page.route("**/api/auth/session", async (route) => {
     await new Promise((resolve) => setTimeout(resolve, 1500));
-    await route.fulfill({ json: { user: { id: "u1", name: "Eric", email: "eric@demo.orazaka.test" }, expires: new Date(Date.now() + 3_600_000).toISOString() } });
+    await route.fulfill({
+      json: {
+        user: { id: "u1", name: "Eric", email: "eric@demo.orazaka.test" },
+        expires: new Date(Date.now() + 3_600_000).toISOString(),
+      },
+    });
   });
   await page.goto("/pricing");
-  await expect(page.locator('header a[href="/"], nav a[href="/"]').filter({ hasText: /./ }).first()).toBeVisible({ timeout: 15_000 });
+  await expect(page.locator('header a[href="/"], nav a[href="/"]').filter({ hasText: /./ }).first()).toBeVisible({
+    timeout: 15_000,
+  });
   expect((await context.cookies()).some((c) => c.name === "kz-session" && c.value === "1")).toBe(true);
   expect(await page.evaluate(() => (window as unknown as { __sawSignIn: boolean }).__sawSignIn)).toBe(false);
 });

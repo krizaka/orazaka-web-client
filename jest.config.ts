@@ -64,13 +64,15 @@ const config = {
     "^@tanstack/markdown/(.*)$": `${markdown}/dist/$1.js`,
     "^@tanstack/highlight/(.*)$": `${highlight}/dist/$1.js`,
   },
-  testPathIgnorePatterns: ["<rootDir>/node_modules/", "<rootDir>/.next/", "<rootDir>/src/__tests__/helpers/", "<rootDir>/e2e/", "<rootDir>/scripts/", "<rootDir>/src/console/test/"],
-  collectCoverageFrom: [
-    "src/**/*.{ts,tsx}",
-    "!src/**/*.d.ts",
-    "!src/app/layout.tsx",
-    "!src/app/page.tsx",
+  testPathIgnorePatterns: [
+    "<rootDir>/node_modules/",
+    "<rootDir>/.next/",
+    "<rootDir>/src/__tests__/helpers/",
+    "<rootDir>/e2e/",
+    "<rootDir>/scripts/",
+    "<rootDir>/src/console/test/",
   ],
+  collectCoverageFrom: ["src/**/*.{ts,tsx}", "!src/**/*.d.ts", "!src/app/layout.tsx", "!src/app/page.tsx"],
 } satisfies Config;
 
 export default createJestConfig(config);

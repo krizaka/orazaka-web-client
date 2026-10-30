@@ -12,10 +12,12 @@ test("no fenced code block of content/docs holds an e-mail address", () => {
   const found = [];
   for (const name of readdirSync(dir).filter((f) => f.endsWith(".md"))) {
     let fence = false;
-    readFileSync(new URL(name, dir), "utf8").split("\n").forEach((line, i) => {
-      if (/^ {0,3}(```|~~~)/.test(line)) fence = !fence;
-      else if (fence && EMAIL.test(line)) found.push(`${name}:${i + 1}`);
-    });
+    readFileSync(new URL(name, dir), "utf8")
+      .split("\n")
+      .forEach((line, i) => {
+        if (/^ {0,3}(```|~~~)/.test(line)) fence = !fence;
+        else if (fence && EMAIL.test(line)) found.push(`${name}:${i + 1}`);
+      });
   }
   assert.deepEqual(found, [], "write <email> in a code block, Cloudflare rewrites addresses in the served HTML");
 });

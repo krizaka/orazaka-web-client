@@ -45,7 +45,16 @@ export function toPricesView(current: AdminPrice[], histories: Record<string, Ad
       .filter((h) => new Date(h.effectiveFrom).getTime() > now.getTime())
       .sort((a, b) => a.effectiveFrom.localeCompare(b.effectiveFrom))
       .map((h) => ({ ...figures(h), versionId: h.versionId, effectiveFrom: h.effectiveFrom }));
-    return { ...figures(p), key: p.key, product, plan, currency: p.currency, versionId: p.versionId, effectiveFrom: p.effectiveFrom, upcoming };
+    return {
+      ...figures(p),
+      key: p.key,
+      product,
+      plan,
+      currency: p.currency,
+      versionId: p.versionId,
+      effectiveFrom: p.effectiveFrom,
+      upcoming,
+    };
   });
   return { units: PRICE_UNITS, availabilities: PRICE_AVAILABILITIES, entries };
 }

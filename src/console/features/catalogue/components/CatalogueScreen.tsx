@@ -14,12 +14,33 @@ import { providerSummaries, type ProviderSummary } from "@/console/features/cata
 
 const m = consoleCopy.models;
 
+const routeCell = (c: Capability) => <code className="text-xs">{c.routingKey}</code>;
+
 const modelColumns: DataTableColumn<ModelEntry>[] = [
-  { id: "modelName", header: m.model, sortable: true, filter: "text", card: "title", cell: (x) => x.modelLabel ?? x.modelName },
+  {
+    id: "modelName",
+    header: m.model,
+    sortable: true,
+    filter: "text",
+    card: "title",
+    cell: (x) => x.modelLabel ?? x.modelName,
+  },
   { id: "category", header: m.category, sortable: true, filter: "facet" },
   { id: "providerName", header: m.provider, filter: "facet", value: (x) => x.providerName ?? "unassigned" },
-  { id: "compatible", header: m.host, value: (x) => (x.compatible ? m.compatible : m.incompatible), cell: (x) => <Badge tone={x.compatible ? "success" : "warning"}>{x.compatible ? m.compatible : m.incompatible}</Badge> },
-  { id: "isDefault", header: m.isDefault, value: (x) => (x.isDefault ? "yes" : ""), cell: (x) => (x.isDefault ? <Badge tone="accent">{m.isDefault}</Badge> : null) },
+  {
+    id: "compatible",
+    header: m.host,
+    value: (x) => (x.compatible ? m.compatible : m.incompatible),
+    cell: (x) => (
+      <Badge tone={x.compatible ? "success" : "warning"}>{x.compatible ? m.compatible : m.incompatible}</Badge>
+    ),
+  },
+  {
+    id: "isDefault",
+    header: m.isDefault,
+    value: (x) => (x.isDefault ? "yes" : ""),
+    cell: (x) => (x.isDefault ? <Badge tone="accent">{m.isDefault}</Badge> : null),
+  },
 ];
 
 const providerColumns: DataTableColumn<ProviderSummary>[] = [
@@ -35,11 +56,29 @@ export function CatalogueScreen() {
 
   const capabilityColumns = React.useMemo<DataTableColumn<Capability>[]>(
     () => [
-      { id: "featureKey", header: m.capability, sortable: true, filter: "text", card: "title", cell: (c) => c.featureKey.replace(/^orazaka\./, "") },
+      {
+        id: "featureKey",
+        header: m.capability,
+        sortable: true,
+        filter: "text",
+        card: "title",
+        cell: (c) => c.featureKey.replace(/^orazaka\./, ""),
+      },
       { id: "handlerKey", header: m.handler, cell: (c) => c.handlerKey },
-      { id: "routingKey", header: m.route, cell: (c) => <code className="text-xs">{c.routingKey}</code> },
+      { id: "routingKey", header: m.route, cell: routeCell },
       { id: "billableCapability", header: m.billable, filter: "facet", value: (c) => c.billableCapability ?? "—" },
-      { id: "enabled", header: m.enabled, value: (c) => (c.enabled ? "on" : "off"), cell: (c) => <Switch label={`${m.switchLabel} ${c.featureKey}`} checked={c.enabled} onCheckedChange={(on) => void data.toggle(c.featureKey, on)} /> },
+      {
+        id: "enabled",
+        header: m.enabled,
+        value: (c) => (c.enabled ? "on" : "off"),
+        cell: (c) => (
+          <Switch
+            label={`${m.switchLabel} ${c.featureKey}`}
+            checked={c.enabled}
+            onCheckedChange={(on) => void data.toggle(c.featureKey, on)}
+          />
+        ),
+      },
     ],
     // `toggle` is stable (useCallback with no dependencies).
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -53,7 +92,16 @@ export function CatalogueScreen() {
         <p className="max-w-3xl text-sm text-fg-secondary">{m.lead}</p>
       </header>
       {data.hasError && !data.isLoading && (
-        <Alert tone="warning" action={<Button variant="secondary" size="sm" onClick={data.reload}>{m.retry}</Button>}>{m.error}</Alert>
+        <Alert
+          tone="warning"
+          action={
+            <Button variant="secondary" size="sm" onClick={data.reload}>
+              {m.retry}
+            </Button>
+          }
+        >
+          {m.error}
+        </Alert>
       )}
       {data.switchFailed && <Alert tone="danger">{m.toggleFailed}</Alert>}
       <Tabs.Root routeKey="tab" routeValues={["models", "providers", "capabilities"]}>
@@ -63,14 +111,36 @@ export function CatalogueScreen() {
           <Tabs.Trigger value="capabilities">{m.tabs.capabilities}</Tabs.Trigger>
         </Tabs.List>
         <Tabs.Content value="models">
-          <DataTable caption={m.tabs.models} rows={data.models} columns={modelColumns} getRowId={(x) => x.modelName} loading={data.isLoading} defaultPageSize={15} toolbar={<DataTableFilters />} />
+          <DataTable
+            caption={m.tabs.models}
+            rows={data.models}
+            columns={modelColumns}
+            getRowId={(x) => x.modelName}
+            loading={data.isLoading}
+            defaultPageSize={15}
+            toolbar={<DataTableFilters />}
+          />
         </Tabs.Content>
         <Tabs.Content value="providers">
           <p className="mb-3 text-sm text-fg-secondary">{m.providersLead}</p>
-          <DataTable caption={m.tabs.providers} rows={providers} columns={providerColumns} getRowId={(p) => p.provider} loading={data.isLoading} />
+          <DataTable
+            caption={m.tabs.providers}
+            rows={providers}
+            columns={providerColumns}
+            getRowId={(p) => p.provider}
+            loading={data.isLoading}
+          />
         </Tabs.Content>
         <Tabs.Content value="capabilities">
-          <DataTable caption={m.tabs.capabilities} rows={data.capabilities} columns={capabilityColumns} getRowId={(c) => c.featureKey} loading={data.isLoading} defaultPageSize={15} toolbar={<DataTableFilters />} />
+          <DataTable
+            caption={m.tabs.capabilities}
+            rows={data.capabilities}
+            columns={capabilityColumns}
+            getRowId={(c) => c.featureKey}
+            loading={data.isLoading}
+            defaultPageSize={15}
+            toolbar={<DataTableFilters />}
+          />
         </Tabs.Content>
       </Tabs.Root>
     </article>

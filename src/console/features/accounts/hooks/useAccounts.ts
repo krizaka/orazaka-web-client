@@ -47,7 +47,11 @@ export function useAccounts(): Accounts {
         await load(query);
         return true;
       } catch (error) {
-        setProblem(error instanceof AdminRefusal ? refusalMessage(error.code, error.status) : "The identity service did not answer.");
+        setProblem(
+          error instanceof AdminRefusal
+            ? refusalMessage(error.code, error.status)
+            : "The identity service did not answer.",
+        );
         return false;
       }
     },

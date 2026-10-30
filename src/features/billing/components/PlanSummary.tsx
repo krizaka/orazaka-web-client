@@ -18,13 +18,7 @@ interface PlanSummaryProps {
  * The first thing on /studios: what the plan gives (its name and monthly credits), how many Studios that makes ready,
  * how many more exist, and the way to « Plan & packs ». One line, so it answers before the list starts.
  */
-export function PlanSummary({
-  plan,
-  loading,
-  ready,
-  more,
-  href,
-}: Readonly<PlanSummaryProps>) {
+export function PlanSummary({ plan, loading, ready, more, href }: Readonly<PlanSummaryProps>) {
   const { t } = useTranslation();
   const p = t.plan;
 
@@ -46,15 +40,8 @@ export function PlanSummary({
         </span>
       )}
       <span className="tabular-nums">{fill(p.ready, { n: ready })}</span>
-      {more > 0 && (
-        <span className="hidden tabular-nums md:inline">
-          {fill(p.more, { n: more })}
-        </span>
-      )}
-      <Link
-        href={href}
-        className="ml-auto font-medium text-fg-accent underline-offset-4 hover:underline"
-      >
+      {more > 0 && <span className="hidden tabular-nums md:inline">{fill(p.more, { n: more })}</span>}
+      <Link href={href} className="ml-auto font-medium text-fg-accent underline-offset-4 hover:underline">
         {p.link}
       </Link>
     </p>

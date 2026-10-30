@@ -19,6 +19,8 @@ export default async function HomePage() {
   const signedIn = SESSION_COOKIES.some((name) => jar.has(name));
   if (signedIn) return <DashboardHome />;
   // The proof band is counted from the published « Measured runs » page, at build — never typed.
-  const measured = measuredRuns(fs.readFileSync(path.join(process.cwd(), "content", "docs", "measured-runs.md"), "utf8"));
+  const measured = measuredRuns(
+    fs.readFileSync(path.join(process.cwd(), "content", "docs", "measured-runs.md"), "utf8"),
+  );
   return <LandingPage measured={measured} />;
 }

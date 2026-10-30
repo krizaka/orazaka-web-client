@@ -19,8 +19,8 @@ export default function StudiosPage() {
       <header>
         <h1 className="font-display text-3xl font-bold tracking-tight text-fg">Studios</h1>
         <p className="text-sm text-fg-muted">
-          Un Studio est une donnée : le workflow, ses étapes et ses formulaires s’écrivent ici et se
-          publient sans déploiement.
+          Un Studio est une donnée : le workflow, ses étapes et ses formulaires s’écrivent ici et se publient sans
+          déploiement.
         </p>
       </header>
       <Tabs.Root routeKey="tab" routeValues={["usage", "builder"]}>

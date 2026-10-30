@@ -22,12 +22,19 @@ export function StudiosUsedChart({ runs, studioLabel, loading, error }: Readonly
   const { t } = useTranslation();
   const w = t.insights;
   const studios = React.useMemo(
-    () => runsByStudio(runs).slice(0, 8).map((s) => ({ ...s, ok: s.runs - s.failed, studio: studioLabel(s.studioKey) })),
+    () =>
+      runsByStudio(runs)
+        .slice(0, 8)
+        .map((s) => ({ ...s, ok: s.runs - s.failed, studio: studioLabel(s.studioKey) })),
     [runs, studioLabel],
   );
   const top = studios[0];
   return (
-    <ChartCard title={w.studiosUsed} insight={top ? fill(w.usage.studioInsight, { studio: top.studio, runs: top.runs }) : w.noStudioRun} description={w.studiosUsedDesc}>
+    <ChartCard
+      title={w.studiosUsed}
+      insight={top ? fill(w.usage.studioInsight, { studio: top.studio, runs: top.runs }) : w.noStudioRun}
+      description={w.studiosUsedDesc}
+    >
       <BarChart
         data={studios}
         x="studio"
@@ -58,10 +65,19 @@ interface TimeToResultChartProps {
 export function TimeToResultChart({ jobs, loading, error }: Readonly<TimeToResultChartProps>) {
   const { t } = useTranslation();
   const w = t.insights;
-  const timing = React.useMemo(() => timeToResultByKind(jobs).map((k) => ({ ...k, label: w.kinds[k.kind] })), [jobs, w]);
+  const timing = React.useMemo(
+    () => timeToResultByKind(jobs).map((k) => ({ ...k, label: w.kinds[k.kind] })),
+    [jobs, w],
+  );
   const slowest = timing[0];
   return (
-    <ChartCard title={w.timeToResult} insight={slowest ? fill(w.usage.timeInsight, { kind: slowest.label, seconds: slowest.seconds }) : w.usage.timeInsightNone} description={w.timeToResultDesc}>
+    <ChartCard
+      title={w.timeToResult}
+      insight={
+        slowest ? fill(w.usage.timeInsight, { kind: slowest.label, seconds: slowest.seconds }) : w.usage.timeInsightNone
+      }
+      description={w.timeToResultDesc}
+    >
       <BarChart
         data={timing}
         x="label"

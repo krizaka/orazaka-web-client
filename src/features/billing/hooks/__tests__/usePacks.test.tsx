@@ -4,7 +4,9 @@ import { usePacks } from "@/features/billing/hooks/usePacks";
 import { BillingApi } from "@/services/billing.api";
 import { StudioApi } from "@/services/studio.api";
 
-jest.mock("@/services/billing.api", () => ({ BillingApi: { fetchMyPacks: jest.fn(), subscribeToPack: jest.fn(), removePack: jest.fn() } }));
+jest.mock("@/services/billing.api", () => ({
+  BillingApi: { fetchMyPacks: jest.fn(), subscribeToPack: jest.fn(), removePack: jest.fn() },
+}));
 jest.mock("@/services/studio.api", () => ({ StudioApi: { fetchPacks: jest.fn(), fetchPackCategories: jest.fn() } }));
 
 const pack: PackSummary = {

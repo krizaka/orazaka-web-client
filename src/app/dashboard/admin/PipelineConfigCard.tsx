@@ -27,13 +27,10 @@ export function PipelineConfigCard({ fetchWithAuth }: Readonly<PipelineConfigCar
   const [dragIdx, setDragIdx] = React.useState<number | null>(null);
   const [dirty, setDirty] = React.useState(false);
 
-  const showToast = React.useCallback(
-    (type: "success" | "error", message: string) => {
-      setToast({ type, message });
-      setTimeout(() => setToast(null), 3500);
-    },
-    [],
-  );
+  const showToast = React.useCallback((type: "success" | "error", message: string) => {
+    setToast({ type, message });
+    setTimeout(() => setToast(null), 3500);
+  }, []);
 
   // The server's list, with the operator's unsaved edits laid over it (a draft) — never copied into state by an effect.
   const config = useQuery({
@@ -46,7 +43,8 @@ export function PipelineConfigCard({ fetchWithAuth }: Readonly<PipelineConfigCar
     refetchOnWindowFocus: false,
   });
   const interceptors = draft ?? config.data ?? [];
-  const setInterceptors = (next: InterceptorConfig[] | ((prev: InterceptorConfig[]) => InterceptorConfig[])) => setDraft(typeof next === "function" ? next(interceptors) : next);
+  const setInterceptors = (next: InterceptorConfig[] | ((prev: InterceptorConfig[]) => InterceptorConfig[])) =>
+    setDraft(typeof next === "function" ? next(interceptors) : next);
   const loading = config.isPending;
   const shownToast = toast ?? (config.isError ? { type: "error" as const, message: pl.errorLoading } : null);
 
@@ -70,11 +68,7 @@ export function PipelineConfigCard({ fetchWithAuth }: Readonly<PipelineConfigCar
   const handleDragEnd = () => setDragIdx(null);
 
   const handleToggle = (idx: number) => {
-    setInterceptors((prev) =>
-      prev.map((item, i) =>
-        i === idx ? { ...item, enabled: !item.enabled } : item,
-      ),
-    );
+    setInterceptors((prev) => prev.map((item, i) => (i === idx ? { ...item, enabled: !item.enabled } : item)));
     setDirty(true);
   };
 
@@ -101,10 +95,7 @@ export function PipelineConfigCard({ fetchWithAuth }: Readonly<PipelineConfigCar
     if (!confirm(pl.resetConfirm)) return;
     setSaving(true);
     try {
-      const res = await fetchWithAuth(
-        "/api/v1/pipeline/interceptors/reset",
-        { method: "POST" },
-      );
+      const res = await fetchWithAuth("/api/v1/pipeline/interceptors/reset", { method: "POST" });
       if (!res.ok) throw new Error(pl.errorSaving);
       const defaults: InterceptorConfig[] = await res.json();
       setInterceptors(defaults);
@@ -124,10 +115,7 @@ export function PipelineConfigCard({ fetchWithAuth }: Readonly<PipelineConfigCar
           <span className="h-5 w-56 bg-surface-2 rounded block" />
           <span className="h-3 w-80 bg-surface-2 rounded block" />
           {[1, 2, 3, 4].map((i) => (
-            <span
-              key={i}
-              className="h-14 bg-surface-1 rounded-xl block"
-            />
+            <span key={i} className="h-14 bg-surface-1 rounded-xl block" />
           ))}
         </article>
       </section>
@@ -143,7 +131,7 @@ export function PipelineConfigCard({ fetchWithAuth }: Readonly<PipelineConfigCar
             "absolute top-4 right-4 z-10 flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium shadow-lg animate-in fade-in slide-in-from-top-2 duration-300",
             shownToast.type === "success"
               ? "bg-success/40 text-success border border-success"
-              : "bg-danger/40 text-danger border border-danger"
+              : "bg-danger/40 text-danger border border-danger",
           )}
         >
           {shownToast.type === "success" ? (
@@ -164,9 +152,7 @@ export function PipelineConfigCard({ fetchWithAuth }: Readonly<PipelineConfigCar
             </span>
             {pl.title}
           </h3>
-          <p className="text-xs text-fg-secondary mt-0.5">
-            {pl.subtitle}
-          </p>
+          <p className="text-xs text-fg-secondary mt-0.5">{pl.subtitle}</p>
         </article>
         <nav className="flex items-center gap-2">
           <Button variant="secondary" size="sm" onClick={handleReset} disabled={saving}>

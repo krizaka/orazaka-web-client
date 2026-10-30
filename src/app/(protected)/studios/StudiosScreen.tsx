@@ -10,17 +10,8 @@ import { PackDrawer } from "@/features/billing/components/PackDrawer";
 import { PlanSummary } from "@/features/billing/components/PlanSummary";
 import { usePacks } from "@/features/billing/hooks/usePacks";
 import { usePlan } from "@/features/billing/hooks/usePlan";
-import {
-  buildRows,
-  countViews,
-  filterRows,
-  groupByTrade,
-  tradesOf,
-} from "@/features/studio/catalogue/catalogue";
-import {
-  CatalogueView,
-  type CataloguePack,
-} from "@/features/studio/catalogue/catalogue.types";
+import { buildRows, countViews, filterRows, groupByTrade, tradesOf } from "@/features/studio/catalogue/catalogue";
+import { CatalogueView, type CataloguePack } from "@/features/studio/catalogue/catalogue.types";
 import { RunsInProgress } from "@/features/studio/components/RunsInProgress";
 import { StudioLoadError } from "@/features/studio/components/StudioAsyncState";
 import { StudioCatalogueList } from "@/features/studio/components/StudioCatalogueList";
@@ -42,22 +33,12 @@ export function StudiosScreen() {
   const c = t.catalogue;
   const { studios, isLoading, hasError, reload } = useStudios(null);
   const { installations } = useInstallations();
-  const {
-    packs,
-    ownedKeys,
-    holdingsUnavailable,
-    pendingKey,
-    subscribe,
-    remove,
-  } = usePacks(locale, t.packs.loadError);
+  const { packs, ownedKeys, holdingsUnavailable, pendingKey, subscribe, remove } = usePacks(locale, t.packs.loadError);
   const { plan, isLoading: planLoading } = usePlan();
   const { query, setQuery } = useCatalogueQuery();
   const drawer = useDrawerParam("pack");
 
-  const tradeLabel = useMemo(
-    () => (trade: string) => t.studio.professions[trade] ?? trade,
-    [t],
-  );
+  const tradeLabel = useMemo(() => (trade: string) => t.studio.professions[trade] ?? trade, [t]);
   const cataloguePacks = useMemo<CataloguePack[]>(
     () =>
       packs.map((p) => ({
@@ -74,48 +55,25 @@ export function StudiosScreen() {
     () => buildRows(studios, installations, cataloguePacks, tradeLabel),
     [studios, installations, cataloguePacks, tradeLabel],
   );
-  const all = useMemo(
-    () => countViews(rows, { query: "", trade: null }),
-    [rows],
-  );
+  const all = useMemo(() => countViews(rows, { query: "", trade: null }), [rows]);
   const counts = useMemo(() => countViews(rows, query), [rows, query]);
-  const groups = useMemo(
-    () => groupByTrade(filterRows(rows, query), tradeLabel),
-    [rows, query, tradeLabel],
-  );
+  const groups = useMemo(() => groupByTrade(filterRows(rows, query), tradeLabel), [rows, query, tradeLabel]);
   const studioNames = useMemo(
-    () =>
-      new Map(
-        studios.map((s) => [
-          s.studioKey,
-          { label: s.label, iconKey: s.iconKey },
-        ]),
-      ),
+    () => new Map(studios.map((s) => [s.studioKey, { label: s.label, iconKey: s.iconKey }])),
     [studios],
   );
   const openPack = packs.find((p) => p.packKey === drawer.value) ?? null;
 
-  const filtered =
-    query.query !== "" ||
-    query.trade !== null ||
-    query.view !== CatalogueView.All;
+  const filtered = query.query !== "" || query.trade !== null || query.view !== CatalogueView.All;
 
   return (
     <div className="flex flex-col gap-4">
       <header className="flex flex-col gap-1">
-        <h1 className="font-display text-2xl font-bold tracking-[-0.02em] text-fg">
-          {c.title}
-        </h1>
+        <h1 className="font-display text-2xl font-bold tracking-[-0.02em] text-fg">{c.title}</h1>
         <p className="text-sm text-fg-secondary">{c.subtitle}</p>
       </header>
 
-      <PlanSummary
-        plan={plan}
-        loading={planLoading}
-        ready={all.ready}
-        more={all.more}
-        href={PLANS_HREF}
-      />
+      <PlanSummary plan={plan} loading={planLoading} ready={all.ready} more={all.more} href={PLANS_HREF} />
       <RunsInProgress />
       <StudioCatalogueToolbar
         query={query}
@@ -126,40 +84,23 @@ export function StudiosScreen() {
       />
 
       {isLoading && (
-        <List
-          aria-label={c.title}
-          loading
-          items={[]}
-          getId={() => ""}
-          row={() => ({ title: "" })}
-          density="compact"
-        />
+        <List aria-label={c.title} loading items={[]} getId={() => ""} row={() => ({ title: "" })} density="compact" />
       )}
       {!isLoading && hasError && <StudioLoadError onRetry={reload} />}
       {!isLoading && !hasError && groups.length > 0 && (
-        <StudioCatalogueList
-          groups={groups}
-          onGetPack={drawer.open}
-          plansHref={PLANS_HREF}
-        />
+        <StudioCatalogueList groups={groups} onGetPack={drawer.open} plansHref={PLANS_HREF} />
       )}
       {!isLoading && !hasError && groups.length === 0 && (
         <EmptyState
           role="status"
-          title={
-            query.view === CatalogueView.More && !query.query && !query.trade
-              ? c.emptyMore
-              : c.emptyTitle
-          }
+          title={query.view === CatalogueView.More && !query.query && !query.trade ? c.emptyMore : c.emptyTitle}
           description={filtered ? c.emptyBody : undefined}
           action={
             filtered ? (
               <Button
                 variant="secondary"
                 size="sm"
-                onClick={() =>
-                  setQuery({ query: "", trade: null, view: CatalogueView.All })
-                }
+                onClick={() => setQuery({ query: "", trade: null, view: CatalogueView.All })}
               >
                 {c.emptyReset}
               </Button>

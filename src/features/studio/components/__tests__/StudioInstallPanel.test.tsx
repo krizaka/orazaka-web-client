@@ -68,7 +68,9 @@ describe("StudioInstallPanel — kind (ADR-061)", () => {
   });
 
   it("asks nothing of a VERTICAL Studio without settings: its first run installs it, so there is no Install step", () => {
-    const { container } = render(<StudioInstallPanel studio={studio("VERTICAL")} installation={undefined} onChanged={jest.fn()} />);
+    const { container } = render(
+      <StudioInstallPanel studio={studio("VERTICAL")} installation={undefined} onChanged={jest.fn()} />,
+    );
 
     expect(screen.queryByRole("button")).not.toBeInTheDocument();
     expect(container).toBeEmptyDOMElement();

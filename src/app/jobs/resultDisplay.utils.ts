@@ -36,8 +36,7 @@ export function isAudio(format: string | undefined, url: string): boolean {
       (url.startsWith("data:audio/") ||
         url.endsWith(".mp3") ||
         url.endsWith(".wav") ||
-        (url.includes("/api/v1/assets/") &&
-          (url.endsWith(".mp3") || url.endsWith(".wav")))))
+        (url.includes("/api/v1/assets/") && (url.endsWith(".mp3") || url.endsWith(".wav")))))
   );
 }
 
@@ -52,9 +51,6 @@ export function isImage(format: string | undefined, url: string): boolean {
       url.endsWith(".png") ||
       url.endsWith(".jpg") ||
       url.endsWith(".jpeg") ||
-      (url.includes("/api/v1/assets/") &&
-        (url.endsWith(".png") ||
-          url.endsWith(".jpg") ||
-          url.endsWith(".jpeg"))))
+      (url.includes("/api/v1/assets/") && (url.endsWith(".png") || url.endsWith(".jpg") || url.endsWith(".jpeg"))))
   );
 }

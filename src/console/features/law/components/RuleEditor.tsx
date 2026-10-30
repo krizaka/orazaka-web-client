@@ -8,7 +8,15 @@ import type { RuleProposal } from "@/console/services/law.schemas";
 import { RULE_METHODS, RULE_SEVERITIES } from "@/console/features/law/utils/rule-values";
 import { asRefusal } from "@/console/features/law/hooks/useLawLoad";
 import { useLawCopy } from "@/console/features/law/hooks/useLawCopy";
-import { EDITOR_CHECK_TYPES, draftOf, hasText, isHttpsUrl, passedVet, ruleOf, type Notice } from "@/console/features/law/utils/law";
+import {
+  EDITOR_CHECK_TYPES,
+  draftOf,
+  hasText,
+  isHttpsUrl,
+  passedVet,
+  ruleOf,
+  type Notice,
+} from "@/console/features/law/utils/law";
 
 const required = z.string().refine(hasText, "law.required");
 /** One of the known values: a raw one the model wrote is never sent back from the editor. */
@@ -49,7 +57,10 @@ const ruleForm = createKrizakaForm({
 });
 
 /** Edits a rule: saving is `PUT /proposals/{id}`, a new revision vetted again; the answer says how the vet judged it. */
-export function RuleEditor({ proposal, onDone }: Readonly<{ proposal: RuleProposal; onDone: (notice: Notice) => void }>) {
+export function RuleEditor({
+  proposal,
+  onDone,
+}: Readonly<{ proposal: RuleProposal; onDone: (notice: Notice) => void }>) {
   const { t, refusal } = useLawCopy();
   const e = t.editor;
   const words: Record<string, string> = { "law.required": e.required, "law.https": e.https };
@@ -61,23 +72,37 @@ export function RuleEditor({ proposal, onDone }: Readonly<{ proposal: RulePropos
         const revised = await LawAdminApi.revise(proposal.id, ruleOf(proposal.rule, draft));
         const passed = passedVet(revised);
         const values = { revision: revised.proposalRevision, ruleId: revised.ruleId };
-        onDone({ tone: passed ? "success" : "warning", text: fill(passed ? t.actions.revisedPassed : t.actions.revisedFailed, values) });
+        onDone({
+          tone: passed ? "success" : "warning",
+          text: fill(passed ? t.actions.revisedPassed : t.actions.revisedFailed, values),
+        });
       } catch (error) {
         onDone({ tone: "danger", text: refusal(asRefusal(error)) });
       }
     },
   });
-  const options = <K extends string>(keys: readonly K[], names: Record<K, string>) => keys.map((value) => ({ value, label: names[value] }));
+  const options = <K extends string>(keys: readonly K[], names: Record<K, string>) =>
+    keys.map((value) => ({ value, label: names[value] }));
   return (
     <form.Form aria-label={fill(t.actions.editTitle, { ruleId: proposal.ruleId })} className="flex flex-col gap-3">
       <form.TextField name="title" label={e.title} autoComplete="off" />
       <section className="grid gap-3 sm:grid-cols-2">
-        <form.Select name="severity" label={e.severity} options={options(RULE_SEVERITIES, t.severity)} placeholder={e.choose} />
+        <form.Select
+          name="severity"
+          label={e.severity}
+          options={options(RULE_SEVERITIES, t.severity)}
+          placeholder={e.choose}
+        />
         <form.Select name="method" label={e.method} options={options(RULE_METHODS, t.method)} placeholder={e.choose} />
       </section>
       <form.TextField name="subject" label={e.subject} autoComplete="off" />
       <section className="grid gap-3 sm:grid-cols-2">
-        <form.Select name="checkType" label={e.checkType} options={options(EDITOR_CHECK_TYPES, t.checkType)} placeholder={e.choose} />
+        <form.Select
+          name="checkType"
+          label={e.checkType}
+          options={options(EDITOR_CHECK_TYPES, t.checkType)}
+          placeholder={e.choose}
+        />
         <form.TextField name="pattern" label={e.pattern} autoComplete="off" />
       </section>
       <form.TextArea name="question" label={e.question} rows={2} />

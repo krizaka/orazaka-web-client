@@ -93,8 +93,7 @@ export function BlueprintEditor({ studioKey, featureKeys, onSaved }: Readonly<Bl
       `Brouillon ${version} enregistré et validé.`,
     );
 
-  const publish = () =>
-    act(() => StudioAdminApi.publish(studioKey, version), `Version ${version} publiée.`);
+  const publish = () => act(() => StudioAdminApi.publish(studioKey, version), `Version ${version} publiée.`);
 
   const canAct = version.trim() !== "" && !isBusy;
 
@@ -139,19 +138,34 @@ export function BlueprintEditor({ studioKey, featureKeys, onSaved }: Readonly<Bl
         </summary>
         <ul className="mt-2 flex flex-wrap gap-1.5">
           {featureKeys.map((key) => (
-            <li
-              key={key}
-              className="rounded bg-surface-2 px-2 py-0.5 font-mono text-[11px] text-fg-secondary"
-            >
+            <li key={key} className="rounded bg-surface-2 px-2 py-0.5 font-mono text-[11px] text-fg-secondary">
               {key}
             </li>
           ))}
         </ul>
       </details>
 
-      <JsonField label="Définition (steps + outputs)" value={definition} onChange={setDefinition} disabled={isBusy} rows={18} />
-      <JsonField label="Schéma des entrées (formulaire d'exécution)" value={inputSchema} onChange={setInputSchema} disabled={isBusy} rows={8} />
-      <JsonField label="Schéma de configuration (dialogue d'installation)" value={configSchema} onChange={setConfigSchema} disabled={isBusy} rows={6} />
+      <JsonField
+        label="Définition (steps + outputs)"
+        value={definition}
+        onChange={setDefinition}
+        disabled={isBusy}
+        rows={18}
+      />
+      <JsonField
+        label="Schéma des entrées (formulaire d'exécution)"
+        value={inputSchema}
+        onChange={setInputSchema}
+        disabled={isBusy}
+        rows={8}
+      />
+      <JsonField
+        label="Schéma de configuration (dialogue d'installation)"
+        value={configSchema}
+        onChange={setConfigSchema}
+        disabled={isBusy}
+        rows={6}
+      />
 
       {error && <p className="whitespace-pre-wrap text-sm text-fg-danger">{error}</p>}
       {notice && <p className="text-sm text-fg-success">{notice}</p>}

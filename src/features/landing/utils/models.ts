@@ -6,7 +6,18 @@
  */
 import data from "./models.generated.json";
 
-export type Capability = "chat" | "reasoning" | "vision" | "code" | "embeddings" | "image" | "video" | "speech-to-text" | "text-to-speech" | "music" | "video-to-audio";
+export type Capability =
+  | "chat"
+  | "reasoning"
+  | "vision"
+  | "code"
+  | "embeddings"
+  | "image"
+  | "video"
+  | "speech-to-text"
+  | "text-to-speech"
+  | "music"
+  | "video-to-audio";
 export type RunsOn = "local" | "provider";
 export type ModelStatus = "default" | "available" | "planned";
 
@@ -31,8 +42,21 @@ export interface ModelEntry {
 export const MODELS = data.models as ModelEntry[];
 
 /** The capabilities that appear in the registry, in the order the filters show them. */
-const CAPABILITY_ORDER: Capability[] = ["chat", "reasoning", "vision", "code", "embeddings", "image", "video", "speech-to-text", "text-to-speech", "music", "video-to-audio"];
-export const capabilitiesOf = (models: readonly ModelEntry[]): Capability[] => CAPABILITY_ORDER.filter((c) => models.some((m) => m.capabilities.includes(c)));
+const CAPABILITY_ORDER: Capability[] = [
+  "chat",
+  "reasoning",
+  "vision",
+  "code",
+  "embeddings",
+  "image",
+  "video",
+  "speech-to-text",
+  "text-to-speech",
+  "music",
+  "video-to-audio",
+];
+export const capabilitiesOf = (models: readonly ModelEntry[]): Capability[] =>
+  CAPABILITY_ORDER.filter((c) => models.some((m) => m.capabilities.includes(c)));
 
 export interface Filters {
   capabilities: readonly Capability[];
@@ -40,7 +64,11 @@ export interface Filters {
 }
 
 export function filterModels(models: readonly ModelEntry[], { capabilities, runsOn }: Filters): ModelEntry[] {
-  return models.filter((m) => (capabilities.length === 0 || capabilities.some((c) => m.capabilities.includes(c))) && (runsOn === null || m.runsOn === runsOn));
+  return models.filter(
+    (m) =>
+      (capabilities.length === 0 || capabilities.some((c) => m.capabilities.includes(c))) &&
+      (runsOn === null || m.runsOn === runsOn),
+  );
 }
 
 /** The address' filters: `?cap=chat,code&where=local`. Unknown values are ignored, never trusted. */
@@ -60,7 +88,8 @@ export function filtersHref(filters: Filters): string {
 }
 
 /** How many tokens, grouped for reading: 32768 → "32,768" (the locale's own separator). */
-export const formatCount = (n: number, locale: string) => new Intl.NumberFormat(locale === "fr" ? "fr-CA" : "en-CA").format(n);
+export const formatCount = (n: number, locale: string) =>
+  new Intl.NumberFormat(locale === "fr" ? "fr-CA" : "en-CA").format(n);
 
 /** The licences that let anyone use the weights for anything (a score, never a claim about law). */
 const PERMISSIVE = new Set(["Apache-2.0", "MIT"]);
@@ -73,10 +102,15 @@ const PERMISSIVE = new Set(["Apache-2.0", "MIT"]);
 export function featured(models: readonly ModelEntry[] = MODELS, count = 6): ModelEntry[] {
   const score = (m: ModelEntry) => (m.status === "default" ? 2 : 0) + (PERMISSIVE.has(m.licence.name) ? 1 : 0);
   const best = (a: ModelEntry, b: ModelEntry) =>
-    score(b) - score(a) || a.family.length - b.family.length || (b.contextWindow ?? 0) - (a.contextWindow ?? 0) || a.id.localeCompare(b.id);
+    score(b) - score(a) ||
+    a.family.length - b.family.length ||
+    (b.contextWindow ?? 0) - (a.contextWindow ?? 0) ||
+    a.id.localeCompare(b.id);
   const picked: ModelEntry[] = [];
   for (const cap of ["chat", "vision", "code", "image", "video", "speech-to-text", "text-to-speech"] as Capability[]) {
-    const candidate = models.filter((m) => m.runsOn === "local" && m.status !== "planned" && m.capabilities[0] === cap && !picked.includes(m)).sort(best)[0];
+    const candidate = models
+      .filter((m) => m.runsOn === "local" && m.status !== "planned" && m.capabilities[0] === cap && !picked.includes(m))
+      .sort(best)[0];
     if (candidate) picked.push(candidate);
     if (picked.length === count) break;
   }
@@ -84,4 +118,5 @@ export function featured(models: readonly ModelEntry[] = MODELS, count = 6): Mod
 }
 
 /** The models served by a provider: the home page says how many, never lists them as if they were the product. */
-export const providerCount = (models: readonly ModelEntry[] = MODELS) => models.filter((m) => m.runsOn === "provider").length;
+export const providerCount = (models: readonly ModelEntry[] = MODELS) =>
+  models.filter((m) => m.runsOn === "provider").length;

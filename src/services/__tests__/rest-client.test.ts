@@ -52,7 +52,9 @@ describe("restRequest errors", () => {
   });
 
   it("keeps the status and the parsed body on the error, and reads the Studio service's `message`", async () => {
-    mockFetch.mockResolvedValueOnce(failing(451, { status: "consent_required", message: "consent needed", consentVersion: "1.0" }));
+    mockFetch.mockResolvedValueOnce(
+      failing(451, { status: "consent_required", message: "consent needed", consentVersion: "1.0" }),
+    );
 
     const failure = await restRequest("/api/v1/studios/x/installations").catch((error: unknown) => error);
 

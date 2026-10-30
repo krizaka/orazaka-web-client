@@ -11,11 +11,7 @@
 
 import * as React from "react";
 import { useSettings } from "@/core/hooks/useSettings";
-import {
-  type Locale,
-  type TranslationDictionary,
-  translations,
-} from "./translations";
+import { type Locale, type TranslationDictionary, translations } from "./translations";
 export type { Locale, TranslationDictionary };
 
 /**
@@ -33,9 +29,7 @@ interface LocaleContextType {
 /**
  * React Context storing current UI language preferences.
  */
-const LocaleContext = React.createContext<LocaleContextType | undefined>(
-  undefined,
-);
+const LocaleContext = React.createContext<LocaleContextType | undefined>(undefined);
 
 /**
  * LocaleProvider component handling internationalization context wrapper.
@@ -45,9 +39,7 @@ const LocaleContext = React.createContext<LocaleContextType | undefined>(
  * @param props.children - Child nodes to render inside language context.
  * @returns The context Provider element.
  */
-export function LocaleProvider({
-  children,
-}: Readonly<{ children: React.ReactNode }>) {
+export function LocaleProvider({ children }: Readonly<{ children: React.ReactNode }>) {
   const { settings, updateSettings } = useSettings();
   const [locale, setLocaleState] = React.useState<Locale>("en");
 
@@ -98,11 +90,7 @@ export function LocaleProvider({
     [locale, setLocale],
   );
 
-  return (
-    <LocaleContext.Provider value={contextValue}>
-      {children}
-    </LocaleContext.Provider>
-  );
+  return <LocaleContext.Provider value={contextValue}>{children}</LocaleContext.Provider>;
 }
 
 /**

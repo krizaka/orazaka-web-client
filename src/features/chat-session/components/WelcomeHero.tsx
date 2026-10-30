@@ -21,7 +21,6 @@ interface WelcomeHeroProps {
  * click. No "AI" cliché, reduced-motion safe (entrance only).
  */
 export function WelcomeHero({ t, onPrompt }: Readonly<WelcomeHeroProps>) {
-
   const cards: { label: string; icon: IconName }[] = [
     { label: t.chat.suggestionImage, icon: "image" },
     { label: t.chat.suggestionCode, icon: "code" },
@@ -39,9 +38,7 @@ export function WelcomeHero({ t, onPrompt }: Readonly<WelcomeHeroProps>) {
       <h2 className="text-xl font-bold tracking-tight text-fg">
         <Greeting suffix="." />
       </h2>
-      <p className="mt-2 text-sm text-fg-muted">
-        {t.chat.startConversationDesc}
-      </p>
+      <p className="mt-2 text-sm text-fg-muted">{t.chat.startConversationDesc}</p>
 
       {/* Actionable prompt cards */}
       <div className="mt-8 grid w-full grid-cols-1 gap-3 stagger-children sm:grid-cols-3">

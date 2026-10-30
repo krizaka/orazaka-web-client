@@ -54,7 +54,8 @@ function RunOutputRow({ artefact, index, wide }: Readonly<RunOutputRowProps>) {
   const [copied, setCopied] = useState(false);
   // The run row outlives its file (storage can be reset by a deploy): a media that 404s is said so.
   const [gone, setGone] = useState(false);
-  const media = (artefact.type === "IMAGE" || artefact.type === "VIDEO" || artefact.type === "AUDIO") && artefact.value !== "";
+  const media =
+    (artefact.type === "IMAGE" || artefact.type === "VIDEO" || artefact.type === "AUDIO") && artefact.value !== "";
   const report = artefact.type === "TEXT" ? asReport(artefact.value) : null;
 
   const copy = async () => {
@@ -103,7 +104,11 @@ function RunOutputRow({ artefact, index, wide }: Readonly<RunOutputRowProps>) {
  * The value is the public URL the executor published, so it is used as-is; a root-relative
  * path is resolved against the current origin the same way the jobs dashboard does it.
  */
-function ArtefactMedia({ artefact, gone, onGone }: Readonly<RunOutputRowProps & { gone: boolean; onGone: () => void }>) {
+function ArtefactMedia({
+  artefact,
+  gone,
+  onGone,
+}: Readonly<RunOutputRowProps & { gone: boolean; onGone: () => void }>) {
   const { t, locale } = useTranslation();
   const image = useRef<HTMLImageElement>(null);
 
@@ -135,22 +140,14 @@ function ArtefactMedia({ artefact, gone, onGone }: Readonly<RunOutputRowProps & 
 
   if (artefact.type === "VIDEO") {
     return (
-      <video
-        src={source}
-        controls
-        playsInline
-        onError={onGone}
-        className="aspect-video w-full bg-media object-contain"
-      >
+      <video src={source} controls playsInline onError={onGone} className="aspect-video w-full bg-media object-contain">
         <track kind="captions" />
       </video>
     );
   }
 
   if (artefact.type === "AUDIO") {
-    return (
-      <AudioWaveform src={source} label={artefactLabel(artefact, locale)} className="px-4 pt-4" />
-    );
+    return <AudioWaveform src={source} label={artefactLabel(artefact, locale)} className="px-4 pt-4" />;
   }
 
   return (

@@ -9,5 +9,7 @@ export const generateStaticParams = () => CLIP_IDS.flatMap((clip) => LANGS.map((
 export async function GET(_request: Request, { params }: { params: Promise<{ clip: string; lang: string }> }) {
   const { clip, lang } = await params;
   if (!isClipId(clip) || !isLang(lang)) return new Response("Not found", { status: 404 });
-  return new Response(captionsVtt(clip, clips[lang][clip].cues), { headers: { "Content-Type": "text/vtt; charset=utf-8", "Cache-Control": "public, max-age=3600" } });
+  return new Response(captionsVtt(clip, clips[lang][clip].cues), {
+    headers: { "Content-Type": "text/vtt; charset=utf-8", "Cache-Control": "public, max-age=3600" },
+  });
 }

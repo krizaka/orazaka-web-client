@@ -26,7 +26,10 @@ export async function loadPublicPrices(): Promise<PublicPrice[]> {
   if (!credential) return [];
   const edge = process.env.ROUTER_URL || process.env.GATEWAY_URL || "http://localhost:8088";
   try {
-    const res = await fetch(`${edge}/api/v1/billing/prices`, { headers: { Authorization: `Bearer ${credential}` }, next: { revalidate: 300 } });
+    const res = await fetch(`${edge}/api/v1/billing/prices`, {
+      headers: { Authorization: `Bearer ${credential}` },
+      next: { revalidate: 300 },
+    });
     if (!res.ok) return [];
     return z.array(PublicPriceSchema).parse(await res.json());
   } catch {

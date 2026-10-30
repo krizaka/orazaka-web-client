@@ -27,8 +27,7 @@ export function useJobs(page: number, size: number, enabled = true) {
     enabled,
   });
 
-  const refresh = () =>
-    queryClient.invalidateQueries({ queryKey: [QUERY_KEY_PREFIX] });
+  const refresh = () => queryClient.invalidateQueries({ queryKey: [QUERY_KEY_PREFIX] });
 
   return {
     jobs: query.data?.content ?? [],

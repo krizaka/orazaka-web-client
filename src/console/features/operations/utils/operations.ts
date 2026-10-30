@@ -4,7 +4,14 @@ import type { Health } from "@/console/services/platform.schemas";
 export type QueueDepths = Record<JobStatus, number>;
 
 /** Every state the queue shows, in reading order. A `Record<JobStatus, …>` forces a new contract state to be added here. */
-export const QUEUE_STATES = ["PENDING", "PROCESSING", "COMPLETED", "FAILED", "CANCELLED", "DELETED"] as const satisfies readonly JobStatus[];
+export const QUEUE_STATES = [
+  "PENDING",
+  "PROCESSING",
+  "COMPLETED",
+  "FAILED",
+  "CANCELLED",
+  "DELETED",
+] as const satisfies readonly JobStatus[];
 
 /** How many jobs wait, run, ended and failed: the queue's depth as an operator reads it. */
 export function queueDepths(jobs: readonly JobRecord[]): QueueDepths {
@@ -43,9 +50,29 @@ export interface DependencyCheck {
  */
 export function dependencyChecks(health: Health): DependencyCheck[] {
   return [
-    { id: "database", ok: health.pgVectorConnected, tone: health.pgVectorConnected ? "success" : "danger", detail: health.pgVectorConnected ? "connected" : "unreachable" },
-    { id: "vector", ok: health.pgVectorExtensionInstalled, tone: health.pgVectorExtensionInstalled ? "success" : "danger", detail: health.pgVectorExtensionInstalled ? "pgvector installed" : "pgvector missing" },
-    { id: "ollama", ok: health.ollamaConnected, tone: health.ollamaConnected ? "success" : "danger", detail: health.ollamaConnected ? `${health.ollamaModels.length} models installed` : "unreachable" },
-    { id: "provider", ok: health.defaultProvider.toLowerCase() === "ollama", tone: health.defaultProvider.toLowerCase() === "ollama" ? "success" : "warning", detail: health.defaultProvider },
+    {
+      id: "database",
+      ok: health.pgVectorConnected,
+      tone: health.pgVectorConnected ? "success" : "danger",
+      detail: health.pgVectorConnected ? "connected" : "unreachable",
+    },
+    {
+      id: "vector",
+      ok: health.pgVectorExtensionInstalled,
+      tone: health.pgVectorExtensionInstalled ? "success" : "danger",
+      detail: health.pgVectorExtensionInstalled ? "pgvector installed" : "pgvector missing",
+    },
+    {
+      id: "ollama",
+      ok: health.ollamaConnected,
+      tone: health.ollamaConnected ? "success" : "danger",
+      detail: health.ollamaConnected ? `${health.ollamaModels.length} models installed` : "unreachable",
+    },
+    {
+      id: "provider",
+      ok: health.defaultProvider.toLowerCase() === "ollama",
+      tone: health.defaultProvider.toLowerCase() === "ollama" ? "success" : "warning",
+      detail: health.defaultProvider,
+    },
   ];
 }

@@ -1,11 +1,6 @@
 import "@testing-library/jest-dom";
 import { render, screen } from "@testing-library/react";
-import {
-  ProgressTimeline,
-  StageLabels,
-  StatusPill,
-  LiveElapsed,
-} from "@/app/jobs/JobModalParts";
+import { ProgressTimeline, StageLabels, StatusPill, LiveElapsed } from "@/app/jobs/JobModalParts";
 
 jest.mock("@/core/context/LocaleContext", () => ({
   useTranslation: () => ({
@@ -86,23 +81,12 @@ describe("StageLabels", () => {
 
 describe("LiveElapsed", () => {
   it("renders formatted elapsed time", () => {
-    render(
-      <LiveElapsed
-        createdAt="2026-01-01T00:00:00.000Z"
-        updatedAt="2026-01-01T00:00:03.500Z"
-        isLive={false}
-      />,
-    );
+    render(<LiveElapsed createdAt="2026-01-01T00:00:00.000Z" updatedAt="2026-01-01T00:00:03.500Z" isLive={false} />);
     expect(screen.getByText("3.5s")).toBeInTheDocument();
   });
 
   it("renders pulse indicator when live", () => {
-    const { container } = render(
-      <LiveElapsed
-        createdAt="2026-01-01T00:00:00.000Z"
-        isLive={true}
-      />,
-    );
+    const { container } = render(<LiveElapsed createdAt="2026-01-01T00:00:00.000Z" isLive={true} />);
     expect(container.querySelector(".animate-pulse")).toBeInTheDocument();
   });
 });

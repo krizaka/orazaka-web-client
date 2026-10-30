@@ -71,9 +71,25 @@ function ForgotPasswordPageContent() {
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
           <Field.Root>
             <Field.Label htmlFor="forgot-email">{t.auth.emailLabel}</Field.Label>
-            <Input id="forgot-email" type="email" required value={email} onChange={(e) => setEmail(e.target.value)} placeholder="you@orazaka.com" autoComplete="email" />
+            <Input
+              id="forgot-email"
+              type="email"
+              required
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="you@orazaka.com"
+              autoComplete="email"
+            />
           </Field.Root>
-          <Button id="btn-forgot-submit" type="submit" variant="primary" size="lg" loading={isSubmitting} disabled={!email.trim()} className="w-full">
+          <Button
+            id="btn-forgot-submit"
+            type="submit"
+            variant="primary"
+            size="lg"
+            loading={isSubmitting}
+            disabled={!email.trim()}
+            className="w-full"
+          >
             {t.auth.forgotSubmit}
           </Button>
         </form>

@@ -34,7 +34,12 @@ export function consoleResponse(request: NextRequest, rewritePath: string): Next
   const hasSession = request.cookies.has(SESSION_COOKIE) || request.cookies.has(`__Secure-${SESSION_COOKIE}`);
   const decision = gate(pathname, hasSession, readAuthFlags());
   if (decision === "not-found") {
-    return noindex(NextResponse.json({ error: "Orazaka Operations is in development — sign-in is closed on this site" }, { status: 404 }));
+    return noindex(
+      NextResponse.json(
+        { error: "Orazaka Operations is in development — sign-in is closed on this site" },
+        { status: 404 },
+      ),
+    );
   }
   if (decision === "login") {
     // The public address of the console, not the platform's internal one.
@@ -46,4 +51,3 @@ export function consoleResponse(request: NextRequest, rewritePath: string): Next
   }
   return rewrite();
 }
-

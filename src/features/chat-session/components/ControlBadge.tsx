@@ -5,7 +5,10 @@ import { useTranslation } from "@/core/context/LocaleContext";
 import { controlLabel } from "@/core/utils/control";
 
 /** « En vérification » while the engine checks the answer, then its verdict; a degraded verification says so. */
-export const ControlBadge: React.FC<Readonly<{ message: ChatMessageType; streaming: boolean }>> = ({ message, streaming }) => {
+export const ControlBadge: React.FC<Readonly<{ message: ChatMessageType; streaming: boolean }>> = ({
+  message,
+  streaming,
+}) => {
   const { t } = useTranslation();
   const label = controlLabel(message.control, streaming);
   if (!label) return null;

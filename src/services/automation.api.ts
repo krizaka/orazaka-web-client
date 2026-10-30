@@ -19,8 +19,7 @@ export interface NewAutomation {
 
 /** A trigger to add: a signed webhook, or a daily slot in a time zone. */
 export type NewTrigger =
-  | { kind: "webhook" }
-  | { kind: "schedule"; time: string; zone: string; days: string[]; catchUp: "once" | "skip" };
+  { kind: "webhook" } | { kind: "schedule"; time: string; zone: string; days: string[]; catchUp: "once" | "skip" };
 
 const path = (...parts: string[]) => [BASE, ...parts.map(encodeURIComponent)].join("/");
 

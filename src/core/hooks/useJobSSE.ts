@@ -28,11 +28,7 @@ interface JobSSECallbacks {
  * @param hasActiveJobs Whether there are active jobs to monitor.
  * @param callbacks Event handlers for job updates, progress, and state changes.
  */
-export function useJobSSE(
-  isAuthenticated: boolean,
-  hasActiveJobs: boolean,
-  callbacks: JobSSECallbacks,
-) {
+export function useJobSSE(isAuthenticated: boolean, hasActiveJobs: boolean, callbacks: JobSSECallbacks) {
   const reconnectTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const reconnectDelayRef = useRef<number>(1000);
   const eventSourceRef = useRef<EventSource | null>(null);
@@ -42,63 +38,49 @@ export function useJobSSE(
     callbacksRef.current = callbacks;
   }, [callbacks]);
 
-  const handleJobStatus = useCallback(
-    (event: MessageEvent) => {
-      try {
-        const updatedJob: Job = JSON.parse(event.data);
-        callbacksRef.current.onJobUpdate(updatedJob);
+  const handleJobStatus = useCallback((event: MessageEvent) => {
+    try {
+      const updatedJob: Job = JSON.parse(event.data);
+      callbacksRef.current.onJobUpdate(updatedJob);
 
-        if (updatedJob.status === "PROCESSING") {
-          callbacksRef.current.onJobEvent(updatedJob, "started");
-        } else if (updatedJob.status === "COMPLETED") {
-          callbacksRef.current.onJobProgress(updatedJob.id, 100);
-          callbacksRef.current.onJobEvent(updatedJob, "completed");
-        } else if (updatedJob.status === "FAILED") {
-          callbacksRef.current.onJobProgress(updatedJob.id, 0);
-          callbacksRef.current.onJobEvent(updatedJob, "failed");
-        } else if (updatedJob.status === JOB_STATUS.CANCELLED) {
-          callbacksRef.current.onJobProgress(updatedJob.id, 0);
-          callbacksRef.current.onJobEvent(updatedJob, "cancelled");
-        }
+      if (updatedJob.status === "PROCESSING") {
+        callbacksRef.current.onJobEvent(updatedJob, "started");
+      } else if (updatedJob.status === "COMPLETED") {
+        callbacksRef.current.onJobProgress(updatedJob.id, 100);
+        callbacksRef.current.onJobEvent(updatedJob, "completed");
+      } else if (updatedJob.status === "FAILED") {
+        callbacksRef.current.onJobProgress(updatedJob.id, 0);
+        callbacksRef.current.onJobEvent(updatedJob, "failed");
+      } else if (updatedJob.status === JOB_STATUS.CANCELLED) {
+        callbacksRef.current.onJobProgress(updatedJob.id, 0);
+        callbacksRef.current.onJobEvent(updatedJob, "cancelled");
+      }
 
-        if (["COMPLETED", "FAILED", "CANCELLED", "DELETED"].includes(updatedJob.status)) {
-          const otherActive = callbacksRef.current
-            .getJobs()
-            .filter(
-              (j) =>
-                j.id !== updatedJob.id &&
-                (j.status === "PENDING" || j.status === "PROCESSING"),
-            );
-          if (otherActive.length === 0) {
-            console.log(
-              "[useJobSSE] All active tasks completed. Closing SSE connection.",
-            );
-            if (eventSourceRef.current) {
-              eventSourceRef.current.close();
-              eventSourceRef.current = null;
-            }
+      if (["COMPLETED", "FAILED", "CANCELLED", "DELETED"].includes(updatedJob.status)) {
+        const otherActive = callbacksRef.current
+          .getJobs()
+          .filter((j) => j.id !== updatedJob.id && (j.status === "PENDING" || j.status === "PROCESSING"));
+        if (otherActive.length === 0) {
+          console.log("[useJobSSE] All active tasks completed. Closing SSE connection.");
+          if (eventSourceRef.current) {
+            eventSourceRef.current.close();
+            eventSourceRef.current = null;
           }
         }
-      } catch (err) {
-        console.error("Failed to parse job SSE event data", err);
       }
-    },
-    [],
-  );
+    } catch (err) {
+      console.error("Failed to parse job SSE event data", err);
+    }
+  }, []);
 
   const handleJobProgress = useCallback((event: MessageEvent) => {
     try {
-      const progressPayload: { jobId: string; progress: number } & JobProgressDetail =
-        JSON.parse(event.data);
-      callbacksRef.current.onJobProgress(
-        progressPayload.jobId,
-        progressPayload.progress,
-        {
-          phase: progressPayload.phase,
-          step: progressPayload.step,
-          steps: progressPayload.steps,
-        },
-      );
+      const progressPayload: { jobId: string; progress: number } & JobProgressDetail = JSON.parse(event.data);
+      callbacksRef.current.onJobProgress(progressPayload.jobId, progressPayload.progress, {
+        phase: progressPayload.phase,
+        step: progressPayload.step,
+        steps: progressPayload.steps,
+      });
     } catch (err) {
       console.error("Failed to parse job progress SSE event data", err);
     }
@@ -141,10 +123,7 @@ export function useJobSSE(
         const nextDelay = Math.min(reconnectDelayRef.current * 2, 30000);
         reconnectDelayRef.current = nextDelay;
 
-        reconnectTimeoutRef.current = setTimeout(
-          onReconnect,
-          reconnectDelayRef.current,
-        );
+        reconnectTimeoutRef.current = setTimeout(onReconnect, reconnectDelayRef.current);
       };
     }
 

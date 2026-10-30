@@ -65,9 +65,7 @@ describe("MediaApi", () => {
       mockedGetSession.mockResolvedValueOnce(null);
       mockFetch.mockResolvedValueOnce({ ok: false, status: 500 });
 
-      await expect(MediaApi.searchRag("query")).rejects.toThrow(
-        "RAG query failed with status 500",
-      );
+      await expect(MediaApi.searchRag("query")).rejects.toThrow("RAG query failed with status 500");
     });
   });
 
@@ -102,9 +100,7 @@ describe("MediaApi", () => {
         statusText: "Bad Request",
       });
 
-      await expect(MediaApi.analyzeVideo("a", "m")).rejects.toThrow(
-        "Analysis failed: Bad Request",
-      );
+      await expect(MediaApi.analyzeVideo("a", "m")).rejects.toThrow("Analysis failed: Bad Request");
     });
   });
 
@@ -135,9 +131,7 @@ describe("MediaApi", () => {
       mockFetch.mockResolvedValueOnce({ ok: false, status: 413 });
 
       const file = new File(["x".repeat(200)], "big.mp4");
-      await expect(MediaApi.uploadMedia(file)).rejects.toThrow(
-        "Media upload failed with status 413",
-      );
+      await expect(MediaApi.uploadMedia(file)).rejects.toThrow("Media upload failed with status 413");
     });
   });
 });

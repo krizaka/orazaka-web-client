@@ -17,7 +17,14 @@ test("it checks what the criterion asks through the shared @krizaka/page-audit: 
   assert.match(crawl, /from "@krizaka\/page-audit"/);
   assert.match(crawl, /auditRoutes\(/);
   // The checks the audit measures (scroll, boxes past the edge and wider than their own) are always on; these are the ones this crawl turns on.
-  for (const needle of ['landmarks: "public"', "boxes: true", "pictures: true", "emptyControls: true", "hardColors: true", "ignoreConsole: IGNORED_CONSOLE"]) {
+  for (const needle of [
+    'landmarks: "public"',
+    "boxes: true",
+    "pictures: true",
+    "emptyControls: true",
+    "hardColors: true",
+    "ignoreConsole: IGNORED_CONSOLE",
+  ]) {
     assert.ok(crawl.includes(needle), `missing: ${needle}`);
   }
   assert.match(crawl, /chrome: "auth"/);
@@ -28,7 +35,8 @@ test("public screens come from the sitemap, signed-in screens need a persona (E2
   assert.match(crawl, /routesFromSitemap\(BASE/);
   assert.match(crawl, /E2E_USER/);
   assert.match(crawl, /E2E_PASSWORD/);
-  for (const screen of ["/", "/studios", "/packs", "/chat", "/jobs"]) assert.ok(crawl.includes(`"${screen}"`), `signed-in screen ${screen}`);
+  for (const screen of ["/", "/studios", "/packs", "/chat", "/jobs"])
+    assert.ok(crawl.includes(`"${screen}"`), `signed-in screen ${screen}`);
 });
 
 test("captures go to a scratch folder (OUT), never into the repository", () => {
@@ -45,7 +53,10 @@ test("it is an npm script and a step of its own post-deploy workflow (a failing 
 
 test("the post-deploy workflow also runs the SEO family contract against the deployed site, indexed (seo.family)", () => {
   const wf = read(".github/workflows/dev-preview-live.yml");
-  assert.match(wf, /node scripts\/check-seo-family\.mjs --base https:\/\/www\.orazaka\.com --host https:\/\/www\.orazaka\.com(\s|$)/);
+  assert.match(
+    wf,
+    /node scripts\/check-seo-family\.mjs --base https:\/\/www\.orazaka\.com --host https:\/\/www\.orazaka\.com(\s|$)/,
+  );
   assert.ok(!/--index off/.test(wf), "www.orazaka.com is indexed (AGENTS.md)");
 });
 
@@ -54,7 +65,8 @@ test("the console crawl covers every console screen in both themes and both view
   assert.match(c, /THEMES = \["dark", "light"\]/);
   assert.match(c, /desktop:/);
   assert.match(c, /phone:/);
-  for (const screen of ["/operations", "/tasks", "/users", "/billing", "/models", "/studios", "/audit"]) assert.ok(c.includes(`"${screen}"`), screen);
+  for (const screen of ["/operations", "/tasks", "/users", "/billing", "/models", "/studios", "/audit"])
+    assert.ok(c.includes(`"${screen}"`), screen);
   assert.ok(c.includes("no DEV badge"));
   assert.equal(JSON.parse(read("package.json")).scripts["test:console-crawl"], "node e2e/console-crawl.mjs");
 });
@@ -66,8 +78,9 @@ test("the same workflow proves the console gate from outside: 403 on the admin h
 });
 
 test("the crawl also runs axe-core (WCAG 2.1 AA) through the audit's a11y step and ratchets it against the baselines of this repo", () => {
-  assert.match(crawl, /a11y: \{ app: "orazaka-web-client", baseline: A11Y_BASELINE/);
-  assert.match(crawl, /app: "orazaka-web-client-app", baseline: A11Y_BASELINE_APP/);
+  const flat = crawl.replace(/\s+/g, " "); // the layout (Prettier) is not what is checked
+  assert.match(flat, /a11y: \{ app: "orazaka-web-client", baseline: A11Y_BASELINE/);
+  assert.match(flat, /app: "orazaka-web-client-app", baseline: A11Y_BASELINE_APP/);
   assert.match(crawl, /a11y-baseline\.json/);
   assert.match(crawl, /a11y-baseline\.app\.json/);
   assert.doesNotMatch(crawl, /from "axe-core"/, "apps never import axe-core");
@@ -83,7 +96,8 @@ test("a11y-baseline.json holds counts, and no serious or critical rule (those ar
 
 test("a signed-in screen that shows « qa_user » fails the crawl: one shared regex, used by the crawl, the takes and the recordings", async () => {
   const { QA_ON_SCREEN } = await import("./qa-on-screen.mjs");
-  for (const bad of ["Good morning, qa_user", "qa-user", "qa_admin", "Hello QA", "signed in as qa user"]) assert.match(bad, QA_ON_SCREEN, bad);
+  for (const bad of ["Good morning, qa_user", "qa-user", "qa_admin", "Hello QA", "signed in as qa user"])
+    assert.match(bad, QA_ON_SCREEN, bad);
   for (const ok of ["Good morning, Éric", "Mira Haddad", "Quality", "aqa"]) assert.doesNotMatch(ok, QA_ON_SCREEN, ok);
   assert.match(crawl, /qaOnScreen\(page\)/);
   assert.match(crawl, /problems\.push\(/);

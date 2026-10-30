@@ -20,12 +20,9 @@ export const MediaApi = {
     const session = await getSession();
     const token = session?.user?.id || "user-mock";
 
-    const response = await fetch(
-      `/api/v1/media/search?q=${encodeURIComponent(query)}`,
-      {
-        headers: { Authorization: `Bearer ${token}` },
-      },
-    );
+    const response = await fetch(`/api/v1/media/search?q=${encodeURIComponent(query)}`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
 
     if (!response.ok) {
       throw new Error(`RAG query failed with status ${response.status}`);
@@ -42,10 +39,7 @@ export const MediaApi = {
    * @param model - The model selected for analysis.
    * @returns The active Job ID wrapper.
    */
-  analyzeVideo: async (
-    assetId: string,
-    model: string,
-  ): Promise<{ jobId: string }> => {
+  analyzeVideo: async (assetId: string, model: string): Promise<{ jobId: string }> => {
     const session = await getSession();
     const headers: Record<string, string> = {
       "Content-Type": "application/json",

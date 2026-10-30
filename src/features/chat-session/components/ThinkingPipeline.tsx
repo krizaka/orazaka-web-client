@@ -4,10 +4,7 @@ import React from "react";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { Icon } from "@krizaka/orazaka-design-system";
 import type { TranslationDictionary } from "@/core/context/LocaleContext";
-import {
-  toPipelineSteps,
-  type ChatPipelineSchema,
-} from "@/core/types/pipeline.types";
+import { toPipelineSteps, type ChatPipelineSchema } from "@/core/types/pipeline.types";
 
 interface Props {
   t: TranslationDictionary;
@@ -26,10 +23,7 @@ const DotIndicator: React.FC = () => (
 );
 
 /** Where the pipeline stands: the steps, how many are done, and the one to show (the first unfinished, else the last). */
-export function pipelineProgress(
-  chatPipeline: Props["chatPipeline"],
-  done: ReadonlySet<string>,
-) {
+export function pipelineProgress(chatPipeline: Props["chatPipeline"], done: ReadonlySet<string>) {
   const steps = chatPipeline ? toPipelineSteps(chatPipeline) : [];
   const total = steps.length;
   const doneCount = steps.filter((s) => done.has(s.id)).length;
@@ -50,20 +44,10 @@ export function pipelineProgress(
  * progress counter. No data is invented; if no schema arrived, it falls back to
  * the dot indicator.
  */
-export const ThinkingPipeline: React.FC<Props> = ({
-  t,
-  chatPipeline,
-  completedStageIds,
-}) => {
+export const ThinkingPipeline: React.FC<Props> = ({ t, chatPipeline, completedStageIds }) => {
   const reduce = useReducedMotion();
-  const done = React.useMemo(
-    () => new Set(completedStageIds ?? []),
-    [completedStageIds],
-  );
-  const { total, doneCount, allDone, current } = pipelineProgress(
-    chatPipeline,
-    done,
-  );
+  const done = React.useMemo(() => new Set(completedStageIds ?? []), [completedStageIds]);
+  const { total, doneCount, allDone, current } = pipelineProgress(chatPipeline, done);
 
   return (
     <div className="flex items-start gap-3 animate-in fade-in slide-in-from-left-3 duration-300">
@@ -78,9 +62,7 @@ export const ThinkingPipeline: React.FC<Props> = ({
               <span className="absolute inline-flex h-full w-full rounded-sm bg-accent opacity-60 motion-safe:animate-ping" />
               <span className="relative inline-flex h-2 w-2 rounded-full bg-accent" />
             </span>
-            <span className="text-[11px] font-semibold text-fg-secondary">
-              {t.chat.typing}
-            </span>
+            <span className="text-[11px] font-semibold text-fg-secondary">{t.chat.typing}</span>
             <span className="ml-auto text-[10px] font-mono text-fg-muted">
               {allDone ? total : doneCount + 1}/{total}
             </span>
@@ -97,25 +79,13 @@ export const ThinkingPipeline: React.FC<Props> = ({
               className="flex items-center gap-2 text-[12px] text-fg"
             >
               {allDone ? (
-                <Icon
-                  name="check"
-                  size={14}
-                  className={
-                    current.phase === "core" ? "text-accent" : "text-success"
-                  }
-                />
+                <Icon name="check" size={14} className={current.phase === "core" ? "text-accent" : "text-success"} />
               ) : (
-                <Icon
-                  name="loader"
-                  size={14}
-                  className="text-accent motion-safe:animate-spin"
-                />
+                <Icon name="loader" size={14} className="text-accent motion-safe:animate-spin" />
               )}
               <span className="leading-tight font-medium">{current.label}</span>
               {current.phase === "dynamic" && (
-                <span className="ml-auto pl-2 text-[9px] font-semibold text-success">
-                  routed
-                </span>
+                <span className="ml-auto pl-2 text-[9px] font-semibold text-success">routed</span>
               )}
             </motion.div>
           </AnimatePresence>

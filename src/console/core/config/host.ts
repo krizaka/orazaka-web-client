@@ -12,7 +12,8 @@ export type HostRoute = { kind: "next" } | { kind: "rewrite"; path: string } | {
 export const isAdminHost = (host: string | null | undefined): boolean => /^admin\./i.test(host ?? "");
 
 /** Is `pathname` inside the internal console tree (`/console` or `/console/…`, not `/consoles`)? */
-export const inConsoleTree = (pathname: string): boolean => pathname === CONSOLE_PREFIX || pathname.startsWith(`${CONSOLE_PREFIX}/`);
+export const inConsoleTree = (pathname: string): boolean =>
+  pathname === CONSOLE_PREFIX || pathname.startsWith(`${CONSOLE_PREFIX}/`);
 
 export function routeFor(host: string | null | undefined, pathname: string): HostRoute {
   if (inConsoleTree(pathname)) return { kind: "notFound" };

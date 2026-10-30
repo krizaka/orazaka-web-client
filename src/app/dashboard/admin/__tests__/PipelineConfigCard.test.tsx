@@ -4,7 +4,8 @@ import { queryWrapper } from "@/core/testing/queryWrapper";
 import { PipelineConfigCard } from "@/app/dashboard/admin/PipelineConfigCard";
 
 /** These screens read server state: every render gets a fresh query client. */
-const render = (ui: Parameters<typeof plainRender>[0], options?: Parameters<typeof plainRender>[1]) => plainRender(ui, { wrapper: queryWrapper(), ...options });
+const render = (ui: Parameters<typeof plainRender>[0], options?: Parameters<typeof plainRender>[1]) =>
+  plainRender(ui, { wrapper: queryWrapper(), ...options });
 
 const mockTranslations = {
   admin: {
@@ -33,15 +34,25 @@ jest.mock("@/core/context/LocaleContext", () => ({
 }));
 
 const mockInterceptors = [
-  { interceptorKey: "rag", displayLabel: "RAG Interceptor", executionOrder: 1, enabled: true, description: "Vector search" },
-  { interceptorKey: "memory", displayLabel: "Memory Interceptor", executionOrder: 2, enabled: true, description: "Conversation history" },
+  {
+    interceptorKey: "rag",
+    displayLabel: "RAG Interceptor",
+    executionOrder: 1,
+    enabled: true,
+    description: "Vector search",
+  },
+  {
+    interceptorKey: "memory",
+    displayLabel: "Memory Interceptor",
+    executionOrder: 2,
+    enabled: true,
+    description: "Conversation history",
+  },
   { interceptorKey: "router", displayLabel: "Router Interceptor", executionOrder: 3, enabled: false, description: "" },
 ];
 
 function makeFetch(data: unknown = mockInterceptors, ok = true) {
-  return jest.fn(() =>
-    Promise.resolve({ ok, json: () => Promise.resolve(data) } as unknown as Response),
-  );
+  return jest.fn(() => Promise.resolve({ ok, json: () => Promise.resolve(data) } as unknown as Response));
 }
 
 describe("PipelineConfigCard", () => {
@@ -206,10 +217,7 @@ describe("PipelineConfigCard", () => {
     fireEvent.click(resetBtn);
 
     expect(confirmSpy).toHaveBeenCalled();
-    expect(fetchMock).not.toHaveBeenCalledWith(
-      "/api/v1/pipeline/interceptors/reset",
-      expect.anything(),
-    );
+    expect(fetchMock).not.toHaveBeenCalledWith("/api/v1/pipeline/interceptors/reset", expect.anything());
 
     confirmSpy.mockRestore();
   });

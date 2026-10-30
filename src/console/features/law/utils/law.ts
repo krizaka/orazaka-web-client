@@ -69,7 +69,8 @@ export function wordOf(names: Readonly<Record<string, string>>, value: string | 
 /** A text as the screen shows it, a dash when there is none. */
 export const orDash = (value: string | null | undefined) => (value && hasText(value) ? value : "—");
 
-const knownOr = (values: readonly string[], value: string | null | undefined) => (value && values.includes(value) ? value : "");
+const knownOr = (values: readonly string[], value: string | null | undefined) =>
+  value && values.includes(value) ? value : "";
 
 export const EDITOR_CHECK_TYPES = ["NONE", ...CHECK_TYPES] as const;
 

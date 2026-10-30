@@ -11,5 +11,9 @@ function subscribe(notify: () => void) {
 }
 
 export function useLook(): Look {
-  return React.useSyncExternalStore(subscribe, () => (document.documentElement.classList.contains("light") ? "light" : "dark"), () => "dark");
+  return React.useSyncExternalStore(
+    subscribe,
+    () => (document.documentElement.classList.contains("light") ? "light" : "dark"),
+    () => "dark",
+  );
 }
