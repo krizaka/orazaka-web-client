@@ -3,13 +3,18 @@ import { encode } from "next-auth/jwt";
 
 const SECRET = "e2e-only-secret-not-used-anywhere-else"; // the suite's dev server (playwright.config.ts)
 
-// The rail stays where it is while the page scrolls (Oussama, 2026-10-20, on Orochia's rail): after 2000 px of scrolling,
+// The rail stays where it is while the page scrolls (Oussama, 2026-10-20, on a product's rail): after 2000 px of scrolling,
 // on the window and on the content beside it, its bounding box is unchanged.
 test("the rail does not move when the page scrolls", async ({ page }) => {
   await page.setViewportSize({ width: 1280, height: 800 });
-  const token = await encode({ token: { name: "Eric", email: "eric@orazaka.dev", id: "e2e-user", role: "user" }, secret: SECRET });
+  const token = await encode({
+    token: { name: "Eric", email: "eric@orazaka.dev", id: "e2e-user", role: "user" },
+    secret: SECRET,
+  });
   await page.context().addCookies([{ name: "next-auth.session-token", value: token, url: "http://localhost:3000" }]);
-  await page.route("**/api/v1/**", (route) => route.fulfill({ status: 200, contentType: "application/json", body: "[]" }));
+  await page.route("**/api/v1/**", (route) =>
+    route.fulfill({ status: 200, contentType: "application/json", body: "[]" }),
+  );
   await page.goto("/jobs");
   await page.waitForLoadState("networkidle");
 

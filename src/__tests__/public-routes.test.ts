@@ -5,7 +5,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { PUBLIC_REDIRECTS, REMOVED_PUBLIC, SIGNED_OUT_REDIRECTS } from "@/core/config/redirects";
-import { NAV_DOCS, NAV_GROUPS } from "@/features/landing/utils/site-nav";
+import { NAV_DOCS, NAV_GROUPS, NAV_PAGES } from "@/features/landing/utils/site-nav";
 import { findPage } from "@/features/docs/utils/docs";
 import { publicPaths, llmsText } from "@/app/_seo/seo";
 import { JOURNEY_IDS } from "@/core/constants/docs-journeys";
@@ -27,7 +27,8 @@ function homeIds(): Set<string> {
   // `features` is the id @krizaka/ui's landing template gives its features section (LandingHome.test checks it renders).
   const ids = new Set<string>(["features"]);
   for (const f of fs.readdirSync(dir).filter((n) => n.endsWith(".tsx"))) {
-    for (const m of fs.readFileSync(path.join(dir, f), "utf8").matchAll(/\bid[:=]\s*\{?["']([a-z-]+)["']/g)) ids.add(m[1]);
+    for (const m of fs.readFileSync(path.join(dir, f), "utf8").matchAll(/\bid[:=]\s*\{?["']([a-z-]+)["']/g))
+      ids.add(m[1]);
   }
   return ids;
 }
@@ -51,18 +52,44 @@ describe("the bar", () => {
   });
 
   it("Docs resolves", () => expect(isPage(NAV_DOCS.path)).toBe(true));
+
+  it.each(NAV_PAGES.map((p) => [p.id, p.path] as const))("%s (%s) resolves and is in the sitemap", (_id, p) => {
+    expect(isPage(p)).toBe(true);
+    expect(publicPaths()).toContain(p);
+  });
+});
+
+describe("the lean public site (#290)", () => {
+  it("/docs/licensing answers 308 to /open-source, and the licence is no longer a published doc", () => {
+    expect(PUBLIC_REDIRECTS.find((r) => r.source === "/docs/licensing")).toMatchObject({
+      destination: "/open-source",
+      permanent: true,
+    });
+    expect(findPage("licensing")).toBeNull();
+    expect(publicPaths()).not.toContain("/docs/licensing");
+  });
+
+  it("/contact answers 308 to krizaka.com/contact?topic=orazaka", () => {
+    expect(PUBLIC_REDIRECTS.find((r) => r.source === "/contact")).toMatchObject({
+      destination: "https://www.krizaka.com/contact?topic=orazaka",
+      permanent: true,
+    });
+  });
 });
 
 describe("removed public addresses", () => {
-  it.each(REMOVED_PUBLIC.map((r) => [r.source, r.destination] as const))("%s answers 308 to %s, which exists", (source, destination) => {
-    const rule = PUBLIC_REDIRECTS.find((r) => r.source === source);
-    expect(rule?.permanent).toBe(true);
-    const [target, hash] = destination.split("#");
-    expect(resolves(target || "/")).toBe(true);
-    if (hash) expect(homeIds().has(hash)).toBe(true);
-    // The page itself is gone: a redirect to a page that still exists would hide a forgotten file.
-    expect(isPage(source.replace(/\/:id$/, "")) ).toBe(false);
-  });
+  it.each(REMOVED_PUBLIC.map((r) => [r.source, r.destination] as const))(
+    "%s answers 308 to %s, which exists",
+    (source, destination) => {
+      const rule = PUBLIC_REDIRECTS.find((r) => r.source === source);
+      expect(rule?.permanent).toBe(true);
+      const [target, hash] = destination.split("#");
+      expect(resolves(target || "/")).toBe(true);
+      if (hash) expect(homeIds().has(hash)).toBe(true);
+      // The page itself is gone: a redirect to a page that still exists would hide a forgotten file.
+      expect(isPage(source.replace(/\/:id$/, ""))).toBe(false);
+    },
+  );
 
   it("never redirects to another removed address", () => {
     const removed = new Set(REMOVED_PUBLIC.map((r) => r.source));
@@ -72,7 +99,11 @@ describe("removed public addresses", () => {
 
 describe("Packs, now in the docs", () => {
   it("/fr/packs and /en/packs answer 308 to /docs/packs, a published page", () => {
-    for (const source of ["/fr/packs", "/en/packs"]) expect(PUBLIC_REDIRECTS.find((r) => r.source === source)).toMatchObject({ destination: "/docs/packs", permanent: true });
+    for (const source of ["/fr/packs", "/en/packs"])
+      expect(PUBLIC_REDIRECTS.find((r) => r.source === source)).toMatchObject({
+        destination: "/docs/packs",
+        permanent: true,
+      });
     expect(resolves("/docs/packs")).toBe(true);
   });
 

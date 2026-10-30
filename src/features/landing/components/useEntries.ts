@@ -19,7 +19,8 @@ export function useEntries() {
   const closed = t.landing.closed;
   return {
     flags,
-    primary: (label: string): Entry => (flags.signup ? { href: "/register", label } : { href: "/docs", label: closed.heroPrimary }),
+    primary: (label: string): Entry =>
+      flags.signup ? { href: "/register", label } : { href: "/docs", label: closed.heroPrimary },
     secondary: (label: string, href = "/login"): Entry => ({ href, label }),
   };
 }

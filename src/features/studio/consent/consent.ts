@@ -35,8 +35,14 @@ export interface ErasureReceipt {
 
 function crisisLines(value: unknown): CrisisLine[] | undefined {
   if (!Array.isArray(value)) return undefined;
-  const lines = value.filter((line): line is CrisisLine =>
-    typeof line === "object" && line !== null && ["region", "label", "contact", "availability", "sourceUrl", "verifiedOn"].every((key) => typeof (line as Record<string, unknown>)[key] === "string"));
+  const lines = value.filter(
+    (line): line is CrisisLine =>
+      typeof line === "object" &&
+      line !== null &&
+      ["region", "label", "contact", "availability", "sourceUrl", "verifiedOn"].every(
+        (key) => typeof (line as Record<string, unknown>)[key] === "string",
+      ),
+  );
   return lines.length > 0 ? lines : undefined;
 }
 
@@ -66,5 +72,9 @@ export function asConsentStep(error: unknown): unknown {
   if (!(error instanceof RestError) || error.status !== 451) return error;
   const body = error.body as { consentVersion?: unknown; statement?: unknown; regions?: unknown } | undefined;
   if (typeof body?.consentVersion !== "string" || typeof body.statement !== "string") return error;
-  return new ConsentRequiredError({ version: body.consentVersion, statement: body.statement, regions: crisisLines(body.regions) });
+  return new ConsentRequiredError({
+    version: body.consentVersion,
+    statement: body.statement,
+    regions: crisisLines(body.regions),
+  });
 }

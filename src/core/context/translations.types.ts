@@ -11,11 +11,13 @@ import type { JobsTableDictionary } from "./translations.jobsTable.types";
 import type { WebhooksDictionary } from "./translations.webhooks.types";
 import type { AutomationsDictionary } from "./translations.automations.types";
 import type { RunProgressDictionary } from "./translations.runProgress.types";
+import type { ControlDictionary } from "./translations.control";
 import type { CatalogueDictionary, PlanDictionary } from "./translations.catalogue";
 import type { ConsentDictionary } from "./translations.consent";
 import type { MobileDictionary } from "./translations.mobile";
 import type { DesktopDictionary } from "./translations.desktop";
 import type { PricingDictionary } from "./translations.pricing";
+import type { OpenSourceDictionary } from "./translations.openSource";
 import type { DocsDictionary } from "./translations.docs";
 
 export type Locale = "en" | "fr";
@@ -60,7 +62,21 @@ export interface TranslationDictionary {
     emptyContent: string;
   };
   /** The signed-in app's sections (core/config/app-sections.ts) and the user menu — the same words on web, mobile and Mac. */
-  appNav: Record<"label" | "home" | "chat" | "studios" | "jobs" | "packs" | "usage" | "settings" | "admin" | "account" | "language" | "signOut", string>;
+  appNav: Record<
+    | "label"
+    | "home"
+    | "chat"
+    | "studios"
+    | "jobs"
+    | "packs"
+    | "usage"
+    | "settings"
+    | "admin"
+    | "account"
+    | "language"
+    | "signOut",
+    string
+  >;
   header: {
     profile: string;
     logout: string;
@@ -858,6 +874,7 @@ export interface TranslationDictionary {
   jobsTable: JobsTableDictionary;
   webhooks: WebhooksDictionary;
   runProgress: RunProgressDictionary;
+  control: ControlDictionary;
   /** The ⌘K palette: its words (the entries reuse the sidebar's). */
   commandPalette: {
     label: string;
@@ -882,6 +899,8 @@ export interface TranslationDictionary {
   desktop: DesktopDictionary;
   /** /pricing (the editions of Orazaka). */
   pricing: PricingDictionary;
+  /** /open-source. */
+  openSource: OpenSourceDictionary;
   /** The documentation: hub, sidebar, article chrome, the text version of the schemas. */
   docs: DocsDictionary;
 }
@@ -957,7 +976,14 @@ export interface ShowcaseDictionary {
     close: string;
   };
   media: { play: string; pause: string; local: string };
-  dashboard: { studios: string; studiosDesc: string; creations: string; creationsDesc: string; latestCreations: string; seeAll: string };
+  dashboard: {
+    studios: string;
+    studiosDesc: string;
+    creations: string;
+    creationsDesc: string;
+    latestCreations: string;
+    seeAll: string;
+  };
   chat: { approvePlan: string; adjustPlan: string; thinking: string; reasoning: string };
   notifications: { emptyTitle: string; emptyBody: string; running: string; done: string; failed: string };
 }

@@ -9,7 +9,13 @@ import type { RunProgressDictionary } from "./translations.runProgress.types";
 
 export const runProgress: Record<Locale, RunProgressDictionary> = {
   en: {
-    phases: { queued: "Waiting for a machine", loading: "Loading the model", generating: "Generating", encoding: "Encoding the file", uploading: "Saving the result" },
+    phases: {
+      queued: "Waiting for a machine",
+      loading: "Loading the model",
+      generating: "Generating",
+      encoding: "Encoding the file",
+      uploading: "Saving the result",
+    },
     stepOf: "Step {step} of {steps}",
     elapsed: "{time} so far",
     overdue: "Taking longer than usual — it typically takes {time}",
@@ -20,7 +26,12 @@ export const runProgress: Record<Locale, RunProgressDictionary> = {
     cancelling: "Stopping…",
     cancelFailed: "The run could not be stopped. Try again in a moment.",
     cancelled: "{name} was stopped. Nothing was billed.",
-    inProgress: { title: "Your runs in progress", empty: "Nothing is running.", open: "Follow", since: "Started {time}" },
+    inProgress: {
+      title: "Your runs in progress",
+      empty: "Nothing is running.",
+      open: "Follow",
+      since: "Started {time}",
+    },
     deleteDialog: {
       title: "Delete {name}?",
       description: "The file is removed from storage for good. You have a few seconds to undo.",
@@ -33,7 +44,13 @@ export const runProgress: Record<Locale, RunProgressDictionary> = {
     },
   },
   fr: {
-    phases: { queued: "En attente d'une machine", loading: "Chargement du modèle", generating: "Génération", encoding: "Encodage du fichier", uploading: "Enregistrement du résultat" },
+    phases: {
+      queued: "En attente d'une machine",
+      loading: "Chargement du modèle",
+      generating: "Génération",
+      encoding: "Encodage du fichier",
+      uploading: "Enregistrement du résultat",
+    },
     stepOf: "Étape {step} sur {steps}",
     elapsed: "{time} écoulées",
     overdue: "Plus long que d'habitude — cela prend en général {time}",
@@ -44,7 +61,12 @@ export const runProgress: Record<Locale, RunProgressDictionary> = {
     cancelling: "Arrêt en cours…",
     cancelFailed: "L'exécution n'a pas pu être arrêtée. Réessayez dans un instant.",
     cancelled: "{name} a été arrêtée. Rien n'a été facturé.",
-    inProgress: { title: "Vos exécutions en cours", empty: "Rien ne tourne.", open: "Suivre", since: "Démarrée {time}" },
+    inProgress: {
+      title: "Vos exécutions en cours",
+      empty: "Rien ne tourne.",
+      open: "Suivre",
+      since: "Démarrée {time}",
+    },
     deleteDialog: {
       title: "Supprimer {name} ?",
       description: "Le fichier est retiré du stockage pour de bon. Vous avez quelques secondes pour annuler.",

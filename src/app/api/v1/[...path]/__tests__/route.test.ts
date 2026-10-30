@@ -23,8 +23,14 @@ describe("BFF proxy: bodiless upstream answers", () => {
   });
 
   it("still relays a JSON body", async () => {
-    global.fetch = jest.fn().mockResolvedValue(new Response('{"a":1}', { status: 200, headers: { "content-type": "application/json" } })) as never;
-    const res = await POST(new Request("http://web/api/v1/x", { method: "POST", body: "{}" }), { params: Promise.resolve({ path: ["x"] }) });
+    global.fetch = jest
+      .fn()
+      .mockResolvedValue(
+        new Response('{"a":1}', { status: 200, headers: { "content-type": "application/json" } }),
+      ) as never;
+    const res = await POST(new Request("http://web/api/v1/x", { method: "POST", body: "{}" }), {
+      params: Promise.resolve({ path: ["x"] }),
+    });
     expect(await res.json()).toEqual({ a: 1 });
   });
 });

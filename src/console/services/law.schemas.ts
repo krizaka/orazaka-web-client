@@ -6,7 +6,14 @@ import { z } from "zod";
  * wrong decision, not a wrong pixel. Dates are ISO `YYYY-MM-DD`, instants ISO-8601 UTC strings.
  */
 
-export const PROPOSAL_STATUSES = ["PROPOSED", "REJECTED_AUTO", "APPROVED", "REJECTED", "PROMOTED", "SUPERSEDED"] as const;
+export const PROPOSAL_STATUSES = [
+  "PROPOSED",
+  "REJECTED_AUTO",
+  "APPROVED",
+  "REJECTED",
+  "PROMOTED",
+  "SUPERSEDED",
+] as const;
 export type ProposalStatus = (typeof PROPOSAL_STATUSES)[number];
 
 export const LAW_LANGUAGES = ["fr", "en"] as const;

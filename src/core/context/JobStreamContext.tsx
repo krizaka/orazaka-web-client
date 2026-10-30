@@ -1,14 +1,6 @@
 "use client";
 
-import React, {
-  createContext,
-  useCallback,
-  useContext,
-  useEffect,
-  useMemo,
-  useState,
-  useRef,
-} from "react";
+import React, { createContext, useCallback, useContext, useEffect, useMemo, useState, useRef } from "react";
 import { useAuth } from "@/core/hooks/useAuth";
 import type { Job } from "@/core/types/jobs.types";
 import { JobsApi } from "@/services/jobs.api";
@@ -21,17 +13,13 @@ import { JOB_STATUS } from "@/core/constants/http.constants";
 import type { JobStreamContextType } from "@/core/context/jobStream.types";
 import { usePlaygroundState } from "@/core/hooks/usePlaygroundState";
 
-const JobStreamContext = createContext<JobStreamContextType | undefined>(
-  undefined,
-);
+const JobStreamContext = createContext<JobStreamContextType | undefined>(undefined);
 
 /**
  * Global React Context Provider establishing a persistent EventSource stream
  * pointing to the BFF proxy. Tracks and broadcasts all async task progress.
  */
-export function JobStreamProvider({
-  children,
-}: Readonly<{ children: React.ReactNode }>) {
+export function JobStreamProvider({ children }: Readonly<{ children: React.ReactNode }>) {
   const { isAuthenticated, user } = useAuth();
   const [jobs, setJobs] = useState<Job[]>([]);
   const [jobProgress, setJobProgress] = useState<Record<string, number>>({});
@@ -54,25 +42,14 @@ export function JobStreamProvider({
     activeJobIdByNodeId,
     setActiveJobIdForNode,
   } = usePlaygroundState();
-  const [videoAnalysisJobId, setVideoAnalysisJobId] = useState<string | null>(
-    null,
-  );
+  const [videoAnalysisJobId, setVideoAnalysisJobId] = useState<string | null>(null);
 
   const [chatInput, setChatInput] = useState<string>("");
-  const {
-    isChatStreaming,
-    chatPipeline,
-    chatStageProgress,
-    chatRouting,
-    startChatStream,
-    stopChatStream,
-  } = useChatStreamClient();
+  const { isChatStreaming, chatPipeline, chatStageProgress, chatRouting, startChatStream, stopChatStream } =
+    useChatStreamClient();
 
-  const [videoAnalysisIsUploading, setVideoAnalysisIsUploading] =
-    useState<boolean>(false);
-  const [videoAnalysisError, setVideoAnalysisError] = useState<string | null>(
-    null,
-  );
+  const [videoAnalysisIsUploading, setVideoAnalysisIsUploading] = useState<boolean>(false);
+  const [videoAnalysisError, setVideoAnalysisError] = useState<string | null>(null);
 
   const [ragQuery, setRagQuery] = useState<string>("");
   const [ragResult, setRagResult] = useState<string | null>(null);
@@ -84,10 +61,7 @@ export function JobStreamProvider({
   ).length;
 
   const lastJobs = [...jobs]
-    .sort(
-      (a, b) =>
-        parseISO(b.createdAt).getTime() - parseISO(a.createdAt).getTime(),
-    )
+    .sort((a, b) => parseISO(b.createdAt).getTime() - parseISO(a.createdAt).getTime())
     .slice(0, 5);
 
   /** A job's progression, announced by the platform Toaster (mounted once in Providers), in the reader's language. */
@@ -119,7 +93,6 @@ export function JobStreamProvider({
       // eslint-disable-next-line react-hooks/set-state-in-effect
       fetchJobs();
     } else {
-       
       setJobs([]);
     }
   }, [isAuthenticated, fetchJobs]);
@@ -172,58 +145,76 @@ export function JobStreamProvider({
   // focus and while jobs are in flight, so completions are never lost.
   useJobReconciliation(isAuthenticated, hasActiveJobs, fetchJobs);
 
-  const contextValue = useMemo<JobStreamContextType>(() => ({
-    jobs,
-    activeJobsCount,
-    lastJobs,
-    refreshJobs: fetchJobs,
-    activeConversationId,
-    setActiveConversationId,
-    playgroundInputs,
-    setPlaygroundInput,
-    playgroundResults,
-    setPlaygroundResult,
-    activeJobIdByNodeId,
-    setActiveJobIdForNode,
-    videoAnalysisJobId,
-    setVideoAnalysisJobId,
-    chatInput,
-    setChatInput,
-    isChatStreaming,
-    chatPipeline,
-    chatStageProgress,
-    chatRouting,
-    startChatStream,
-    stopChatStream,
-    videoAnalysisIsUploading,
-    setVideoAnalysisIsUploading,
-    videoAnalysisError,
-    setVideoAnalysisError,
-    ragQuery,
-    setRagQuery,
-    ragResult,
-    setRagResult,
-    ragIsPending,
-    setRagIsPending,
-    ragError,
-    setRagError,
-    jobProgress,
-  }), [
-    jobs, activeJobsCount, lastJobs, fetchJobs,
-    activeConversationId, setActiveConversationId, playgroundInputs, setPlaygroundInput,
-    playgroundResults, setPlaygroundResult, activeJobIdByNodeId,
-    setActiveJobIdForNode, videoAnalysisJobId, chatInput, isChatStreaming,
-    chatPipeline, chatStageProgress, chatRouting, startChatStream, stopChatStream,
-    videoAnalysisIsUploading,
-    videoAnalysisError, ragQuery, ragResult, ragIsPending, ragError,
-    jobProgress,
-  ]);
-
-  return (
-    <JobStreamContext.Provider value={contextValue}>
-      {children}
-    </JobStreamContext.Provider>
+  const contextValue = useMemo<JobStreamContextType>(
+    () => ({
+      jobs,
+      activeJobsCount,
+      lastJobs,
+      refreshJobs: fetchJobs,
+      activeConversationId,
+      setActiveConversationId,
+      playgroundInputs,
+      setPlaygroundInput,
+      playgroundResults,
+      setPlaygroundResult,
+      activeJobIdByNodeId,
+      setActiveJobIdForNode,
+      videoAnalysisJobId,
+      setVideoAnalysisJobId,
+      chatInput,
+      setChatInput,
+      isChatStreaming,
+      chatPipeline,
+      chatStageProgress,
+      chatRouting,
+      startChatStream,
+      stopChatStream,
+      videoAnalysisIsUploading,
+      setVideoAnalysisIsUploading,
+      videoAnalysisError,
+      setVideoAnalysisError,
+      ragQuery,
+      setRagQuery,
+      ragResult,
+      setRagResult,
+      ragIsPending,
+      setRagIsPending,
+      ragError,
+      setRagError,
+      jobProgress,
+    }),
+    [
+      jobs,
+      activeJobsCount,
+      lastJobs,
+      fetchJobs,
+      activeConversationId,
+      setActiveConversationId,
+      playgroundInputs,
+      setPlaygroundInput,
+      playgroundResults,
+      setPlaygroundResult,
+      activeJobIdByNodeId,
+      setActiveJobIdForNode,
+      videoAnalysisJobId,
+      chatInput,
+      isChatStreaming,
+      chatPipeline,
+      chatStageProgress,
+      chatRouting,
+      startChatStream,
+      stopChatStream,
+      videoAnalysisIsUploading,
+      videoAnalysisError,
+      ragQuery,
+      ragResult,
+      ragIsPending,
+      ragError,
+      jobProgress,
+    ],
   );
+
+  return <JobStreamContext.Provider value={contextValue}>{children}</JobStreamContext.Provider>;
 }
 
 export function useJobStream() {

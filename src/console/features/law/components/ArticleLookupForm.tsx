@@ -15,7 +15,13 @@ import { hasText, isIsoDate } from "@/console/features/law/utils/law";
 const required = z.string().refine(hasText, "law.required");
 
 const lookupForm = createKrizakaForm({
-  schema: z.object({ jurisdiction: required, instrument: required, ref: required, language: z.enum(LAW_LANGUAGES), asOf: z.string().refine(isIsoDate, "law.date") }),
+  schema: z.object({
+    jurisdiction: required,
+    instrument: required,
+    ref: required,
+    language: z.enum(LAW_LANGUAGES),
+    asOf: z.string().refine(isIsoDate, "law.date"),
+  }),
   defaultValues: { jurisdiction: "QC", instrument: "CCQ-1991", ref: "", language: "fr", asOf: "" },
 });
 
@@ -27,9 +33,25 @@ function versionColumns({ t, date }: LawWords): DataTableColumn<ArticleVersion>[
   return [
     { id: "inForceFrom", header: c.from, card: "title", value: (v) => v.inForceFrom, cell: (v) => date(v.inForceFrom) },
     { id: "inForceTo", header: c.to, value: (v) => (v.inForceTo ? date(v.inForceTo) : c.current) },
-    { id: "contentHash", header: c.hash, cell: (v) => <code className="text-xs" title={v.contentHash}>{short(v.contentHash)}</code> },
+    {
+      id: "contentHash",
+      header: c.hash,
+      cell: (v) => (
+        <code className="text-xs" title={v.contentHash}>
+          {short(v.contentHash)}
+        </code>
+      ),
+    },
     { id: "length", header: c.length, align: "end" },
-    { id: "officialUrl", header: c.official, cell: (v) => <a href={v.officialUrl} target="_blank" rel="noreferrer" className="text-fg-accent underline">{c.official}</a> },
+    {
+      id: "officialUrl",
+      header: c.official,
+      cell: (v) => (
+        <a href={v.officialUrl} target="_blank" rel="noreferrer" className="text-fg-accent underline">
+          {c.official}
+        </a>
+      ),
+    },
   ];
 }
 
@@ -63,7 +85,11 @@ export function ArticleLookupForm() {
           <form.TextField name="jurisdiction" label={c.jurisdiction} autoComplete="off" />
           <form.TextField name="instrument" label={c.code} autoComplete="off" />
           <form.TextField name="ref" label={c.ref} autoComplete="off" />
-          <form.Select name="language" label={c.language} options={LAW_LANGUAGES.map((value) => ({ value, label: t.languages[value] }))} />
+          <form.Select
+            name="language"
+            label={c.language}
+            options={LAW_LANGUAGES.map((value) => ({ value, label: t.languages[value] }))}
+          />
         </section>
         <form.DateField name="asOf" label={c.asOf} entry="parts" labels={t.dateParts} />
         <form.Submit variant="secondary">{c.lookupSubmit}</form.Submit>
@@ -73,10 +99,21 @@ export function ArticleLookupForm() {
         <>
           <Alert tone={found.inForce ? "success" : "warning"}>
             {found.inForce
-              ? fill(c.inForce, { date: date(found.asOf), from: date(found.inForce.inForceFrom), length: found.inForce.length, hash: short(found.inForce.contentHash) })
+              ? fill(c.inForce, {
+                  date: date(found.asOf),
+                  from: date(found.inForce.inForceFrom),
+                  length: found.inForce.length,
+                  hash: short(found.inForce.contentHash),
+                })
               : fill(c.notInForce, { date: date(found.asOf) })}
           </Alert>
-          <DataTable caption={c.history} rows={found.history} columns={columns} getRowId={(v) => `${v.inForceFrom}-${v.contentHash}`} labels={table} />
+          <DataTable
+            caption={c.history}
+            rows={found.history}
+            columns={columns}
+            getRowId={(v) => `${v.inForceFrom}-${v.contentHash}`}
+            labels={table}
+          />
         </>
       )}
     </section>

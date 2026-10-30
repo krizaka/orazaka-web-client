@@ -10,6 +10,7 @@ import { landing } from "./translations.landing";
 import { mobile } from "./translations.mobile";
 import { desktop } from "./translations.desktop";
 import { pricing } from "./translations.pricing";
+import { openSource } from "./translations.openSource";
 import { docs } from "./translations.docs";
 import { a11y, automation } from "./translations.automation";
 import { automations } from "./translations.automations";
@@ -18,6 +19,7 @@ import { insights } from "./translations.insights";
 import { jobsTable } from "./translations.jobsTable";
 import { webhooks } from "./translations.webhooks";
 import { runProgress } from "./translations.runProgress";
+import { control } from "./translations.control";
 import { catalogue, plan } from "./translations.catalogue";
 import { consent } from "./translations.consent";
 import { THEME_MODE } from "@/core/constants/http.constants";
@@ -60,8 +62,7 @@ export const translations: Record<Locale, TranslationDictionary> = {
     playgroundUsecases: {
       emptyTitle: "Use Case Workspace",
       emptySubtitle: "Orazaka AI Orchestrator Dynamic Node Workspace",
-      emptyContent:
-        "This workspace is currently empty. Blueprints are resolved dynamically from the Operation Graph.",
+      emptyContent: "This workspace is currently empty. Blueprints are resolved dynamically from the Operation Graph.",
     },
     appNav: {
       label: "Sections",
@@ -114,8 +115,7 @@ export const translations: Record<Locale, TranslationDictionary> = {
       manageProfile: "Your account",
       manageProfileDesc: "Your plan, your e-mail and how you sign in.",
       configureSettings: "Appearance & Workspace",
-      configureSettingsDesc:
-        "Theme, language, providers and workspace — all in your profile.",
+      configureSettingsDesc: "Theme, language, providers and workspace — all in your profile.",
       recentActivity: "Recent conversations",
       noRecentSessions: "No conversation yet — your first one starts here.",
       resumeSession: "Resume conversation",
@@ -167,12 +167,15 @@ export const translations: Record<Locale, TranslationDictionary> = {
       generating: "Generating…",
       viewTask: "View task",
       awaitingInput: "This run is waiting for you",
-      genui: { surface: "The answer as a dashboard", loading: "Building the dashboard…", noData: "No data for this part" },
+      genui: {
+        surface: "The answer as a dashboard",
+        loading: "Building the dashboard…",
+        noData: "No data for this part",
+      },
     },
     profile: {
       title: "Profile",
-      subtitle:
-        "Manage and review your security identifiers and preferences here.",
+      subtitle: "Manage and review your security identifiers and preferences here.",
       accountDetails: "Account Details",
       detailsDesc: "Who you are on this workspace, and how you sign in.",
       userId: "Account ID",
@@ -230,22 +233,18 @@ export const translations: Record<Locale, TranslationDictionary> = {
       showPreferences: "Show",
       hidePreferences: "Hide",
       appearanceTitle: "Appearance",
-      appearanceDesc:
-        "Theme, accent, density and language — applied instantly across the workspace.",
+      appearanceDesc: "Theme, accent, density and language — applied instantly across the workspace.",
       workspaceTitle: "Workspace",
-      workspaceDesc:
-        "Brand the workspace and tune the assistant. Visible to workspace admins.",
+      workspaceDesc: "Brand the workspace and tune the assistant. Visible to workspace admins.",
       integrationsTitle: "Integrations",
-      integrationsDesc:
-        "Connect AI provider keys and MCP servers used by your workspace.",
+      integrationsDesc: "Connect AI provider keys and MCP servers used by your workspace.",
       unsavedChanges: "You have unsaved changes",
       saveChanges: "Save changes",
       discard: "Discard",
     },
     settings: {
       title: "Global Application Settings",
-      description:
-        "Configure language parameters, model options, and dynamic theme properties.",
+      description: "Configure language parameters, model options, and dynamic theme properties.",
       language: "Language",
       english: "English",
       french: "Français",
@@ -310,8 +309,7 @@ export const translations: Record<Locale, TranslationDictionary> = {
       mcpCommand: "Execution Command",
       mcpCommandPlaceholder: "e.g. npx, uvx, node",
       mcpArgs: "Command Arguments (JSON array)",
-      mcpArgsPlaceholder:
-        'e.g. ["-y", "@modelcontextprotocol/server-filesystem"]',
+      mcpArgsPlaceholder: 'e.g. ["-y", "@modelcontextprotocol/server-filesystem"]',
       mcpRegister: "Register Server",
       mcpDelete: "Delete",
       mcpNoServers: "No private MCP servers configured.",
@@ -325,8 +323,7 @@ export const translations: Record<Locale, TranslationDictionary> = {
     },
     jobs: {
       title: "My Tasks",
-      subtitle:
-        "Track your asynchronous AI runs and background jobs in real-time.",
+      subtitle: "Track your asynchronous AI runs and background jobs in real-time.",
       searchPlaceholder: "Search tasks by feature key...",
       statusAll: "All Tasks",
       statusActive: "Active",
@@ -390,8 +387,7 @@ export const translations: Record<Locale, TranslationDictionary> = {
       editKeyHint: "Enter a new key to replace the saved one.",
       saveError: "Couldn't save the connection. Please try again.",
       emptyTitle: "No providers connected",
-      emptyDesc:
-        "Connect an AI provider API key to unlock more models in your workspace.",
+      emptyDesc: "Connect an AI provider API key to unlock more models in your workspace.",
       emptyCta: "Add a connection",
       allConfigured: "All available providers are connected.",
       cancel: "Cancel",
@@ -399,39 +395,33 @@ export const translations: Record<Locale, TranslationDictionary> = {
     },
     apiKeys: {
       title: "API Keys",
-      subtitle:
-        "Personal access tokens to call the Orazaka API programmatically.",
+      subtitle: "Personal access tokens to call the Orazaka API programmatically.",
       create: "Create API key",
       loading: "Loading keys…",
       emptyTitle: "No API keys yet",
-      emptyDesc:
-        "Create a key to authenticate your programmatic calls to the Orazaka API.",
+      emptyDesc: "Create a key to authenticate your programmatic calls to the Orazaka API.",
       emptyCta: "Create your first key",
       nameLabel: "Name",
       namePlaceholder: "e.g. My laptop, CI pipeline",
       createCta: "Create key",
       cancel: "Cancel",
       createError: "Couldn't create the key. Please try again.",
-      limitReached:
-        "You've reached the maximum of 10 API keys. Revoke one to create another.",
+      limitReached: "You've reached the maximum of 10 API keys. Revoke one to create another.",
       limitCaption: "keys used",
       created: "Created",
       lastUsed: "Last used",
       neverUsed: "Never used",
       revoke: "Revoke",
-      confirmDelete:
-        "Revoke this API key? Any integration using it will stop working immediately.",
+      confirmDelete: "Revoke this API key? Any integration using it will stop working immediately.",
       revealTitle: "Copy your API key now",
-      revealDesc:
-        "This is the only time you'll see it. Store it somewhere safe.",
+      revealDesc: "This is the only time you'll see it. Store it somewhere safe.",
       copy: "Copy",
       copied: "Copied",
       done: "Done",
     },
     playground: {
       videoAnalysis: "Video Analysis",
-      videoAnalysisDesc:
-        "Drop a video file here or click to browse. Supports MP4 and QuickTime up to 100MB.",
+      videoAnalysisDesc: "Drop a video file here or click to browse. Supports MP4 and QuickTime up to 100MB.",
       selectVideo: "Select Video",
       uploadingVideo: "Uploading video…",
       processingVideo: "Extracting keyframes & transcript…",
@@ -448,29 +438,25 @@ export const translations: Record<Locale, TranslationDictionary> = {
       runningIngestion: "Running Ingestion...",
       executionFailed: "Execution failed.",
       serviceOffline: "Service offline",
-      serviceOfflineHint:
-        "The local engine for this capability is offline. Start it, then retry.",
+      serviceOfflineHint: "The local engine for this capability is offline. Start it, then retry.",
       synthesizeSpeech: "Synthesize Speech",
       ttsUnsupportedWarning:
         "Warning: The current AI provider (Ollama) does not support multi-modal audio capabilities (TTS). Please configure an OpenAI API key in the backend to use speech synthesis.",
       outputResult: "Output Result",
       gatewayRestriction: "Gateway Restriction",
-      speechHelper:
-        "Example: Hello, this is a local speech synthesis verification test running on macOS bare-metal.",
+      speechHelper: "Example: Hello, this is a local speech synthesis verification test running on macOS bare-metal.",
       imageTokensLabel: "Suggested styles:",
       videoExamplesLabel: "Optimized prompts:",
       posterGuidelines:
         "Guidelines: Upload a PNG/JPG poster image. Prompt: Describe the visual composition and key text elements.",
-      audioGuidelines:
-        "Guidelines: Upload a clean WAV/MP3 audio file to analyze spoken words and spectral properties.",
+      audioGuidelines: "Guidelines: Upload a clean WAV/MP3 audio file to analyze spoken words and spectral properties.",
       imageTokenIllustration: "illustration",
       imageTokenCyberpunk: THEME_MODE.CYBERPUNK,
       imageTokenPhotorealistic: "photorealistic",
       imageTokenAntigravity: "antigravity",
       videoExampleVerification: "A local-first verification video stream",
       videoExampleCinematic: "Cinematic camera panning, high fidelity stream",
-      videoExampleDynamic:
-        "Dynamic light effects, virtual studio, smooth rotation",
+      videoExampleDynamic: "Dynamic light effects, virtual studio, smooth rotation",
       posterExamplePrompt: "Identify elements in this poster",
       modelPiperLow: "Piper English Low (Ultra-fast)",
       modelPiperRyan: "Piper English Medium Ryan (Natural)",
@@ -514,8 +500,7 @@ export const translations: Record<Locale, TranslationDictionary> = {
       failedUploadMedia: "Failed to upload media asset: ",
       processingProgress: "Processing: {percent}%",
       passiveRagTitle: "Passive RAG Context Retrieval (all-minilm)",
-      passiveRagPlaceholder:
-        "Query semantic index (e.g., 'Virtual thread concurrency' or 'BFF proxy mapping')",
+      passiveRagPlaceholder: "Query semantic index (e.g., 'Virtual thread concurrency' or 'BFF proxy mapping')",
       search: "Search",
       examples: "Examples:",
       retrievedContext: "Retrieved Context",
@@ -530,14 +515,12 @@ export const translations: Record<Locale, TranslationDictionary> = {
       mcpExecuting: "Tool executing...",
       mcpExecutionResult: "Execution Result",
       tryLabel: "Try:",
-      illustrationExamplePrompt:
-        "A beautiful local-first illustration of Antigravity",
+      illustrationExamplePrompt: "A beautiful local-first illustration of Antigravity",
     },
     admin: {
       loadingCredentials: "Loading credentials...",
       title: "Model Catalog Management",
-      subtitle:
-        "Register, configure, and maintain local/cloud models in the active database catalog.",
+      subtitle: "Register, configure, and maintain local/cloud models in the active database catalog.",
       refresh: "Refresh",
       addModel: "Add Model",
       modelsSuffix: "Models",
@@ -565,15 +548,13 @@ export const translations: Record<Locale, TranslationDictionary> = {
         "Categorizes where this model appears in the UI. For instance, speech models appear in voice selectors, while vision/audio models are registered for analysis tasks.",
       helpModelName:
         "The backend model identifier (e.g. llava:latest, sdxl-turbo-gguf). It must match exactly the model ID configured in the local AI providers.",
-      helpModelLabel:
-        "A user-friendly label displayed in the dropdown select menus in the playground interface.",
+      helpModelLabel: "A user-friendly label displayed in the dropdown select menus in the playground interface.",
       helpOptions:
         "Extra arguments for model configuration. For TTS/speech models, this defines the comma-separated list of voices available for the user to select.",
       helpDefault:
         "Mark this model as the default processor for this category. If an asynchronous task runs (like automatic poster/audio compliance analysis) and no specific model parameter is provided, the system dynamically queries and uses this model. Setting a model as default automatically unsets any other model in the same category as default.",
       nameAndLabelRequired: "Model Name and Label are required",
-      confirmDelete:
-        "Are you sure you want to delete this model from the catalog?",
+      confirmDelete: "Are you sure you want to delete this model from the catalog?",
       loadingModels: "Loading...",
       deleteModelTitle: "Delete Model",
       systemRoleLabel: "System Role:",
@@ -590,14 +571,12 @@ export const translations: Record<Locale, TranslationDictionary> = {
       featureOverrideEnabled: "Database override enabled",
       pipeline: {
         title: "Pipeline Interceptor Chain",
-        subtitle:
-          "Configure execution order and toggle interceptors in the orchestration pipeline.",
+        subtitle: "Configure execution order and toggle interceptors in the orchestration pipeline.",
         orderLabel: "Order",
         enabledLabel: "Enabled",
         descriptionLabel: "Description",
         resetToDefault: "Reset to Default",
-        resetConfirm:
-          "Reset the pipeline to its default interceptor ordering? This cannot be undone.",
+        resetConfirm: "Reset the pipeline to its default interceptor ordering? This cannot be undone.",
         saveOrder: "Save Order",
         saving: "Saving...",
         savedSuccess: "Pipeline configuration saved successfully.",
@@ -617,8 +596,7 @@ export const translations: Record<Locale, TranslationDictionary> = {
       orContinueWith: "Or continue with",
       noAccount: "No account?",
       registerLink: "Register",
-      invalidCredentials:
-        "Invalid email or password. Please check your credentials.",
+      invalidCredentials: "Invalid email or password. Please check your credentials.",
       unexpectedError: "An unexpected error occurred. Please try again.",
       registerTitle: "Orazaka",
       registerSubtitle: "Create your Orazaka account",
@@ -636,10 +614,8 @@ export const translations: Record<Locale, TranslationDictionary> = {
       heroTagline:
         "The sovereign AI platform that runs on your own hardware, with zero telemetry. This demo runs on our development server.",
       heroFeature1: "Absolute privacy — your data stays on the machine you run Orazaka on",
-      heroFeature2:
-        "Unified engine — text, vision, audio, video & code in one runtime",
-      heroFeature3:
-        "Infinite reach — extend with MCP to any tool, API, or knowledge source",
+      heroFeature2: "Unified engine — text, vision, audio, video & code in one runtime",
+      heroFeature3: "Infinite reach — extend with MCP to any tool, API, or knowledge source",
       forgotTitle: "Reset Your Password",
       forgotSubtitle: "Enter your email and we'll send you a reset link.",
       forgotError: "Failed to send reset email. Please try again.",
@@ -673,11 +649,9 @@ export const translations: Record<Locale, TranslationDictionary> = {
       step2Title: "Target Model Extraction",
       step2Desc: "Routing task payload explicitly to model: [{modelName}]",
       step3Title: "Compute Infrastructure Allocation",
-      step3Desc:
-        "Invoking native Apple Silicon bare-metal execution layer via Metal (MPS)...",
+      step3Desc: "Invoking native Apple Silicon bare-metal execution layer via Metal (MPS)...",
       step4Title: "Storage Isolation Sync",
-      step4Desc:
-        "Writing media binary files to isolated workspace disk storage...",
+      step4Desc: "Writing media binary files to isolated workspace disk storage...",
     },
     errors: {
       generic: "An unexpected error occurred. Please try again.",
@@ -692,8 +666,7 @@ export const translations: Record<Locale, TranslationDictionary> = {
     interception: {
       loadingSchema: "Loading form schema...",
       loadingError: "Loading Error",
-      loadingErrorDesc:
-        "Could not resolve the interception form schema. Please try refreshing.",
+      loadingErrorDesc: "Could not resolve the interception form schema. Please try refreshing.",
       retry: "Retry",
       fieldRequired: (label: string) => `Field "${label}" is required.`,
       resolving: "Resolving...",
@@ -702,8 +675,7 @@ export const translations: Record<Locale, TranslationDictionary> = {
     },
     operationGraph: {
       title: "Operation Graph",
-      subtitle:
-        "Server-driven capability graph — node states are resolved in real-time from YAML configuration.",
+      subtitle: "Server-driven capability graph — node states are resolved in real-time from YAML configuration.",
       colFeature: "Feature Key",
       colLabel: "Label",
       colState: "State",
@@ -721,8 +693,7 @@ export const translations: Record<Locale, TranslationDictionary> = {
         "Interrogate and execute the dynamic capabilities of the Orazaka Orchestration Engine. Blueprints are resolved in real-time from the Operation Graph.",
       mediaCapabilities: "Media Capabilities",
       noActiveCapabilities: "No Active Capabilities",
-      noActiveCapabilitiesDesc:
-        "The operation graph returned an empty or invalid dataset configuration.",
+      noActiveCapabilitiesDesc: "The operation graph returned an empty or invalid dataset configuration.",
       creativeCategory: "Creative Studio",
       creativeDesc: "Generate images, videos, and speech from text prompts.",
       generateVideoDesc: "Generate AI-powered video from text prompts using local diffusion models.",
@@ -741,16 +712,14 @@ export const translations: Record<Locale, TranslationDictionary> = {
     verify: {
       loadingMessage: "Verifying your account...",
       successTitle: "Account Verified!",
-      successDescription:
-        "Your account has been successfully verified. You can now log in.",
+      successDescription: "Your account has been successfully verified. You can now log in.",
       goToLogin: "Go to Login",
       errorTitle: "Verification Failed",
       enterTokenManually: "Enter verification token manually:",
       retryVerification: "Retry Verification",
       tokenPlaceholder: "e.g. your-activation-token",
       idleTitle: "Account Activation",
-      idleDescription:
-        "Please enter the verification token received via email to activate your account.",
+      idleDescription: "Please enter the verification token received via email to activate your account.",
       tokenLabel: "Verification Token",
       activateAccount: "Activate Account",
     },
@@ -775,7 +744,14 @@ export const translations: Record<Locale, TranslationDictionary> = {
     studio: {
       title: "Studios",
       subtitle: "Workflows for your trade. Find one and run it.",
-      professions: { creative: "Creative", general: "General", legal: "Legal", "real-estate": "Real estate", sales: "Sales", trades: "Trades" },
+      professions: {
+        creative: "Creative",
+        general: "General",
+        legal: "Legal",
+        "real-estate": "Real estate",
+        sales: "Sales",
+        trades: "Trades",
+      },
       loadError: "The catalogue could not be loaded.",
       retry: "Try again",
       back: "Back to Studios",
@@ -833,7 +809,11 @@ export const translations: Record<Locale, TranslationDictionary> = {
         perRun: "{price} per run",
         free: "Free",
         unavailable: "Unavailable right now",
-        unavailableCodes: { gpu_offline: "GPU offline", worker_offline: "Engine offline", provider_down: "Provider not answering" },
+        unavailableCodes: {
+          gpu_offline: "GPU offline",
+          worker_offline: "Engine offline",
+          provider_down: "Provider not answering",
+        },
         notForThisModel: "not for this model",
         choicesUnreachable: "The list could not be loaded; the platform will choose for you.",
         noModels: "No model available: contact the administrator.",
@@ -881,7 +861,10 @@ export const translations: Record<Locale, TranslationDictionary> = {
       },
       inputs: {
         prompt: { title: "What should happen on screen" },
-        image: { title: "Starting image (optional)", description: "Choose a photo from your device to start from, instead of an empty frame." },
+        image: {
+          title: "Starting image (optional)",
+          description: "Choose a photo from your device to start from, instead of an empty frame.",
+        },
         aspect: { title: "Format", description: "9:16: vertical video (TikTok, Reels, Shorts). Leave empty for 9:16." },
         durationSeconds: { title: "Duration (seconds)" },
         model: { title: "Model" },
@@ -894,7 +877,11 @@ export const translations: Record<Locale, TranslationDictionary> = {
         foleyModel: { title: "Sound-effects model (optional)" },
         text: { title: "Text to read" },
         voice: { title: "Voice" },
-        "video-generation/prompt": { title: "What should happen on screen", description: "Describe the shot. With a starting image, describe only the motion and the camera: the image already shows the scene." },
+        "video-generation/prompt": {
+          title: "What should happen on screen",
+          description:
+            "Describe the shot. With a starting image, describe only the motion and the camera: the image already shows the scene.",
+        },
         "image-generation/prompt": { title: "What you want to see" },
         "image-analysis/prompt": { title: "What you want to know" },
         "image-analysis/assetId": { title: "Your image" },
@@ -907,7 +894,8 @@ export const translations: Record<Locale, TranslationDictionary> = {
       runFailed: "Run failed",
       runSucceeded: "Run finished",
       resultGone: "This result is no longer available",
-      resultGoneBody: "The file was not kept: this environment can reset its storage when a new version goes out. The facts of the run are below; run it again with the same seed to make it again.",
+      resultGoneBody:
+        "The file was not kept: this environment can reset its storage when a new version goes out. The facts of the run are below; run it again with the same seed to make it again.",
       runCancelled: "Run cancelled",
       runRunning: "Running...",
       runAwaitingInput: "Waiting for your approval",
@@ -919,7 +907,8 @@ export const translations: Record<Locale, TranslationDictionary> = {
     packs: {
       loadError: "Packs could not be loaded.",
       retry: "Retry",
-      holdingsUnavailable: "Billing is not available in this environment: you can browse the packs, but adding or removing one is turned off.",
+      holdingsUnavailable:
+        "Billing is not available in this environment: you can browse the packs, but adding or removing one is turned off.",
     },
     automation: automation.en,
     automations: automations.en,
@@ -932,6 +921,7 @@ export const translations: Record<Locale, TranslationDictionary> = {
     jobsTable: jobsTable.en,
     webhooks: webhooks.en,
     runProgress: runProgress.en,
+    control: control.en,
     commandPalette: {
       label: "Command palette",
       placeholder: "Search a page…",
@@ -949,6 +939,7 @@ export const translations: Record<Locale, TranslationDictionary> = {
     mobile: mobile.en,
     desktop: desktop.en,
     pricing: pricing.en,
+    openSource: openSource.en,
     docs: docs.en,
   },
   fr: {
@@ -983,8 +974,7 @@ export const translations: Record<Locale, TranslationDictionary> = {
     },
     playgroundUsecases: {
       emptyTitle: "Espace de travail du cas d'usage",
-      emptySubtitle:
-        "Espace de travail du nœud dynamique du moteur d'orchestration Orazaka IA",
+      emptySubtitle: "Espace de travail du nœud dynamique du moteur d'orchestration Orazaka IA",
       emptyContent:
         "Cet espace de travail est actuellement vide. Les plans sont résolus dynamiquement à partir du graphe d'opérations.",
     },
@@ -1039,8 +1029,7 @@ export const translations: Record<Locale, TranslationDictionary> = {
       manageProfile: "Votre compte",
       manageProfileDesc: "Votre offre, votre e-mail et votre connexion.",
       configureSettings: "Apparence & Espace",
-      configureSettingsDesc:
-        "Thème, langue, fournisseurs et espace — dans votre profil.",
+      configureSettingsDesc: "Thème, langue, fournisseurs et espace — dans votre profil.",
       recentActivity: "Conversations récentes",
       noRecentSessions: "Pas encore de conversation — la première commence ici.",
       resumeSession: "Reprendre la conversation",
@@ -1063,8 +1052,7 @@ export const translations: Record<Locale, TranslationDictionary> = {
       ai: "IA",
       user: "Vous",
       connectionError: "Connexion interrompue.",
-      promptRequired:
-        "Veuillez d'abord saisir un message dans le champ de saisie.",
+      promptRequired: "Veuillez d'abord saisir un message dans le champ de saisie.",
       addCapability: "Ajouter une fonctionnalité",
       modeChat: "Chat",
       clear: "Effacer",
@@ -1080,8 +1068,7 @@ export const translations: Record<Locale, TranslationDictionary> = {
       composerBusy: "Réponse en cours…",
       copyMessage: "Copier le message",
       copiedMessage: "Copié !",
-      deleteConfirm:
-        "Êtes-vous sûr de vouloir supprimer cette session de discussion ?",
+      deleteConfirm: "Êtes-vous sûr de vouloir supprimer cette session de discussion ?",
       capGeneration: "Génération",
       capAnalysis: "Analyse",
       optModel: "Modèle",
@@ -1094,12 +1081,15 @@ export const translations: Record<Locale, TranslationDictionary> = {
       generating: "Génération en cours…",
       viewTask: "Voir la tâche",
       awaitingInput: "Ce run attend une réponse de votre part",
-      genui: { surface: "La réponse en tableau de bord", loading: "Construction du tableau de bord…", noData: "Pas de données pour cette partie" },
+      genui: {
+        surface: "La réponse en tableau de bord",
+        loading: "Construction du tableau de bord…",
+        noData: "Pas de données pour cette partie",
+      },
     },
     profile: {
       title: "Profil",
-      subtitle:
-        "Gerez et examinez vos identifiants de sécurité et vos préférences ici.",
+      subtitle: "Gerez et examinez vos identifiants de sécurité et vos préférences ici.",
       accountDetails: "Détails du Compte",
       detailsDesc: "Qui vous êtes dans cet espace, et comment vous vous connectez.",
       userId: "Identifiant du compte",
@@ -1157,22 +1147,18 @@ export const translations: Record<Locale, TranslationDictionary> = {
       showPreferences: "Afficher",
       hidePreferences: "Masquer",
       appearanceTitle: "Apparence",
-      appearanceDesc:
-        "Thème, accent, densité et langue — appliqués instantanément à tout l'espace.",
+      appearanceDesc: "Thème, accent, densité et langue — appliqués instantanément à tout l'espace.",
       workspaceTitle: "Espace de travail",
-      workspaceDesc:
-        "Personnalisez l'espace et réglez l'assistant. Visible par les administrateurs.",
+      workspaceDesc: "Personnalisez l'espace et réglez l'assistant. Visible par les administrateurs.",
       integrationsTitle: "Intégrations",
-      integrationsDesc:
-        "Connectez les clés des fournisseurs IA et les serveurs MCP de votre espace.",
+      integrationsDesc: "Connectez les clés des fournisseurs IA et les serveurs MCP de votre espace.",
       unsavedChanges: "Modifications non enregistrées",
       saveChanges: "Enregistrer",
       discard: "Annuler",
     },
     settings: {
       title: "Paramètres Globaux de l'Application",
-      description:
-        "Configurez les paramètres de langue, les options de modèle IA et les thèmes dynamiques.",
+      description: "Configurez les paramètres de langue, les options de modèle IA et les thèmes dynamiques.",
       language: "Langue",
       english: "English",
       french: "Français",
@@ -1212,8 +1198,7 @@ export const translations: Record<Locale, TranslationDictionary> = {
       themeElectricDesc: "L'ancienne identité bleue",
       themeApplied: "appliqué",
       themeClickToApply: "Cliquer pour appliquer",
-      themeChangesInstant:
-        "Les changements s'appliquent instantanément sur toute l'interface",
+      themeChangesInstant: "Les changements s'appliquent instantanément sur toute l'interface",
       saveTheme: "Enregistrer le Thème Dynamique",
       saving: "Enregistrement...",
       credentialsTitle: "Identifiants IA Commerciaux",
@@ -1238,8 +1223,7 @@ export const translations: Record<Locale, TranslationDictionary> = {
       mcpCommand: "Commande d'exécution",
       mcpCommandPlaceholder: "ex. npx, uvx, node",
       mcpArgs: "Arguments de commande (tableau JSON)",
-      mcpArgsPlaceholder:
-        'ex. ["-y", "@modelcontextprotocol/server-filesystem"]',
+      mcpArgsPlaceholder: 'ex. ["-y", "@modelcontextprotocol/server-filesystem"]',
       mcpRegister: "Enregistrer le serveur",
       mcpDelete: "Supprimer",
       mcpNoServers: "Aucun serveur MCP privé configuré.",
@@ -1253,8 +1237,7 @@ export const translations: Record<Locale, TranslationDictionary> = {
     },
     jobs: {
       title: "Mes tâches",
-      subtitle:
-        "Suivez vos exécutions IA asynchrones et tâches de fond en temps réel.",
+      subtitle: "Suivez vos exécutions IA asynchrones et tâches de fond en temps réel.",
       searchPlaceholder: "Rechercher par clé de fonctionnalité...",
       statusAll: "Toutes les tâches",
       statusActive: "Actives",
@@ -1292,8 +1275,7 @@ export const translations: Record<Locale, TranslationDictionary> = {
     },
     providers: {
       title: "Fournisseurs IA",
-      subtitle:
-        "Connectez vos clés API de fournisseurs IA pour un accès étendu",
+      subtitle: "Connectez vos clés API de fournisseurs IA pour un accès étendu",
       connected: "Connecté",
       notConfigured: "Non configuré",
       apiKey: "Clé API",
@@ -1319,8 +1301,7 @@ export const translations: Record<Locale, TranslationDictionary> = {
       editKeyHint: "Saisissez une nouvelle clé pour remplacer celle enregistrée.",
       saveError: "Impossible d'enregistrer la connexion. Réessayez.",
       emptyTitle: "Aucun fournisseur connecté",
-      emptyDesc:
-        "Connectez une clé API de fournisseur IA pour débloquer plus de modèles dans votre espace.",
+      emptyDesc: "Connectez une clé API de fournisseur IA pour débloquer plus de modèles dans votre espace.",
       emptyCta: "Ajouter une connexion",
       allConfigured: "Tous les fournisseurs disponibles sont connectés.",
       cancel: "Annuler",
@@ -1328,31 +1309,26 @@ export const translations: Record<Locale, TranslationDictionary> = {
     },
     apiKeys: {
       title: "Clés API",
-      subtitle:
-        "Jetons d'accès personnels pour appeler l'API Orazaka par programme.",
+      subtitle: "Jetons d'accès personnels pour appeler l'API Orazaka par programme.",
       create: "Créer une clé API",
       loading: "Chargement des clés…",
       emptyTitle: "Aucune clé API",
-      emptyDesc:
-        "Créez une clé pour authentifier vos appels programmatiques à l'API Orazaka.",
+      emptyDesc: "Créez une clé pour authentifier vos appels programmatiques à l'API Orazaka.",
       emptyCta: "Créer votre première clé",
       nameLabel: "Nom",
       namePlaceholder: "ex. Mon portable, Pipeline CI",
       createCta: "Créer la clé",
       cancel: "Annuler",
       createError: "Impossible de créer la clé. Réessayez.",
-      limitReached:
-        "Vous avez atteint le maximum de 10 clés API. Révoquez-en une pour en créer une autre.",
+      limitReached: "Vous avez atteint le maximum de 10 clés API. Révoquez-en une pour en créer une autre.",
       limitCaption: "clés utilisées",
       created: "Créée le",
       lastUsed: "Dernière utilisation",
       neverUsed: "Jamais utilisée",
       revoke: "Révoquer",
-      confirmDelete:
-        "Révoquer cette clé API ? Toute intégration l'utilisant cessera immédiatement de fonctionner.",
+      confirmDelete: "Révoquer cette clé API ? Toute intégration l'utilisant cessera immédiatement de fonctionner.",
       revealTitle: "Copiez votre clé API maintenant",
-      revealDesc:
-        "C'est la seule fois où elle sera affichée. Conservez-la en lieu sûr.",
+      revealDesc: "C'est la seule fois où elle sera affichée. Conservez-la en lieu sûr.",
       copy: "Copier",
       copied: "Copiée",
       done: "Terminé",
@@ -1369,8 +1345,7 @@ export const translations: Record<Locale, TranslationDictionary> = {
       transcript: "Transcription",
       analyzeAnother: "Analyser une autre vidéo",
       tryAgain: "Réessayer",
-      onlyMp4MovSupported:
-        "Seuls les fichiers MP4 et QuickTime sont pris en charge.",
+      onlyMp4MovSupported: "Seuls les fichiers MP4 et QuickTime sont pris en charge.",
       fileLimitExceeded: "Le fichier dépasse la limite de 100 Mo.",
       locked: "Verrouillé",
       enterValue: "Entrez la valeur pour {field}",
@@ -1378,15 +1353,13 @@ export const translations: Record<Locale, TranslationDictionary> = {
       runningIngestion: "Ingestion en cours...",
       executionFailed: "L'exécution a échoué.",
       serviceOffline: "Service hors ligne",
-      serviceOfflineHint:
-        "Le moteur local de cette capacité est hors ligne. Démarrez-le, puis réessayez.",
+      serviceOfflineHint: "Le moteur local de cette capacité est hors ligne. Démarrez-le, puis réessayez.",
       synthesizeSpeech: "Synthétiser la parole",
       ttsUnsupportedWarning:
         "Attention : Le fournisseur d'IA actuel (Ollama) ne prend pas en charge les fonctionnalités audio multi-modales (TTS). Veuillez configurer une clé API OpenAI dans le backend pour utiliser la synthèse vocale.",
       outputResult: "Résultat de sortie",
       gatewayRestriction: "Restriction de passerelle",
-      speechHelper:
-        "Exemple : Hello, this is a local speech synthesis verification test running on macOS bare-metal.",
+      speechHelper: "Exemple : Hello, this is a local speech synthesis verification test running on macOS bare-metal.",
       imageTokensLabel: "Styles suggérés :",
       videoExamplesLabel: "Prompts optimisés :",
       posterGuidelines:
@@ -1399,8 +1372,7 @@ export const translations: Record<Locale, TranslationDictionary> = {
       imageTokenAntigravity: "antigravite",
       videoExampleVerification: "A local-first verification video stream",
       videoExampleCinematic: "Cinematic camera panning, high fidelity stream",
-      videoExampleDynamic:
-        "Dynamic light effects, virtual studio, smooth rotation",
+      videoExampleDynamic: "Dynamic light effects, virtual studio, smooth rotation",
       posterExamplePrompt: "Identify elements in this poster",
       modelPiperLow: "Piper Anglais Low (Ultra-rapide)",
       modelPiperRyan: "Piper Anglais Medium Ryan (Naturel)",
@@ -1439,14 +1411,12 @@ export const translations: Record<Locale, TranslationDictionary> = {
       removeAsset: "Supprimer l'élément",
       dragAndDropAssetOr: "Glissez-déposez l'élément, ou ",
       supportedFormatsAudio: "Formats pris en charge : .mp3, .wav, .aac",
-      invalidAudioFile:
-        "Veuillez télécharger un fichier audio valide (.mp3, .wav, .aac)",
+      invalidAudioFile: "Veuillez télécharger un fichier audio valide (.mp3, .wav, .aac)",
       invalidImageFile: "Veuillez télécharger un fichier image valide",
       failedUploadMedia: "Échec du téléversement de l'élément média : ",
       processingProgress: "Traitement : {percent}%",
       passiveRagTitle: "Récupération passive de contexte RAG (all-minilm)",
-      passiveRagPlaceholder:
-        "Interrogez l'index sémantique (ex. 'Virtual thread concurrency' ou 'BFF proxy mapping')",
+      passiveRagPlaceholder: "Interrogez l'index sémantique (ex. 'Virtual thread concurrency' ou 'BFF proxy mapping')",
       search: "Rechercher",
       examples: "Exemples :",
       retrievedContext: "Contexte récupéré",
@@ -1480,8 +1450,7 @@ export const translations: Record<Locale, TranslationDictionary> = {
       modelNameLabel: "Nom du modèle (ID)",
       modelLabelLabel: "Libellé du modèle (Nom d'affichage)",
       optionsLabel: "Options (séparées par des virgules)",
-      setAsDefaultLabel:
-        "Définir comme valeur par défaut de catégorie dynamique",
+      setAsDefaultLabel: "Définir comme valeur par défaut de catégorie dynamique",
       cancel: "Annuler",
       saveChanges: "Enregistrer les modifications",
       createModel: "Créer le modèle",
@@ -1503,8 +1472,7 @@ export const translations: Record<Locale, TranslationDictionary> = {
       helpDefault:
         "Marquez ce modèle comme le processeur par défaut pour cette catégorie. Si une tâche asynchrone s'exécute (comme l'analyse automatique de conformité d'affiche/audio) et qu'aucuen paramètre de modèle spécifique n'est fourni, le système interroge et utilise dynamiquement ce modèle. La définition d'un modèle par défaut désactive automatiquement tout autre modèle de la même catégorie par défaut.",
       nameAndLabelRequired: "Le nom et le libellé du modèle sont requis",
-      confirmDelete:
-        "Êtes-vous sûr de vouloir supprimer ce modèle du catalogue ?",
+      confirmDelete: "Êtes-vous sûr de vouloir supprimer ce modèle du catalogue ?",
       loadingModels: "Chargement...",
       deleteModelTitle: "Supprimer le modèle",
       systemRoleLabel: "Rôle système :",
@@ -1517,13 +1485,11 @@ export const translations: Record<Locale, TranslationDictionary> = {
       placeholderModelLabel: "ex. Piper Low (en)",
       placeholderOptions: "ex. Alloy,Echo,Nova (Optionnel)",
       featureOverridesTitle: "Surcharges du registre de capacités",
-      featureNoOverrides:
-        "Aucune surcharge configurée dans la base de données.",
+      featureNoOverrides: "Aucune surcharge configurée dans la base de données.",
       featureOverrideEnabled: "Surcharge base de données active",
       pipeline: {
         title: "Chaîne d'intercepteurs du pipeline",
-        subtitle:
-          "Configurez l'ordre d'exécution et activez/désactivez les intercepteurs du pipeline d'orchestration.",
+        subtitle: "Configurez l'ordre d'exécution et activez/désactivez les intercepteurs du pipeline d'orchestration.",
         orderLabel: "Ordre",
         enabledLabel: "Activé",
         descriptionLabel: "Description",
@@ -1533,8 +1499,7 @@ export const translations: Record<Locale, TranslationDictionary> = {
         saveOrder: "Enregistrer l'ordre",
         saving: "Enregistrement...",
         savedSuccess: "Configuration du pipeline enregistrée avec succès.",
-        errorSaving:
-          "Échec de l'enregistrement de la configuration du pipeline.",
+        errorSaving: "Échec de l'enregistrement de la configuration du pipeline.",
         errorLoading: "Échec du chargement de la configuration du pipeline.",
         dragHint: "Glissez pour réorganiser les intercepteurs",
         disabled: "Désactivé",
@@ -1550,10 +1515,8 @@ export const translations: Record<Locale, TranslationDictionary> = {
       orContinueWith: "Ou continuez avec",
       noAccount: "Pas de compte ?",
       registerLink: "S'inscrire",
-      invalidCredentials:
-        "E-mail ou mot de passe invalide. Veuillez vérifier vos identifiants.",
-      unexpectedError:
-        "Une erreur inattendue est survenue. Veuillez réessayer.",
+      invalidCredentials: "E-mail ou mot de passe invalide. Veuillez vérifier vos identifiants.",
+      unexpectedError: "Une erreur inattendue est survenue. Veuillez réessayer.",
       registerTitle: "Orazaka",
       registerSubtitle: "Créez votre compte Orazaka",
       usernameLabel: "Nom d'utilisateur",
@@ -1561,22 +1524,17 @@ export const translations: Record<Locale, TranslationDictionary> = {
       preferredLanguageLabel: "Langue préférée",
       creatingAccountBtn: "Création du compte…",
       createAccountBtn: "Créer le compte",
-      termsNotice:
-        "En vous inscrivant, vous acceptez les conditions d'utilisation de la plateforme.",
+      termsNotice: "En vous inscrivant, vous acceptez les conditions d'utilisation de la plateforme.",
       alreadyHaveAccount: "Vous avez déjà un compte ?",
-      usernameMinLength:
-        "Le nom d'utilisateur doit comporter au moins 3 caractères.",
-      passwordMinLength:
-        "Le mot de passe doit comporter au moins 8 caractères.",
+      usernameMinLength: "Le nom d'utilisateur doit comporter au moins 3 caractères.",
+      passwordMinLength: "Le mot de passe doit comporter au moins 8 caractères.",
       passwordsDoNotMatch: "Les mots de passe ne correspondent pas.",
       heroHeadline: "Maîtrisez votre intelligence.",
       heroTagline:
         "La plateforme d'IA souveraine qui s'exécute sur votre propre matériel, sans télémétrie. Cette démo tourne sur notre serveur de développement.",
       heroFeature1: "Confidentialité absolue — vos données restent sur la machine où vous exécutez Orazaka",
-      heroFeature2:
-        "Moteur unifié — texte, vision, audio, vidéo & code en un seul runtime",
-      heroFeature3:
-        "Portée infinie — étendez via MCP vers tout outil, API ou source de données",
+      heroFeature2: "Moteur unifié — texte, vision, audio, vidéo & code en un seul runtime",
+      heroFeature3: "Portée infinie — étendez via MCP vers tout outil, API ou source de données",
       forgotTitle: "Réinitialiser votre mot de passe",
       forgotSubtitle: "Entrez votre email et nous vous enverrons un lien de réinitialisation.",
       forgotError: "Échec de l'envoi de l'email de réinitialisation. Veuillez réessayer.",
@@ -1610,11 +1568,9 @@ export const translations: Record<Locale, TranslationDictionary> = {
       step2Title: "Extraction du Modèle Cible",
       step2Desc: "Routage de la charge utile vers le modèle: [{modelName}]",
       step3Title: "Allocation de l'Infrastructure de Calcul",
-      step3Desc:
-        "Invocation de la couche d'exécution Apple Silicon via Metal (MPS)...",
+      step3Desc: "Invocation de la couche d'exécution Apple Silicon via Metal (MPS)...",
       step4Title: "Synchronisation de l'Isolation de Stockage",
-      step4Desc:
-        "Écriture des fichiers binaires médias sur le disque d'espace de travail isolé...",
+      step4Desc: "Écriture des fichiers binaires médias sur le disque d'espace de travail isolé...",
     },
     errors: {
       generic: "Une erreur inattendue s'est produite. Veuillez réessayer.",
@@ -1622,17 +1578,14 @@ export const translations: Record<Locale, TranslationDictionary> = {
       videoGenerationFailed: "La génération vidéo a échoué.",
       fileUploadFailed: "Échec du téléversement du fichier.",
       threadParseFailed: "Échec de l'analyse des messages du fil.",
-      fetchSupportedModelsFailed:
-        "Échec de la récupération des modèles supportés.",
-      fetchModelCatalogFailed:
-        "Échec de la récupération du catalogue de modèles.",
+      fetchSupportedModelsFailed: "Échec de la récupération des modèles supportés.",
+      fetchModelCatalogFailed: "Échec de la récupération du catalogue de modèles.",
       featureToggleFailed: "Échec de la mise à jour du feature toggle.",
     },
     interception: {
       loadingSchema: "Chargement du formulaire...",
       loadingError: "Erreur de Chargement",
-      loadingErrorDesc:
-        "Impossible de charger le formulaire de validation. Veuillez rafraîchir la page.",
+      loadingErrorDesc: "Impossible de charger le formulaire de validation. Veuillez rafraîchir la page.",
       retry: "Recharger",
       fieldRequired: (label: string) => `Le champ "${label}" est requis.`,
       resolving: "Validation...",
@@ -1660,8 +1613,7 @@ export const translations: Record<Locale, TranslationDictionary> = {
         "Interrogez et exécutez les capacités dynamiques du moteur d'orchestration Orazaka. Les plans sont résolus en temps réel depuis le graphe des opérations.",
       mediaCapabilities: "Capacités Média",
       noActiveCapabilities: "Aucune Capacité Active",
-      noActiveCapabilitiesDesc:
-        "Le graphe des opérations a retourné un jeu de données vide ou invalide.",
+      noActiveCapabilitiesDesc: "Le graphe des opérations a retourné un jeu de données vide ou invalide.",
       creativeCategory: "Studio Créatif",
       creativeDesc: "Générez des images, vidéos et voix à partir de prompts textuels.",
       generateVideoDesc: "Générez des vidéos IA à partir de prompts textuels avec des modèles de diffusion locaux.",
@@ -1680,16 +1632,14 @@ export const translations: Record<Locale, TranslationDictionary> = {
     verify: {
       loadingMessage: "Vérification de votre compte...",
       successTitle: "Compte Activé !",
-      successDescription:
-        "Votre compte a été vérifié avec succès. Vous pouvez maintenant vous connecter.",
+      successDescription: "Votre compte a été vérifié avec succès. Vous pouvez maintenant vous connecter.",
       goToLogin: "Se Connecter",
       errorTitle: "Échec de la Vérification",
       enterTokenManually: "Entrez le jeton manuellement :",
       retryVerification: "Essayer à nouveau",
       tokenPlaceholder: "ex. votre-jeton-activation",
       idleTitle: "Activation du Compte",
-      idleDescription:
-        "Veuillez saisir le jeton reçu par email pour activer votre compte.",
+      idleDescription: "Veuillez saisir le jeton reçu par email pour activer votre compte.",
       tokenLabel: "Jeton de vérification",
       activateAccount: "Activer le Compte",
     },
@@ -1714,7 +1664,14 @@ export const translations: Record<Locale, TranslationDictionary> = {
     studio: {
       title: "Studios",
       subtitle: "Des workflows pour votre métier. Trouvez-en un et lancez-le.",
-      professions: { creative: "Création", general: "Général", legal: "Juridique", "real-estate": "Immobilier", sales: "Vente", trades: "Artisans" },
+      professions: {
+        creative: "Création",
+        general: "Général",
+        legal: "Juridique",
+        "real-estate": "Immobilier",
+        sales: "Vente",
+        trades: "Artisans",
+      },
       loadError: "Le catalogue n'a pas pu être chargé.",
       retry: "Réessayer",
       back: "Retour aux Studios",
@@ -1772,7 +1729,11 @@ export const translations: Record<Locale, TranslationDictionary> = {
         perRun: "{price} par essai",
         free: "Gratuit",
         unavailable: "Indisponible pour le moment",
-        unavailableCodes: { gpu_offline: "GPU hors ligne", worker_offline: "Moteur hors ligne", provider_down: "Fournisseur injoignable" },
+        unavailableCodes: {
+          gpu_offline: "GPU hors ligne",
+          worker_offline: "Moteur hors ligne",
+          provider_down: "Fournisseur injoignable",
+        },
         notForThisModel: "pas pour ce modèle",
         choicesUnreachable: "La liste n'a pas pu être chargée ; la plateforme choisira pour vous.",
         noModels: "Aucun modèle disponible : contactez l'administrateur.",
@@ -1820,8 +1781,14 @@ export const translations: Record<Locale, TranslationDictionary> = {
       },
       inputs: {
         prompt: { title: "Ce qui doit se passer à l'écran" },
-        image: { title: "Image d'amorce (facultatif)", description: "Choisissez une photo depuis votre appareil pour partir d'une image plutôt que du vide." },
-        aspect: { title: "Format", description: "9:16 : la vidéo verticale (TikTok, Reels, Shorts). Laissez vide pour 9:16." },
+        image: {
+          title: "Image d'amorce (facultatif)",
+          description: "Choisissez une photo depuis votre appareil pour partir d'une image plutôt que du vide.",
+        },
+        aspect: {
+          title: "Format",
+          description: "9:16 : la vidéo verticale (TikTok, Reels, Shorts). Laissez vide pour 9:16.",
+        },
         durationSeconds: { title: "Durée (secondes)" },
         model: { title: "Modèle" },
         seed: { title: "Graine" },
@@ -1833,7 +1800,11 @@ export const translations: Record<Locale, TranslationDictionary> = {
         foleyModel: { title: "Modèle de bruitage (facultatif)" },
         text: { title: "Le texte à lire" },
         voice: { title: "Voix" },
-        "video-generation/prompt": { title: "Ce qui doit se passer à l'écran", description: "Décrivez le plan. Avec une image d'amorce, décrivez seulement le mouvement et la caméra : l'image montre déjà la scène." },
+        "video-generation/prompt": {
+          title: "Ce qui doit se passer à l'écran",
+          description:
+            "Décrivez le plan. Avec une image d'amorce, décrivez seulement le mouvement et la caméra : l'image montre déjà la scène.",
+        },
         "image-generation/prompt": { title: "Ce que vous voulez voir" },
         "image-analysis/prompt": { title: "Ce que vous voulez savoir" },
         "image-analysis/assetId": { title: "Votre image" },
@@ -1846,7 +1817,8 @@ export const translations: Record<Locale, TranslationDictionary> = {
       runFailed: "Exécution échouée",
       runSucceeded: "Exécution terminée",
       resultGone: "Ce résultat n'est plus disponible",
-      resultGoneBody: "Le fichier n'a pas été conservé : cet environnement peut réinitialiser son stockage à chaque nouvelle version. Les faits de l'exécution sont ci-dessous ; relancez-la avec la même graine pour la refaire.",
+      resultGoneBody:
+        "Le fichier n'a pas été conservé : cet environnement peut réinitialiser son stockage à chaque nouvelle version. Les faits de l'exécution sont ci-dessous ; relancez-la avec la même graine pour la refaire.",
       runCancelled: "Exécution annulée",
       runRunning: "En cours...",
       runAwaitingInput: "En attente de votre validation",
@@ -1858,7 +1830,8 @@ export const translations: Record<Locale, TranslationDictionary> = {
     packs: {
       loadError: "Impossible de charger les packs.",
       retry: "Réessayer",
-      holdingsUnavailable: "La facturation n’est pas disponible dans cet environnement : vous pouvez parcourir les packs, mais l’ajout et le retrait sont désactivés.",
+      holdingsUnavailable:
+        "La facturation n’est pas disponible dans cet environnement : vous pouvez parcourir les packs, mais l’ajout et le retrait sont désactivés.",
     },
     automation: automation.fr,
     automations: automations.fr,
@@ -1871,6 +1844,7 @@ export const translations: Record<Locale, TranslationDictionary> = {
     jobsTable: jobsTable.fr,
     webhooks: webhooks.fr,
     runProgress: runProgress.fr,
+    control: control.fr,
     commandPalette: {
       label: "Palette de commandes",
       placeholder: "Chercher une page…",
@@ -1888,6 +1862,7 @@ export const translations: Record<Locale, TranslationDictionary> = {
     mobile: mobile.fr,
     desktop: desktop.fr,
     pricing: pricing.fr,
+    openSource: openSource.fr,
     docs: docs.fr,
   },
 };

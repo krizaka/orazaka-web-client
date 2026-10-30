@@ -10,9 +10,7 @@ function ChatContent() {
   const searchParams = useSearchParams();
   const conversationId = searchParams.get("conversationId") || "";
 
-  return (
-    <ChatWindow key={conversationId} initialConversationId={conversationId} />
-  );
+  return <ChatWindow key={conversationId} initialConversationId={conversationId} />;
 }
 
 /**
@@ -35,13 +33,7 @@ export default function ChatPage() {
   return (
     <AppShell>
       <main className="flex-1 flex flex-col overflow-hidden bg-surface-0">
-        <Suspense
-          fallback={
-            <output className="p-6 text-fg-muted text-sm animate-pulse">
-              Loading chat...
-            </output>
-          }
-        >
+        <Suspense fallback={<output className="p-6 text-fg-muted text-sm animate-pulse">Loading chat...</output>}>
           <ChatContent />
         </Suspense>
       </main>

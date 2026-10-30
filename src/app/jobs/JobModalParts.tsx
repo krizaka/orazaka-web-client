@@ -33,10 +33,7 @@ export function ProgressTimeline({ status }: Readonly<{ status: string }>) {
     },
     {
       key: "done",
-      label:
-        status === JOB_STATUS.FAILED
-          ? t.jobs?.statusFailed || "Failed"
-          : t.jobs?.statusCompleted || "Completed",
+      label: status === JOB_STATUS.FAILED ? t.jobs?.statusFailed || "Failed" : t.jobs?.statusCompleted || "Completed",
       icon: status === JOB_STATUS.FAILED ? "error" : "checkCircle",
     },
   ];
@@ -58,29 +55,20 @@ export function ProgressTimeline({ status }: Readonly<{ status: string }>) {
               className={cn(
                 "relative flex items-center justify-center w-9 h-9 rounded-xl transition-all duration-500",
                 (() => {
-                  if (isDone)
-                    return isFailed
-                      ? "bg-danger/10 text-danger"
-                      : "bg-success/10 text-success";
-                  if (isActive)
-                    return isFailed
-                      ? "bg-danger/10 text-danger"
-                      : "bg-accent-soft text-accent";
+                  if (isDone) return isFailed ? "bg-danger/10 text-danger" : "bg-success/10 text-success";
+                  if (isActive) return isFailed ? "bg-danger/10 text-danger" : "bg-accent-soft text-accent";
                   return "bg-surface-2 text-fg-muted";
-                })()
+                })(),
               )}
             >
-              {isActive &&
-                !isDone &&
-                status !== JOB_STATUS.FAILED &&
-                status !== JOB_STATUS.COMPLETED && (
-                  <span className="absolute inset-0 rounded-xl bg-accent opacity-[0.06] animate-pulse" />
-                )}
+              {isActive && !isDone && status !== JOB_STATUS.FAILED && status !== JOB_STATUS.COMPLETED && (
+                <span className="absolute inset-0 rounded-xl bg-accent opacity-[0.06] animate-pulse" />
+              )}
               <Icon
                 name={stageIconName}
                 className={cn(
                   "w-4 h-4 relative z-10",
-                  isActive && (status === JOB_STATUS.PROCESSING || status === JOB_STATUS.PENDING) ? "animate-spin" : ""
+                  isActive && (status === JOB_STATUS.PROCESSING || status === JOB_STATUS.PENDING) ? "animate-spin" : "",
                 )}
               />
             </div>
@@ -89,15 +77,15 @@ export function ProgressTimeline({ status }: Readonly<{ status: string }>) {
             {i < stages.length - 1 && (
               <div className="flex-1 h-[2px] rounded-sm bg-surface-3 overflow-hidden">
                 <div
-                  className={cn("h-full rounded-sm transition-all duration-700 ease-out", (() => {
-                    if (isDone || (isActive && i < currentIdx))
-                      return isFailed
-                        ? "bg-danger w-full"
-                        : "bg-accent w-full";
-                    if (isActive)
-                      return "bg-accent w-1/2 animate-pulse";
-                    return "w-0";
-                  })())}
+                  className={cn(
+                    "h-full rounded-sm transition-all duration-700 ease-out",
+                    (() => {
+                      if (isDone || (isActive && i < currentIdx))
+                        return isFailed ? "bg-danger w-full" : "bg-accent w-full";
+                      if (isActive) return "bg-accent w-1/2 animate-pulse";
+                      return "w-0";
+                    })(),
+                  )}
                 />
               </div>
             )}
@@ -115,9 +103,7 @@ export function StageLabels({ status }: Readonly<{ status: string }>) {
   const labels = [
     t.jobs?.colCreated || "Submitted",
     t.jobs?.running || "Processing",
-    status === JOB_STATUS.FAILED
-      ? t.jobs?.statusFailed || "Failed"
-      : t.jobs?.statusCompleted || "Completed",
+    status === JOB_STATUS.FAILED ? t.jobs?.statusFailed || "Failed" : t.jobs?.statusCompleted || "Completed",
   ];
 
   const currentIdx = resolveStatusIndex(status);
@@ -127,9 +113,10 @@ export function StageLabels({ status }: Readonly<{ status: string }>) {
       {labels.map((label, i) => (
         <span
           key={label}
-          className={cn("text-[10px] font-medium transition-colors duration-300", i <= currentIdx
-            ? "text-fg"
-            : "text-fg-muted")}
+          className={cn(
+            "text-[10px] font-medium transition-colors duration-300",
+            i <= currentIdx ? "text-fg" : "text-fg-muted",
+          )}
         >
           {label}
         </span>
@@ -150,16 +137,13 @@ export function StatusPill({ status }: Readonly<{ status: string }>) {
   const dotColor = style.dot;
   return (
     <span
-      className={cn(
-        "inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-sm text-[10px] font-semibold",
-        style.cls
-      )}
+      className={cn("inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-sm text-[10px] font-semibold", style.cls)}
     >
       <span
         className={cn(
           "w-1.5 h-1.5 rounded-full",
           status === JOB_STATUS.PROCESSING || status === JOB_STATUS.PENDING ? "animate-pulse" : "",
-          dotColor
+          dotColor,
         )}
       />
       {style.label}
@@ -205,9 +189,7 @@ export function LiveElapsed({
     <span className="inline-flex items-center gap-1 text-[10px] text-fg-muted font-mono tabular-nums">
       <Icon name="timer" className="w-3 h-3" />
       {elapsed}
-      {isLive && (
-        <span className="w-1 h-1 rounded-full bg-warning animate-pulse" />
-      )}
+      {isLive && <span className="w-1 h-1 rounded-full bg-warning animate-pulse" />}
     </span>
   );
 }

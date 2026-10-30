@@ -62,7 +62,10 @@ export function JobsGallery({ jobs, onOpen, limit = 6 }: Readonly<JobsGalleryPro
                   {jobLabel(t, job)}
                 </Badge>
                 <span className="ml-auto text-[11px] text-fg-muted">
-                  {formatDistanceToNow(new Date(job.updatedAt), { addSuffix: true, locale: locale === "fr" ? fr : enUS })}
+                  {formatDistanceToNow(new Date(job.updatedAt), {
+                    addSuffix: true,
+                    locale: locale === "fr" ? fr : enUS,
+                  })}
                 </span>
               </div>
               {prompt && <Card.Description className="text-[13px]">{prompt}</Card.Description>}

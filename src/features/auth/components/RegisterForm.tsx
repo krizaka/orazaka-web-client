@@ -70,10 +70,58 @@ export function RegisterForm({ onSuccess, onError }: Readonly<RegisterFormProps>
 
   return (
     <form id="form-register" onSubmit={handleRegister} className="flex flex-col gap-4">
-      {field("reg-username", t.auth.usernameLabel, <Input id="reg-username" type="text" placeholder="your_name" value={username} onChange={(e) => setUsername(e.target.value)} required minLength={3} autoComplete="username" />)}
-      {field("reg-email", t.auth.emailLabel, <Input id="reg-email" type="email" placeholder="you@orazaka.com" value={email} onChange={(e) => setEmail(e.target.value)} required autoComplete="email" />)}
-      {field("reg-password", t.auth.passwordLabel, <Input id="reg-password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} required minLength={8} autoComplete="new-password" />)}
-      {field("reg-confirm-password", t.auth.confirmPasswordLabel, <Input id="reg-confirm-password" type="password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} required autoComplete="new-password" />)}
+      {field(
+        "reg-username",
+        t.auth.usernameLabel,
+        <Input
+          id="reg-username"
+          type="text"
+          placeholder="your_name"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+          required
+          minLength={3}
+          autoComplete="username"
+        />,
+      )}
+      {field(
+        "reg-email",
+        t.auth.emailLabel,
+        <Input
+          id="reg-email"
+          type="email"
+          placeholder="you@orazaka.com"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          required
+          autoComplete="email"
+        />,
+      )}
+      {field(
+        "reg-password",
+        t.auth.passwordLabel,
+        <Input
+          id="reg-password"
+          type="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          required
+          minLength={8}
+          autoComplete="new-password"
+        />,
+      )}
+      {field(
+        "reg-confirm-password",
+        t.auth.confirmPasswordLabel,
+        <Input
+          id="reg-confirm-password"
+          type="password"
+          value={confirmPassword}
+          onChange={(e) => setConfirmPassword(e.target.value)}
+          required
+          autoComplete="new-password"
+        />,
+      )}
       {field(
         "reg-language",
         t.auth.preferredLanguageLabel,

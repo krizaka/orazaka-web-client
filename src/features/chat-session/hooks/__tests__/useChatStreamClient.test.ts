@@ -121,6 +121,34 @@ describe("useChatStreamClient", () => {
     expect(stored).toContain("Hello world!");
   });
 
+  it("puts the engine's verdict on the answer: pending on the chunks, final on the last event", async () => {
+    const { result } = renderHook(() => useChatStreamClient(), { wrapper });
+    const sse = (o: object) => new Uint8Array(Buffer.from(`data: ${JSON.stringify(o)}\n\n`));
+    mockReader.read
+      .mockResolvedValueOnce({
+        done: false,
+        value: sse({ content: "Hello", metadata: { "control.verdict": "PENDING" } }),
+      })
+      .mockResolvedValueOnce({
+        done: false,
+        value: sse({
+          content: "",
+          metadata: { "control.verdict": "DEGRADED", "control.badge": "verification_unavailable" },
+        }),
+      })
+      .mockResolvedValueOnce({ done: true });
+
+    await act(async () => {
+      await result.current.startChatStream("conv-ctl", "hi");
+    });
+
+    const stored = JSON.parse(localStorage.getItem("orazaka_messages_test-user_conv-ctl") ?? "[]");
+    expect(stored.at(-1)).toMatchObject({
+      content: "Hello",
+      control: { state: "degraded", badge: "verification_unavailable" },
+    });
+  });
+
   it("handles fetch non-ok response and logs error", async () => {
     global.fetch = jest.fn().mockResolvedValue({
       ok: false,
@@ -160,10 +188,7 @@ describe("useChatStreamClient", () => {
 
   it("updates thread title in localStorage on stream error", async () => {
     global.fetch = jest.fn().mockRejectedValue(new Error("Network Failure"));
-    localStorage.setItem(
-      "orazaka_threads",
-      JSON.stringify([{ conversationId: "conv-123", title: "Original Title" }]),
-    );
+    localStorage.setItem("orazaka_threads", JSON.stringify([{ conversationId: "conv-123", title: "Original Title" }]));
 
     const consoleErrorSpy = jest.spyOn(console, "error").mockImplementation(() => {});
 

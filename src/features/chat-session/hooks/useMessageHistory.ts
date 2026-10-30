@@ -20,14 +20,9 @@ const buildKey = (userId: string, conversationId: string): readonly string[] =>
  * @param {string} conversationId - The target conversation thread ID.
  * @returns {ChatMessage[]} The list of stored messages for the conversation.
  */
-export const getStoredMessages = (
-  userId: string,
-  conversationId: string,
-): ChatMessage[] => {
+export const getStoredMessages = (userId: string, conversationId: string): ChatMessage[] => {
   if (!conversationId || globalThis.window === undefined) return [];
-  const stored = localStorage.getItem(
-    `orazaka_messages_${userId}_${conversationId}`,
-  );
+  const stored = localStorage.getItem(`orazaka_messages_${userId}_${conversationId}`);
   if (!stored) return [];
   try {
     const parsed: Partial<ChatMessage>[] = JSON.parse(stored);
@@ -45,9 +40,7 @@ export const getStoredMessages = (
       // is the same case: the bubble becomes the text it already held.
       if (msg.kind === "run-pending") {
         const pending = msg as Partial<ChatMessage> & { runId?: string };
-        return pending.runId
-          ? { ...base, kind: "run-pending", runId: pending.runId }
-          : { ...base, kind: "text" };
+        return pending.runId ? { ...base, kind: "run-pending", runId: pending.runId } : { ...base, kind: "text" };
       }
       return { ...base, kind: msg.kind ?? "text" };
     });
@@ -64,16 +57,9 @@ export const getStoredMessages = (
  * @param {string} conversationId - The target conversation thread ID.
  * @param {ChatMessage[]} messages - The messages to serialize and save.
  */
-export const saveStoredMessages = (
-  userId: string,
-  conversationId: string,
-  messages: ChatMessage[],
-): void => {
+export const saveStoredMessages = (userId: string, conversationId: string, messages: ChatMessage[]): void => {
   if (!conversationId || globalThis.window === undefined) return;
-  localStorage.setItem(
-    `orazaka_messages_${userId}_${conversationId}`,
-    JSON.stringify(messages),
-  );
+  localStorage.setItem(`orazaka_messages_${userId}_${conversationId}`, JSON.stringify(messages));
 };
 
 /**

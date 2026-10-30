@@ -6,11 +6,7 @@ import { CatalogueIcon } from "@/components/icons/CatalogueIcon";
 import { useTranslation } from "@/core/context/LocaleContext";
 import { fill } from "@/core/context/fill";
 import { useMoney } from "@/core/hooks/useMoney";
-import {
-  StudioState,
-  type CatalogueGroup,
-  type CatalogueRow,
-} from "@/features/studio/catalogue/catalogue.types";
+import { StudioState, type CatalogueGroup, type CatalogueRow } from "@/features/studio/catalogue/catalogue.types";
 import { StudioRowAction } from "@/features/studio/components/StudioRowAction";
 
 interface StudioCatalogueListProps {
@@ -31,11 +27,7 @@ const TONE = {
  * state, and one action. Dense on purpose (a phone shows a dozen rows, a desktop a whole trade), so finding a Studio
  * is reading a list, not scrolling past posters.
  */
-export function StudioCatalogueList({
-  groups,
-  onGetPack,
-  plansHref,
-}: Readonly<StudioCatalogueListProps>) {
+export function StudioCatalogueList({ groups, onGetPack, plansHref }: Readonly<StudioCatalogueListProps>) {
   const { t } = useTranslation();
   const c = t.catalogue;
   const money = useMoney();
@@ -63,19 +55,10 @@ export function StudioCatalogueList({
   return (
     <div className="flex flex-col gap-5">
       {groups.map((group) => (
-        <section
-          key={group.trade}
-          aria-labelledby={`trade-${group.trade}`}
-          className="flex flex-col gap-2"
-        >
-          <h2
-            id={`trade-${group.trade}`}
-            className="flex items-baseline gap-2 px-1 text-sm font-semibold text-fg"
-          >
+        <section key={group.trade} aria-labelledby={`trade-${group.trade}`} className="flex flex-col gap-2">
+          <h2 id={`trade-${group.trade}`} className="flex items-baseline gap-2 px-1 text-sm font-semibold text-fg">
             {group.label}
-            <span className="text-xs font-normal tabular-nums text-fg-muted">
-              {group.rows.length}
-            </span>
+            <span className="text-xs font-normal tabular-nums text-fg-muted">{group.rows.length}</span>
           </h2>
           <List
             aria-label={fill(c.listLabel, { trade: group.label })}
@@ -96,13 +79,7 @@ export function StudioCatalogueList({
                   {c.states[row.state]}
                 </Badge>
               ),
-              actions: (
-                <StudioRowAction
-                  row={row}
-                  onGetPack={onGetPack}
-                  plansHref={plansHref}
-                />
-              ),
+              actions: <StudioRowAction row={row} onGetPack={onGetPack} plansHref={plansHref} />,
             })}
           />
         </section>

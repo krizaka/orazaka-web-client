@@ -1,7 +1,23 @@
 /** @jest-environment node */
 import fs from "node:fs";
 import path from "node:path";
-import { JOURNEY_IDS, editUrl, listDocs, listPages, navItems, neighbours, plainText, prepareBody, readDoc, resolveLink, searchDocs, searchIndex, sourcesMap, splitSegments, tocOf } from "@/features/docs/utils/docs";
+import {
+  JOURNEY_IDS,
+  editUrl,
+  listDocs,
+  listPages,
+  navItems,
+  neighbours,
+  plainText,
+  prepareBody,
+  readDoc,
+  resolveLink,
+  searchDocs,
+  searchIndex,
+  sourcesMap,
+  splitSegments,
+  tocOf,
+} from "@/features/docs/utils/docs";
 import { diagramData } from "@/features/docs/components/DocDiagram";
 import { loadModel, parseSequence, parseStates } from "@/features/docs/utils/diagrams";
 
@@ -12,8 +28,9 @@ describe("published docs", () => {
 
   it("lists the allow-listed docs, each with its markdown file and a journey", () => {
     // The essential only (2026-10-23): the internal inventories stay in the Orazaka repository.
-    expect(docs.length).toBeGreaterThanOrEqual(15);
-    for (const unpublished of ["tools", "automation", "jobs", "admin", "mobile-guide"]) expect(docs.map((d) => d.slug)).not.toContain(unpublished);
+    expect(docs.length).toBeGreaterThanOrEqual(14);
+    for (const unpublished of ["tools", "automation", "jobs", "admin", "mobile-guide", "licensing"])
+      expect(docs.map((d) => d.slug)).not.toContain(unpublished);
     expect(docs.length).toBeLessThan(25); // the short path: a page that repeats another is folded, not added
     for (const d of docs) {
       expect(fs.existsSync(path.join(process.cwd(), "content", "docs", d.file!))).toBe(true);
@@ -26,14 +43,24 @@ describe("published docs", () => {
   it("covers the three journeys, in reading order: quickstart, then concepts, then the guides", () => {
     const journeys = [...new Set(listPages().map((d) => d.journey))];
     expect(journeys).toEqual([...JOURNEY_IDS]);
-    expect(listPages().slice(0, 3).map((d) => d.slug)).toEqual(["101", "concepts", "self-hosting"]);
+    expect(
+      listPages()
+        .slice(0, 3)
+        .map((d) => d.slug),
+    ).toEqual(["101", "concepts", "self-hosting"]);
     // The reference is the last journey: folded out of the reading path.
     expect(JOURNEY_IDS.at(-1)).toBe("reference");
   });
 
   it("never publishes contributor-only or strategy docs, and no frontmatter is left behind", () => {
     const slugs = listPages().map((d) => d.slug);
-    for (const internal of ["delivery", "billing_architecture", "production_readiness_audit", "architecture_assessment"]) expect(slugs).not.toContain(internal);
+    for (const internal of [
+      "delivery",
+      "billing_architecture",
+      "production_readiness_audit",
+      "architecture_assessment",
+    ])
+      expect(slugs).not.toContain(internal);
     for (const d of docs) {
       const { body } = readDoc(d.slug)!;
       expect(body.startsWith("---")).toBe(false);
@@ -50,8 +77,12 @@ describe("published docs", () => {
   });
 
   it("sends 'edit' to the source file, and generated pages to the generated file", () => {
-    expect(editUrl(listPages().find((d) => d.slug === "concepts")!)).toBe("https://github.com/krizaka/orazaka/edit/main/docs/CONCEPTS.md");
-    expect(editUrl(listPages().find((d) => d.slug === "cli")!)).toBe("https://github.com/krizaka/orazaka/blob/main/docs/_generated/CLI.md");
+    expect(editUrl(listPages().find((d) => d.slug === "concepts")!)).toBe(
+      "https://github.com/krizaka/orazaka/edit/main/docs/CONCEPTS.md",
+    );
+    expect(editUrl(listPages().find((d) => d.slug === "cli")!)).toBe(
+      "https://github.com/krizaka/orazaka/blob/main/docs/_generated/CLI.md",
+    );
     expect(editUrl(listPages().find((d) => d.slug === "mobile")!)).toBeNull();
   });
 
@@ -62,7 +93,10 @@ describe("published docs", () => {
 
 describe("links of a doc", () => {
   it("keeps external and in-page links", () => {
-    expect(resolveLink("https://x.dev/a", "docs/CORE.md", sources)).toEqual({ href: "https://x.dev/a", internal: false });
+    expect(resolveLink("https://x.dev/a", "docs/CORE.md", sources)).toEqual({
+      href: "https://x.dev/a",
+      internal: false,
+    });
     expect(resolveLink("#section", "docs/CORE.md", sources)).toEqual({ href: "#section", internal: true });
   });
 
@@ -73,12 +107,23 @@ describe("links of a doc", () => {
   });
 
   it("sends anything not published to GitHub — never a dead link — and drops a link out of the repository", () => {
-    expect(resolveLink("BILLING_ARCHITECTURE.md", "docs/101.md", sources)).toEqual({ href: "https://github.com/krizaka/orazaka/blob/main/docs/BILLING_ARCHITECTURE.md", internal: false });
+    expect(resolveLink("BILLING_ARCHITECTURE.md", "docs/101.md", sources)).toEqual({
+      href: "https://github.com/krizaka/orazaka/blob/main/docs/BILLING_ARCHITECTURE.md",
+      internal: false,
+    });
     expect(resolveLink("../../../elsewhere/x.md", "docs/101.md", sources)).toBeNull();
   });
 
   it("prepares a body: links, images, callouts — code fences untouched", () => {
-    const body = ["See [core](CORE.md) and [out](../../nope.md).", "![shot](assets/a.png)", "> [!IMPORTANT]", "> Mind this.", "```md", "[core](CORE.md)", "```"].join("\n");
+    const body = [
+      "See [core](CORE.md) and [out](../../nope.md).",
+      "![shot](assets/a.png)",
+      "> [!IMPORTANT]",
+      "> Mind this.",
+      "```md",
+      "[core](CORE.md)",
+      "```",
+    ].join("\n");
     const out = prepareBody(body, "docs/101.md", sources);
     expect(out).toContain("[core](/docs/core)");
     expect(out).toContain("See [core](/docs/core) and out.");
@@ -97,7 +142,24 @@ describe("links of a doc", () => {
 });
 
 describe("segments and contents", () => {
-  const body = ["# T", "", "## One", "", "```bash", "echo ok", "```", "", "```sequence", "participant a: A", "participant b: B", "a -> b: hi", "```", "", "## Two", "text"].join("\n");
+  const body = [
+    "# T",
+    "",
+    "## One",
+    "",
+    "```bash",
+    "echo ok",
+    "```",
+    "",
+    "```sequence",
+    "participant a: A",
+    "participant b: B",
+    "a -> b: hi",
+    "```",
+    "",
+    "## Two",
+    "text",
+  ].join("\n");
 
   it("splits the markdown from the schema blocks, keeping other fences in the markdown", () => {
     const s = splitSegments(body);

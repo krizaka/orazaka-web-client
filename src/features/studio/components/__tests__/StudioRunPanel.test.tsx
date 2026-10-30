@@ -12,7 +12,9 @@ jest.mock("@/core/context/LocaleContext", () => ({
 }));
 jest.mock("@/features/studio/components/RunForm", () => ({
   RunForm: ({ onSubmit }: { onSubmit: (inputs: Record<string, unknown>) => void }) => (
-    <button type="button" onClick={() => onSubmit({ prompt: "a lamp" })}>Run</button>
+    <button type="button" onClick={() => onSubmit({ prompt: "a lamp" })}>
+      Run
+    </button>
   ),
 }));
 jest.mock("@/services/studio.api", () => ({
@@ -21,9 +23,23 @@ jest.mock("@/services/studio.api", () => ({
 
 const run = { id: "run-1" };
 const detail = (kind: StudioDetail["kind"]): StudioDetail => ({
-  studioKey: "mood-tracking", label: "Mood tracking", tagline: null, description: null, profession: "general", iconKey: "heart",
-  heroAssetId: null, pricing: "FREE", kind, status: "PUBLISHED", latestVersion: "1.2.0", estimatedCredits: 2,
-  inputSchema: null, configSchema: null, locked: false, lockedReason: "NONE", packKey: null,
+  studioKey: "mood-tracking",
+  label: "Mood tracking",
+  tagline: null,
+  description: null,
+  profession: "general",
+  iconKey: "heart",
+  heroAssetId: null,
+  pricing: "FREE",
+  kind,
+  status: "PUBLISHED",
+  latestVersion: "1.2.0",
+  estimatedCredits: 2,
+  inputSchema: null,
+  configSchema: null,
+  locked: false,
+  lockedReason: "NONE",
+  packKey: null,
 });
 
 describe("StudioRunPanel", () => {
@@ -43,7 +59,9 @@ describe("StudioRunPanel", () => {
 
   it("runs an installed Studio through its installation, without installing again", async () => {
     jest.mocked(StudioApi.startRun).mockResolvedValue(run as never);
-    render(<StudioRunPanel studio={detail("VERTICAL")} installation={{ id: "inst-9", status: "ACTIVE" } as Installation} />);
+    render(
+      <StudioRunPanel studio={detail("VERTICAL")} installation={{ id: "inst-9", status: "ACTIVE" } as Installation} />,
+    );
 
     fireEvent.click(screen.getByRole("button", { name: "Run" }));
 
@@ -79,7 +97,10 @@ describe("StudioRunPanel", () => {
     });
 
     it("installs with the three declarations, then runs the inputs the person had typed", async () => {
-      jest.mocked(StudioApi.install).mockRejectedValueOnce(refused()).mockResolvedValueOnce({ id: "inst-2" } as Installation);
+      jest
+        .mocked(StudioApi.install)
+        .mockRejectedValueOnce(refused())
+        .mockResolvedValueOnce({ id: "inst-2" } as Installation);
       jest.mocked(StudioApi.startRun).mockResolvedValue(run as never);
       render(<StudioRunPanel studio={detail("VERTICAL")} />);
       fireEvent.click(screen.getByRole("button", { name: "Run" }));
@@ -91,7 +112,12 @@ describe("StudioRunPanel", () => {
       fireEvent.click(screen.getByRole("button", { name: "Agree and continue" }));
 
       await waitFor(() => expect(push).toHaveBeenCalledWith("/studios/runs/run-1"));
-      expect(StudioApi.install).toHaveBeenLastCalledWith("mood-tracking", {}, { consentVersion: "1.0", ageAttested: true, region: "CA-QC" }, "en");
+      expect(StudioApi.install).toHaveBeenLastCalledWith(
+        "mood-tracking",
+        {},
+        { consentVersion: "1.0", ageAttested: true, region: "CA-QC" },
+        "en",
+      );
       expect(StudioApi.startRun).toHaveBeenCalledWith("inst-2", { prompt: "a lamp" });
     });
 
@@ -108,7 +134,8 @@ describe("StudioRunPanel", () => {
     });
 
     it("keeps the step open and says why when the server refuses the age or the region", async () => {
-      jest.mocked(StudioApi.install)
+      jest
+        .mocked(StudioApi.install)
         .mockRejectedValueOnce(refused())
         .mockRejectedValueOnce(new Error("installing mood-tracking is not available in region 'CA'"));
       render(<StudioRunPanel studio={detail("VERTICAL")} />);
@@ -125,9 +152,17 @@ describe("StudioRunPanel", () => {
     });
 
     it("asks again when a run of an installed Studio meets a statement that changed", async () => {
-      jest.mocked(StudioApi.startRun).mockRejectedValueOnce(new ConsentRequiredError({ version: "1.1", statement: "Nouvelle déclaration." })).mockResolvedValueOnce(run as never);
+      jest
+        .mocked(StudioApi.startRun)
+        .mockRejectedValueOnce(new ConsentRequiredError({ version: "1.1", statement: "Nouvelle déclaration." }))
+        .mockResolvedValueOnce(run as never);
       jest.mocked(StudioApi.install).mockResolvedValue({ id: "inst-9" } as Installation);
-      render(<StudioRunPanel studio={detail("VERTICAL")} installation={{ id: "inst-9", status: "ACTIVE", config: {} } as Installation} />);
+      render(
+        <StudioRunPanel
+          studio={detail("VERTICAL")}
+          installation={{ id: "inst-9", status: "ACTIVE", config: {} } as Installation}
+        />,
+      );
       fireEvent.click(screen.getByRole("button", { name: "Run" }));
       expect(await screen.findByText("Nouvelle déclaration.")).toBeInTheDocument();
 
@@ -137,7 +172,12 @@ describe("StudioRunPanel", () => {
       fireEvent.click(screen.getByRole("button", { name: "Agree and continue" }));
 
       await waitFor(() => expect(push).toHaveBeenCalledWith("/studios/runs/run-1"));
-      expect(StudioApi.install).toHaveBeenCalledWith("mood-tracking", {}, { consentVersion: "1.1", ageAttested: true, region: "FR" }, "en");
+      expect(StudioApi.install).toHaveBeenCalledWith(
+        "mood-tracking",
+        {},
+        { consentVersion: "1.1", ageAttested: true, region: "FR" },
+        "en",
+      );
     });
   });
 });

@@ -3,12 +3,11 @@ import { render, screen } from "@testing-library/react";
 import { ChatMessage } from "@/features/chat-session/components/ChatMessage";
 
 jest.mock("@/core/context/LocaleContext", () => ({
-  useTranslation: () => ({
-    t: {
-      chat: { user: "You", ai: "AI" },
-    },
-    locale: "en",
-  }),
+  useTranslation: () => {
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    const { translations } = require("@/core/context/translations");
+    return { t: { ...translations.en, chat: { user: "You", ai: "AI" } }, locale: "en" };
+  },
 }));
 
 jest.mock("react-markdown", () => ({
@@ -36,9 +35,7 @@ describe("ChatMessage", () => {
   });
 
   it("renders the brand mark (no 'AI' text) for assistant messages", () => {
-    const { container } = render(
-      <ChatMessage message={{ ...baseMsg, role: "assistant" }} />,
-    );
+    const { container } = render(<ChatMessage message={{ ...baseMsg, role: "assistant" }} />);
     expect(screen.queryByText("AI")).not.toBeInTheDocument();
     expect(container.querySelector("svg")).toBeInTheDocument();
   });
@@ -50,9 +47,7 @@ describe("ChatMessage", () => {
   });
 
   it("renders image content for image kind", () => {
-    render(
-      <ChatMessage message={{ ...baseMsg, kind: "image", content: "data:image/png;base64,abc" }} />,
-    );
+    render(<ChatMessage message={{ ...baseMsg, kind: "image", content: "data:image/png;base64,abc" }} />);
     const img = screen.getByAltText("Generated Asset");
     expect(img).toBeInTheDocument();
     expect(img).toHaveAttribute("src", "data:image/png;base64,abc");
@@ -65,5 +60,35 @@ describe("ChatMessage", () => {
     const audio = container.querySelector("audio");
     expect(audio).toBeInTheDocument();
     expect(audio).toHaveAttribute("src", "data:audio/mp3;base64,abc");
+  });
+
+  describe("control badge", () => {
+    const answer = { ...baseMsg, role: "assistant" as const };
+
+    it("says « Verifying… » while the answer streams and the verdict is pending", () => {
+      render(<ChatMessage message={{ ...answer, control: { state: "pending" } }} streaming />);
+      expect(screen.getByTestId("chat-control-pending")).toHaveTextContent("Verifying…");
+    });
+
+    it("shows the verdict once it is final", () => {
+      render(<ChatMessage message={{ ...answer, control: { state: "validated" } }} />);
+      expect(screen.getByTestId("chat-control-validated")).toHaveTextContent("Verified");
+    });
+
+    it("shows the degraded badge with its explanation", () => {
+      render(
+        <ChatMessage message={{ ...answer, control: { state: "degraded", badge: "verification_unavailable" } }} />,
+      );
+      const badge = screen.getByTestId("chat-control-unavailable");
+      expect(badge).toHaveTextContent("Verification unavailable");
+      expect(badge).toHaveAttribute("title", expect.stringContaining("judge"));
+    });
+
+    it("shows nothing when no control ran, or on a user message", () => {
+      const { rerender } = render(<ChatMessage message={{ ...answer, control: { state: "not_checked" } }} />);
+      expect(screen.queryByRole("status")).toBeNull();
+      rerender(<ChatMessage message={{ ...baseMsg, control: { state: "validated" } }} />);
+      expect(screen.queryByRole("status")).toBeNull();
+    });
   });
 });

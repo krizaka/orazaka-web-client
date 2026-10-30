@@ -8,8 +8,7 @@ import { PROVIDERS } from "@/features/profile/components/AiProviderLogos";
 const CREDENTIALS_KEY = ["credentials"] as const;
 
 const toBackendName = (id: string): string => (id === "claude" ? "anthropic" : id);
-const fromBackendName = (name: string): string =>
-  name === "anthropic" ? "claude" : name;
+const fromBackendName = (name: string): string => (name === "anthropic" ? "claude" : name);
 
 /** Add/edit modal state. `mode` drives whether a provider is pickable or fixed. */
 export interface ProviderModalState {
@@ -48,9 +47,7 @@ interface UseAiProviders {
  *
  * @param fetchHeaders - Async factory for authenticated request headers.
  */
-export function useAiProviders(
-  fetchHeaders: () => Promise<Record<string, string>>,
-): UseAiProviders {
+export function useAiProviders(fetchHeaders: () => Promise<Record<string, string>>): UseAiProviders {
   const [modal, setModal] = React.useState<ProviderModalState>(CLOSED);
   const [draftKey, setDraftKey] = React.useState("");
   const [isRevealed, setIsRevealed] = React.useState(false);
@@ -65,7 +62,9 @@ export function useAiProviders(
       const res = await fetch("/api/v1/credentials", { headers: await fetchHeaders() });
       if (!res.ok) throw new Error(`credentials ${res.status}`);
       const data: { providerName: string; configured: boolean }[] = await res.json();
-      return data.filter((credential) => credential.configured).map((credential) => fromBackendName(credential.providerName));
+      return data
+        .filter((credential) => credential.configured)
+        .map((credential) => fromBackendName(credential.providerName));
     },
   });
   const configured = new Set(credentials.data ?? []);
@@ -73,12 +72,8 @@ export function useAiProviders(
   const setConfigured = (update: (prev: Set<string>) => Set<string>) =>
     queryClient.setQueryData<string[]>(CREDENTIALS_KEY, (prev) => [...update(new Set(prev ?? []))]);
 
-  const configuredIds = PROVIDERS.map((p) => p.id).filter((id) =>
-    configured.has(id),
-  );
-  const availableIds = PROVIDERS.map((p) => p.id).filter(
-    (id) => !configured.has(id),
-  );
+  const configuredIds = PROVIDERS.map((p) => p.id).filter((id) => configured.has(id));
+  const availableIds = PROVIDERS.map((p) => p.id).filter((id) => !configured.has(id));
 
   const resetDraft = () => {
     setDraftKey("");
@@ -96,8 +91,7 @@ export function useAiProviders(
     setModal({ mode: "edit", providerId });
   };
 
-  const selectProvider = (providerId: string) =>
-    setModal((prev) => ({ ...prev, providerId }));
+  const selectProvider = (providerId: string) => setModal((prev) => ({ ...prev, providerId }));
 
   const closeModal = () => {
     setModal(CLOSED);

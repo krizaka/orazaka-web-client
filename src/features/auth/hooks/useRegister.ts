@@ -24,11 +24,7 @@ interface UseRegisterOptions {
 export function useRegister({ onSuccess, onError }: UseRegisterOptions) {
   const router = useRouter();
 
-  const mutation = useMutation<
-    unknown,
-    { status: number; error?: string },
-    RegisterPayload
-  >({
+  const mutation = useMutation<unknown, { status: number; error?: string }, RegisterPayload>({
     mutationFn: AuthApi.register,
     onSuccess: async (_, variables) => {
       onSuccess("Account created! Signing you in…");

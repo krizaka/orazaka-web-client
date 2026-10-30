@@ -6,7 +6,15 @@ import type { Segment } from "@/features/docs/utils/docs";
 export function DocBody({ segments }: Readonly<{ segments: readonly Segment[] }>) {
   return (
     <>
-      {segments.map((s, i) => (s.kind === "markdown" ? <DocMarkdown key={i} text={s.text} /> : <DocDiagram key={i} lang={s.lang} source={s.source} />))}
+      {segments.map((s, i) => {
+        // A page's segments never reorder: the position in the document is their identity.
+        const key = `${i}-${s.kind}`;
+        return s.kind === "markdown" ? (
+          <DocMarkdown key={key} text={s.text} />
+        ) : (
+          <DocDiagram key={key} lang={s.lang} source={s.source} />
+        );
+      })}
     </>
   );
 }

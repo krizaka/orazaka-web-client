@@ -9,7 +9,13 @@ import { Button } from "@krizaka/ui/button";
 import { DataTable, type DataTableColumn } from "@krizaka/ui/data-table";
 import { createKrizakaForm } from "@krizaka/ui/form";
 import { useTranslation } from "@/core/context/LocaleContext";
-import { EVENT_WORD, WEBHOOK_EVENTS, isHttpsUrl, type WebhookDelivery, type WebhookEvent } from "@/features/profile/hooks/useWebhooks";
+import {
+  EVENT_WORD,
+  WEBHOOK_EVENTS,
+  isHttpsUrl,
+  type WebhookDelivery,
+  type WebhookEvent,
+} from "@/features/profile/hooks/useWebhooks";
 
 /** The create form: one address, and the events to be told about. Defined once; its words are keys the section translates. */
 const createWebhook = createKrizakaForm({
@@ -32,7 +38,10 @@ function eventsOf(values: { completed: boolean; failed: boolean; cancelled: bool
 export function CreateWebhookForm({
   error,
   onSubmit,
-}: Readonly<{ error: "none" | "url" | "limit" | "generic"; onSubmit: (url: string, events: WebhookEvent[]) => Promise<void> }>) {
+}: Readonly<{
+  error: "none" | "url" | "limit" | "generic";
+  onSubmit: (url: string, events: WebhookEvent[]) => Promise<void>;
+}>) {
   const { t } = useTranslation();
   const w = t.webhooks;
   const words: Record<string, string> = { "webhooks.url.https": w.invalidUrl };
@@ -42,7 +51,8 @@ export function CreateWebhookForm({
       await onSubmit(values.url.trim(), eventsOf(values));
     },
   });
-  const message = error === "limit" ? w.limitReached : error === "url" ? w.invalidUrl : error === "generic" ? w.createError : null;
+  const messages: Record<string, string> = { limit: w.limitReached, url: w.invalidUrl, generic: w.createError };
+  const message = (error && messages[error]) || null;
   return (
     <form.Form aria-label={w.create}>
       <form.TextField name="url" label={w.urlLabel} type="url" placeholder={w.urlPlaceholder} autoComplete="off" />
@@ -80,7 +90,10 @@ export function RevealSecret({ secret, onDone }: Readonly<{ secret: string; onDo
     <div className="space-y-4">
       <p className="text-xs text-fg-muted">{w.revealDesc}</p>
       <div className="flex items-center gap-2">
-        <code data-testid="webhook-secret" className="min-w-0 flex-1 truncate rounded-md border border-border-subtle bg-surface-2 px-3 py-2 font-mono text-xs text-fg">
+        <code
+          data-testid="webhook-secret"
+          className="min-w-0 flex-1 truncate rounded-md border border-border-subtle bg-surface-2 px-3 py-2 font-mono text-xs text-fg"
+        >
           {secret}
         </code>
         <Button type="button" variant="secondary" size="sm" onClick={copy}>
@@ -96,7 +109,11 @@ export function RevealSecret({ secret, onDone }: Readonly<{ secret: string; onDo
   );
 }
 
-const STATUS_TONE: Record<WebhookDelivery["status"], "neutral" | "success" | "danger"> = { PENDING: "neutral", DELIVERED: "success", DEAD: "danger" };
+const STATUS_TONE: Record<WebhookDelivery["status"], "neutral" | "success" | "danger"> = {
+  PENDING: "neutral",
+  DELIVERED: "success",
+  DEAD: "danger",
+};
 
 /** The delivery log of one endpoint, newest first. */
 export function DeliveryLog({ deliveries }: Readonly<{ deliveries: WebhookDelivery[] }>) {
@@ -105,7 +122,13 @@ export function DeliveryLog({ deliveries }: Readonly<{ deliveries: WebhookDelive
   const dateLocale = locale === "fr" ? fr : enUS;
   if (deliveries.length === 0) return <p className="py-4 text-sm text-fg-secondary">{w.logEmpty}</p>;
   const columns: DataTableColumn<WebhookDelivery>[] = [
-    { id: "event", header: w.logColumns.event, type: "title", value: (d) => w.events[EVENT_WORD[d.event]], cell: (d) => w.events[EVENT_WORD[d.event]] },
+    {
+      id: "event",
+      header: w.logColumns.event,
+      type: "title",
+      value: (d) => w.events[EVENT_WORD[d.event]],
+      cell: (d) => w.events[EVENT_WORD[d.event]],
+    },
     {
       id: "status",
       header: w.logColumns.status,
@@ -117,8 +140,21 @@ export function DeliveryLog({ deliveries }: Readonly<{ deliveries: WebhookDelive
         </Badge>
       ),
     },
-    { id: "attempts", header: w.logColumns.attempts, priority: 3, type: "number", align: "end", value: (d) => d.attempts },
-    { id: "answer", header: w.logColumns.answer, priority: 2, value: (d) => (d.lastHttpStatus ? String(d.lastHttpStatus) : (d.lastError ?? "")), cell: (d) => d.lastHttpStatus ?? d.lastError ?? "—" },
+    {
+      id: "attempts",
+      header: w.logColumns.attempts,
+      priority: 3,
+      type: "number",
+      align: "end",
+      value: (d) => d.attempts,
+    },
+    {
+      id: "answer",
+      header: w.logColumns.answer,
+      priority: 2,
+      value: (d) => (d.lastHttpStatus ? String(d.lastHttpStatus) : (d.lastError ?? "")),
+      cell: (d) => d.lastHttpStatus ?? d.lastError ?? "—",
+    },
     {
       id: "when",
       header: w.logColumns.when,

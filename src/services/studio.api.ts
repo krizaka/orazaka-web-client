@@ -40,10 +40,7 @@ export const StudioApi = {
    * @param profession - the trade to filter on, or null for everything
    * @param locale - the caller's locale; untranslated rows fall back to the base row
    */
-  fetchCatalogue: async (
-    profession: string | null,
-    locale: string,
-  ): Promise<StudioSummary[]> => {
+  fetchCatalogue: async (profession: string | null, locale: string): Promise<StudioSummary[]> => {
     const query = new URLSearchParams({ locale });
     if (profession) {
       query.set("profession", profession);
@@ -82,9 +79,7 @@ export const StudioApi = {
    * @param locale - the caller's locale
    */
   fetchPackCategories: async (locale: string): Promise<PackCategory[]> => {
-    const data = await restRequest<unknown[]>(
-      `/api/v1/studios/packs/categories?locale=${encodeURIComponent(locale)}`,
-    );
+    const data = await restRequest<unknown[]>(`/api/v1/studios/packs/categories?locale=${encodeURIComponent(locale)}`);
     return (data ?? []).map((category) => PackCategorySchema.parse(category));
   },
 
@@ -107,9 +102,7 @@ export const StudioApi = {
    * @param studioKey - the Studio's stable key
    */
   fetchVersions: async (studioKey: string): Promise<BlueprintVersion[]> => {
-    const data = await restRequest<unknown[]>(
-      `/api/v1/studios/${encodeURIComponent(studioKey)}/versions`,
-    );
+    const data = await restRequest<unknown[]>(`/api/v1/studios/${encodeURIComponent(studioKey)}/versions`);
     return (data ?? []).map((version) => BlueprintVersionSchema.parse(version));
   },
 
@@ -136,10 +129,10 @@ export const StudioApi = {
   ): Promise<Installation | null> => {
     // The locale makes the server answer a 451 with the statement in the person's language.
     const query = locale ? `?locale=${encodeURIComponent(locale)}` : "";
-    const data = await restRequest<unknown>(
-      `/api/v1/studios/${encodeURIComponent(studioKey)}/installations${query}`,
-      { method: "POST", body: { config, ...consent } },
-    ).catch((error: unknown) => {
+    const data = await restRequest<unknown>(`/api/v1/studios/${encodeURIComponent(studioKey)}/installations${query}`, {
+      method: "POST",
+      body: { config, ...consent },
+    }).catch((error: unknown) => {
       throw asConsentStep(error);
     });
     return data ? InstallationSchema.parse(data) : null;
@@ -154,14 +147,11 @@ export const StudioApi = {
    * @param installationId - the installation to reconfigure
    * @param config - the complete new answers
    */
-  updateConfig: async (
-    installationId: string,
-    config: Record<string, string>,
-  ): Promise<Installation | null> => {
-    const data = await restRequest<unknown>(
-      `/api/v1/studios/installations/${encodeURIComponent(installationId)}`,
-      { method: "PATCH", body: { config } },
-    );
+  updateConfig: async (installationId: string, config: Record<string, string>): Promise<Installation | null> => {
+    const data = await restRequest<unknown>(`/api/v1/studios/installations/${encodeURIComponent(installationId)}`, {
+      method: "PATCH",
+      body: { config },
+    });
     return data ? InstallationSchema.parse(data) : null;
   },
 
@@ -187,10 +177,9 @@ export const StudioApi = {
    * @param installationId - the installation to revoke
    */
   uninstall: async (installationId: string): Promise<void> => {
-    await restRequest<unknown>(
-      `/api/v1/studios/installations/${encodeURIComponent(installationId)}`,
-      { method: "DELETE" },
-    );
+    await restRequest<unknown>(`/api/v1/studios/installations/${encodeURIComponent(installationId)}`, {
+      method: "DELETE",
+    });
   },
 
   /**
@@ -220,10 +209,7 @@ export const StudioApi = {
    * @param installationId - the installation to execute
    * @param inputs - the answers to its run form, validated again server-side
    */
-  startRun: async (
-    installationId: string,
-    inputs: Record<string, unknown>,
-  ): Promise<Run | null> => {
+  startRun: async (installationId: string, inputs: Record<string, unknown>): Promise<Run | null> => {
     const data = await restRequest<unknown>(
       `/api/v1/studios/installations/${encodeURIComponent(installationId)}/runs`,
       { method: "POST", body: { inputs } },
@@ -243,14 +229,11 @@ export const StudioApi = {
    * @param studioKey - the Studio to run
    * @param inputs - the answers to its run form, validated again server-side
    */
-  startStudioRun: async (
-    studioKey: string,
-    inputs: Record<string, unknown>,
-  ): Promise<Run | null> => {
-    const data = await restRequest<unknown>(
-      `/api/v1/studios/${encodeURIComponent(studioKey)}/runs`,
-      { method: "POST", body: { inputs } },
-    );
+  startStudioRun: async (studioKey: string, inputs: Record<string, unknown>): Promise<Run | null> => {
+    const data = await restRequest<unknown>(`/api/v1/studios/${encodeURIComponent(studioKey)}/runs`, {
+      method: "POST",
+      body: { inputs },
+    });
     return data ? RunSchema.parse(data) : null;
   },
 
@@ -265,9 +248,7 @@ export const StudioApi = {
    */
   fetchComposerStudios: async (locale: string): Promise<ComposerStudio[]> => {
     const query = new URLSearchParams({ locale });
-    const data = await restRequest<unknown[]>(
-      `/api/v1/studios/composer?${query.toString()}`,
-    );
+    const data = await restRequest<unknown[]>(`/api/v1/studios/composer?${query.toString()}`);
     return (data ?? []).map((studio) => ComposerStudioSchema.parse(studio));
   },
 
@@ -285,17 +266,11 @@ export const StudioApi = {
 
   /** Resolves an approval step, resuming the run. */
   approveRun: async (runId: string): Promise<void> => {
-    await restRequest<unknown>(
-      `/api/v1/studios/runs/${encodeURIComponent(runId)}/approve`,
-      { method: "POST" },
-    );
+    await restRequest<unknown>(`/api/v1/studios/runs/${encodeURIComponent(runId)}/approve`, { method: "POST" });
   },
 
   /** Cancels a run and releases its credit hold. */
   cancelRun: async (runId: string): Promise<void> => {
-    await restRequest<unknown>(
-      `/api/v1/studios/runs/${encodeURIComponent(runId)}/cancel`,
-      { method: "POST" },
-    );
+    await restRequest<unknown>(`/api/v1/studios/runs/${encodeURIComponent(runId)}/cancel`, { method: "POST" });
   },
 } as const;

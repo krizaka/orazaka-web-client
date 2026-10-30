@@ -8,30 +8,20 @@ import { AppFrame, type FrameSection } from "@krizaka/ui/app-frame";
 import { SettingsIcon, ShieldIcon, UserIcon } from "@krizaka/icons";
 import { useAuth } from "@/core/hooks/useAuth";
 import { useTranslation } from "@/core/context/LocaleContext";
-import {
-  AppSectionId,
-  AppSectionPlace,
-  appSectionsFor,
-  currentAppSection,
-} from "@/core/config/app-sections";
+import { AppSectionId, AppSectionPlace, appSectionsFor, currentAppSection } from "@/core/config/app-sections";
 import { NotificationBell } from "./NotificationBell";
 
 const LOCALES = ["en", "fr"] as const;
 
 /** The places the frame holds under the avatar (the shared account menu): Settings and Admin leave the rail. */
-const ACCOUNT_PLACES: readonly string[] = [
-  AppSectionId.Settings,
-  AppSectionId.Admin,
-];
+const ACCOUNT_PLACES: ReadonlySet<string> = new Set([AppSectionId.Settings, AppSectionId.Admin]);
 
 /**
  * The signed-in frame of every page of the app — `@krizaka/ui` `AppFrame` (one rail, one top bar, one account menu for
  * the whole family). The sections come from core/config/app-sections.ts, their words from `t.appNav`; Settings and
  * Admin are the account menu's places (Settings, Administration), never repeated on the rail.
  */
-export function AppShell({
-  children,
-}: Readonly<{ children: React.ReactNode }>) {
+export function AppShell({ children }: Readonly<{ children: React.ReactNode }>) {
   const { user, isAuthenticated, logout } = useAuth();
   const { locale, setLocale, t } = useTranslation();
   const [bellOpen, setBellOpen] = React.useState(false);
@@ -39,12 +29,7 @@ export function AppShell({
   const current = currentAppSection(usePathname());
 
   const sections: FrameSection[] = appSectionsFor(isAdmin)
-    .filter(
-      (s) =>
-        s.id !== AppSectionId.Home &&
-        !ACCOUNT_PLACES.includes(s.id) &&
-        s.place === AppSectionPlace.Main,
-    )
+    .filter((s) => s.id !== AppSectionId.Home && !ACCOUNT_PLACES.has(s.id) && s.place === AppSectionPlace.Main)
     .map((s) => ({
       id: s.id,
       label: t.appNav[s.id],
@@ -66,11 +51,7 @@ export function AppShell({
       currentId={current ?? undefined}
       locale={locale}
       linkAs={Link}
-      notifications={
-        isAuthenticated ? (
-          <NotificationBell bellOpen={bellOpen} onToggle={setBellOpen} />
-        ) : undefined
-      }
+      notifications={isAuthenticated ? <NotificationBell bellOpen={bellOpen} onToggle={setBellOpen} /> : undefined}
       language={{
         value: locale,
         options: LOCALES.map((code) => ({

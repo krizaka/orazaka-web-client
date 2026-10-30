@@ -35,7 +35,12 @@ export function StudioRowAction({ row, onGetPack, plansHref }: Readonly<StudioRo
   if (row.state === StudioState.NeedsPack && row.pack) {
     const packKey = row.pack.packKey;
     return (
-      <Button variant="secondary" size="sm" onClick={() => onGetPack(packKey)} aria-label={fill(c.actionLabels.getPack, { studio })}>
+      <Button
+        variant="secondary"
+        size="sm"
+        onClick={() => onGetPack(packKey)}
+        aria-label={fill(c.actionLabels.getPack, { studio })}
+      >
         {c.actions.getPack}
       </Button>
     );

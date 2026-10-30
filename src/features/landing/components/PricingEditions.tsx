@@ -6,6 +6,8 @@ import { PricingPage, type PricingPlan } from "@krizaka/ui/pricing-page";
 import { useTranslation } from "@/core/context/LocaleContext";
 import { LandingNav } from "@/features/landing/components/LandingNav";
 import { LandingFooter } from "@/features/landing/components/LandingFooter";
+import { inDevelopment } from "@/core/config/product-status";
+import { priceFor, type PublicPrice } from "@/features/landing/utils/public-prices";
 
 /** Where the Enterprise offer is reached: Krizaka's contact form, the Orazaka topic preselected (the offer has no page of its own yet). */
 export const ENTERPRISE_URL = "https://www.krizaka.com/contact?topic=orazaka";
@@ -13,19 +15,26 @@ const REPO_URL = "https://github.com/krizaka/orazaka";
 
 /**
  * `/pricing` — the editions on @krizaka/ui's pricing template: Community (open source, what runs), Business (soon, no
- * figure) and Enterprise (Krizaka's single custom offer, through the contact form). The price slot never holds an
- * amount: prices come from the price catalogue (ADR-009), which has no Orazaka plan. Words: `t.pricing`.
+ * figure) and Enterprise (Krizaka's single custom offer, through the contact form). The price slot holds an amount
+ * only when the price catalogue (ADR-009, read on the server) publishes one for the edition; otherwise it holds the
+ * edition's own words. Words: `t.pricing`.
  */
-export function PricingEditions() {
-  const { t } = useTranslation();
+export function PricingEditions({ prices = [] }: Readonly<{ prices?: readonly PublicPrice[] }>) {
+  const { t, locale } = useTranslation();
   const p = t.pricing;
+  const slot = (edition: "community" | "business" | "enterprise") => {
+    // While Orazaka is in development no amount is public: a price nobody can pay is never shown (krizaka-com#468).
+    const shown = inDevelopment() ? undefined : priceFor(prices, edition, locale);
+    return shown
+      ? { price: shown.text, unit: `${p.units[shown.unit] ?? shown.unit} · ${p.plusTaxes}` }
+      : { price: p[edition].price, unit: p[edition].unit };
+  };
 
   const plans: PricingPlan[] = [
     {
       id: "community",
       name: p.community.name,
-      price: p.community.price,
-      unit: p.community.unit,
+      ...slot("community"),
       features: p.community.features,
       featured: true,
       action: (
@@ -44,16 +53,14 @@ export function PricingEditions() {
     {
       id: "business",
       name: p.business.name,
-      price: p.business.price,
-      unit: p.business.unit,
+      ...slot("business"),
       features: p.business.features,
       action: <p className="font-mono text-sm text-fg-secondary">{p.business.soon}</p>,
     },
     {
       id: "enterprise",
       name: p.enterprise.name,
-      price: p.enterprise.price,
-      unit: p.enterprise.unit,
+      ...slot("enterprise"),
       features: p.enterprise.features,
       action: (
         <Button asChild variant="secondary" size="md" shape="cut">

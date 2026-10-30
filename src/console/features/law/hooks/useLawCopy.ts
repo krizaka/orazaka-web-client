@@ -48,7 +48,8 @@ export function useLawCopy(): LawWords {
     return {
       t,
       locale,
-      date: (iso, withTime = false) => formatDate(iso, { locale: intl, style: "medium", timeStyle: withTime ? "short" : undefined, timeZone: "UTC" }),
+      date: (iso, withTime = false) =>
+        formatDate(iso, { locale: intl, style: "medium", timeStyle: withTime ? "short" : undefined, timeZone: "UTC" }),
       refusal: (r) => t.refusals[refusalKey(r.code, r.status, t.refusals)],
       table: tableLabels(t.table),
     };

@@ -4,10 +4,7 @@ import { useCallback, useState } from "react";
 import { Button } from "@krizaka/ui/button";
 import { useTranslation } from "@/core/context/LocaleContext";
 import { RunInput, localized } from "@/features/studio/components/RunInput";
-import {
-  useInputSchema,
-  type InputField,
-} from "@/features/studio/hooks/useInputSchema";
+import { useInputSchema, type InputField } from "@/features/studio/hooks/useInputSchema";
 
 interface RunFormProps {
   /** The Studio's key: a shared input key ("voice") reads differently from one Studio to another. */
@@ -25,22 +22,14 @@ interface RunFormProps {
  * run costs a second credit hold, so a user who cannot tell whether their click
  * landed must not be able to pay twice for finding out.
  */
-export function RunForm({
-  studioKey,
-  inputSchema,
-  estimatedCredits,
-  isSubmitting,
-  onSubmit,
-}: Readonly<RunFormProps>) {
+export function RunForm({ studioKey, inputSchema, estimatedCredits, isSubmitting, onSubmit }: Readonly<RunFormProps>) {
   const { t, locale } = useTranslation();
   const fields = useInputSchema(inputSchema, locale);
   const [values, setValues] = useState<Record<string, string>>({});
   const [uploading, setUploading] = useState<Record<string, boolean>>({});
   const setBusy = useCallback((key: string, busy: boolean) => {
     setUploading((current) =>
-      current[key] === busy || (!busy && !current[key])
-        ? current
-        : { ...current, [key]: busy },
+      current[key] === busy || (!busy && !current[key]) ? current : { ...current, [key]: busy },
     );
   }, []);
   const isUploading = Object.values(uploading).some(Boolean);
@@ -84,9 +73,7 @@ export function RunForm({
     onSubmit(payload);
   };
 
-  const missingRequired = fields.some(
-    (field) => field.required && !valueOf(field).trim(),
-  );
+  const missingRequired = fields.some((field) => field.required && !valueOf(field).trim());
   const main = fields.filter((field) => !field.advanced);
   const more = fields.filter((field) => field.advanced);
   const renderField = (field: InputField) => (
@@ -97,9 +84,7 @@ export function RunForm({
       disabled={isSubmitting}
       allowedOptions={aspectRule && field.key === aspectRule.field ? aspectRule.supported : null}
       onBusyChange={(busy) => setBusy(field.key, busy)}
-      onChange={(value) =>
-        setValues((current) => ({ ...current, [field.key]: value }))
-      }
+      onChange={(value) => setValues((current) => ({ ...current, [field.key]: value }))}
     />
   );
 
@@ -112,17 +97,14 @@ export function RunForm({
             <summary className="cursor-pointer select-none text-sm font-medium text-fg-muted">
               {t.studio.form.moreOptions}
             </summary>
-            <div className="mt-3 flex flex-col gap-3">
-              {more.map(renderField)}
-            </div>
+            <div className="mt-3 flex flex-col gap-3">{more.map(renderField)}</div>
           </details>
         )}
       </div>
 
       <div className="flex flex-wrap items-center justify-between gap-3">
         <span className="text-xs text-fg-muted">
-          {t.studio.estimatedCost}:{" "}
-          <span className="font-semibold text-fg">{estimatedCredits}</span>{" "}
+          {t.studio.estimatedCost}: <span className="font-semibold text-fg">{estimatedCredits}</span>{" "}
           {t.studio.creditsPerRun}
         </span>
         <Button

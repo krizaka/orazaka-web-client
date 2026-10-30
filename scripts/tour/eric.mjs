@@ -47,9 +47,12 @@ export const PREPARED = [
   },
 ];
 
-/** The recorded chat: a question typed, the policy pasted under it, an answer sourced on the policy. */
+/** The server tool the recorded chat is meant to call (orazaka-ai-engine#169): one ALREADY registered on dev, checked by videos-preflight.mjs before any paid run. */
+export const PROOF_TOOL = "searchKnowledge";
+
+/** The recorded chat: a question typed, the policy pasted under it, an answer sourced on the policy, then a search of the knowledge base (the tool call). */
 export const RECORDED_QUESTION =
-  "Ms Laurent wants to return her custom-glaze Halo lamp after 20 days. According to our policy, what do I tell her? Two sentences.";
+  "Ms Laurent wants to return her custom-glaze Halo lamp after 20 days. According to our policy, what do I tell her? Two sentences. Then search our knowledge base for any note on custom-glaze returns and tell me in one line whether it changes the answer.";
 export const RECORDED_DOCUMENT = RETURNS_POLICY;
 
 /** The recorded visual: a product shot for the shop, generated on this machine. */
@@ -57,7 +60,8 @@ export const RECORDED_VISUAL =
   "Product photograph of the Halo table lamp: a hand-glazed terracotta ceramic base with a natural linen shade, softly lit on a pale oak desk at dusk, window light, shallow depth of field, editorial catalogue style, no text";
 
 /** The home card's visual: the same lamp, for the shop's product page. */
-export const SHOWCASE_VISUAL = "Product photo of the ceramic table lamp, warm orange glow, dark slate plinth, ink-blue background";
+export const SHOWCASE_VISUAL =
+  "Product photo of the ceramic table lamp, warm orange glow, dark slate plinth, ink-blue background";
 
 /** The recorded voice-over: the same lamp, read aloud by the local speech engine. */
 export const RECORDED_VOICE =

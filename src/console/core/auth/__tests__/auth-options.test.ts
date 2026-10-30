@@ -7,7 +7,10 @@ type Authorize = (credentials: Record<string, string> | undefined, request: unkn
 const authorize = (authOptions.providers[0] as unknown as { options: { authorize: Authorize } }).options.authorize;
 
 const signIn = (authorities: string[]) => {
-  global.fetch = jest.fn().mockResolvedValue({ ok: true, json: async () => ({ token: "jwt", username: "eric", email: "eric@example.com", authorities }) }) as never;
+  global.fetch = jest.fn().mockResolvedValue({
+    ok: true,
+    json: async () => ({ token: "jwt", username: "eric", email: "eric@example.com", authorities }),
+  }) as never;
   return authorize({ email: "eric@example.com", password: "a-password" }, {});
 };
 

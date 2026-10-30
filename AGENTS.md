@@ -19,17 +19,17 @@ The org code rules (addendum 2026-10-15) are lint rules, not review comments. [`
 is a **pinned devDependency** (no global install, CI reproduces local): `sgconfig.yml` + `rules/*.yml` (one rule per file,
 with a message and, where safe, a `fix:`; written for Tsx and `.ts` is parsed as Tsx too, so each rule covers `.ts` and `.tsx`), `rule-tests/` (valid/invalid cases of each rule).
 
-| Rule | What it refuses |
-| :--- | :--- |
-| `no-hand-ms-*`, `no-get-time-difference`, `no-get-time-arithmetic` | hand-written time arithmetic (`n * 60 * 1000`, `a.getTime() - b.getTime()`): date-fns, or a duration read from the settings |
-| `no-env-in-domain` | an `env` import in domain code (`packages/*/src`, `src/`): the value arrives as a parameter |
-| `no-db-in-service-or-rules` | a db client / schema import in `*.service.ts`, `*-service.ts`, `*.rules.ts`, `*-rules.ts` |
-| `no-ts-enum` | the TypeScript `enum` keyword (`as const` object + derived type, or a Postgres enum) |
-| `no-enum-string-compare` | `x.status === "OPEN"` (field named status/kind/role/reason/state/direction compared to a string literal) |
-| `no-ambient-clock` | `new Date()` / `Date.now()` in domain code: the clock is injected |
-| `no-types-at-package-root` | `types.ts` at a package root (`<feature>/<feature>.types.ts`) |
-| `no-unjustified-numeric-export` | a numeric (or `…ToMilliseconds(n)`) `export const` in feature code without `// @fixed: <reason>` just above |
-| `no-hand-made-nav`, `no-hand-made-language-switch` | a navigation bar that is not `NavBar` of @krizaka/ui (own Radix NavigationMenu, a local `NavBar`/`TopNav`), a hand-made language switch (`hrefLang` in a component, a row of `aria-pressed={locale === …}` buttons): use `NavBar` and `NavBar.Language` (« Navigation in the family », ui.krizaka.com) |
+| Rule                                                               | What it refuses                                                                                                                                                                                                                                                                                        |
+| :----------------------------------------------------------------- | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `no-hand-ms-*`, `no-get-time-difference`, `no-get-time-arithmetic` | hand-written time arithmetic (`n * 60 * 1000`, `a.getTime() - b.getTime()`): date-fns, or a duration read from the settings                                                                                                                                                                            |
+| `no-env-in-domain`                                                 | an `env` import in domain code (`packages/*/src`, `src/`): the value arrives as a parameter                                                                                                                                                                                                            |
+| `no-db-in-service-or-rules`                                        | a db client / schema import in `*.service.ts`, `*-service.ts`, `*.rules.ts`, `*-rules.ts`                                                                                                                                                                                                              |
+| `no-ts-enum`                                                       | the TypeScript `enum` keyword (`as const` object + derived type, or a Postgres enum)                                                                                                                                                                                                                   |
+| `no-enum-string-compare`                                           | `x.status === "OPEN"` (field named status/kind/role/reason/state/direction compared to a string literal)                                                                                                                                                                                               |
+| `no-ambient-clock`                                                 | `new Date()` / `Date.now()` in domain code: the clock is injected                                                                                                                                                                                                                                      |
+| `no-types-at-package-root`                                         | `types.ts` at a package root (`<feature>/<feature>.types.ts`)                                                                                                                                                                                                                                          |
+| `no-unjustified-numeric-export`                                    | a numeric (or `…ToMilliseconds(n)`) `export const` in feature code without `// @fixed: <reason>` just above                                                                                                                                                                                            |
+| `no-hand-made-nav`, `no-hand-made-language-switch`                 | a navigation bar that is not `NavBar` of @krizaka/ui (own Radix NavigationMenu, a local `NavBar`/`TopNav`), a hand-made language switch (`hrefLang` in a component, a row of `aria-pressed={locale === …}` buttons): use `NavBar` and `NavBar.Language` (« Navigation in the family », ui.krizaka.com) |
 
 - **Run**: `npm run lint` runs everything (it includes `ast-grep test` and the ratchet). `npx ast-grep scan` lists the
   violations with their message; `npm run lint:sg:test` runs the rule tests.
@@ -78,6 +78,7 @@ www.orazaka.com is **indexed**; `dev.*` and `admin.*` never are — robots `Disa
 ## Before you open or update a pull request (coding agents)
 
 These are the defects code review found most often on 2026-10-23. Check them yourself before you open or update a pull request:
+
 1. **Checks:** run the repository's full check (lint, typecheck, tests, build) and fix it. Never push a red check.
 2. **Concurrency:** any « count then insert » or « check then write » runs in one transaction with a lock, and has a concurrency test.
 3. **One gate:** a rule (limit, permission, validation) is enforced in the service, so no route can skip it. Test every route.
@@ -96,3 +97,38 @@ These are the defects code review found most often on 2026-10-23. Check them you
 - **Default media** (avatars, banners, logos): their URLs come from the Krizaka org JSON (`@krizaka/org`: `listDefaults(kind)`, `defaultFor(kind, seed)`) — never hard-coded or bundled in this repository; a folder is never given a person. [Standard](https://github.com/krizaka/.github/blob/main/docs/standards/default-media.md).
 
 **Repository layout:** the root follows [krizaka/.github `docs/standards/repo-layout.md`](https://github.com/krizaka/.github/blob/main/docs/standards/repo-layout.md); the CI guard `check-repo-layout` fails on a stray root file, and a justified extra is declared in `.repo-layout.json` with its why.
+
+## 9. Anti-slop (ADR-015)
+
+What a model tends to write and the code does not need. Each line points at the rule that refuses it
+([ADR-015](https://github.com/krizaka/.github/blob/main/docs/adr/ADR-015-ai-code-audit-measured-and-enforced.md), [docs/standards/guards.md](https://github.com/krizaka/.github/blob/main/docs/standards/guards.md)).
+
+1. **No defensive null on `@NullMarked` code.** No `Objects.requireNonNull` or `if (x == null)` on a value the type already
+   guarantees. Enforced by NullAway at compile time; a new package is `@NullMarked` (ArchUnit).
+2. **A closed set is a type.** An enum, a sealed interface or an `as const` object, never a string compared by hand;
+   strategies are a `Map<Kind, Strategy>` built once at startup. Enforced by PMD / ArchUnit (Java) and `no-enum-string-compare` (ast-grep).
+3. **HTTP in Java is a DTO record, `@Valid` and `ProblemDetail`.** No `Map.of("error", …)`, no entity in a response, one
+   `@RestControllerAdvice` per service. Enforced by ArchUnit.
+4. **No `*Utils`, `*Helper` or `*Manager`.** Name the thing by what it does (§4). Enforced by ArchUnit (ADR-015 §5).
+5. **`?.` and `??` in TypeScript**, not a chain of `&&` or a ternary on null. The target rules are `@typescript-eslint/prefer-optional-chain` and `prefer-nullish-coalescing`; they are not in `@krizaka/config` yet.
+6. **The build is the judge.** Compile, lint and test before every push; `krizaka-edit-check` runs on each edit (below) and
+   NullAway and ArchUnit run at pre-push and in CI. A rule is never silenced to get green.
+
+**The edit hook.** Every repository adds this to `.claude/settings.json`. After each `Edit` or `Write`, the one file is
+checked in under 10 s: ESLint with the repository's config for TypeScript, PMD with the Krizaka rules for Java (never Maven).
+A finding comes back to the agent (exit 2); a timeout is silent.
+
+```json
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [{ "type": "command", "command": "npx --yes -p @krizaka/config krizaka-edit-check", "timeout": 10 }]
+      }
+    ]
+  }
+}
+```
+
+In a TypeScript repository that already depends on `@krizaka/config`, use `npx --no-install krizaka-edit-check` (no download).

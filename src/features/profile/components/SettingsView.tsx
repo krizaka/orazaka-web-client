@@ -9,7 +9,12 @@ import { Icon, type IconName } from "@krizaka/orazaka-design-system";
 import { useTranslation } from "@/core/context/LocaleContext";
 import { useProfile } from "@/features/profile/hooks/useProfile";
 import { useProfileForm } from "@/features/profile/hooks/useProfileForm";
-import { resolveSection, settingsHref, visibleSections, type SettingsSectionId } from "@/features/profile/utils/settingsSections";
+import {
+  resolveSection,
+  settingsHref,
+  visibleSections,
+  type SettingsSectionId,
+} from "@/features/profile/utils/settingsSections";
 import { AccountTab } from "./AccountTab";
 import { AppearanceTab } from "./AppearanceTab";
 import { WorkspaceTab } from "./WorkspaceTab";
@@ -81,7 +86,15 @@ export function SettingsView({ section }: Readonly<{ section: string }>) {
 
   return (
     <>
-      <SettingsLayout variant="flat" title={t.profile.pageTitle} description={t.profile.pageDesc} nav={nav} navLabel={t.profile.navLabel} linkAs={Link} className="pb-24">
+      <SettingsLayout
+        variant="flat"
+        title={t.profile.pageTitle}
+        description={t.profile.pageDesc}
+        nav={nav}
+        navLabel={t.profile.navLabel}
+        linkAs={Link}
+        className="pb-24"
+      >
         {active === "account" && <AccountTab profile={profile} t={t} />}
         {active === "appearance" && <AppearanceTab pf={pf} />}
         {active === "workspace" && isAdmin && <WorkspaceTab pf={pf} />}

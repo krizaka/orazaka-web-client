@@ -5,7 +5,9 @@ import { useComposerRunReconciler } from "@/features/chat-session/hooks/useCompo
 import { StudioApi } from "@/services/studio.api";
 import type { ChatMessage } from "@/core/types/chat.types";
 
-jest.mock("@/core/context/LocaleContext", () => ({ useTranslation: () => ({ t: { chat: { awaitingInput: "Waiting" } } }) }));
+jest.mock("@/core/context/LocaleContext", () => ({
+  useTranslation: () => ({ t: { chat: { awaitingInput: "Waiting" } } }),
+}));
 jest.mock("@/services/studio.api", () => ({ StudioApi: { fetchRun: jest.fn() } }));
 
 const KEY = ["chatMessages", "eric", "thread-1"];
@@ -24,13 +26,23 @@ describe("useComposerRunReconciler", () => {
       outputs: [{ key: "image", label: "Image", type: "IMAGE", value: "/api/v1/assets/job/image.png" }],
     });
     const client = new QueryClient();
-    const pending: ChatMessage = { id: "m-2", role: "assistant", content: "", timestamp: 1, kind: "run-pending", runId: "run-1" };
+    const pending: ChatMessage = {
+      id: "m-2",
+      role: "assistant",
+      content: "",
+      timestamp: 1,
+      kind: "run-pending",
+      runId: "run-1",
+    };
     client.setQueryData<ChatMessage[]>(KEY, [pending]);
 
     renderHook(() => useComposerRunReconciler("eric", "thread-1"), { wrapper: wrap(client) });
 
     await waitFor(() =>
-      expect(client.getQueryData<ChatMessage[]>(KEY)?.[0]).toMatchObject({ kind: "image", content: "/api/v1/assets/job/image.png" }),
+      expect(client.getQueryData<ChatMessage[]>(KEY)?.[0]).toMatchObject({
+        kind: "image",
+        content: "/api/v1/assets/job/image.png",
+      }),
     );
     expect(StudioApi.fetchRun).toHaveBeenCalledWith("run-1");
   });

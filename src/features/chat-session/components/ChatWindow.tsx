@@ -19,9 +19,7 @@ import { useChatThreadActions } from "@/features/chat-session/hooks/useChatThrea
 import { useScrollFab } from "@/features/chat-session/hooks/useScrollFab";
 import { useComposerStudios } from "@/features/chat-session/hooks/useComposerStudios";
 
-export const ChatWindow: React.FC<{ initialConversationId: string }> = ({
-  initialConversationId,
-}) => {
+export const ChatWindow: React.FC<{ initialConversationId: string }> = ({ initialConversationId }) => {
   const router = useRouter();
   const {
     activeConversationId,
@@ -35,19 +33,11 @@ export const ChatWindow: React.FC<{ initialConversationId: string }> = ({
   } = useJobStream();
 
   useEffect(() => {
-    if (
-      initialConversationId &&
-      initialConversationId !== activeConversationId
-    ) {
+    if (initialConversationId && initialConversationId !== activeConversationId) {
       setActiveConversationId(initialConversationId);
       router.push(`/chat?conversationId=${initialConversationId}`);
     }
-  }, [
-    initialConversationId,
-    activeConversationId,
-    setActiveConversationId,
-    router,
-  ]);
+  }, [initialConversationId, activeConversationId, setActiveConversationId, router]);
 
   const [isThreadDrawerOpen, setIsThreadDrawerOpen] = useState(false);
   const [isPlusMenuOpen, setIsPlusMenuOpen] = useState(false);
@@ -86,13 +76,7 @@ export const ChatWindow: React.FC<{ initialConversationId: string }> = ({
     deleteThread,
   } = useChatStream(activeConversationId);
 
-  const {
-    handleNewChat,
-    handleFirstSend,
-    handleRenameThread,
-    handleDeleteThread,
-    threadTitle,
-  } = useChatThreadActions({
+  const { handleNewChat, handleFirstSend, handleRenameThread, handleDeleteThread, threadTitle } = useChatThreadActions({
     activeConversationId,
     setActiveConversationId,
     setChatInput,
@@ -104,18 +88,15 @@ export const ChatWindow: React.FC<{ initialConversationId: string }> = ({
     deleteThread,
   });
 
-  const {
-    messagesEndRef,
-    scrollContainerRef,
-    showScrollFab,
-    handleScroll,
-    scrollToBottom,
-  } = useScrollFab([messages, isSending, isGenerating, nodeMutation.isPending]);
+  const { messagesEndRef, scrollContainerRef, showScrollFab, handleScroll, scrollToBottom } = useScrollFab([
+    messages,
+    isSending,
+    isGenerating,
+    nodeMutation.isPending,
+  ]);
 
-  const isImagePending =
-    nodeMutation.isPending && nodeMutation.variables?.studio.iconKey === "image";
-  const isSpeechPending =
-    nodeMutation.isPending && nodeMutation.variables?.studio.iconKey === "speech";
+  const isImagePending = nodeMutation.isPending && nodeMutation.variables?.studio.iconKey === "image";
+  const isSpeechPending = nodeMutation.isPending && nodeMutation.variables?.studio.iconKey === "speech";
 
   /** Whether the input bar should render in centered (search) mode */
   const isInputCentered = !activeConversationId;
@@ -136,12 +117,10 @@ export const ChatWindow: React.FC<{ initialConversationId: string }> = ({
     isPlusMenuOpen,
     onTogglePlusMenu: () => setIsPlusMenuOpen(!isPlusMenuOpen),
     onClosePlusMenu: () => setIsPlusMenuOpen(false),
-    onExecuteNode: (studio: ComposerStudio) =>
-      handleExecuteNode(studio, isPlusMenuOpen, setIsPlusMenuOpen),
+    onExecuteNode: (studio: ComposerStudio) => handleExecuteNode(studio, isPlusMenuOpen, setIsPlusMenuOpen),
     composerStudios,
     fileInputRef,
-    onFileChange: (e: React.ChangeEvent<HTMLInputElement>) =>
-      handleFileChange(e, t),
+    onFileChange: (e: React.ChangeEvent<HTMLInputElement>) => handleFileChange(e, t),
     routing: chatRouting,
     t,
   };
@@ -180,9 +159,7 @@ export const ChatWindow: React.FC<{ initialConversationId: string }> = ({
             <ChatHeader
               threadTitle={threadTitle}
               onOpenDrawer={() => setIsThreadDrawerOpen(true)}
-              onRename={(title) =>
-                handleRenameThread(activeConversationId, title)
-              }
+              onRename={(title) => handleRenameThread(activeConversationId, title)}
               t={t}
             />
 

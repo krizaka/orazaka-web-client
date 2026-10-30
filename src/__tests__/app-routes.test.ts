@@ -17,7 +17,9 @@ describe("the proxy knows every route folder (krizaka/orazaka#443)", () => {
   it("lists each folder of src/app as public or as a page of the app — a new page is added to app-routes.ts", () => {
     const unknown = routeSegments(APP).filter((name) => {
       const address = `/${name}`;
-      const isPublic = PUBLIC_PREFIXES.some((prefix) => address === prefix || address.startsWith(prefix) || `${address}/` === prefix);
+      const isPublic = PUBLIC_PREFIXES.some(
+        (prefix) => address === prefix || address.startsWith(prefix) || `${address}/` === prefix,
+      );
       return !isPublic && !(APP_SEGMENTS as readonly string[]).includes(name);
     });
     expect(unknown).toEqual([]);

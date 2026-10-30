@@ -38,7 +38,10 @@ const PASSWORD = process.env.E2E_PASSWORD;
 const PUBLIC_LIMIT = Number(process.env.CRAWL_PUBLIC_LIMIT || 14);
 const THEMES = ["dark", "light"];
 /** Desktop and phone, each with its height; the audit measures them in the order given. */
-const VIEWPORTS = [{ width: 1440, height: 900 }, { width: 390, height: 844 }];
+const VIEWPORTS = [
+  { width: 1440, height: 900 },
+  { width: 390, height: 844 },
+];
 const SIGNED_IN = ["/", "/studios", "/packs", "/chat", "/jobs", "/usage", "/automation", "/settings"];
 
 /** Console messages that are not Orazaka's (a blocked third-party beacon, a missing favicon). */
@@ -69,7 +72,9 @@ const PAGES = [
   // The sign-in screen is the auth layout (no bar, no footer, by design); the signed-in app is the rail + header shell
   // (a navigation landmark, no page footer): the family footer belongs to the public pages.
   { name: "login", url: "/login", chrome: "auth" },
-  ...(USER && PASSWORD ? SIGNED_IN.map((url) => ({ name: url === "/" ? "app-home" : url.slice(1), url, session: true, chrome: "app" })) : []),
+  ...(USER && PASSWORD
+    ? SIGNED_IN.map((url) => ({ name: url === "/" ? "app-home" : url.slice(1), url, session: true, chrome: "app" }))
+    : []),
 ];
 if (!(USER && PASSWORD)) say("· signed-in screens skipped: set E2E_USER and E2E_PASSWORD (a demo persona)");
 
@@ -105,7 +110,13 @@ const problems = await auditRoutes({
   ignoreConsole: IGNORED_CONSOLE,
   launch: () => chromium.launch(),
   session: storageState ? { storageState } : undefined,
-  a11y: { app: "orazaka-web-client", baseline: A11Y_BASELINE, widths: VIEWPORTS.map((v) => v.width), log: say, ...(USER && PASSWORD ? { session: { app: "orazaka-web-client-app", baseline: A11Y_BASELINE_APP } } : {}) },
+  a11y: {
+    app: "orazaka-web-client",
+    baseline: A11Y_BASELINE,
+    widths: VIEWPORTS.map((v) => v.width),
+    log: say,
+    ...(USER && PASSWORD ? { session: { app: "orazaka-web-client-app", baseline: A11Y_BASELINE_APP } } : {}),
+  },
   // The family contract and the inline-colour rule of the old crawl, plus the audit's own layout measures (overflow, containment, boxes wider than their own).
   checks: { landmarks: "public", boxes: true, pictures: true, emptyControls: true, hardColors: true },
 });
@@ -119,7 +130,10 @@ if (storageState) {
     await page.goto(`${BASE}${url}`, { waitUntil: "networkidle" });
     await page.waitForTimeout(500);
     const qa = await qaOnScreen(page);
-    if (qa) problems.push(`${url}: « ${qa} » is on a signed-in screen — the account must carry a persona's name (@krizaka/org cast)`);
+    if (qa)
+      problems.push(
+        `${url}: « ${qa} » is on a signed-in screen — the account must carry a persona's name (@krizaka/org cast)`,
+      );
   }
   await browser.close();
 }

@@ -54,9 +54,7 @@ export function RecentSessions({
             <div className="mx-auto mb-4 w-12 h-12 rounded-lg bg-surface-2 flex items-center justify-center">
               <Icon name="chat" size={20} className="text-fg-muted" />
             </div>
-            <p className="fluid-sm text-fg-secondary mb-4">
-              {t.dashboard.noRecentSessions}
-            </p>
+            <p className="fluid-sm text-fg-secondary mb-4">{t.dashboard.noRecentSessions}</p>
             <Button onClick={onStartNewChat} size="sm">
               {t.dashboard.startNewChat}
             </Button>
@@ -70,27 +68,25 @@ export function RecentSessions({
                   onClick={() => onResumeSession(thread.conversationId)}
                   className="group h-auto w-full justify-between px-3 py-3.5 text-left font-normal"
                 >
-                <div className="flex items-center min-w-0 mr-4">
-                  <div className="w-9 h-9 rounded-md bg-surface-2 flex items-center justify-center mr-3.5 text-fg-muted group-hover:text-accent transition-colors duration-200 border border-border-subtle">
-                    <Icon name="chat" size={16} />
+                  <div className="flex items-center min-w-0 mr-4">
+                    <div className="w-9 h-9 rounded-md bg-surface-2 flex items-center justify-center mr-3.5 text-fg-muted group-hover:text-accent transition-colors duration-200 border border-border-subtle">
+                      <Icon name="chat" size={16} />
+                    </div>
+                    <div className="min-w-0">
+                      <p className="fluid-sm font-semibold text-fg truncate max-w-[200px] sm:max-w-[320px]">
+                        {thread.title}
+                      </p>
+                      <span className="fluid-xs text-fg-muted font-mono flex items-center mt-0.5">
+                        <Icon name="history" size={12} className="mr-1" />
+                        {formatDate(thread.updatedAt)}
+                      </span>
+                    </div>
                   </div>
-                  <div className="min-w-0">
-                    <p className="fluid-sm font-semibold text-fg truncate max-w-[200px] sm:max-w-[320px]">
-                      {thread.title}
-                    </p>
-                    <span className="fluid-xs text-fg-muted font-mono flex items-center mt-0.5">
-                      <Icon name="history" size={12} className="mr-1" />
-                      {formatDate(thread.updatedAt)}
-                    </span>
-                  </div>
-                </div>
 
-                <div className="flex items-center fluid-xs text-fg-muted font-medium group-hover:text-accent transition-colors duration-200">
-                  <span className="mr-1.5 hidden sm:inline-block font-semibold ">
-                    {t.dashboard.resumeSession}
-                  </span>
-                  <Icon name="arrowRight" size={14} className="transform transition-transform duration-200" />
-                </div>
+                  <div className="flex items-center fluid-xs text-fg-muted font-medium group-hover:text-accent transition-colors duration-200">
+                    <span className="mr-1.5 hidden sm:inline-block font-semibold ">{t.dashboard.resumeSession}</span>
+                    <Icon name="arrowRight" size={14} className="transform transition-transform duration-200" />
+                  </div>
                 </Button>
               </li>
             ))}

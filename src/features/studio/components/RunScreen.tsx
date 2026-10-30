@@ -116,9 +116,14 @@ export function RunScreen({ runId }: Readonly<RunScreenProps>) {
             <h1 className="font-display text-xl font-bold tracking-[-0.02em] text-fg">{headline[run.status]}</h1>
             {body[run.status] && <p className="text-sm text-fg-secondary">{body[run.status]}</p>}
             <span className="font-mono text-[11px] text-fg-muted">
-              {studio?.label ?? run.studioKey} · {run.blueprintVersion} · {format(new Date(run.startedAt), "dd MMM yyyy HH:mm")}
+              {studio?.label ?? run.studioKey} · {run.blueprintVersion} ·{" "}
+              {format(new Date(run.startedAt), "dd MMM yyyy HH:mm")}
             </span>
-            {run.errorMessage && <p role="alert" className="text-xs text-fg-danger">{run.errorMessage}</p>}
+            {run.errorMessage && (
+              <p role="alert" className="text-xs text-fg-danger">
+                {run.errorMessage}
+              </p>
+            )}
             {!isTerminalRun(run.status) && total > 1 && (
               <span className="font-mono text-[11px] text-fg-muted">
                 {fill(t.showcase.studio.stepsProgress, { done, total })}
@@ -132,7 +137,13 @@ export function RunScreen({ runId }: Readonly<RunScreenProps>) {
                   {t.studio.approve}
                 </Button>
               )}
-              <ConfirmButton variant="ghost" size="sm" disabled={stopping} confirmLabel={t.runProgress.cancelConfirm} onConfirm={() => void stop()}>
+              <ConfirmButton
+                variant="ghost"
+                size="sm"
+                disabled={stopping}
+                confirmLabel={t.runProgress.cancelConfirm}
+                onConfirm={() => void stop()}
+              >
                 {stopping ? t.runProgress.cancelling : t.studio.cancelRun}
               </ConfirmButton>
             </div>

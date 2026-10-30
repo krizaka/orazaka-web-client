@@ -87,7 +87,13 @@ export function PricebookScreen() {
     { id: "modelName", header: "Modèle", sortable: true, value: (rate) => rate.modelName ?? "—" },
     { id: "unit", header: "Unité", sortable: true },
     { id: "creditsPerUnit", header: "Crédits / unité", sortable: true, align: "end" },
-    { id: "estimateCredits", header: "Estimation", sortable: true, align: "end", cell: (rate) => formatCredits(rate.estimateCredits) },
+    {
+      id: "estimateCredits",
+      header: "Estimation",
+      sortable: true,
+      align: "end",
+      cell: (rate) => formatCredits(rate.estimateCredits),
+    },
     { id: "version", header: "v", sortable: true, align: "end" },
     {
       id: "actions",
@@ -106,8 +112,8 @@ export function PricebookScreen() {
       <header>
         <h2 className="text-lg font-semibold text-fg">Grille tarifaire</h2>
         <p className="text-sm text-fg-muted">
-          Une publication clôture le tarif courant et en ouvre une nouvelle version.
-          Les réservations en cours restent facturées à la version qu’elles ont figée.
+          Une publication clôture le tarif courant et en ouvre une nouvelle version. Les réservations en cours restent
+          facturées à la version qu’elles ont figée.
         </p>
       </header>
 
@@ -186,25 +192,19 @@ export function PricebookScreen() {
  */
 function MarginPreviewPanel({ preview }: { preview: MarginPreview }) {
   const delta = preview.proposedCredits - preview.currentCredits;
-  const percent =
-    preview.currentCredits === 0
-      ? 0
-      : Math.round((delta / preview.currentCredits) * 10000) / 100;
+  const percent = preview.currentCredits === 0 ? 0 : Math.round((delta / preview.currentCredits) * 10000) / 100;
 
   return (
     <div className="rounded-lg border border-border-subtle p-4">
       {!preview.sampleEvents ? (
-        <p className="text-sm text-fg-warning">
-          Aucun trafic sur 30 jours — cette publication se fait sans données.
-        </p>
+        <p className="text-sm text-fg-warning">Aucun trafic sur 30 jours — cette publication se fait sans données.</p>
       ) : (
         <div className="space-y-2 text-sm">
           <p className="text-fg-muted">
             Sur <strong>{preview.sampleEvents}</strong> requêtes réelles :
           </p>
           <p className="text-fg">
-            {formatCredits(preview.currentCredits)} →{" "}
-            {formatCredits(preview.proposedCredits)} crédits{" "}
+            {formatCredits(preview.currentCredits)} → {formatCredits(preview.proposedCredits)} crédits{" "}
             <Badge variant={delta >= 0 ? "success" : "warning"}>
               {delta >= 0 ? "+" : ""}
               {percent}%

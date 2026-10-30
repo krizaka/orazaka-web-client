@@ -17,11 +17,14 @@ import { BlueprintVersionTable } from "@/console/features/studio/components/Blue
  * by accident.
  */
 export function StudioBuilderScreen() {
-  const { studios, versions, selected, select, isLoading, error, reloadVersions } =
-    useStudioAdmin();
+  const { studios, versions, selected, select, isLoading, error, reloadVersions } = useStudioAdmin();
   // A best-effort list: the picker is a convenience, and the server is what actually
   // refuses a step naming a capability that does not exist.
-  const featureKeysQuery = useQuery({ queryKey: ["studio-feature-keys"], queryFn: () => StudioAdminApi.featureKeys(), retry: false });
+  const featureKeysQuery = useQuery({
+    queryKey: ["studio-feature-keys"],
+    queryFn: () => StudioAdminApi.featureKeys(),
+    retry: false,
+  });
   const featureKeys: string[] = featureKeysQuery.data ?? [];
 
   if (isLoading) {
@@ -38,18 +41,16 @@ export function StudioBuilderScreen() {
             onClick={() => select(studio.studioKey)}
             className={cn(
               "block w-full rounded px-3 py-2 text-left text-sm transition-colors",
-              selected === studio.studioKey ? "bg-surface-2 font-semibold text-fg" : "text-fg-secondary hover:bg-surface-2",
+              selected === studio.studioKey
+                ? "bg-surface-2 font-semibold text-fg"
+                : "text-fg-secondary hover:bg-surface-2",
             )}
           >
             {studio.label}
-            <span className="block font-mono text-[10px] text-fg-muted">
-              {studio.studioKey}
-            </span>
+            <span className="block font-mono text-[10px] text-fg-muted">{studio.studioKey}</span>
           </button>
         ))}
-        {studios.length === 0 && (
-          <p className="text-sm text-fg-muted">Aucun Studio au catalogue.</p>
-        )}
+        {studios.length === 0 && <p className="text-sm text-fg-muted">Aucun Studio au catalogue.</p>}
       </nav>
 
       <div className="space-y-6">
@@ -57,16 +58,8 @@ export function StudioBuilderScreen() {
 
         {selected && (
           <>
-            <BlueprintVersionTable
-              studioKey={selected}
-              versions={versions}
-              onChanged={reloadVersions}
-            />
-            <BlueprintEditor
-              studioKey={selected}
-              featureKeys={featureKeys}
-              onSaved={reloadVersions}
-            />
+            <BlueprintVersionTable studioKey={selected} versions={versions} onChanged={reloadVersions} />
+            <BlueprintEditor studioKey={selected} featureKeys={featureKeys} onSaved={reloadVersions} />
           </>
         )}
       </div>

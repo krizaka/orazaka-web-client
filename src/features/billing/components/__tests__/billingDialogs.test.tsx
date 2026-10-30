@@ -7,7 +7,8 @@ import { TopUpDialog } from "@/features/billing/components/TopUpDialog";
 import { LowBalanceBanner } from "@/features/billing/components/LowBalanceBanner";
 
 /** These screens read server state: every render gets a fresh query client. */
-const render = (ui: Parameters<typeof plainRender>[0], options?: Parameters<typeof plainRender>[1]) => plainRender(ui, { wrapper: queryWrapper(), ...options });
+const render = (ui: Parameters<typeof plainRender>[0], options?: Parameters<typeof plainRender>[1]) =>
+  plainRender(ui, { wrapper: queryWrapper(), ...options });
 
 const t = translations.en;
 
@@ -37,7 +38,14 @@ describe("CostConfirmDialog (@krizaka/ui Dialog)", () => {
     const onConfirm = jest.fn();
     const onCancel = jest.fn();
     render(
-      <CostConfirmDialog open capability="image" actionLabel="Generate" onConfirm={onConfirm} onCancel={onCancel} {...props} />,
+      <CostConfirmDialog
+        open
+        capability="image"
+        actionLabel="Generate"
+        onConfirm={onConfirm}
+        onCancel={onCancel}
+        {...props}
+      />,
     );
     return { onConfirm, onCancel };
   };
@@ -85,8 +93,24 @@ describe("CostConfirmDialog (@krizaka/ui Dialog)", () => {
 describe("TopUpDialog (@krizaka/ui Dialog)", () => {
   it("lists the public, active plans", async () => {
     mockFetchPlans.mockResolvedValue([
-      { planKey: "pro", label: "Pro", isPublic: true, isActive: true, monthlyCreditGrant: 1000, priceCents: 2900, currency: "CAD" },
-      { planKey: "hidden", label: "Hidden", isPublic: false, isActive: true, monthlyCreditGrant: 1, priceCents: 1, currency: "CAD" },
+      {
+        planKey: "pro",
+        label: "Pro",
+        isPublic: true,
+        isActive: true,
+        monthlyCreditGrant: 1000,
+        priceCents: 2900,
+        currency: "CAD",
+      },
+      {
+        planKey: "hidden",
+        label: "Hidden",
+        isPublic: false,
+        isActive: true,
+        monthlyCreditGrant: 1,
+        priceCents: 1,
+        currency: "CAD",
+      },
     ]);
     render(<TopUpDialog open onClose={jest.fn()} />);
     expect(screen.getByRole("dialog", { name: t.billing.topUpTitle })).toBeInTheDocument();

@@ -37,7 +37,15 @@ export function LoginForm() {
     }
   };
 
-  return <LoginCard error={error} isLoading={isLoading} onSubmit={handleLogin} onGithub={loginWithGithub} onGoogle={loginWithGoogle} />;
+  return (
+    <LoginCard
+      error={error}
+      isLoading={isLoading}
+      onSubmit={handleLogin}
+      onGithub={loginWithGithub}
+      onGoogle={loginWithGoogle}
+    />
+  );
 }
 
 /**

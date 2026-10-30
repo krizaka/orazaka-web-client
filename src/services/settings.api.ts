@@ -31,12 +31,9 @@ export const SettingsApi = {
       autoSave: (preferences.autoSave as boolean) ?? true,
       aiPersona: (preferences.aiPersona as Settings["aiPersona"]) || "standard",
       themeName: (preferences.themeName as string) || "Orazaka",
-      themeTagline:
-        (preferences.themeTagline as string) || "Decoupled Intelligence",
-      themeAccent:
-        (preferences.themeAccent as Settings["themeAccent"]) || "zinc",
-      themeLayout:
-        (preferences.themeLayout as Settings["themeLayout"]) || "standard",
+      themeTagline: (preferences.themeTagline as string) || "Decoupled Intelligence",
+      themeAccent: (preferences.themeAccent as Settings["themeAccent"]) || "zinc",
+      themeLayout: (preferences.themeLayout as Settings["themeLayout"]) || "standard",
       theme: (preferences.theme as Settings["theme"]) || "system",
       tenantId: (preferences.tenantId as string) || "orazaka-default",
     };
@@ -50,10 +47,10 @@ export const SettingsApi = {
    * @returns The updated preferences payload from the server.
    */
   update: async (settings: Partial<Settings>): Promise<Partial<Settings>> => {
-    const data = await restRequest<ProfilePreferences>(
-      "/api/v1/profile/preferences",
-      { method: "PUT", body: settings },
-    );
+    const data = await restRequest<ProfilePreferences>("/api/v1/profile/preferences", {
+      method: "PUT",
+      body: settings,
+    });
     return (data?.preferences as Partial<Settings>) ?? {};
   },
 } as const;

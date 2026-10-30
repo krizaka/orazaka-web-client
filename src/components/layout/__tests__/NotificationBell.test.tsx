@@ -41,7 +41,13 @@ jest.mock("@/core/context/LocaleContext", () => ({
         videoAnalysis: "Video Analysis",
       },
       showcase: {
-        notifications: { emptyTitle: "No tasks", emptyBody: "Nothing yet", running: "Running", done: "Ready", failed: "Failed" },
+        notifications: {
+          emptyTitle: "No tasks",
+          emptyBody: "Nothing yet",
+          running: "Running",
+          done: "Ready",
+          failed: "Failed",
+        },
       },
     },
     locale: "en",
@@ -98,33 +104,25 @@ describe("NotificationBell", () => {
   });
 
   it("renders completed job", () => {
-    mockLastJobs = [
-      { id: "job-12345678-abcd", featureKey: "chat.text", status: "COMPLETED" },
-    ];
+    mockLastJobs = [{ id: "job-12345678-abcd", featureKey: "chat.text", status: "COMPLETED" }];
     render(<NotificationBell bellOpen={true} onToggle={jest.fn()} />);
     expect(screen.getByText("Text Generation")).toBeInTheDocument();
   });
 
   it("renders video job", () => {
-    mockLastJobs = [
-      { id: "job-22345678-abcd", featureKey: "media.video", status: "PROCESSING" },
-    ];
+    mockLastJobs = [{ id: "job-22345678-abcd", featureKey: "media.video", status: "PROCESSING" }];
     render(<NotificationBell bellOpen={true} onToggle={jest.fn()} />);
     expect(screen.getByText("Video Generation")).toBeInTheDocument();
   });
 
   it("renders image job", () => {
-    mockLastJobs = [
-      { id: "job-32345678-abcd", featureKey: "media.image", status: "COMPLETED" },
-    ];
+    mockLastJobs = [{ id: "job-32345678-abcd", featureKey: "media.image", status: "COMPLETED" }];
     render(<NotificationBell bellOpen={true} onToggle={jest.fn()} />);
     expect(screen.getByText("Image Generation")).toBeInTheDocument();
   });
 
   it("renders speech job", () => {
-    mockLastJobs = [
-      { id: "job-42345678-abcd", featureKey: "chat.speech", status: "FAILED" },
-    ];
+    mockLastJobs = [{ id: "job-42345678-abcd", featureKey: "chat.speech", status: "FAILED" }];
     render(<NotificationBell bellOpen={true} onToggle={jest.fn()} />);
     expect(screen.getByText("Speech Generation")).toBeInTheDocument();
   });

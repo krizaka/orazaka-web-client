@@ -2,14 +2,7 @@
   "host": "dev.orazaka.com",
   "iosBundleId": "com.krizaka.orazaka",
   "androidPackage": "com.krizaka.orazaka",
-  "paths": [
-    "/studios",
-    "/studios/*",
-    "/chat",
-    "/jobs",
-    "/settings",
-    "/settings/*"
-  ],
+  "paths": ["/studios", "/studios/*", "/chat", "/jobs", "/settings", "/settings/*"],
   "web": {
     "appDir": "src/app",
     "extra": [],
@@ -29,6 +22,7 @@
       "/models",
       "/desktop",
       "/pricing",
+      "/open-source",
       "/console",
       "/console/*",
       "/dashboard/*",

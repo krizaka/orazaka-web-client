@@ -15,6 +15,7 @@ export interface ForwardedBody {
 export async function forwardedBody(request: Request, method: string): Promise<ForwardedBody> {
   if (!WRITES.has(method)) return { body: undefined, contentType: "application/json" };
   const type = request.headers.get("content-type") ?? "";
-  if (type.toLowerCase().startsWith("multipart/form-data")) return { body: await request.arrayBuffer(), contentType: type };
+  if (type.toLowerCase().startsWith("multipart/form-data"))
+    return { body: await request.arrayBuffer(), contentType: type };
   return { body: await request.text(), contentType: "application/json" };
 }

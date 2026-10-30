@@ -72,7 +72,13 @@ export function LandingPage({ measured = NO_RUNS }: Readonly<{ measured?: Measur
             { value: <NumberTicker value={0} locale={locale} />, label: t.landing.figures.telemetry },
           ]}
           featuresHeading={{ eyebrow: f.eyebrow, title: f.title, lead: f.lead }}
-          features={FEATURES.map(({ id, size, clip }) => ({ id, size, title: f.items[id].title, text: f.items[id].text, visual: <Clip id={clip} /> }))}
+          features={FEATURES.map(({ id, size, clip }) => ({
+            id,
+            size,
+            title: f.items[id].title,
+            text: f.items[id].text,
+            visual: <Clip id={clip} />,
+          }))}
           closing={{
             title: t.landing.cta.title,
             body: t.landing.cta.body,

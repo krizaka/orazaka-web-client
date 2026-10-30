@@ -45,11 +45,11 @@ pre-commit install   # once: the gitleaks and zizmor hooks on each commit
 
 ## Position in the platform
 
-| | |
-|:---|:---|
-| Depends on | [`orazaka-ui-kit`](https://github.com/krizaka/orazaka-ui-kit) |
-| Used by | _no other Orazaka repository._ |
-| Workspace path | `orazaka-apps/ui/orazaka-web-client` |
+|                |                                                               |
+| :------------- | :------------------------------------------------------------ |
+| Depends on     | [`orazaka-ui-kit`](https://github.com/krizaka/orazaka-ui-kit) |
+| Used by        | _no other Orazaka repository._                                |
+| Workspace path | `orazaka-apps/ui/orazaka-web-client`                          |
 
 ## Build
 
@@ -119,11 +119,11 @@ The Krizaka names and birds are not licensed: [trademark policy](https://github.
 The same app runs as a read-only public site: no sign-in, no sign-up, no call to the backend. `www.orazaka.com` is
 indexed; `dev.orazaka.com` sends its pages to www (308) and, like any `dev.*` address, is never indexed.
 
-| Variable | Default | Effect |
-| --- | --- | --- |
-| `AUTH_LOGIN_ENABLED` | `false` | Sign-in, forgot-password and verify show "Orazaka is in development — sign-in is closed on this site"; the BFF routes (`/api/v1`, `/api/auth`, `/api/chat`, `/uploads`) answer 404 while both flags are off. |
-| `AUTH_SIGNUP_ENABLED` | `false` | Same for `/register`; the entry points are hidden from the landing. |
-| `APP_VERSION` | `package.json` version + short sha | Shown in the footer (`NEXT_PUBLIC_APP_VERSION`, set at build). |
+| Variable              | Default                            | Effect                                                                                                                                                                                                       |
+| --------------------- | ---------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `AUTH_LOGIN_ENABLED`  | `false`                            | Sign-in, forgot-password and verify show "Orazaka is in development — sign-in is closed on this site"; the BFF routes (`/api/v1`, `/api/auth`, `/api/chat`, `/uploads`) answer 404 while both flags are off. |
+| `AUTH_SIGNUP_ENABLED` | `false`                            | Same for `/register`; the entry points are hidden from the landing.                                                                                                                                          |
+| `APP_VERSION`         | `package.json` version + short sha | Shown in the footer (`NEXT_PUBLIC_APP_VERSION`, set at build).                                                                                                                                               |
 
 No edge URL is needed to build or run it. The documentation (`/docs`) is generated: `node scripts/sync-docs.mjs <orazaka checkout>` (what is published, in which journey and order: `scripts/docs-manifest.mjs`; a wrong or unclear page is fixed in the Orazaka repository, then re-synced); the demo recordings and packs of the home page: `node scripts/sync-showcase.mjs <krizaka-com checkout>` — never hand-edit `content/docs` or `showcase.generated.json`. Media stay on Bunny.
 
@@ -144,15 +144,18 @@ audited); every refusal is worded by its Problem `code`. Its words are in Englis
 (`src/console/core/copy/law.ts`), in the browser's language (`ConsoleLocale`); the tab and the filters are the URL
 (`?tab=`, `?status=`, `?kind=`).
 
-| Variable | Default | Effect |
-| --- | --- | --- |
-| `AUTH_ALLOWED_IPS` | empty | Comma-separated client addresses (DigitalOcean's `do-connecting-ip`) allowed on the admin host; any other gets 403, sign-in page included. In production an empty list lets nobody in. |
-| `AUTH_CONSOLE_LOGIN_ENABLED` | `false` | Opens the console's sign-in (only `ROLE_ADMIN` signs in). Closed, its BFF routes answer 404. Independent of `AUTH_LOGIN_ENABLED`. |
-| `APP_STORE_IOS_URL` / `APP_STORE_ANDROID_URL` | unset | Store pages of the mobile apps, read at build (`src/core/config/store-links.ts`). Unset: the Download page says « Coming to iPhone and Android », no button. Set (an `apps.apple.com` / `play.google.com` https page only — never TestFlight or an APK): the store button appears by itself. |
-| `AUTH_CONSOLE_SECRET` | none | Signing key of the console's session (never the public site's `NEXTAUTH_SECRET`); unset in production, no console session can be opened. |
-| `AUTH_TRUST_HOST` | unset | `true` on the deployment: next-auth builds callback URLs from the requested Host (one `NEXTAUTH_URL` cannot name two hosts). |
+| Variable                                      | Default     | Effect                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
+| --------------------------------------------- | ----------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `AUTH_ALLOWED_IPS`                            | empty       | Comma-separated client addresses (DigitalOcean's `do-connecting-ip`) allowed on the admin host; any other gets 403, sign-in page included. In production an empty list lets nobody in.                                                                                                                                                                                                                                                                                                 |
+| `AUTH_CONSOLE_LOGIN_ENABLED`                  | `false`     | Opens the console's sign-in (only `ROLE_ADMIN` signs in). Closed, its BFF routes answer 404. Independent of `AUTH_LOGIN_ENABLED`.                                                                                                                                                                                                                                                                                                                                                      |
+| `APP_DOWNLOADS_MAC_ENABLED`                   | unset (off) | Bootstrap default of the Mac download switch (`src/core/config/downloads.ts`). The admin setting `downloads.mac-enabled` (Engine page of the console, audited) wins whenever the edge (`ROUTER_URL`) answers `GET /api/v1/studios/public/downloads`; this value applies when no edge is set or the call fails. Anything but `true`: the Download page shows a disabled button and « In testing — not distributed yet », with no link to the file, and `/desktop/download` answers 404. |
+| `APP_STORE_IOS_URL` / `APP_STORE_ANDROID_URL` | unset       | Store pages of the mobile apps, read at build (`src/core/config/store-links.ts`). Unset: the Download page says « Coming to iPhone and Android », no button. Set (an `apps.apple.com` / `play.google.com` https page only — never TestFlight or an APK): the store button appears by itself.                                                                                                                                                                                           |
+| `AUTH_CONSOLE_SECRET`                         | none        | Signing key of the console's session (never the public site's `NEXTAUTH_SECRET`); unset in production, no console session can be opened.                                                                                                                                                                                                                                                                                                                                               |
+| `AUTH_TRUST_HOST`                             | unset       | `true` on the deployment: next-auth builds callback URLs from the requested Host (one `NEXTAUTH_URL` cannot name two hosts).                                                                                                                                                                                                                                                                                                                                                           |
 
 `ROUTER_URL` (the edge) is shared. They replace the standalone `orazaka-web-admin` app (now part of this repository); `npm run test:console` runs the console's logic tests, `src/__tests__/host-routing.test.ts` the host routing.
+
+`/pricing` reads krizaka-billing's public price catalogue (`GET /api/v1/billing/prices`) on the server, refreshed every 5 minutes, with `PAYMENTS_CATALOGUE_TOKEN` (a service credential, server-only). Without it, or when billing does not answer, the page shows no figure — prices are data (ADR-009), never typed here.
 
 ---
 

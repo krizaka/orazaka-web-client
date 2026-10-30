@@ -43,7 +43,10 @@ export function RunsInProgress() {
   const w = t.runProgress.inProgress;
   const dateLocale = locale === "fr" ? fr : enUS;
   return (
-    <section aria-label={w.title} className="flex flex-col gap-2 rounded-xl border border-border-default bg-surface-1 p-4">
+    <section
+      aria-label={w.title}
+      className="flex flex-col gap-2 rounded-xl border border-border-default bg-surface-1 p-4"
+    >
       <h2 className="text-xs font-semibold text-fg-muted">{w.title}</h2>
       <ul className="flex flex-col gap-2">
         {runs.map((run) => (
@@ -51,7 +54,11 @@ export function RunsInProgress() {
             <Badge tone="accent" size="sm" dot>
               {run.studioKey}
             </Badge>
-            <span className="text-xs text-fg-muted">{fill(w.since, { time: formatDistanceToNow(new Date(run.startedAt), { addSuffix: true, locale: dateLocale }) })}</span>
+            <span className="text-xs text-fg-muted">
+              {fill(w.since, {
+                time: formatDistanceToNow(new Date(run.startedAt), { addSuffix: true, locale: dateLocale }),
+              })}
+            </span>
             <Button asChild variant="ghost" size="sm" className="ml-auto">
               <Link href={`/studios/runs/${run.id}`}>{w.open}</Link>
             </Button>

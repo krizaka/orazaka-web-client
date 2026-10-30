@@ -78,10 +78,7 @@ async function invalidateSession(): Promise<void> {
  * @throws {Error} On non-2xx responses, using the server's Problem Details `detail` (or legacy
  *   `error`) when present.
  */
-export async function restRequest<T>(
-  path: string,
-  init: { method?: string; body?: unknown } = {},
-): Promise<T> {
+export async function restRequest<T>(path: string, init: { method?: string; body?: unknown } = {}): Promise<T> {
   const response = await fetch(path, {
     method: init.method ?? "GET",
     headers: { "Content-Type": "application/json" },
@@ -106,5 +103,5 @@ export async function restRequest<T>(
   }
 
   const text = await response.text();
-  return (text ? (JSON.parse(text) as T) : (undefined as T));
+  return text ? (JSON.parse(text) as T) : (undefined as T);
 }

@@ -30,8 +30,6 @@ const PIPELINE_NODES: PipelineNode[] = [
   { id: "validation", label: "Validation", icon: "quantum", order: 10, status: "active", aiDep: true },
 ];
 
-
-
 const STATUS_BORDER_CLASSES: Record<PipelineNode["status"], string> = {
   active: "border-success",
   bypassed: "border-fg-muted",
@@ -69,7 +67,7 @@ export function InterceptorPipeline() {
             <div
               className={cn(
                 "pipeline-node group flex-shrink-0 flex flex-col items-center gap-1.5 px-2 py-2 rounded-md transition-all duration-200 hover:bg-surface-2 cursor-default",
-                node.status === "active" ? "opacity-100" : "opacity-40"
+                node.status === "active" ? "opacity-100" : "opacity-40",
               )}
               title={`${node.label} — ${node.status}${node.aiDep ? " (AI)" : ""}`}
             >
@@ -78,22 +76,17 @@ export function InterceptorPipeline() {
                 className={cn(
                   "relative flex items-center justify-center w-9 h-9 rounded-full border transition-colors duration-200",
                   STATUS_BORDER_CLASSES[node.status],
-                  STATUS_BG_CLASSES[node.status]
+                  STATUS_BG_CLASSES[node.status],
                 )}
               >
-                <Icon
-                  name={node.icon}
-                  size={16}
-                  className="transition-colors duration-200"
-                  label={node.label}
-                />
+                <Icon name={node.icon} size={16} className="transition-colors duration-200" label={node.label} />
                 {/* Active pulse ring */}
                 {node.status === "active" && (
                   <span
                     className={cn(
                       "absolute inset-0 rounded-sm animate-[pulse-ring_2s_ease-in-out_infinite] border border-solid",
                       STATUS_BORDER_CLASSES[node.status],
-                      "opacity-30"
+                      "opacity-30",
                     )}
                   />
                 )}

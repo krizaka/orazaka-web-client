@@ -15,14 +15,25 @@ test("a multipart upload keeps its bytes and its boundary", async () => {
   const { body, contentType } = await forwardedBody(request, "POST");
   assert.equal(contentType, sentType);
   assert.match(contentType, /^multipart\/form-data; boundary=/);
-  const relayed = await new Request(URL_, { method: "POST", body, headers: { "content-type": contentType } }).formData();
+  const relayed = await new Request(URL_, {
+    method: "POST",
+    body,
+    headers: { "content-type": contentType },
+  }).formData();
   assert.equal(relayed.get("datasetUrl"), "https://www.donneesquebec.ca/ccq.xml");
   assert.equal(await (relayed.get("file") as File).text(), "<loi/>");
 });
 
 test("a JSON write is relayed as JSON text", async () => {
-  const request = new Request(URL_, { method: "POST", body: JSON.stringify({ reason: "Eric: wrong article" }), headers: { "content-type": "application/json" } });
-  assert.deepEqual(await forwardedBody(request, "POST"), { body: '{"reason":"Eric: wrong article"}', contentType: "application/json" });
+  const request = new Request(URL_, {
+    method: "POST",
+    body: JSON.stringify({ reason: "Eric: wrong article" }),
+    headers: { "content-type": "application/json" },
+  });
+  assert.deepEqual(await forwardedBody(request, "POST"), {
+    body: '{"reason":"Eric: wrong article"}',
+    contentType: "application/json",
+  });
 });
 
 test("a read carries no body", async () => {

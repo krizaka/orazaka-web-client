@@ -23,14 +23,32 @@ export interface DocsModel {
   modules: ModelModule[];
   dependencies: { from: string; to: string }[];
   flows: { from: string; to: string; kind: string; via?: string; exchange?: string; routingKey?: string }[];
-  pipeline: { interceptor: string; order: number; enabled: boolean; phase: string; implemented: boolean; concern: string; summary: string }[];
+  pipeline: {
+    interceptor: string;
+    order: number;
+    enabled: boolean;
+    phase: string;
+    implemented: boolean;
+    concern: string;
+    summary: string;
+  }[];
   coreChain: { interceptor: string; rank: number; concern: string; summary: string }[];
-  cli: { alias: string; journey: { command: string; description: string; phases?: { id: string; title: string; detail: string }[]; processes?: { key: string; label: string; port: number | null }[] }[] };
+  cli: {
+    alias: string;
+    journey: {
+      command: string;
+      description: string;
+      phases?: { id: string; title: string; detail: string }[];
+      processes?: { key: string; label: string; port: number | null }[];
+    }[];
+  };
 }
 
 let cached: DocsModel | null = null;
 export function loadModel(): DocsModel {
-  cached ??= JSON.parse(fs.readFileSync(path.join(process.cwd(), "content", "docs", "model.json"), "utf8")) as DocsModel;
+  cached ??= JSON.parse(
+    fs.readFileSync(path.join(process.cwd(), "content", "docs", "model.json"), "utf8"),
+  ) as DocsModel;
   return cached;
 }
 
@@ -60,13 +78,23 @@ export function parseArchitecture(source: string, model: DocsModel): Architectur
   const fields: Record<string, string> = {};
   for (const { text, n } of lines(source)) {
     const m = /^(\w+)\s*:\s*(.+)$/.exec(text);
-    if (!m || !["product", "focus", "mode", "journey", "owner"].includes(m[1])) throw new DiagramError("architecture", n, `expected product|focus|mode|journey|owner: value, got "${text}"`);
+    if (!m || !["product", "focus", "mode", "journey", "owner"].includes(m[1]))
+      throw new DiagramError("architecture", n, `expected product|focus|mode|journey|owner: value, got "${text}"`);
     fields[m[1]] = m[2].trim();
   }
-  if ((fields.product ?? "orazaka") !== "orazaka") throw new DiagramError("architecture", null, `unknown product ${fields.product}`);
-  if (fields.mode && !["build", "runtime", "journey"].includes(fields.mode)) throw new DiagramError("architecture", null, `mode is build, runtime or journey, not ${fields.mode}`);
-  if (fields.focus && !model.modules.some((m) => m.id === fields.focus)) throw new DiagramError("architecture", null, `${fields.focus} is not a module of the generated model`);
-  return { product: "orazaka", focus: fields.focus ?? null, mode: (fields.mode ?? null) as ArchitectureBlock["mode"], journey: fields.journey ?? null, owner: fields.owner ?? null };
+  if ((fields.product ?? "orazaka") !== "orazaka")
+    throw new DiagramError("architecture", null, `unknown product ${fields.product}`);
+  if (fields.mode && !["build", "runtime", "journey"].includes(fields.mode))
+    throw new DiagramError("architecture", null, `mode is build, runtime or journey, not ${fields.mode}`);
+  if (fields.focus && !model.modules.some((m) => m.id === fields.focus))
+    throw new DiagramError("architecture", null, `${fields.focus} is not a module of the generated model`);
+  return {
+    product: "orazaka",
+    focus: fields.focus ?? null,
+    mode: (fields.mode ?? null) as ArchitectureBlock["mode"],
+    journey: fields.journey ?? null,
+    owner: fields.owner ?? null,
+  };
 }
 
 // ── sequence ─────────────────────────────────────────────────────────────────────────────────────
@@ -79,7 +107,15 @@ export interface SequenceParticipant {
 }
 export type SequenceItem =
   | { type: "section"; title: string }
-  | { type: "step"; n: number; from: string; to: string; text: string; reply: boolean; branch: { kind: "if" | "else"; condition: string } | null };
+  | {
+      type: "step";
+      n: number;
+      from: string;
+      to: string;
+      text: string;
+      reply: boolean;
+      branch: { kind: "if" | "else"; condition: string } | null;
+    };
 export interface SequenceBlock {
   participants: SequenceParticipant[];
   items: SequenceItem[];
@@ -91,7 +127,8 @@ export function parseSequence(source: string, model: DocsModel): SequenceBlock {
   let branch: { kind: "if" | "else"; condition: string } | null = null;
   let n = 0;
   const known = (key: string, line: number) => {
-    if (!participants.some((p) => p.key === key)) throw new DiagramError("sequence", line, `unknown participant ${key} — declare it with "participant ${key}: …"`);
+    if (!participants.some((p) => p.key === key))
+      throw new DiagramError("sequence", line, `unknown participant ${key} — declare it with "participant ${key}: …"`);
   };
   for (const { text, n: line } of lines(source)) {
     let m: RegExpExecArray | null;
@@ -131,16 +168,26 @@ export interface StateBlock {
   transitions: { from: string; to: string; label: string }[];
 }
 
-export function parseStates(source: string): StateBlock {
+/** The `state` and `a -> b` lines of a states block. */
+function readStateLines(source: string): Pick<StateBlock, "transitions"> & { labels: Map<string, string> } {
   const labels = new Map<string, string>();
   const transitions: StateBlock["transitions"] = [];
   for (const { text, n } of lines(source)) {
-    let m: RegExpExecArray | null;
     if (/^enum\s*:/.test(text)) continue;
-    if ((m = /^state\s+([\w-]+)\s*:\s*(.+)$/.exec(text))) labels.set(m[1], m[2].trim());
-    else if ((m = /^([\w-]+)\s*->\s*([\w-]+)\s*:\s*(.+)$/.exec(text))) transitions.push({ from: m[1], to: m[2], label: m[3].trim() });
-    else throw new DiagramError("states", n, `cannot read "${text}"`);
+    const state = /^state\s+([\w-]+)\s*:(.+)$/.exec(text);
+    if (state) {
+      labels.set(state[1], state[2].trim());
+      continue;
+    }
+    const move = /^([\w-]+)\s*->\s*([\w-]+)\s*:(.+)$/.exec(text);
+    if (!move) throw new DiagramError("states", n, `cannot read "${text}"`);
+    transitions.push({ from: move[1], to: move[2], label: move[3].trim() });
   }
+  return { labels, transitions };
+}
+
+export function parseStates(source: string): StateBlock {
+  const { labels, transitions } = readStateLines(source);
   if (!transitions.some((t) => t.from === "start")) throw new DiagramError("states", null, "no transition from start");
   const order: string[] = [];
   const queue = ["start"];
@@ -153,7 +200,9 @@ export function parseStates(source: string): StateBlock {
       }
     }
   }
-  const unreachable = [...new Set(transitions.flatMap((t) => [t.from, t.to]))].filter((id) => id !== "start" && id !== "end" && !order.includes(id));
+  const unreachable = [...new Set(transitions.flatMap((t) => [t.from, t.to]))].filter(
+    (id) => id !== "start" && id !== "end" && !order.includes(id),
+  );
   if (unreachable.length) throw new DiagramError("states", null, `unreachable from start: ${unreachable.join(", ")}`);
   return {
     states: order.map((id) => ({

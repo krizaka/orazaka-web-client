@@ -16,7 +16,8 @@ export const closedCopy = {
   fr: {
     title: "Orazaka Operations est en développement — la connexion est fermée sur ce site",
     body: "Ceci est le déploiement public de développement de la console d'administration. Les comptes ne sont pas encore ouverts.",
-    signInBanner: "La connexion s'ouvre quand les services de développement d'Orazaka tournent — regardez la démo d'Orazaka en attendant.",
+    signInBanner:
+      "La connexion s'ouvre quand les services de développement d'Orazaka tournent — regardez la démo d'Orazaka en attendant.",
     home: "Découvrir Orazaka",
     by: "Un produit Krizaka",
     version: "Version",

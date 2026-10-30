@@ -12,6 +12,5 @@
   "docs/_generated/MEASURED_RUNS.md": "measured-runs",
   "docs/_generated/ARCHITECTURE.md": "architecture",
   "docs/AUTH.md": "auth",
-  "SECURITY.md": "security",
-  "docs/LICENSING.md": "licensing"
+  "SECURITY.md": "security"
 }

@@ -10,7 +10,8 @@ export const showcase: Record<"en" | "fr", ShowcaseDictionary> = {
   en: {
     studio: {
       loadErrorTitle: "This page did not load",
-      runRunningBody: "Every step runs on your machine. You can leave this page: the run carries on and the bell tells you when it is done.",
+      runRunningBody:
+        "Every step runs on your machine. You can leave this page: the run carries on and the bell tells you when it is done.",
       runSucceededBody: "Everything it produced is below — copy it, download it, use it.",
       runFailedBody: "The steps below show where it stopped.",
       stepsProgress: "{done} of {total} steps",
@@ -19,7 +20,8 @@ export const showcase: Record<"en" | "fr", ShowcaseDictionary> = {
     },
     jobs: {
       emptyTitle: "Nothing has run yet",
-      emptyBody: "Generate an image, a video or a voice-over from the chat, or run a Studio: every job lands here, live.",
+      emptyBody:
+        "Generate an image, a video or a voice-over from the chat, or run a Studio: every job lands here, live.",
       emptyCta: "Open a Studio",
       runningTitle: "{count} running on your machine",
       runningBody: "You can keep working: the bell tells you when each one is done.",
@@ -61,7 +63,8 @@ export const showcase: Record<"en" | "fr", ShowcaseDictionary> = {
   fr: {
     studio: {
       loadErrorTitle: "Cette page n'a pas pu se charger",
-      runRunningBody: "Chaque étape tourne sur votre machine. Vous pouvez quitter cette page : le run continue et la cloche vous prévient quand il est terminé.",
+      runRunningBody:
+        "Chaque étape tourne sur votre machine. Vous pouvez quitter cette page : le run continue et la cloche vous prévient quand il est terminé.",
       runSucceededBody: "Tout ce qu'il a produit est ci-dessous — copiez-le, téléchargez-le, utilisez-le.",
       runFailedBody: "Les étapes ci-dessous montrent où il s'est arrêté.",
       stepsProgress: "{done} étape(s) sur {total}",
@@ -70,7 +73,8 @@ export const showcase: Record<"en" | "fr", ShowcaseDictionary> = {
     },
     jobs: {
       emptyTitle: "Rien n'a encore tourné",
-      emptyBody: "Générez une image, une vidéo ou une voix off depuis le chat, ou lancez un Studio : chaque tâche arrive ici, en direct.",
+      emptyBody:
+        "Générez une image, une vidéo ou une voix off depuis le chat, ou lancez un Studio : chaque tâche arrive ici, en direct.",
       emptyCta: "Ouvrir un Studio",
       runningTitle: "{count} en cours sur votre machine",
       runningBody: "Vous pouvez continuer à travailler : la cloche vous prévient quand chacune est terminée.",
@@ -89,7 +93,8 @@ export const showcase: Record<"en" | "fr", ShowcaseDictionary> = {
     },
     dashboard: {
       studios: "Ouvrir un Studio",
-      studiosDesc: "Vérification de documents, visuels produit, voix off, prospection — des workflows prêts à l'emploi.",
+      studiosDesc:
+        "Vérification de documents, visuels produit, voix off, prospection — des workflows prêts à l'emploi.",
       creations: "Vos créations",
       creationsDesc: "Chaque image, vidéo et voix off générée sur votre machine.",
       latestCreations: "Dernières créations",

@@ -9,9 +9,7 @@ import { useAuth } from "@/core/hooks/useAuth";
  * The frame of every settings route: the app's frame around a calm, scrolling column. Signed-out
  * visitors go to the sign-in page.
  */
-export default function SettingsFrame({
-  children,
-}: Readonly<{ children: React.ReactNode }>) {
+export default function SettingsFrame({ children }: Readonly<{ children: React.ReactNode }>) {
   const router = useRouter();
   const { isAuthenticated, isLoading } = useAuth();
 

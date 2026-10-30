@@ -7,10 +7,7 @@ import { Button } from "@krizaka/orazaka-design-system";
 import { Icon } from "@krizaka/orazaka-design-system";
 import { useTranslation } from "@/core/context/LocaleContext";
 import { InterceptionFormField } from "./InterceptionFormField";
-import {
-  useInterceptionSchema,
-  useResolveInterception,
-} from "@/features/auth/hooks/useInterception";
+import { useInterceptionSchema, useResolveInterception } from "@/features/auth/hooks/useInterception";
 import { Card } from "@krizaka/ui/card";
 
 interface InterceptionFormProps {
@@ -18,10 +15,7 @@ interface InterceptionFormProps {
   interceptionType?: string;
 }
 
-export function InterceptionForm({
-  schemaId,
-  interceptionType = schemaId,
-}: Readonly<InterceptionFormProps>) {
+export function InterceptionForm({ schemaId, interceptionType = schemaId }: Readonly<InterceptionFormProps>) {
   const router = useRouter();
   const { data: session, update } = useSession();
   const { locale, t } = useTranslation();
@@ -41,9 +35,7 @@ export function InterceptionForm({
     schemaId,
     onSuccess: async () => {
       if (session?.user) {
-        const updated = (session.user.activeInterceptions || []).filter(
-          (id) => id !== schemaId,
-        );
+        const updated = (session.user.activeInterceptions || []).filter((id) => id !== schemaId);
         await update({ activeInterceptions: updated });
         router.push("/");
         router.refresh();
@@ -61,9 +53,7 @@ export function InterceptionForm({
   const handleSubmit = (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
     setErrorMsg(null);
-    const missing = schema?.fields?.find(
-      (f) => f.required && !formValues[f.name]?.trim(),
-    );
+    const missing = schema?.fields?.find((f) => f.required && !formValues[f.name]?.trim());
     if (missing) {
       setErrorMsg(t.interception.fieldRequired(missing.label));
       return;
@@ -75,9 +65,7 @@ export function InterceptionForm({
     return (
       <div className="flex flex-col items-center justify-center min-h-[300px] space-y-4">
         <Icon name="loader" size={32} className="animate-spin text-success" />
-        <p className="text-fg-secondary text-sm">
-          {t.interception.loadingSchema}
-        </p>
+        <p className="text-fg-secondary text-sm">{t.interception.loadingSchema}</p>
       </div>
     );
   }
@@ -88,17 +76,14 @@ export function InterceptionForm({
         <Card.Body padding="lg" className="gap-1.5">
           <div className="flex items-center space-x-2 text-danger">
             <Icon name="error" size={24} />
-            <Card.Title
-              className="line-clamp-none text-lg leading-none tracking-tight group-hover:text-fg">{t.interception.loadingError}</Card.Title>
+            <Card.Title className="line-clamp-none text-lg leading-none tracking-tight group-hover:text-fg">
+              {t.interception.loadingError}
+            </Card.Title>
           </div>
           <Card.Description className="line-clamp-none text-sm">{t.interception.loadingErrorDesc}</Card.Description>
         </Card.Body>
         <Card.Footer className="px-6 pb-6 text-sm">
-          <Button
-            variant="outline"
-            onClick={() => globalThis.location.reload()}
-            className="w-full"
-          >
+          <Button variant="outline" onClick={() => globalThis.location.reload()} className="w-full">
             {t.interception.retry}
           </Button>
         </Card.Footer>

@@ -10,6 +10,9 @@ import { useStudios } from "@/features/studio/hooks/useStudios";
  */
 export function PacksScreen() {
   const { studios: catalogue } = useStudios(null);
-  const studios = useMemo(() => new Map(catalogue.map((s) => [s.studioKey, { label: s.label, iconKey: s.iconKey }])), [catalogue]);
+  const studios = useMemo(
+    () => new Map(catalogue.map((s) => [s.studioKey, { label: s.label, iconKey: s.iconKey }])),
+    [catalogue],
+  );
   return <PlanAndPacks studios={studios} />;
 }

@@ -36,7 +36,10 @@ export function useLanguageSwitch(label: string) {
  * The language switch of the pages a visitor reads before signing in (sign-in, legal, contact) and of the footer: the
  * family's `LanguageSwitch` (a globe and the current code, or a row of the languages with `variant="inline"`).
  */
-export function LocaleSwitch({ variant = "menu", className }: Readonly<{ variant?: "menu" | "inline"; className?: string }>) {
+export function LocaleSwitch({
+  variant = "menu",
+  className,
+}: Readonly<{ variant?: "menu" | "inline"; className?: string }>) {
   const { t } = useTranslation();
   return <LanguageSwitch {...useLanguageSwitch(t.auth.langSwitchLabel)} variant={variant} className={className} />;
 }

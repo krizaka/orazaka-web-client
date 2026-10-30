@@ -10,7 +10,10 @@ const E2E_SECRET = "e2e-only-secret-not-used-anywhere-else"; // the dev server o
 
 async function signIn(page: Page) {
   // A real session cookie (signed with the suite's secret): the server renders the page signed in, as for a user.
-  const token = await encode({ token: { name: "Eric", email: "eric@orazaka.dev", id: "e2e-user", role: "user" }, secret: E2E_SECRET });
+  const token = await encode({
+    token: { name: "Eric", email: "eric@orazaka.dev", id: "e2e-user", role: "user" },
+    secret: E2E_SECRET,
+  });
   await page.context().addCookies([{ name: "next-auth.session-token", value: token, url: "http://localhost:3000" }]);
   await mockBackend(page);
 }
@@ -19,7 +22,11 @@ async function signIn(page: Page) {
 async function mockBackend(page: Page) {
   await page.route("**/api/v1/**", (route) => {
     const url = route.request().url();
-    const body = url.includes("/jobs") ? { content: [], totalPages: 0, totalElements: 0 } : url.includes("/settings") ? { id: "e2e-user", username: "Eric" } : [];
+    const body = url.includes("/jobs")
+      ? { content: [], totalPages: 0, totalElements: 0 }
+      : url.includes("/settings")
+        ? { id: "e2e-user", username: "Eric" }
+        : [];
     return route.fulfill({ status: 200, contentType: "application/json", body: JSON.stringify(body) });
   });
 }
@@ -40,7 +47,11 @@ test.describe("chat composer", () => {
     await expect(input).toBeVisible();
 
     const pill = await box(page);
-    const cards = await page.locator("main, section").getByRole("button", { name: /Generate an image|Ask anything|Draft a client/ }).first().boundingBox();
+    const cards = await page
+      .locator("main, section")
+      .getByRole("button", { name: /Generate an image|Ask anything|Draft a client/ })
+      .first()
+      .boundingBox();
     expect(cards).not.toBeNull();
 
     // inside the pill, on the left: the mode chip and attach; on the right: the send
@@ -56,7 +67,7 @@ test.describe("chat composer", () => {
 
     // centred in the viewport
     const viewport = page.viewportSize()!;
-    expect(Math.abs(pill.x + pill.width / 2 - (viewport.width / 2 + 0)) ).toBeLessThan(viewport.width * 0.2);
+    expect(Math.abs(pill.x + pill.width / 2 - (viewport.width / 2 + 0))).toBeLessThan(viewport.width * 0.2);
     expect(pill.width).toBeGreaterThan(280);
   });
 
@@ -84,10 +95,16 @@ test.describe("chat composer", () => {
       });
     });
     await page.addInitScript(() => {
-      localStorage.setItem("orazaka_threads", JSON.stringify([{ conversationId: "c1", title: "Renewals", updatedAt: Date.now() }]));
+      localStorage.setItem(
+        "orazaka_threads",
+        JSON.stringify([{ conversationId: "c1", title: "Renewals", updatedAt: Date.now() }]),
+      );
       localStorage.setItem(
         "orazaka_messages_e2e-user_c1",
-        JSON.stringify([{ id: "m1", role: "user", content: "Hi", timestamp: 1, kind: "text" }, { id: "m2", role: "assistant", content: "Hello", timestamp: 2, kind: "text" }]),
+        JSON.stringify([
+          { id: "m1", role: "user", content: "Hi", timestamp: 1, kind: "text" },
+          { id: "m2", role: "assistant", content: "Hello", timestamp: 2, kind: "text" },
+        ]),
       );
     });
     await page.goto("/chat?conversationId=c1");

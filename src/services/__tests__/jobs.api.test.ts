@@ -56,9 +56,7 @@ describe("JobsApi", () => {
         },
       });
 
-      await expect(JobsApi.fetchPage(0, 10)).rejects.toThrow(
-        "REST request failed: 500 Internal Server Error",
-      );
+      await expect(JobsApi.fetchPage(0, 10)).rejects.toThrow("REST request failed: 500 Internal Server Error");
       expect(mockedSignOut).not.toHaveBeenCalled();
     });
 

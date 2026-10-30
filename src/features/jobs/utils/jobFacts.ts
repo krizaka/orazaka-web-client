@@ -16,40 +16,100 @@ export type { FactId };
 export type FactSection = "output" | "generation" | "hardware" | "timing" | "other";
 
 export const FACT_SECTION: Record<FactId, FactSection> = {
-  format: "output", resolution: "output", aspect: "output", frames: "output", fps: "output", clipLength: "output", images: "output", voice: "output", keyframes: "output",
-  model: "generation", provider: "generation", seed: "generation", steps: "generation",
-  gpu: "hardware", vram: "hardware", peakRam: "hardware",
-  inference: "timing", gpuTime: "timing", apiCall: "timing", queued: "timing", total: "timing",
+  format: "output",
+  resolution: "output",
+  aspect: "output",
+  frames: "output",
+  fps: "output",
+  clipLength: "output",
+  images: "output",
+  voice: "output",
+  keyframes: "output",
+  model: "generation",
+  provider: "generation",
+  seed: "generation",
+  steps: "generation",
+  gpu: "hardware",
+  vram: "hardware",
+  peakRam: "hardware",
+  inference: "timing",
+  gpuTime: "timing",
+  apiCall: "timing",
+  queued: "timing",
+  total: "timing",
   credits: "generation",
 };
 
 /** Normalised worker/payload key (lower case, letters and digits only) → the fact it is. */
 const KEY_TO_FACT: Record<string, FactId | "width" | "height"> = {
-  format: "format", outputformat: "format",
-  width: "width", height: "height",
-  aspect: "aspect", aspectratio: "aspect",
-  frames: "frames", numframes: "frames", framecount: "frames",
-  fps: "fps", framerate: "fps",
-  images: "images", imagecount: "images", numimages: "images",
+  format: "format",
+  outputformat: "format",
+  width: "width",
+  height: "height",
+  aspect: "aspect",
+  aspectratio: "aspect",
+  frames: "frames",
+  numframes: "frames",
+  framecount: "frames",
+  fps: "fps",
+  framerate: "fps",
+  images: "images",
+  imagecount: "images",
+  numimages: "images",
   voice: "voice",
-  keyframes: "keyframes", keyframecount: "keyframes",
-  model: "model", modelname: "model", modelid: "model",
-  provider: "provider", inference: "provider",
+  keyframes: "keyframes",
+  keyframecount: "keyframes",
+  model: "model",
+  modelname: "model",
+  modelid: "model",
+  provider: "provider",
+  inference: "provider",
   seed: "seed",
-  steps: "steps", numinferencesteps: "steps", inferencesteps: "steps",
-  gpu: "gpu", gpuname: "gpu",
-  gpuallocatedmb: "vram", vrammb: "vram",
-  peakmemoryrssmb: "peakRam", peakrssmb: "peakRam",
-  inferencetimesec: "inference", inferencetimes: "inference",
-  gpuseconds: "gpuTime", gpusec: "gpuTime", gputimesec: "gpuTime",
-  durationms: "apiCall", duration: "apiCall", durationsec: "apiCall",
-  credits: "credits", creditscharged: "credits", cost: "credits",
+  steps: "steps",
+  numinferencesteps: "steps",
+  inferencesteps: "steps",
+  gpu: "gpu",
+  gpuname: "gpu",
+  gpuallocatedmb: "vram",
+  vrammb: "vram",
+  peakmemoryrssmb: "peakRam",
+  peakrssmb: "peakRam",
+  inferencetimesec: "inference",
+  inferencetimes: "inference",
+  gpuseconds: "gpuTime",
+  gpusec: "gpuTime",
+  gputimesec: "gpuTime",
+  durationms: "apiCall",
+  duration: "apiCall",
+  durationsec: "apiCall",
+  credits: "credits",
+  creditscharged: "credits",
+  cost: "credits",
 };
 
 /** Every key a worker is known to emit in a job's payload, metadata or metrics — each must have a label (tested). */
 export const WORKER_KEYS = [
-  "model", "provider", "inference", "format", "fps", "gpu", "seed", "steps", "width", "height", "aspect", "frames", "images",
-  "gpu_seconds", "duration", "durationMs", "gpu_allocated_mb", "inference_time_sec", "peak_memory_rss_mb", "keyframeCount", "voice",
+  "model",
+  "provider",
+  "inference",
+  "format",
+  "fps",
+  "gpu",
+  "seed",
+  "steps",
+  "width",
+  "height",
+  "aspect",
+  "frames",
+  "images",
+  "gpu_seconds",
+  "duration",
+  "durationMs",
+  "gpu_allocated_mb",
+  "inference_time_sec",
+  "peak_memory_rss_mb",
+  "keyframeCount",
+  "voice",
 ] as const;
 
 /** `gpu_allocated_mb` → `gpuallocatedmb`. */
@@ -72,7 +132,8 @@ export interface JobFact {
 type Scalar = string | number | boolean;
 const isScalar = (v: unknown): v is Scalar => typeof v === "string" || typeof v === "number" || typeof v === "boolean";
 
-const asRecord = (v: unknown): Record<string, unknown> => (typeof v === "object" && v !== null && !Array.isArray(v) ? (v as Record<string, unknown>) : {});
+const asRecord = (v: unknown): Record<string, unknown> =>
+  typeof v === "object" && v !== null && !Array.isArray(v) ? (v as Record<string, unknown>) : {};
 
 /** Everything the job reports, flat, by normalised key — the worker's measures over the result's own fields over the request. */
 function merged(job: Pick<Job, "payload" | "result">): Map<string, { key: string; value: Scalar }> {
@@ -108,17 +169,33 @@ export function wallTimeMs(job: Pick<Job, "status" | "createdAt" | "updatedAt">,
   const start = Date.parse(job.createdAt);
   if (Number.isNaN(start)) return null;
   const running = job.status === JOB_STATUS.PENDING || job.status === JOB_STATUS.PROCESSING;
-  const end = running ? now ?? Number.NaN : Date.parse(job.updatedAt);
+  const end = running ? (now ?? Number.NaN) : Date.parse(job.updatedAt);
   return Number.isNaN(end) ? null : Math.max(0, end - start);
 }
 
 const humanise = (key: string) => {
-  const words = key.replace(/([a-z0-9])([A-Z])/g, "$1 $2").replace(/[_\-.]+/g, " ").trim().toLowerCase();
+  const words = key
+    .replace(/([a-z0-9])([A-Z])/g, "$1 $2")
+    .replace(/[_\-.]+/g, " ")
+    .trim()
+    .toLowerCase();
   return words.charAt(0).toUpperCase() + words.slice(1);
 };
 
 /** Keys that are the request or the result itself, not facts about the run. */
-const NOT_FACTS = new Set(["prompt", "text", "input", "url", "assetid", "jobid", "negativeprompt", "studio", "studiokey", "success", "type"]);
+const NOT_FACTS = new Set([
+  "prompt",
+  "text",
+  "input",
+  "url",
+  "assetid",
+  "jobid",
+  "negativeprompt",
+  "studio",
+  "studiokey",
+  "success",
+  "type",
+]);
 
 /** The facts of a job, in reading order, each in its section. */
 export interface JobFactsOptions {
@@ -127,70 +204,82 @@ export interface JobFactsOptions {
   modelNames?: ReadonlyMap<string, string>;
 }
 
-export function jobFacts(job: Pick<Job, "payload" | "result" | "status" | "createdAt" | "updatedAt">, { now, modelNames }: JobFactsOptions = {}): JobFact[] {
-  const m = merged(job);
-  const get = (id: string) => {
-    for (const [k, v] of m) if (KEY_TO_FACT[k] === id) return v.value;
-    return undefined;
-  };
-  const facts: JobFact[] = [];
-  const push = (id: FactId, value: string | null) => {
-    if (value !== null && value !== "") facts.push({ id, section: FACT_SECTION[id], value });
-  };
+type Merged = ReturnType<typeof merged>;
+type Pair = [FactId, string | null];
 
+const asText = (value: Scalar | undefined): string | null => (value === undefined ? null : String(value));
+const asNumberText = (n: number | null): string | null => (n === null ? null : String(n));
+
+/** The facts about the media: format, resolution, aspect, frames, fps, clip length, images, voice, keyframes. */
+function mediaFacts(get: (id: string) => Scalar | undefined): Pair[] {
   const format = get("format");
-  push("format", typeof format === "string" ? format.toUpperCase() : null);
   const w = num(get("width"));
   const h = num(get("height"));
-  push("resolution", w !== null && h !== null ? `${w}×${h}` : null);
-  const aspect = get("aspect");
-  push("aspect", aspect === undefined ? null : String(aspect));
   const frames = num(get("frames"));
   const fps = num(get("fps"));
-  push("frames", frames === null ? null : String(frames));
-  push("fps", fps === null ? null : `${fps} fps`);
-  push("clipLength", frames !== null && fps ? `${(frames / fps).toFixed(1)} s` : null);
-  const images = num(get("images"));
-  push("images", images === null ? null : String(images));
-  const voice = get("voice");
-  push("voice", voice === undefined ? null : String(voice));
-  const keyframes = num(get("keyframes"));
-  push("keyframes", keyframes === null ? null : String(keyframes));
+  return [
+    ["format", typeof format === "string" ? format.toUpperCase() : null],
+    ["resolution", w !== null && h !== null ? `${w}×${h}` : null],
+    ["aspect", asText(get("aspect"))],
+    ["frames", asNumberText(frames)],
+    ["fps", fps === null ? null : `${fps} fps`],
+    ["clipLength", frames !== null && fps ? `${(frames / fps).toFixed(1)} s` : null],
+    ["images", asNumberText(num(get("images")))],
+    ["voice", asText(get("voice"))],
+    ["keyframes", asNumberText(num(get("keyframes")))],
+  ];
+}
 
-  const model = modelOf(job, modelNames);
-  push("model", model);
+/** The facts about who made it: model, provider, seed, steps, credits. */
+function makerFacts(get: (id: string) => Scalar | undefined, model: string | null): Pair[] {
   const provider = get("provider");
-  push("provider", provider === undefined ? null : providerName(String(provider)));
-  const seed = get("seed");
-  push("seed", seed === undefined ? null : String(seed));
-  const steps = num(get("steps"));
-  push("steps", steps === null ? null : String(steps));
-  const credits = num(get("credits"));
-  push("credits", credits === null ? null : String(credits));
+  return [
+    ["model", model],
+    ["provider", provider === undefined ? null : providerName(String(provider))],
+    ["seed", asText(get("seed"))],
+    ["steps", asNumberText(num(get("steps")))],
+    ["credits", asNumberText(num(get("credits")))],
+  ];
+}
 
-  const gpu = get("gpu");
-  push("gpu", gpu === undefined ? null : String(gpu));
+/** The facts about the machine: gpu, vram, peak ram. */
+function machineFacts(get: (id: string) => Scalar | undefined): Pair[] {
   const vram = num(get("vram"));
-  push("vram", vram === null ? null : memory(vram));
   const peak = num(get("peakRam"));
-  push("peakRam", peak === null ? null : memory(peak));
+  return [
+    ["gpu", asText(get("gpu"))],
+    ["vram", vram === null ? null : memory(vram)],
+    ["peakRam", peak === null ? null : memory(peak)],
+  ];
+}
 
+/** The facts about time: queued, inference, gpu time, api call, total. */
+function timingFacts(
+  job: Pick<Job, "status" | "createdAt" | "updatedAt">,
+  m: Merged,
+  get: (id: string) => Scalar | undefined,
+  now: number | undefined,
+): Pair[] {
   const inference = num(get("inference"));
   const total = wallTimeMs(job, now);
   const finished = job.status === JOB_STATUS.COMPLETED || job.status === JOB_STATUS.FAILED;
   const waiting = finished && inference !== null && total !== null ? total - inference * 1000 : null;
-  push("queued", waiting !== null && waiting >= 1000 ? formatDuration(waiting) : null);
-  push("inference", inference === null ? null : seconds(inference));
   const gpuTime = num(get("gpuTime"));
-  push("gpuTime", gpuTime === null ? null : seconds(gpuTime));
-  const api = get("apiCall");
-  const apiMs = num(api);
+  const apiMs = num(get("apiCall"));
   // `duration` is milliseconds in a result (`durationMs`) and seconds when the key says so.
   const apiKey = [...m].find(([k]) => KEY_TO_FACT[k] === "apiCall")?.[0] ?? "";
-  push("apiCall", apiMs === null ? null : formatDuration(apiKey.endsWith("sec") ? apiMs * 1000 : apiMs));
-  push("total", total === null ? null : formatDuration(total));
+  return [
+    ["queued", waiting !== null && waiting >= 1000 ? formatDuration(waiting) : null],
+    ["inference", inference === null ? null : seconds(inference)],
+    ["gpuTime", gpuTime === null ? null : seconds(gpuTime)],
+    ["apiCall", apiMs === null ? null : formatDuration(apiKey.endsWith("sec") ? apiMs * 1000 : apiMs)],
+    ["total", total === null ? null : formatDuration(total)],
+  ];
+}
 
-  // What the dictionary has no word for: shown with its key in words, never raw.
+/** What the dictionary has no word for: shown with its key in words, never raw. */
+function otherFacts(m: Merged): JobFact[] {
+  const facts: JobFact[] = [];
   for (const [k, { key, value }] of m) {
     if (KEY_TO_FACT[k] || NOT_FACTS.has(k)) continue;
     if (typeof value === "string" && value.length > 80) continue;
@@ -199,9 +288,46 @@ export function jobFacts(job: Pick<Job, "payload" | "result" | "status" | "creat
   return facts;
 }
 
+export function jobFacts(
+  job: Pick<Job, "payload" | "result" | "status" | "createdAt" | "updatedAt">,
+  { now, modelNames }: JobFactsOptions = {},
+): JobFact[] {
+  const m = merged(job);
+  const get = (id: string) => {
+    for (const [k, v] of m) {
+      if (KEY_TO_FACT[k] === id) {
+        return v.value;
+      }
+    }
+    return undefined;
+  };
+  const pairs: Pair[] = [
+    ...mediaFacts(get),
+    ...makerFacts(get, modelOf(job, modelNames)),
+    ...machineFacts(get),
+    ...timingFacts(job, m, get, now),
+  ];
+  const facts: JobFact[] = [];
+  for (const [id, value] of pairs) {
+    if (value !== null && value !== "") {
+      facts.push({ id, section: FACT_SECTION[id], value });
+    }
+  }
+  return [...facts, ...otherFacts(m)];
+}
+
 const PROVIDERS: Record<string, string> = {
-  runpod: "RunPod", digitalocean: "DigitalOcean", ollama: "Ollama", openai: "OpenAI", anthropic: "Anthropic", mistral: "Mistral", comfyui: "ComfyUI",
-  mlx: "Mac · Metal", metal: "Mac · Metal", mps: "Mac · Metal", local: "Local",
+  runpod: "RunPod",
+  digitalocean: "DigitalOcean",
+  ollama: "Ollama",
+  openai: "OpenAI",
+  anthropic: "Anthropic",
+  mistral: "Mistral",
+  comfyui: "ComfyUI",
+  mlx: "Mac · Metal",
+  metal: "Mac · Metal",
+  mps: "Mac · Metal",
+  local: "Local",
 };
 
 /** "runpod" → "RunPod"; an unknown provider keeps its own spelling. */
@@ -211,7 +337,9 @@ export const providerName = (raw: string) => PROVIDERS[normaliseKey(raw)] ?? raw
 export function gpuName(raw: string): string {
   if (/apple|\bm[1-9]\b|metal|mps/i.test(raw)) return "Mac";
   const known = raw.match(/\b(B200|H200|H100|A100|L40S|L40|A10G|A10|A40|V100|T4|RTX ?\d{4}[A-Za-z]*)\b/i);
-  return known ? known[1].toUpperCase().replace(/^RTX(\d)/, "RTX $1") : raw.replace(/^nvidia\s+(geforce\s+)?/i, "").trim();
+  return known
+    ? known[1].toUpperCase().replace(/^RTX(\d)/, "RTX $1")
+    : raw.replace(/^nvidia\s+(geforce\s+)?/i, "").trim();
 }
 
 /** Where a job ran: "H100 · RunPod", "Mac · Metal", "DigitalOcean". Null when the job does not say. */

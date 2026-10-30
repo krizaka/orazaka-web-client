@@ -10,9 +10,25 @@ jest.mock("@/core/context/LocaleContext", () => ({
 beforeAll(() => {
   Object.defineProperty(window, "matchMedia", {
     writable: true,
-    value: (query: string) => ({ matches: query.includes("reduce"), media: query, addEventListener: () => {}, removeEventListener: () => {}, addListener: () => {}, removeListener: () => {}, onchange: null, dispatchEvent: () => false }),
+    value: (query: string) => ({
+      matches: query.includes("reduce"),
+      media: query,
+      addEventListener: () => {},
+      removeEventListener: () => {},
+      addListener: () => {},
+      removeListener: () => {},
+      onchange: null,
+      dispatchEvent: () => false,
+    }),
   });
-  class IO { observe() {} disconnect() {} unobserve() {} takeRecords() { return []; } }
+  class IO {
+    observe() {}
+    disconnect() {}
+    unobserve() {}
+    takeRecords() {
+      return [];
+    }
+  }
   Object.defineProperty(window, "IntersectionObserver", { writable: true, value: IO });
 });
 

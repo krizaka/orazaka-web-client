@@ -27,11 +27,18 @@ interface Report {
 export function asReport(value: string): Report | null {
   try {
     const parsed = JSON.parse(value) as Partial<Report>;
-    return Array.isArray(parsed.findings) && parsed.findings.every((f) => f && typeof f.verdict === "string") ? (parsed as Report) : null;
+    return Array.isArray(parsed.findings) && parsed.findings.every((f) => f && typeof f.verdict === "string")
+      ? (parsed as Report)
+      : null;
   } catch {
     return null;
   }
 }
+
+const VERDICT_LOOK: Record<string, { Glyph: typeof CheckIcon; tone: string }> = {
+  PASS: { Glyph: CheckIcon, tone: "text-fg-success" },
+  FAIL: { Glyph: WarningIcon, tone: "text-fg-danger" },
+};
 
 const TONE = { PASS: "success", FAIL: "danger" } as const;
 
@@ -41,7 +48,8 @@ const TONE = { PASS: "success", FAIL: "danger" } as const;
  * them); nothing is summarised or invented here.
  */
 export function ReportFindings({ report }: Readonly<{ report: Report }>) {
-  const order = (f: Finding) => (f.verdict === "FAIL" ? 0 : f.verdict === "PASS" ? 2 : 1);
+  const rank: Record<string, number> = { FAIL: 0, PASS: 2 };
+  const order = (f: Finding) => rank[f.verdict] ?? 1;
   const findings = [...report.findings].sort((a, b) => order(a) - order(b));
   const counts = report.summary?.byVerdict ?? {};
   return (
@@ -56,8 +64,7 @@ export function ReportFindings({ report }: Readonly<{ report: Report }>) {
       </div>
       <ul className="flex flex-col divide-y divide-border-subtle overflow-hidden rounded-xl border border-border-default">
         {findings.map((f) => {
-          const Glyph = f.verdict === "PASS" ? CheckIcon : f.verdict === "FAIL" ? WarningIcon : InfoIcon;
-          const tone = f.verdict === "PASS" ? "text-fg-success" : f.verdict === "FAIL" ? "text-fg-danger" : "text-fg-warning";
+          const { Glyph, tone } = VERDICT_LOOK[f.verdict] ?? { Glyph: InfoIcon, tone: "text-fg-warning" };
           return (
             <li key={f.ruleId} className="flex gap-3 px-4 py-3">
               <Glyph size={18} className={cn("mt-0.5 flex-shrink-0", tone)} />
@@ -67,7 +74,9 @@ export function ReportFindings({ report }: Readonly<{ report: Report }>) {
                 </p>
                 {f.explanation && <p className="text-[13px] text-fg-secondary">{f.explanation}</p>}
                 {f.evidenceSpan?.quote && (
-                  <blockquote className="border-l-2 border-accent/60 pl-3 text-[12px] italic text-fg-secondary">« {f.evidenceSpan.quote} »</blockquote>
+                  <blockquote className="border-l-2 border-accent/60 pl-3 text-[12px] italic text-fg-secondary">
+                    « {f.evidenceSpan.quote} »
+                  </blockquote>
                 )}
                 {f.citation && <p className="text-[11px] text-fg-muted">{f.citation}</p>}
               </div>

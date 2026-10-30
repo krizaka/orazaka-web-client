@@ -22,6 +22,7 @@ export const PUBLIC_PREFIXES = [
   "/mobile",
   "/desktop",
   "/pricing",
+  "/open-source",
   "/captions/", // the clips' WebVTT (src/app/captions)
   // What search engines and AI assistants read (src/app/robots.ts, sitemap.ts, llms*.txt, opengraph-image.tsx).
   "/robots.txt",

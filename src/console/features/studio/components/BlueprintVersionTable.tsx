@@ -17,11 +17,7 @@ interface BlueprintVersionTableProps {
  * Deprecate never deletes: a run records the version it executed, and removing that
  * row would destroy its reproducibility (ADR-034 §4.6). The button says so.
  */
-export function BlueprintVersionTable({
-  studioKey,
-  versions,
-  onChanged,
-}: Readonly<BlueprintVersionTableProps>) {
+export function BlueprintVersionTable({ studioKey, versions, onChanged }: Readonly<BlueprintVersionTableProps>) {
   const [busy, setBusy] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
@@ -39,7 +35,12 @@ export function BlueprintVersionTable({
   };
 
   const columns: DataTableColumn<BlueprintVersion>[] = [
-    { id: "version", header: "Version", card: "title", cell: (version) => <span className="font-mono text-[12px]">{version.version}</span> },
+    {
+      id: "version",
+      header: "Version",
+      card: "title",
+      cell: (version) => <span className="font-mono text-[12px]">{version.version}</span>,
+    },
     {
       id: "status",
       header: "Statut",

@@ -1,17 +1,21 @@
 import type { RuntimeSetting, SettingValue } from "@/console/services/runtime-config.admin.api";
 import { fill, type EngineWords } from "@/console/core/copy/engine";
 
-export const ENGINE_GROUPS = ["run", "webhook", "retention", "marketplace", "other"] as const;
+export const ENGINE_GROUPS = ["run", "webhook", "retention", "marketplace", "downloads", "other"] as const;
 export type EngineGroup = (typeof ENGINE_GROUPS)[number];
 
-/** The group of a key, by its prefix (`run.*`, `webhook.*`, `retention.*`, `marketplace.*`); `routing.*` is not this screen's. */
+/** The group of a key, by its prefix (`run.*`, `webhook.*`, `retention.*`, `marketplace.*`, `downloads.*`); `routing.*` is not this screen's. */
 export function groupOf(key: string): EngineGroup {
   const prefix = key.split(".")[0];
-  return (ENGINE_GROUPS as readonly string[]).includes(prefix) && prefix !== "other" ? (prefix as EngineGroup) : "other";
+  return (ENGINE_GROUPS as readonly string[]).includes(prefix) && prefix !== "other"
+    ? (prefix as EngineGroup)
+    : "other";
 }
 
 /** The settings by group, in the group order, each group sorted by key; empty groups are left out. */
-export function groupSettings(settings: readonly RuntimeSetting[]): { group: EngineGroup; settings: RuntimeSetting[] }[] {
+export function groupSettings(
+  settings: readonly RuntimeSetting[],
+): { group: EngineGroup; settings: RuntimeSetting[] }[] {
   return ENGINE_GROUPS.map((group) => ({
     group,
     settings: settings.filter((s) => groupOf(s.key) === group).sort((a, b) => a.key.localeCompare(b.key)),
@@ -43,7 +47,8 @@ function parseInteger(setting: RuntimeSetting, draft: string, words: EngineWords
   const high = maximum ?? undefined;
   const below = low !== undefined && n < low;
   const above = high !== undefined && n > high;
-  if ((below || above) && low !== undefined && high !== undefined) return { ok: false, error: fill(words.invalid.range, { min: low, max: high }) };
+  if ((below || above) && low !== undefined && high !== undefined)
+    return { ok: false, error: fill(words.invalid.range, { min: low, max: high }) };
   if (below) return { ok: false, error: fill(words.invalid.min, { n: low }) };
   if (above) return { ok: false, error: fill(words.invalid.max, { n: high }) };
   return { ok: true, value: n };
@@ -56,7 +61,8 @@ function parseList(setting: RuntimeSetting, draft: string, words: EngineWords): 
   const filled = items.length === 1 && items[0] === "" ? [] : items;
   if (filled.includes("")) return { ok: false, error: words.invalid.empty };
   if (new Set(filled).size !== filled.length) return { ok: false, error: words.invalid.duplicate };
-  if (maxItems != null && filled.length > maxItems) return { ok: false, error: fill(words.invalid.items, { n: maxItems }) };
+  if (maxItems != null && filled.length > maxItems)
+    return { ok: false, error: fill(words.invalid.items, { n: maxItems }) };
   return { ok: true, value: filled };
 }
 

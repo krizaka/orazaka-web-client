@@ -3,11 +3,7 @@
 import * as React from "react";
 import { Button } from "@krizaka/ui/button";
 import { useTranslation } from "@/core/context/LocaleContext";
-import {
-  useAutomationMutations,
-  useAutomations,
-  useRunnableStudios,
-} from "@/features/automation/hooks/useAutomations";
+import { useAutomationMutations, useAutomations, useRunnableStudios } from "@/features/automation/hooks/useAutomations";
 import { AutomationCard } from "./AutomationCard";
 import { NewAutomationDialog } from "./NewAutomationDialog";
 

@@ -22,7 +22,9 @@ if (!workspace) {
 const generated = path.join(workspace, "docs", "_generated");
 const arch = JSON.parse(fs.readFileSync(path.join(generated, "architecture.json"), "utf8"));
 if (!Array.isArray(arch.models) || arch.models.length === 0) {
-  console.error("architecture.json has no `models` section — regenerate the workspace docs (node scripts/generate-docs.mjs)");
+  console.error(
+    "architecture.json has no `models` section — regenerate the workspace docs (node scripts/generate-docs.mjs)",
+  );
   process.exit(1);
 }
 
@@ -57,6 +59,13 @@ const withoutKeptOut = (text) => {
   const stays = dropped.flatMap((block) => STAYS.map((re) => block.match(re)?.[0]).filter(Boolean));
   return kept.join("") + (stays.length ? `\n${stays.join("\n\n")}\n` : "");
 };
-const md = withoutKeptOut(fs.readFileSync(path.join(generated, "MODELS.md"), "utf8").replace(/^---\n[\s\S]*?\n---\n/, "").trimStart());
+const md = withoutKeptOut(
+  fs
+    .readFileSync(path.join(generated, "MODELS.md"), "utf8")
+    .replace(/^---\n[\s\S]*?\n---\n/, "")
+    .trimStart(),
+);
 fs.writeFileSync(path.join(root, "content", "docs", "models.md"), md);
-process.stdout.write(`${models.length} models → src/features/landing/utils/models.generated.json, content/docs/models.md\n`);
+process.stdout.write(
+  `${models.length} models → src/features/landing/utils/models.generated.json, content/docs/models.md\n`,
+);

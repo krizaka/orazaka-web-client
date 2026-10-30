@@ -76,8 +76,7 @@ export function useWallet(): WalletState {
 
   const available = wallet ? availableCredits(wallet) : 0;
   const granted = wallet ? wallet.balanceGranted + wallet.balancePurchased : 0;
-  const isLow =
-    lowBalanceSignal || (granted > 0 && available <= granted * DEFAULT_LOW_BALANCE_RATIO);
+  const isLow = lowBalanceSignal || (granted > 0 && available <= granted * DEFAULT_LOW_BALANCE_RATIO);
 
   return { wallet, available, isLow, isLoading, refresh };
 }

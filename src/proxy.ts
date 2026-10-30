@@ -9,6 +9,7 @@
  * entrypoint is now named `proxy` (same request/response contract as before).
  */
 
+import { sessionHint } from "@krizaka/auth";
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { authClosed, isBackendPath, readAuthFlags } from "@/core/config/auth-flags";
@@ -18,6 +19,11 @@ import { SIGNED_OUT_REDIRECTS } from "@/core/config/redirects";
 import { SITE_URL } from "@/app/_seo/seo";
 import { consoleResponse } from "@/console/core/edge";
 import { isAdminHost, routeFor } from "@/console/core/config/host";
+/** The next-auth cookie of the session, by the name this deployment uses (`__Secure-` on https); it is only read, as a hint, never trusted (krizaka-ui#827). */
+const SESSION_COOKIES = ["__Secure-next-auth.session-token", "next-auth.session-token"] as const;
+const sessionCookieOf = (request: NextRequest) =>
+  SESSION_COOKIES.find((name) => request.cookies.has(name)) ?? SESSION_COOKIES[1];
+
 /** The platform's liveness probe: answered on every host, before any gate. */
 const HEALTH_PATH = "/api/healthz";
 
@@ -76,7 +82,10 @@ export function proxy(request: NextRequest) {
       r.headers.set("x-robots-tag", NOINDEX_HEADER);
       return r;
     };
-    if (pathname === "/robots.txt") return closed(new NextResponse(CLOSED_ROBOTS, { status: 200, headers: { "content-type": "text/plain; charset=utf-8" } }));
+    if (pathname === "/robots.txt")
+      return closed(
+        new NextResponse(CLOSED_ROBOTS, { status: 200, headers: { "content-type": "text/plain; charset=utf-8" } }),
+      );
     const to = devRedirect(request.method, pathname, request.nextUrl.search, process.env.APP_PUBLIC_URL ?? SITE_URL);
     if (to) return closed(NextResponse.redirect(to, 308));
     if (pathname !== HEALTH_PATH) return closed(route(request));
@@ -89,7 +98,10 @@ export function proxy(request: NextRequest) {
     const hostRoute = routeFor(host, pathname);
     if (pathname === "/robots.txt" && (isAdminHost(host) || isDevAddress(host))) {
       // The console and any dev.* address are never indexed: said here, before the network gate (a crawler must read it).
-      return new NextResponse("User-agent: *\nDisallow: /\n", { status: 200, headers: { "content-type": "text/plain; charset=utf-8", "x-robots-tag": NOINDEX_HEADER } });
+      return new NextResponse("User-agent: *\nDisallow: /\n", {
+        status: 200,
+        headers: { "content-type": "text/plain; charset=utf-8", "x-robots-tag": NOINDEX_HEADER },
+      });
     }
     if (hostRoute.kind === "notFound") {
       response = new NextResponse("Not found", { status: 404 });
@@ -101,14 +113,16 @@ export function proxy(request: NextRequest) {
     }
   }
   if (!indexable() || isDevAddress(host)) response.headers.set("x-robots-tag", NOINDEX_HEADER);
-  return response;
+  // The bar's readable hint follows the session cookie, so a signed-in person never sees « Sign in » while the session is read (krizaka-ui#827).
+  return sessionHint(response, request, {
+    cookie: sessionCookieOf(request),
+    secure: process.env.NODE_ENV === "production",
+  });
 }
 
 export const config = {
   /**
    * Run on pages and on the BFF routes (a closed site answers 404 there) — exclude static assets and internals.
    */
-  matcher: [
-    "/((?!_next/static|_next/image|_next/data|favicon).*)",
-  ],
+  matcher: ["/((?!_next/static|_next/image|_next/data|favicon).*)"],
 };

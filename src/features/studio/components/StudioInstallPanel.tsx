@@ -32,11 +32,7 @@ interface StudioInstallPanelProps {
  * `StudioRunPanel`), so the form is the action. Only a Studio whose blueprint declares settings (an agency name, a
  * tone, a signature) asks them once, behind « Set up », before its first run.
  */
-export function StudioInstallPanel({
-  studio,
-  installation,
-  onChanged,
-}: Readonly<StudioInstallPanelProps>) {
+export function StudioInstallPanel({ studio, installation, onChanged }: Readonly<StudioInstallPanelProps>) {
   const { t } = useTranslation();
   const [isDialogOpen, setDialogOpen] = useState(false);
   const [isSubmitting, setSubmitting] = useState(false);
@@ -115,11 +111,21 @@ export function StudioInstallPanel({
               </Button>
             )}
             {installation.status === "UPGRADE_AVAILABLE" && (
-              <Button variant="primary" size="sm" onClick={() => void act(() => StudioApi.upgrade(installation.id))} disabled={isSubmitting}>
+              <Button
+                variant="primary"
+                size="sm"
+                onClick={() => void act(() => StudioApi.upgrade(installation.id))}
+                disabled={isSubmitting}
+              >
                 {t.studio.upgradeNow}
               </Button>
             )}
-            <Button variant="ghost" size="sm" onClick={() => void act(() => StudioApi.uninstall(installation.id))} disabled={isSubmitting}>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => void act(() => StudioApi.uninstall(installation.id))}
+              disabled={isSubmitting}
+            >
               {t.studio.uninstall}
             </Button>
           </>
@@ -139,7 +145,11 @@ export function StudioInstallPanel({
         <p className="text-xs text-fg-accent">{t.studio.upgradeAvailable}</p>
       )}
 
-      {error && <p role="alert" className="text-xs text-fg-danger">{error}</p>}
+      {error && (
+        <p role="alert" className="text-xs text-fg-danger">
+          {error}
+        </p>
+      )}
     </div>
   );
 }

@@ -7,8 +7,7 @@ import { InterceptionForm } from "@/features/auth/components/InterceptionForm";
  */
 export const metadata: Metadata = {
   title: "Required Action | Orazaka Workspace",
-  description:
-    "A required account setup or preference update form is pending completion.",
+  description: "A required account setup or preference update form is pending completion.",
 };
 
 interface InterceptionPageProps {
@@ -19,9 +18,7 @@ interface InterceptionPageProps {
  * Page routing component for active user interceptions.
  * Renders the dynamic layout form matching the target schema configuration.
  */
-export default async function InterceptionPage({
-  params,
-}: InterceptionPageProps) {
+export default async function InterceptionPage({ params }: Readonly<InterceptionPageProps>) {
   const { schemaId } = await params;
 
   return (

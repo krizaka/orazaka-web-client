@@ -6,7 +6,10 @@
  */
 
 export function parseAllowList(value: string | undefined): string[] {
-  return (value ?? "").split(",").map((s) => s.trim()).filter(Boolean);
+  return (value ?? "")
+    .split(",")
+    .map((s) => s.trim())
+    .filter(Boolean);
 }
 
 export function clientIp(headers: { get(name: string): string | null }, production: boolean): string | null {

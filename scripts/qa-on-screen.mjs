@@ -7,7 +7,9 @@ export const QA_ON_SCREEN = /\bqa[_\s-]|qa_user|\bqa\b/i;
 
 /** What a person reads on the page: the visible text plus the accessible labels, titles and alternatives. Runs in the browser. */
 export function readableText() {
-  const attrs = [...document.querySelectorAll("[aria-label],[title],[alt]")].map((e) => [e.getAttribute("aria-label"), e.getAttribute("title"), e.getAttribute("alt")].filter(Boolean).join(" "));
+  const attrs = [...document.querySelectorAll("[aria-label],[title],[alt]")].map((e) =>
+    [e.getAttribute("aria-label"), e.getAttribute("title"), e.getAttribute("alt")].filter(Boolean).join(" "),
+  );
   return `${document.body.innerText} ${attrs.join(" ")}`;
 }
 

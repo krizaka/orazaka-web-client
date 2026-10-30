@@ -26,16 +26,34 @@ const release = {
   sha256: SHA,
 };
 
-function renderPage(locale: Locale, rel: typeof release | null) {
+function renderPage(locale: Locale, rel: typeof release | null, downloadEnabled = true) {
   mockLocale = locale;
   return render(
     <AuthFlagsProvider flags={{ login: false, signup: false, github: false, google: false }}>
       <ThemeProvider>
-        <DesktopPage release={rel} />
+        <DesktopPage release={rel} downloadEnabled={downloadEnabled} />
       </ThemeProvider>
     </AuthFlagsProvider>,
   );
 }
+
+describe("DesktopPage with the Mac download switched off", () => {
+  it.each(["en", "fr"] as const)(
+    "disables the button, says it is in testing, carries no file link and no checksum (%s)",
+    (locale) => {
+      const { container } = renderPage(locale, release, false);
+      const d = translations[locale].desktop.download;
+      expect(screen.getByRole("button", { name: d.button })).toBeDisabled();
+      expect(screen.getByText(d.disabled)).toBeInTheDocument();
+      expect(screen.queryByRole("link", { name: d.button })).toBeNull();
+      expect(container.innerHTML).not.toContain("example.test");
+      expect(container.innerHTML).not.toContain("/desktop/download");
+      expect(container.innerHTML).not.toContain(SHA);
+      expect(screen.queryByTestId("desktop-sha")).toBeNull();
+      expect(screen.queryByRole("link", { name: d.releases })).toBeNull();
+    },
+  );
+});
 
 describe("DesktopPage", () => {
   it("puts one Download first, its facts quiet, the version read from the release — nothing hard-coded", () => {
@@ -43,7 +61,7 @@ describe("DesktopPage", () => {
     const d = translations.en.desktop;
     const downloads = screen.getAllByRole("link", { name: d.download.button });
     expect(downloads).toHaveLength(1);
-    expect(downloads[0]).toHaveAttribute("href", release.dmg.url);
+    expect(downloads[0]).toHaveAttribute("href", "/desktop/download");
     expect(screen.getByText(/Apple Silicon · macOS 14\+ · 6\.3 MB/)).toBeInTheDocument();
     expect(screen.getByTestId("desktop-version")).toHaveTextContent("9.9.9-test");
   });
@@ -81,7 +99,9 @@ describe("DesktopPage", () => {
     const d = translations.en.desktop;
     for (const m of d.modes.items) expect(screen.getByRole("heading", { name: m.title })).toBeInTheDocument();
     const services = container.querySelector(`dl[aria-label="${d.services.title}"]`)!;
-    expect([...services.querySelectorAll("dt")].map((dt) => dt.textContent)).toEqual(d.services.rows.map((r) => r.name));
+    expect([...services.querySelectorAll("dt")].map((dt) => dt.textContent)).toEqual(
+      d.services.rows.map((r) => r.name),
+    );
     expect(container.textContent).not.toMatch(/sagas|Metal acceleration|cryptographic|tok\/s|HIPAA/i);
   });
 
@@ -112,7 +132,12 @@ describe("DesktopPage", () => {
   });
 
   it("has the same shape in English and French", () => {
-    const keys = (v: unknown): unknown => (Array.isArray(v) ? v.map(keys) : v && typeof v === "object" ? Object.fromEntries(Object.entries(v).map(([k, x]) => [k, keys(x)])) : typeof v);
+    const keys = (v: unknown): unknown =>
+      Array.isArray(v)
+        ? v.map(keys)
+        : v && typeof v === "object"
+          ? Object.fromEntries(Object.entries(v).map(([k, x]) => [k, keys(x)]))
+          : typeof v;
     expect(keys(translations.fr.desktop)).toEqual(keys(translations.en.desktop));
   });
 });

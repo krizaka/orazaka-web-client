@@ -25,6 +25,10 @@ const markdown = findPackage("@tanstack/markdown");
 const highlight = findPackage("@tanstack/highlight");
 const query = path.dirname(resolveFromApp("@krizaka/query/package.json"));
 const pacer = path.dirname(resolveFromApp("@krizaka/pacer/package.json"));
+// @krizaka/settings (findTypedPrices, orazaka#417) and its @krizaka/db are ES modules only: mapped to their files here,
+// compiled to CommonJS by the transform (both are in `transpilePackages` of next.config.ts, which next/jest reads).
+const settings = path.dirname(resolveFromApp("@krizaka/settings/package.json"));
+const db = path.dirname(createRequire(path.join(settings, "package.json")).resolve("@krizaka/db/package.json"));
 
 const createJestConfig = nextJest({
   dir: "./",
@@ -35,6 +39,7 @@ const config = {
   setupFiles: ["<rootDir>/tests/setup.ts"],
   moduleNameMapper: {
     "^@/(.*)$": "<rootDir>/src/$1",
+    "^@krizaka/auth$": "<rootDir>/tests/auth-stub.ts",
     // @krizaka/ui (re-exported by @krizaka/orazaka-design-system 2.x) exposes its entries under the `import`
     // condition only, which Jest's CommonJS resolver does not read: map them to their files.
     "^@krizaka/ui$": `${ui}/dist/index.js`,
@@ -53,17 +58,21 @@ const config = {
     "^@krizaka/query/(.*)$": `${query}/dist/$1.js`,
     // @krizaka/pacer (a dependency of @krizaka/ui's DataTable): the same `import`-only exports.
     "^@krizaka/pacer/(.*)$": `${pacer}/dist/$1.js`,
+    "^@krizaka/settings$": `${settings}/dist/index.js`,
+    "^@krizaka/db$": `${db}/dist/index.js`,
     // @tanstack/markdown and @tanstack/highlight (under @krizaka/ui's Markdown and CodeBlock): the same `import`-only exports.
     "^@tanstack/markdown/(.*)$": `${markdown}/dist/$1.js`,
     "^@tanstack/highlight/(.*)$": `${highlight}/dist/$1.js`,
   },
-  testPathIgnorePatterns: ["<rootDir>/node_modules/", "<rootDir>/.next/", "<rootDir>/src/__tests__/helpers/", "<rootDir>/e2e/", "<rootDir>/scripts/", "<rootDir>/src/console/test/"],
-  collectCoverageFrom: [
-    "src/**/*.{ts,tsx}",
-    "!src/**/*.d.ts",
-    "!src/app/layout.tsx",
-    "!src/app/page.tsx",
+  testPathIgnorePatterns: [
+    "<rootDir>/node_modules/",
+    "<rootDir>/.next/",
+    "<rootDir>/src/__tests__/helpers/",
+    "<rootDir>/e2e/",
+    "<rootDir>/scripts/",
+    "<rootDir>/src/console/test/",
   ],
+  collectCoverageFrom: ["src/**/*.{ts,tsx}", "!src/**/*.d.ts", "!src/app/layout.tsx", "!src/app/page.tsx"],
 } satisfies Config;
 
 export default createJestConfig(config);

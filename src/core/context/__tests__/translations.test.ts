@@ -28,41 +28,32 @@ describe("translations", () => {
   });
 
   test("en and fr have the same key structure", () => {
-    const enKeys = collectKeys(
-      translations.en as unknown as Record<string, unknown>,
-    ).sort((a, b) => a.localeCompare(b));
-    const frKeys = collectKeys(
-      translations.fr as unknown as Record<string, unknown>,
-    ).sort((a, b) => a.localeCompare(b));
+    const enKeys = collectKeys(translations.en as unknown as Record<string, unknown>).sort((a, b) =>
+      a.localeCompare(b),
+    );
+    const frKeys = collectKeys(translations.fr as unknown as Record<string, unknown>).sort((a, b) =>
+      a.localeCompare(b),
+    );
     expect(enKeys).toEqual(frKeys);
   });
 
-  test.each(LOCALES)(
-    "all values in '%s' are non-empty strings or functions",
-    (locale) => {
-      const dict = translations[locale] as unknown as Record<string, unknown>;
-      const keys = collectKeys(dict);
-      for (const key of keys) {
-        const value = key.split(".").reduce<unknown>((obj, k) => {
-          return (obj as Record<string, unknown>)?.[k];
-        }, dict);
-        const valueType = typeof value;
-        expect(valueType === "string" || valueType === "function").toBe(true);
-        if (valueType === "string") {
-          expect((value as string).trim().length).toBeGreaterThan(0);
-        }
+  test.each(LOCALES)("all values in '%s' are non-empty strings or functions", (locale) => {
+    const dict = translations[locale] as unknown as Record<string, unknown>;
+    const keys = collectKeys(dict);
+    for (const key of keys) {
+      const value = key.split(".").reduce<unknown>((obj, k) => {
+        return (obj as Record<string, unknown>)?.[k];
+      }, dict);
+      const valueType = typeof value;
+      expect(valueType === "string" || valueType === "function").toBe(true);
+      if (valueType === "string") {
+        expect((value as string).trim().length).toBeGreaterThan(0);
       }
-    },
-  );
+    }
+  });
 
   test("sidebar section has all required keys", () => {
-    const required = [
-      "dashboard",
-      "chatSessions",
-      "logout",
-      "memoryBlocks",
-      "playground",
-    ];
+    const required = ["dashboard", "chatSessions", "logout", "memoryBlocks", "playground"];
     for (const key of required) {
       expect(translations.en.sidebar).toHaveProperty(key);
       expect(translations.fr.sidebar).toHaveProperty(key);

@@ -1,11 +1,12 @@
 /**
  * @file model-compare.ts
  * @description "Compare models": one prompt per inspiration, the same for every model, each image an Orazaka run of the image-generation
- * Studio on dev.orazaka.com. The LIST of images is the media manifest (`products/orazaka/compare/<inspiration>--<model>.webp`) — nothing
- * here lists a file; `RESULTS` holds what each run recorded (run id, time, size), keyed by the file. A published image without its record,
+ * Studio on dev.orazaka.com. The LIST of images is the media manifest (`sites/orazaka/compare/<inspiration>--<model>.webp`) — nothing
+ * here lists a file; `model-compare.results.json` (a table, no logic) holds what each run recorded (run id, time, size), keyed by the file. A published image without its record,
  * or one whose inspiration or model is unknown, fails the build. Words: `t.gallery`.
  */
 import { mediaPaths, mediaUrl } from "@/core/media/cdn";
+import results from "./model-compare.results.json";
 
 /** Where a model ran: honest labels, never "local" for a hosted model. */
 export type CompareWhere = "mac" | "digitalocean";
@@ -26,9 +27,31 @@ export interface CompareModel {
 
 /** In display order: the local ones, then the hosted one. */
 export const COMPARE_MODELS: readonly CompareModel[] = [
-  { id: "flux-2-klein-4b", slug: "flux-2-klein-4b", name: "FLUX.2 [klein] 4B", where: "mac", licence: "Apache-2.0", seedHonoured: true },
-  { id: "v1-5-pruned-emaonly", slug: "v1-5-pruned-emaonly", name: "Stable Diffusion 1.5", where: "mac", licence: "CreativeML OpenRAIL-M", seedHonoured: true },
-  { id: "stable-diffusion-3.5-large", slug: "stable-diffusion-3-5-large", name: "Stable Diffusion 3.5 Large", where: "digitalocean", licence: "Stability AI Community Licence", costUsd: 0.08, seedHonoured: false },
+  {
+    id: "flux-2-klein-4b",
+    slug: "flux-2-klein-4b",
+    name: "FLUX.2 [klein] 4B",
+    where: "mac",
+    licence: "Apache-2.0",
+    seedHonoured: true,
+  },
+  {
+    id: "v1-5-pruned-emaonly",
+    slug: "v1-5-pruned-emaonly",
+    name: "Stable Diffusion 1.5",
+    where: "mac",
+    licence: "CreativeML OpenRAIL-M",
+    seedHonoured: true,
+  },
+  {
+    id: "stable-diffusion-3.5-large",
+    slug: "stable-diffusion-3-5-large",
+    name: "Stable Diffusion 3.5 Large",
+    where: "digitalocean",
+    licence: "Stability AI Community Licence",
+    costUsd: 0.08,
+    seedHonoured: false,
+  },
 ];
 
 export interface CompareInspiration {
@@ -39,12 +62,36 @@ export interface CompareInspiration {
 }
 
 export const COMPARE_INSPIRATIONS: readonly CompareInspiration[] = [
-  { id: "montreal-winter", prompt: "A quiet street of the Plateau in Montréal on a winter night, outside spiral staircases, warm lit windows, snow falling through the streetlight, steam from a street vent. Cinematic photograph, 35mm lens, shallow depth of field, rich colour grade. No text, no lettering, no logos." },
-  { id: "moroccan-riad", prompt: "A Moroccan riad courtyard in the late afternoon: a zellige tile fountain, orange trees, carved plaster arches, shafts of warm light. Editorial architecture photograph, 24mm lens, soft shadows, natural textures. No text, no lettering, no logos." },
-  { id: "alps-dawn", prompt: "The Alps at dawn above a valley in mist: snow-capped peaks glowing pink, a cable car gliding over the pine forest, first light. Aerial landscape photograph, telephoto lens, crisp detail, cinematic colour grade. No text, no lettering, no logos." },
-  { id: "neon-arcade", prompt: "A 1990s arcade at night, rows of glowing cabinets, a player's hands on a joystick and buttons seen from behind, neon magenta and cyan, haze. Cinematic photograph, 35mm lens, shallow depth of field. No text, no lettering, no logos, no characters on the screens." },
-  { id: "server-room", prompt: "A quiet sovereign server room at night in Montréal: a single rack glowing with warm orange light, snow falling beyond a tall window, polished concrete floor reflections, volumetric haze. Cinematic photograph, 35mm anamorphic lens, ultra-detailed. No text, no lettering, no logos." },
-  { id: "notary-desk", prompt: "A Québec notary's walnut desk at blue hour: a stack of contracts, a fountain pen, a steaming cup of coffee, snow falling outside the window, a line of warm lamp light across the pages. Editorial still-life photograph, 85mm lens, shallow depth of field. No legible text." },
+  {
+    id: "montreal-winter",
+    prompt:
+      "A quiet street of the Plateau in Montréal on a winter night, outside spiral staircases, warm lit windows, snow falling through the streetlight, steam from a street vent. Cinematic photograph, 35mm lens, shallow depth of field, rich colour grade. No text, no lettering, no logos.",
+  },
+  {
+    id: "moroccan-riad",
+    prompt:
+      "A Moroccan riad courtyard in the late afternoon: a zellige tile fountain, orange trees, carved plaster arches, shafts of warm light. Editorial architecture photograph, 24mm lens, soft shadows, natural textures. No text, no lettering, no logos.",
+  },
+  {
+    id: "alps-dawn",
+    prompt:
+      "The Alps at dawn above a valley in mist: snow-capped peaks glowing pink, a cable car gliding over the pine forest, first light. Aerial landscape photograph, telephoto lens, crisp detail, cinematic colour grade. No text, no lettering, no logos.",
+  },
+  {
+    id: "neon-arcade",
+    prompt:
+      "A 1990s arcade at night, rows of glowing cabinets, a player's hands on a joystick and buttons seen from behind, neon magenta and cyan, haze. Cinematic photograph, 35mm lens, shallow depth of field. No text, no lettering, no logos, no characters on the screens.",
+  },
+  {
+    id: "server-room",
+    prompt:
+      "A quiet sovereign server room at night in Montréal: a single rack glowing with warm orange light, snow falling beyond a tall window, polished concrete floor reflections, volumetric haze. Cinematic photograph, 35mm anamorphic lens, ultra-detailed. No text, no lettering, no logos.",
+  },
+  {
+    id: "notary-desk",
+    prompt:
+      "A Québec notary's walnut desk at blue hour: a stack of contracts, a fountain pen, a steaming cup of coffee, snow falling outside the window, a line of warm lamp light across the pages. Editorial still-life photograph, 85mm lens, shallow depth of field. No legible text.",
+  },
 ];
 
 /** What the run of one image recorded. */
@@ -59,24 +106,7 @@ export interface CompareRecord {
 }
 
 /** What each run recorded, by the media path of its file (no extension). */
-const RESULTS: Record<string, CompareRecord> = {
-  "products/orazaka/compare/alps-dawn--flux-2-klein-4b": { runId: "ecfdbd20-0abc-4b65-8ff1-42d52e5c3957", seconds: 62, width: 1024, height: 1024, seed: "20261011" },
-  "products/orazaka/compare/alps-dawn--stable-diffusion-3-5-large": { runId: "357ec8f9-932c-4be7-bfec-e281da332927", seconds: 9, width: 1024, height: 1024, seed: "20261011" },
-  "products/orazaka/compare/alps-dawn--v1-5-pruned-emaonly": { runId: "609b48cc-905b-4cc6-a961-db146fc77ceb", seconds: 58, width: 512, height: 512, seed: "20261011" },
-  "products/orazaka/compare/montreal-winter--flux-2-klein-4b": { runId: "6a4c4310-5970-4502-86c3-c4791bca3566", seconds: 66, width: 1024, height: 1024, seed: "20261011" },
-  "products/orazaka/compare/montreal-winter--stable-diffusion-3-5-large": { runId: "3961f27e-e269-413f-817b-9b166579554e", seconds: 8, width: 1024, height: 1024, seed: "20261011" },
-  "products/orazaka/compare/montreal-winter--v1-5-pruned-emaonly": { runId: "5b4ef17f-2af4-4800-ac5d-c98645b74baf", seconds: 58, width: 512, height: 512, seed: "20261011" },
-  "products/orazaka/compare/moroccan-riad--flux-2-klein-4b": { runId: "352eb15f-9022-4a56-a921-5f74a270250a", seconds: 61, width: 1024, height: 1024, seed: "20261011" },
-  "products/orazaka/compare/moroccan-riad--stable-diffusion-3-5-large": { runId: "64269eeb-f6e3-46c4-8421-fe9136672186", seconds: 8, width: 1024, height: 1024, seed: "20261011" },
-  "products/orazaka/compare/moroccan-riad--v1-5-pruned-emaonly": { runId: "8e149fac-9a97-4552-98a8-e318444787da", seconds: 58, width: 512, height: 512, seed: "20261011" },
-  "products/orazaka/compare/neon-arcade--flux-2-klein-4b": { runId: "437e0c13-f122-4fac-aeba-3b1cf569010c", seconds: 61, width: 1024, height: 1024, seed: "20261011" },
-  "products/orazaka/compare/neon-arcade--stable-diffusion-3-5-large": { runId: "fa9ea84b-4ea6-4cde-9786-1b3c0920bd00", seconds: 8, width: 1024, height: 1024, seed: "20261011" },
-  "products/orazaka/compare/neon-arcade--v1-5-pruned-emaonly": { runId: "d1ea2b40-5193-4965-bbff-2e6d7b50aa7a", seconds: 58, width: 512, height: 512, seed: "20261011" },
-  "products/orazaka/compare/notary-desk--stable-diffusion-3-5-large": { runId: "01c27c5d-50a7-4de7-84a2-1988b55b1bc2", seconds: 7, width: 1024, height: 1024, seed: "20261011" },
-  "products/orazaka/compare/notary-desk--v1-5-pruned-emaonly": { runId: "d7ee2076-e7ab-4b57-b1b3-e8c7a08928a0", seconds: 58, width: 512, height: 512, seed: "20261011" },
-  "products/orazaka/compare/server-room--stable-diffusion-3-5-large": { runId: "98131a01-25b7-4bb6-b326-26c084eff4f7", seconds: 8, width: 1024, height: 1024, seed: "20261011" },
-  "products/orazaka/compare/server-room--v1-5-pruned-emaonly": { runId: "7a6e9497-7c85-47a3-bd2b-e6827eb42c12", seconds: 58, width: 512, height: 512, seed: "20261011" },
-};
+const RESULTS: Record<string, CompareRecord> = results;
 
 /** One published image of the comparison. */
 export interface CompareImage extends CompareRecord {
@@ -86,10 +116,10 @@ export interface CompareImage extends CompareRecord {
   src: string;
 }
 
-const COMPARE_FILE = /^products\/orazaka\/compare\/([a-z0-9-]+)--([a-z0-9-]+)\.webp$/;
+const COMPARE_FILE = /^sites\/orazaka\/compare\/([a-z0-9-]+)--([a-z0-9-]+)\.webp$/;
 
 function discover(): CompareImage[] {
-  const found = mediaPaths("products/orazaka/compare/")
+  const found = mediaPaths("sites/orazaka/compare/")
     .map((path) => COMPARE_FILE.exec(path))
     .filter((match): match is RegExpExecArray => match !== null)
     .map((match) => {
@@ -101,7 +131,8 @@ function discover(): CompareImage[] {
       if (!record) throw new Error(`${match[0]} is published but no run recorded it (model-compare RESULTS)`);
       return { ...record, inspiration, model, stem, src: mediaUrl(match[0]) };
     });
-  for (const stem of Object.keys(RESULTS)) if (!found.some((image) => image.stem === stem)) throw new Error(`${stem} has a record but is not published`);
+  for (const stem of Object.keys(RESULTS))
+    if (!found.some((image) => image.stem === stem)) throw new Error(`${stem} has a record but is not published`);
   return found;
 }
 
@@ -109,4 +140,6 @@ export const COMPARE_IMAGES: readonly CompareImage[] = discover();
 
 /** The images of one inspiration, in the order of `COMPARE_MODELS`. */
 export const imagesOf = (inspirationId: string): CompareImage[] =>
-  COMPARE_IMAGES.filter((image) => image.inspiration.id === inspirationId).sort((a, b) => COMPARE_MODELS.indexOf(a.model) - COMPARE_MODELS.indexOf(b.model));
+  COMPARE_IMAGES.filter((image) => image.inspiration.id === inspirationId).sort(
+    (a, b) => COMPARE_MODELS.indexOf(a.model) - COMPARE_MODELS.indexOf(b.model),
+  );

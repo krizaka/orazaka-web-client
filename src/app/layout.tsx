@@ -47,7 +47,14 @@ export const metadata: Metadata = {
   authors: [{ name: "Krizaka", url: KRIZAKA_URL }],
   // Every page is canonical to itself; the image is app/opengraph-image.tsx.
   alternates: { canonical: "./" },
-  openGraph: { type: "website", siteName: SITE_NAME, title: SITE_TITLE, description: SITE_DESCRIPTION, locale: "en_US", alternateLocale: "fr_CA" },
+  openGraph: {
+    type: "website",
+    siteName: SITE_NAME,
+    title: SITE_TITLE,
+    description: SITE_DESCRIPTION,
+    locale: "en_US",
+    alternateLocale: "fr_CA",
+  },
   twitter: { card: "summary_large_image", title: SITE_TITLE, description: SITE_DESCRIPTION },
   icons: {
     icon: [
@@ -72,7 +79,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" data-surface="product" className={cn(inter.variable, productDisplay.variable)} suppressHydrationWarning>
+    <html
+      lang="en"
+      data-surface="product"
+      className={cn(inter.variable, productDisplay.variable)}
+      suppressHydrationWarning
+    >
       <head>
         {/* The organisation's theme mechanism: applies the persisted mode and named theme before the first paint. */}
         <ThemeScript />
@@ -80,7 +92,10 @@ export default function RootLayout({
         <noscript>
           <style>{"[data-reveal]{opacity:1!important;transform:none!important;filter:none!important}"}</style>
         </noscript>
-        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(siteJsonLd()).replace(/</g, "\\u003c") }} />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(siteJsonLd()).replace(/</g, String.raw`\u003c`) }}
+        />
       </head>
       <body className="antialiased transition-colors duration-200">
         <PublicShell authFlags={readAuthFlags()} showDevNotice={!indexable()}>

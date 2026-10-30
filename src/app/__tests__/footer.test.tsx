@@ -1,5 +1,5 @@
 import "@testing-library/jest-dom";
-import { render, screen } from "@testing-library/react";
+import { render, screen, within } from "@testing-library/react";
 import { ThemeProvider } from "@krizaka/ui/theme";
 import { translations, type Locale } from "@/core/context/translations";
 import { AuthFlagsProvider } from "@/core/context/AuthFlagsContext";
@@ -18,7 +18,16 @@ jest.mock("@krizaka/ui/toast", () => ({ toast: { error: jest.fn(), success: jest
 beforeAll(() => {
   Object.defineProperty(window, "matchMedia", {
     writable: true,
-    value: (query: string) => ({ matches: query.includes("reduce"), media: query, addEventListener: () => {}, removeEventListener: () => {}, addListener: () => {}, removeListener: () => {}, onchange: null, dispatchEvent: () => false }),
+    value: (query: string) => ({
+      matches: query.includes("reduce"),
+      media: query,
+      addEventListener: () => {},
+      removeEventListener: () => {},
+      addListener: () => {},
+      removeListener: () => {},
+      onchange: null,
+      dispatchEvent: () => false,
+    }),
   });
 });
 
@@ -42,8 +51,15 @@ describe.each<[string, React.ReactElement]>([
     expect(footers[0].closest("main")).toBeNull();
     expect(footers[0]).toHaveTextContent(/Krizaka/);
     expect(screen.queryByRole("navigation", { name: /famil/i })).toBeNull();
-    // krizaka.com already holds the contact and open-source pages (krizaka/orazaka#443): the footer links them, nothing is duplicated here.
-    expect(screen.getByRole("link", { name: translations[locale].landing.footer.openSource })).toHaveAttribute("href", "https://www.krizaka.com/open-source");
-    expect(screen.getByRole("link", { name: translations[locale].landing.footer.contact })).toHaveAttribute("href", "https://www.krizaka.com/contact");
+    // Open source is this site's own page (#290); the contact form lives on krizaka.com (krizaka/orazaka#443).
+    expect(
+      within(screen.getByRole("contentinfo")).getByRole("link", {
+        name: translations[locale].landing.footer.openSource,
+      }),
+    ).toHaveAttribute("href", "/open-source");
+    expect(screen.getByRole("link", { name: translations[locale].landing.footer.contact })).toHaveAttribute(
+      "href",
+      "https://www.krizaka.com/contact",
+    );
   });
 });

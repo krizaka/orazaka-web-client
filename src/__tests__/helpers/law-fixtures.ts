@@ -4,7 +4,8 @@
  */
 import type { RuleProposal } from "@/console/services/law.schemas";
 
-export const QUOTE = "de donner au locataire un préavis de vingt-quatre heures de son intention de vérifier l’état du bien";
+export const QUOTE =
+  "de donner au locataire un préavis de vingt-quatre heures de son intention de vérifier l’état du bien";
 export const OFFICIAL_URL = "https://www.legisquebec.gouv.qc.ca/fr/document/lc/CCQ-1991#se:1931";
 export const HASH = "a".repeat(64);
 

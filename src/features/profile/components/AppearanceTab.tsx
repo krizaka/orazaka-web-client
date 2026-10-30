@@ -18,12 +18,22 @@ export function AppearanceTab({ pf }: Readonly<{ pf: UseProfileForm }>) {
   const { form, setField, setTheme, setLanguage, availableThemes } = pf;
 
   return (
-    <SettingsSection variant="flat" id="appearance" title={t.profile.appearanceTitle} description={t.profile.appearanceDesc}>
+    <SettingsSection
+      variant="flat"
+      id="appearance"
+      title={t.profile.appearanceTitle}
+      description={t.profile.appearanceDesc}
+    >
       <div className="py-4">
         <AppearancePicker theme={form.theme} onThemeChange={setTheme} />
       </div>
       <SettingsRow label={t.profile.rowAccent} description={t.profile.rowAccentHelp} htmlFor="appearance-accent">
-        <Select id="appearance-accent" className="w-48" value={form.themeAccent} onChange={(e) => setField("themeAccent", e.target.value as ThemeAccent)}>
+        <Select
+          id="appearance-accent"
+          className="w-48"
+          value={form.themeAccent}
+          onChange={(e) => setField("themeAccent", e.target.value as ThemeAccent)}
+        >
           {availableThemes.map((th) => (
             <option key={th.value} value={th.value}>
               {th.label}
@@ -32,7 +42,12 @@ export function AppearanceTab({ pf }: Readonly<{ pf: UseProfileForm }>) {
         </Select>
       </SettingsRow>
       <SettingsRow label={t.profile.rowDensity} description={t.profile.rowDensityHelp} htmlFor="appearance-layout">
-        <Select id="appearance-layout" className="w-48" value={form.themeLayout} onChange={(e) => setField("themeLayout", e.target.value as ThemeLayout)}>
+        <Select
+          id="appearance-layout"
+          className="w-48"
+          value={form.themeLayout}
+          onChange={(e) => setField("themeLayout", e.target.value as ThemeLayout)}
+        >
           {THEME_LAYOUTS.map((l) => (
             <option key={l} value={l}>
               {t.settings[THEME_LAYOUT_LABELS[l].split(".")[1] as keyof typeof t.settings] as string}
@@ -41,7 +56,12 @@ export function AppearanceTab({ pf }: Readonly<{ pf: UseProfileForm }>) {
         </Select>
       </SettingsRow>
       <SettingsRow label={t.profile.rowLanguage} description={t.profile.rowLanguageHelp} htmlFor="appearance-language">
-        <Select id="appearance-language" className="w-48" value={form.language} onChange={(e) => setLanguage(e.target.value as Locale)}>
+        <Select
+          id="appearance-language"
+          className="w-48"
+          value={form.language}
+          onChange={(e) => setLanguage(e.target.value as Locale)}
+        >
           <option value="en">{t.settings.english}</option>
           <option value="fr">{t.settings.french}</option>
         </Select>

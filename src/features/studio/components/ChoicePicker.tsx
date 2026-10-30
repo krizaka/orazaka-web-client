@@ -22,26 +22,21 @@ interface ChoicePickerProps {
  * the whole list side by side is one click away (« Compare models »). Left alone, the field stays on « Automatic »
  * and sends nothing, so the platform keeps choosing the best available model at run time.
  */
-export function ChoicePicker({
-  field,
-  choices,
-  value,
-  disabled,
-  onChange,
-}: Readonly<ChoicePickerProps>) {
+export function ChoicePicker({ field, choices, value, disabled, onChange }: Readonly<ChoicePickerProps>) {
   const { t } = useTranslation();
   const form = t.studio.form;
   const options: ComboboxOption[] = choices.map((choice) => ({
     value: choice.value,
     label: choice.label,
-    description: choice.meta?.available === false ? unavailableWords(choice, form.unavailableCodes, form.unavailable) : (choice.hint ?? undefined),
+    description:
+      choice.meta?.available === false
+        ? unavailableWords(choice, form.unavailableCodes, form.unavailable)
+        : (choice.hint ?? undefined),
     disabled: choice.meta?.available === false,
   }));
   const chosen = options.find((option) => option.value === value) ?? null;
   const running = choices.find((choice) => choice.value === field.defaultValue);
-  const shown = choices.find(
-    (choice) => choice.value === (chosen?.value ?? field.defaultValue),
-  );
+  const shown = choices.find((choice) => choice.value === (chosen?.value ?? field.defaultValue));
   return (
     <div className="flex flex-col gap-2" data-testid={`choice-picker-${field.key}`}>
       <Combobox
@@ -49,11 +44,7 @@ export function ChoicePicker({
         options={options}
         value={chosen}
         onValueChange={(option) => onChange(option?.value ?? "")}
-        placeholder={
-          running
-            ? form.automatic.replace("{name}", running.label)
-            : form.automaticPlain
-        }
+        placeholder={running ? form.automatic.replace("{name}", running.label) : form.automaticPlain}
         hint={field.description ?? shown?.hint ?? form.automaticHint}
         disabled={disabled}
         labels={{
@@ -76,7 +67,10 @@ function ChoiceChips({ choice, compare = false }: Readonly<{ choice: Choice; com
     return null;
   }
   return (
-    <ul className="flex flex-wrap gap-1.5" aria-label={compare ? choice.label : `${t.studio.form.chosenLabel}: ${choice.label}`}>
+    <ul
+      className="flex flex-wrap gap-1.5"
+      aria-label={compare ? choice.label : `${t.studio.form.chosenLabel}: ${choice.label}`}
+    >
       {facts.map((fact) => (
         <li key={fact}>
           <Badge tone="neutral" size="sm">
@@ -111,10 +105,7 @@ function CompareChoices({ choices }: Readonly<{ choices: Choice[] }>) {
 }
 
 /** A catalogue-fed or closed list with nothing to offer: said out loud (and logged), never a blank select. */
-export function EmptyChoices({
-  field,
-  message,
-}: Readonly<{ field: InputField; message: string }>) {
+export function EmptyChoices({ field, message }: Readonly<{ field: InputField; message: string }>) {
   useEffect(() => {
     console.error(`Studio form: the « ${field.key} » list has no option to offer.`);
   }, [field.key]);

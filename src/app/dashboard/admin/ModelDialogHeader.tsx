@@ -14,13 +14,7 @@ interface ModelDialogHeaderProps {
 }
 
 /** Category-accented header (icon + title + sub-label + close) for the model dialog. */
-export function ModelDialogHeader({
-  catMeta,
-  title,
-  subtitle,
-  saving,
-  onClose,
-}: Readonly<ModelDialogHeaderProps>) {
+export function ModelDialogHeader({ catMeta, title, subtitle, saving, onClose }: Readonly<ModelDialogHeaderProps>) {
   const { t } = useTranslation();
   return (
     <header className="flex items-center justify-between p-5 border-b border-border-subtle bg-surface-0">
@@ -29,15 +23,13 @@ export function ModelDialogHeader({
           className={cn(
             "inline-flex items-center justify-center w-9 h-9 rounded-xl text-lg border",
             catMeta.color,
-            "transition-all duration-300"
+            "transition-all duration-300",
           )}
         >
           {catMeta.icon}
         </span>
         <div>
-          <h3 className="text-base font-semibold text-fg">
-            {title}
-          </h3>
+          <h3 className="text-base font-semibold text-fg">{title}</h3>
           <p className="text-xs text-fg-muted">{subtitle}</p>
         </div>
       </div>

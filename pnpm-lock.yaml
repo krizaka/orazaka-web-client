@@ -11,36 +11,42 @@ importers:
       '@dagrejs/dagre':
         specifier: ^3.0.0
         version: 3.1.1
+      '@krizaka/auth':
+        specifier: ^0.10.0
+        version: 0.10.0(zod@4.6.7)
       '@krizaka/charts':
         specifier: ^0.6.0
-        version: 0.6.0(@krizaka/ui@3.65.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
+        version: 0.6.0(@krizaka/ui@3.71.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       '@krizaka/fonts':
         specifier: ^0.5.0
         version: 0.5.0
       '@krizaka/icons':
-        specifier: ^0.7.0
-        version: 0.7.0(react@19.2.4)
+        specifier: ^0.9.0
+        version: 0.9.0(react@19.2.4)
       '@krizaka/intl':
         specifier: ^0.4.0
         version: 0.4.0
       '@krizaka/orazaka-design-system':
         specifier: ^3.4.0
-        version: 3.4.0(@krizaka/query@0.2.2(@types/react@19.3.0)(csstype@3.2.3)(react@19.2.4))(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(next@16.4.3(@babel/core@7.29.7(supports-color@8.1.1))(@playwright/test@1.64.1)(@types/node@25.9.9)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(tailwind-merge@3.7.0)(tailwindcss@4.3.3)
+        version: 3.4.0(@krizaka/query@0.2.2(@types/react@19.3.0)(csstype@3.2.3)(react@19.2.4))(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(next@16.4.2(@babel/core@7.29.7(supports-color@8.1.1))(@playwright/test@1.64.1)(@types/node@25.9.9)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(tailwind-merge@3.7.0)(tailwindcss@4.3.3)
       '@krizaka/orazaka-shared':
         specifier: ^1.4.0
         version: 1.5.0
       '@krizaka/query':
         specifier: ^0.2.2
         version: 0.2.2(@types/react@19.3.0)(csstype@3.2.3)(react@19.2.4)
+      '@krizaka/settings':
+        specifier: 0.5.2
+        version: 0.5.2(zod@4.6.7)
       '@krizaka/tailwind':
-        specifier: ^3.65.0
-        version: 3.65.0(@krizaka/tokens@3.65.0)(@krizaka/ui@3.65.0)(tailwindcss@4.3.3)
+        specifier: ^3.71.0
+        version: 3.71.0(@krizaka/tokens@3.71.0)(@krizaka/ui@3.71.0)(tailwindcss@4.3.3)
       '@krizaka/tokens':
-        specifier: ^3.65.0
-        version: 3.65.0
+        specifier: ^3.71.0
+        version: 3.71.0
       '@krizaka/ui':
-        specifier: ^3.65.0
-        version: 3.65.0(@krizaka/query@0.2.2(@types/react@19.3.0)(csstype@3.2.3)(react@19.2.4))(@krizaka/tailwind@3.65.0)(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(tailwind-merge@3.7.0)(tailwindcss@4.3.3)
+        specifier: ^3.71.0
+        version: 3.71.0(@krizaka/query@0.2.2(@types/react@19.3.0)(csstype@3.2.3)(react@19.2.4))(@krizaka/tailwind@3.71.0)(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(tailwind-merge@3.7.0)(tailwindcss@4.3.3)
       '@tanstack/react-query':
         specifier: ^5.100.11
         version: 5.104.5(@types/react@19.3.0)(react@19.2.4)
@@ -55,10 +61,10 @@ importers:
         version: 14.6.0(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       next:
         specifier: ^16.3.0
-        version: 16.4.3(@babel/core@7.29.7(supports-color@8.1.1))(@playwright/test@1.64.1)(@types/node@25.9.9)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
+        version: 16.4.2(@babel/core@7.29.7(supports-color@8.1.1))(@playwright/test@1.64.1)(@types/node@25.9.9)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       next-auth:
         specifier: ^4.24.15
-        version: 4.24.15(next@16.4.3(@babel/core@7.29.7(supports-color@8.1.1))(@playwright/test@1.64.1)(@types/node@25.9.9)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
+        version: 4.24.15(next@16.4.2(@babel/core@7.29.7(supports-color@8.1.1))(@playwright/test@1.64.1)(@types/node@25.9.9)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       react:
         specifier: 19.2.4
         version: 19.2.4
@@ -85,8 +91,8 @@ importers:
         specifier: 0.2.0
         version: 0.2.0
       '@krizaka/config':
-        specifier: ^0.12.0
-        version: 0.12.0(eslint-config-next@16.4.2(@typescript-eslint/parser@8.72.0(eslint@10.13.0(jiti@2.7.0)(supports-color@8.1.1))(supports-color@8.1.1)(typescript@6.0.3))(eslint@10.13.0(jiti@2.7.0)(supports-color@8.1.1))(supports-color@8.1.1)(typescript@6.0.3))(eslint@10.13.0(jiti@2.7.0)(supports-color@8.1.1))(prettier@3.9.10)(supports-color@8.1.1)(typescript@6.0.3)
+        specifier: ^0.17.0
+        version: 0.17.0(eslint-config-next@16.4.2(@typescript-eslint/parser@8.72.0(eslint@10.13.0(jiti@2.7.0)(supports-color@8.1.1))(supports-color@8.1.1)(typescript@6.0.3))(eslint@10.13.0(jiti@2.7.0)(supports-color@8.1.1))(supports-color@8.1.1)(typescript@6.0.3))(eslint@10.13.0(jiti@2.7.0)(supports-color@8.1.1))(prettier@3.9.10)(supports-color@8.1.1)(typescript@6.0.3)
       '@krizaka/page-audit':
         specifier: 0.3.1
         version: 0.3.1(@krizaka/a11y-audit@0.2.0)(playwright-core@1.64.1)
@@ -934,6 +940,18 @@ packages:
     resolution: {integrity: sha512-hRQwJuX3PCtJdc6M3KkT+WwyluV8WVW2pGenZIE/qNC7pcGpkrcIqwFb5gauu7JcJkhraekto/egOIX4QLfm1g==}
     engines: {node: '>=22'}
 
+  '@krizaka/auth@0.10.0':
+    resolution: {integrity: sha512-swQ9EkF1T8tweabekLfHjkACJZX9LJZslzAcQXezdIkOslvI5BHWUXbeP38cO2NPkDAXehn1UYHJ4QsgocCMvA==}
+    engines: {node: '>=22'}
+    peerDependencies:
+      vitest: '>=4'
+      zod: '>=3.23'
+    peerDependenciesMeta:
+      vitest:
+        optional: true
+      zod:
+        optional: true
+
   '@krizaka/charts@0.6.0':
     resolution: {integrity: sha512-NkfG0HNQ+QJQm5gwj+QbNotjnlXRk0XsBYBnFoHy5DtPsVUHteWDa0CSJWbKb6s4Zv3vYfMqBZEd2xqzNu3mAg==}
     engines: {node: '>=22'}
@@ -951,8 +969,8 @@ packages:
       react-native-svg:
         optional: true
 
-  '@krizaka/config@0.12.0':
-    resolution: {integrity: sha512-j3jPlncOzoIxVagD4HMqy9RZwIZLh1KI2ClGM+TeJzMRPqNEMi6HAk581jro/9GOSzGT6Ix4TI7gUTUQ8efCZQ==}
+  '@krizaka/config@0.17.0':
+    resolution: {integrity: sha512-fVvkhV10sPAuA2AkrOuYt1ItT7a6hHQUJlUhEUEzgJIl+1majrLfelu2KpWQ1IoW1jsBCZvTvtIyUWAljgf+7Q==}
     engines: {node: '>=22'}
     hasBin: true
     peerDependencies:
@@ -965,6 +983,14 @@ packages:
         optional: true
       prettier:
         optional: true
+
+  '@krizaka/db@0.2.0':
+    resolution: {integrity: sha512-m4gFEqeKd1B//UDjGaj/6YN0pXPWjKi2vH391Hl86K0pCemuVg57+AKx9b1pHzpLXm1SyBK4p/svmoi9o1gOgA==}
+    engines: {node: '>=22'}
+
+  '@krizaka/db@0.3.1':
+    resolution: {integrity: sha512-51ouJYSak2hJE8Rb6Ui5p+ZL2Yc2IlvY+qLGo99c6TiyOUKfb6ak4GMXEunTAng173ID7JZaqEPjlNPBXcn1nw==}
+    engines: {node: '>=22'}
 
   '@krizaka/fonts@0.5.0':
     resolution: {integrity: sha512-romnY4PqqOLvW/7ZYNzmUq1rTIM8ylmlUeZgB2YukNCp/PxlbSM4kc5ldm1SB6KHbt/rBOlkbQdkW9prhyVvqg==}
@@ -980,8 +1006,8 @@ packages:
       react-native-svg:
         optional: true
 
-  '@krizaka/icons@0.7.0':
-    resolution: {integrity: sha512-wm25c4e3OZPsAdPM4vcnnHV20kFJNCEmkjdSh76QG3agVGGBBPsj2clKSgsfhSoyeK836X6LEx9BjpIibb4mBA==}
+  '@krizaka/icons@0.9.0':
+    resolution: {integrity: sha512-WKjh6UGoTXaRndWJ/c3T8zDTwZ0fcqacPSHBDx0aDD4+BJowDfE+ueinrpsG1Z7VPI2lfjL4iTP0Cz0zlEBbTw==}
     engines: {node: '>=22'}
     peerDependencies:
       react: '>=18'
@@ -1061,6 +1087,12 @@ packages:
       pg:
         optional: true
 
+  '@krizaka/settings@0.5.2':
+    resolution: {integrity: sha512-mF7L8Jf/Zji1MEJXZ5avVK/7IWh6f8hFuHNzmu0qX2TtY7EdzP2q3z+oKkh+62osw0B/CKJZwlMW9EbOvWtgpA==}
+    engines: {node: '>=22'}
+    peerDependencies:
+      zod: '>=3.23'
+
   '@krizaka/tailwind@2.10.0':
     resolution: {integrity: sha512-LZTufxgBnPcJ31LNtY6KEax6Fh9blavHZVsdluI5jT8q41Hr/oZjVuE6OcZlYqrbD+f3SGPCqFfyjrxixCE3Rw==}
     engines: {node: '>=20'}
@@ -1069,28 +1101,28 @@ packages:
       '@krizaka/ui': ^2.10.0
       tailwindcss: ^4.1
 
-  '@krizaka/tailwind@3.65.0':
-    resolution: {integrity: sha512-rBVdg7xFKo9XhcdsOdxtdw27NAlMlyhByG+/370OfJ5fe+mW8hkzDknyhRQ/XLsFQzLdxYzAoHwwORqH7dgXTw==}
+  '@krizaka/tailwind@3.71.0':
+    resolution: {integrity: sha512-BsqIFJ//UQofA507UuJfsUK1ifbI0yrEs3foYo1DHa0DKry+PBHMTWQeiwc9G2YZgVKoiB6Yzy08aUd0MILNBQ==}
     engines: {node: '>=22'}
     peerDependencies:
-      '@krizaka/tokens': ^3.65.0
-      '@krizaka/ui': ^3.65.0
+      '@krizaka/tokens': ^3.71.0
+      '@krizaka/ui': ^3.71.0
       tailwindcss: ^4.1
 
   '@krizaka/tokens@2.10.0':
     resolution: {integrity: sha512-OULaE9a9LA0Cpm1ckIa8hiwTZVgZ1Z17b/LBhsMTdQgYoI6iM7WE6PNotS+7JDkn0PaVoYaaxFmaG8r605J96g==}
     engines: {node: '>=20'}
 
-  '@krizaka/tokens@3.65.0':
-    resolution: {integrity: sha512-Q+NjIc1CKUEQ4EH299sG/QpP+QCl3+o2v/RAr8PCczav+M/vZfH3XGWSCtfY1mjSXrJ3PyR+dh/+Xk3oCEk8IQ==}
+  '@krizaka/tokens@3.71.0':
+    resolution: {integrity: sha512-MvZFrw+40jc6pn15wD9xaZ5ENoyw97FIl9EnXTYDdyxpNjiBj3TWO1WV5ivYqe1aNM+1IL36/vrS5Nwp31FsPA==}
     engines: {node: '>=22'}
 
-  '@krizaka/ui@3.65.0':
-    resolution: {integrity: sha512-k6a4APZpJQFfzL+NL4A1C9xSaG16fj+KwBTVCx52g4lVqNsSu7cookoBirCsNeMSnFUeqYGopbF+Dkj5JC+81Q==}
+  '@krizaka/ui@3.71.0':
+    resolution: {integrity: sha512-upAWduaAbxRl+y0pEL82wKA2S8twFNnlsSo8sn3rtfkprAamdhP0YkSyc2imcdPgMtBgwuGLgp8HcOEzZzlUkg==}
     engines: {node: '>=22'}
     peerDependencies:
       '@krizaka/query': '>=0.2.2'
-      '@krizaka/tailwind': '>=3.65.0'
+      '@krizaka/tailwind': '>=3.71.0'
       '@maplibre/maplibre-react-native': '>=11'
       '@shopify/flash-list': '>=2'
       expo-camera: '>=16'
@@ -1141,60 +1173,60 @@ packages:
       '@emnapi/core': ^1.7.1 || ^2.0.0-alpha.4
       '@emnapi/runtime': ^1.7.1 || ^2.0.0-alpha.4
 
-  '@next/env@16.4.3':
-    resolution: {integrity: sha512-a7tz1QCcWWkwC/rPJcPMJk/UNRu9CFhDd3OHYE5hddbJrs8BqRTalxI6GlKCWEGzRLHN+S/B7a4PAHCtm25aBQ==}
+  '@next/env@16.4.2':
+    resolution: {integrity: sha512-nTUTFH7G5/J/fmpkjVLegOkqyKOP0CEsJcMsyO4UCYeN1su+YMW/MfaSErnJskL7XM+UDK6aTvslxsRCyya/sA==}
 
   '@next/eslint-plugin-next@16.4.2':
     resolution: {integrity: sha512-gCTWlw0e+Y6kajpFyKKgA195jUJCRhlzJE0lV7ufe8a+ghIsANWZ0/FiJwg6DuOG1+OvRbcZDcFBoRh3mNJx0g==}
 
-  '@next/swc-darwin-arm64@16.4.3':
-    resolution: {integrity: sha512-4yq5EXBt+VDtAZwTyfijaFp5D2C5oz3Ikw5a2kiX2K9nw72vrZX2q5UuAlkPtUMO1tQz6JTKpaKWjS7OOefTDQ==}
+  '@next/swc-darwin-arm64@16.4.2':
+    resolution: {integrity: sha512-ONkhFvZNFWlsEHOM/81AtxdyuJP2KRYKYR0JxPwvcu1AuPMMMgcL+wW2luldJvMtZwKtUxoSkCychW5wIeoYSw==}
     engines: {node: '>= 10'}
     cpu: [arm64]
     os: [darwin]
 
-  '@next/swc-darwin-x64@16.4.3':
-    resolution: {integrity: sha512-1Rvkn/LUhnEF8WxnRkOrqGhbwXui1bkWFxONKIbN+r7C+9KHDSZ+iUoj4CzymVMWUyZIyx9szcb9+kbKhD500A==}
+  '@next/swc-darwin-x64@16.4.2':
+    resolution: {integrity: sha512-luPCMbOsCoaF+kXJEUjmjmOZg1lC3BflhmUu+ZmW4tBu2vW/4AXak8JBFvePizGkxVmNiAw/r9ra+6UviCWtWQ==}
     engines: {node: '>= 10'}
     cpu: [x64]
     os: [darwin]
 
-  '@next/swc-linux-arm64-gnu@16.4.3':
-    resolution: {integrity: sha512-dCKpXErGg3abUM6t5JTJV/ottVBTStJB5lRJTbgdUdQaQ+jNHiK56Hsc0YAEg/rinSh42hYG3HWiYmEMdilnxg==}
+  '@next/swc-linux-arm64-gnu@16.4.2':
+    resolution: {integrity: sha512-xhwFTAncJyaCNy5KqKKuKaIIdCy1/1ZV1s5S1G0hhT7wGMkDTlfJ6aQbfRFnIG/s3/kDrxQ8aycVe+c5QnP8ow==}
     engines: {node: '>= 10'}
     cpu: [arm64]
     os: [linux]
     libc: [glibc]
 
-  '@next/swc-linux-arm64-musl@16.4.3':
-    resolution: {integrity: sha512-WwYbhWkhYBvBtib1K4W0kL8MW2snBD2A5b3SN4vPpqalZbZs5+bQ1yzAdepVoOqrFfEW3dmREy4Zs1MrWcrFbw==}
+  '@next/swc-linux-arm64-musl@16.4.2':
+    resolution: {integrity: sha512-T1PNmfbPcxr5ndtWUL/3wQtLXsz808lq6sc2GrNT5k2oquF7UyqZddHSuAewHVsWsGXe6nsl9HoN1YNriVjuSg==}
     engines: {node: '>= 10'}
     cpu: [arm64]
     os: [linux]
     libc: [musl]
 
-  '@next/swc-linux-x64-gnu@16.4.3':
-    resolution: {integrity: sha512-QymWvfUwDEC5/lpJOsxX5VAbyoR2D13+2Jsjz4be7gT4LPqEgdpkeLIR/HFfCLgKzoMhpJbp6I/JnogyNZHcaA==}
+  '@next/swc-linux-x64-gnu@16.4.2':
+    resolution: {integrity: sha512-N9cDUOCGtkJG5PNKDFZUF3xXndrJJcpLp121uAGjIGvO/U2p9tfdNOM9htj7+5f72l0m8rMw/cvYacUJBQoudg==}
     engines: {node: '>= 10'}
     cpu: [x64]
     os: [linux]
     libc: [glibc]
 
-  '@next/swc-linux-x64-musl@16.4.3':
-    resolution: {integrity: sha512-Vmjd9D7DpA4Vv3cUlr82QWgJD/BQZmns801vtC5VWHg6jCIA4a5vMKpQnfrM2pyCrp2eV0ENdUg4PlN3bAc2Yw==}
+  '@next/swc-linux-x64-musl@16.4.2':
+    resolution: {integrity: sha512-yY2uh1YhX6ufuYy2FCbw1dqblbhI57GLYAJfCkqD9auTv6pLrH67Uccjc3QMKBeCYAG6lkgu08ExmX1bbjejjQ==}
     engines: {node: '>= 10'}
     cpu: [x64]
     os: [linux]
     libc: [musl]
 
-  '@next/swc-win32-arm64-msvc@16.4.3':
-    resolution: {integrity: sha512-lG1pPdPLk7gTyGb00n5JIMLdBJgjb+UEhSdZvFbhUMg0DyC6z4B7RnpSKF9VCd4imkLObVbXOFA0kFCpw7yFow==}
+  '@next/swc-win32-arm64-msvc@16.4.2':
+    resolution: {integrity: sha512-j/ArWRIHpMMB6wYLMhr2puTguBt70lNU/Cmjl9p6dTDE8DGknYJMP9PdwPk2dqpCNL/KIX9yfngDvIesxJPmsg==}
     engines: {node: '>= 10'}
     cpu: [arm64]
     os: [win32]
 
-  '@next/swc-win32-x64-msvc@16.4.3':
-    resolution: {integrity: sha512-NmQC9RkJdnPXRaMxtkCzobB3teVjqF33oSOnwDfi+XYGWWYpt+xlGK3mtktSKLbdjwaWbJu2OkkMiRFGUUncKg==}
+  '@next/swc-win32-x64-msvc@16.4.2':
+    resolution: {integrity: sha512-AA4edyWHDko3NCSo0x6GomsdgFb0oR1J3MXU1b5xt6FRFg4AucrMPW3S0hCe/9onU0O1BbpGQBsqo1r0Gneu1g==}
     engines: {node: '>= 10'}
     cpu: [x64]
     os: [win32]
@@ -2785,8 +2817,8 @@ packages:
     resolution: {integrity: sha512-BLrgEcRTwX2o6gGxGOCNyMvGSp35YofuYzw9h1IMTRmKqttAZZVU67bdb9Pr2vUHA8+j3i2tJfjO6C6+4myGTA==}
     engines: {node: 18 || 20 || >=22}
 
-  baseline-browser-mapping@2.11.32:
-    resolution: {integrity: sha512-UvuxFU9P3hM29LrQdwu0cD6w6/+SFr+UlB9s/knI7+O2rK9xFxKUwSDWxGdbbqQ9/V7BJ5s0NI5nQAE4uJp3gQ==}
+  baseline-browser-mapping@2.11.31:
+    resolution: {integrity: sha512-b0k7wXlWjpuL/Uxb/pYlpjY0ej5BjAmurtPUk3eRGuloI4yjK32m8TiKUQ81l1ptcLjKS/KH2+uqIolZti1x4Q==}
     engines: {node: '>=6.0.0'}
     hasBin: true
 
@@ -3085,8 +3117,8 @@ packages:
   echarts@6.1.0:
     resolution: {integrity: sha512-q0yaFPggC9FUdsWH4blavRWFmxdrIodbkoKNAjJudAI6CA9gNPxHtV2RcZNEepZVlk4yvBYkOkbk6HIVpIyHZA==}
 
-  electron-to-chromium@1.5.464:
-    resolution: {integrity: sha512-nRa65aFge40viPAKxMKULIY8tcXKwKboJWNn4RoKwyWXJ6SP7BnrDGKUTzc64818jIciH0PK7LSF8QzZes19GA==}
+  electron-to-chromium@1.5.463:
+    resolution: {integrity: sha512-nVWNU6ltFjopvOdD44J4zoBkgO0M+WZiFKKFV7EjebOH9z0KNphk6bCEjplXtJofL21ARIuuwWOCsFkBVklm6w==}
 
   emittery@0.13.1:
     resolution: {integrity: sha512-DeWwawk6r5yR9jFgnDKYt4sLS0LmHJJi3ZOnb5/JdbYwj3nW+FxQnHIjhBKz8YLC7oRNPVM9NQ47I3CVx34eqQ==}
@@ -4370,8 +4402,8 @@ packages:
       nodemailer:
         optional: true
 
-  next@16.4.3:
-    resolution: {integrity: sha512-OqxKTGi9u80FydydsMNYNjnuje9Au+kvHlt2GZ//ftdpDHm1dxKqAaENoOOTX5wKzn+9vaKUNIfZeyZUuLhCnA==}
+  next@16.4.2:
+    resolution: {integrity: sha512-r+oBJojfefUjOiWkBhXgLS+igxX/7BWyK59uHnyOyplMSLtBZ+QLP3okrdYTbrfrbrmNTVWLBPaHDX9KRaIt3w==}
     engines: {node: '>=20.9.0'}
     hasBin: true
     peerDependencies:
@@ -6311,10 +6343,18 @@ snapshots:
     dependencies:
       axe-core: 4.11.0
 
-  '@krizaka/charts@0.6.0(@krizaka/ui@3.65.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)':
+  '@krizaka/auth@0.10.0(zod@4.6.7)':
+    dependencies:
+      '@krizaka/db': 0.2.0
+      '@krizaka/settings': 0.5.2(zod@4.6.7)
+      date-fns: 4.4.0
+    optionalDependencies:
+      zod: 4.6.7
+
+  '@krizaka/charts@0.6.0(@krizaka/ui@3.71.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)':
     dependencies:
       '@krizaka/intl': 0.2.1
-      '@krizaka/ui': 3.65.0(@krizaka/query@0.2.2(@types/react@19.3.0)(csstype@3.2.3)(react@19.2.4))(@krizaka/tailwind@3.65.0)(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(tailwind-merge@3.7.0)(tailwindcss@4.3.3)
+      '@krizaka/ui': 3.71.0(@krizaka/query@0.2.2(@types/react@19.3.0)(csstype@3.2.3)(react@19.2.4))(@krizaka/tailwind@3.71.0)(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(tailwind-merge@3.7.0)(tailwindcss@4.3.3)
       d3-geo: 3.1.1
       echarts: 6.1.0
       react: 19.2.4
@@ -6322,7 +6362,7 @@ snapshots:
     optionalDependencies:
       react-dom: 19.2.4(react@19.2.4)
 
-  '@krizaka/config@0.12.0(eslint-config-next@16.4.2(@typescript-eslint/parser@8.72.0(eslint@10.13.0(jiti@2.7.0)(supports-color@8.1.1))(supports-color@8.1.1)(typescript@6.0.3))(eslint@10.13.0(jiti@2.7.0)(supports-color@8.1.1))(supports-color@8.1.1)(typescript@6.0.3))(eslint@10.13.0(jiti@2.7.0)(supports-color@8.1.1))(prettier@3.9.10)(supports-color@8.1.1)(typescript@6.0.3)':
+  '@krizaka/config@0.17.0(eslint-config-next@16.4.2(@typescript-eslint/parser@8.72.0(eslint@10.13.0(jiti@2.7.0)(supports-color@8.1.1))(supports-color@8.1.1)(typescript@6.0.3))(eslint@10.13.0(jiti@2.7.0)(supports-color@8.1.1))(supports-color@8.1.1)(typescript@6.0.3))(eslint@10.13.0(jiti@2.7.0)(supports-color@8.1.1))(prettier@3.9.10)(supports-color@8.1.1)(typescript@6.0.3)':
     dependencies:
       '@eslint/js': 10.0.1(eslint@10.13.0(jiti@2.7.0)(supports-color@8.1.1))
       dependency-cruiser: 18.7.0
@@ -6340,13 +6380,17 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
+  '@krizaka/db@0.2.0': {}
+
+  '@krizaka/db@0.3.1': {}
+
   '@krizaka/fonts@0.5.0': {}
 
   '@krizaka/icons@0.1.0(react@19.2.4)':
     dependencies:
       react: 19.2.4
 
-  '@krizaka/icons@0.7.0(react@19.2.4)':
+  '@krizaka/icons@0.9.0(react@19.2.4)':
     dependencies:
       react: 19.2.4
 
@@ -6356,14 +6400,14 @@ snapshots:
 
   '@krizaka/intl@0.4.1': {}
 
-  '@krizaka/orazaka-design-system@3.4.0(@krizaka/query@0.2.2(@types/react@19.3.0)(csstype@3.2.3)(react@19.2.4))(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(next@16.4.3(@babel/core@7.29.7(supports-color@8.1.1))(@playwright/test@1.64.1)(@types/node@25.9.9)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(tailwind-merge@3.7.0)(tailwindcss@4.3.3)':
+  '@krizaka/orazaka-design-system@3.4.0(@krizaka/query@0.2.2(@types/react@19.3.0)(csstype@3.2.3)(react@19.2.4))(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(next@16.4.2(@babel/core@7.29.7(supports-color@8.1.1))(@playwright/test@1.64.1)(@types/node@25.9.9)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(tailwind-merge@3.7.0)(tailwindcss@4.3.3)':
     dependencies:
       '@krizaka/icons': 0.1.0(react@19.2.4)
       '@krizaka/orazaka-shared': 1.5.0
-      '@krizaka/tailwind': 2.10.0(@krizaka/tokens@2.10.0)(@krizaka/ui@3.65.0)(tailwindcss@4.3.3)
+      '@krizaka/tailwind': 2.10.0(@krizaka/tokens@2.10.0)(@krizaka/ui@3.71.0)(tailwindcss@4.3.3)
       '@krizaka/tokens': 2.10.0
-      '@krizaka/ui': 3.65.0(@krizaka/query@0.2.2(@types/react@19.3.0)(csstype@3.2.3)(react@19.2.4))(@krizaka/tailwind@2.10.0)(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(tailwind-merge@3.7.0)(tailwindcss@4.3.3)
-      next: 16.4.3(@babel/core@7.29.7(supports-color@8.1.1))(@playwright/test@1.64.1)(@types/node@25.9.9)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
+      '@krizaka/ui': 3.71.0(@krizaka/query@0.2.2(@types/react@19.3.0)(csstype@3.2.3)(react@19.2.4))(@krizaka/tailwind@2.10.0)(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(tailwind-merge@3.7.0)(tailwindcss@4.3.3)
+      next: 16.4.2(@babel/core@7.29.7(supports-color@8.1.1))(@playwright/test@1.64.1)(@types/node@25.9.9)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       react: 19.2.4
       react-dom: 19.2.4(react@19.2.4)
       tailwind-variants: 3.3.1(tailwind-merge@3.7.0)(tailwindcss@4.3.3)
@@ -6421,28 +6465,33 @@ snapshots:
 
   '@krizaka/realtime@0.2.1': {}
 
-  '@krizaka/tailwind@2.10.0(@krizaka/tokens@2.10.0)(@krizaka/ui@3.65.0)(tailwindcss@4.3.3)':
+  '@krizaka/settings@0.5.2(zod@4.6.7)':
+    dependencies:
+      '@krizaka/db': 0.3.1
+      zod: 4.6.7
+
+  '@krizaka/tailwind@2.10.0(@krizaka/tokens@2.10.0)(@krizaka/ui@3.71.0)(tailwindcss@4.3.3)':
     dependencies:
       '@krizaka/tokens': 2.10.0
-      '@krizaka/ui': 3.65.0(@krizaka/query@0.2.2(@types/react@19.3.0)(csstype@3.2.3)(react@19.2.4))(@krizaka/tailwind@3.65.0)(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(tailwind-merge@3.7.0)(tailwindcss@4.3.3)
+      '@krizaka/ui': 3.71.0(@krizaka/query@0.2.2(@types/react@19.3.0)(csstype@3.2.3)(react@19.2.4))(@krizaka/tailwind@3.71.0)(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(tailwind-merge@3.7.0)(tailwindcss@4.3.3)
       tailwindcss: 4.3.3
 
-  '@krizaka/tailwind@3.65.0(@krizaka/tokens@3.65.0)(@krizaka/ui@3.65.0)(tailwindcss@4.3.3)':
+  '@krizaka/tailwind@3.71.0(@krizaka/tokens@3.71.0)(@krizaka/ui@3.71.0)(tailwindcss@4.3.3)':
     dependencies:
-      '@krizaka/tokens': 3.65.0
-      '@krizaka/ui': 3.65.0(@krizaka/query@0.2.2(@types/react@19.3.0)(csstype@3.2.3)(react@19.2.4))(@krizaka/tailwind@3.65.0)(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(tailwind-merge@3.7.0)(tailwindcss@4.3.3)
+      '@krizaka/tokens': 3.71.0
+      '@krizaka/ui': 3.71.0(@krizaka/query@0.2.2(@types/react@19.3.0)(csstype@3.2.3)(react@19.2.4))(@krizaka/tailwind@3.71.0)(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(tailwind-merge@3.7.0)(tailwindcss@4.3.3)
       tailwindcss: 4.3.3
 
   '@krizaka/tokens@2.10.0': {}
 
-  '@krizaka/tokens@3.65.0': {}
+  '@krizaka/tokens@3.71.0': {}
 
-  '@krizaka/ui@3.65.0(@krizaka/query@0.2.2(@types/react@19.3.0)(csstype@3.2.3)(react@19.2.4))(@krizaka/tailwind@2.10.0)(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(tailwind-merge@3.7.0)(tailwindcss@4.3.3)':
+  '@krizaka/ui@3.71.0(@krizaka/query@0.2.2(@types/react@19.3.0)(csstype@3.2.3)(react@19.2.4))(@krizaka/tailwind@2.10.0)(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(tailwind-merge@3.7.0)(tailwindcss@4.3.3)':
     dependencies:
       '@krizaka/intl': 0.4.1
       '@krizaka/organize': 0.4.0
       '@krizaka/pacer': 0.1.0(react@19.2.4)
-      '@krizaka/tokens': 3.65.0
+      '@krizaka/tokens': 3.71.0
       '@protomaps/basemaps': 5.7.2
       '@tanstack/highlight': 1.1.0
       '@tanstack/markdown': 1.0.0(react@19.2.4)
@@ -6460,7 +6509,7 @@ snapshots:
       zod: 4.6.7
     optionalDependencies:
       '@krizaka/query': 0.2.2(@types/react@19.3.0)(csstype@3.2.3)(react@19.2.4)
-      '@krizaka/tailwind': 2.10.0(@krizaka/tokens@2.10.0)(@krizaka/ui@3.65.0)(tailwindcss@4.3.3)
+      '@krizaka/tailwind': 2.10.0(@krizaka/tokens@2.10.0)(@krizaka/ui@3.71.0)(tailwindcss@4.3.3)
       react-dom: 19.2.4(react@19.2.4)
       tailwindcss: 4.3.3
     transitivePeerDependencies:
@@ -6471,12 +6520,12 @@ snapshots:
       - tailwind-merge
       - vitest
 
-  '@krizaka/ui@3.65.0(@krizaka/query@0.2.2(@types/react@19.3.0)(csstype@3.2.3)(react@19.2.4))(@krizaka/tailwind@3.65.0)(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(tailwind-merge@3.7.0)(tailwindcss@4.3.3)':
+  '@krizaka/ui@3.71.0(@krizaka/query@0.2.2(@types/react@19.3.0)(csstype@3.2.3)(react@19.2.4))(@krizaka/tailwind@3.71.0)(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(tailwind-merge@3.7.0)(tailwindcss@4.3.3)':
     dependencies:
       '@krizaka/intl': 0.4.1
       '@krizaka/organize': 0.4.0
       '@krizaka/pacer': 0.1.0(react@19.2.4)
-      '@krizaka/tokens': 3.65.0
+      '@krizaka/tokens': 3.71.0
       '@protomaps/basemaps': 5.7.2
       '@tanstack/highlight': 1.1.0
       '@tanstack/markdown': 1.0.0(react@19.2.4)
@@ -6494,7 +6543,7 @@ snapshots:
       zod: 4.6.7
     optionalDependencies:
       '@krizaka/query': 0.2.2(@types/react@19.3.0)(csstype@3.2.3)(react@19.2.4)
-      '@krizaka/tailwind': 3.65.0(@krizaka/tokens@3.65.0)(@krizaka/ui@3.65.0)(tailwindcss@4.3.3)
+      '@krizaka/tailwind': 3.71.0(@krizaka/tokens@3.71.0)(@krizaka/ui@3.71.0)(tailwindcss@4.3.3)
       react-dom: 19.2.4(react@19.2.4)
       tailwindcss: 4.3.3
     transitivePeerDependencies:
@@ -6512,7 +6561,7 @@ snapshots:
       '@tybys/wasm-util': 0.10.4
     optional: true
 
-  '@next/env@16.4.3': {}
+  '@next/env@16.4.2': {}
 
   '@next/eslint-plugin-next@16.4.2(eslint@10.13.0(jiti@2.7.0)(supports-color@8.1.1))':
     dependencies:
@@ -6521,28 +6570,28 @@ snapshots:
     transitivePeerDependencies:
       - eslint
 
-  '@next/swc-darwin-arm64@16.4.3':
+  '@next/swc-darwin-arm64@16.4.2':
     optional: true
 
-  '@next/swc-darwin-x64@16.4.3':
+  '@next/swc-darwin-x64@16.4.2':
     optional: true
 
-  '@next/swc-linux-arm64-gnu@16.4.3':
+  '@next/swc-linux-arm64-gnu@16.4.2':
     optional: true
 
-  '@next/swc-linux-arm64-musl@16.4.3':
+  '@next/swc-linux-arm64-musl@16.4.2':
     optional: true
 
-  '@next/swc-linux-x64-gnu@16.4.3':
+  '@next/swc-linux-x64-gnu@16.4.2':
     optional: true
 
-  '@next/swc-linux-x64-musl@16.4.3':
+  '@next/swc-linux-x64-musl@16.4.2':
     optional: true
 
-  '@next/swc-win32-arm64-msvc@16.4.3':
+  '@next/swc-win32-arm64-msvc@16.4.2':
     optional: true
 
-  '@next/swc-win32-x64-msvc@16.4.3':
+  '@next/swc-win32-x64-msvc@16.4.2':
     optional: true
 
   '@nodelib/fs.scandir@2.1.5':
@@ -8163,7 +8212,7 @@ snapshots:
 
   balanced-match@4.0.4: {}
 
-  baseline-browser-mapping@2.11.32: {}
+  baseline-browser-mapping@2.11.31: {}
 
   brace-expansion@1.1.21:
     dependencies:
@@ -8184,9 +8233,9 @@ snapshots:
 
   browserslist@4.29.4:
     dependencies:
-      baseline-browser-mapping: 2.11.32
+      baseline-browser-mapping: 2.11.31
       caniuse-lite: 1.0.30001819
-      electron-to-chromium: 1.5.464
+      electron-to-chromium: 1.5.463
       node-releases: 2.0.60
       update-browserslist-db: 1.3.4(browserslist@4.29.4)
 
@@ -8452,7 +8501,7 @@ snapshots:
       tslib: 2.3.0
       zrender: 6.1.0
 
-  electron-to-chromium@1.5.464: {}
+  electron-to-chromium@1.5.463: {}
 
   emittery@0.13.1: {}
 
@@ -10280,13 +10329,13 @@ snapshots:
 
   neo-async@2.6.2: {}
 
-  next-auth@4.24.15(next@16.4.3(@babel/core@7.29.7(supports-color@8.1.1))(@playwright/test@1.64.1)(@types/node@25.9.9)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(react-dom@19.2.4(react@19.2.4))(react@19.2.4):
+  next-auth@4.24.15(next@16.4.2(@babel/core@7.29.7(supports-color@8.1.1))(@playwright/test@1.64.1)(@types/node@25.9.9)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(react-dom@19.2.4(react@19.2.4))(react@19.2.4):
     dependencies:
       '@babel/runtime': 7.29.10
       '@panva/hkdf': 1.2.1
       cookie: 0.7.2
       jose: 4.15.9
-      next: 16.4.3(@babel/core@7.29.7(supports-color@8.1.1))(@playwright/test@1.64.1)(@types/node@25.9.9)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
+      next: 16.4.2(@babel/core@7.29.7(supports-color@8.1.1))(@playwright/test@1.64.1)(@types/node@25.9.9)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       oauth: 0.9.15
       openid-client: 5.7.1
       preact: 10.29.8(preact-render-to-string@5.2.6)
@@ -10295,25 +10344,25 @@ snapshots:
       react-dom: 19.2.4(react@19.2.4)
       uuid: 11.1.1
 
-  next@16.4.3(@babel/core@7.29.7(supports-color@8.1.1))(@playwright/test@1.64.1)(@types/node@25.9.9)(react-dom@19.2.4(react@19.2.4))(react@19.2.4):
+  next@16.4.2(@babel/core@7.29.7(supports-color@8.1.1))(@playwright/test@1.64.1)(@types/node@25.9.9)(react-dom@19.2.4(react@19.2.4))(react@19.2.4):
     dependencies:
-      '@next/env': 16.4.3
+      '@next/env': 16.4.2
       '@swc/helpers': 0.5.23
-      baseline-browser-mapping: 2.11.32
+      baseline-browser-mapping: 2.11.31
       caniuse-lite: 1.0.30001819
       postcss: 8.5.23
       react: 19.2.4
       react-dom: 19.2.4(react@19.2.4)
       styled-jsx: 5.1.6(@babel/core@7.29.7(supports-color@8.1.1))(react@19.2.4)
     optionalDependencies:
-      '@next/swc-darwin-arm64': 16.4.3
-      '@next/swc-darwin-x64': 16.4.3
-      '@next/swc-linux-arm64-gnu': 16.4.3
-      '@next/swc-linux-arm64-musl': 16.4.3
-      '@next/swc-linux-x64-gnu': 16.4.3
-      '@next/swc-linux-x64-musl': 16.4.3
-      '@next/swc-win32-arm64-msvc': 16.4.3
-      '@next/swc-win32-x64-msvc': 16.4.3
+      '@next/swc-darwin-arm64': 16.4.2
+      '@next/swc-darwin-x64': 16.4.2
+      '@next/swc-linux-arm64-gnu': 16.4.2
+      '@next/swc-linux-arm64-musl': 16.4.2
+      '@next/swc-linux-x64-gnu': 16.4.2
+      '@next/swc-linux-x64-musl': 16.4.2
+      '@next/swc-win32-arm64-msvc': 16.4.2
+      '@next/swc-win32-x64-msvc': 16.4.2
       '@playwright/test': 1.64.1
       sharp: 0.35.5(@types/node@25.9.9)
     transitivePeerDependencies:

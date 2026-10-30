@@ -1,7 +1,18 @@
 import { StudioApi } from "@/services/studio.api";
 import { ConsentRequiredError } from "@/features/studio/consent/consent";
 
-const installation = { id: "inst-1", studioKey: "guided-journaling", label: "Guided journaling", iconKey: "heart", pinnedVersion: "1.0.0", latestVersion: "1.0.0", status: "ACTIVE", config: {}, installedAt: "2026-10-20T12:00:00Z", lastRunAt: null };
+const installation = {
+  id: "inst-1",
+  studioKey: "guided-journaling",
+  label: "Guided journaling",
+  iconKey: "heart",
+  pinnedVersion: "1.0.0",
+  latestVersion: "1.0.0",
+  status: "ACTIVE",
+  config: {},
+  installedAt: "2026-10-20T12:00:00Z",
+  lastRunAt: null,
+};
 
 function answer(status: number, body: unknown) {
   global.fetch = jest.fn().mockResolvedValue({
@@ -15,10 +26,19 @@ function answer(status: number, body: unknown) {
 
 describe("StudioApi.install and the consent a wellbeing Studio requires (451)", () => {
   it("surfaces the server's 451 as the consent step: version and statement, verbatim", async () => {
-    answer(451, { status: "consent_required", message: "refused", studioKey: "guided-journaling", consentVersion: "1.0", statement: "Ce Studio enregistre ce que vous y écrivez." });
+    answer(451, {
+      status: "consent_required",
+      message: "refused",
+      studioKey: "guided-journaling",
+      consentVersion: "1.0",
+      statement: "Ce Studio enregistre ce que vous y écrivez.",
+    });
     const failure = await StudioApi.install("guided-journaling", {}).catch((error: unknown) => error);
     expect(failure).toBeInstanceOf(ConsentRequiredError);
-    expect((failure as ConsentRequiredError).requirement).toEqual({ version: "1.0", statement: "Ce Studio enregistre ce que vous y écrivez." });
+    expect((failure as ConsentRequiredError).requirement).toEqual({
+      version: "1.0",
+      statement: "Ce Studio enregistre ce que vous y écrivez.",
+    });
   });
 
   it("leaves any other failure alone (a 451 without a statement is not a consent step)", async () => {
@@ -33,7 +53,12 @@ describe("StudioApi.install and the consent a wellbeing Studio requires (451)", 
     await StudioApi.install("guided-journaling", {}, { consentVersion: "1.0", ageAttested: true, region: "CA-QC" });
     const [url, init] = jest.mocked(global.fetch).mock.calls[0];
     expect(url).toBe("/api/v1/studios/guided-journaling/installations");
-    expect(JSON.parse((init as RequestInit).body as string)).toEqual({ config: {}, consentVersion: "1.0", ageAttested: true, region: "CA-QC" });
+    expect(JSON.parse((init as RequestInit).body as string)).toEqual({
+      config: {},
+      consentVersion: "1.0",
+      ageAttested: true,
+      region: "CA-QC",
+    });
   });
 
   it("sends no consent block when none is given (a Studio that asks none stays as it was)", async () => {
@@ -49,16 +74,41 @@ describe("StudioApi.install and the consent a wellbeing Studio requires (451)", 
   });
 
   it("asks for the statement in the person's language and carries the server's regions with their lines", async () => {
-    const regions = [{ region: "FR", label: "3114", contact: "3114", availability: "24h/24", sourceUrl: "https://3114.fr/", verifiedOn: "2026-10-20" }];
-    answer(451, { status: "consent_required", consentVersion: "2.0", statement: "This Studio records what you write.", regions });
+    const regions = [
+      {
+        region: "FR",
+        label: "3114",
+        contact: "3114",
+        availability: "24h/24",
+        sourceUrl: "https://3114.fr/",
+        verifiedOn: "2026-10-20",
+      },
+    ];
+    answer(451, {
+      status: "consent_required",
+      consentVersion: "2.0",
+      statement: "This Studio records what you write.",
+      regions,
+    });
     const failure = await StudioApi.install("guided-journaling", {}, undefined, "en").catch((error: unknown) => error);
-    expect((jest.mocked(global.fetch).mock.calls[0][0])).toBe("/api/v1/studios/guided-journaling/installations?locale=en");
-    expect((failure as ConsentRequiredError).requirement).toEqual({ version: "2.0", statement: "This Studio records what you write.", regions });
+    expect(jest.mocked(global.fetch).mock.calls[0][0]).toBe(
+      "/api/v1/studios/guided-journaling/installations?locale=en",
+    );
+    expect((failure as ConsentRequiredError).requirement).toEqual({
+      version: "2.0",
+      statement: "This Studio records what you write.",
+      regions,
+    });
   });
 
   it("erases all the wellbeing data with one DELETE on the pack, and one entry with a DELETE on the run", async () => {
     answer(200, { packKey: "bien-etre", entries: 2, installations: 1, jobs: 2 });
-    await expect(StudioApi.eraseWellbeingData("bien-etre")).resolves.toEqual({ packKey: "bien-etre", entries: 2, installations: 1, jobs: 2 });
+    await expect(StudioApi.eraseWellbeingData("bien-etre")).resolves.toEqual({
+      packKey: "bien-etre",
+      entries: 2,
+      installations: 1,
+      jobs: 2,
+    });
     let [url, init] = jest.mocked(global.fetch).mock.calls[0];
     expect(url).toBe("/api/v1/studios/packs/bien-etre/my-data");
     expect((init as RequestInit).method).toBe("DELETE");

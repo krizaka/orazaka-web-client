@@ -23,7 +23,7 @@ import {
 async function request<T>(path: string, init?: RequestInit): Promise<T> {
   const response = await fetch(path, {
     ...init,
-    headers: { "Content-Type": "application/json", ...(init?.headers ?? {}) },
+    headers: { "Content-Type": "application/json", ...init?.headers },
   });
   if (!response.ok) {
     const detail = await response.text().catch(() => "");
@@ -73,9 +73,7 @@ export const StudioAdminApi = {
 
   /** Every version of a Studio, drafts included — the Builder's version list. */
   listVersions: async (studioKey: string): Promise<BlueprintVersion[]> => {
-    const data = await request<unknown[]>(
-      `/api/v1/studios/${encodeURIComponent(studioKey)}/blueprints`,
-    );
+    const data = await request<unknown[]>(`/api/v1/studios/${encodeURIComponent(studioKey)}/blueprints`);
     return (data ?? []).map((version) => BlueprintVersionSchema.parse(version));
   },
 
@@ -85,15 +83,11 @@ export const StudioAdminApi = {
    * The server validates the graph on write, so an invalid blueprint is refused
    * while the author is still looking at it rather than at publish time.
    */
-  saveDraft: async (
-    studioKey: string,
-    version: string,
-    draft: BlueprintDraft,
-  ): Promise<void> => {
-    await request<void>(
-      `/api/v1/studios/${encodeURIComponent(studioKey)}/blueprints/${encodeURIComponent(version)}`,
-      { method: "PUT", body: JSON.stringify(draft) },
-    );
+  saveDraft: async (studioKey: string, version: string, draft: BlueprintDraft): Promise<void> => {
+    await request<void>(`/api/v1/studios/${encodeURIComponent(studioKey)}/blueprints/${encodeURIComponent(version)}`, {
+      method: "PUT",
+      body: JSON.stringify(draft),
+    });
   },
 
   /** Publishes a draft, minting it as the Studio's latest version. */
@@ -106,10 +100,9 @@ export const StudioAdminApi = {
 
   /** Deprecates a version without deleting it — runs still reference what they ran. */
   deprecate: async (studioKey: string, version: string): Promise<void> => {
-    await request<void>(
-      `/api/v1/studios/${encodeURIComponent(studioKey)}/blueprints/${encodeURIComponent(version)}`,
-      { method: "DELETE" },
-    );
+    await request<void>(`/api/v1/studios/${encodeURIComponent(studioKey)}/blueprints/${encodeURIComponent(version)}`, {
+      method: "DELETE",
+    });
   },
 
   /** How the marketplace is actually performing — installs, runs, success rate. */
@@ -119,11 +112,7 @@ export const StudioAdminApi = {
 
   /** The capability keys a blueprint step may name, for the feature-key picker. */
   featureKeys: async (): Promise<string[]> => {
-    const data = await request<Array<{ id?: string; featureKey?: string }>>(
-      "/api/v1/features/all",
-    );
-    return (data ?? [])
-      .map((feature) => feature.featureKey ?? feature.id ?? "")
-      .filter((key) => key !== "");
+    const data = await request<Array<{ id?: string; featureKey?: string }>>("/api/v1/features/all");
+    return (data ?? []).map((feature) => feature.featureKey ?? feature.id ?? "").filter((key) => key !== "");
   },
 } as const;

@@ -23,12 +23,19 @@ export interface DesktopDictionary {
   phone: PhoneWords;
   /** The videos the web journeys recorded (`AppVideosSection`, krizaka/.github#315); `items` is keyed by `<platform>-<flow>` of the manifest. */
   videos: VideosWords;
-  mobile: { title: string; soon: string; ios: { button: string; soon: string }; android: { button: string; soon: string } };
+  mobile: {
+    title: string;
+    soon: string;
+    ios: { button: string; soon: string };
+    android: { button: string; soon: string };
+  };
   download: {
     button: string;
     /** `{size}` is the .dmg's size. */
     facts: string;
     testBuild: string;
+    /** Shown instead of the facts while the Mac download is switched off (`APP_DOWNLOADS_MAC_ENABLED`). */
+    disabled: string;
     version: string;
     verify: string;
     verifyBody: string;
@@ -38,9 +45,19 @@ export interface DesktopDictionary {
     unreadable: string;
     releases: string;
   };
-  firstLaunch: { title: string; lead: string; steps: Titled[]; damaged: { summary: string; body: string; terminal: string } };
+  firstLaunch: {
+    title: string;
+    lead: string;
+    steps: Titled[];
+    damaged: { summary: string; body: string; terminal: string };
+  };
   modes: { title: string; lead: string; items: Titled[] };
-  services: { title: string; lead: string; head: { service: string; runs: string; does: string }; rows: { name: string; runs: string; does: string }[] };
+  services: {
+    title: string;
+    lead: string;
+    head: { service: string; runs: string; does: string };
+    rows: { name: string; runs: string; does: string }[];
+  };
   trouble: { title: string; items: (Titled & { code?: string })[] };
   requirements: { title: string; items: string[] };
 }
@@ -49,7 +66,8 @@ export const desktop: Record<Locale, DesktopDictionary> = {
   en: {
     meta: {
       title: "Orazaka for Mac — Orazaka",
-      description: "Run Orazaka on your Mac, or connect it to your workspace: a control panel in the menu bar, and access only to the folders you choose. Apple Silicon, macOS 14+.",
+      description:
+        "Run Orazaka on your Mac, or connect it to your workspace: a control panel in the menu bar, and access only to the folders you choose. Apple Silicon, macOS 14+.",
     },
     hero: {
       eyebrow: "Orazaka for Mac",
@@ -72,6 +90,7 @@ export const desktop: Record<Locale, DesktopDictionary> = {
     download: {
       button: "Download for Mac",
       facts: "Apple Silicon · macOS 14+ · {size}",
+      disabled: "In testing — not distributed yet.",
       testBuild: "A test build: not yet signed by Apple — the first launch takes one extra step.",
       version: "Version {version}",
       verify: "Verify the download",
@@ -87,7 +106,10 @@ export const desktop: Record<Locale, DesktopDictionary> = {
       lead: "The app is not signed by Apple yet, so macOS asks once.",
       steps: [
         { title: "Drag to Applications", body: "Open the .dmg and drag Orazaka onto the Applications folder." },
-        { title: "Right-click, then Open", body: "In Applications, right-click Orazaka and choose Open — a plain double-click is blocked." },
+        {
+          title: "Right-click, then Open",
+          body: "In Applications, right-click Orazaka and choose Open — a plain double-click is blocked.",
+        },
         { title: "Confirm Open", body: "macOS asks if you are sure: choose Open. It never asks again." },
       ],
       damaged: {
@@ -100,9 +122,18 @@ export const desktop: Record<Locale, DesktopDictionary> = {
       title: "Two ways to use it",
       lead: "Switch in the app's settings; your folders stay yours in both.",
       items: [
-        { title: "Connected to your workspace", body: "The app opens your hosted Orazaka (dev.orazaka.com by default, https only). You sign in on the Orazaka page itself — the app never sees or stores your password." },
-        { title: "Everything on this Mac", body: "Start, stop and check the local engine from the panel. Models run on your Mac's own chip (Apple Silicon); nothing leaves the machine unless you connect a cloud model." },
-        { title: "Only the folders you choose", body: "Grant folders with the macOS picker, preview their files, drop files in, revoke any time. Your home folder, system folders and ~/.ssh can never be granted." },
+        {
+          title: "Connected to your workspace",
+          body: "The app opens your hosted Orazaka (dev.orazaka.com by default, https only). You sign in on the Orazaka page itself — the app never sees or stores your password.",
+        },
+        {
+          title: "Everything on this Mac",
+          body: "Start, stop and check the local engine from the panel. Models run on your Mac's own chip (Apple Silicon); nothing leaves the machine unless you connect a cloud model.",
+        },
+        {
+          title: "Only the folders you choose",
+          body: "Grant folders with the macOS picker, preview their files, drop files in, revoke any time. Your home folder, system folders and ~/.ssh can never be granted.",
+        },
       ],
     },
     services: {
@@ -110,34 +141,64 @@ export const desktop: Record<Locale, DesktopDictionary> = {
       lead: "« Start » runs the orazaka CLI on your Mac; the panel shows each service's state.",
       head: { service: "Service", runs: "Runs in", does: "What it does" },
       rows: [
-        { name: "PostgreSQL", runs: "Docker", does: "Your data: conversations, jobs, settings, and the search index of your documents." },
+        {
+          name: "PostgreSQL",
+          runs: "Docker",
+          does: "Your data: conversations, jobs, settings, and the search index of your documents.",
+        },
         { name: "Redis", runs: "Docker", does: "Short-lived cache and sessions." },
-        { name: "RabbitMQ", runs: "Docker", does: "The queue that hands long jobs (images, video, voice) to the workers." },
+        {
+          name: "RabbitMQ",
+          runs: "Docker",
+          does: "The queue that hands long jobs (images, video, voice) to the workers.",
+        },
         { name: "Ollama", runs: "Your Mac", does: "The text models, on the Mac's own chip." },
         { name: "Image engine", runs: "Your Mac", does: "Image generation (stable-diffusion.cpp or LocalAI)." },
         { name: "Media worker", runs: "Your Mac", does: "Runs image, video and voice jobs from the queue." },
-        { name: "Engine API", runs: "Your Mac", does: "The router every request goes through: security, rules, the right model." },
+        {
+          name: "Engine API",
+          runs: "Your Mac",
+          does: "The router every request goes through: security, rules, the right model.",
+        },
         { name: "Workspace", runs: "Your Mac", does: "The web app, opened in the app's window (Open workspace)." },
       ],
     },
     trouble: {
       title: "If something goes wrong",
       items: [
-        { title: "Run doctor", body: "In the panel, Run doctor checks your Mac (Node.js, the chip) and whether each service answers, then lists what to fix.", code: "orazaka doctor" },
-        { title: "Read the logs", body: "The panel shows the live output; for one service, open its logs.", code: "orazaka logs --service router" },
+        {
+          title: "Run doctor",
+          body: "In the panel, Run doctor checks your Mac (Node.js, the chip) and whether each service answers, then lists what to fix.",
+          code: "orazaka doctor",
+        },
+        {
+          title: "Read the logs",
+          body: "The panel shows the live output; for one service, open its logs.",
+          code: "orazaka logs --service router",
+        },
         { title: "Docker is not running", body: "Start OrbStack, Colima or Docker Desktop, then Start again." },
-        { title: "Node.js is missing", body: "This build needs Node.js 22 or later on the Mac.", code: "brew install node" },
+        {
+          title: "Node.js is missing",
+          body: "This build needs Node.js 22 or later on the Mac.",
+          code: "brew install node",
+        },
       ],
     },
     requirements: {
       title: "What you need",
-      items: ["A Mac with Apple Silicon, macOS 14 or later.", "Node.js 22 or later.", "For everything on this Mac: Docker (OrbStack, Colima or Docker Desktop).", "No Windows or Linux build yet: on those, run Orazaka on a server (/docs/self-hosting)."],
+      items: [
+        "A Mac with Apple Silicon, macOS 14 or later.",
+        "Node.js 22 or later.",
+        "For everything on this Mac: Docker (OrbStack, Colima or Docker Desktop).",
+        "No Windows or Linux build yet: on those, run Orazaka on a server (/docs/self-hosting).",
+      ],
     },
   },
   fr: {
     meta: {
       title: "Orazaka pour Mac — Orazaka",
-      description: "Faites tourner Orazaka sur votre Mac, ou reliez-le à votre espace : un panneau dans la barre des menus, et l'accès aux seuls dossiers que vous choisissez. Apple Silicon, macOS 14+.",
+      description:
+        "Faites tourner Orazaka sur votre Mac, ou reliez-le à votre espace : un panneau dans la barre des menus, et l'accès aux seuls dossiers que vous choisissez. Apple Silicon, macOS 14+.",
     },
     hero: {
       eyebrow: "Orazaka pour Mac",
@@ -155,11 +216,12 @@ export const desktop: Record<Locale, DesktopDictionary> = {
       title: "Sur votre téléphone",
       soon: "Bientôt sur iPhone et Android",
       ios: { button: "Télécharger sur l'App Store", soon: "iPhone : bientôt" },
-      android: { button: "Disponible sur Google Play", soon: "Android : bientôt" },
+      android: { button: "Obtenir sur Google Play", soon: "Android : bientôt" },
     },
     download: {
       button: "Télécharger pour Mac",
       facts: "Apple Silicon · macOS 14+ · {size}",
+      disabled: "En test — pas encore distribuée.",
       testBuild: "Une version de test : pas encore signée par Apple — le premier lancement demande une étape de plus.",
       version: "Version {version}",
       verify: "Vérifier le téléchargement",
@@ -175,8 +237,14 @@ export const desktop: Record<Locale, DesktopDictionary> = {
       lead: "L'app n'est pas encore signée par Apple : macOS demande une fois.",
       steps: [
         { title: "Glisser dans Applications", body: "Ouvrez le .dmg et glissez Orazaka sur le dossier Applications." },
-        { title: "Clic droit, puis Ouvrir", body: "Dans Applications, clic droit sur Orazaka, puis Ouvrir — un simple double-clic est bloqué." },
-        { title: "Confirmer Ouvrir", body: "macOS demande si vous êtes sûr : choisissez Ouvrir. Il ne redemandera plus." },
+        {
+          title: "Clic droit, puis Ouvrir",
+          body: "Dans Applications, clic droit sur Orazaka, puis Ouvrir — un simple double-clic est bloqué.",
+        },
+        {
+          title: "Confirmer Ouvrir",
+          body: "macOS demande si vous êtes sûr : choisissez Ouvrir. Il ne redemandera plus.",
+        },
       ],
       damaged: {
         summary: "Si macOS dit que l'app est endommagée",
@@ -188,9 +256,18 @@ export const desktop: Record<Locale, DesktopDictionary> = {
       title: "Deux façons de l'utiliser",
       lead: "Changez dans les réglages de l'app ; vos dossiers restent à vous dans les deux cas.",
       items: [
-        { title: "Relié à votre espace", body: "L'app ouvre votre Orazaka hébergé (dev.orazaka.com par défaut, https seulement). Vous vous connectez sur la page d'Orazaka elle-même — l'app ne voit ni ne garde votre mot de passe." },
-        { title: "Tout sur ce Mac", body: "Démarrez, arrêtez et vérifiez le moteur local depuis le panneau. Les modèles tournent sur la puce du Mac (Apple Silicon) ; rien ne sort de la machine, sauf si vous branchez un modèle cloud." },
-        { title: "Seulement les dossiers choisis", body: "Accordez des dossiers avec le sélecteur de macOS, prévisualisez leurs fichiers, déposez-en, retirez l'accès quand vous voulez. Votre dossier personnel, les dossiers système et ~/.ssh ne peuvent jamais être accordés." },
+        {
+          title: "Relié à votre espace",
+          body: "L'app ouvre votre Orazaka hébergé (dev.orazaka.com par défaut, https seulement). Vous vous connectez sur la page d'Orazaka elle-même — l'app ne voit ni ne garde votre mot de passe.",
+        },
+        {
+          title: "Tout sur ce Mac",
+          body: "Démarrez, arrêtez et vérifiez le moteur local depuis le panneau. Les modèles tournent sur la puce du Mac (Apple Silicon) ; rien ne sort de la machine, sauf si vous branchez un modèle cloud.",
+        },
+        {
+          title: "Seulement les dossiers choisis",
+          body: "Accordez des dossiers avec le sélecteur de macOS, prévisualisez leurs fichiers, déposez-en, retirez l'accès quand vous voulez. Votre dossier personnel, les dossiers système et ~/.ssh ne peuvent jamais être accordés.",
+        },
       ],
     },
     services: {
@@ -198,28 +275,69 @@ export const desktop: Record<Locale, DesktopDictionary> = {
       lead: "« Démarrer » lance le CLI orazaka sur votre Mac ; le panneau montre l'état de chaque service.",
       head: { service: "Service", runs: "Tourne dans", does: "Ce qu'il fait" },
       rows: [
-        { name: "PostgreSQL", runs: "Docker", does: "Vos données : conversations, tâches, réglages, et l'index de recherche de vos documents." },
+        {
+          name: "PostgreSQL",
+          runs: "Docker",
+          does: "Vos données : conversations, tâches, réglages, et l'index de recherche de vos documents.",
+        },
         { name: "Redis", runs: "Docker", does: "Cache court et sessions." },
-        { name: "RabbitMQ", runs: "Docker", does: "La file qui confie les longues tâches (images, vidéo, voix) aux workers." },
+        {
+          name: "RabbitMQ",
+          runs: "Docker",
+          does: "La file qui confie les longues tâches (images, vidéo, voix) aux workers.",
+        },
         { name: "Ollama", runs: "Votre Mac", does: "Les modèles de texte, sur la puce du Mac." },
-        { name: "Moteur d'images", runs: "Votre Mac", does: "La génération d'images (stable-diffusion.cpp ou LocalAI)." },
-        { name: "Worker média", runs: "Votre Mac", does: "Exécute les tâches d'image, de vidéo et de voix de la file." },
-        { name: "API du moteur", runs: "Votre Mac", does: "Le routeur par lequel passe chaque requête : sécurité, règles, le bon modèle." },
-        { name: "Espace de travail", runs: "Votre Mac", does: "L'app web, ouverte dans la fenêtre de l'app (Ouvrir l'espace)." },
+        {
+          name: "Moteur d'images",
+          runs: "Votre Mac",
+          does: "La génération d'images (stable-diffusion.cpp ou LocalAI).",
+        },
+        {
+          name: "Worker média",
+          runs: "Votre Mac",
+          does: "Exécute les tâches d'image, de vidéo et de voix de la file.",
+        },
+        {
+          name: "API du moteur",
+          runs: "Votre Mac",
+          does: "Le routeur par lequel passe chaque requête : sécurité, règles, le bon modèle.",
+        },
+        {
+          name: "Espace de travail",
+          runs: "Votre Mac",
+          does: "L'app web, ouverte dans la fenêtre de l'app (Ouvrir l'espace).",
+        },
       ],
     },
     trouble: {
       title: "Si quelque chose ne va pas",
       items: [
-        { title: "Lancer le diagnostic", body: "Dans le panneau, le diagnostic vérifie votre Mac (Node.js, la puce) et si chaque service répond, puis liste quoi corriger.", code: "orazaka doctor" },
-        { title: "Lire les journaux", body: "Le panneau montre la sortie en direct ; pour un service, ouvrez ses journaux.", code: "orazaka logs --service router" },
+        {
+          title: "Lancer le diagnostic",
+          body: "Dans le panneau, le diagnostic vérifie votre Mac (Node.js, la puce) et si chaque service répond, puis liste quoi corriger.",
+          code: "orazaka doctor",
+        },
+        {
+          title: "Lire les journaux",
+          body: "Le panneau montre la sortie en direct ; pour un service, ouvrez ses journaux.",
+          code: "orazaka logs --service router",
+        },
         { title: "Docker ne tourne pas", body: "Lancez OrbStack, Colima ou Docker Desktop, puis Démarrer à nouveau." },
-        { title: "Node.js manque", body: "Cette version demande Node.js 22 ou plus sur le Mac.", code: "brew install node" },
+        {
+          title: "Node.js manque",
+          body: "Cette version demande Node.js 22 ou plus sur le Mac.",
+          code: "brew install node",
+        },
       ],
     },
     requirements: {
       title: "Ce qu'il vous faut",
-      items: ["Un Mac Apple Silicon, macOS 14 ou plus.", "Node.js 22 ou plus.", "Pour tout faire sur ce Mac : Docker (OrbStack, Colima ou Docker Desktop).", "Pas encore de version Windows ou Linux : sur ces systèmes, faites tourner Orazaka sur un serveur (/docs/self-hosting)."],
+      items: [
+        "Un Mac Apple Silicon, macOS 14 ou plus.",
+        "Node.js 22 ou plus.",
+        "Pour tout faire sur ce Mac : Docker (OrbStack, Colima ou Docker Desktop).",
+        "Pas encore de version Windows ou Linux : sur ces systèmes, faites tourner Orazaka sur un serveur (/docs/self-hosting).",
+      ],
     },
   },
 };

@@ -9,6 +9,7 @@ import { ChatMessage as ChatMessageType } from "@/core/types/chat.types";
 import { useTranslation } from "@/core/context/LocaleContext";
 
 import { cn } from "@krizaka/ui/cn";
+import { ControlBadge } from "./ControlBadge";
 import { GenUiAnswer, hasGenUi } from "./GenUiAnswer";
 
 interface Props {
@@ -19,27 +20,19 @@ interface Props {
 }
 
 const MarkdownH1 = ({ children }: { children?: React.ReactNode }) => (
-  <h1 className="text-base font-semibold mt-3 mb-1 text-fg">
-    {children}
-  </h1>
+  <h1 className="text-base font-semibold mt-3 mb-1 text-fg">{children}</h1>
 );
 
 const MarkdownH2 = ({ children }: { children?: React.ReactNode }) => (
-  <h2 className="text-[13px] font-semibold mt-3 mb-1 text-fg">
-    {children}
-  </h2>
+  <h2 className="text-[13px] font-semibold mt-3 mb-1 text-fg">{children}</h2>
 );
 
 const MarkdownH3 = ({ children }: { children?: React.ReactNode }) => (
-  <h3 className="text-[12px] font-semibold mt-2 mb-1 text-fg">
-    {children}
-  </h3>
+  <h3 className="text-[12px] font-semibold mt-2 mb-1 text-fg">{children}</h3>
 );
 
 const MarkdownP = ({ children }: { children?: React.ReactNode }) => (
-  <p className="mb-2 last:mb-0 leading-relaxed break-words whitespace-pre-wrap">
-    {children}
-  </p>
+  <p className="mb-2 last:mb-0 leading-relaxed break-words whitespace-pre-wrap">{children}</p>
 );
 
 const markdownComponents = {
@@ -47,26 +40,17 @@ const markdownComponents = {
   h2: MarkdownH2,
   h3: MarkdownH3,
   p: MarkdownP,
-  ul: ({ children }: { children?: React.ReactNode }) => (
-    <ul className="list-disc pl-5 mb-2 space-y-1">{children}</ul>
-  ),
+  ul: ({ children }: { children?: React.ReactNode }) => <ul className="list-disc pl-5 mb-2 space-y-1">{children}</ul>,
   ol: ({ children }: { children?: React.ReactNode }) => (
     <ol className="list-decimal pl-5 mb-2 space-y-1">{children}</ol>
   ),
   li: ({ children }: { children?: React.ReactNode }) => <li className="mb-0.5">{children}</li>,
   strong: ({ children }: { children?: React.ReactNode }) => (
-    <strong className="font-semibold text-fg">
-      {children}
-    </strong>
+    <strong className="font-semibold text-fg">{children}</strong>
   ),
   em: ({ children }: { children?: React.ReactNode }) => <em className="italic">{children}</em>,
   a: ({ href, children }: { href?: string; children?: React.ReactNode }) => (
-    <a
-      href={href}
-      target="_blank"
-      rel="noopener noreferrer"
-      className="text-accent hover:underline break-all"
-    >
+    <a href={href} target="_blank" rel="noopener noreferrer" className="text-accent hover:underline break-all">
       {children}
     </a>
   ),
@@ -78,9 +62,7 @@ const markdownComponents = {
   code: ({ className, children }: { className?: string; children?: React.ReactNode }) => {
     const isInline = !className;
     return isInline ? (
-      <code className="bg-surface-3 rounded px-1 py-0.5 font-mono text-[11px] text-fg">
-        {children}
-      </code>
+      <code className="bg-surface-3 rounded px-1 py-0.5 font-mono text-[11px] text-fg">{children}</code>
     ) : (
       <code className={className}>{children}</code>
     );
@@ -94,20 +76,14 @@ const markdownComponents = {
 
 const ContentText: React.FC<Readonly<{ content: string }>> = ({ content }) => (
   <div className="max-w-none text-fg">
-    <ReactMarkdown components={markdownComponents}>
-      {content}
-    </ReactMarkdown>
+    <ReactMarkdown components={markdownComponents}>{content}</ReactMarkdown>
   </div>
 );
 
 const ContentImage: React.FC<{ content: string }> = ({ content }) => (
   <div className="mt-1 rounded-xl overflow-hidden border border-border-subtle bg-surface-2 max-w-sm shadow-sm transition-all duration-200">
     {/* eslint-disable-next-line @next/next/no-img-element */}
-    <img
-      src={content}
-      alt="Generated Asset"
-      className="w-full object-contain max-h-[300px]"
-    />
+    <img src={content} alt="Generated Asset" className="w-full object-contain max-h-[300px]" />
   </div>
 );
 
@@ -184,18 +160,13 @@ export const ChatMessage: React.FC<Props> = ({ message, index = 0, streaming = f
       }}
       className={cn("flex w-full mb-4", isUser ? "justify-end" : "justify-start")}
     >
-      <div
-        className={cn(
-          "flex max-w-[75%] gap-3 items-start",
-          isUser ? "flex-row-reverse" : "flex-row"
-        )}
-      >
+      <div className={cn("flex max-w-[75%] gap-3 items-start", isUser ? "flex-row-reverse" : "flex-row")}>
         <figure
           className={cn(
             "h-9 w-9 rounded-2xl flex items-center justify-center text-[11px] font-bold border select-none flex-shrink-0 transition-colors duration-200",
             isUser
               ? "bg-accent-soft border-accent/20 text-accent"
-              : "bg-surface-2 border-border-subtle text-fg-secondary"
+              : "bg-surface-2 border-border-subtle text-fg-secondary",
           )}
         >
           {isUser ? t.chat.user[0] : <SentinelMini size={18} />}
@@ -206,7 +177,7 @@ export const ChatMessage: React.FC<Props> = ({ message, index = 0, streaming = f
             "p-4 rounded-2xl border text-[13px] leading-[1.7] text-fg transition-shadow duration-200",
             isUser
               ? "bg-accent-soft border-accent/10 rounded-tr-md"
-              : "bg-surface-1 border-border-subtle rounded-tl-md"
+              : "bg-surface-1 border-border-subtle rounded-tl-md",
           )}
         >
           {message.attachment?.url ? (
@@ -220,6 +191,7 @@ export const ChatMessage: React.FC<Props> = ({ message, index = 0, streaming = f
             </figure>
           ) : null}
           {renderContent()}
+          {isUser ? null : <ControlBadge message={message} streaming={streaming} />}
           <span className="text-[10px] text-fg-muted block mt-2 text-right select-none tabular-nums">
             {format(message.timestamp, "HH:mm")}
           </span>

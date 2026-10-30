@@ -21,7 +21,15 @@ import { mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { setHours, setMinutes, startOfDay } from "date-fns";
-import { ERIC, PREPARED, RECORDED_DOCUMENT, RECORDED_VIDEO, RECORDED_VISUAL, RECORDED_VOICE, SHOWCASE_VISUAL } from "./tour/eric.mjs";
+import {
+  ERIC,
+  PREPARED,
+  RECORDED_DOCUMENT,
+  RECORDED_VIDEO,
+  RECORDED_VISUAL,
+  RECORDED_VOICE,
+  SHOWCASE_VISUAL,
+} from "./tour/eric.mjs";
 import { askRecordedQuestion } from "./tour/chat-journey.mjs";
 import { DEMO_LEASE } from "./tour/documents.mjs";
 
@@ -50,7 +58,12 @@ try {
   console.error("✗ Playwright is missing: npm install, then npx playwright install chromium.");
   process.exit(2);
 }
-if (!(await fetch(`${BASE}/login`).then((r) => r.ok, () => false))) {
+if (
+  !(await fetch(`${BASE}/login`).then(
+    (r) => r.ok,
+    () => false,
+  ))
+) {
   console.error(`✗ Nothing answers at ${BASE}: start the web client (npm run start) or set ORAZAKA_URL.`);
   process.exit(2);
 }
@@ -93,7 +106,9 @@ async function signIn() {
   await page.fill('input[type="password"]', PASSWORD);
   await page.click('button[type="submit"]');
   await page.waitForURL(`${BASE}/`, { timeout: 60_000 }).catch(() => {
-    throw new Error(`Sign-in failed for ${LOGIN}: run \`orazaka demo seed\` first (or set TOUR_LOGIN / TOUR_PASSWORD).`);
+    throw new Error(
+      `Sign-in failed for ${LOGIN}: run \`orazaka demo seed\` first (or set TOUR_LOGIN / TOUR_PASSWORD).`,
+    );
   });
   return { ctx, page };
 }
@@ -101,7 +116,12 @@ async function signIn() {
 /** The turn is over when the composer is editable again (ERR-126), then when the streamed text settles. */
 async function awaitAnswer(page, minLength) {
   const composer = (locked) =>
-    page.waitForFunction((l) => document.querySelector("textarea")?.disabled === l, locked, { timeout: locked ? 5_000 : 180_000, polling: 250 }).catch(() => {});
+    page
+      .waitForFunction((l) => document.querySelector("textarea")?.disabled === l, locked, {
+        timeout: locked ? 5_000 : 180_000,
+        polling: 250,
+      })
+      .catch(() => {});
   await composer(true);
   await composer(false);
   let last = "";
@@ -185,7 +205,10 @@ async function latestRun(studioKey) {
 /** A run screen until its result is on screen; the wait is cut. */
 async function awaitRun(page, cut) {
   cut.from();
-  await page.getByText(/Run finished|Exécution terminée/).first().waitFor({ timeout: 600_000 });
+  await page
+    .getByText(/Run finished|Exécution terminée/)
+    .first()
+    .waitFor({ timeout: 600_000 });
   await settle(page, 300);
   cut.to();
 }
@@ -253,8 +276,14 @@ const CLIPS = {
       await field.scrollIntoViewIfNeeded();
       await field.click();
       await field.pressSequentially(RECORDED_VIDEO, { delay: 5 });
-      await page.locator("#studio-run-model").selectOption("wan2-2-t2v-a14b").catch(() => {});
-      await page.locator("#studio-run-aspect").selectOption("16:9").catch(() => {});
+      await page
+        .locator("#studio-run-model")
+        .selectOption("wan2-2-t2v-a14b")
+        .catch(() => {});
+      await page
+        .locator("#studio-run-aspect")
+        .selectOption("16:9")
+        .catch(() => {});
       await pause(page, 700);
       await page.getByRole("button", { name: /^Run$/ }).click();
       await page.waitForURL(/\/studios\/runs\//, { timeout: 30_000 });
@@ -277,9 +306,15 @@ const CLIPS = {
       await page.getByRole("radio", { name: /^All trades$/ }).click();
       await settle(page, 1200);
       await glide(page, 520, 1800);
-      await page.getByText(/^Compliance Check$/).first().hover();
+      await page
+        .getByText(/^Compliance Check$/)
+        .first()
+        .hover();
       await pause(page, 1200);
-      await page.getByText(/^Compliance Check$/).first().click();
+      await page
+        .getByText(/^Compliance Check$/)
+        .first()
+        .click();
       await page.waitForURL(/\/studios\/compliance-check/);
       await settle(page, 2600);
       await glide(page, 400, 1600);
@@ -350,7 +385,10 @@ const CLIPS = {
       await settle(page, 300);
       cut.to();
       await pause(page, 1800);
-      await page.getByRole("button", { name: /^Result/ }).first().click();
+      await page
+        .getByRole("button", { name: /^Result/ })
+        .first()
+        .click();
       cut.from();
       await page.getByRole("dialog").waitFor({ timeout: 15_000 });
       await settle(page, 300);
@@ -403,20 +441,84 @@ async function record(id, state) {
   const source = await video.path();
 
   const target = path.join(OUT, id);
-  const spans = cuts.filter((c) => c.to).map((c) => `between(t,${(c.from - start).toFixed(2)},${(c.to - start).toFixed(2)})`);
+  const spans = cuts
+    .filter((c) => c.to)
+    .map((c) => `between(t,${(c.from - start).toFixed(2)},${(c.to - start).toFixed(2)})`);
   const drop = spans.length ? `select='not(${spans.join("+")})',setpts=N/FRAME_RATE/TB,` : "";
-  const trim = ["-y", "-loglevel", "error", "-ss", start.toFixed(2), "-i", source, "-vf", `fps=25,${drop}scale=1440:900:flags=lanczos`, "-an"];
-  execFileSync("ffmpeg", [...trim, "-c:v", "libvpx-vp9", "-b:v", "0", "-crf", "42", "-row-mt", "1", "-deadline", "good", "-cpu-used", "2", `${target}.webm`]);
-  execFileSync("ffmpeg", [...trim, "-c:v", "libx264", "-crf", "28", "-preset", "slow", "-pix_fmt", "yuv420p", "-movflags", "+faststart", `${target}.mp4`]);
+  const trim = [
+    "-y",
+    "-loglevel",
+    "error",
+    "-ss",
+    start.toFixed(2),
+    "-i",
+    source,
+    "-vf",
+    `fps=25,${drop}scale=1440:900:flags=lanczos`,
+    "-an",
+  ];
+  execFileSync("ffmpeg", [
+    ...trim,
+    "-c:v",
+    "libvpx-vp9",
+    "-b:v",
+    "0",
+    "-crf",
+    "42",
+    "-row-mt",
+    "1",
+    "-deadline",
+    "good",
+    "-cpu-used",
+    "2",
+    `${target}.webm`,
+  ]);
+  execFileSync("ffmpeg", [
+    ...trim,
+    "-c:v",
+    "libx264",
+    "-crf",
+    "28",
+    "-preset",
+    "slow",
+    "-pix_fmt",
+    "yuv420p",
+    "-movflags",
+    "+faststart",
+    `${target}.mp4`,
+  ]);
   const duration = Number(
-    execFileSync("ffprobe", ["-v", "error", "-show_entries", "format=duration", "-of", "default=nw=1:nk=1", `${target}.mp4`]).toString(),
+    execFileSync("ffprobe", [
+      "-v",
+      "error",
+      "-show_entries",
+      "format=duration",
+      "-of",
+      "default=nw=1:nk=1",
+      `${target}.mp4`,
+    ]).toString(),
   );
   // The poster is the moment worth stopping on: the generation that just landed for the openers, else late in the clip.
   const posterAt = { showcase: 3.2, creations: 4.2 }[id] ?? duration * 0.7;
-  execFileSync("ffmpeg", ["-y", "-loglevel", "error", "-ss", Math.min(posterAt, duration - 0.2).toFixed(2), "-i", `${target}.mp4`, "-frames:v", "1", "-q:v", "4", `${target}.jpg`]);
+  execFileSync("ffmpeg", [
+    "-y",
+    "-loglevel",
+    "error",
+    "-ss",
+    Math.min(posterAt, duration - 0.2).toFixed(2),
+    "-i",
+    `${target}.mp4`,
+    "-frames:v",
+    "1",
+    "-q:v",
+    "4",
+    `${target}.jpg`,
+  ]);
   const cutSeconds = cuts.filter((c) => c.to).reduce((sum, c) => sum + c.to - c.from, 0);
   const cutNote = drop ? ` (${cutSeconds.toFixed(0)} s of waiting cut)` : "";
-  process.stdout.write(`✓ ${id}  ${duration.toFixed(1)} s${cutNote} → ${path.relative(process.cwd(), target)}.{webm,mp4,jpg}` + "\n");
+  process.stdout.write(
+    `✓ ${id}  ${duration.toFixed(1)} s${cutNote} → ${path.relative(process.cwd(), target)}.{webm,mp4,jpg}` + "\n",
+  );
 }
 
 try {

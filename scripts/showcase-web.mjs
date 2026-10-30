@@ -9,7 +9,7 @@
 //   ORAZAKA_USER_EMAIL=… ORAZAKA_USER_PASSWORD=… node scripts/showcase-web.mjs <out-dir> [--base https://www.orazaka.com]
 //
 // Writes <out-dir>/web-chat.webm and web-studio.webm (no audio), ready for the app-videos action.
-import { mkdirSync, renameSync } from "node:fs";
+import { appendFileSync, mkdirSync, renameSync } from "node:fs";
 import path from "node:path";
 import { chromium } from "@playwright/test";
 import { askRecordedQuestion } from "./tour/chat-journey.mjs";
@@ -20,7 +20,8 @@ const baseAt = args.indexOf("--base");
 const base = (baseAt >= 0 && args[baseAt + 1] ? args[baseAt + 1] : "https://www.orazaka.com").replace(/\/$/, "");
 const persona = process.env.ORAZAKA_USER_EMAIL;
 const secret = process.env.ORAZAKA_USER_PASSWORD;
-if (!persona || !secret) throw new Error("ORAZAKA_USER_EMAIL and ORAZAKA_USER_PASSWORD are required (the demo persona, never a real account)");
+if (!persona || !secret)
+  throw new Error("ORAZAKA_USER_EMAIL and ORAZAKA_USER_PASSWORD are required (the demo persona, never a real account)");
 mkdirSync(outDir, { recursive: true });
 
 const VIEWPORT = { width: 1280, height: 800 };
@@ -31,7 +32,8 @@ const pause = (page, ms) => page.waitForTimeout(ms);
 const hideEmail = () => {
   const hide = () => {
     for (const el of document.querySelectorAll("body *")) {
-      if (el.childElementCount === 0 && /@[a-z0-9.-]+\.[a-z]{2,}/i.test(el.textContent ?? "")) el.style.visibility = "hidden";
+      if (el.childElementCount === 0 && /@[a-z0-9.-]+\.[a-z]{2,}/i.test(el.textContent ?? ""))
+        el.style.visibility = "hidden";
     }
   };
   document.addEventListener("DOMContentLoaded", () => {
@@ -56,7 +58,12 @@ async function session() {
 
 /** One journey = one context = one video; the file is renamed <id>.webm in the out directory. */
 async function record(id, act, storageState) {
-  const ctx = await browser.newContext({ viewport: VIEWPORT, colorScheme: "dark", storageState, recordVideo: { dir: outDir, size: VIEWPORT } });
+  const ctx = await browser.newContext({
+    viewport: VIEWPORT,
+    colorScheme: "dark",
+    storageState,
+    recordVideo: { dir: outDir, size: VIEWPORT },
+  });
   await ctx.addInitScript(hideEmail);
   const page = await ctx.newPage();
   await act(page);
@@ -72,16 +79,30 @@ const state = await session();
 await record(
   "web-chat",
   async (page) => {
+    // The proof of a server tool run (orazaka-ai-engine#169): the turn's event stream, kept beside the video (the `tool-call` event).
+    page.on("response", async (response) => {
+      if (!(response.headers()["content-type"] ?? "").includes("text/event-stream")) return;
+      const body = await response.text().catch(() => "");
+      if (body) appendFileSync(path.join(outDir, "chat-sse.txt"), `# ${new URL(response.url()).pathname}\n${body}\n`);
+    });
     await page.goto(`${base}/chat`, { waitUntil: "load" });
     const box = page.locator("textarea").first();
     await box.waitFor();
     await askRecordedQuestion(page);
     // The answer must grow the page; then the turn is over when the composer is editable again.
     const before = (await page.locator("main").first().innerText()).length;
-    await page.waitForFunction((n) => (document.querySelector("main")?.innerText.length ?? 0) > n + 80, before, { timeout: 180_000, polling: 500 }).catch(() => {
-      throw new Error("the chat gave no answer: no video is published");
+    await page
+      .waitForFunction((n) => (document.querySelector("main")?.innerText.length ?? 0) > n + 80, before, {
+        timeout: 180_000,
+        polling: 500,
+      })
+      .catch(() => {
+        throw new Error("the chat gave no answer: no video is published");
+      });
+    await page.waitForFunction(() => document.querySelector("textarea")?.disabled === false, null, {
+      timeout: 180_000,
+      polling: 250,
     });
-    await page.waitForFunction(() => document.querySelector("textarea")?.disabled === false, null, { timeout: 180_000, polling: 250 });
     await pause(page, 2200);
   },
   state,
@@ -101,7 +122,10 @@ await record(
     await pause(page, 1800);
     await page.getByRole("heading", { name: /^Legal/ }).scrollIntoViewIfNeeded();
     await pause(page, 1200);
-    await page.getByText(/^Document Authenticity$/).first().click();
+    await page
+      .getByText(/^Document Authenticity$/)
+      .first()
+      .click();
     await page.waitForURL(/\/studios\/[^/]+$/);
     await page.waitForLoadState("networkidle");
     await pause(page, 2600);

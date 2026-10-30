@@ -50,17 +50,12 @@ export const BillingApi = {
    * @param capability - the capability about to run
    * @param modelName - the resolved model, when one is chosen
    */
-  estimate: async (
-    capability: string,
-    modelName?: string | null,
-  ): Promise<CostEstimate | null> => {
+  estimate: async (capability: string, modelName?: string | null): Promise<CostEstimate | null> => {
     const query = new URLSearchParams({ capability });
     if (modelName) {
       query.set("modelName", modelName);
     }
-    const data = await restRequest<unknown>(
-      `/api/v1/billing/pricebook/estimate?${query.toString()}`,
-    );
+    const data = await restRequest<unknown>(`/api/v1/billing/pricebook/estimate?${query.toString()}`);
     return data ? CostEstimateSchema.parse(data) : null;
   },
 
@@ -90,10 +85,9 @@ export const BillingApi = {
    */
   subscribeToPack: async (packKey: string): Promise<PackSubscription> =>
     PackSubscriptionSchema.parse(
-      await restRequest<unknown>(
-        `/api/v1/billing/pack-subscriptions/me/${encodeURIComponent(packKey)}`,
-        { method: "POST" },
-      ),
+      await restRequest<unknown>(`/api/v1/billing/pack-subscriptions/me/${encodeURIComponent(packKey)}`, {
+        method: "POST",
+      }),
     ),
 
   /**
@@ -102,9 +96,8 @@ export const BillingApi = {
    * @param packKey - the pack to remove
    */
   removePack: async (packKey: string): Promise<void> => {
-    await restRequest<void>(
-      `/api/v1/billing/pack-subscriptions/me/${encodeURIComponent(packKey)}`,
-      { method: "DELETE" },
-    );
+    await restRequest<void>(`/api/v1/billing/pack-subscriptions/me/${encodeURIComponent(packKey)}`, {
+      method: "DELETE",
+    });
   },
 } as const;

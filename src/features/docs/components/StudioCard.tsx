@@ -48,7 +48,8 @@ export function StudioCard({ studio }: Readonly<{ studio: PackStudio }>) {
         <div>
           <dt className="font-mono text-[0.7rem] text-fg-muted">{p.steps}</dt>
           <dd className="text-fg">
-            {studio.steps} <span className="text-xs text-fg-secondary">{studio.stepKinds.join(", ").toLowerCase()}</span>
+            {studio.steps}{" "}
+            <span className="text-xs text-fg-secondary">{studio.stepKinds.join(", ").toLowerCase()}</span>
           </dd>
         </div>
         <div>

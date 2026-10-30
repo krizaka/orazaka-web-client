@@ -33,7 +33,9 @@ export function JobsRunningBanner({ jobs, history }: Readonly<JobsRunningBannerP
       <Card.Body padding="lg" className="flex-row flex-wrap items-center gap-5">
         <Mascot bird={birdFor(jobs[0].featureKey)} mood="thinking" size={88} />
         <section aria-live="polite" className="flex min-w-0 flex-1 flex-col gap-2">
-          <p className="text-base font-semibold text-fg">{fill(t.showcase.jobs.runningTitle, { count: jobs.length })}</p>
+          <p className="text-base font-semibold text-fg">
+            {fill(t.showcase.jobs.runningTitle, { count: jobs.length })}
+          </p>
           <p className="text-[13px] text-fg-secondary">{t.showcase.jobs.runningBody}</p>
           <ul className="flex flex-col gap-3">
             {jobs.slice(0, 3).map((job) => {

@@ -18,11 +18,11 @@ A refusal answers `422` with the stable code `content.policy_refused`. Clients t
 
 ## What you configure
 
-| Table | What it says | Default |
-|---|---|---|
-| `content_policy_tenant` | For a subject (`'*'` is the whole install) and a label: `ALLOW` or `REFUSE`. | Everything allowed |
-| `content_provider_policy` | What a provider's terms allow, and `enforcement`: `BLOCK` or `WARN`. | No restriction |
-| `content_policy_rule` | Extra classifier patterns. | Built-in rules only |
+| Table                     | What it says                                                                 | Default             |
+| ------------------------- | ---------------------------------------------------------------------------- | ------------------- |
+| `content_policy_tenant`   | For a subject (`'*'` is the whole install) and a label: `ALLOW` or `REFUSE`. | Everything allowed  |
+| `content_provider_policy` | What a provider's terms allow, and `enforcement`: `BLOCK` or `WARN`.         | No restriction      |
+| `content_policy_rule`     | Extra classifier patterns.                                                   | Built-in rules only |
 
 Protect a hosted provider account by marking the capability that reaches it:
 

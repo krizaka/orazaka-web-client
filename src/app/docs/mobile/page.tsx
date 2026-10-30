@@ -15,7 +15,12 @@ export default function MobileDocPage() {
     <>
       <LandingNav onHome={false} />
       <main id="main" className="min-h-screen bg-surface-0 text-fg">
-        <MobileTour entry={entry} nav={navItems()} previous={previous && { slug: previous.slug, title: previous.title }} next={next && { slug: next.slug, title: next.title }} />
+        <MobileTour
+          entry={entry}
+          nav={navItems()}
+          previous={previous && { slug: previous.slug, title: previous.title }}
+          next={next && { slug: next.slug, title: next.title }}
+        />
       </main>
       <LandingFooter />
     </>
