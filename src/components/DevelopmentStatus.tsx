@@ -1,5 +1,7 @@
 "use client";
 
+import { cn } from "@krizaka/ui/cn";
+
 import { useTranslation } from "@/core/context/LocaleContext";
 
 /**
@@ -9,7 +11,7 @@ import { useTranslation } from "@/core/context/LocaleContext";
 export function DevelopmentStatus({ className = "" }: Readonly<{ className?: string }>) {
   const { t } = useTranslation();
   return (
-    <p className={`max-w-[60ch] text-sm text-fg-secondary ${className}`.trim()} data-testid="development-status">
+    <p className={cn("max-w-[60ch] text-sm text-fg-secondary", className)} data-testid="development-status">
       {t.landing.status.development}
     </p>
   );
