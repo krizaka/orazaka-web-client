@@ -84,7 +84,9 @@ export const PlatformAdminApi = {
   suspendUser: async (id: string): Promise<AdminUser> => AdminUserSchema.parse(await write(`/api/v1/admin/users/${encodeURIComponent(id)}/suspend`, "POST")),
   restoreUser: async (id: string): Promise<AdminUser> => AdminUserSchema.parse(await write(`/api/v1/admin/users/${encodeURIComponent(id)}/restore`, "POST")),
   setAdmin: async (id: string, admin: boolean): Promise<AdminUser> => AdminUserSchema.parse(await write(`/api/v1/admin/users/${encodeURIComponent(id)}/admin`, "PUT", { admin })),
-  eraseUser: async (id: string, confirmEmail: string): Promise<void> => void (await write(`/api/v1/admin/users/${encodeURIComponent(id)}`, "DELETE", { confirmEmail })),
+  eraseUser: async (id: string, confirmEmail: string): Promise<void> => {
+    await write(`/api/v1/admin/users/${encodeURIComponent(id)}`, "DELETE", { confirmEmail });
+  },
 
   /** A service's operator audit (every operator write it saw), newest first: billing, the Studio service, the engine's registry. */
   serviceAudit: async (service: "billing" | "studio" | "engine", limit = 200): Promise<BillingAuditLine[]> =>
