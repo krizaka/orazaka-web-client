@@ -24,7 +24,9 @@ describe("mediaPaths", () => {
   it("lists only the files under the prefix, sorted and without duplicates", () => {
     const paths = mediaPaths("sites/orazaka/");
     expect(paths.length).toBeGreaterThan(0);
-    for (const path of paths) expect(path.startsWith("sites/orazaka/")).toBe(true);
+    for (const path of paths) {
+      expect(path.startsWith("sites/orazaka/")).toBe(true);
+    }
     expect(paths).toEqual([...paths].sort((a, b) => a.localeCompare(b)));
     expect(new Set(paths).size).toBe(paths.length);
   });

@@ -214,7 +214,11 @@ function otherFacts(m: Merged): JobFact[] {
 export function jobFacts(job: Pick<Job, "payload" | "result" | "status" | "createdAt" | "updatedAt">, { now, modelNames }: JobFactsOptions = {}): JobFact[] {
   const m = merged(job);
   const get = (id: string) => {
-    for (const [k, v] of m) if (KEY_TO_FACT[k] === id) return v.value;
+    for (const [k, v] of m) {
+      if (KEY_TO_FACT[k] === id) {
+        return v.value;
+      }
+    }
     return undefined;
   };
   const pairs: Pair[] = [
@@ -225,7 +229,9 @@ export function jobFacts(job: Pick<Job, "payload" | "result" | "status" | "creat
   ];
   const facts: JobFact[] = [];
   for (const [id, value] of pairs) {
-    if (value !== null && value !== "") facts.push({ id, section: FACT_SECTION[id], value });
+    if (value !== null && value !== "") {
+      facts.push({ id, section: FACT_SECTION[id], value });
+    }
   }
   return [...facts, ...otherFacts(m)];
 }
