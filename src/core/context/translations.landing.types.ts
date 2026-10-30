@@ -40,6 +40,8 @@ export interface LandingDictionary {
   };
   /** The first screen: one statement, one line, the real product beside it. */
   hero: { title: string; lead: string; secondary: string; visualLabel: string };
+  /** The honest status line, the same one Yomizaka and Akinaza say: shown under the hero's actions and on the sign-in. */
+  status: { development: string };
   /** The figures under the hero, counted from the published measured runs. */
   figures: { runs: string; models: string; telemetry: string };
   features: {
