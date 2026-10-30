@@ -9,7 +9,8 @@ import { effectiveInstant } from "@/console/features/billing/utils/prices";
 import { useNow } from "@/core/hooks/useNow";
 import { usePrices } from "@/console/features/billing/hooks/usePrices";
 
-const pageLocale = (): PricesLocale => (typeof document !== "undefined" && document.documentElement.lang.toLowerCase().startsWith("en") ? "en" : "fr");
+const pageLocale = (): PricesLocale =>
+  typeof document !== "undefined" && document.documentElement.lang.toLowerCase().startsWith("en") ? "en" : "fr";
 
 /** The price catalogue: each entry editable from a date (@krizaka/ui's PriceCatalogueEditor); billing is the only holder of the figures. */
 export function PricesScreen({ locale }: Readonly<{ locale?: PricesLocale }>) {
@@ -38,11 +39,22 @@ export function PricesScreen({ locale }: Readonly<{ locale?: PricesLocale }>) {
   return (
     <section className="flex flex-col gap-4" aria-labelledby="prices-title">
       <header className="flex flex-col gap-1">
-        <h2 id="prices-title" className="text-lg font-semibold text-fg">{words.title}</h2>
+        <h2 id="prices-title" className="text-lg font-semibold text-fg">
+          {words.title}
+        </h2>
         <p className="max-w-3xl text-sm text-fg-secondary">{words.lead}</p>
       </header>
       {hasError && !isLoading && (
-        <Alert tone="warning" action={<Button variant="secondary" size="sm" onClick={reload}>{words.retry}</Button>}>{words.error}</Alert>
+        <Alert
+          tone="warning"
+          action={
+            <Button variant="secondary" size="sm" onClick={reload}>
+              {words.retry}
+            </Button>
+          }
+        >
+          {words.error}
+        </Alert>
       )}
       {isLoading && <output className="text-sm text-fg-secondary">{words.loading}</output>}
       {prices && (

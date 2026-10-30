@@ -6,11 +6,11 @@
 
 ## 1. Overview
 
-| Strategy | Module | Configuration | Description |
-|:---|:---|:---|:---|
-| **Local Credentials** | `krizaka-users-core` | `orazaka.identity.auth.local` | Email + password hashed with BCrypt |
-| **OAuth2 Exchange** | `krizaka-users-core` | `orazaka.identity.auth.oauth2.*` | NextAuth verifies -> Gateway reconciles |
-| **Password Reset** | `krizaka-users-core` | — | Token-based reset with zero-enumeration |
+| Strategy              | Module               | Configuration                    | Description                             |
+| :-------------------- | :------------------- | :------------------------------- | :-------------------------------------- |
+| **Local Credentials** | `krizaka-users-core` | `orazaka.identity.auth.local`    | Email + password hashed with BCrypt     |
+| **OAuth2 Exchange**   | `krizaka-users-core` | `orazaka.identity.auth.oauth2.*` | NextAuth verifies -> Gateway reconciles |
+| **Password Reset**    | `krizaka-users-core` | —                                | Token-based reset with zero-enumeration |
 
 > [!IMPORTANT]
 > The backend **never** performs OAuth2 redirects or protocol negotiations. This is handled by NextAuth (BFF). The backend only validates tokens.
@@ -131,8 +131,8 @@ end
 ---
 
 ## Related Documentation
+
 - [Quickstart](101.md)
 - [Architecture Reference](_generated/ARCHITECTURE.md)
 - [API Reference](_generated/API_REFERENCE.md)
 - [Concepts](CONCEPTS.md)
-

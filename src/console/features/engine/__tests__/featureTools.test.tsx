@@ -1,10 +1,4 @@
-import {
-  fireEvent,
-  render,
-  screen,
-  waitFor,
-  within,
-} from "@testing-library/react";
+import { fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import { FeatureToolsScreen } from "@/console/features/engine/components/FeatureToolsScreen";
 import { featureToolsCopy } from "@/console/core/copy/featureTools";
 import { queryWrapper } from "@/core/testing/queryWrapper";
@@ -48,8 +42,7 @@ function mockServer() {
     }
     const key = decodeURIComponent(url.split("/feature-tool-bounds/")[1]);
     if (method === "PUT") {
-      const n = (JSON.parse(init!.body as string) as { maxToolRounds: number })
-        .maxToolRounds;
+      const n = (JSON.parse(init!.body as string) as { maxToolRounds: number }).maxToolRounds;
       if (n < 1 || n > 32) {
         return reply(400, {
           code: "invalid-request",
@@ -72,8 +65,7 @@ function mockServer() {
   return calls;
 }
 
-const row = (key: string) =>
-  within(document.querySelector(`[data-bound="${key}"]`) as HTMLElement);
+const row = (key: string) => within(document.querySelector(`[data-bound="${key}"]`) as HTMLElement);
 
 beforeEach(() => {
   bounds = [
@@ -91,20 +83,10 @@ describe("FeatureToolsScreen", () => {
     mockServer();
     render(<FeatureToolsScreen locale="en" />, { wrapper: queryWrapper() });
     expect(await screen.findByText(en.defaultRow)).toBeTruthy();
-    expect(
-      (
-        row("agent.code.issue-to-pr").getByLabelText(
-          en.rounds,
-        ) as HTMLInputElement
-      ).value,
-    ).toBe("3");
-    expect((row("*").getByLabelText(en.rounds) as HTMLInputElement).value).toBe(
-      "8",
-    );
+    expect((row("agent.code.issue-to-pr").getByLabelText(en.rounds) as HTMLInputElement).value).toBe("3");
+    expect((row("*").getByLabelText(en.rounds) as HTMLInputElement).value).toBe("8");
     expect(row("*").queryByRole("button", { name: en.remove })).toBeNull();
-    const route = document.querySelector(
-      '[data-route="agent.code.issue-to-pr"]',
-    ) as HTMLElement;
+    const route = document.querySelector('[data-route="agent.code.issue-to-pr"]') as HTMLElement;
     expect(
       within(route)
         .getAllByRole("listitem")
@@ -115,13 +97,9 @@ describe("FeatureToolsScreen", () => {
   it("saves a new bound with a PUT and shows the saved line", async () => {
     const calls = mockServer();
     render(<FeatureToolsScreen locale="en" />, { wrapper: queryWrapper() });
-    const input = (
-      await screen.findAllByLabelText(en.rounds)
-    )[1] as HTMLInputElement;
+    const input = (await screen.findAllByLabelText(en.rounds))[1] as HTMLInputElement;
     fireEvent.change(input, { target: { value: "5" } });
-    fireEvent.click(
-      row("agent.code.issue-to-pr").getByRole("button", { name: en.save }),
-    );
+    fireEvent.click(row("agent.code.issue-to-pr").getByRole("button", { name: en.save }));
     await waitFor(() =>
       expect(
         calls.some(
@@ -138,16 +116,10 @@ describe("FeatureToolsScreen", () => {
   it("refuses a value outside the range before any request is sent", async () => {
     const calls = mockServer();
     render(<FeatureToolsScreen locale="en" />, { wrapper: queryWrapper() });
-    const input = (
-      await screen.findAllByLabelText(en.rounds)
-    )[1] as HTMLInputElement;
+    const input = (await screen.findAllByLabelText(en.rounds))[1] as HTMLInputElement;
     fireEvent.change(input, { target: { value: "99" } });
-    fireEvent.click(
-      row("agent.code.issue-to-pr").getByRole("button", { name: en.save }),
-    );
-    expect(
-      await screen.findByText("Enter a whole number from 1 to 32."),
-    ).toBeTruthy();
+    fireEvent.click(row("agent.code.issue-to-pr").getByRole("button", { name: en.save }));
+    expect(await screen.findByText("Enter a whole number from 1 to 32.")).toBeTruthy();
     expect(calls.some((c) => c.method === "PUT")).toBe(false);
   });
 
@@ -166,36 +138,20 @@ describe("FeatureToolsScreen", () => {
           } as Response)
         : base(url, init),
     ) as unknown as typeof fetch;
-    const input = (
-      await screen.findAllByLabelText(en.rounds)
-    )[1] as HTMLInputElement;
+    const input = (await screen.findAllByLabelText(en.rounds))[1] as HTMLInputElement;
     fireEvent.change(input, { target: { value: "32" } });
-    fireEvent.click(
-      row("agent.code.issue-to-pr").getByRole("button", { name: en.save }),
-    );
-    expect(
-      await screen.findByText("maxToolRounds must be 1 to 32"),
-    ).toBeTruthy();
+    fireEvent.click(row("agent.code.issue-to-pr").getByRole("button", { name: en.save }));
+    expect(await screen.findByText("maxToolRounds must be 1 to 32")).toBeTruthy();
   });
 
   it("removes a feature's own bound with a DELETE and the row goes away", async () => {
     const calls = mockServer();
     render(<FeatureToolsScreen locale="en" />, { wrapper: queryWrapper() });
     await screen.findByText(en.defaultRow);
-    fireEvent.click(
-      row("agent.code.issue-to-pr").getByRole("button", { name: en.remove }),
-    );
-    await waitFor(() =>
-      expect(
-        document.querySelector('[data-bound="agent.code.issue-to-pr"]'),
-      ).toBeNull(),
-    );
+    fireEvent.click(row("agent.code.issue-to-pr").getByRole("button", { name: en.remove }));
+    await waitFor(() => expect(document.querySelector('[data-bound="agent.code.issue-to-pr"]')).toBeNull());
     expect(
-      calls.some(
-        (c) =>
-          c.method === "DELETE" &&
-          c.url.endsWith("/feature-tool-bounds/agent.code.issue-to-pr"),
-      ),
+      calls.some((c) => c.method === "DELETE" && c.url.endsWith("/feature-tool-bounds/agent.code.issue-to-pr")),
     ).toBe(true);
   });
 
@@ -205,31 +161,17 @@ describe("FeatureToolsScreen", () => {
     fireEvent.change(await screen.findByLabelText(en.featureKey), {
       target: { value: "agent.other" },
     });
-    const rounds = screen
-      .getAllByLabelText(en.rounds)
-      .at(-1) as HTMLInputElement;
+    const rounds = screen.getAllByLabelText(en.rounds).at(-1) as HTMLInputElement;
     fireEvent.change(rounds, { target: { value: "4" } });
     fireEvent.click(screen.getByRole("button", { name: en.add }));
-    await waitFor(() =>
-      expect(
-        document.querySelector('[data-bound="agent.other"]'),
-      ).not.toBeNull(),
-    );
-    expect(
-      calls.some(
-        (c) =>
-          c.method === "PUT" &&
-          c.url.endsWith("/feature-tool-bounds/agent.other"),
-      ),
-    ).toBe(true);
+    await waitFor(() => expect(document.querySelector('[data-bound="agent.other"]')).not.toBeNull());
+    expect(calls.some((c) => c.method === "PUT" && c.url.endsWith("/feature-tool-bounds/agent.other"))).toBe(true);
   });
 
   it("speaks French", async () => {
     mockServer();
     render(<FeatureToolsScreen locale="fr" />, { wrapper: queryWrapper() });
-    expect(
-      await screen.findByRole("heading", { name: fr.title, level: 1 }),
-    ).toBeTruthy();
+    expect(await screen.findByRole("heading", { name: fr.title, level: 1 })).toBeTruthy();
     expect(await screen.findByText(fr.defaultRow)).toBeTruthy();
   });
 

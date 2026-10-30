@@ -48,7 +48,12 @@ describe("activityByDay", () => {
 describe("jobsByKind", () => {
   it("counts each kind of work, largest first", () => {
     expect(
-      jobsByKind([job({}), job({}), job({ featureKey: "orazaka.core.media.speech" }), job({ featureKey: "orazaka.core.chat.completion" })]),
+      jobsByKind([
+        job({}),
+        job({}),
+        job({ featureKey: "orazaka.core.media.speech" }),
+        job({ featureKey: "orazaka.core.chat.completion" }),
+      ]),
     ).toEqual([
       { kind: "image", count: 2 },
       { kind: "audio", count: 1 },
@@ -90,7 +95,9 @@ describe("remainingFor", () => {
   });
 
   it("says nothing when no comparable work has finished", () => {
-    expect(remainingFor(job({ status: "PROCESSING", featureKey: "orazaka.core.media.video" }), history, NOW)).toBeNull();
+    expect(
+      remainingFor(job({ status: "PROCESSING", featureKey: "orazaka.core.media.video" }), history, NOW),
+    ).toBeNull();
   });
 });
 

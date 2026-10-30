@@ -12,15 +12,34 @@ const CONSUMERS_LIMIT = 200;
 
 const COLUMNS: DataTableColumn<AccountUsage>[] = [
   { id: "account", header: "Compte produit", sortable: true, card: "title" },
-  { id: "keys", header: "Clés", sortable: true, align: "end", value: (row) => row.keys.length, cell: (row) => row.keys.map((k) => k.keyPrefix).join(", ") },
+  {
+    id: "keys",
+    header: "Clés",
+    sortable: true,
+    align: "end",
+    value: (row) => row.keys.length,
+    cell: (row) => row.keys.map((k) => k.keyPrefix).join(", "),
+  },
   { id: "events", header: "Requêtes", sortable: true, align: "end" },
-  { id: "creditsCharged", header: "Crédits", sortable: true, align: "end", cell: (row) => formatCredits(row.creditsCharged) },
+  {
+    id: "creditsCharged",
+    header: "Crédits",
+    sortable: true,
+    align: "end",
+    cell: (row) => formatCredits(row.creditsCharged),
+  },
 ];
 
 /** One organization: the usage and cost of each product's key, side by side. */
 function OrganizationUsage({ organization }: Readonly<{ organization: Organization }>) {
-  const keys = useQuery({ queryKey: ["organization-service-keys", organization.id], queryFn: () => OrganizationsAdminApi.serviceKeys(organization.id) });
-  const consumers = useQuery({ queryKey: ["billing-top-consumers", DAYS, CONSUMERS_LIMIT], queryFn: () => BillingAdminApi.topConsumers(DAYS, CONSUMERS_LIMIT) });
+  const keys = useQuery({
+    queryKey: ["organization-service-keys", organization.id],
+    queryFn: () => OrganizationsAdminApi.serviceKeys(organization.id),
+  });
+  const consumers = useQuery({
+    queryKey: ["billing-top-consumers", DAYS, CONSUMERS_LIMIT],
+    queryFn: () => BillingAdminApi.topConsumers(DAYS, CONSUMERS_LIMIT),
+  });
   const failed = keys.error ?? consumers.error;
   const rows = keys.data && consumers.data ? groupByAccount(keys.data, consumers.data) : null;
 
@@ -33,7 +52,11 @@ function OrganizationUsage({ organization }: Readonly<{ organization: Organizati
       defaultSort={{ column: "creditsCharged", direction: "descending" }}
       loading={rows === null && !failed}
       loadingRows={3}
-      error={failed ? <p className="text-sm text-fg-danger">{failed instanceof Error ? failed.message : "Chargement impossible"}</p> : undefined}
+      error={
+        failed ? (
+          <p className="text-sm text-fg-danger">{failed instanceof Error ? failed.message : "Chargement impossible"}</p>
+        ) : undefined
+      }
       labels={{ loading: "Lecture des clés", empty: "Aucune clé de service rattachée à cette organisation." }}
     />
   );
@@ -49,7 +72,9 @@ export function KeyUsageScreen() {
     <section className="space-y-6">
       <header>
         <h2 className="text-lg font-semibold text-fg">Clés des produits</h2>
-        <p className="text-sm text-fg-muted">{DAYS} derniers jours. Chaque produit garde sa clé et son offre : ici, ce que chacune consomme.</p>
+        <p className="text-sm text-fg-muted">
+          {DAYS} derniers jours. Chaque produit garde sa clé et son offre : ici, ce que chacune consomme.
+        </p>
       </header>
       {organizations.error ? <p className="text-sm text-fg-danger">Organisations illisibles.</p> : null}
       {(organizations.data ?? []).map((organization) => (

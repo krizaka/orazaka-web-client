@@ -15,7 +15,10 @@ export function refusalMessage(code: string | null, status: number): string {
 }
 
 /** The action's label for an account: the one that undoes its current state. */
-export function stateActions(user: { enabled: boolean; admin: boolean }): { status: "suspend" | "restore"; role: "grant" | "withdraw" } {
+export function stateActions(user: { enabled: boolean; admin: boolean }): {
+  status: "suspend" | "restore";
+  role: "grant" | "withdraw";
+} {
   return { status: user.enabled ? "suspend" : "restore", role: user.admin ? "withdraw" : "grant" };
 }
 

@@ -49,8 +49,7 @@ export function useResolveInterception({
   onError,
 }: UseResolveInterceptionOptions) {
   const mutation = useMutation({
-    mutationFn: (responses: Record<string, string>) =>
-      InterceptionApi.resolve(interceptionType, schemaId, responses),
+    mutationFn: (responses: Record<string, string>) => InterceptionApi.resolve(interceptionType, schemaId, responses),
     onSuccess,
     onError: (err: Error) => {
       onError(err.message || "An error occurred. Please try again.");

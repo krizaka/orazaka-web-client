@@ -27,7 +27,9 @@ beforeEach(() => Form.mockClear());
 describe("AuthGate", () => {
   it("shows the calm closed notice and never mounts the form (no backend call) when the flag is off", () => {
     renderGate("login", { login: false, signup: true });
-    expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent("Orazaka is in development — sign-in is closed on this site");
+    expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent(
+      "Orazaka is in development — sign-in is closed on this site",
+    );
     expect(Form).not.toHaveBeenCalled();
     expect(screen.queryByText("the form")).toBeNull();
   });

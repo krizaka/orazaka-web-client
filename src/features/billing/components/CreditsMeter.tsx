@@ -10,7 +10,6 @@ import { fill } from "@/core/context/fill";
 import { useTranslation } from "@/core/context/LocaleContext";
 import { INTL_LOCALES } from "@/core/constants/locale.constants";
 
-
 interface CreditsMeterProps {
   /** The balances (billing), or null when the person has never been billed. */
   wallet: Wallet | null;
@@ -35,7 +34,8 @@ export function CreditsMeter({ wallet, available, plan, loading, href }: Readonl
   const numberLocale = INTL_LOCALES[locale];
   const grant = plan?.monthlyCreditGrant ?? 0;
   /** Nothing granted, bought or held: a clear next step instead of a zero. */
-  const noCredits = !loading && available <= 0 && (!wallet || wallet.balanceGranted + wallet.balancePurchased + wallet.held <= 0);
+  const noCredits =
+    !loading && available <= 0 && (!wallet || wallet.balanceGranted + wallet.balancePurchased + wallet.held <= 0);
 
   const body = (
     <section className="flex flex-col gap-5 p-6">
@@ -46,16 +46,29 @@ export function CreditsMeter({ wallet, available, plan, loading, href }: Readonl
             <Skeleton className="h-10 w-40" />
           ) : noCredits ? (
             <span className="flex flex-col gap-1">
-              <span className="font-display text-2xl font-bold tracking-tight text-fg">{grant > 0 ? t.insights.usage.noCreditsLeft : t.insights.usage.noCredits}</span>
+              <span className="font-display text-2xl font-bold tracking-tight text-fg">
+                {grant > 0 ? t.insights.usage.noCreditsLeft : t.insights.usage.noCredits}
+              </span>
               <Link href="/packs" className="text-sm font-medium text-fg-accent underline-offset-4 hover:underline">
                 {t.insights.usage.noCreditsAction}
               </Link>
             </span>
           ) : (
-            <NumberTicker value={available} locale={numberLocale} trigger="change" announce align="start" className="font-display text-4xl font-bold tracking-tight text-fg" />
+            <NumberTicker
+              value={available}
+              locale={numberLocale}
+              trigger="change"
+              announce
+              align="start"
+              className="font-display text-4xl font-bold tracking-tight text-fg"
+            />
           )}
         </span>
-        {plan && <span className="rounded-sm border border-border-default px-3 py-1 text-xs font-medium text-fg-secondary">{fill(w.plan, { plan: plan.label })}</span>}
+        {plan && (
+          <span className="rounded-sm border border-border-default px-3 py-1 text-xs font-medium text-fg-secondary">
+            {fill(w.plan, { plan: plan.label })}
+          </span>
+        )}
       </header>
       {wallet && (
         <Meter
@@ -74,7 +87,13 @@ export function CreditsMeter({ wallet, available, plan, loading, href }: Readonl
 
   return (
     <GlowCard glow="border" asChild={Boolean(href)} className="rounded-xl">
-      {href ? <Link href={href} aria-label={w.title}>{body}</Link> : body}
+      {href ? (
+        <Link href={href} aria-label={w.title}>
+          {body}
+        </Link>
+      ) : (
+        body
+      )}
     </GlowCard>
   );
 }

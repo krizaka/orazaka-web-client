@@ -5,7 +5,9 @@ import { useChatThreadActions } from "@/features/chat-session/hooks/useChatThrea
 
 const push = jest.fn();
 jest.mock("next/navigation", () => ({ useRouter: () => ({ push }) }));
-jest.mock("@/core/context/LocaleContext", () => ({ useTranslation: () => ({ t: { chat: { sessionTitle: "Chat" } } }) }));
+jest.mock("@/core/context/LocaleContext", () => ({
+  useTranslation: () => ({ t: { chat: { sessionTitle: "Chat" } } }),
+}));
 
 function setup() {
   const params = {
@@ -20,7 +22,9 @@ function setup() {
     deleteThread: jest.fn(),
   };
   const client = new QueryClient();
-  const wrapper = ({ children }: { children: ReactNode }) => <QueryClientProvider client={client}>{children}</QueryClientProvider>;
+  const wrapper = ({ children }: { children: ReactNode }) => (
+    <QueryClientProvider client={client}>{children}</QueryClientProvider>
+  );
   const { result } = renderHook(() => useChatThreadActions(params), { wrapper });
   return { params, result, client };
 }

@@ -15,7 +15,9 @@ describe("media layout v2", () => {
   it("an address is the hashed object at the root of the zone, never under site/", () => {
     const [path] = mediaPaths("sites/orazaka/mobile/");
     expect(hasMedia(path!)).toBe(true);
-    expect(mediaUrl(path!)).toMatch(/^https:\/\/krizaka-assets\.b-cdn\.net\/sites\/orazaka\/mobile\/.+\.[0-9a-f]{10}\.(webm|mp4|webp)$/);
+    expect(mediaUrl(path!)).toMatch(
+      /^https:\/\/krizaka-assets\.b-cdn\.net\/sites\/orazaka\/mobile\/.+\.[0-9a-f]{10}\.(webm|mp4|webp)$/,
+    );
     expect(() => mediaUrl("products/orazaka/mobile/ask-dark-916.mp4")).toThrow();
   });
 });

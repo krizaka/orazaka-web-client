@@ -52,7 +52,6 @@ jest.mock("@krizaka/orazaka-design-system", () => ({
   ),
 }));
 
-
 describe("McpServersSection", () => {
   beforeEach(() => {
     global.fetch = jest.fn().mockResolvedValue({

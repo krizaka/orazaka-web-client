@@ -1,7 +1,13 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { Dropzone, UploadList, type FileRejection, type UploadItem, type UploadListLabels } from "@krizaka/ui/file-upload";
+import {
+  Dropzone,
+  UploadList,
+  type FileRejection,
+  type UploadItem,
+  type UploadListLabels,
+} from "@krizaka/ui/file-upload";
 import { useTranslation } from "@/core/context/LocaleContext";
 import { fill } from "@/core/context/fill";
 import { MediaApi } from "@/services/media.api";
@@ -36,7 +42,16 @@ interface AssetInputProps {
  * form submits — an asset id is never typed. The file is previewed, can be removed, and a failed upload can be
  * tried again.
  */
-export function AssetInput({ id, kind, value, disabled, onChange, onBusyChange, describedBy, label }: Readonly<AssetInputProps>) {
+export function AssetInput({
+  id,
+  kind,
+  value,
+  disabled,
+  onChange,
+  onBusyChange,
+  describedBy,
+  label,
+}: Readonly<AssetInputProps>) {
   const { t, locale } = useTranslation();
   const [item, setItem] = useState<UploadItem | null>(null);
   const [refusal, setRefusal] = useState<string | null>(null);
@@ -51,9 +66,12 @@ export function AssetInput({ id, kind, value, disabled, onChange, onBusyChange, 
 
   // The preview is an object URL: free it when it goes.
   const previewUrl = item?.previewUrl;
-  useEffect(() => () => {
-    if (previewUrl) URL.revokeObjectURL(previewUrl);
-  }, [previewUrl]);
+  useEffect(
+    () => () => {
+      if (previewUrl) URL.revokeObjectURL(previewUrl);
+    },
+    [previewUrl],
+  );
   // The form's callback changes on every render; the field only needs the latest one, and to release the form on unmount.
   const busyRef = useRef(onBusyChange);
   useEffect(() => {
@@ -67,7 +85,15 @@ export function AssetInput({ id, kind, value, disabled, onChange, onBusyChange, 
     setRefusal(null);
     onChange("");
     onBusyChange(true);
-    setItem({ id, name: file.name, size: file.size, type: file.type, progress: 0, status: "uploading", previewUrl: previewUrlOf });
+    setItem({
+      id,
+      name: file.name,
+      size: file.size,
+      type: file.type,
+      progress: 0,
+      status: "uploading",
+      previewUrl: previewUrlOf,
+    });
     try {
       const { assetId } = await MediaApi.uploadMedia(file);
       if (mine !== attempt.current) return;
@@ -102,11 +128,20 @@ export function AssetInput({ id, kind, value, disabled, onChange, onBusyChange, 
     retry: (name) => fill(t.studio.asset.retry, { name }),
     cancel: (name) => fill(t.studio.asset.cancel, { name }),
     remove: (name) => fill(t.studio.asset.remove, { name }),
-    status: (status) => ({ done: t.studio.asset.done, error: t.studio.asset.error })[status as "done" | "error"] ?? t.studio.asset.uploading,
+    status: (status) =>
+      ({ done: t.studio.asset.done, error: t.studio.asset.error })[status as "done" | "error"] ??
+      t.studio.asset.uploading,
   };
 
   return (
-    <div id={id} role="group" aria-label={label} aria-describedby={describedBy} className="flex flex-col gap-2" data-asset-kind={kind} data-asset-id={value || undefined}>
+    <fieldset
+      id={id}
+      aria-label={label}
+      aria-describedby={describedBy}
+      className="m-0 flex min-w-0 flex-col gap-2 border-0 p-0"
+      data-asset-kind={kind}
+      data-asset-id={value || undefined}
+    >
       {item ? (
         <UploadList
           items={[item]}
@@ -128,7 +163,11 @@ export function AssetInput({ id, kind, value, disabled, onChange, onBusyChange, 
           onReject={refuse}
         />
       )}
-      {refusal && <p role="alert" className="text-xs text-fg-danger">{refusal}</p>}
-    </div>
+      {refusal && (
+        <p role="alert" className="text-xs text-fg-danger">
+          {refusal}
+        </p>
+      )}
+    </fieldset>
   );
 }

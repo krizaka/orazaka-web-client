@@ -38,18 +38,21 @@ function renderPage(locale: Locale, rel: typeof release | null, downloadEnabled 
 }
 
 describe("DesktopPage with the Mac download switched off", () => {
-  it.each(["en", "fr"] as const)("disables the button, says it is in testing, carries no file link and no checksum (%s)", (locale) => {
-    const { container } = renderPage(locale, release, false);
-    const d = translations[locale].desktop.download;
-    expect(screen.getByRole("button", { name: d.button })).toBeDisabled();
-    expect(screen.getByText(d.disabled)).toBeInTheDocument();
-    expect(screen.queryByRole("link", { name: d.button })).toBeNull();
-    expect(container.innerHTML).not.toContain("example.test");
-    expect(container.innerHTML).not.toContain("/desktop/download");
-    expect(container.innerHTML).not.toContain(SHA);
-    expect(screen.queryByTestId("desktop-sha")).toBeNull();
-    expect(screen.queryByRole("link", { name: d.releases })).toBeNull();
-  });
+  it.each(["en", "fr"] as const)(
+    "disables the button, says it is in testing, carries no file link and no checksum (%s)",
+    (locale) => {
+      const { container } = renderPage(locale, release, false);
+      const d = translations[locale].desktop.download;
+      expect(screen.getByRole("button", { name: d.button })).toBeDisabled();
+      expect(screen.getByText(d.disabled)).toBeInTheDocument();
+      expect(screen.queryByRole("link", { name: d.button })).toBeNull();
+      expect(container.innerHTML).not.toContain("example.test");
+      expect(container.innerHTML).not.toContain("/desktop/download");
+      expect(container.innerHTML).not.toContain(SHA);
+      expect(screen.queryByTestId("desktop-sha")).toBeNull();
+      expect(screen.queryByRole("link", { name: d.releases })).toBeNull();
+    },
+  );
 });
 
 describe("DesktopPage", () => {
@@ -96,7 +99,9 @@ describe("DesktopPage", () => {
     const d = translations.en.desktop;
     for (const m of d.modes.items) expect(screen.getByRole("heading", { name: m.title })).toBeInTheDocument();
     const services = container.querySelector(`dl[aria-label="${d.services.title}"]`)!;
-    expect([...services.querySelectorAll("dt")].map((dt) => dt.textContent)).toEqual(d.services.rows.map((r) => r.name));
+    expect([...services.querySelectorAll("dt")].map((dt) => dt.textContent)).toEqual(
+      d.services.rows.map((r) => r.name),
+    );
     expect(container.textContent).not.toMatch(/sagas|Metal acceleration|cryptographic|tok\/s|HIPAA/i);
   });
 
@@ -127,7 +132,12 @@ describe("DesktopPage", () => {
   });
 
   it("has the same shape in English and French", () => {
-    const keys = (v: unknown): unknown => (Array.isArray(v) ? v.map(keys) : v && typeof v === "object" ? Object.fromEntries(Object.entries(v).map(([k, x]) => [k, keys(x)])) : typeof v);
+    const keys = (v: unknown): unknown =>
+      Array.isArray(v)
+        ? v.map(keys)
+        : v && typeof v === "object"
+          ? Object.fromEntries(Object.entries(v).map(([k, x]) => [k, keys(x)]))
+          : typeof v;
     expect(keys(translations.fr.desktop)).toEqual(keys(translations.en.desktop));
   });
 });

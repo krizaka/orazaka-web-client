@@ -11,7 +11,10 @@ describe("pipelineProgress", () => {
     });
   });
 
-  const schema = { coreInterceptorIds: ["AuthInterceptor", "SemanticRouterInterceptor"], dynamicInterceptorIds: ["PiiGuardInterceptor"] };
+  const schema = {
+    coreInterceptorIds: ["AuthInterceptor", "SemanticRouterInterceptor"],
+    dynamicInterceptorIds: ["PiiGuardInterceptor"],
+  };
 
   it("shows the first step when nothing is done", () => {
     const p = pipelineProgress(schema as never, new Set());
@@ -30,7 +33,10 @@ describe("pipelineProgress", () => {
   });
 
   it("ends on the last step, dynamic phase, once the whole chain is done", () => {
-    const p = pipelineProgress(schema as never, new Set(["AuthInterceptor", "SemanticRouterInterceptor", "PiiGuardInterceptor"]));
+    const p = pipelineProgress(
+      schema as never,
+      new Set(["AuthInterceptor", "SemanticRouterInterceptor", "PiiGuardInterceptor"]),
+    );
     expect(p.allDone).toBe(true);
     expect(p.doneCount).toBe(3);
     expect(p.current).toMatchObject({ id: "PiiGuardInterceptor", phase: "dynamic", label: "Pii Guard" });

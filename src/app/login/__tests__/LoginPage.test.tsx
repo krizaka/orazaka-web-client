@@ -7,7 +7,9 @@ import { AuthFlagsProvider } from "@/core/context/AuthFlagsContext";
 import type { AuthFlags } from "@/core/config/auth-flags";
 
 const withFlags = (flags: Partial<AuthFlags>) => (ui: ReactNode) => (
-  <AuthFlagsProvider flags={{ login: true, signup: true, github: true, google: true, ...flags }}>{ui}</AuthFlagsProvider>
+  <AuthFlagsProvider flags={{ login: true, signup: true, github: true, google: true, ...flags }}>
+    {ui}
+  </AuthFlagsProvider>
 );
 const open = withFlags({});
 
@@ -20,9 +22,7 @@ jest.mock("next/navigation", () => ({
 }));
 
 jest.mock("next/link", () => {
-  return ({ children, ...props }: { children: React.ReactNode; href: string }) => (
-    <a {...props}>{children}</a>
-  );
+  return ({ children, ...props }: { children: React.ReactNode; href: string }) => <a {...props}>{children}</a>;
 });
 
 jest.mock("next-auth/react", () => ({
@@ -39,7 +39,10 @@ jest.mock("@/core/hooks/useAuth", () => ({ useAuth: () => mockUseAuth() }));
 jest.mock("@/core/context/LocaleContext", () => ({
   useTranslation: () => ({
     t: {
-      landing: { closed: jest.requireActual("@/core/context/translations.landing").landing.en.closed, footer: { license: "Apache-2.0", by: "A Krizaka product" } },
+      landing: {
+        closed: jest.requireActual("@/core/context/translations.landing").landing.en.closed,
+        footer: { license: "Apache-2.0", by: "A Krizaka product" },
+      },
       a11y: jest.requireActual("@/core/context/translations.automation").a11y.en,
       auth: {
         loginTitle: "Welcome Back",

@@ -6,20 +6,32 @@ import { buildOAuthExchangeBody, OAUTH_PROVIDERS } from "@/core/auth/oauth-excha
 
 /** Mirror of `OAuthRequest`'s compact constructor in krizaka-users. */
 const REQUIRED_BY_USERS = ["provider", "idToken"] as const;
-const accepted = (body: object | null) => body !== null && REQUIRED_BY_USERS.every((k) => { const v = (body as Record<string, unknown>)[k]; return typeof v === "string" && v.trim() !== ""; });
+const accepted = (body: object | null) =>
+  body !== null &&
+  REQUIRED_BY_USERS.every((k) => {
+    const v = (body as Record<string, unknown>)[k];
+    return typeof v === "string" && v.trim() !== "";
+  });
 
-const account = (a: Partial<Account> & { provider: string }): Account => ({ type: "oauth", providerAccountId: "1", ...a }) as Account;
+const account = (a: Partial<Account> & { provider: string }): Account =>
+  ({ type: "oauth", providerAccountId: "1", ...a }) as Account;
 const user = { email: "eric@example.com", name: "Eric" };
 
 describe("OAuth token exchange body", () => {
   it("sends Google's id token with the provider", () => {
-    const body = buildOAuthExchangeBody(account({ provider: "google", id_token: "g.id.token", access_token: "g-access" }), user);
+    const body = buildOAuthExchangeBody(
+      account({ provider: "google", id_token: "g.id.token", access_token: "g-access" }),
+      user,
+    );
     expect(body).toEqual({ provider: "google", idToken: "g.id.token", email: "eric@example.com", username: "Eric" });
     expect(accepted(body)).toBe(true);
   });
 
   it("sends GitHub's access token (GitHub has no id token)", () => {
-    const body = buildOAuthExchangeBody(account({ provider: "github", access_token: "gho_x" }), { email: "e@example.com", name: null });
+    const body = buildOAuthExchangeBody(account({ provider: "github", access_token: "gho_x" }), {
+      email: "e@example.com",
+      name: null,
+    });
     expect(body).toMatchObject({ provider: "github", idToken: "gho_x", username: "e" });
     expect(accepted(body)).toBe(true);
   });
@@ -36,7 +48,9 @@ describe("OAuth token exchange body", () => {
 
   it("covers every offered provider", () => {
     for (const provider of OAUTH_PROVIDERS) {
-      expect(accepted(buildOAuthExchangeBody(account({ provider, id_token: "t", access_token: "t" }), user))).toBe(true);
+      expect(accepted(buildOAuthExchangeBody(account({ provider, id_token: "t", access_token: "t" }), user))).toBe(
+        true,
+      );
     }
   });
 });

@@ -14,12 +14,7 @@ interface SeedControlProps {
 }
 
 /** The seed: random by default (nothing is sent); turn the toggle off to type the number that repeats a result. */
-export function SeedControl({
-  field,
-  value,
-  disabled,
-  onChange,
-}: Readonly<SeedControlProps>) {
+export function SeedControl({ field, value, disabled, onChange }: Readonly<SeedControlProps>) {
   const { t } = useTranslation();
   const form = t.studio.form;
   const [fixed, setFixed] = useState(value !== "");
@@ -46,9 +41,7 @@ export function SeedControl({
             value={value}
             disabled={disabled}
             maxLength={10}
-            onChange={(event) =>
-              onChange(event.target.value.replace(/\D/g, ""))
-            }
+            onChange={(event) => onChange(event.target.value.replace(/\D/g, ""))}
           />
         )}
       </div>

@@ -82,11 +82,7 @@ function collectTsxFiles(dir: string): string[] {
   const entries = fs.readdirSync(dir, { withFileTypes: true });
   for (const entry of entries) {
     const fullPath = path.join(dir, entry.name);
-    if (
-      entry.isDirectory() &&
-      !entry.name.startsWith("__") &&
-      entry.name !== "node_modules"
-    ) {
+    if (entry.isDirectory() && !entry.name.startsWith("__") && entry.name !== "node_modules") {
       files.push(...collectTsxFiles(fullPath));
     } else if (entry.isFile() && entry.name.endsWith(".tsx")) {
       files.push(fullPath);
@@ -166,9 +162,7 @@ describe("i18n compliance [ERR-115]", () => {
     }
 
     if (allViolations.length > 0) {
-      const report = allViolations
-        .map((v) => `  ${v.file}:${v.line} → ${v.reason}\n    ${v.content}`)
-        .join("\n\n");
+      const report = allViolations.map((v) => `  ${v.file}:${v.line} → ${v.reason}\n    ${v.content}`).join("\n\n");
 
       // Log as warning rather than hard-fail during initial rollout
       console.warn(

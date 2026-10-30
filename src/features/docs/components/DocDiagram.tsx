@@ -1,6 +1,14 @@
 import type { DiagramLang } from "@/features/docs/utils/docs";
 import type { DiagramData } from "@/features/docs/utils/diagram-data";
-import { dependenciesOf, flowsOf, loadModel, parseArchitecture, parseSequence, parseStates, type DocsModel } from "@/features/docs/utils/diagrams";
+import {
+  dependenciesOf,
+  flowsOf,
+  loadModel,
+  parseArchitecture,
+  parseSequence,
+  parseStates,
+  type DocsModel,
+} from "@/features/docs/utils/diagrams";
 import { parsePack, parsePackIndex } from "@/features/docs/utils/packs";
 import { DiagramView } from "@/features/docs/components/DiagramView";
 
@@ -13,7 +21,10 @@ export function diagramData(lang: DiagramLang, source: string, model: DocsModel)
   switch (lang) {
     case "sequence": {
       const b = parseSequence(source, model);
-      return { kind: "sequence", block: { ...b, participants: b.participants.map((p) => ({ key: p.key, label: p.label })) } };
+      return {
+        kind: "sequence",
+        block: { ...b, participants: b.participants.map((p) => ({ key: p.key, label: p.label })) },
+      };
     }
     case "pipeline":
       return { kind: "pipeline", coreChain: model.coreChain, pipeline: model.pipeline };
@@ -26,7 +37,10 @@ export function diagramData(lang: DiagramLang, source: string, model: DocsModel)
       if (!focus) return { kind: "architecture", focus, runtime: false, ...none };
       const { uses, usedBy } = dependenciesOf(model, focus.id);
       const { calls, calledBy } = flowsOf(model, focus.id);
-      const tag = (f: DocsModel["flows"][number], key: "to" | "from") => `${f[key]}${f.via ? ` (${f.kind}: ${f.via})` : ` (${f.kind})`}`;
+      const tag = (f: DocsModel["flows"][number], key: "to" | "from") => {
+        const how = f.via ? `${f.kind}: ${f.via}` : f.kind;
+        return `${f[key]} (${how})`;
+      };
       return {
         kind: "architecture",
         focus,

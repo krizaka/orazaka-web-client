@@ -16,7 +16,13 @@ import { PackKindSchema, type Installation, type Run, type StudioDetail } from "
  * With a `consent` (a wellbeing Studio, after the person agreed) the Studio is installed again with the three
  * declarations, which is also how a statement that changed since is agreed to anew.
  */
-async function startFor(studio: StudioDetail, installation: Installation | undefined, inputs: Record<string, unknown>, locale: string, consent?: ConsentAnswer): Promise<Run | null> {
+async function startFor(
+  studio: StudioDetail,
+  installation: Installation | undefined,
+  inputs: Record<string, unknown>,
+  locale: string,
+  consent?: ConsentAnswer,
+): Promise<Run | null> {
   if (consent) {
     const installed = await StudioApi.install(studio.studioKey, installation?.config ?? {}, consent, locale);
     return installed ? StudioApi.startRun(installed.id, inputs) : null;
@@ -92,15 +98,19 @@ export function StudioRunPanel({ studio, installation }: Readonly<StudioRunPanel
   return (
     <Card.Root>
       <Card.Body padding="lg" className="gap-4">
-      <h2 className="text-base font-semibold text-fg">{t.studio.runTitle}</h2>
-      <RunForm
-        studioKey={studio.studioKey}
-        inputSchema={studio.inputSchema}
-        estimatedCredits={studio.estimatedCredits}
-        isSubmitting={isSubmitting}
-        onSubmit={(inputs) => void start(inputs)}
-      />
-      {error && <p role="alert" className="text-xs text-fg-danger">{error}</p>}
+        <h2 className="text-base font-semibold text-fg">{t.studio.runTitle}</h2>
+        <RunForm
+          studioKey={studio.studioKey}
+          inputSchema={studio.inputSchema}
+          estimatedCredits={studio.estimatedCredits}
+          isSubmitting={isSubmitting}
+          onSubmit={(inputs) => void start(inputs)}
+        />
+        {error && (
+          <p role="alert" className="text-xs text-fg-danger">
+            {error}
+          </p>
+        )}
       </Card.Body>
       {pending && (
         <ConsentDialog
@@ -110,7 +120,10 @@ export function StudioRunPanel({ studio, installation }: Readonly<StudioRunPanel
           isSubmitting={isSubmitting}
           error={consentError}
           onConfirm={(answer) => void start(pending.inputs, answer)}
-          onCancel={() => { setPending(null); setConsentError(null); }}
+          onCancel={() => {
+            setPending(null);
+            setConsentError(null);
+          }}
         />
       )}
     </Card.Root>

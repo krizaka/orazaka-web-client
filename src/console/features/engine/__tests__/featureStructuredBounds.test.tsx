@@ -1,10 +1,4 @@
-import {
-  fireEvent,
-  render,
-  screen,
-  waitFor,
-  within,
-} from "@testing-library/react";
+import { fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import { FeatureToolsScreen } from "@/console/features/engine/components/FeatureToolsScreen";
 import { featureToolsCopy } from "@/console/core/copy/featureTools";
 import { queryWrapper } from "@/core/testing/queryWrapper";
@@ -39,8 +33,7 @@ function mockServer() {
     }
     const key = decodeURIComponent(url.split("/feature-structured-bounds/")[1]);
     if (method === "PUT") {
-      const n = (JSON.parse(init!.body as string) as { maxAttempts: number })
-        .maxAttempts;
+      const n = (JSON.parse(init!.body as string) as { maxAttempts: number }).maxAttempts;
       if (n < 1 || n > 5) {
         return reply(400, {
           code: "invalid-request",
@@ -63,10 +56,7 @@ function mockServer() {
   return calls;
 }
 
-const row = (key: string) =>
-  within(
-    document.querySelector(`[data-structured-bound="${key}"]`) as HTMLElement,
-  );
+const row = (key: string) => within(document.querySelector(`[data-structured-bound="${key}"]`) as HTMLElement);
 
 beforeEach(() => {
   rows = [
@@ -86,16 +76,8 @@ describe("FeatureToolsScreen: the structured-output bound (#172)", () => {
       }),
     ).toBeTruthy();
     expect(await screen.findByText(en.structuredDefaultRow)).toBeTruthy();
-    expect(
-      (
-        row("agent.code.issue-to-pr").getByLabelText(
-          en.answers,
-        ) as HTMLInputElement
-      ).value,
-    ).toBe("4");
-    expect(
-      (row("*").getByLabelText(en.answers) as HTMLInputElement).value,
-    ).toBe("2");
+    expect((row("agent.code.issue-to-pr").getByLabelText(en.answers) as HTMLInputElement).value).toBe("4");
+    expect((row("*").getByLabelText(en.answers) as HTMLInputElement).value).toBe("2");
     expect(row("*").queryByRole("button", { name: en.remove })).toBeNull();
   });
 
@@ -103,18 +85,12 @@ describe("FeatureToolsScreen: the structured-output bound (#172)", () => {
     const calls = mockServer();
     render(<FeatureToolsScreen locale="en" />, { wrapper: queryWrapper() });
     await screen.findByText(en.structuredDefaultRow);
-    const input = row("agent.code.issue-to-pr").getByLabelText(
-      en.answers,
-    ) as HTMLInputElement;
+    const input = row("agent.code.issue-to-pr").getByLabelText(en.answers) as HTMLInputElement;
     fireEvent.change(input, { target: { value: "3" } });
-    fireEvent.click(
-      row("agent.code.issue-to-pr").getByRole("button", { name: en.save }),
-    );
+    fireEvent.click(row("agent.code.issue-to-pr").getByRole("button", { name: en.save }));
     expect(await screen.findByText(en.savedAnswers)).toBeTruthy();
     const put = calls.find((c) => c.method === "PUT");
-    expect(
-      put?.url.endsWith("/feature-structured-bounds/agent.code.issue-to-pr"),
-    ).toBe(true);
+    expect(put?.url.endsWith("/feature-structured-bounds/agent.code.issue-to-pr")).toBe(true);
     expect(JSON.parse(put!.body!)).toEqual({ maxAttempts: 3 });
   });
 
@@ -122,16 +98,10 @@ describe("FeatureToolsScreen: the structured-output bound (#172)", () => {
     const calls = mockServer();
     render(<FeatureToolsScreen locale="en" />, { wrapper: queryWrapper() });
     await screen.findByText(en.structuredDefaultRow);
-    const input = row("agent.code.issue-to-pr").getByLabelText(
-      en.answers,
-    ) as HTMLInputElement;
+    const input = row("agent.code.issue-to-pr").getByLabelText(en.answers) as HTMLInputElement;
     fireEvent.change(input, { target: { value: "9" } });
-    fireEvent.click(
-      row("agent.code.issue-to-pr").getByRole("button", { name: en.save }),
-    );
-    expect(
-      await screen.findByText("Enter a whole number of answers from 1 to 5."),
-    ).toBeTruthy();
+    fireEvent.click(row("agent.code.issue-to-pr").getByRole("button", { name: en.save }));
+    expect(await screen.findByText("Enter a whole number of answers from 1 to 5.")).toBeTruthy();
     expect(calls.some((c) => c.method === "PUT")).toBe(false);
   });
 
@@ -139,37 +109,18 @@ describe("FeatureToolsScreen: the structured-output bound (#172)", () => {
     const calls = mockServer();
     render(<FeatureToolsScreen locale="en" />, { wrapper: queryWrapper() });
     await screen.findByText(en.structuredDefaultRow);
-    fireEvent.click(
-      row("agent.code.issue-to-pr").getByRole("button", { name: en.remove }),
-    );
-    await waitFor(() =>
-      expect(
-        document.querySelector(
-          '[data-structured-bound="agent.code.issue-to-pr"]',
-        ),
-      ).toBeNull(),
-    );
+    fireEvent.click(row("agent.code.issue-to-pr").getByRole("button", { name: en.remove }));
+    await waitFor(() => expect(document.querySelector('[data-structured-bound="agent.code.issue-to-pr"]')).toBeNull());
     expect(
-      calls.some(
-        (c) =>
-          c.method === "DELETE" &&
-          c.url.endsWith("/feature-structured-bounds/agent.code.issue-to-pr"),
-      ),
+      calls.some((c) => c.method === "DELETE" && c.url.endsWith("/feature-structured-bounds/agent.code.issue-to-pr")),
     ).toBe(true);
 
     fireEvent.change(await screen.findByLabelText(en.structuredFeatureKey), {
       target: { value: "agent.other" },
     });
-    fireEvent.change(
-      screen.getAllByLabelText(en.answers).at(-1) as HTMLInputElement,
-      { target: { value: "5" } },
-    );
+    fireEvent.change(screen.getAllByLabelText(en.answers).at(-1) as HTMLInputElement, { target: { value: "5" } });
     fireEvent.click(screen.getByRole("button", { name: en.addStructured }));
-    await waitFor(() =>
-      expect(
-        document.querySelector('[data-structured-bound="agent.other"]'),
-      ).not.toBeNull(),
-    );
+    await waitFor(() => expect(document.querySelector('[data-structured-bound="agent.other"]')).not.toBeNull());
   });
 
   it("speaks French", async () => {

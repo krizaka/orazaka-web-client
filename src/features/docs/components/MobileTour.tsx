@@ -7,7 +7,17 @@ import { STEPS } from "@/core/mobile/mobile";
 import { editUrl, type DocEntry, type NavItem } from "@/features/docs/utils/docs-shared";
 
 /** The four-step tour of the app inside the documentation: one article, each step a recording and the three things to notice. */
-export function MobileTour({ entry, nav, previous, next }: Readonly<{ entry: DocEntry; nav: NavItem[]; previous: { slug: string; title: string } | null; next: { slug: string; title: string } | null }>) {
+export function MobileTour({
+  entry,
+  nav,
+  previous,
+  next,
+}: Readonly<{
+  entry: DocEntry;
+  nav: NavItem[];
+  previous: { slug: string; title: string } | null;
+  next: { slug: string; title: string } | null;
+}>) {
   const { t } = useTranslation();
   const m = t.mobile;
   return (

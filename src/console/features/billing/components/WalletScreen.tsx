@@ -39,12 +39,7 @@ export function WalletScreen() {
     setError(null);
     setNotice(null);
     try {
-      const updated = await BillingAdminApi.adjust(
-        actorId.trim(),
-        bucket,
-        Number(amount),
-        reason,
-      );
+      const updated = await BillingAdminApi.adjust(actorId.trim(), bucket, Number(amount), reason);
       setWallet(updated);
       setAmount("");
       setReason("");
@@ -61,18 +56,14 @@ export function WalletScreen() {
       <header>
         <h2 className="text-lg font-semibold text-fg">Portefeuilles</h2>
         <p className="text-sm text-fg-muted">
-          Un ajustement est la seule écriture qui déplace des crédits sans réservation.
-          Il est signé, motivé et attribué — et plafonné par jour et par administrateur.
+          Un ajustement est la seule écriture qui déplace des crédits sans réservation. Il est signé, motivé et attribué
+          — et plafonné par jour et par administrateur.
         </p>
       </header>
 
       <Card.Root className="p-5">
         <div className="flex items-end gap-3">
-          <BillingField
-            label="Identifiant de l’acteur"
-            value={actorId}
-            onChange={(e) => setActorId(e.target.value)}
-          />
+          <BillingField label="Identifiant de l’acteur" value={actorId} onChange={(e) => setActorId(e.target.value)} />
           <Button onClick={lookup} disabled={!actorId.trim()}>
             Rechercher
           </Button>
@@ -95,9 +86,7 @@ export function WalletScreen() {
 
           <Card.Root className="p-5">
             <div className="space-y-4">
-              <h3 className="text-sm font-semibold text-fg">
-                Ajustement manuel
-              </h3>
+              <h3 className="text-sm font-semibold text-fg">Ajustement manuel</h3>
 
               <div className="flex gap-2">
                 {(["GRANTED", "PURCHASED"] as CreditBucket[]).map((option) => (
@@ -119,11 +108,7 @@ export function WalletScreen() {
                   value={amount}
                   onChange={(e) => setAmount(e.target.value)}
                 />
-                <BillingField
-                  label="Motif (obligatoire)"
-                  value={reason}
-                  onChange={(e) => setReason(e.target.value)}
-                />
+                <BillingField label="Motif (obligatoire)" value={reason} onChange={(e) => setReason(e.target.value)} />
               </div>
 
               <div className="flex justify-end">
@@ -151,15 +136,7 @@ function Metric({
   return (
     <div>
       <p className="text-xs text-fg-muted">{label}</p>
-      <p
-        className={
-          muted
-            ? "text-lg text-fg-muted"
-            : "text-lg font-semibold text-fg"
-        }
-      >
-        {formatCredits(value)}
-      </p>
+      <p className={muted ? "text-lg text-fg-muted" : "text-lg font-semibold text-fg"}>{formatCredits(value)}</p>
     </div>
   );
 }

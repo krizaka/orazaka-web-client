@@ -5,7 +5,12 @@ import { CheckIcon, CopyIcon } from "@krizaka/icons";
 import { Button } from "@krizaka/ui/button";
 
 /** Copies a text to the clipboard and says so (aria-live); says so too when the browser refuses. */
-export function CopyButton({ text, label, done, failed }: Readonly<{ text: string; label: string; done: string; failed: string }>) {
+export function CopyButton({
+  text,
+  label,
+  done,
+  failed,
+}: Readonly<{ text: string; label: string; done: string; failed: string }>) {
   const [state, setState] = React.useState<"idle" | "done" | "failed">("idle");
   const copy = async () => {
     try {

@@ -41,7 +41,13 @@ export const PricesAdminApi = {
     const response = await fetch(`${BASE}/${encodeURIComponent(key)}/schedule`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ unit: change.unit, amountCents: change.amountCents, availability: change.availability, limits: change.limits, effectiveFrom }),
+      body: JSON.stringify({
+        unit: change.unit,
+        amountCents: change.amountCents,
+        availability: change.availability,
+        limits: change.limits,
+        effectiveFrom,
+      }),
     });
     if (response.ok) {
       return { ok: true };

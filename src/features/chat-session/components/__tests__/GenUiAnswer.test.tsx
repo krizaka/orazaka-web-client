@@ -12,9 +12,29 @@ jest.mock("@/core/context/LocaleContext", () => ({
 
 // jsdom has no matchMedia nor IntersectionObserver (the KpiStat's number ticker and the charts use them).
 beforeAll(() => {
-  (globalThis as { IntersectionObserver?: unknown }).IntersectionObserver ??= class { observe() {} unobserve() {} disconnect() {} takeRecords() { return []; } };
-  (globalThis as { ResizeObserver?: unknown }).ResizeObserver ??= class { observe() {} unobserve() {} disconnect() {} };
-  window.matchMedia ??= ((query: string) => ({ matches: false, media: query, onchange: null, addEventListener() {}, removeEventListener() {}, addListener() {}, removeListener() {}, dispatchEvent: () => false })) as unknown as typeof window.matchMedia;
+  (globalThis as { IntersectionObserver?: unknown }).IntersectionObserver ??= class {
+    observe() {}
+    unobserve() {}
+    disconnect() {}
+    takeRecords() {
+      return [];
+    }
+  };
+  (globalThis as { ResizeObserver?: unknown }).ResizeObserver ??= class {
+    observe() {}
+    unobserve() {}
+    disconnect() {}
+  };
+  window.matchMedia ??= ((query: string) => ({
+    matches: false,
+    media: query,
+    onchange: null,
+    addEventListener() {},
+    removeEventListener() {},
+    addListener() {},
+    removeListener() {},
+    dispatchEvent: () => false,
+  })) as unknown as typeof window.matchMedia;
 });
 
 const line = (m: unknown) => JSON.stringify(m);
@@ -31,11 +51,30 @@ const ANSWER = [
         { id: "root", component: "Column", children: ["kpi", "note", "rows"] },
         { id: "kpi", component: "KpiStat", label: "Passes sold", value: 720, previous: 610, format: "integer" },
         { id: "note", component: "Callout", tone: "info", title: "Montréal leads", text: "412 passes." },
-        { id: "rows", component: "Table", caption: "By city", columns: [{ key: "city", label: "City" }, { key: "passes", label: "Passes", format: "integer" }], rows: { path: "/rows" } },
+        {
+          id: "rows",
+          component: "Table",
+          caption: "By city",
+          columns: [
+            { key: "city", label: "City" },
+            { key: "passes", label: "Passes", format: "integer" },
+          ],
+          rows: { path: "/rows" },
+        },
       ],
     },
   }),
-  line({ version: V, updateDataModel: { surfaceId: "answer", path: "/rows", value: [{ city: "Montréal", passes: 412 }, { city: "Laval", passes: 121 }] } }),
+  line({
+    version: V,
+    updateDataModel: {
+      surfaceId: "answer",
+      path: "/rows",
+      value: [
+        { city: "Montréal", passes: 412 },
+        { city: "Laval", passes: 121 },
+      ],
+    },
+  }),
   "```",
 ].join("\n");
 
@@ -64,7 +103,19 @@ describe("GenUiAnswer — a model's answer drawn as a dashboard in the chat", ()
   });
 
   it("never draws what is outside the catalog: a script or HTML falls back to the text", () => {
-    const evil = ["Hi", "```a2ui", line({ version: V, createSurface: { surfaceId: "s", catalogId: "krizaka:genui/v1" } }), line({ version: V, updateComponents: { surfaceId: "s", components: [{ id: "root", component: "Html", html: "<script>alert(1)</script>" }] } }), "```"].join("\n");
+    const evil = [
+      "Hi",
+      "```a2ui",
+      line({ version: V, createSurface: { surfaceId: "s", catalogId: "krizaka:genui/v1" } }),
+      line({
+        version: V,
+        updateComponents: {
+          surfaceId: "s",
+          components: [{ id: "root", component: "Html", html: "<script>alert(1)</script>" }],
+        },
+      }),
+      "```",
+    ].join("\n");
     const { container } = render(<GenUiAnswer content={evil} streaming={false} renderProse={prose} />);
     expect(container.querySelector("script")).toBeNull();
     expect(container.querySelector("[data-genui-surface]")).toBeNull();

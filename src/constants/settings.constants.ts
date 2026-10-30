@@ -11,14 +11,7 @@
 // ── Source of Truth (as const arrays) ──────────────────────────────────
 
 export const AI_PERSONAS = ["standard", "concise", "creative"] as const;
-export const THEME_ACCENTS = [
-  "rose",
-  "emerald",
-  "amber",
-  "zinc",
-  "indigo",
-  "violet",
-] as const;
+export const THEME_ACCENTS = ["rose", "emerald", "amber", "zinc", "indigo", "violet"] as const;
 export const THEME_LAYOUTS = ["standard", "compact"] as const;
 
 // ── Derived Pure Types (zero JavaScript footprint) ─────────────────────

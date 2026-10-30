@@ -58,9 +58,12 @@ export interface NavItem {
   group: GroupId | null;
 }
 
-
 /** Pages whose words match every word of `query`, the best first: a title hit, then a heading, then the intro. */
-export function searchDocs(index: readonly SearchEntry[], query: string, limit = 8): { slug: string; id: string | null; label: string; meta: string }[] {
+export function searchDocs(
+  index: readonly SearchEntry[],
+  query: string,
+  limit = 8,
+): { slug: string; id: string | null; label: string; meta: string }[] {
   const words = query.toLowerCase().split(/\s+/).filter(Boolean);
   if (!words.length) return [];
   const hits: { score: number; slug: string; id: string | null; label: string; meta: string }[] = [];
@@ -69,10 +72,15 @@ export function searchDocs(index: readonly SearchEntry[], query: string, limit =
     const intro = e.intro.toLowerCase();
     const inPage = (text: string) => words.every((w) => text.includes(w));
     if (inPage(title)) hits.push({ score: 3, slug: e.slug, id: null, label: e.title, meta: e.journey });
-    else if (inPage(`${title} ${intro}`)) hits.push({ score: 1, slug: e.slug, id: null, label: e.title, meta: e.journey });
+    else if (inPage(`${title} ${intro}`))
+      hits.push({ score: 1, slug: e.slug, id: null, label: e.title, meta: e.journey });
     for (const h of e.headings) {
-      if (inPage(`${title} ${h.label.toLowerCase()}`) && !inPage(title)) hits.push({ score: 2, slug: e.slug, id: h.id, label: `${e.title} › ${h.label}`, meta: e.journey });
+      if (inPage(`${title} ${h.label.toLowerCase()}`) && !inPage(title))
+        hits.push({ score: 2, slug: e.slug, id: h.id, label: `${e.title} › ${h.label}`, meta: e.journey });
     }
   }
-  return [...hits].sort((a, b) => b.score - a.score).slice(0, limit).map(({ score: _score, ...rest }) => rest);
+  return [...hits]
+    .sort((a, b) => b.score - a.score)
+    .slice(0, limit)
+    .map(({ score: _score, ...rest }) => rest);
 }

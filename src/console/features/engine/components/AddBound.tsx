@@ -50,9 +50,7 @@ export function AddBound({
       <div className="flex flex-col gap-3">
         <h3 className="text-sm font-semibold text-fg">{words.addTitle}</h3>
         <Field.Root>
-          <Field.Label htmlFor={`${prefix}-key`}>
-            {words.featureKey}
-          </Field.Label>
+          <Field.Label htmlFor={`${prefix}-key`}>{words.featureKey}</Field.Label>
           <Input
             id={`${prefix}-key`}
             value={key}
@@ -78,17 +76,10 @@ export function AddBound({
               setError(null);
             }}
           />
-          {error !== null && (
-            <Field.Error id={`${prefix}-msg`}>{error}</Field.Error>
-          )}
+          {error !== null && <Field.Error id={`${prefix}-msg`}>{error}</Field.Error>}
         </Field.Root>
         <footer>
-          <Button
-            type="button"
-            size="sm"
-            onClick={() => void submit()}
-            disabled={busy}
-          >
+          <Button type="button" size="sm" onClick={() => void submit()} disabled={busy}>
             {words.add}
           </Button>
         </footer>

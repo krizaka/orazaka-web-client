@@ -1,7 +1,15 @@
 "use client";
 
 import { useState } from "react";
-import { AgentIcon, ChatIcon, FlagIcon, MessageIcon, NotificationIcon, SettingsIcon, type IconProps } from "@krizaka/icons";
+import {
+  AgentIcon,
+  ChatIcon,
+  FlagIcon,
+  MessageIcon,
+  NotificationIcon,
+  SettingsIcon,
+  type IconProps,
+} from "@krizaka/icons";
 import { Badge } from "@krizaka/ui/badge";
 import { Button, IconButton } from "@krizaka/ui/button";
 import { Card } from "@krizaka/ui/card";
@@ -52,7 +60,9 @@ export default function ConnectorCatalogue() {
 
   const toggle = (id: ConnectorId) =>
     setConnectors((previous) =>
-      previous.map((c) => (c.id === id ? { ...c, status: c.status === "connected" ? "disconnected" : "connected" } : c)),
+      previous.map((c) =>
+        c.id === id ? { ...c, status: c.status === "connected" ? "disconnected" : "connected" } : c,
+      ),
     );
 
   return (

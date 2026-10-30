@@ -5,10 +5,26 @@ import { z } from "zod";
  * the BFF (`/api/v1/**`, AGENTS.md §8): the most tool rounds a feature key may run in a turn, the most answers a structured-output call may ask for (#172), and the models each
  * feature routes to (read only). Responses are parsed: a screen that misreads a bound would show a wrong limit.
  */
-export const ToolBoundSchema = z.object({ featureKey: z.string(), maxToolRounds: z.number().int(), isDefault: z.boolean() });
-export const ToolBoundsSchema = z.object({ min: z.number().int(), max: z.number().int(), bounds: z.array(ToolBoundSchema) });
-export const StructuredBoundSchema = z.object({ featureKey: z.string(), maxAttempts: z.number().int(), isDefault: z.boolean() });
-export const StructuredBoundsSchema = z.object({ min: z.number().int(), max: z.number().int(), bounds: z.array(StructuredBoundSchema) });
+export const ToolBoundSchema = z.object({
+  featureKey: z.string(),
+  maxToolRounds: z.number().int(),
+  isDefault: z.boolean(),
+});
+export const ToolBoundsSchema = z.object({
+  min: z.number().int(),
+  max: z.number().int(),
+  bounds: z.array(ToolBoundSchema),
+});
+export const StructuredBoundSchema = z.object({
+  featureKey: z.string(),
+  maxAttempts: z.number().int(),
+  isDefault: z.boolean(),
+});
+export const StructuredBoundsSchema = z.object({
+  min: z.number().int(),
+  max: z.number().int(),
+  bounds: z.array(StructuredBoundSchema),
+});
 export const FeatureRouteSchema = z.object({ featureKey: z.string(), models: z.array(z.string()) });
 
 export type ToolBound = z.infer<typeof ToolBoundSchema>;
@@ -45,7 +61,12 @@ export const FeatureToolsApi = {
 
   /** Sets the bound of a feature; it applies on the next turn, with no restart. */
   save: async (featureKey: string, maxToolRounds: number): Promise<ToolBound> =>
-    ToolBoundSchema.parse(await call(`${BASE}/feature-tool-bounds/${encodeURIComponent(featureKey)}`, { method: "PUT", body: JSON.stringify({ maxToolRounds }) })),
+    ToolBoundSchema.parse(
+      await call(`${BASE}/feature-tool-bounds/${encodeURIComponent(featureKey)}`, {
+        method: "PUT",
+        body: JSON.stringify({ maxToolRounds }),
+      }),
+    ),
 
   /** Removes a feature's own bound so it follows the default row. */
   remove: async (featureKey: string): Promise<void> => {
@@ -53,11 +74,17 @@ export const FeatureToolsApi = {
   },
 
   /** Every structured-output bound (the default row `*` first) and the range the server accepts. */
-  structuredBounds: async (): Promise<StructuredBounds> => StructuredBoundsSchema.parse(await call(`${BASE}/feature-structured-bounds`)),
+  structuredBounds: async (): Promise<StructuredBounds> =>
+    StructuredBoundsSchema.parse(await call(`${BASE}/feature-structured-bounds`)),
 
   /** Sets the most answers a feature's structured calls may ask for; it applies on the next call. */
   saveStructured: async (featureKey: string, maxAttempts: number): Promise<StructuredBound> =>
-    StructuredBoundSchema.parse(await call(`${BASE}/feature-structured-bounds/${encodeURIComponent(featureKey)}`, { method: "PUT", body: JSON.stringify({ maxAttempts }) })),
+    StructuredBoundSchema.parse(
+      await call(`${BASE}/feature-structured-bounds/${encodeURIComponent(featureKey)}`, {
+        method: "PUT",
+        body: JSON.stringify({ maxAttempts }),
+      }),
+    ),
 
   /** Removes a feature's own structured bound so it follows the default row. */
   removeStructured: async (featureKey: string): Promise<void> => {

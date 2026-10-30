@@ -42,23 +42,17 @@ describe("JobModal", () => {
   });
 
   it("renders job ID", () => {
-    render(
-      <JobModal job={baseJob as never} modalType="payload" onClose={onClose} copiedId={null} onCopy={onCopy} />,
-    );
+    render(<JobModal job={baseJob as never} modalType="payload" onClose={onClose} copiedId={null} onCopy={onCopy} />);
     expect(screen.getByText(/job-42/)).toBeInTheDocument();
   });
 
   it("renders status pill", () => {
-    render(
-      <JobModal job={baseJob as never} modalType="payload" onClose={onClose} copiedId={null} onCopy={onCopy} />,
-    );
+    render(<JobModal job={baseJob as never} modalType="payload" onClose={onClose} copiedId={null} onCopy={onCopy} />);
     expect(screen.getByText("COMPLETED")).toBeInTheDocument();
   });
 
   it("closes on Escape key", () => {
-    render(
-      <JobModal job={baseJob as never} modalType="payload" onClose={onClose} copiedId={null} onCopy={onCopy} />,
-    );
+    render(<JobModal job={baseJob as never} modalType="payload" onClose={onClose} copiedId={null} onCopy={onCopy} />);
     fireEvent.keyDown(screen.getByRole("dialog"), { key: "Escape" });
     expect(onClose).toHaveBeenCalled();
   });

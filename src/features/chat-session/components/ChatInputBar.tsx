@@ -13,7 +13,11 @@ import { routingStatus } from "@/core/utils/routing";
 import type { ChatInputBarProps } from "@/features/chat-session/components/chatInputBar.types";
 
 // Attributes for the kit's field and send button (the e2e and the unit tests find them by these ids).
-const INPUT_ATTRS: Record<string, string> = { "data-testid": "chat-input", "data-composer-field": "", autoComplete: "off" };
+const INPUT_ATTRS: Record<string, string> = {
+  "data-testid": "chat-input",
+  "data-composer-field": "",
+  autoComplete: "off",
+};
 const SEND_ATTRS: Record<string, string> = { "data-testid": "chat-submit" };
 
 export const ChatInputBar: React.FC<ChatInputBarProps> = ({
@@ -48,13 +52,11 @@ export const ChatInputBar: React.FC<ChatInputBarProps> = ({
   const showOptions = !!selectedStudio && resolveModelCategory(selectedStudio.capabilityKey) !== null;
 
   const canSend =
-    !isUploadingAttachment &&
-    !(needsAttachment && !attachment) &&
-    (!!input.trim() || !!attachment || !!selectedStudio);
+    !isUploadingAttachment && !(needsAttachment && !attachment) && (!!input.trim() || !!attachment || !!selectedStudio);
 
   // The status line says only what is true: local only when the last routing was local, plus the estimate.
   const status = routingStatus(routing);
-  const statusParts: React.ReactNode[] = [];
+  const statusParts: React.ReactElement[] = [];
   if (isAgentBusy) {
     statusParts.push(<span key="busy">{t.chat.composerBusy}</span>);
   } else {
@@ -132,15 +134,30 @@ export const ChatInputBar: React.FC<ChatInputBarProps> = ({
                   disabled={isAgentBusy}
                   aria-label={t.chat.addCapability}
                   aria-expanded={isPlusMenuOpen}
-                  className={cn("h-8 gap-1.5 pl-2.5 pr-2 font-medium", selectedStudio && "bg-accent-soft text-fg-accent")}
+                  className={cn(
+                    "h-8 gap-1.5 pl-2.5 pr-2 font-medium",
+                    selectedStudio && "bg-accent-soft text-fg-accent",
+                  )}
                 >
                   <Icon name="spark" size={15} />
                   {/* On a phone the chip is its icon and chevron: the field keeps the room to write. */}
-                  <span className="hidden max-w-[96px] truncate sm:inline">{selectedStudio ? selectedStudio.label : t.chat.modeChat}</span>
-                  <ChevronDownIcon size={14} className={cn("transition-transform duration-200", isPlusMenuOpen && "rotate-180")} />
+                  <span className="hidden max-w-[96px] truncate sm:inline">
+                    {selectedStudio ? selectedStudio.label : t.chat.modeChat}
+                  </span>
+                  <ChevronDownIcon
+                    size={14}
+                    className={cn("transition-transform duration-200", isPlusMenuOpen && "rotate-180")}
+                  />
                 </Button>
                 {selectedStudio && (
-                  <IconButton variant="ghost" size="sm" shape="pill" onClick={onClearStudio} disabled={isAgentBusy} label={t.chat.clear}>
+                  <IconButton
+                    variant="ghost"
+                    size="sm"
+                    shape="pill"
+                    onClick={onClearStudio}
+                    disabled={isAgentBusy}
+                    label={t.chat.clear}
+                  >
                     <CloseIcon size={13} />
                   </IconButton>
                 )}
@@ -156,7 +173,20 @@ export const ChatInputBar: React.FC<ChatInputBarProps> = ({
                 </IconButton>
               </>
             }
-            status={statusParts.length ? statusParts.flatMap((p, i) => (i ? [<span key={`sep-${i}`} aria-hidden>·</span>, p] : [p])) : undefined}
+            status={
+              statusParts.length
+                ? statusParts.flatMap((p, i) =>
+                    i
+                      ? [
+                          <span key={`sep-${p.key}`} aria-hidden>
+                            ·
+                          </span>,
+                          p,
+                        ]
+                      : [p],
+                  )
+                : undefined
+            }
           />
         </section>
       </article>

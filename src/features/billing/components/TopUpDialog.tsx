@@ -28,7 +28,12 @@ export function TopUpDialog({ open, onClose }: TopUpDialogProps) {
   const { t } = useTranslation();
   const money = useMoney();
   // The public plans are read once the dialog opens, and again only when they are stale.
-  const loaded = useQuery({ queryKey: ["billing-plans"], queryFn: () => BillingApi.fetchPlans(), enabled: open, retry: false });
+  const loaded = useQuery({
+    queryKey: ["billing-plans"],
+    queryFn: () => BillingApi.fetchPlans(),
+    enabled: open,
+    retry: false,
+  });
   const plans: Plan[] = (loaded.data ?? []).filter((plan) => plan.isPublic && plan.isActive);
   const isLoading = open && loaded.isFetching;
 

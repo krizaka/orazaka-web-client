@@ -122,10 +122,12 @@ export const LawAdminApi = {
   instruments: async (): Promise<Instrument[]> => z.array(InstrumentSchema).parse(await call("/instruments")),
 
   /** The imports, newest first. */
-  imports: async (limit = 50): Promise<ImportRow[]> => z.array(ImportRowSchema).parse(await call(`/imports?limit=${limit}`)),
+  imports: async (limit = 50): Promise<ImportRow[]> =>
+    z.array(ImportRowSchema).parse(await call(`/imports?limit=${limit}`)),
 
   /** Which version of an article was in force on a date — metadata only, never the text. */
-  article: async (q: ArticleQuery): Promise<ArticleLookup> => ArticleLookupSchema.parse(await call(`/articles${query({ ...q })}`)),
+  article: async (q: ArticleQuery): Promise<ArticleLookup> =>
+    ArticleLookupSchema.parse(await call(`/articles${query({ ...q })}`)),
 
   /** The manual import of a consolidated XML file (multipart: the browser sets the boundary). */
   importFile: async (upload: ManualImport): Promise<ImportResult> => {

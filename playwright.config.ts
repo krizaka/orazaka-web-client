@@ -37,12 +37,14 @@ export default defineConfig({
   ],
 
   // E2E_BASE_URL points the suite at a deployed site (the live smoke): nothing is started then.
-  webServer: process.env.E2E_BASE_URL ? undefined : {
-    command: "npm run dev",
-    // A known secret so the suite can sign the session cookie it needs (a throwaway value, used nowhere else); sign-in open so the session route answers.
-    env: { NEXTAUTH_SECRET: "e2e-only-secret-not-used-anywhere-else", AUTH_LOGIN_ENABLED: "true" },
-    url: "http://localhost:3000",
-    reuseExistingServer: !process.env.CI,
-    timeout: 120_000,
-  },
+  webServer: process.env.E2E_BASE_URL
+    ? undefined
+    : {
+        command: "npm run dev",
+        // A known secret so the suite can sign the session cookie it needs (a throwaway value, used nowhere else); sign-in open so the session route answers.
+        env: { NEXTAUTH_SECRET: "e2e-only-secret-not-used-anywhere-else", AUTH_LOGIN_ENABLED: "true" },
+        url: "http://localhost:3000",
+        reuseExistingServer: !process.env.CI,
+        timeout: 120_000,
+      },
 });

@@ -32,10 +32,7 @@ function loadRootEnv(): void {
     const key = trimmed.slice(0, eq).trim();
     if (process.env[key] !== undefined) continue;
     let value = trimmed.slice(eq + 1).trim();
-    if (
-      (value.startsWith('"') && value.endsWith('"')) ||
-      (value.startsWith("'") && value.endsWith("'"))
-    ) {
+    if ((value.startsWith('"') && value.endsWith('"')) || (value.startsWith("'") && value.endsWith("'"))) {
       value = value.slice(1, -1);
     }
     process.env[key] = value;
@@ -65,7 +62,28 @@ const nextConfig: NextConfig = {
   agentRules: false,
   // @krizaka/ui: the primitives the design system re-exports since 2.0 (ES modules) — listed so next/jest
   // transforms them like the design system itself.
-  transpilePackages: ["@krizaka/orazaka-design-system", "@krizaka/orazaka-shared", "@krizaka/ui", "@krizaka/query", "@krizaka/charts", "@krizaka/tokens", "@krizaka/icons", "@krizaka/intl", "@krizaka/pacer", "@tanstack/pacer", "@tanstack/react-table", "@tanstack/table-core", "@tanstack/react-virtual", "@tanstack/virtual-core", "@tanstack/store", "@tanstack/react-store", "@tanstack/markdown", "@tanstack/highlight", "@krizaka/settings", "@krizaka/db"],
+  transpilePackages: [
+    "@krizaka/orazaka-design-system",
+    "@krizaka/orazaka-shared",
+    "@krizaka/ui",
+    "@krizaka/query",
+    "@krizaka/charts",
+    "@krizaka/tokens",
+    "@krizaka/icons",
+    "@krizaka/intl",
+    "@krizaka/pacer",
+    "@tanstack/pacer",
+    "@tanstack/react-table",
+    "@tanstack/table-core",
+    "@tanstack/react-virtual",
+    "@tanstack/virtual-core",
+    "@tanstack/store",
+    "@tanstack/react-store",
+    "@tanstack/markdown",
+    "@tanstack/highlight",
+    "@krizaka/settings",
+    "@krizaka/db",
+  ],
   turbopack: {
     root: path.resolve(__dirname, ".."),
   },

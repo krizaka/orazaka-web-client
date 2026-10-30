@@ -22,12 +22,7 @@ interface ChatHeaderProps {
  * the application, not something its reader needs, so it is not shown.
  * Calm Obsidian 2026 — solid surface, no backdrop-blur.
  */
-export function ChatHeader({
-  threadTitle,
-  onOpenDrawer,
-  onRename,
-  t,
-}: Readonly<ChatHeaderProps>) {
+export function ChatHeader({ threadTitle, onOpenDrawer, onRename, t }: Readonly<ChatHeaderProps>) {
   const [isEditing, setIsEditing] = useState(false);
   // What the person typed, or nothing: the title shown is the thread's own until they edit it.
   const [draft, setDraft] = useState<string | null>(null);
@@ -71,9 +66,7 @@ export function ChatHeader({
               />
             ) : (
               <>
-                <h1 className="text-sm font-semibold text-fg truncate">
-                  {threadTitle || t.chat.sessionTitle}
-                </h1>
+                <h1 className="text-sm font-semibold text-fg truncate">{threadTitle || t.chat.sessionTitle}</h1>
                 <IconButton
                   id="btn-edit-session-title"
                   variant="ghost"

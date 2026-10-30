@@ -26,7 +26,12 @@ export function clean(md, omit = []) {
 
 /** Removes every `##` section whose heading starts with one of `prefixes` (numbering and punctuation ignored). */
 export function omitSections(md, prefixes) {
-  const norm = (s) => s.replace(/^#+\s*/, "").replace(/^\d+[.)]?\s*/, "").trim().toLowerCase();
+  const norm = (s) =>
+    s
+      .replace(/^#+\s*/, "")
+      .replace(/^\d+[.)]?\s*/, "")
+      .trim()
+      .toLowerCase();
   const wanted = prefixes.map(norm);
   const lines = md.split("\n");
   const out = [];
@@ -44,7 +49,15 @@ export function omitSections(md, prefixes) {
 export function modelSlice(arch) {
   return {
     roles: arch.roles,
-    modules: arch.modules.map(({ id, repository, owner, role, layer, runtime, description }) => ({ id, repository, owner, role, layer, runtime, description })),
+    modules: arch.modules.map(({ id, repository, owner, role, layer, runtime, description }) => ({
+      id,
+      repository,
+      owner,
+      role,
+      layer,
+      runtime,
+      description,
+    })),
     dependencies: arch.dependencies,
     flows: arch.flows,
     pipeline: arch.pipeline,
@@ -79,9 +92,24 @@ export function sync(srcDir, outDir = path.join(root, "content", "docs")) {
     if (!fs.existsSync(file)) throw new Error(`${d.slug}: ${d.source} is not in ${srcDir}`);
     const body = clean(fs.readFileSync(file, "utf8"), d.omit);
     const gone = removedLinks(body);
-    if (gone.length) throw new Error(`${d.slug}: links a removed public route (${gone.join(", ")}) — fix ${d.source} in the Orazaka repository`);
+    if (gone.length)
+      throw new Error(
+        `${d.slug}: links a removed public route (${gone.join(", ")}) — fix ${d.source} in the Orazaka repository`,
+      );
     fs.writeFileSync(path.join(outDir, `${d.slug}.md`), body);
-    index.push({ slug: d.slug, journey: d.journey, group: d.group ?? null, order: d.order, title: d.title, intro: d.intro, audience: d.audience, source: d.source, generated: Boolean(d.generated), clip: d.clip ?? null, file: `${d.slug}.md` });
+    index.push({
+      slug: d.slug,
+      journey: d.journey,
+      group: d.group ?? null,
+      order: d.order,
+      title: d.title,
+      intro: d.intro,
+      audience: d.audience,
+      source: d.source,
+      generated: Boolean(d.generated),
+      clip: d.clip ?? null,
+      file: `${d.slug}.md`,
+    });
   }
   for (const s of SPECIAL) index.push({ ...s, group: null, source: null, generated: false, clip: null, file: null });
   fs.writeFileSync(path.join(outDir, "index.json"), `${JSON.stringify(index, null, 2)}\n`);

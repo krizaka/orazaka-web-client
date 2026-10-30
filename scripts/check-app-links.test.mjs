@@ -21,13 +21,22 @@ function tree(files) {
 describe("a catch-all that only answers 404", () => {
   it("is recognised, comments and async or not", () => {
     assert.equal(isNotFoundOnly(NOT_FOUND), true);
-    assert.equal(isNotFoundOnly(`import { notFound } from "next/navigation";\nexport default async function P() { notFound() }`), true);
+    assert.equal(
+      isNotFoundOnly(`import { notFound } from "next/navigation";\nexport default async function P() { notFound() }`),
+      true,
+    );
     assert.equal(isNotFoundOnly(`export default function P() { return <p>hi</p>; }`), false);
-    assert.equal(isNotFoundOnly(`import { notFound } from "next/navigation";\nexport default function P() { log(); notFound(); }`), false);
+    assert.equal(
+      isNotFoundOnly(`import { notFound } from "next/navigation";\nexport default function P() { log(); notFound(); }`),
+      false,
+    );
   });
 
   it("is no route of the app — a real catch-all still is", () => {
-    const only = tree({ "[locale]/watch/[id]/page.tsx": "export default function P() { return null; }", "[locale]/[...rest]/page.tsx": NOT_FOUND });
+    const only = tree({
+      "[locale]/watch/[id]/page.tsx": "export default function P() { return null; }",
+      "[locale]/[...rest]/page.tsx": NOT_FOUND,
+    });
     assert.deepEqual(nextRoutes(only), ["/[locale]/watch/[id]"]);
     const real = tree({ "docs/[...slug]/page.tsx": "export default function P() { return <p>doc</p>; }" });
     assert.deepEqual(nextRoutes(real), ["/docs/[...slug]"]);

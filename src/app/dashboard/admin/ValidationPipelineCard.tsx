@@ -16,9 +16,7 @@ interface ValidationPipelineCardProps {
   fetchWithAuth: (url: string, options?: RequestInit) => Promise<Response>;
 }
 
-export function ValidationPipelineCard({
-  fetchWithAuth,
-}: Readonly<ValidationPipelineCardProps>) {
+export function ValidationPipelineCard({ fetchWithAuth }: Readonly<ValidationPipelineCardProps>) {
   const { t } = useTranslation();
   const [draft, setDraft] = React.useState<ValidationTierConfig[] | null>(null);
   const [saving, setSaving] = React.useState(false);
@@ -28,13 +26,10 @@ export function ValidationPipelineCard({
     message: string;
   } | null>(null);
 
-  const showToast = React.useCallback(
-    (type: "success" | "error", message: string) => {
-      setToast({ type, message });
-      setTimeout(() => setToast(null), 3500);
-    },
-    [],
-  );
+  const showToast = React.useCallback((type: "success" | "error", message: string) => {
+    setToast({ type, message });
+    setTimeout(() => setToast(null), 3500);
+  }, []);
 
   // The server's list, with the operator's unsaved edits laid over it (a draft) — never copied into state by an effect.
   const config = useQuery({
@@ -47,16 +42,15 @@ export function ValidationPipelineCard({
     refetchOnWindowFocus: false,
   });
   const tiers = draft ?? config.data ?? [];
-  const setTiers = (next: ValidationTierConfig[] | ((prev: ValidationTierConfig[]) => ValidationTierConfig[])) => setDraft(typeof next === "function" ? next(tiers) : next);
+  const setTiers = (next: ValidationTierConfig[] | ((prev: ValidationTierConfig[]) => ValidationTierConfig[])) =>
+    setDraft(typeof next === "function" ? next(tiers) : next);
   const loading = config.isPending;
-  const shownToast = toast ?? (config.isError ? { type: "error" as const, message: "Failed to load validation pipeline configuration." } : null);
+  const shownToast =
+    toast ??
+    (config.isError ? { type: "error" as const, message: "Failed to load validation pipeline configuration." } : null);
 
   const handleToggle = (idx: number) => {
-    setTiers((prev) =>
-      prev.map((tier, i) =>
-        i === idx ? { ...tier, enabled: !tier.enabled } : tier,
-      ),
-    );
+    setTiers((prev) => prev.map((tier, i) => (i === idx ? { ...tier, enabled: !tier.enabled } : tier)));
     setDirty(true);
   };
 
@@ -89,10 +83,7 @@ export function ValidationPipelineCard({
           <span className="h-5 w-64 bg-surface-2 rounded block" />
           <span className="h-3 w-96 bg-surface-2 rounded block" />
           {[1, 2, 3, 4].map((i) => (
-            <span
-              key={i}
-              className="h-20 bg-surface-1 rounded-xl block"
-            />
+            <span key={i} className="h-20 bg-surface-1 rounded-xl block" />
           ))}
         </article>
       </section>
@@ -111,7 +102,7 @@ export function ValidationPipelineCard({
             "absolute top-4 right-4 z-10 flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium shadow-lg animate-in fade-in slide-in-from-top-2 duration-300",
             shownToast.type === "success"
               ? "bg-success/40 text-success border border-success"
-              : "bg-danger/40 text-danger border border-danger"
+              : "bg-danger/40 text-danger border border-danger",
           )}
         >
           {shownToast.type === "success" ? (
@@ -132,11 +123,16 @@ export function ValidationPipelineCard({
             </span>
             Validation Matrix
           </h3>
-          <p className="text-xs text-fg-muted mt-0.5">
-            Configure the 4-tier autonomous self-correction chain.
-          </p>
+          <p className="text-xs text-fg-muted mt-0.5">Configure the 4-tier autonomous self-correction chain.</p>
         </article>
-        <Button id="save-validation-pipeline" variant="primary" size="sm" onClick={handleSave} disabled={!dirty} loading={saving}>
+        <Button
+          id="save-validation-pipeline"
+          variant="primary"
+          size="sm"
+          onClick={handleSave}
+          disabled={!dirty}
+          loading={saving}
+        >
           <Icon name="save" className="h-3.5 w-3.5" />
           {saving ? t.admin.pipeline.saving : t.admin.saveChanges}
         </Button>
@@ -161,14 +157,14 @@ export function ValidationPipelineCard({
                 "group flex items-center gap-4 p-4 rounded-xl border transition-all duration-200",
                 tier.enabled
                   ? cn("border-border-subtle bg-surface-0 hover:ring-1", colors.ring, colors.glow)
-                  : "border-border-subtle bg-surface-1/50 opacity-60"
+                  : "border-border-subtle bg-surface-1/50 opacity-60",
               )}
             >
               {/* Tier badge */}
               <span
                 className={cn(
                   "flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-lg text-sm font-bold border",
-                  colors.badge
+                  colors.badge,
                 )}
               >
                 {meta.badge}
@@ -177,16 +173,12 @@ export function ValidationPipelineCard({
               {/* Info */}
               <article className="flex-1 min-w-0">
                 <header className="flex items-center gap-2">
-                  <span className="text-sm font-semibold text-fg truncate">
-                    {meta.label}
-                  </span>
+                  <span className="text-sm font-semibold text-fg truncate">{meta.label}</span>
                   <span className="text-[10px] font-mono text-fg-muted hidden sm:inline">
                     order: {tier.executionOrder}
                   </span>
                 </header>
-                <p className="text-[11px] text-fg-muted truncate mt-0.5">
-                  {meta.description}
-                </p>
+                <p className="text-[11px] text-fg-muted truncate mt-0.5">{meta.description}</p>
               </article>
 
               {/* Disabled badge */}

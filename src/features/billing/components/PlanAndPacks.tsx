@@ -25,21 +25,13 @@ export function PlanAndPacks({ studios }: Readonly<{ studios: StudioNames }>) {
   const p = t.plan;
   const money = useMoney();
   const { plan, isLoading: planLoading } = usePlan();
-  const {
-    packs,
-    ownedKeys,
-    holdingsUnavailable,
-    isLoading,
-    error,
-    pendingKey,
-    reload,
-    subscribe,
-    remove,
-  } = usePacks(locale, t.packs.loadError);
+  const { packs, ownedKeys, holdingsUnavailable, isLoading, error, pendingKey, reload, subscribe, remove } = usePacks(
+    locale,
+    t.packs.loadError,
+  );
   const drawer = useDrawerParam("pack");
 
-  const isMine = (pack: PackSummary) =>
-    pack.access === "INCLUDED" || ownedKeys.has(pack.packKey);
+  const isMine = (pack: PackSummary) => pack.access === "INCLUDED" || ownedKeys.has(pack.packKey);
   const mine = packs.filter(isMine);
   const more = packs.filter((pack) => !isMine(pack));
   const open = packs.find((pack) => pack.packKey === drawer.value) ?? null;
@@ -61,12 +53,7 @@ export function PlanAndPacks({ studios }: Readonly<{ studios: StudioNames }>) {
       row={(pack) => ({
         title: pack.label,
         description: [
-          fill(
-            pack.studioKeys.length === 1
-              ? p.studiosCount.one
-              : p.studiosCount.other,
-            { n: pack.studioKeys.length },
-          ),
+          fill(pack.studioKeys.length === 1 ? p.studiosCount.one : p.studiosCount.other, { n: pack.studioKeys.length }),
           pack.studioKeys.map((k) => studios.get(k)?.label ?? k).join(", "),
         ].join(" · "),
         leading: <CatalogueIcon iconKey={pack.iconKey} size={18} />,
@@ -97,9 +84,7 @@ export function PlanAndPacks({ studios }: Readonly<{ studios: StudioNames }>) {
   return (
     <article className="flex flex-col gap-6">
       <header className="flex flex-col gap-1">
-        <h1 className="font-display text-2xl font-bold tracking-[-0.02em] text-fg">
-          {p.title}
-        </h1>
+        <h1 className="font-display text-2xl font-bold tracking-[-0.02em] text-fg">{p.title}</h1>
         <p className="max-w-2xl text-sm text-fg-secondary">{p.subtitle}</p>
       </header>
 
@@ -108,9 +93,7 @@ export function PlanAndPacks({ studios }: Readonly<{ studios: StudioNames }>) {
           {p.yourPlan}
         </h2>
         <div className="flex flex-wrap items-baseline gap-x-4 gap-y-1 rounded-xl border border-border-default bg-surface-1 px-4 py-3 text-sm text-fg-secondary">
-          <strong className="text-base font-semibold text-fg">
-            {planName}
-          </strong>
+          <strong className="text-base font-semibold text-fg">{planName}</strong>
           {planPrice && <span>{planPrice}</span>}
           {plan && (
             <span>
@@ -119,10 +102,7 @@ export function PlanAndPacks({ studios }: Readonly<{ studios: StudioNames }>) {
               })}
             </span>
           )}
-          <Link
-            href="/usage"
-            className="ml-auto font-medium text-fg-accent underline-offset-4 hover:underline"
-          >
+          <Link href="/usage" className="ml-auto font-medium text-fg-accent underline-offset-4 hover:underline">
             {p.seeUsage}
           </Link>
         </div>

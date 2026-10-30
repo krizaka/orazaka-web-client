@@ -32,7 +32,8 @@ describe.each(["en", "fr"] as const)("/pricing (%s)", (locale) => {
     const { container } = renderPage(locale);
     const p = translations[locale].pricing;
     expect(screen.getAllByRole("heading", { level: 1 })).toHaveLength(1);
-    for (const name of [p.community.name, p.business.name, p.enterprise.name]) expect(screen.getAllByText(name).length).toBeGreaterThan(0);
+    for (const name of [p.community.name, p.business.name, p.enterprise.name])
+      expect(screen.getAllByText(name).length).toBeGreaterThan(0);
     // Prices are data (ADR-009) and the catalogue has no Orazaka plan: nothing on the page looks like a price.
     expect(container.textContent).not.toMatch(/[$€£]|\d\s?(\$|CAD|USD|EUR)|\bper month\b|\/\s?mois/i);
   });
@@ -48,28 +49,45 @@ describe.each(["en", "fr"] as const)("/pricing (%s)", (locale) => {
     renderPage(locale);
     const p = translations[locale].pricing;
     expect(screen.getAllByText(p.business.soon).length).toBeGreaterThan(0);
-    expect(screen.getAllByRole("link", { name: p.community.download }).some((a) => a.getAttribute("href") === "/desktop")).toBe(true);
+    expect(
+      screen.getAllByRole("link", { name: p.community.download }).some((a) => a.getAttribute("href") === "/desktop"),
+    ).toBe(true);
   });
 
   it("the footer links the page", () => {
     renderPage(locale);
     const footer = screen.getAllByRole("contentinfo")[0];
-    expect(within(footer).getByRole("link", { name: translations[locale].landing.footer.pricing })).toHaveAttribute("href", "/pricing");
+    expect(within(footer).getByRole("link", { name: translations[locale].landing.footer.pricing })).toHaveAttribute(
+      "href",
+      "/pricing",
+    );
   });
 });
 
 describe("/pricing reads the price catalogue (krizaka/orazaka#417)", () => {
-  const entry = (over: Partial<PublicPrice>): PublicPrice => ({ key: "orazaka.business", unit: "year", amountCents: 290000, availability: "public", limits: {}, ...over });
+  const entry = (over: Partial<PublicPrice>): PublicPrice => ({
+    key: "orazaka.business",
+    unit: "year",
+    amountCents: 290000,
+    availability: "public",
+    limits: {},
+    ...over,
+  });
 
   it("keeps a published catalogue price off the page while Orazaka is in development (krizaka-com#468)", () => {
     const { container } = renderPage("en", [entry({})]);
     expect(container.textContent?.replace(/\s/g, " ")).not.toContain("2,900.00");
-    expect(container.textContent).not.toContain(`${translations.en.pricing.units.year} · ${translations.en.pricing.plusTaxes}`);
+    expect(container.textContent).not.toContain(
+      `${translations.en.pricing.units.year} · ${translations.en.pricing.plusTaxes}`,
+    );
     expect(container.textContent).toContain(translations.en.pricing.business.soon);
   });
 
   it("keeps the edition's own words when the catalogue says preparing or internal", () => {
-    const { container } = renderPage("fr", [entry({ availability: "preparing", amountCents: null }), entry({ key: "orazaka.enterprise", availability: "internal" })]);
+    const { container } = renderPage("fr", [
+      entry({ availability: "preparing", amountCents: null }),
+      entry({ key: "orazaka.enterprise", availability: "internal" }),
+    ]);
     expect(container.textContent).not.toMatch(/[$€£]/);
     expect(screen.getAllByText(translations.fr.pricing.business.soon).length).toBeGreaterThan(0);
   });
@@ -78,7 +96,8 @@ describe("/pricing reads the price catalogue (krizaka/orazaka#417)", () => {
 describe("/pricing in the public surfaces", () => {
   it("is in the sitemap", () => expect(publicPaths()).toContain("/pricing"));
   it("has the same keys in both languages", () => {
-    const keys = (o: unknown): string[] => (o && typeof o === "object" ? Object.entries(o).flatMap(([k, v]) => [k, ...keys(v).map((x) => `${k}.${x}`)]) : []);
+    const keys = (o: unknown): string[] =>
+      o && typeof o === "object" ? Object.entries(o).flatMap(([k, v]) => [k, ...keys(v).map((x) => `${k}.${x}`)]) : [];
     expect(keys(translations.fr.pricing)).toEqual(keys(translations.en.pricing));
   });
 });

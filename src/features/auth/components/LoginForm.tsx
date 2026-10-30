@@ -26,7 +26,15 @@ interface LoginCardProps {
  * next-auth, `LoginPreview` shows it disabled while sign-in is closed. The "Register" way appears only while sign-up
  * is open, and each OAuth button only when its provider is offered (`AuthFlags.github` / `google`).
  */
-export function LoginCard({ preview = false, notice, error = "", isLoading = false, onSubmit, onGithub, onGoogle }: Readonly<LoginCardProps>) {
+export function LoginCard({
+  preview = false,
+  notice,
+  error = "",
+  isLoading = false,
+  onSubmit,
+  onGithub,
+  onGoogle,
+}: Readonly<LoginCardProps>) {
   const { t } = useTranslation();
   const flags = useAuthFlags();
   const [email, setEmail] = React.useState("");
@@ -58,18 +66,45 @@ export function LoginCard({ preview = false, notice, error = "", isLoading = fal
         {error && <Alert tone="danger">{error}</Alert>}
         <Field.Root>
           <Field.Label htmlFor="login-email">{t.auth.emailLabel}</Field.Label>
-          <Input id="login-email" type="email" placeholder="you@orazaka.com" value={email} onChange={(e) => setEmail(e.target.value)} required disabled={preview} autoComplete="email" invalid={Boolean(error)} />
+          <Input
+            id="login-email"
+            type="email"
+            placeholder="you@orazaka.com"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+            disabled={preview}
+            autoComplete="email"
+            invalid={Boolean(error)}
+          />
         </Field.Root>
         <Field.Root>
           <Field.Label htmlFor="login-password">{t.auth.passwordLabel}</Field.Label>
-          <Input id="login-password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} required disabled={preview} autoComplete="current-password" invalid={Boolean(error)} />
+          <Input
+            id="login-password"
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+            disabled={preview}
+            autoComplete="current-password"
+            invalid={Boolean(error)}
+          />
           <Field.Hint>
             <Link href="/forgot-password" className="text-fg-accent hover:underline">
               {t.auth.forgotPasswordLink}
             </Link>
           </Field.Hint>
         </Field.Root>
-        <Button id="btn-login-submit" type="submit" variant="primary" size="lg" loading={isLoading && !preview} disabled={preview} className="w-full">
+        <Button
+          id="btn-login-submit"
+          type="submit"
+          variant="primary"
+          size="lg"
+          loading={isLoading && !preview}
+          disabled={preview}
+          className="w-full"
+        >
           {isLoading ? t.auth.signingInBtn : t.auth.signInBtn}
         </Button>
       </form>

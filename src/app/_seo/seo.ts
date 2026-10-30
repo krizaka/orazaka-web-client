@@ -27,16 +27,50 @@ export const SITE_DESCRIPTION =
 
 /** The search bots and AI crawlers the whole family welcomes — the same list on every site. */
 export const CRAWLERS = [
-  "Googlebot", "Google-Extended", "Bingbot", "GPTBot", "OAI-SearchBot", "ChatGPT-User", "PerplexityBot", "Perplexity-User",
-  "Claude-SearchBot", "Claude-User", "ClaudeBot", "anthropic-ai", "Applebot", "Applebot-Extended", "CCBot",
+  "Googlebot",
+  "Google-Extended",
+  "Bingbot",
+  "GPTBot",
+  "OAI-SearchBot",
+  "ChatGPT-User",
+  "PerplexityBot",
+  "Perplexity-User",
+  "Claude-SearchBot",
+  "Claude-User",
+  "ClaudeBot",
+  "anthropic-ai",
+  "Applebot",
+  "Applebot-Extended",
+  "CCBot",
 ] as const;
 
 /** What a crawler may not walk into: the signed-in workspace, the BFF and the account forms. */
-export const PRIVATE_PATHS = ["/api/", "/dashboard", "/chat", "/jobs", "/usage", "/settings", "/interceptions", "/login", "/register", "/verify", "/forgot-password"];
+export const PRIVATE_PATHS = [
+  "/api/",
+  "/dashboard",
+  "/chat",
+  "/jobs",
+  "/usage",
+  "/settings",
+  "/interceptions",
+  "/login",
+  "/register",
+  "/verify",
+  "/forgot-password",
+];
 
 /** Every public page, in the order of the sitemap. */
 export function publicPaths(): string[] {
-  return ["/", "/desktop", "/pricing", "/open-source", "/docs", ...listPages().map((d) => `/docs/${d.slug}`), "/privacy", "/terms"];
+  return [
+    "/",
+    "/desktop",
+    "/pricing",
+    "/open-source",
+    "/docs",
+    ...listPages().map((d) => `/docs/${d.slug}`),
+    "/privacy",
+    "/terms",
+  ];
 }
 
 const ORG = { "@type": "Organization", "@id": ORG_ID, name: "Krizaka", url: KRIZAKA_URL };
@@ -46,7 +80,14 @@ export function siteJsonLd() {
   return {
     "@context": "https://schema.org",
     "@graph": [
-      { "@type": "WebSite", "@id": `${SITE_URL}/#website`, url: `${SITE_URL}/`, name: SITE_NAME, inLanguage: ["en", "fr"], publisher: ORG },
+      {
+        "@type": "WebSite",
+        "@id": `${SITE_URL}/#website`,
+        url: `${SITE_URL}/`,
+        name: SITE_NAME,
+        inLanguage: ["en", "fr"],
+        publisher: ORG,
+      },
       {
         "@type": "SoftwareApplication",
         "@id": `${SITE_URL}/#software`,
@@ -67,7 +108,8 @@ export function siteJsonLd() {
 }
 
 // A deployed product is independent: llms.txt names its publisher and nothing else of the family — no other product.
-const familySection = () => `## Publisher\n\n- [Krizaka](${KRIZAKA_URL}): the company that publishes Orazaka, an open-source software studio in Montréal\n\nSitemap: ${SITE_URL}/sitemap.xml\n`;
+const familySection = () =>
+  `## Publisher\n\n- [Krizaka](${KRIZAKA_URL}): the company that publishes Orazaka, an open-source software studio in Montréal\n\nSitemap: ${SITE_URL}/sitemap.xml\n`;
 
 export function llmsText(): string {
   const docs = listPages().map((d) => `- [${d.title}](${SITE_URL}/docs/${d.slug}): ${d.intro}`);
@@ -100,7 +142,9 @@ ${familySection()}`;
 }
 
 export function llmsFullText(): string {
-  const docs = listPages().map((d) => `\n---\n\n# ${d.title}\n\nURL: ${SITE_URL}/docs/${d.slug}\n\n${plainDoc(d.slug) ?? d.intro}\n`);
+  const docs = listPages().map(
+    (d) => `\n---\n\n# ${d.title}\n\nURL: ${SITE_URL}/docs/${d.slug}\n\n${plainDoc(d.slug) ?? d.intro}\n`,
+  );
   return `${llmsText().replace(/\n## Publisher[\s\S]*$/, "")}\n## Documentation (full text)\n${docs.join("")}\n---\n\n${familySection()}`;
 }
 

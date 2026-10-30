@@ -2,7 +2,13 @@
 
 import { useCallback } from "react";
 import { useQuery, useQueryClient } from "@krizaka/query";
-import { FeatureToolsApi, FeatureToolsRefusal, type FeatureRoute, type StructuredBounds, type ToolBounds } from "@/console/services/feature-tools.admin.api";
+import {
+  FeatureToolsApi,
+  FeatureToolsRefusal,
+  type FeatureRoute,
+  type StructuredBounds,
+  type ToolBounds,
+} from "@/console/services/feature-tools.admin.api";
 
 const BOUNDS_KEY = ["engine", "feature-tool-bounds"] as const;
 const STRUCTURED_KEY = ["engine", "feature-structured-bounds"] as const;
@@ -35,7 +41,12 @@ export function useFeatureTools(): FeatureTools {
   const bounds = useQuery({ queryKey: BOUNDS_KEY, queryFn: () => FeatureToolsApi.bounds(), retry: false, gcTime: 0 });
   const routes = useQuery({ queryKey: ROUTES_KEY, queryFn: () => FeatureToolsApi.routes(), retry: false, gcTime: 0 });
 
-  const structured = useQuery({ queryKey: STRUCTURED_KEY, queryFn: () => FeatureToolsApi.structuredBounds(), retry: false, gcTime: 0 });
+  const structured = useQuery({
+    queryKey: STRUCTURED_KEY,
+    queryFn: () => FeatureToolsApi.structuredBounds(),
+    retry: false,
+    gcTime: 0,
+  });
 
   const write = useCallback(
     async (queryKey: readonly string[], action: () => Promise<unknown>) => {
@@ -64,7 +75,8 @@ export function useFeatureTools(): FeatureTools {
     },
     save: (featureKey, rounds) => write(BOUNDS_KEY, () => FeatureToolsApi.save(featureKey, rounds)),
     remove: (featureKey) => write(BOUNDS_KEY, () => FeatureToolsApi.remove(featureKey)),
-    saveStructured: (featureKey, attempts) => write(STRUCTURED_KEY, () => FeatureToolsApi.saveStructured(featureKey, attempts)),
+    saveStructured: (featureKey, attempts) =>
+      write(STRUCTURED_KEY, () => FeatureToolsApi.saveStructured(featureKey, attempts)),
     removeStructured: (featureKey) => write(STRUCTURED_KEY, () => FeatureToolsApi.removeStructured(featureKey)),
   };
 }

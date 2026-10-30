@@ -24,5 +24,10 @@ export function attachArtefactLabels<T extends { outputs: { key: string }[] }>(r
       labelsByKey.set(output.key, output.labels);
     }
   }
-  return { ...run, outputs: run.outputs.map((output) => (labelsByKey.has(output.key) ? { ...output, labels: labelsByKey.get(output.key) } : output)) };
+  return {
+    ...run,
+    outputs: run.outputs.map((output) =>
+      labelsByKey.has(output.key) ? { ...output, labels: labelsByKey.get(output.key) } : output,
+    ),
+  };
 }

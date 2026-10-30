@@ -27,10 +27,7 @@ export interface NotificationBellProps {
  * click, focus returned to the bell). Its open state stays controlled by the Header, which closes its other menus
  * when this one opens.
  */
-export const NotificationBell: React.FC<NotificationBellProps> = ({
-  bellOpen,
-  onToggle,
-}) => {
+export const NotificationBell: React.FC<NotificationBellProps> = ({ bellOpen, onToggle }) => {
   const { activeJobsCount, lastJobs } = useJobStream();
   const { t } = useTranslation();
 
@@ -121,7 +118,12 @@ function JobItem({ job, onSelect }: Readonly<{ job: Job; onSelect: () => void }>
             )}
           </span>
           <span className="mt-0.5 block truncate text-xs text-fg-secondary">
-            {prompt ?? (running ? t.showcase.notifications.running : failed ? t.showcase.notifications.failed : t.showcase.notifications.done)}
+            {prompt ??
+              (running
+                ? t.showcase.notifications.running
+                : failed
+                  ? t.showcase.notifications.failed
+                  : t.showcase.notifications.done)}
           </span>
         </span>
       </Link>

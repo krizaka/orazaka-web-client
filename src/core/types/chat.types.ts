@@ -68,11 +68,7 @@ export interface RunPendingChatMessage extends BaseChatMessage {
 }
 
 export type ChatMessage =
-  | TextChatMessage
-  | ImageChatMessage
-  | AudioChatMessage
-  | VideoChatMessage
-  | RunPendingChatMessage;
+  TextChatMessage | ImageChatMessage | AudioChatMessage | VideoChatMessage | RunPendingChatMessage;
 
 /**
  * Thread item metadata representing a single conversation history session.

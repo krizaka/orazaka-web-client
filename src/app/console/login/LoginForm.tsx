@@ -73,27 +73,56 @@ export function LoginForm({ preview }: Readonly<{ preview?: ClosedPreview }>) {
             <p>{copy.lead}</p>
           </div>
         }
-        asideFooter={<>© {new Date().getFullYear()} Orazaka · {consoleCopy.product} {consoleCopy.console}</>}
+        asideFooter={
+          <>
+            © {new Date().getFullYear()} Orazaka · {consoleCopy.product} {consoleCopy.console}
+          </>
+        }
         title={copy.title}
         description={copy.lead}
       >
         {preview && (
           <Alert tone="info" role="status">
             <span lang={preview.locale}>{preview.banner}</span>{" "}
-            <a href={preview.href} className="font-medium underline underline-offset-4">{preview.link}</a>
+            <a href={preview.href} className="font-medium underline underline-offset-4">
+              {preview.link}
+            </a>
           </Alert>
         )}
         {error && <Alert tone="danger">{error}</Alert>}
         <form onSubmit={onSubmit} className="flex flex-col gap-4" noValidate>
           <Field.Root>
             <Field.Label htmlFor="login-email">{copy.email}</Field.Label>
-            <Input id="login-email" name="email" type="email" autoComplete="username" required disabled={pending || Boolean(preview)} invalid={Boolean(error)} />
+            <Input
+              id="login-email"
+              name="email"
+              type="email"
+              autoComplete="username"
+              required
+              disabled={pending || Boolean(preview)}
+              invalid={Boolean(error)}
+            />
           </Field.Root>
           <Field.Root>
             <Field.Label htmlFor="login-password">{copy.password}</Field.Label>
-            <Input id="login-password" name="password" type="password" autoComplete="current-password" required disabled={pending || Boolean(preview)} invalid={Boolean(error)} />
+            <Input
+              id="login-password"
+              name="password"
+              type="password"
+              autoComplete="current-password"
+              required
+              disabled={pending || Boolean(preview)}
+              invalid={Boolean(error)}
+            />
           </Field.Root>
-          <Button type="submit" variant="primary" size="lg" loading={pending} disabled={Boolean(preview)} className="w-full">
+          <Button
+            type="submit"
+            variant="primary"
+            size="lg"
+            loading={pending}
+            disabled={Boolean(preview)}
+            className="w-full"
+          >
             {copy.submit}
           </Button>
         </form>

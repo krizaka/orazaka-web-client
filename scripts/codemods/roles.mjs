@@ -107,7 +107,8 @@ function arbitrary(prefix, name, rest) {
   const variants = prefix.slice(0, prefix.length - util.length);
   let out = null;
   if (util === "ring" && name === "accent") out = "ring-ring";
-  else if (util === "shadow" && (name === "accent-glow" || name === "shadow-glow")) out = name === "accent-glow" ? "shadow-(--orazaka-accent-glow)" : "shadow-md";
+  else if (util === "shadow" && (name === "accent-glow" || name === "shadow-glow"))
+    out = name === "accent-glow" ? "shadow-(--orazaka-accent-glow)" : "shadow-md";
   else if (util === "shadow" && /^shadow-(xs|sm|md|lg)$/.test(name)) out = name;
   else if (util === "rounded" && /^radius-/.test(name)) out = `rounded-${name.slice(7)}`;
   else if (util === "text" && /^text-(xs|sm|base|lg|xl|2xl|display)$/.test(name)) out = name;
@@ -121,15 +122,46 @@ function arbitrary(prefix, name, rest) {
 
 /** The 1.x utilities of the kit's compatibility block → roles. */
 const COMPAT = [
-  [/\b(text|bg|border|from|via|to|divide|ring|fill|stroke|placeholder|decoration|outline|shadow)-text-(primary|secondary|muted)\b/g, (_, u, n) => `${u}-${ROLE[`text-${n}`]}`],
-  [/\b(text|bg|border|from|via|to|divide|ring|fill|stroke|outline|shadow)-status-(success|error|warning)\b/g, (_, u, n) => `${u}-${ROLE[`status-${n}`]}`],
-  [/\b(text|bg|border|from|via|to|divide|ring|fill|stroke|outline)-(card|input)-(bg|border|text)\b/g, (_, u, a, b) => `${u}-${ROLE[`${a}-${b}`]}`],
-  [/\b(text|bg|border|from|via|to|divide|ring|fill|stroke|outline)-(background|foreground)\b/g, (_, u, n) => `${u}-${ROLE[n]}`],
+  [
+    /\b(text|bg|border|from|via|to|divide|ring|fill|stroke|placeholder|decoration|outline|shadow)-text-(primary|secondary|muted)\b/g,
+    (_, u, n) => `${u}-${ROLE[`text-${n}`]}`,
+  ],
+  [
+    /\b(text|bg|border|from|via|to|divide|ring|fill|stroke|outline|shadow)-status-(success|error|warning)\b/g,
+    (_, u, n) => `${u}-${ROLE[`status-${n}`]}`,
+  ],
+  [
+    /\b(text|bg|border|from|via|to|divide|ring|fill|stroke|outline)-(card|input)-(bg|border|text)\b/g,
+    (_, u, a, b) => `${u}-${ROLE[`${a}-${b}`]}`,
+  ],
+  [
+    /\b(text|bg|border|from|via|to|divide|ring|fill|stroke|outline)-(background|foreground)\b/g,
+    (_, u, n) => `${u}-${ROLE[n]}`,
+  ],
 ];
 
 const COLOR_VALUE =
   /^(surface-[0-3]|fg(-secondary|-muted|-on-media)?|border-(subtle|default|strong)|accent(-soft|-hover|-2)?|on-accent|ring|success|warning|danger|info|media|scrim(-strong)?|overlay|white|black|transparent|current|(zinc|slate|gray|neutral|stone|red|rose|orange|amber|yellow|lime|green|emerald|teal|cyan|sky|blue|indigo|violet|purple|fuchsia|pink)-\d+|\[[^\]]*\])(\/\S+)?$/;
-const KINDS = ["border-t", "border-b", "border-l", "border-r", "border-x", "border-y", "bg", "text", "border", "from", "via", "to", "divide", "ring", "shadow", "fill", "stroke", "outline"];
+const KINDS = [
+  "border-t",
+  "border-b",
+  "border-l",
+  "border-r",
+  "border-x",
+  "border-y",
+  "bg",
+  "text",
+  "border",
+  "from",
+  "via",
+  "to",
+  "divide",
+  "ring",
+  "shadow",
+  "fill",
+  "stroke",
+  "outline",
+];
 
 /** `[variants:]kind-value` → { key, value } when the value is a colour, else null. */
 function colorToken(token) {
@@ -179,7 +211,10 @@ export function rewriteClasses(text) {
   s = s.replace(/([a-z:-]*?)-\[color-mix\(in_srgb,var\(--([a-z0-9-]+)\)_(\d+)%,transparent\)\]/g, (m, p, n, pct) =>
     ROLE[n] ? `${p}-${ROLE[n]}/${pct}` : m,
   );
-  s = s.replace(/([a-z0-9:-]*?)-\[var\(--([a-z0-9-]+)\)\](\/\[[0-9.]+\]|\/\d+)?/g, (m, p, n, rest = "") => arbitrary(p, n, rest) ?? m);
+  s = s.replace(
+    /([a-z0-9:-]*?)-\[var\(--([a-z0-9-]+)\)\](\/\[[0-9.]+\]|\/\d+)?/g,
+    (m, p, n, rest = "") => arbitrary(p, n, rest) ?? m,
+  );
   for (const [re, fn] of COMPAT) s = s.replace(re, fn);
   s = dropDark(s);
   return rewriteVariables(s);
@@ -204,7 +239,8 @@ function ensureImport(root, source, name) {
   const existing = root.find(j.ImportDeclaration, { source: { value: source } });
   if (existing.size()) {
     const decl = existing.get().node;
-    if (!decl.specifiers.some((s) => s.imported?.name === name)) decl.specifiers.push(j.importSpecifier(j.identifier(name)));
+    if (!decl.specifiers.some((s) => s.imported?.name === name))
+      decl.specifiers.push(j.importSpecifier(j.identifier(name)));
     return;
   }
   const imports = root.find(j.ImportDeclaration);
@@ -215,7 +251,9 @@ function ensureImport(root, source, name) {
 
 /** The text-colour class of a className, for the title's hover (the primitive turns it accent on a card hover). */
 function titleHover(classes) {
-  const colour = classes.split(/\s+/).find((c) => /^text-(fg|fg-secondary|fg-muted|accent|success|warning|danger|transparent)(\/\d+)?$/.test(c));
+  const colour = classes
+    .split(/\s+/)
+    .find((c) => /^text-(fg|fg-secondary|fg-muted|accent|success|warning|danger|transparent)(\/\d+)?$/.test(c));
   return colour ? `group-hover:${colour}` : "group-hover:text-fg";
 }
 
@@ -249,7 +287,9 @@ export function transformJsx(source) {
     const value = path.node.value;
     if (value?.type !== "JSXExpressionContainer" || value.expression.type !== "TemplateLiteral") return;
     const { quasis, expressions } = value.expression;
-    const glued = quasis.some((q, i) => (i > 0 && /^\S/.test(q.value.cooked)) || (i < quasis.length - 1 && /\S$/.test(q.value.cooked)));
+    const glued = quasis.some(
+      (q, i) => (i > 0 && /^\S/.test(q.value.cooked)) || (i < quasis.length - 1 && /\S$/.test(q.value.cooked)),
+    );
     if (glued) return;
     const args = [];
     quasis.forEach((q, i) => {
@@ -281,7 +321,8 @@ export function transformJsx(source) {
       const spec = CARD[open.name.name];
       const name = j.jsxMemberExpression(j.jsxIdentifier("Card"), j.jsxIdentifier(spec.to));
       for (const [k, v] of Object.entries(spec.props ?? {})) {
-        if (!open.attributes.some((a) => a.name?.name === k)) open.attributes.unshift(j.jsxAttribute(j.jsxIdentifier(k), j.stringLiteral(v)));
+        if (!open.attributes.some((a) => a.name?.name === k))
+          open.attributes.unshift(j.jsxAttribute(j.jsxIdentifier(k), j.stringLiteral(v)));
       }
       let extra = spec.classes;
       if (spec.to === "Title") {
@@ -291,7 +332,8 @@ export function transformJsx(source) {
       }
       if (mergeClassName(open.attributes, extra)?.usesCn) usesCn = true;
       open.name = name;
-      if (path.node.closingElement) path.node.closingElement.name = j.jsxMemberExpression(j.jsxIdentifier("Card"), j.jsxIdentifier(spec.to));
+      if (path.node.closingElement)
+        path.node.closingElement.name = j.jsxMemberExpression(j.jsxIdentifier("Card"), j.jsxIdentifier(spec.to));
       usesCard = true;
     });
   }
@@ -333,7 +375,8 @@ export function transformStrings(source) {
 function walk(path, out) {
   const stat = statSync(path);
   if (stat.isDirectory()) {
-    for (const entry of readdirSync(path)) if (entry !== "node_modules" && !entry.startsWith(".")) walk(join(path, entry), out);
+    for (const entry of readdirSync(path))
+      if (entry !== "node_modules" && !entry.startsWith(".")) walk(join(path, entry), out);
   } else out.push(path);
   return out;
 }

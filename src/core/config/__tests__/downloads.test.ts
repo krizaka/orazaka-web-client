@@ -3,7 +3,8 @@ import { readDownloads, readDownloadsFromEnv } from "@/core/config/downloads";
 const ON = { APP_DOWNLOADS_MAC_ENABLED: "true" };
 const EDGE = { ROUTER_URL: "http://edge.test" };
 
-const answer = (body: unknown, ok = true) => Promise.resolve({ ok, json: () => Promise.resolve(body) }) as unknown as Promise<Response>;
+const answer = (body: unknown, ok = true) =>
+  Promise.resolve({ ok, json: () => Promise.resolve(body) }) as unknown as Promise<Response>;
 
 describe("readDownloadsFromEnv", () => {
   it("is off by default, empty or anything but « true »", () => {
@@ -29,7 +30,9 @@ describe("readDownloads (the admin's setting, the environment only as the bootst
     expect(init.next?.revalidate).toBe(60);
   });
   it("the admin's off wins over an environment value that is on", async () => {
-    expect((await readDownloads({ vars: { ...EDGE, ...ON }, fetcher: () => answer({ macEnabled: false }) })).macEnabled).toBe(false);
+    expect(
+      (await readDownloads({ vars: { ...EDGE, ...ON }, fetcher: () => answer({ macEnabled: false }) })).macEnabled,
+    ).toBe(false);
   });
   it("falls back to the environment value when no edge is configured, without calling anything", async () => {
     const fetcher = jest.fn();
@@ -38,10 +41,14 @@ describe("readDownloads (the admin's setting, the environment only as the bootst
     expect(fetcher).not.toHaveBeenCalled();
   });
   it("falls back to the environment value (off by default) when the call fails or answers something else", async () => {
-    expect((await readDownloads({ vars: EDGE, fetcher: () => Promise.reject(new Error("down")) })).macEnabled).toBe(false);
+    expect((await readDownloads({ vars: EDGE, fetcher: () => Promise.reject(new Error("down")) })).macEnabled).toBe(
+      false,
+    );
     expect((await readDownloads({ vars: EDGE, fetcher: () => answer({}, false) })).macEnabled).toBe(false);
     expect((await readDownloads({ vars: EDGE, fetcher: () => answer({ macEnabled: "true" }) })).macEnabled).toBe(false);
     expect((await readDownloads({ vars: EDGE, fetcher: () => answer(null) })).macEnabled).toBe(false);
-    expect((await readDownloads({ vars: { ...EDGE, ...ON }, fetcher: () => Promise.reject(new Error("down")) })).macEnabled).toBe(true);
+    expect(
+      (await readDownloads({ vars: { ...EDGE, ...ON }, fetcher: () => Promise.reject(new Error("down")) })).macEnabled,
+    ).toBe(true);
   });
 });

@@ -15,12 +15,7 @@ export function JobThumb({ job }: Readonly<{ job: Job }>) {
   return (
     <span className="relative inline-grid h-11 w-16 shrink-0 place-items-center overflow-hidden rounded-md border border-border-subtle bg-surface-2 text-fg-muted">
       {url && (kind === "image" || kind === "video") ? (
-        <ResultThumb
-          kind={kind}
-          src={kind === "video" ? `${url}#t=0.1` : url}
-          alt={jobResultAlt(t, job)}
-          compact
-        />
+        <ResultThumb kind={kind} src={kind === "video" ? `${url}#t=0.1` : url} alt={jobResultAlt(t, job)} compact />
       ) : (
         <Glyph size={18} />
       )}

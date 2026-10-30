@@ -17,7 +17,13 @@ export interface Operations {
 
 /** The three sources of the operations screen, read in parallel; one failing never blanks the others. */
 export function useOperations(): Operations {
-  const [state, setState] = useState<Omit<Operations, "reload">>({ health: null, infrastructure: null, jobs: [], isLoading: true, hasError: false });
+  const [state, setState] = useState<Omit<Operations, "reload">>({
+    health: null,
+    infrastructure: null,
+    jobs: [],
+    isLoading: true,
+    hasError: false,
+  });
 
   const load = useCallback(async () => {
     setState((s) => ({ ...s, isLoading: true }));

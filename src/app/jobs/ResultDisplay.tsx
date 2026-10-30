@@ -3,12 +3,7 @@ import { Icon } from "@krizaka/orazaka-design-system";
 import { useJobStream } from "@/core/context/JobStreamContext";
 import { useTranslation } from "@/core/context/LocaleContext";
 import { JOB_STATUS } from "@/core/constants/http.constants";
-import {
-  getJobId,
-  isVideo,
-  isAudio,
-  isImage,
-} from "@/app/jobs/resultDisplay.utils";
+import { getJobId, isVideo, isAudio, isImage } from "@/app/jobs/resultDisplay.utils";
 
 /**
  * Props definition for the ResultDisplay component.
@@ -38,9 +33,7 @@ function JobResultDisplay({ job, jobId }: Readonly<JobResultDisplayProps>) {
         </div>
         <p className="text-xs text-fg-secondary">
           {t.playground.status}
-          <span className="font-semibold text-accent">
-            {job.status}
-          </span>
+          <span className="font-semibold text-accent">{job.status}</span>
         </p>
         <p className="text-[10px] text-fg-secondary font-mono">
           {t.playground.jobId} {jobId}
@@ -103,10 +96,7 @@ export function ResultDisplay({ payload }: Readonly<ResultDisplayProps>) {
 
 function ResultDisplayInner({ payload }: Readonly<ResultDisplayProps>) {
   const { t } = useTranslation();
-  const p =
-    typeof payload === "object" && payload !== null
-      ? (payload as Record<string, unknown>)
-      : null;
+  const p = typeof payload === "object" && payload !== null ? (payload as Record<string, unknown>) : null;
   const rawUrl = p ? (p.url as string) : (payload as string);
   const format = p ? (p.format as string) : undefined;
   const content = p ? (p.content as string) : undefined;
@@ -125,14 +115,11 @@ function ResultDisplayInner({ payload }: Readonly<ResultDisplayProps>) {
         <div className="flex flex-col gap-2 mt-2">
           <div className="flex items-center gap-2">
             <span className="text-xs font-semibold px-2 py-0.5 rounded bg-warning/10 text-warning border border-warning/20">
-              {t.playground.keyframesExtracted}{" "}
-              {(p.keyframeCount as number) ?? 0}
+              {t.playground.keyframesExtracted} {(p.keyframeCount as number) ?? 0}
             </span>
           </div>
           <div className="rounded-lg bg-surface-0/40 p-4 border border-border-subtle text-sm">
-            <span className="text-xs font-semibold text-fg-secondary block mb-2">
-              {t.playground.transcript}
-            </span>
+            <span className="text-xs font-semibold text-fg-secondary block mb-2">{t.playground.transcript}</span>
             <p className="text-fg-secondary leading-relaxed italic">
               {(p.transcript as string) || t.playground.noDialogueDetected}
             </p>
@@ -151,11 +138,7 @@ function ResultDisplayInner({ payload }: Readonly<ResultDisplayProps>) {
   }
 
   if (!rawUrl) {
-    return (
-      <p className="text-fg-secondary text-sm">
-        {t.playground.noAssetOutput}
-      </p>
-    );
+    return <p className="text-fg-secondary text-sm">{t.playground.noAssetOutput}</p>;
   }
 
   if (isVideo(format, rawUrl)) {
@@ -172,9 +155,7 @@ function ResultDisplayInner({ payload }: Readonly<ResultDisplayProps>) {
         >
           <track kind="captions" />
         </video>
-        <span className="mt-2 text-xs text-fg-secondary font-semibold ">
-          {t.playground.localCPlusPlusInference}
-        </span>
+        <span className="mt-2 text-xs text-fg-secondary font-semibold ">{t.playground.localCPlusPlusInference}</span>
       </div>
     );
   }
@@ -190,9 +171,7 @@ function ResultDisplayInner({ payload }: Readonly<ResultDisplayProps>) {
         >
           <track kind="captions" />
         </audio>
-        <span className="mt-3 text-fg-muted text-fg-secondary font-semibold ">
-          {t.playground.localAudioGeneration}
-        </span>
+        <span className="mt-3 text-fg-muted text-fg-secondary font-semibold ">{t.playground.localAudioGeneration}</span>
       </div>
     );
   }
@@ -207,9 +186,7 @@ function ResultDisplayInner({ payload }: Readonly<ResultDisplayProps>) {
           className="max-h-[512px] w-full max-w-[512px] rounded-md object-contain shadow-md transition-all duration-300"
           loading="lazy"
         />
-        <span className="mt-2 text-xs text-fg-secondary font-semibold ">
-          {t.playground.localImageGeneration}
-        </span>
+        <span className="mt-2 text-xs text-fg-secondary font-semibold ">{t.playground.localImageGeneration}</span>
       </div>
     );
   }

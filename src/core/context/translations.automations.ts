@@ -48,7 +48,8 @@ export const automations: Record<"en" | "fr", AutomationsDictionary> = {
       copyUrl: "Copy the address",
       copied: "Copied",
       rotate: "New secret",
-      rotateConfirm: "Issue a new secret? The previous one keeps working for a day, so you can switch without losing a call.",
+      rotateConfirm:
+        "Issue a new secret? The previous one keeps working for a day, so you can switch without losing a call.",
       remove: "Remove",
       removeConfirm: "Remove this trigger? Its past runs stay in the history.",
       enable: "Enable",
@@ -109,7 +110,8 @@ export const automations: Record<"en" | "fr", AutomationsDictionary> = {
     loadError: "Vos automatisations n'ont pas pu être chargées.",
     retry: "Réessayer",
     emptyTitle: "Aucune automatisation",
-    emptyDesc: "Choisissez un Studio et dites comment il démarre : un webhook que votre système appelle, ou un horaire.",
+    emptyDesc:
+      "Choisissez un Studio et dites comment il démarre : un webhook que votre système appelle, ou un horaire.",
     runsStudio: "Lance {studio}",
     enabledLabel: "Activée",
     delete: "Supprimer",
@@ -143,7 +145,8 @@ export const automations: Record<"en" | "fr", AutomationsDictionary> = {
       copyUrl: "Copier l'adresse",
       copied: "Copié",
       rotate: "Nouveau secret",
-      rotateConfirm: "Émettre un nouveau secret ? Le précédent continue de fonctionner une journée, pour changer sans perdre d'appel.",
+      rotateConfirm:
+        "Émettre un nouveau secret ? Le précédent continue de fonctionner une journée, pour changer sans perdre d'appel.",
       remove: "Retirer",
       removeConfirm: "Retirer ce déclencheur ? Ses exécutions passées restent dans l'historique.",
       enable: "Activer",

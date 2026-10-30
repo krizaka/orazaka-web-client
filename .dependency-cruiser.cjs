@@ -56,14 +56,14 @@ module.exports = {
         orphan: true,
         pathNot: [
           "(^|/)\\.[^/]+", // Hidden dot files
-          "\\.d\\.ts$",    // TypeScript declaration files
+          "\\.d\\.ts$", // TypeScript declaration files
           "(^|/)tsconfig\\.json$",
           "\\.test\\.(ts|tsx)$", // Test patterns
           "\\.spec\\.(ts|tsx)$", // Spec patterns
-          "^src/__tests__/",     // Exclude test helper files and mocks from orphan rule
+          "^src/__tests__/", // Exclude test helper files and mocks from orphan rule
           // Next.js Framework Entrypoint Invariants: Only exclude magic framework files
           "^src/app/.*\\.(ts|tsx)$",
-          "^src/(middleware|instrumentation)\\.ts$"
+          "^src/(middleware|instrumentation)\\.ts$",
         ],
       },
       to: {},
@@ -125,12 +125,12 @@ module.exports = {
         "NextAuth configurations like authOptions must live securely inside src/core/auth/ or src/core/config/, NOT leaked directly inside the Next.js routing tree routes.",
       from: {
         path: "^src/",
-        pathNot: "^src/app/api/auth/"
+        pathNot: "^src/app/api/auth/",
       },
       to: {
-        path: "^src/app/api/auth/"
+        path: "^src/app/api/auth/",
       },
-    }
+    },
   ],
   options: {
     doNotFollow: {

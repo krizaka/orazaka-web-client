@@ -36,7 +36,12 @@ if (!(USER && SECRET)) {
 
 const PAGES = [
   { name: "login", url: "/login", chrome: "auth" },
-  ...SCREENS.map((url) => ({ name: url === "/" ? "supervision" : url.slice(1), url, session: true, chrome: "console" })),
+  ...SCREENS.map((url) => ({
+    name: url === "/" ? "supervision" : url.slice(1),
+    url,
+    session: true,
+    chrome: "console",
+  })),
 ];
 
 if (OUT) mkdirSync(OUT, { recursive: true });
@@ -60,7 +65,8 @@ await context.close();
 function inspect([chrome, places]) {
   const problems = [];
   const doc = document.documentElement;
-  if (doc.scrollWidth > doc.clientWidth + 1) problems.push(`horizontal scroll (${doc.scrollWidth}px in a ${doc.clientWidth}px viewport)`);
+  if (doc.scrollWidth > doc.clientWidth + 1)
+    problems.push(`horizontal scroll (${doc.scrollWidth}px in a ${doc.clientWidth}px viewport)`);
   if (chrome === "console") {
     const bar = document.querySelector("nav, header");
     if (!bar) problems.push("no bar");
@@ -70,21 +76,39 @@ function inspect([chrome, places]) {
   }
   for (const img of document.querySelectorAll("img")) {
     const box = img.getBoundingClientRect();
-    if (box.width > 8 && box.height > 8 && img.complete && img.naturalWidth === 0 && img.currentSrc) problems.push(`broken picture ${img.currentSrc.slice(0, 80)}`);
+    if (box.width > 8 && box.height > 8 && img.complete && img.naturalWidth === 0 && img.currentSrc)
+      problems.push(`broken picture ${img.currentSrc.slice(0, 80)}`);
   }
   for (const el of document.querySelectorAll("main a[href], main button")) {
     const box = el.getBoundingClientRect();
     const style = getComputedStyle(el);
     const visible = style.visibility !== "hidden" && style.display !== "none";
-    if (visible && box.width > 24 && box.height > 24 && !el.textContent?.trim() && !el.getAttribute("aria-label") && !el.getAttribute("aria-labelledby") && !el.querySelector("img, svg, video, picture, canvas")) problems.push("empty tile (a control with nothing in it)");
+    if (
+      visible &&
+      box.width > 24 &&
+      box.height > 24 &&
+      !el.textContent?.trim() &&
+      !el.getAttribute("aria-label") &&
+      !el.getAttribute("aria-labelledby") &&
+      !el.querySelector("img, svg, video, picture, canvas")
+    )
+      problems.push("empty tile (a control with nothing in it)");
   }
-  const hard = [...document.querySelectorAll("[style]")].filter((e) => /#[0-9a-f]{3,8}\b|rgba?\(/i.test(e.getAttribute("style") || "") && !/var\(/.test(e.getAttribute("style") || ""));
+  const hard = [...document.querySelectorAll("[style]")].filter(
+    (e) =>
+      /#[0-9a-f]{3,8}\b|rgba?\(/i.test(e.getAttribute("style") || "") && !/var\(/.test(e.getAttribute("style") || ""),
+  );
   if (hard.length > 0) problems.push(`${hard.length} element(s) with a hard-coded colour in an inline style`);
   return [...new Set(problems)];
 }
 
 async function crawl(p, theme, device, viewport) {
-  const ctx = await browser.newContext({ viewport, colorScheme: theme, reducedMotion: "reduce", ...(p.session ? { storageState: signedIn } : {}) });
+  const ctx = await browser.newContext({
+    viewport,
+    colorScheme: theme,
+    reducedMotion: "reduce",
+    ...(p.session ? { storageState: signedIn } : {}),
+  });
   await ctx.addInitScript((mode) => {
     try {
       localStorage.setItem("kz-theme", mode);
@@ -93,12 +117,24 @@ async function crawl(p, theme, device, viewport) {
   const consoleErrors = [];
   try {
     const tab = await ctx.newPage();
-    tab.on("console", (m) => m.type() === "error" && !IGNORED_CONSOLE.some((re) => re.test(m.text())) && consoleErrors.push(m.text().slice(0, 160)));
+    tab.on(
+      "console",
+      (m) =>
+        m.type() === "error" &&
+        !IGNORED_CONSOLE.some((re) => re.test(m.text())) &&
+        consoleErrors.push(m.text().slice(0, 160)),
+    );
     tab.on("pageerror", (e) => consoleErrors.push(`uncaught: ${e.message.slice(0, 160)}`));
-    await tab.goto(`${BASE}${p.url}`, { waitUntil: "networkidle", timeout: 60_000 }).catch(() => tab.waitForLoadState("load"));
+    await tab
+      .goto(`${BASE}${p.url}`, { waitUntil: "networkidle", timeout: 60_000 })
+      .catch(() => tab.waitForLoadState("load"));
     await tab.waitForTimeout(800);
     // On a phone the places sit behind the menu button: open it before reading the bar.
-    if (p.chrome === "console" && device === "phone") await tab.getByRole("button", { name: /open the menu/i }).click().catch(() => {});
+    if (p.chrome === "console" && device === "phone")
+      await tab
+        .getByRole("button", { name: /open the menu/i })
+        .click()
+        .catch(() => {});
     const problems = await tab.evaluate(inspect, [p.chrome, PLACES]);
     if (consoleErrors.length > 0) problems.push(...consoleErrors.slice(0, 3).map((m) => `console: ${m}`));
     if (OUT) await tab.screenshot({ path: join(OUT, `${p.name}.${theme}.${device}.png`), fullPage: false });

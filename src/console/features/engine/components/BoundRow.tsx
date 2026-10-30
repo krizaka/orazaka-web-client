@@ -12,10 +12,7 @@ import { parseRounds } from "@/console/features/engine/utils/featureTools";
 export type Range = { min: number; max: number };
 /** Which bound a row edits: the tool rounds of a turn, or the answers of a structured-output call. */
 export type BoundKind = "tools" | "structured";
-export type Save = (
-  featureKey: string,
-  rounds: number,
-) => Promise<string | null>;
+export type Save = (featureKey: string, rounds: number) => Promise<string | null>;
 
 /** One bound, edited in place: the number typed is checked against the server's range before it is sent. */
 export function BoundRow({
@@ -37,9 +34,7 @@ export function BoundRow({
 }>) {
   const [draft, setDraft] = React.useState(String(value));
   const [error, setError] = React.useState<string | null>(null);
-  const [status, setStatus] = React.useState<"idle" | "saving" | "saved">(
-    "idle",
-  );
+  const [status, setStatus] = React.useState<"idle" | "saving" | "saved">("idle");
   const id = `${kind === "tools" ? "bound" : kind}-${bound.featureKey}`;
   const dirty = draft !== String(value);
 
@@ -65,9 +60,7 @@ export function BoundRow({
     <Card.Root className="p-5">
       <div
         data-bound={kind === "tools" ? bound.featureKey : undefined}
-        data-structured-bound={
-          kind === "structured" ? bound.featureKey : undefined
-        }
+        data-structured-bound={kind === "structured" ? bound.featureKey : undefined}
         className="flex flex-col gap-3"
       >
         <header className="flex flex-wrap items-center justify-between gap-2">
@@ -93,20 +86,11 @@ export function BoundRow({
             }}
           />
           <Field.Hint>{fill(words.range, range)}</Field.Hint>
-          {error !== null && (
-            <Field.Error id={`${id}-msg`}>{error}</Field.Error>
-          )}
+          {error !== null && <Field.Error id={`${id}-msg`}>{error}</Field.Error>}
         </Field.Root>
-        {status === "saved" && (
-          <output className="text-sm text-success">{words.saved}</output>
-        )}
+        {status === "saved" && <output className="text-sm text-success">{words.saved}</output>}
         <footer className="flex flex-wrap gap-2">
-          <Button
-            type="button"
-            size="sm"
-            onClick={() => void submit()}
-            disabled={!dirty || status === "saving"}
-          >
+          <Button type="button" size="sm" onClick={() => void submit()} disabled={!dirty || status === "saving"}>
             {status === "saving" ? words.saving : words.save}
           </Button>
           {!bound.isDefault && (

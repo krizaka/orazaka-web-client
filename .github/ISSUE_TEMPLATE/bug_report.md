@@ -1,9 +1,9 @@
 ---
 name: Bug report
 about: Create a report to help us improve Orazaka
-title: '[BUG] '
+title: "[BUG] "
 labels: bug
-assignees: ''
+assignees: ""
 ---
 
 **Describe the bug**
@@ -11,6 +11,7 @@ A clear and concise description of what the bug is.
 
 **To Reproduce**
 Steps to reproduce the behavior:
+
 1. Start the stack using './ops/local/scripts/start.sh'
 2. Send request to '...'
 3. See error
@@ -22,7 +23,8 @@ A clear and concise description of what you expected to happen.
 If applicable, add logs or stack traces to help explain your problem.
 
 **Environment (please complete the following information):**
- - OS: [e.g. macOS Apple Silicon]
- - Java Version: [e.g. 21]
- - Python Version (if applicable): [e.g. 3.12]
- - Node.js Version (if applicable): [e.g. 20]
+
+- OS: [e.g. macOS Apple Silicon]
+- Java Version: [e.g. 21]
+- Python Version (if applicable): [e.g. 3.12]
+- Node.js Version (if applicable): [e.g. 20]

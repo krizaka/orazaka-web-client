@@ -8,9 +8,19 @@ jest.mock("@/core/context/LocaleContext", () => ({
 }));
 
 const pack = (over: Partial<PackSummary> = {}): PackSummary => ({
-  packKey: "data-analytics", categoryKey: "data-analytics", label: "Data & analytics", tagline: "Your numbers, read for you.",
-  iconKey: "chart", heroAssetId: null, regulatoryClass: "STANDARD", kind: "VERTICAL", access: "BUYABLE",
-  studioKeys: ["creator-suggestions", "video-understanding"], priceCents: 4900, includedCredits: 2000, ...over,
+  packKey: "data-analytics",
+  categoryKey: "data-analytics",
+  label: "Data & analytics",
+  tagline: "Your numbers, read for you.",
+  iconKey: "chart",
+  heroAssetId: null,
+  regulatoryClass: "STANDARD",
+  kind: "VERTICAL",
+  access: "BUYABLE",
+  studioKeys: ["creator-suggestions", "video-understanding"],
+  priceCents: 4900,
+  includedCredits: 2000,
+  ...over,
 });
 const studios = new Map([
   ["creator-suggestions", { label: "Creator suggestions", iconKey: "chart" }],
@@ -19,7 +29,17 @@ const studios = new Map([
 
 function open(props: Partial<PackDrawerProps> = {}) {
   const handlers = { onAdd: jest.fn(), onRemove: jest.fn(), onClose: jest.fn() };
-  render(<PackDrawer pack={pack()} owned={false} pending={false} holdingsUnavailable={false} studios={studios} {...handlers} {...props} />);
+  render(
+    <PackDrawer
+      pack={pack()}
+      owned={false}
+      pending={false}
+      holdingsUnavailable={false}
+      studios={studios}
+      {...handlers}
+      {...props}
+    />,
+  );
   return handlers;
 }
 
@@ -29,7 +49,10 @@ describe("PackDrawer", () => {
     expect(screen.getByRole("dialog", { name: "Data & analytics" })).toBeInTheDocument();
     expect(screen.getByText("CA$49.00")).toBeInTheDocument();
     expect(screen.getByText("2,000 credits included")).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: "Creator suggestions" })).toHaveAttribute("href", "/studios/creator-suggestions");
+    expect(screen.getByRole("link", { name: "Creator suggestions" })).toHaveAttribute(
+      "href",
+      "/studios/creator-suggestions",
+    );
     expect(screen.getByRole("link", { name: "Video understanding" })).toBeInTheDocument();
   });
 

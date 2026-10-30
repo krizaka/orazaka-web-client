@@ -23,7 +23,8 @@ describe("the mobile journey", () => {
     const shown = STEPS.flatMap((id) => APPEARANCES.flatMap((a) => Object.values(clipUrls(id, a))));
     expect(shown.filter((u) => /\/clip-/.test(u))).toEqual([]);
     const known = mediaPaths("sites/orazaka/mobile/");
-    for (const id of STEPS) for (const a of APPEARANCES) expect(known).toContain(`sites/orazaka/mobile/${id}-${a}-916.mp4`);
+    for (const id of STEPS)
+      for (const a of APPEARANCES) expect(known).toContain(`sites/orazaka/mobile/${id}-${a}-916.mp4`);
   });
 
   it("has a goal, a purpose, an alt and three things to notice for every step, in English and French", () => {

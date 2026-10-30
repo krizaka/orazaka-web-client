@@ -188,10 +188,7 @@ describe("useChatStreamClient", () => {
 
   it("updates thread title in localStorage on stream error", async () => {
     global.fetch = jest.fn().mockRejectedValue(new Error("Network Failure"));
-    localStorage.setItem(
-      "orazaka_threads",
-      JSON.stringify([{ conversationId: "conv-123", title: "Original Title" }]),
-    );
+    localStorage.setItem("orazaka_threads", JSON.stringify([{ conversationId: "conv-123", title: "Original Title" }]));
 
     const consoleErrorSpy = jest.spyOn(console, "error").mockImplementation(() => {});
 

@@ -35,7 +35,8 @@ export function jobPrompt(job: Pick<Job, "payload">): string | null {
 /** The job's name in the reader's language: "Image generation", "Video generation"… */
 export function jobLabel(t: TranslationDictionary, job: Pick<Job, "featureKey">): string {
   const kind = jobKind(job);
-  if (kind === "video") return job.featureKey.includes("analysis") ? t.notifications.videoAnalysis : t.notifications.videoGen;
+  if (kind === "video")
+    return job.featureKey.includes("analysis") ? t.notifications.videoAnalysis : t.notifications.videoGen;
   if (kind === "image") return t.notifications.imageGen;
   if (kind === "audio") return t.notifications.speechGen;
   return t.notifications.textGen;

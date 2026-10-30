@@ -8,9 +8,7 @@ import { test, expect } from "@playwright/test";
  * decoupled integration tiers.
  */
 test.describe("Orazaka UI Smoke Test", () => {
-  test("should load the landing page and render core layout elements", async ({
-    page,
-  }) => {
+  test("should load the landing page and render core layout elements", async ({ page }) => {
     await page.goto("/");
     await page.waitForLoadState("domcontentloaded");
 
@@ -22,17 +20,15 @@ test.describe("Orazaka UI Smoke Test", () => {
     await expect(page.locator("body")).toBeVisible();
   });
 
-  test("should navigate to chat and render SSE streamed response", async ({
-    page,
-  }) => {
+  test("should navigate to chat and render SSE streamed response", async ({ page }) => {
     // Mock the BFF chat API endpoint to simulate SSE streaming
     await page.route("**/api/chat**", async (route) => {
       const encoder = new TextEncoder();
       const chunks = [
-        "data: {\"content\":\"Hello\"}\n\n",
-        "data: {\"content\":\" from\"}\n\n",
-        "data: {\"content\":\" Orazaka\"}\n\n",
-        "data: {\"content\":\" AI!\"}\n\n",
+        'data: {"content":"Hello"}\n\n',
+        'data: {"content":" from"}\n\n',
+        'data: {"content":" Orazaka"}\n\n',
+        'data: {"content":" AI!"}\n\n',
         "data: [DONE]\n\n",
       ];
 

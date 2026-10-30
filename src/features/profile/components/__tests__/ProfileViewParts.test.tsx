@@ -3,7 +3,10 @@ import { render, screen, fireEvent } from "@testing-library/react";
 import { CopyableField } from "@/features/profile/components/ProfileViewParts";
 
 jest.mock("@/core/context/LocaleContext", () => ({
-  useTranslation: () => ({ t: { a11y: jest.requireActual("@/core/context/translations.automation").a11y.en }, locale: "en" }),
+  useTranslation: () => ({
+    t: { a11y: jest.requireActual("@/core/context/translations.automation").a11y.en },
+    locale: "en",
+  }),
 }));
 
 jest.mock("@krizaka/orazaka-design-system", () => ({

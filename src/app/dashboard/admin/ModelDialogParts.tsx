@@ -13,13 +13,11 @@ import { cn } from "@krizaka/ui/cn";
 export const CATEGORY_META: Record<string, { icon: string; color: string }> = {
   [MODEL_CATEGORY.SPEECH]: {
     icon: "🎙️",
-    color:
-      "bg-accent/10 border-accent/20 text-accent",
+    color: "bg-accent/10 border-accent/20 text-accent",
   },
   [MODEL_CATEGORY.IMAGE]: {
     icon: "🎨",
-    color:
-      "bg-success/10 border-success/20 text-success",
+    color: "bg-success/10 border-success/20 text-success",
   },
   [MODEL_CATEGORY.VIDEO]: {
     icon: "🎬",
@@ -27,8 +25,7 @@ export const CATEGORY_META: Record<string, { icon: string; color: string }> = {
   },
   [MODEL_CATEGORY.VISION]: {
     icon: "👁️",
-    color:
-      "bg-warning/10 border-warning/20 text-warning",
+    color: "bg-warning/10 border-warning/20 text-warning",
   },
   [MODEL_CATEGORY.AUDIO]: {
     icon: "🔊",
@@ -80,12 +77,13 @@ export function CategorySelector({
             disabled={disabled}
             onClick={() => onSelect(cat.value)}
             aria-pressed={isSelected}
-            className={cn("h-auto flex-col gap-1 p-2.5 text-xs font-medium", isSelected && cn(meta.color, "border-current"))}
+            className={cn(
+              "h-auto flex-col gap-1 p-2.5 text-xs font-medium",
+              isSelected && cn(meta.color, "border-current"),
+            )}
           >
             <span className="text-base">{meta.icon}</span>
-            <span className="truncate w-full text-center leading-tight">
-              {cat.label}
-            </span>
+            <span className="truncate w-full text-center leading-tight">{cat.label}</span>
           </Button>
         );
       })}

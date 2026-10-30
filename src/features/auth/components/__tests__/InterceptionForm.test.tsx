@@ -39,9 +39,7 @@ jest.mock("@/features/auth/hooks/useInterception", () => ({
       id: "onboarding",
       title: "Complete Your Profile",
       description: "Fill in the required fields",
-      fields: [
-        { name: "fullName", label: "Full Name", type: "text", required: true, defaultValue: "" },
-      ],
+      fields: [{ name: "fullName", label: "Full Name", type: "text", required: true, defaultValue: "" }],
     },
     isLoading: false,
     error: null,
@@ -70,7 +68,6 @@ jest.mock("@krizaka/orazaka-design-system", () => ({
   CardTitle: ({ children }: { children: React.ReactNode }) => <h3>{children}</h3>,
   CardFooter: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
 }));
-
 
 describe("InterceptionForm", () => {
   it("renders schema title and submit button", async () => {

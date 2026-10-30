@@ -15,13 +15,20 @@ const refusalRate = (row: CapabilityUsage) => {
 };
 
 /** Credits per GPU second, or null: unmeasured and free are different claims. */
-const margin = (row: CapabilityUsage) => (row.gpuSeconds && row.gpuSeconds > 0 ? row.creditsCharged / row.gpuSeconds : null);
+const margin = (row: CapabilityUsage) =>
+  row.gpuSeconds && row.gpuSeconds > 0 ? row.creditsCharged / row.gpuSeconds : null;
 
 const COLUMNS: DataTableColumn<CapabilityUsage>[] = [
   { id: "capability", header: "Capacité", sortable: true, card: "title" },
   { id: "modelName", header: "Modèle", sortable: true, value: (row) => row.modelName ?? "—" },
   { id: "events", header: "Requêtes", sortable: true, align: "end" },
-  { id: "creditsCharged", header: "Crédits", sortable: true, align: "end", cell: (row) => formatCredits(row.creditsCharged) },
+  {
+    id: "creditsCharged",
+    header: "Crédits",
+    sortable: true,
+    align: "end",
+    cell: (row) => formatCredits(row.creditsCharged),
+  },
   {
     id: "refusals",
     header: "Refus",
@@ -35,9 +42,20 @@ const COLUMNS: DataTableColumn<CapabilityUsage>[] = [
     sortable: true,
     align: "end",
     value: refusalRate,
-    cell: (row) => <Badge tone={refusalRate(row) >= CONCERNING_REFUSAL_RATE ? "warning" : "neutral"}>{refusalRate(row).toFixed(1)}%</Badge>,
+    cell: (row) => (
+      <Badge tone={refusalRate(row) >= CONCERNING_REFUSAL_RATE ? "warning" : "neutral"}>
+        {refusalRate(row).toFixed(1)}%
+      </Badge>
+    ),
   },
-  { id: "margin", header: "Crédits / s GPU", sortable: true, align: "end", value: margin, cell: (row) => margin(row)?.toFixed(2) ?? "—" },
+  {
+    id: "margin",
+    header: "Crédits / s GPU",
+    sortable: true,
+    align: "end",
+    value: margin,
+    cell: (row) => margin(row)?.toFixed(2) ?? "—",
+  },
 ];
 
 /**
@@ -51,7 +69,10 @@ const COLUMNS: DataTableColumn<CapabilityUsage>[] = [
  * ever switched on.
  */
 export function UsageScreen() {
-  const usage = useQuery({ queryKey: ["billing-usage-by-capability", 30], queryFn: () => BillingAdminApi.usageByCapability(30) });
+  const usage = useQuery({
+    queryKey: ["billing-usage-by-capability", 30],
+    queryFn: () => BillingAdminApi.usageByCapability(30),
+  });
   const rows: CapabilityUsage[] | null = usage.isPending ? null : (usage.data ?? []);
   const error = usage.error ? (usage.error instanceof Error ? usage.error.message : "Chargement impossible") : null;
 
@@ -60,8 +81,8 @@ export function UsageScreen() {
       <header>
         <h2 className="text-lg font-semibold text-fg">Consommation</h2>
         <p className="text-sm text-fg-muted">
-          30 derniers jours. Le taux de refus inclut les refus simulés en DRY_RUN —
-          c’est la donnée de calibration, pas seulement les 402 réellement renvoyés.
+          30 derniers jours. Le taux de refus inclut les refus simulés en DRY_RUN — c’est la donnée de calibration, pas
+          seulement les 402 réellement renvoyés.
         </p>
       </header>
 

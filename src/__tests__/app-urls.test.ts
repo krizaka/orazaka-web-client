@@ -11,14 +11,18 @@ const RENAMED = [
 
 describe("the app's addresses", () => {
   it.each(RENAMED)("$from answers 308 towards $to, and keeps its query", async ({ from, to }) => {
-    const { default: nextConfig } = (await import(path.join(process.cwd(), "next.config.ts"))) as { default: { redirects: () => Promise<{ source: string; destination: string; permanent: boolean }[]> } };
+    const { default: nextConfig } = (await import(path.join(process.cwd(), "next.config.ts"))) as {
+      default: { redirects: () => Promise<{ source: string; destination: string; permanent: boolean }[]> };
+    };
     const redirects = await nextConfig.redirects();
     const rule = redirects.find((r) => r.source === from);
     expect(rule).toMatchObject({ destination: to, permanent: true });
   });
 
   it("the old /billing address is redirected on the product host only: /billing is a section of the console (admin host)", async () => {
-    const { default: nextConfig } = (await import(path.join(process.cwd(), "next.config.ts"))) as { default: { redirects: () => Promise<{ source: string; has?: { type: string; value?: string }[] }[]> } };
+    const { default: nextConfig } = (await import(path.join(process.cwd(), "next.config.ts"))) as {
+      default: { redirects: () => Promise<{ source: string; has?: { type: string; value?: string }[] }[]> };
+    };
     const rule = (await nextConfig.redirects()).find((r) => r.source === "/billing");
     const host = rule?.has?.find((h) => h.type === "host");
     expect(host?.value).toBeDefined();
@@ -39,8 +43,14 @@ describe("the app's addresses", () => {
         const p = path.join(dir, e.name);
         if (e.isDirectory()) {
           // The operator console (src/console, served on admin.orazaka.com) has its own addresses: /billing is its section.
-          if (e.name !== "__tests__" && e.name !== "node_modules" && p !== path.join(process.cwd(), "src", "console")) walk(p);
-        } else if (e.name !== "redirects.ts" && /\.(ts|tsx)$/.test(e.name) && /["'`]\/(dashboard\/jobs|billing|profile)\b/.test(fs.readFileSync(p, "utf8"))) hits.push(p);
+          if (e.name !== "__tests__" && e.name !== "node_modules" && p !== path.join(process.cwd(), "src", "console"))
+            walk(p);
+        } else if (
+          e.name !== "redirects.ts" &&
+          /\.(ts|tsx)$/.test(e.name) &&
+          /["'`]\/(dashboard\/jobs|billing|profile)\b/.test(fs.readFileSync(p, "utf8"))
+        )
+          hits.push(p);
       }
     };
     walk(path.join(process.cwd(), "src"));

@@ -4,7 +4,13 @@
  * filters of the address (search, state, trade), the trade headings and the counts. No fetch, no React: the screen
  * passes what the services answered.
  */
-import { LockReasonSchema, PackKindSchema, StudioPricingSchema, type Installation, type StudioSummary } from "@krizaka/orazaka-shared";
+import {
+  LockReasonSchema,
+  PackKindSchema,
+  StudioPricingSchema,
+  type Installation,
+  type StudioSummary,
+} from "@krizaka/orazaka-shared";
 import {
   CatalogueView,
   StudioSource,
@@ -21,7 +27,11 @@ const PRICING = StudioPricingSchema.enum;
 
 /** Lower case, no accents, so « resume » finds « Résumé de séance ». */
 export function fold(text: string): string {
-  return text.normalize("NFD").replace(/\p{Diacritic}/gu, "").toLowerCase().trim();
+  return text
+    .normalize("NFD")
+    .replace(/\p{Diacritic}/gu, "")
+    .toLowerCase()
+    .trim();
 }
 
 /** The state of one Studio for this person, from the server's verdict. */
@@ -61,7 +71,9 @@ export function buildRows(
 
   return studios.map((studio) => {
     const state = stateOf(studio);
-    const pack = packOf.get(studio.studioKey) ?? (studio.packKey ? packs.find((p) => p.packKey === studio.packKey) ?? null : null);
+    const pack =
+      packOf.get(studio.studioKey) ??
+      (studio.packKey ? (packs.find((p) => p.packKey === studio.packKey) ?? null) : null);
     const installation = installed.get(studio.studioKey);
     const latest = studio.latestVersion ?? installation?.latestVersion ?? null;
     return {
@@ -93,17 +105,28 @@ export function filterRows(rows: readonly CatalogueRow[], { query, view, trade }
 }
 
 /** How many rows each view would show, for the labels of the state filter (search and trade applied). */
-export function countViews(rows: readonly CatalogueRow[], query: Omit<CatalogueQuery, "view">): Record<CatalogueView, number> {
+export function countViews(
+  rows: readonly CatalogueRow[],
+  query: Omit<CatalogueQuery, "view">,
+): Record<CatalogueView, number> {
   const scoped = filterRows(rows, { ...query, view: CatalogueView.All });
   const ready = scoped.filter((row) => row.state === StudioState.Ready).length;
-  return { [CatalogueView.All]: scoped.length, [CatalogueView.Ready]: ready, [CatalogueView.More]: scoped.length - ready };
+  return {
+    [CatalogueView.All]: scoped.length,
+    [CatalogueView.Ready]: ready,
+    [CatalogueView.More]: scoped.length - ready,
+  };
 }
 
 /**
  * Trade headings, in the order of their words, « General » last (it is what is left once the trades are read).
  * Inside a heading, ready Studios first, then the catalogue's order.
  */
-export function groupByTrade(rows: readonly CatalogueRow[], tradeLabel: (trade: string) => string, generalKey = "general"): CatalogueGroup[] {
+export function groupByTrade(
+  rows: readonly CatalogueRow[],
+  tradeLabel: (trade: string) => string,
+  generalKey = "general",
+): CatalogueGroup[] {
   const groups = new Map<string, CatalogueRow[]>();
   for (const row of rows) {
     const list = groups.get(row.studio.profession) ?? [];
@@ -115,13 +138,19 @@ export function groupByTrade(rows: readonly CatalogueRow[], tradeLabel: (trade: 
     .map(([trade, list]) => ({
       trade,
       label: tradeLabel(trade),
-      rows: list.map((row, index) => ({ row, index })).sort((a, b) => rank(a.row.state) - rank(b.row.state) || a.index - b.index).map(({ row }) => row),
+      rows: list
+        .map((row, index) => ({ row, index }))
+        .sort((a, b) => rank(a.row.state) - rank(b.row.state) || a.index - b.index)
+        .map(({ row }) => row),
     }))
     .sort((a, b) => Number(a.trade === generalKey) - Number(b.trade === generalKey) || a.label.localeCompare(b.label));
 }
 
 /** The trades present in the catalogue, for the trade filter, in the order of their words. */
-export function tradesOf(rows: readonly CatalogueRow[], tradeLabel: (trade: string) => string): { key: string; label: string }[] {
+export function tradesOf(
+  rows: readonly CatalogueRow[],
+  tradeLabel: (trade: string) => string,
+): { key: string; label: string }[] {
   return [...new Set(rows.map((row) => row.studio.profession))]
     .map((key) => ({ key, label: tradeLabel(key) }))
     .sort((a, b) => a.label.localeCompare(b.label));

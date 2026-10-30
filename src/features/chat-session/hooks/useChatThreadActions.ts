@@ -73,10 +73,7 @@ export function useChatThreadActions({
         timestamp: Date.now(),
         kind: "text",
       };
-      queryClient.setQueryData<ChatMessage[]>(
-        ["chatMessages", userId, newId],
-        [userMsg],
-      );
+      queryClient.setQueryData<ChatMessage[]>(["chatMessages", userId, newId], [userMsg]);
       saveStoredMessages(userId, newId, [userMsg]);
       setActiveConversationId(newId);
       setChatInput("");
@@ -96,10 +93,7 @@ export function useChatThreadActions({
   };
 
   const handleDeleteThread = async (id: string) => {
-    if (
-      globalThis.window !== undefined &&
-      !globalThis.confirm(t.chat.deleteConfirm)
-    ) {
+    if (globalThis.window !== undefined && !globalThis.confirm(t.chat.deleteConfirm)) {
       return;
     }
     try {
@@ -113,9 +107,7 @@ export function useChatThreadActions({
     }
   };
 
-  const activeThread = threads.find(
-    (th) => th.conversationId === activeConversationId,
-  );
+  const activeThread = threads.find((th) => th.conversationId === activeConversationId);
   const threadTitle = activeThread ? activeThread.title : "";
 
   return {

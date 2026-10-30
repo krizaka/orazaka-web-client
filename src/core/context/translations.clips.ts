@@ -37,7 +37,11 @@ export const clips = {
     "phone-studio": {
       alt: "The Orazaka phone app: a sentence typed, the run in progress, the generated image with its seed and model.",
       caption: "From your phone: a sentence in, an image out.",
-      cues: ["Mira describes the picture she needs.", "The run is followed live.", "The result, with its seed and model."],
+      cues: [
+        "Mira describes the picture she needs.",
+        "The run is followed live.",
+        "The result, with its seed and model.",
+      ],
     },
     "phone-ask": {
       alt: "The Orazaka phone app chat: a question typed, the answer streamed in.",
@@ -69,7 +73,11 @@ export const clips = {
     "phone-studio": {
       alt: "L'app mobile d'Orazaka : une phrase tapée, le run en cours, l'image générée avec sa graine et son modèle.",
       caption: "Depuis votre téléphone : une phrase, une image.",
-      cues: ["Mira décrit l'image dont elle a besoin.", "Le run se suit en direct.", "Le résultat, avec sa graine et son modèle."],
+      cues: [
+        "Mira décrit l'image dont elle a besoin.",
+        "Le run se suit en direct.",
+        "Le résultat, avec sa graine et son modèle.",
+      ],
     },
     "phone-ask": {
       alt: "Le chat de l'app mobile d'Orazaka : une question tapée, la réponse qui arrive en continu.",

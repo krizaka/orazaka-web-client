@@ -10,18 +10,28 @@ const widths = [
 ] as const;
 
 for (const vp of widths) {
-  test(`the Orazaka mark shows once on ${vp.name}: in the rail on a desktop, in the bar on a phone`, async ({ page }) => {
+  test(`the Orazaka mark shows once on ${vp.name}: in the rail on a desktop, in the bar on a phone`, async ({
+    page,
+  }) => {
     await page.setViewportSize({ width: vp.width, height: vp.height });
-    const token = await encode({ token: { name: "Eric", email: "eric@orazaka.dev", id: "e2e-user", role: "user" }, secret: SECRET });
+    const token = await encode({
+      token: { name: "Eric", email: "eric@orazaka.dev", id: "e2e-user", role: "user" },
+      secret: SECRET,
+    });
     await page.context().addCookies([{ name: "next-auth.session-token", value: token, url: "http://localhost:3000" }]);
-    await page.route("**/api/v1/**", (route) => route.fulfill({ status: 200, contentType: "application/json", body: "[]" }));
+    await page.route("**/api/v1/**", (route) =>
+      route.fulfill({ status: 200, contentType: "application/json", body: "[]" }),
+    );
     await page.goto("/jobs");
     await page.waitForLoadState("networkidle");
     if (SHOTS) await page.screenshot({ path: `${SHOTS}/${vp.name}.png` });
 
     const marks = page.locator("[data-brand-mark]:visible");
     await expect(marks).toHaveCount(1);
-    await expect(marks.first().locator("xpath=ancestor::*[self::nav or self::header][1]")).toHaveJSProperty("tagName", vp.name === "desktop" ? "NAV" : "HEADER");
+    await expect(marks.first().locator("xpath=ancestor::*[self::nav or self::header][1]")).toHaveJSProperty(
+      "tagName",
+      vp.name === "desktop" ? "NAV" : "HEADER",
+    );
 
     if (vp.name === "desktop") {
       // The word « Orazaka » sits on the mark's line, right after the rail.

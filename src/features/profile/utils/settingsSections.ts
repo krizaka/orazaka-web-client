@@ -2,7 +2,14 @@
  * The settings sections and their routes. The URL is the state: `/settings/<section>`. The old
  * `/settings?tab=<section>` is redirected by {@link legacyTabTarget}.
  */
-export const SETTINGS_SECTIONS = ["account", "appearance", "workspace", "integrations", "api-keys", "webhooks"] as const;
+export const SETTINGS_SECTIONS = [
+  "account",
+  "appearance",
+  "workspace",
+  "integrations",
+  "api-keys",
+  "webhooks",
+] as const;
 
 export type SettingsSectionId = (typeof SETTINGS_SECTIONS)[number];
 

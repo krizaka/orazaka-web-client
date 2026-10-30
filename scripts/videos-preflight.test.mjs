@@ -1,9 +1,19 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { describe, it } from "node:test";
-import { loginVerdict, report, rollbackVerdict, toolPathVerdict, toolVerdict, webVerdict } from "./videos-preflight.mjs";
+import {
+  loginVerdict,
+  report,
+  rollbackVerdict,
+  toolPathVerdict,
+  toolVerdict,
+  webVerdict,
+} from "./videos-preflight.mjs";
 
-const knowledge = { name: "searchKnowledge", inputSchema: JSON.stringify({ type: "object", properties: { query: { type: "string" } }, required: ["query"] }) };
+const knowledge = {
+  name: "searchKnowledge",
+  inputSchema: JSON.stringify({ type: "object", properties: { query: { type: "string" } }, required: ["query"] }),
+};
 const poster = { name: "analyzePoster", inputSchema: "{}" };
 
 describe("the tool the recorded prompt needs", () => {
@@ -42,8 +52,20 @@ describe("the rollback guard", () => {
     assert.equal(rollbackVerdict([d("f6acdeb5-0", "2026-10-29T15:50:09Z", "manual", "ACTIVE")], true).ok, true);
   });
   it("fails on an automated rollback and on a failed deployment after the active one", () => {
-    assert.equal(rollbackVerdict([d("a", "2026-10-29T15:22:16Z", 'automated rollback after failed deployment of "x"', "ACTIVE")], false).ok, false);
-    assert.equal(rollbackVerdict([d("e", "2026-10-29T16:00:00Z", "manual", "ERROR"), d("a", "2026-10-29T15:50:09Z", "manual", "ACTIVE")], false).ok, false);
+    assert.equal(
+      rollbackVerdict(
+        [d("a", "2026-10-29T15:22:16Z", 'automated rollback after failed deployment of "x"', "ACTIVE")],
+        false,
+      ).ok,
+      false,
+    );
+    assert.equal(
+      rollbackVerdict(
+        [d("e", "2026-10-29T16:00:00Z", "manual", "ERROR"), d("a", "2026-10-29T15:50:09Z", "manual", "ACTIVE")],
+        false,
+      ).ok,
+      false,
+    );
     assert.equal(rollbackVerdict([d("s", "2026-10-29T15:00:00Z", "manual", "SUPERSEDED")], false).ok, false);
   });
   it("is not verified without DigitalOcean access, and refused when required", () => {
@@ -63,7 +85,10 @@ describe("the report", () => {
 });
 
 describe("the download videos workflow runs the preflight before any paid step", () => {
-  const code = readFileSync(new URL("../.github/workflows/download-videos.yml", import.meta.url), "utf8").replace(/^\s*#.*$/gm, "");
+  const code = readFileSync(new URL("../.github/workflows/download-videos.yml", import.meta.url), "utf8").replace(
+    /^\s*#.*$/gm,
+    "",
+  );
   it("has a preflight job that the recording needs", () => {
     assert.match(code, /preflight:/);
     assert.match(code, /node scripts\/videos-preflight\.mjs/);
@@ -75,15 +100,37 @@ describe("the download videos workflow runs the preflight before any paid step",
 describe("the free proof that a streamed turn emits a tool-call event", () => {
   const proof = "2026-10-29T18:00:00Z";
   it("is green when CI on main is green and dev was deployed after the proof", () => {
-    assert.equal(toolPathVerdict({ ciConclusion: "success", proofCommittedAt: proof, coreDeployedAt: "2026-10-29T19:00:00Z" }, true).ok, true);
+    assert.equal(
+      toolPathVerdict(
+        { ciConclusion: "success", proofCommittedAt: proof, coreDeployedAt: "2026-10-29T19:00:00Z" },
+        true,
+      ).ok,
+      true,
+    );
   });
   it("is red when the proof is not on main, or main's CI is not green", () => {
-    assert.equal(toolPathVerdict({ ciConclusion: "success", proofCommittedAt: null, coreDeployedAt: null }, false).ok, false);
-    assert.equal(toolPathVerdict({ ciConclusion: "failure", proofCommittedAt: proof, coreDeployedAt: "2026-10-29T19:00:00Z" }, false).ok, false);
-    assert.equal(toolPathVerdict({ ciConclusion: null, proofCommittedAt: proof, coreDeployedAt: "2026-10-29T19:00:00Z" }, false).ok, false);
+    assert.equal(
+      toolPathVerdict({ ciConclusion: "success", proofCommittedAt: null, coreDeployedAt: null }, false).ok,
+      false,
+    );
+    assert.equal(
+      toolPathVerdict(
+        { ciConclusion: "failure", proofCommittedAt: proof, coreDeployedAt: "2026-10-29T19:00:00Z" },
+        false,
+      ).ok,
+      false,
+    );
+    assert.equal(
+      toolPathVerdict({ ciConclusion: null, proofCommittedAt: proof, coreDeployedAt: "2026-10-29T19:00:00Z" }, false)
+        .ok,
+      false,
+    );
   });
   it("is red when dev's core is older than the proof (the paid runs ran on builds made before the fixes)", () => {
-    const v = toolPathVerdict({ ciConclusion: "success", proofCommittedAt: proof, coreDeployedAt: "2026-10-29T17:00:00Z" }, false);
+    const v = toolPathVerdict(
+      { ciConclusion: "success", proofCommittedAt: proof, coreDeployedAt: "2026-10-29T17:00:00Z" },
+      false,
+    );
     assert.equal(v.ok, false);
     assert.match(v.message, /redeploy first/);
   });

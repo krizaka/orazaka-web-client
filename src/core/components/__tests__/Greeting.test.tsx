@@ -6,8 +6,14 @@ let dictionary: { welcome: string; greeting: Record<string, string> };
 jest.mock("@/core/hooks/useAuth", () => ({ useAuth: () => ({ user: { name: "Eric Morel" } }) }));
 jest.mock("@/core/context/LocaleContext", () => ({ useTranslation: () => ({ t: { dashboard: dictionary } }) }));
 
-const EN = { welcome: "Welcome back", greeting: { morning: "Good morning, {name}", afternoon: "Good afternoon, {name}", evening: "Good evening, {name}" } };
-const FR = { welcome: "Bon retour", greeting: { morning: "Bonjour {name}", afternoon: "Bon après-midi {name}", evening: "Bonsoir {name}" } };
+const EN = {
+  welcome: "Welcome back",
+  greeting: { morning: "Good morning, {name}", afternoon: "Good afternoon, {name}", evening: "Good evening, {name}" },
+};
+const FR = {
+  welcome: "Bon retour",
+  greeting: { morning: "Bonjour {name}", afternoon: "Bon après-midi {name}", evening: "Bonsoir {name}" },
+};
 
 describe("Greeting", () => {
   afterEach(() => jest.useRealTimers());

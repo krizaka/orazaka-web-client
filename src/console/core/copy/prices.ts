@@ -11,7 +11,10 @@ const WORDS = {
     "The price of every edition, kept by billing. A change starts from a date you choose and never touches what customers already hold.",
     "Le prix de chaque édition, tenu par la facturation. Un changement part d'une date que vous choisissez et ne touche jamais ce que les clients détiennent déjà.",
   ),
-  error: w("The catalogue could not be read: billing may be starting.", "Le catalogue n'a pas pu être lu : la facturation démarre peut-être."),
+  error: w(
+    "The catalogue could not be read: billing may be starting.",
+    "Le catalogue n'a pas pu être lu : la facturation démarre peut-être.",
+  ),
   retry: w("Retry", "Réessayer"),
   loading: w("Reading the catalogue", "Lecture du catalogue"),
   editor: {

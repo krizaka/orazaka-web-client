@@ -3,7 +3,13 @@ import { queryWrapper } from "@/core/testing/queryWrapper";
 import { errorForStatus, isHttpsUrl, useWebhooks, type WebhookEndpoint } from "@/features/profile/hooks/useWebhooks";
 
 const headers = async () => ({ "Content-Type": "application/json" });
-const endpoint: WebhookEndpoint = { id: "e1", url: "https://hooks.example.com/x", events: ["run.completed"], enabled: true, createdAt: "2026-10-20T00:00:00Z" };
+const endpoint: WebhookEndpoint = {
+  id: "e1",
+  url: "https://hooks.example.com/x",
+  events: ["run.completed"],
+  enabled: true,
+  createdAt: "2026-10-20T00:00:00Z",
+};
 
 function reply(status: number, body?: unknown): Response {
   return { ok: status >= 200 && status < 300, status, json: async () => body } as unknown as Response;
@@ -32,7 +38,6 @@ describe("webhook address and error rules", () => {
 });
 
 describe("useWebhooks", () => {
-
   it("lists the endpoints on mount", async () => {
     mockFetch().mockResolvedValue(reply(200, [endpoint]));
     const { result } = renderHook(() => useWebhooks(headers), { wrapper: queryWrapper() });
@@ -54,7 +59,9 @@ describe("useWebhooks", () => {
     expect(result.current.error).toBe("url");
     expect(fetchMock).toHaveBeenCalledTimes(1);
 
-    fetchMock.mockResolvedValueOnce(reply(201, { ...endpoint, secret: "whsec_abc" })).mockResolvedValueOnce(reply(200, [endpoint]));
+    fetchMock
+      .mockResolvedValueOnce(reply(201, { ...endpoint, secret: "whsec_abc" }))
+      .mockResolvedValueOnce(reply(200, [endpoint]));
     await act(async () => {
       ok = await result.current.create("https://hooks.example.com/x", ["run.completed"]);
     });
@@ -89,7 +96,24 @@ describe("useWebhooks", () => {
 
   it("removes a deleted endpoint at once and opens an endpoint's log", async () => {
     const fetchMock = mockFetch();
-    fetchMock.mockResolvedValueOnce(reply(200, [endpoint])).mockResolvedValueOnce(reply(200, [{ id: "d1", runId: "r1", event: "run.completed", status: "DELIVERED", attempts: 1, lastHttpStatus: 200, lastError: null, createdAt: "2026-10-20T00:00:00Z", deliveredAt: "2026-10-20T00:00:01Z" }])).mockResolvedValueOnce(reply(204));
+    fetchMock
+      .mockResolvedValueOnce(reply(200, [endpoint]))
+      .mockResolvedValueOnce(
+        reply(200, [
+          {
+            id: "d1",
+            runId: "r1",
+            event: "run.completed",
+            status: "DELIVERED",
+            attempts: 1,
+            lastHttpStatus: 200,
+            lastError: null,
+            createdAt: "2026-10-20T00:00:00Z",
+            deliveredAt: "2026-10-20T00:00:01Z",
+          },
+        ]),
+      )
+      .mockResolvedValueOnce(reply(204));
     const { result } = renderHook(() => useWebhooks(headers), { wrapper: queryWrapper() });
     await waitFor(() => expect(result.current.isLoading).toBe(false));
 

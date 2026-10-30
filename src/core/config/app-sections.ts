@@ -9,7 +9,17 @@
  */
 import type { ComponentType } from "react";
 import type { IconName } from "@krizaka/orazaka-design-system";
-import { ChatIcon, ClockIcon, CreditsIcon, HomeIcon, PackIcon, SettingsIcon, ShieldIcon, StudioIcon, type IconProps } from "@krizaka/icons";
+import {
+  ChatIcon,
+  ClockIcon,
+  CreditsIcon,
+  HomeIcon,
+  PackIcon,
+  SettingsIcon,
+  ShieldIcon,
+  StudioIcon,
+  type IconProps,
+} from "@krizaka/icons";
 
 export const AppSectionId = {
   Home: "home",
@@ -43,8 +53,21 @@ export const APP_SECTIONS: readonly AppSection[] = [
   { id: AppSectionId.Jobs, href: "/jobs", Icon: ClockIcon, paletteIcon: "history", place: AppSectionPlace.Main },
   { id: AppSectionId.Packs, href: "/packs", Icon: PackIcon, paletteIcon: "layers", place: AppSectionPlace.Main },
   { id: AppSectionId.Usage, href: "/usage", Icon: CreditsIcon, paletteIcon: "spark", place: AppSectionPlace.Main },
-  { id: AppSectionId.Settings, href: "/settings", Icon: SettingsIcon, paletteIcon: "profile", place: AppSectionPlace.Foot },
-  { id: AppSectionId.Admin, href: "/dashboard/admin", Icon: ShieldIcon, paletteIcon: "admin", place: AppSectionPlace.Foot, adminOnly: true },
+  {
+    id: AppSectionId.Settings,
+    href: "/settings",
+    Icon: SettingsIcon,
+    paletteIcon: "profile",
+    place: AppSectionPlace.Foot,
+  },
+  {
+    id: AppSectionId.Admin,
+    href: "/dashboard/admin",
+    Icon: ShieldIcon,
+    paletteIcon: "admin",
+    place: AppSectionPlace.Foot,
+    adminOnly: true,
+  },
 ];
 
 /** The sections this user sees (Admin only for an admin). */
