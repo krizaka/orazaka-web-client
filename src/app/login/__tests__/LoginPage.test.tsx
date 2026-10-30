@@ -41,6 +41,7 @@ jest.mock("@/core/context/LocaleContext", () => ({
     t: {
       landing: {
         closed: jest.requireActual("@/core/context/translations.landing").landing.en.closed,
+        status: jest.requireActual("@/core/context/translations.landing").landing.en.status,
         footer: { license: "Apache-2.0", by: "A Krizaka product" },
       },
       a11y: jest.requireActual("@/core/context/translations.automation").a11y.en,
