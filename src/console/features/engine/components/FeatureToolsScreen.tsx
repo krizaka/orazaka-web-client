@@ -5,14 +5,26 @@ import { Alert } from "@krizaka/ui/alert";
 import { Badge } from "@krizaka/ui/badge";
 import { Button } from "@krizaka/ui/button";
 import { Card } from "@krizaka/ui/card";
-import { featureToolsCopy, type FeatureToolsLocale } from "@/console/core/copy/featureTools";
+import { featureToolsCopy, type FeatureToolsWords, type FeatureToolsLocale } from "@/console/core/copy/featureTools";
 import { useFeatureTools } from "@/console/features/engine/hooks/useFeatureTools";
-import { AddBound } from "./AddBound";
-import { BoundRow } from "./BoundRow";
+import { BoundsSection } from "./BoundsSection";
 
 /** The page language (`<html lang>`), French or English. */
 const pageLocale = (): FeatureToolsLocale =>
   typeof document !== "undefined" && document.documentElement.lang.toLowerCase().startsWith("fr") ? "fr" : "en";
+
+/** The words of the structured-output section: the same fields as the tool-round bounds, said for answers. */
+const structuredWords = (words: FeatureToolsWords): FeatureToolsWords => ({
+  ...words,
+  defaultRow: words.structuredDefaultRow,
+  rounds: words.answers,
+  range: words.answersRange,
+  invalidRange: words.invalidAnswers,
+  saved: words.savedAnswers,
+  addTitle: words.structuredAddTitle,
+  featureKey: words.structuredFeatureKey,
+  add: words.addStructured,
+});
 
 /** The per-feature tool-round bounds, edited in place by the administrator, and the feature routes (read only). */
 export function FeatureToolsScreen({ locale }: Readonly<{ locale?: FeatureToolsLocale }>) {
@@ -43,24 +55,33 @@ export function FeatureToolsScreen({ locale }: Readonly<{ locale?: FeatureToolsL
       )}
       {tools.isLoading && <output className="text-sm text-fg-secondary">{words.loading}</output>}
       {range && tools.bounds && (
-        <section aria-labelledby="tools-bounds" className="flex flex-col gap-3">
-          <h2 id="tools-bounds" className="text-lg font-semibold text-fg">
-            {words.boundsTitle}
-          </h2>
-          <div className="grid gap-4 lg:grid-cols-2">
-            {tools.bounds.bounds.map((bound) => (
-              <BoundRow
-                key={bound.featureKey}
-                bound={bound}
-                range={range}
-                words={words}
-                onSave={tools.save}
-                onRemove={tools.remove}
-              />
-            ))}
-            <AddBound range={range} words={words} onSave={tools.save} />
-          </div>
-        </section>
+        <BoundsSection
+          kind="tools"
+          title={words.boundsTitle}
+          bounds={tools.bounds.bounds.map((b) => ({
+            ...b,
+            value: b.maxToolRounds,
+          }))}
+          range={range}
+          words={words}
+          onSave={tools.save}
+          onRemove={tools.remove}
+        />
+      )}
+      {tools.structured && (
+        <BoundsSection
+          kind="structured"
+          title={words.structuredTitle}
+          lead={words.structuredLead}
+          bounds={tools.structured.bounds.map((b) => ({
+            ...b,
+            value: b.maxAttempts,
+          }))}
+          range={tools.structured}
+          words={structuredWords(words)}
+          onSave={tools.saveStructured}
+          onRemove={tools.removeStructured}
+        />
       )}
       <section aria-labelledby="tools-routes" className="flex flex-col gap-3">
         <h2 id="tools-routes" className="text-lg font-semibold text-fg">
