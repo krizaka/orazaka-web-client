@@ -71,7 +71,7 @@ jobs:
     permissions:
       contents: write
       pull-requests: write
-    uses: krizaka/.github/.github/workflows/app-videos.yml@58d71a2cacfa1563a74aab117bc6a1db75821b87 # main (krizaka/.github#425: the action pinned to sites/<product>/download)
+    uses: krizaka/.github/.github/workflows/app-videos.yml@07c5db4045e7e31e462da7069df5debbdac9bf80 # main (krizaka/.github#425: the action pinned to sites/<product>/download)
     with:
       product: orazaka
       manifest: content/app-videos.json
