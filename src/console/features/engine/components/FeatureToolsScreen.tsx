@@ -8,6 +8,7 @@ import { Card } from "@krizaka/ui/card";
 import { featureToolsCopy, type FeatureToolsWords, type FeatureToolsLocale } from "@/console/core/copy/featureTools";
 import { useFeatureTools } from "@/console/features/engine/hooks/useFeatureTools";
 import { BoundsSection } from "./BoundsSection";
+import { CachePolicySection } from "./CachePolicySection";
 
 /** The page language (`<html lang>`), French or English. */
 const pageLocale = (): FeatureToolsLocale =>
@@ -82,6 +83,9 @@ export function FeatureToolsScreen({ locale }: Readonly<{ locale?: FeatureToolsL
           onSave={tools.saveStructured}
           onRemove={tools.removeStructured}
         />
+      )}
+      {tools.cache && (
+        <CachePolicySection cache={tools.cache} words={words} onSave={tools.saveCache} onRemove={tools.removeCache} />
       )}
       <section aria-labelledby="tools-routes" className="flex flex-col gap-3">
         <h2 id="tools-routes" className="text-lg font-semibold text-fg">

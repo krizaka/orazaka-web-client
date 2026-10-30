@@ -25,12 +25,23 @@ export const StructuredBoundsSchema = z.object({
   max: z.number().int(),
   bounds: z.array(StructuredBoundSchema),
 });
+export const CachePolicySchema = z.object({
+  featureKey: z.string(),
+  strategy: z.string(),
+  isDefault: z.boolean(),
+});
+export const CachePoliciesSchema = z.object({
+  strategies: z.array(z.string()),
+  policies: z.array(CachePolicySchema),
+});
 export const FeatureRouteSchema = z.object({ featureKey: z.string(), models: z.array(z.string()) });
 
 export type ToolBound = z.infer<typeof ToolBoundSchema>;
 export type ToolBounds = z.infer<typeof ToolBoundsSchema>;
 export type StructuredBound = z.infer<typeof StructuredBoundSchema>;
 export type StructuredBounds = z.infer<typeof StructuredBoundsSchema>;
+export type CachePolicy = z.infer<typeof CachePolicySchema>;
+export type CachePolicies = z.infer<typeof CachePoliciesSchema>;
 export type FeatureRoute = z.infer<typeof FeatureRouteSchema>;
 
 /** A refusal of the server (400 `invalid-request`): its message is shown next to the field. */
@@ -89,6 +100,24 @@ export const FeatureToolsApi = {
   /** Removes a feature's own structured bound so it follows the default row. */
   removeStructured: async (featureKey: string): Promise<void> => {
     await call(`${BASE}/feature-structured-bounds/${encodeURIComponent(featureKey)}`, { method: "DELETE" });
+  },
+
+  /** Every prompt-cache policy (the default row `*` first) and the strategies on offer (#173). */
+  cachePolicies: async (): Promise<CachePolicies> =>
+    CachePoliciesSchema.parse(await call(`${BASE}/feature-cache-policies`)),
+
+  /** Sets what of a feature's prompt may be cached; it applies on the next turn. */
+  saveCachePolicy: async (featureKey: string, strategy: string): Promise<CachePolicy> =>
+    CachePolicySchema.parse(
+      await call(`${BASE}/feature-cache-policies/${encodeURIComponent(featureKey)}`, {
+        method: "PUT",
+        body: JSON.stringify({ strategy }),
+      }),
+    ),
+
+  /** Removes a feature's own policy so it follows the default row. */
+  removeCachePolicy: async (featureKey: string): Promise<void> => {
+    await call(`${BASE}/feature-cache-policies/${encodeURIComponent(featureKey)}`, { method: "DELETE" });
   },
 
   /** The feature routes: each feature key with its models, best first. */
