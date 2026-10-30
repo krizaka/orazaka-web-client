@@ -21,4 +21,4 @@ export function mediaUrl(path: string): string {
 export const hasMedia = (path: string): boolean => path in FILES;
 
 /** Every file the manifest knows under a prefix, sorted: what a page lists when it is data-driven (`sites/orazaka/video/`). */
-export const mediaPaths = (prefix: string): string[] => Object.keys(FILES).filter((path) => path.startsWith(prefix)).sort();
+export const mediaPaths = (prefix: string): string[] => Object.keys(FILES).filter((path) => path.startsWith(prefix)).sort((a, b) => a.localeCompare(b));

@@ -52,7 +52,7 @@ export function useStudios(profession: string | null): StudiosState {
   }, [load]);
 
   const professions = useMemo(
-    () => Array.from(new Set(studios.map((studio) => studio.profession))).sort(),
+    () => Array.from(new Set(studios.map((studio) => studio.profession))).sort((a, b) => a.localeCompare(b)),
     [studios],
   );
 
