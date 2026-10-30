@@ -21,7 +21,7 @@ interface InterceptionPageProps {
  */
 export default async function InterceptionPage({
   params,
-}: InterceptionPageProps) {
+}: Readonly<InterceptionPageProps>) {
   const { schemaId } = await params;
 
   return (

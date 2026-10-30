@@ -143,11 +143,11 @@ function Metric({
   label,
   value,
   muted,
-}: {
+}: Readonly<{
   label: string;
   value: number;
   muted?: boolean;
-}) {
+}>) {
   return (
     <div>
       <p className="text-xs text-fg-muted">{label}</p>
