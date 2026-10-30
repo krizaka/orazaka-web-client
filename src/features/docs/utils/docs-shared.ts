@@ -74,5 +74,5 @@ export function searchDocs(index: readonly SearchEntry[], query: string, limit =
       if (inPage(`${title} ${h.label.toLowerCase()}`) && !inPage(title)) hits.push({ score: 2, slug: e.slug, id: h.id, label: `${e.title} › ${h.label}`, meta: e.journey });
     }
   }
-  return hits.sort((a, b) => b.score - a.score).slice(0, limit).map(({ score: _score, ...rest }) => rest);
+  return [...hits].sort((a, b) => b.score - a.score).slice(0, limit).map(({ score: _score, ...rest }) => rest);
 }

@@ -80,7 +80,7 @@ export default function RootLayout({
         <noscript>
           <style>{"[data-reveal]{opacity:1!important;transform:none!important;filter:none!important}"}</style>
         </noscript>
-        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(siteJsonLd()).replace(/</g, "\\u003c") }} />
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(siteJsonLd()).replace(/</g, String.raw`\u003c`) }} />
       </head>
       <body className="antialiased transition-colors duration-200">
         <PublicShell authFlags={readAuthFlags()} showDevNotice={!indexable()}>

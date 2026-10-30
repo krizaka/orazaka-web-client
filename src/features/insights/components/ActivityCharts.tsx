@@ -33,8 +33,8 @@ export function ActivityCharts({ summary, jobs, days, loading, error }: Readonly
   const kinds = React.useMemo(() => jobsByKind(jobs).map((k) => ({ ...k, label: w.kinds[k.kind] })), [jobs, w]);
   const { current, previous } = summary;
   const change = formatChange(changeOf(current.jobs, previous.jobs), tag);
-  const perDayInsight =
-    current.jobs === 0 ? w.usage.jobsInsightNone : change ? fill(w.usage.jobsInsight, { jobs: current.jobs, change }) : fill(w.usage.jobsInsightFlat, { jobs: current.jobs });
+  const changedInsight = change ? fill(w.usage.jobsInsight, { jobs: current.jobs, change }) : fill(w.usage.jobsInsightFlat, { jobs: current.jobs });
+  const perDayInsight = current.jobs === 0 ? w.usage.jobsInsightNone : changedInsight;
   const top = kinds[0];
 
   return (

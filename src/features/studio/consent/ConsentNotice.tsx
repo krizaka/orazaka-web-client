@@ -97,7 +97,7 @@ export function ConsentNotice({ studioKey, installation, onChanged }: Readonly<C
   };
 
   if (erased) {
-    return <p role="status" className="max-w-2xl text-xs text-fg-secondary">{t.consent.erased}</p>;
+    return <output className="block max-w-2xl text-xs text-fg-secondary">{t.consent.erased}</output>;
   }
 
   if (!installation || installation.status === "REVOKED") {
