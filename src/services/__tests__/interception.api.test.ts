@@ -22,9 +22,7 @@ describe("InterceptionApi", () => {
       const schema = {
         title: "Onboarding",
         description: "Complete your profile",
-        fields: [
-          { name: "industry", label: "Industry", type: "select", required: true },
-        ],
+        fields: [{ name: "industry", label: "Industry", type: "select", required: true }],
       };
       mockedRest.mockResolvedValueOnce(schema);
 
@@ -46,9 +44,7 @@ describe("InterceptionApi", () => {
     it("throws when no schema returned", async () => {
       mockedRest.mockResolvedValueOnce(undefined);
 
-      await expect(InterceptionApi.fetchSchema("missing")).rejects.toThrow(
-        "No schema returned from server.",
-      );
+      await expect(InterceptionApi.fetchSchema("missing")).rejects.toThrow("No schema returned from server.");
     });
   });
 

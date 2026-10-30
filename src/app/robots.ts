@@ -9,7 +9,10 @@ export default function robots(): MetadataRoute.Robots {
   // Not indexed (dev, preview): closed, and no sitemap to advertise.
   if (!indexable()) return { rules: [{ userAgent: "*", disallow: "/" }] };
   return {
-    rules: [{ userAgent: "*", allow: "/", disallow: PRIVATE_PATHS }, ...CRAWLERS.map((userAgent) => ({ userAgent, allow: "/", disallow: PRIVATE_PATHS }))],
+    rules: [
+      { userAgent: "*", allow: "/", disallow: PRIVATE_PATHS },
+      ...CRAWLERS.map((userAgent) => ({ userAgent, allow: "/", disallow: PRIVATE_PATHS })),
+    ],
     sitemap: `${SITE_URL}/sitemap.xml`,
     host: SITE_URL,
   };

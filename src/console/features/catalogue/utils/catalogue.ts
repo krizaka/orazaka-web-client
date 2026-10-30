@@ -14,7 +14,11 @@ export function providerSummaries(models: readonly ModelEntry[], providers: read
     byProvider.set(key, [...(byProvider.get(key) ?? []), model]);
   }
   return [...byProvider.entries()]
-    .map(([provider, list]) => ({ provider, models: list.length, categories: [...new Set(list.map((m) => m.category))].sort((x, y) => x.localeCompare(y)) }))
+    .map(([provider, list]) => ({
+      provider,
+      models: list.length,
+      categories: [...new Set(list.map((m) => m.category))].sort((x, y) => x.localeCompare(y)),
+    }))
     .sort((a, b) => b.models - a.models || a.provider.localeCompare(b.provider));
 }
 

@@ -12,13 +12,41 @@ jest.mock("@/core/context/LocaleContext", () => ({
 }));
 
 const pack: PackData = {
-  key: "document-validation", title: "Document Verification", tagline: "Check a contract.", description: "Clause by clause, against your rules.",
-  version: "1.1.0", tier: "WORKER", kind: null, distribution: "CLOUD", regulatoryClass: "SENSITIVE", category: "Legal", listed: true, workers: ["validation"],
+  key: "document-validation",
+  title: "Document Verification",
+  tagline: "Check a contract.",
+  description: "Clause by clause, against your rules.",
+  version: "1.1.0",
+  tier: "WORKER",
+  kind: null,
+  distribution: "CLOUD",
+  regulatoryClass: "SENSITIVE",
+  category: "Legal",
+  listed: true,
+  workers: ["validation"],
   controls: { scopeGuard: true, consent: false, safety: false },
   rulesets: [{ label: "Quebec lease", jurisdiction: "CA-QC", rules: 12, versions: ["2026-01-01", "2026-06-01"] }],
   studios: [
-    { key: "check", label: "Check", summary: "Is it valid?", description: "Reads every clause.", inputs: [{ key: "doc", title: "Document" }], steps: 3, stepKinds: ["CAPABILITY"], credits: 90 },
-    { key: "compare", label: "Compare", summary: "Two versions.", description: null, inputs: [], steps: 1, stepKinds: ["TRANSFORM"], credits: null },
+    {
+      key: "check",
+      label: "Check",
+      summary: "Is it valid?",
+      description: "Reads every clause.",
+      inputs: [{ key: "doc", title: "Document" }],
+      steps: 3,
+      stepKinds: ["CAPABILITY"],
+      credits: 90,
+    },
+    {
+      key: "compare",
+      label: "Compare",
+      summary: "Two versions.",
+      description: null,
+      inputs: [],
+      steps: 1,
+      stepKinds: ["TRANSFORM"],
+      credits: null,
+    },
   ],
 };
 
@@ -49,10 +77,19 @@ describe("PackView", () => {
 });
 
 describe("PackIndexView", () => {
-  const index = parsePackIndex(JSON.stringify([
-    { key: "a", title: "Real-Estate Studio", tagline: "Reels.", tier: "DATA", category: "Sales", studios: 1 },
-    { key: "b", title: "Document Verification", tagline: "Contracts.", tier: "WORKER", category: "Legal", studios: 2 },
-  ]));
+  const index = parsePackIndex(
+    JSON.stringify([
+      { key: "a", title: "Real-Estate Studio", tagline: "Reels.", tier: "DATA", category: "Sales", studios: 1 },
+      {
+        key: "b",
+        title: "Document Verification",
+        tagline: "Contracts.",
+        tier: "WORKER",
+        category: "Legal",
+        studios: 2,
+      },
+    ]),
+  );
 
   it("filters by tier and says how many remain; each card leads to its section", () => {
     render(<PackIndexView items={index} />);
@@ -82,7 +119,9 @@ describe("the Packs & Studios page", () => {
     expect(container.querySelectorAll("[data-pack]").length).toBe(blocks.length);
     for (const table of container.querySelectorAll("table")) {
       // a wall of columns is how the Studios used to read; the remaining tables are the manifest reference
-      expect(table.querySelectorAll("thead th").length === 0 || !/Credits held/.test(table.textContent ?? "")).toBe(true);
+      expect(table.querySelectorAll("thead th").length === 0 || !/Credits held/.test(table.textContent ?? "")).toBe(
+        true,
+      );
     }
   });
 });

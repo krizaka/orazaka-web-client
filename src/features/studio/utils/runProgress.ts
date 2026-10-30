@@ -32,7 +32,8 @@ export type Remaining =
  */
 export function remainingOf(step: Pick<RunStep, "startedAt" | "estimateMs" | "estimateSamples">, now: Date): Remaining {
   const samples = step.estimateSamples ?? 0;
-  if (!step.startedAt || !step.estimateMs || step.estimateMs <= 0 || samples < MIN_ESTIMATE_SAMPLES) return { tag: "none" };
+  if (!step.startedAt || !step.estimateMs || step.estimateMs <= 0 || samples < MIN_ESTIMATE_SAMPLES)
+    return { tag: "none" };
   const elapsed = Math.max(0, differenceInMilliseconds(now, parseISO(step.startedAt)));
   const left = step.estimateMs - elapsed;
   return left > 0 ? { tag: "left", ms: left, samples } : { tag: "overdue", typicalMs: step.estimateMs, samples };

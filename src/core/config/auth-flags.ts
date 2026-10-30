@@ -22,8 +22,10 @@ export function parseFlag(value: string | undefined): boolean {
 }
 
 /** An OAuth client is configured when both its id and its secret are set. */
-export const githubConfigured = (env: Record<string, string | undefined>): boolean => Boolean(env.GITHUB_ID?.trim() && env.GITHUB_SECRET?.trim());
-export const googleConfigured = (env: Record<string, string | undefined>): boolean => Boolean(env.GOOGLE_CLIENT_ID?.trim() && env.GOOGLE_CLIENT_SECRET?.trim());
+export const githubConfigured = (env: Record<string, string | undefined>): boolean =>
+  Boolean(env.GITHUB_ID?.trim() && env.GITHUB_SECRET?.trim());
+export const googleConfigured = (env: Record<string, string | undefined>): boolean =>
+  Boolean(env.GOOGLE_CLIENT_ID?.trim() && env.GOOGLE_CLIENT_SECRET?.trim());
 
 /**
  * A provider button is shown only when its client is configured AND it can sign an existing account in. The gateway's
@@ -35,7 +37,12 @@ export const providerOffered = (configured: boolean, signup: boolean): boolean =
 export function readAuthFlags(env: Record<string, string | undefined> = process.env): AuthFlags {
   const login = parseFlag(env.AUTH_LOGIN_ENABLED);
   const signup = parseFlag(env.AUTH_SIGNUP_ENABLED);
-  return { login, signup, github: login && providerOffered(githubConfigured(env), signup), google: login && providerOffered(googleConfigured(env), signup) };
+  return {
+    login,
+    signup,
+    github: login && providerOffered(githubConfigured(env), signup),
+    google: login && providerOffered(googleConfigured(env), signup),
+  };
 }
 
 /** Neither way in is open: the site is a showcase and must not reach the backend. */

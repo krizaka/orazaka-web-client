@@ -9,7 +9,11 @@ export function DocBody({ segments }: Readonly<{ segments: readonly Segment[] }>
       {segments.map((s, i) => {
         // A page's segments never reorder: the position in the document is their identity.
         const key = `${i}-${s.kind}`;
-        return s.kind === "markdown" ? <DocMarkdown key={key} text={s.text} /> : <DocDiagram key={key} lang={s.lang} source={s.source} />;
+        return s.kind === "markdown" ? (
+          <DocMarkdown key={key} text={s.text} />
+        ) : (
+          <DocDiagram key={key} lang={s.lang} source={s.source} />
+        );
       })}
     </>
   );

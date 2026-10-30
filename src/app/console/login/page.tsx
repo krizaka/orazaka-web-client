@@ -17,7 +17,18 @@ export default async function LoginPage() {
   const locale = pickLocale((await headers()).get("accept-language"));
   return (
     <Suspense fallback={null}>
-      <LoginForm preview={open ? undefined : { banner: closedCopy[locale].signInBanner, link: closedCopy[locale].home, href: "https://dev.orazaka.com", locale }} />
+      <LoginForm
+        preview={
+          open
+            ? undefined
+            : {
+                banner: closedCopy[locale].signInBanner,
+                link: closedCopy[locale].home,
+                href: "https://dev.orazaka.com",
+                locale,
+              }
+        }
+      />
     </Suspense>
   );
 }

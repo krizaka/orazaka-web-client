@@ -81,9 +81,7 @@ jest.mock("@/features/profile/components/AiProvidersParts", () => ({
 }));
 
 jest.mock("@/features/profile/components/AiProviderConnectionForm", () => ({
-  ProviderConnectionForm: ({ mode }: { mode: string }) => (
-    <div data-testid="form">{mode}</div>
-  ),
+  ProviderConnectionForm: ({ mode }: { mode: string }) => <div data-testid="form">{mode}</div>,
 }));
 
 function buildState(overrides: Partial<HookState> = {}): HookState {
@@ -168,8 +166,6 @@ describe("AiProvidersSection", () => {
   it("shows the all-configured note when no providers remain", () => {
     mockHookState = buildState({ configuredIds: ["openai"], availableIds: [] });
     render(<AiProvidersSection fetchHeaders={async () => ({})} />);
-    expect(
-      screen.getByText("All available providers are connected."),
-    ).toBeInTheDocument();
+    expect(screen.getByText("All available providers are connected.")).toBeInTheDocument();
   });
 });

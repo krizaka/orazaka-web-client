@@ -17,7 +17,9 @@ export function usePrices() {
     queryKey: KEY,
     queryFn: async () => {
       const current = await PricesAdminApi.current();
-      const histories = Object.fromEntries(await Promise.all(current.map(async (p) => [p.key, await PricesAdminApi.history(p.key)] as const)));
+      const histories = Object.fromEntries(
+        await Promise.all(current.map(async (p) => [p.key, await PricesAdminApi.history(p.key)] as const)),
+      );
       return toPricesView(current, histories, now);
     },
     retry: false,
@@ -25,5 +27,12 @@ export function usePrices() {
   });
   const loadHistory = useCallback(async (key: string) => toHistory(await PricesAdminApi.history(key)), []);
   const refresh = useCallback(() => client.invalidateQueries({ queryKey: KEY }), [client]);
-  return { prices: query.data, isLoading: query.isPending, hasError: query.isError, reload: () => void query.refetch(), loadHistory, refresh };
+  return {
+    prices: query.data,
+    isLoading: query.isPending,
+    hasError: query.isError,
+    reload: () => void query.refetch(),
+    loadHistory,
+    refresh,
+  };
 }

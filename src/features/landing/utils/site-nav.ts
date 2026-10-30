@@ -71,7 +71,10 @@ export function currentEntry(pathname: string | null | undefined): { group: NavG
  * Where the visitor is, as the bar shows it — at most one top-level item lit: the group holding the page, else Docs for
  * the rest of /docs, else nothing (the home, whose sections are anchors).
  */
-export function navActive(pathname: string | null | undefined): { top: NavGroupId | "docs" | NavPageId | null; entry: NavEntryId | null } {
+export function navActive(pathname: string | null | undefined): {
+  top: NavGroupId | "docs" | NavPageId | null;
+  entry: NavEntryId | null;
+} {
   const hit = currentEntry(pathname);
   if (hit) return { top: hit.group, entry: hit.entry };
   if (under(pathname ?? "", NAV_DOCS.path)) return { top: "docs", entry: null };

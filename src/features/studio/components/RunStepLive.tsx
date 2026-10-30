@@ -39,7 +39,9 @@ export function RunStepLive({ step, job, now }: Readonly<RunStepLiveProps>) {
           <span className="text-fg-muted"> · {fill(w.basis, { n: remaining.samples })}</span>
         </li>
       )}
-      {remaining.tag === "overdue" && <li className="text-fg-warning">{fill(w.overdue, { time: formatSpan(remaining.typicalMs) })}</li>}
+      {remaining.tag === "overdue" && (
+        <li className="text-fg-warning">{fill(w.overdue, { time: formatSpan(remaining.typicalMs) })}</li>
+      )}
       {remaining.tag === "none" && <li className="text-fg-muted">{w.noEstimate}</li>}
     </ul>
   );

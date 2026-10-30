@@ -12,7 +12,11 @@ import { consoleCopy } from "@/console/core/copy/console";
 import { APP_ENV } from "@/console/core/config/version";
 import { CONSOLE_GROUPS, activeGroup } from "@/console/core/config/sections";
 
-const SECTIONS = CONSOLE_GROUPS.map((g) => ({ href: g.href, id: g.id, label: consoleCopy.nav[g.id as keyof typeof consoleCopy.nav] as string }));
+const SECTIONS = CONSOLE_GROUPS.map((g) => ({
+  href: g.href,
+  id: g.id,
+  label: consoleCopy.nav[g.id as keyof typeof consoleCopy.nav] as string,
+}));
 
 /**
  * The console's bar (@krizaka/ui NavBar, full width): the Orazaka mark, its five sections (config/sections.ts) with the

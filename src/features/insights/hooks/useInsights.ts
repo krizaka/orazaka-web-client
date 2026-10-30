@@ -13,7 +13,11 @@ const HISTORY = 100;
  * the dashboard, the credits page and the job queue share one fetch.
  */
 export function useInsights(enabled = true) {
-  const jobs = useQuery<JobsPage>({ queryKey: ["jobs", 0, HISTORY], queryFn: () => JobsApi.fetchPage(0, HISTORY), enabled });
+  const jobs = useQuery<JobsPage>({
+    queryKey: ["jobs", 0, HISTORY],
+    queryFn: () => JobsApi.fetchPage(0, HISTORY),
+    enabled,
+  });
   const runs = useQuery<Run[]>({ queryKey: ["studio-runs"], queryFn: () => StudioApi.fetchRuns(), enabled });
   return {
     jobs: jobs.data?.content ?? [],

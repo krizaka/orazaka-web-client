@@ -130,7 +130,8 @@ export const consent: Record<"en" | "fr", ConsentDictionary> = {
     ageLabel: "Je confirme être majeur·e là où j'habite.",
     regionLabel: "Votre région",
     regionPlaceholder: "Choisissez votre région",
-    regionHelp: "Sert uniquement à afficher la bonne ligne d'écoute. Le Studio est proposé là où une ligne a été vérifiée.",
+    regionHelp:
+      "Sert uniquement à afficher la bonne ligne d'écoute. Le Studio est proposé là où une ligne a été vérifiée.",
     regions: {
       FR: "France",
       "BE-FR": "Belgique francophone",
@@ -144,7 +145,8 @@ export const consent: Record<"en" | "fr", ConsentDictionary> = {
     cancel: "Pas maintenant",
     close: "Fermer",
     refused: "Ce Studio ne peut pas être lancé avec ces réponses.",
-    asked: "Consentement demandé : avant votre premier lancement, ce Studio vous demande de confirmer votre âge et votre région, et de consentir.",
+    asked:
+      "Consentement demandé : avant votre premier lancement, ce Studio vous demande de confirmer votre âge et votre région, et de consentir.",
     givenTitle: "Vous avez accepté la déclaration de ce Studio.",
     withdraw: "Retirer mon consentement",
     withdrawTitle: "Retirer votre consentement ?",

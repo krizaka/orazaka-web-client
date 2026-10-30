@@ -59,9 +59,7 @@ export const BillingAdminApi = {
   // ── Plans & packs ────────────────────────────────────────────────────────
 
   listPlans: async (includeInactive = true): Promise<Plan[]> => {
-    const data = await request<unknown[]>(
-      `/api/v1/billing/plans?includeInactive=${includeInactive}`,
-    );
+    const data = await request<unknown[]>(`/api/v1/billing/plans?includeInactive=${includeInactive}`);
     return data.map((plan) => PlanSchema.parse(plan));
   },
 
@@ -77,9 +75,7 @@ export const BillingAdminApi = {
     request<void>(`/api/v1/billing/plans/${planKey}`, { method: "DELETE" }),
 
   listPacks: async (includeInactive = true): Promise<Pack[]> => {
-    const data = await request<unknown[]>(
-      `/api/v1/billing/packs?includeInactive=${includeInactive}`,
-    );
+    const data = await request<unknown[]>(`/api/v1/billing/packs?includeInactive=${includeInactive}`);
     return data.map((pack) => PackSchema.parse(pack));
   },
 
@@ -135,12 +131,7 @@ export const BillingAdminApi = {
    * left to a server error: an admin should learn the rule from the form, not
    * from a rejected submission.
    */
-  adjust: async (
-    actorId: string,
-    bucket: CreditBucket,
-    amount: number,
-    reason: string,
-  ): Promise<Wallet> => {
+  adjust: async (actorId: string, bucket: CreditBucket, amount: number, reason: string): Promise<Wallet> => {
     if (!reason.trim()) {
       throw new Error("A reason is required for every manual adjustment");
     }
@@ -152,26 +143,19 @@ export const BillingAdminApi = {
     );
   },
 
-  adjustedToday: (): Promise<number> =>
-    request<number>("/api/v1/billing/wallets/adjustments/today"),
+  adjustedToday: (): Promise<number> => request<number>("/api/v1/billing/wallets/adjustments/today"),
 
   // ── Subscriptions ────────────────────────────────────────────────────────
 
   fetchSubscription: async (actorId: string): Promise<Subscription | null> => {
     try {
-      return SubscriptionSchema.parse(
-        await request<unknown>(`/api/v1/billing/subscriptions/${actorId}`),
-      );
+      return SubscriptionSchema.parse(await request<unknown>(`/api/v1/billing/subscriptions/${actorId}`));
     } catch {
       return null;
     }
   },
 
-  changePlan: async (
-    actorId: string,
-    planKey: string,
-    status = "ACTIVE",
-  ): Promise<Subscription> =>
+  changePlan: async (actorId: string, planKey: string, status = "ACTIVE"): Promise<Subscription> =>
     SubscriptionSchema.parse(
       await request<unknown>(`/api/v1/billing/subscriptions/${actorId}`, {
         method: "POST",
@@ -187,16 +171,12 @@ export const BillingAdminApi = {
   // ── Usage analytics ──────────────────────────────────────────────────────
 
   usageByCapability: async (days = 30): Promise<CapabilityUsage[]> => {
-    const data = await request<unknown[]>(
-      `/api/v1/billing/usage/capabilities?days=${days}`,
-    );
+    const data = await request<unknown[]>(`/api/v1/billing/usage/capabilities?days=${days}`);
     return data.map((row) => CapabilityUsageSchema.parse(row));
   },
 
   topConsumers: async (days = 30, limit = 20): Promise<ActorConsumption[]> => {
-    const data = await request<unknown[]>(
-      `/api/v1/billing/usage/top-consumers?days=${days}&limit=${limit}`,
-    );
+    const data = await request<unknown[]>(`/api/v1/billing/usage/top-consumers?days=${days}&limit=${limit}`);
     return data.map((row) => ActorConsumptionSchema.parse(row));
   },
 

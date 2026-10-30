@@ -98,9 +98,7 @@ export function ProviderConnectionForm({
     >
       {mode === "add" ? (
         <fieldset className="space-y-2">
-          <legend className="mb-2 text-xs font-medium text-fg-secondary">
-            {t.providers.selectProvider}
-          </legend>
+          <legend className="mb-2 text-xs font-medium text-fg-secondary">{t.providers.selectProvider}</legend>
           <div className="grid grid-cols-2 gap-2">
             {pickable.map((provider) => {
               const active = selected?.id === provider.id;
@@ -110,12 +108,13 @@ export function ProviderConnectionForm({
                   variant="outline"
                   onClick={() => onSelect(provider.id)}
                   aria-pressed={active}
-                  className={cn("h-auto justify-start gap-2.5 p-2.5 text-left font-normal", active && "border-accent bg-accent-soft")}
+                  className={cn(
+                    "h-auto justify-start gap-2.5 p-2.5 text-left font-normal",
+                    active && "border-accent bg-accent-soft",
+                  )}
                 >
                   <ProviderGlyph provider={provider} active={active} />
-                  <span className="truncate text-xs font-medium text-fg">
-                    {provider.name}
-                  </span>
+                  <span className="truncate text-xs font-medium text-fg">{provider.name}</span>
                 </Button>
               );
             })}
@@ -126,12 +125,8 @@ export function ProviderConnectionForm({
           <div className="flex items-center gap-3 rounded-md border border-border-subtle bg-surface-2 p-3">
             <ProviderGlyph provider={selected} active />
             <div>
-              <p className="text-sm font-semibold text-fg">
-                {selected.name}
-              </p>
-              <p className="text-xs text-fg-secondary">
-                {t.providers.editKeyHint}
-              </p>
+              <p className="text-sm font-semibold text-fg">{selected.name}</p>
+              <p className="text-xs text-fg-secondary">{t.providers.editKeyHint}</p>
             </div>
           </div>
         )

@@ -15,7 +15,10 @@ describe("parseRouting", () => {
     expect(parseRouting({ provider: "x", local: "yes" })).toBeNull();
   });
   it("drops a nonsensical estimate rather than showing it", () => {
-    expect(parseRouting({ provider: "x", local: false, estimatedCredits: -3 })).toEqual({ provider: "x", local: false });
+    expect(parseRouting({ provider: "x", local: false, estimatedCredits: -3 })).toEqual({
+      provider: "x",
+      local: false,
+    });
   });
 });
 
@@ -24,9 +27,17 @@ describe("routingStatus", () => {
     expect(routingStatus(null)).toEqual({ localOnly: false, routedTo: null, credits: null });
   });
   it("claims local only when the last routing was local", () => {
-    expect(routingStatus({ provider: "ollama", local: true, estimatedCredits: 30 })).toEqual({ localOnly: true, routedTo: null, credits: 30 });
+    expect(routingStatus({ provider: "ollama", local: true, estimatedCredits: 30 })).toEqual({
+      localOnly: true,
+      routedTo: null,
+      credits: 30,
+    });
   });
   it("names the provider, neutrally, when the answer left the network", () => {
-    expect(routingStatus({ provider: "openai", local: false })).toEqual({ localOnly: false, routedTo: "openai", credits: null });
+    expect(routingStatus({ provider: "openai", local: false })).toEqual({
+      localOnly: false,
+      routedTo: "openai",
+      credits: null,
+    });
   });
 });

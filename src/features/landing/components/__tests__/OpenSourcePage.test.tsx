@@ -25,13 +25,23 @@ function renderLanding(locale: Locale, ui: ReactElement) {
 }
 
 const o = translations.en.openSource;
-const repos = [{ name: "orazaka-studio", description: "Studio runs", url: "https://github.com/krizaka/orazaka-studio", pushedAt: "2026-10-20T00:00:00Z" }];
+const repos = [
+  {
+    name: "orazaka-studio",
+    description: "Studio runs",
+    url: "https://github.com/krizaka/orazaka-studio",
+    pushedAt: "2026-10-20T00:00:00Z",
+  },
+];
 
 describe("/open-source", () => {
   it("lists the repositories it was given, each a link to GitHub", () => {
     renderLanding("en", <OpenSourcePage repos={repos} />);
     const list = screen.getByRole("list", { name: o.repos.label });
-    expect(within(list).getByRole("link", { name: /orazaka-studio/ })).toHaveAttribute("href", "https://github.com/krizaka/orazaka-studio");
+    expect(within(list).getByRole("link", { name: /orazaka-studio/ })).toHaveAttribute(
+      "href",
+      "https://github.com/krizaka/orazaka-studio",
+    );
   });
 
   it("says so, with a link to the organisation, when GitHub could not be read", () => {

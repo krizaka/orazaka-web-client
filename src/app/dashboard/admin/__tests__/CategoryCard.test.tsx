@@ -42,9 +42,7 @@ describe("CategoryCard", () => {
   afterEach(() => jest.clearAllMocks());
 
   it("renders category heading with model count", () => {
-    const models = [
-      { id: 1, modelName: "gpt-4o", modelLabel: "GPT-4o", category: "text" },
-    ];
+    const models = [{ id: 1, modelName: "gpt-4o", modelLabel: "GPT-4o", category: "text" }];
     render(<CategoryCard category="text" models={models} onEdit={onEdit} onDelete={onDelete} />);
     expect(screen.getByText("1")).toBeInTheDocument();
   });
@@ -55,43 +53,33 @@ describe("CategoryCard", () => {
   });
 
   it("renders model items with label and name", () => {
-    const models = [
-      { id: 1, modelName: "llama3:latest", modelLabel: "Llama 3", category: "text" },
-    ];
+    const models = [{ id: 1, modelName: "llama3:latest", modelLabel: "Llama 3", category: "text" }];
     render(<CategoryCard category="text" models={models} onEdit={onEdit} onDelete={onDelete} />);
     expect(screen.getByText("Llama 3")).toBeInTheDocument();
     expect(screen.getByText("llama3:latest")).toBeInTheDocument();
   });
 
   it("shows default badge for default model", () => {
-    const models = [
-      { id: 1, modelName: "gpt-4o", modelLabel: "GPT-4o", category: "text", isDefault: true },
-    ];
+    const models = [{ id: 1, modelName: "gpt-4o", modelLabel: "GPT-4o", category: "text", isDefault: true }];
     render(<CategoryCard category="text" models={models} onEdit={onEdit} onDelete={onDelete} />);
     expect(screen.getByText("Default")).toBeInTheDocument();
   });
 
   it("shows options when present", () => {
-    const models = [
-      { id: 1, modelName: "tts-1", modelLabel: "TTS-1", category: "speech", options: "voice1,voice2" },
-    ];
+    const models = [{ id: 1, modelName: "tts-1", modelLabel: "TTS-1", category: "speech", options: "voice1,voice2" }];
     render(<CategoryCard category="speech" models={models} onEdit={onEdit} onDelete={onDelete} />);
     expect(screen.getByText(/voice1,voice2/)).toBeInTheDocument();
   });
 
   it("calls onEdit when edit button clicked", () => {
-    const models = [
-      { id: 1, modelName: "gpt-4o", modelLabel: "GPT-4o", category: "text" },
-    ];
+    const models = [{ id: 1, modelName: "gpt-4o", modelLabel: "GPT-4o", category: "text" }];
     render(<CategoryCard category="text" models={models} onEdit={onEdit} onDelete={onDelete} />);
     fireEvent.click(screen.getByTitle("Edit"));
     expect(onEdit).toHaveBeenCalledWith(models[0]);
   });
 
   it("calls onDelete when delete button clicked", () => {
-    const models = [
-      { id: 1, modelName: "gpt-4o", modelLabel: "GPT-4o", category: "text" },
-    ];
+    const models = [{ id: 1, modelName: "gpt-4o", modelLabel: "GPT-4o", category: "text" }];
     render(<CategoryCard category="text" models={models} onEdit={onEdit} onDelete={onDelete} />);
     fireEvent.click(screen.getByTitle("Delete"));
     expect(onDelete).toHaveBeenCalledWith(1);

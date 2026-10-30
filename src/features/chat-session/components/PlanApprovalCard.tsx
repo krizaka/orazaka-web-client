@@ -48,22 +48,22 @@ export function PlanApprovalCard({
     >
       {/* Header bar */}
       <header className="flex items-center gap-3 px-5 py-4 border-b border-border-subtle bg-surface-2/30">
-        <span className="inline-flex items-center justify-center w-8 h-8 bg-accent-soft border border-accent/20"
-              style={{ borderRadius: "var(--kz-radius-sm)" }}>
+        <span
+          className="inline-flex items-center justify-center w-8 h-8 bg-accent-soft border border-accent/20"
+          style={{ borderRadius: "var(--kz-radius-sm)" }}
+        >
           <Icon name="shield" size={16} className="text-accent" />
         </span>
         <div>
-          <h3 className="text-sm font-bold text-fg tracking-tight">
-            Execution Plan — Awaiting Approval
-          </h3>
-          <p className="text-[11px] text-fg-muted mt-0.5">
-            Review the proposed steps before execution proceeds.
-          </p>
+          <h3 className="text-sm font-bold text-fg tracking-tight">Execution Plan — Awaiting Approval</h3>
+          <p className="text-[11px] text-fg-muted mt-0.5">Review the proposed steps before execution proceeds.</p>
         </div>
 
         {/* Status pill */}
-        <span className="ml-auto inline-flex items-center gap-1.5 px-3 py-1 text-[10px] font-semibold bg-warning/10 text-warning border border-warning/20"
-              style={{ borderRadius: "var(--kz-radius-full)" }}>
+        <span
+          className="ml-auto inline-flex items-center gap-1.5 px-3 py-1 text-[10px] font-semibold bg-warning/10 text-warning border border-warning/20"
+          style={{ borderRadius: "var(--kz-radius-full)" }}
+        >
           <span className="w-1.5 h-1.5 rounded-full bg-warning animate-pulse" />
           Awaiting
         </span>
@@ -86,13 +86,9 @@ export function PlanApprovalCard({
 
             {/* Step content */}
             <div className="flex-1 min-w-0">
-              <p className="text-[13px] font-medium text-fg leading-snug">
-                {step.label}
-              </p>
+              <p className="text-[13px] font-medium text-fg leading-snug">{step.label}</p>
               {step.description && (
-                <p className="text-[11px] text-fg-secondary mt-0.5 leading-relaxed">
-                  {step.description}
-                </p>
+                <p className="text-[11px] text-fg-secondary mt-0.5 leading-relaxed">{step.description}</p>
               )}
             </div>
 
@@ -119,7 +115,13 @@ export function PlanApprovalCard({
         </Button>
 
         {/* Secondary: Request Adjustments */}
-        <Button id="plan-adjust-btn" variant="secondary" size="sm" onClick={onRequestAdjustments} disabled={isProcessing}>
+        <Button
+          id="plan-adjust-btn"
+          variant="secondary"
+          size="sm"
+          onClick={onRequestAdjustments}
+          disabled={isProcessing}
+        >
           <Icon name="edit" size={14} />
           {t.showcase.chat.adjustPlan}
         </Button>

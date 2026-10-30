@@ -6,9 +6,15 @@ import { localise, w, type Localised } from "@/core/context/words";
 
 const WORDS = {
   title: w("Engine", "Moteur"),
-  lead: w("The engine's runtime settings. A change takes effect on the next read, with no restart.", "Les réglages d'exécution du moteur. Un changement prend effet à la lecture suivante, sans redémarrage."),
+  lead: w(
+    "The engine's runtime settings. A change takes effect on the next read, with no restart.",
+    "Les réglages d'exécution du moteur. Un changement prend effet à la lecture suivante, sans redémarrage.",
+  ),
   nav: w("Engine", "Moteur"),
-  error: w("The settings could not be read: the studio service may be starting.", "Les réglages n'ont pas pu être lus : le service des studios démarre peut-être."),
+  error: w(
+    "The settings could not be read: the studio service may be starting.",
+    "Les réglages n'ont pas pu être lus : le service des studios démarre peut-être.",
+  ),
   retry: w("Retry", "Réessayer"),
   loading: w("Reading the settings", "Lecture des réglages"),
   groups: {
@@ -59,4 +65,5 @@ export type EngineLocale = "en" | "fr";
 export const engineCopy: Record<EngineLocale, EngineWords> = { en: localise(WORDS, 0), fr: localise(WORDS, 1) };
 
 /** The words of a language, with `{n}`-style placeholders filled in. */
-export const fill = (text: string, values: Record<string, string | number>) => text.replace(/\{(\w+)\}/g, (_, k: string) => String(values[k] ?? ""));
+export const fill = (text: string, values: Record<string, string | number>) =>
+  text.replace(/\{(\w+)\}/g, (_, k: string) => String(values[k] ?? ""));

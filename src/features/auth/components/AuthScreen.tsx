@@ -53,7 +53,12 @@ export function AuthScreen({
         asideFooter={
           <>
             © {new Date().getFullYear()} Orazaka · {t.landing.footer.license} ·{" "}
-            <a href="https://www.krizaka.com/" target="_blank" rel="noopener noreferrer" className="underline underline-offset-2 hover:text-fg">
+            <a
+              href="https://www.krizaka.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="underline underline-offset-2 hover:text-fg"
+            >
               {t.landing.footer.by}
             </a>
           </>
@@ -63,10 +68,16 @@ export function AuthScreen({
         footer={footer}
         legal={
           <span className="flex flex-wrap items-center justify-center gap-x-3 gap-y-1">
-            <Link href="/privacy" className="hover:text-fg">{t.auth.legalPrivacy}</Link>
-            <Link href="/terms" className="hover:text-fg">{t.auth.legalTerms}</Link>
+            <Link href="/privacy" className="hover:text-fg">
+              {t.auth.legalPrivacy}
+            </Link>
+            <Link href="/terms" className="hover:text-fg">
+              {t.auth.legalTerms}
+            </Link>
             {/* /contact answers a redirect to www.krizaka.com: prefetching it is a CORS error on every visit. */}
-            <Link href="/contact" prefetch={false} className="hover:text-fg">{t.auth.legalContact}</Link>
+            <Link href="/contact" prefetch={false} className="hover:text-fg">
+              {t.auth.legalContact}
+            </Link>
           </span>
         }
       >

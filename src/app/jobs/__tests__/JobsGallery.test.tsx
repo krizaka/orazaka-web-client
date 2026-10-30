@@ -10,9 +10,14 @@ jest.mock("@/core/context/LocaleContext", () => ({
 const prompt = "A heron standing in the shallow water at dawn, mist over the reeds, long exposure, ".repeat(4).trim();
 
 const image: Job = {
-  id: "job-image-1", userId: "u", featureKey: "orazaka.core.media.image", status: "COMPLETED",
-  createdAt: "2026-10-16T10:00:00Z", updatedAt: "2026-10-16T10:02:00Z",
-  payload: { prompt, model: "flux" }, result: { url: "/heron.png" },
+  id: "job-image-1",
+  userId: "u",
+  featureKey: "orazaka.core.media.image",
+  status: "COMPLETED",
+  createdAt: "2026-10-16T10:00:00Z",
+  updatedAt: "2026-10-16T10:02:00Z",
+  payload: { prompt, model: "flux" },
+  result: { url: "/heron.png" },
 };
 
 describe("JobsGallery", () => {

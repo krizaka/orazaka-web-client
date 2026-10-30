@@ -16,12 +16,8 @@ export function ApiKeysEmptyState({ onCreate }: Readonly<{ onCreate: () => void 
         <Icon name="key" size={20} />
       </span>
       <div className="space-y-1">
-        <p className="text-sm font-medium text-fg">
-          {t.apiKeys.emptyTitle}
-        </p>
-        <p className="max-w-sm text-xs text-fg-muted">
-          {t.apiKeys.emptyDesc}
-        </p>
+        <p className="text-sm font-medium text-fg">{t.apiKeys.emptyTitle}</p>
+        <p className="max-w-sm text-xs text-fg-muted">{t.apiKeys.emptyDesc}</p>
       </div>
       <Button type="button" size="sm" onClick={onCreate} className="gap-1.5">
         <Icon name="plus" size={15} />
@@ -51,16 +47,13 @@ export function ApiKeyRow({
     <li className="flex items-center justify-between gap-3 px-4 py-3">
       <div className="min-w-0 space-y-1">
         <div className="flex items-center gap-2">
-          <p className="truncate text-sm font-medium text-fg">
-            {apiKey.name}
-          </p>
+          <p className="truncate text-sm font-medium text-fg">{apiKey.name}</p>
           <code className="rounded bg-surface-2 px-1.5 py-0.5 font-mono text-[11px] text-fg-secondary">
             {apiKey.keyPrefix}…
           </code>
         </div>
         <p className="text-[11px] text-fg-muted">
-          {t.apiKeys.created}:{" "}
-          {format(parseISO(apiKey.createdAt), "PP", { locale: dfLocale })}
+          {t.apiKeys.created}: {format(parseISO(apiKey.createdAt), "PP", { locale: dfLocale })}
           {" · "}
           {lastUsed}
         </p>
@@ -106,10 +99,7 @@ export function CreateApiKeyForm({
       }}
     >
       <div className="space-y-1.5">
-        <label
-          htmlFor="api-key-name"
-          className="text-xs font-medium text-fg-secondary"
-        >
+        <label htmlFor="api-key-name" className="text-xs font-medium text-fg-secondary">
           {t.apiKeys.nameLabel}
         </label>
         <Input
@@ -122,19 +112,13 @@ export function CreateApiKeyForm({
         />
       </div>
       {error !== "none" && (
-        <p className="text-xs text-danger">
-          {error === "limit" ? t.apiKeys.limitReached : t.apiKeys.createError}
-        </p>
+        <p className="text-xs text-danger">{error === "limit" ? t.apiKeys.limitReached : t.apiKeys.createError}</p>
       )}
       <div className="flex justify-end gap-2">
         <Button type="button" variant="ghost" size="sm" onClick={onCancel}>
           {t.apiKeys.cancel}
         </Button>
-        <Button
-          type="submit"
-          size="sm"
-          disabled={isSaving || !draftName.trim()}
-        >
+        <Button type="submit" size="sm" disabled={isSaving || !draftName.trim()}>
           {t.apiKeys.createCta}
         </Button>
       </div>
@@ -143,10 +127,7 @@ export function CreateApiKeyForm({
 }
 
 /** One-time reveal of the freshly created plaintext secret, with copy-to-clipboard. */
-export function RevealKeyPanel({
-  generated,
-  onDone,
-}: Readonly<{ generated: GeneratedKey; onDone: () => void }>) {
+export function RevealKeyPanel({ generated, onDone }: Readonly<{ generated: GeneratedKey; onDone: () => void }>) {
   const { t } = useTranslation();
   const [copied, setCopied] = React.useState(false);
 
@@ -166,13 +147,7 @@ export function RevealKeyPanel({
         <code className="min-w-0 flex-1 truncate rounded-md border border-border-subtle bg-surface-2 px-3 py-2 font-mono text-xs text-fg">
           {generated.key}
         </code>
-        <Button
-          type="button"
-          variant="outline"
-          size="sm"
-          onClick={copy}
-          className="shrink-0 gap-1.5"
-        >
+        <Button type="button" variant="outline" size="sm" onClick={copy} className="shrink-0 gap-1.5">
           <Icon name={copied ? "check" : "copy"} size={15} />
           {copied ? t.apiKeys.copied : t.apiKeys.copy}
         </Button>

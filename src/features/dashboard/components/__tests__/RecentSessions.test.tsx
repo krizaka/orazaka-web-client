@@ -78,9 +78,7 @@ describe("RecentSessions", () => {
   });
 
   it("formats dates using formatDate callback", () => {
-    const threads = [
-      { conversationId: "c1", title: "Test", updatedAt: 1234 },
-    ];
+    const threads = [{ conversationId: "c1", title: "Test", updatedAt: 1234 }];
     render(
       <RecentSessions
         recentThreads={threads}
@@ -95,9 +93,7 @@ describe("RecentSessions", () => {
   });
 
   it("calls onResumeSession when thread clicked", () => {
-    const threads = [
-      { conversationId: "c1", title: "Chat about AI", updatedAt: 1000 },
-    ];
+    const threads = [{ conversationId: "c1", title: "Chat about AI", updatedAt: 1000 }];
     render(
       <RecentSessions
         recentThreads={threads}

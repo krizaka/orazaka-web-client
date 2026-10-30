@@ -12,14 +12,17 @@ const BARS = 64;
 /** The loudness of `BARS` slices of a decoded sound, 0..1 — the waveform of the file itself, never a decoration. */
 async function peaksOf(src: string, signal: AbortSignal): Promise<number[]> {
   const data = await (await fetch(src, { signal })).arrayBuffer();
-  const Ctx = globalThis.AudioContext ?? (globalThis as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
+  const Ctx =
+    globalThis.AudioContext ??
+    (globalThis as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
   const ctx = new Ctx();
   try {
     const channel = (await ctx.decodeAudioData(data)).getChannelData(0);
     const size = Math.max(1, Math.floor(channel.length / BARS));
     const peaks = Array.from({ length: BARS }, (_, i) => {
       let max = 0;
-      for (let j = i * size; j < Math.min((i + 1) * size, channel.length); j++) max = Math.max(max, Math.abs(channel[j]));
+      for (let j = i * size; j < Math.min((i + 1) * size, channel.length); j++)
+        max = Math.max(max, Math.abs(channel[j]));
       return max;
     });
     const top = Math.max(...peaks, 0.001);
@@ -49,7 +52,12 @@ export function AudioWaveform({ src, label, className }: Readonly<AudioWaveformP
   const [progress, setProgress] = React.useState(0);
 
   // One decode per source; a new source cancels the one in flight (the query's signal) and shows its own result.
-  const decoded = useQuery({ queryKey: ["audio-peaks", src], queryFn: ({ signal }) => peaksOf(src, signal), retry: false, staleTime: Infinity });
+  const decoded = useQuery({
+    queryKey: ["audio-peaks", src],
+    queryFn: ({ signal }) => peaksOf(src, signal),
+    retry: false,
+    staleTime: Infinity,
+  });
   const peaks = decoded.data ?? null;
   const failed = decoded.isError;
 
@@ -70,7 +78,12 @@ export function AudioWaveform({ src, label, className }: Readonly<AudioWaveformP
 
   return (
     <div className={cn("flex items-center gap-3", className)} data-testid="audio-waveform">
-      <IconButton variant="primary" shape="pill" onClick={toggle} label={`${playing ? t.showcase.media.pause : t.showcase.media.play} — ${label}`}>
+      <IconButton
+        variant="primary"
+        shape="pill"
+        onClick={toggle}
+        label={`${playing ? t.showcase.media.pause : t.showcase.media.play} — ${label}`}
+      >
         {playing ? <PauseIcon size={18} /> : <PlayIcon size={18} />}
       </IconButton>
       <svg viewBox={`0 0 ${BARS * 4} 40`} preserveAspectRatio="none" className="h-10 flex-1" aria-hidden="true">
@@ -99,7 +112,9 @@ export function AudioWaveform({ src, label, className }: Readonly<AudioWaveformP
           setPlaying(false);
           setProgress(1);
         }}
-        onTimeUpdate={(e) => setProgress(e.currentTarget.duration ? e.currentTarget.currentTime / e.currentTarget.duration : 0)}
+        onTimeUpdate={(e) =>
+          setProgress(e.currentTarget.duration ? e.currentTarget.currentTime / e.currentTarget.duration : 0)
+        }
       >
         <track kind="captions" />
       </audio>

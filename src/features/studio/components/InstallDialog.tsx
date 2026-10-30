@@ -63,9 +63,7 @@ function InstallForm({
   });
 
   const submit = () => {
-    const filled = Object.fromEntries(
-      Object.entries(values).filter(([, value]) => value.trim() !== ""),
-    );
+    const filled = Object.fromEntries(Object.entries(values).filter(([, value]) => value.trim() !== ""));
     onSubmit(filled);
   };
 

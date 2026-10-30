@@ -56,10 +56,7 @@ export function useStudios(profession: string | null): StudiosState {
     return () => clearTimeout(timer);
   }, [load]);
 
-  const professions = useMemo(
-    () => professionsOf(studios),
-    [studios],
-  );
+  const professions = useMemo(() => professionsOf(studios), [studios]);
 
   const visible = useMemo(
     () => (profession ? studios.filter((studio) => studio.profession === profession) : studios),

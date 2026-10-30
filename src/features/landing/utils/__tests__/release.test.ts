@@ -7,8 +7,16 @@ const rel = (tag: string, at: string, over: Partial<GithubRelease> = {}): Github
   published_at: at,
   html_url: `https://github.com/krizaka/orazaka/releases/tag/${tag}`,
   assets: [
-    { name: "Orazaka_0.1.0_aarch64.dmg", browser_download_url: `https://example.test/${tag}/Orazaka.dmg`, size: 6271937 },
-    { name: "Orazaka_0.1.0_aarch64.dmg.sha256", browser_download_url: `https://example.test/${tag}/Orazaka.dmg.sha256`, size: 92 },
+    {
+      name: "Orazaka_0.1.0_aarch64.dmg",
+      browser_download_url: `https://example.test/${tag}/Orazaka.dmg`,
+      size: 6271937,
+    },
+    {
+      name: "Orazaka_0.1.0_aarch64.dmg.sha256",
+      browser_download_url: `https://example.test/${tag}/Orazaka.dmg.sha256`,
+      size: 92,
+    },
   ],
   ...over,
 });

@@ -3,14 +3,29 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { lawCopy } from "../core/copy/law.ts";
-import { canApprove, canEdit, canReject, draftOf, isIsoDate, kindsOf, orDash, promotable, refusalKey, ruleOf, wordOf } from "../features/law/utils/law.ts";
+import {
+  canApprove,
+  canEdit,
+  canReject,
+  draftOf,
+  isIsoDate,
+  kindsOf,
+  orDash,
+  promotable,
+  refusalKey,
+  ruleOf,
+  wordOf,
+} from "../features/law/utils/law.ts";
 import { proposal } from "../../__tests__/helpers/law-fixtures.ts";
 
 test("only a PROPOSED rule is approved; PROPOSED or APPROVED is rejected unless a packs pull request carries it", () => {
   assert.equal(canApprove(proposal()), true);
   assert.equal(canApprove(proposal({ status: "APPROVED" })), false);
   assert.equal(canReject(proposal({ status: "APPROVED" })), true);
-  assert.equal(canReject(proposal({ status: "APPROVED", packsPrUrl: "https://github.com/krizaka/orazaka-packs/pull/7" })), false);
+  assert.equal(
+    canReject(proposal({ status: "APPROVED", packsPrUrl: "https://github.com/krizaka/orazaka-packs/pull/7" })),
+    false,
+  );
   assert.equal(canReject(proposal({ status: "REJECTED_AUTO" })), false);
 });
 
@@ -27,7 +42,10 @@ test("a kind promotes its approved rules that no packs pull request carries yet"
     proposal({ id: "c", status: "PROPOSED" }),
     proposal({ id: "d", status: "APPROVED", kindId: "qc-sublet-notice" }),
   ];
-  assert.deepEqual(promotable(list, "qc-visit-notice").map((p) => p.id), ["a"]);
+  assert.deepEqual(
+    promotable(list, "qc-visit-notice").map((p) => p.id),
+    ["a"],
+  );
   assert.deepEqual(kindsOf(list), ["qc-sublet-notice", "qc-visit-notice"]);
 });
 
@@ -41,7 +59,15 @@ test("a refusal reads by its code, else by its status", () => {
 });
 
 test("every 409 code of the promotion has its words", () => {
-  for (const code of ["proposal-not-approved", "already-in-review", "kind-mismatch", "duplicate-rule", "golden-minimum-not-met", "law-version-mismatch", "quote-too-long"]) {
+  for (const code of [
+    "proposal-not-approved",
+    "already-in-review",
+    "kind-mismatch",
+    "duplicate-rule",
+    "golden-minimum-not-met",
+    "law-version-mismatch",
+    "quote-too-long",
+  ]) {
     assert.equal(refusalKey(code, 409, lawCopy.en.refusals), code);
   }
 });
@@ -49,7 +75,13 @@ test("every 409 code of the promotion has its words", () => {
 test("the editor's fields give the same rule back, its id and cited law kept, empty texts as null", () => {
   const rule = proposal().rule;
   assert.deepEqual(ruleOf(rule, draftOf(rule)), rule);
-  const edited = ruleOf(rule, { ...draftOf(rule), checkType: "NONE", onPass: "  ", fixturesPass: "", fixturesFail: "" });
+  const edited = ruleOf(rule, {
+    ...draftOf(rule),
+    checkType: "NONE",
+    onPass: "  ",
+    fixturesPass: "",
+    fixturesFail: "",
+  });
   assert.equal(edited.check, null);
   assert.equal(edited.onPass, null);
   assert.equal(edited.fixtures, null);
@@ -58,7 +90,14 @@ test("the editor's fields give the same rule back, its id and cited law kept, em
 });
 
 test("a rule stored as the model wrote it shows its raw values, and the editor starts it on known values only", () => {
-  const raw = { ...proposal().rule, title: null, severity: "CRITICAL", method: null, check: { type: "MAYBE_PATTERN", pattern: "x" }, sourceUrl: undefined };
+  const raw = {
+    ...proposal().rule,
+    title: null,
+    severity: "CRITICAL",
+    method: null,
+    check: { type: "MAYBE_PATTERN", pattern: "x" },
+    sourceUrl: undefined,
+  };
   assert.equal(wordOf(lawCopy.en.severity, raw.severity), "CRITICAL");
   assert.equal(wordOf(lawCopy.en.severity, "BLOCKING"), "Blocking");
   assert.equal(wordOf(lawCopy.en.method, raw.method), "—");

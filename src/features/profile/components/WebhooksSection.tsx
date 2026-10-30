@@ -1,8 +1,9 @@
 "use client";
 
 import * as React from "react";
-import { formatDistanceToNow } from "date-fns";
 import { enUS, fr } from "date-fns/locale";
+
+import { timeAgoCell } from "@/core/components/timeAgo";
 import { EyeIcon, TrashIcon } from "@krizaka/icons";
 import { Icon } from "@krizaka/orazaka-design-system";
 import { Badge } from "@krizaka/ui/badge";
@@ -19,6 +20,8 @@ interface WebhooksSectionProps {
   fetchHeaders: () => Promise<Record<string, string>>;
 }
 
+const urlCell = (e: WebhookEndpoint) => <code className="break-all font-mono text-xs">{e.url}</code>;
+
 /**
  * Webhooks settings: the endpoints that are told when a run is over, on the kit's DataTable (cards on a phone), with a
  * form to add one. The signing secret is shown once in a dialog (create, rotate); each endpoint has its delivery log.
@@ -32,7 +35,15 @@ export function WebhooksSection({ fetchHeaders }: Readonly<WebhooksSectionProps>
 
   const columns = React.useMemo<DataTableColumn<WebhookEndpoint>[]>(
     () => [
-      { id: "url", header: w.columns.url, type: "title", filter: "text", sortable: true, value: (e) => e.url, cell: (e) => <code className="break-all font-mono text-xs">{e.url}</code> },
+      {
+        id: "url",
+        header: w.columns.url,
+        type: "title",
+        filter: "text",
+        sortable: true,
+        value: (e) => e.url,
+        cell: urlCell,
+      },
       {
         id: "events",
         header: w.columns.events,
@@ -55,7 +66,7 @@ export function WebhooksSection({ fetchHeaders }: Readonly<WebhooksSectionProps>
         type: "date",
         sortable: true,
         value: (e) => new Date(e.createdAt),
-        cell: (e) => <time dateTime={e.createdAt}>{formatDistanceToNow(new Date(e.createdAt), { addSuffix: true, locale: dateLocale })}</time>,
+        cell: (e) => timeAgoCell(e.createdAt, dateLocale),
       },
       {
         id: "actions",
@@ -173,7 +184,9 @@ export function WebhooksSection({ fetchHeaders }: Readonly<WebhooksSectionProps>
             <Dialog.Title>{w.revealTitle}</Dialog.Title>
             <Dialog.Description>{hook.revealed?.url}</Dialog.Description>
           </Dialog.Header>
-          <Dialog.Body>{hook.revealed && <RevealSecret secret={hook.revealed.secret} onDone={hook.dismissRevealed} />}</Dialog.Body>
+          <Dialog.Body>
+            {hook.revealed && <RevealSecret secret={hook.revealed.secret} onDone={hook.dismissRevealed} />}
+          </Dialog.Body>
         </Dialog.Content>
       </Dialog.Root>
 

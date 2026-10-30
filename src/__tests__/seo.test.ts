@@ -4,14 +4,31 @@ import sitemap from "@/app/sitemap";
 import { proxy } from "@/proxy";
 import { NextRequest } from "next/server";
 import { indexable, isDevAddress, NOINDEX_HEADER } from "@/core/config/indexing";
-import { CRAWLERS, KRIZAKA_URL, SITE_DESCRIPTION, SITE_TITLE, llmsFullText, llmsText, ORG_ID, publicPaths, SITE_URL, siteJsonLd } from "@/app/_seo/seo";
+import {
+  CRAWLERS,
+  KRIZAKA_URL,
+  SITE_DESCRIPTION,
+  SITE_TITLE,
+  llmsFullText,
+  llmsText,
+  ORG_ID,
+  publicPaths,
+  SITE_URL,
+  siteJsonLd,
+} from "@/app/_seo/seo";
 // eslint-disable-next-line no-restricted-imports -- the shared family guard lives in scripts/, outside src/
 import { auditLlms, auditRobots, auditSitemap } from "../../scripts/check-seo-family.mjs";
 
 /** MetadataRoute.Robots as the text Next serves. */
 function robotsText(r: ReturnType<typeof robots>): string {
   const rules = Array.isArray(r.rules) ? r.rules : [r.rules];
-  const groups = rules.map((rule) => [`User-Agent: ${rule.userAgent}`, `Allow: ${rule.allow}`, ...([] as string[]).concat(rule.disallow ?? []).map((d) => `Disallow: ${d}`)].join("\n"));
+  const groups = rules.map((rule) =>
+    [
+      `User-Agent: ${rule.userAgent}`,
+      `Allow: ${rule.allow}`,
+      ...([] as string[]).concat(rule.disallow ?? []).map((d) => `Disallow: ${d}`),
+    ].join("\n"),
+  );
   return `${groups.join("\n\n")}\n\nSitemap: ${r.sitemap}\n`;
 }
 
@@ -44,13 +61,18 @@ describe("search engines and AI assistants (the Krizaka family contract)", () =>
     const graph = siteJsonLd()["@graph"] as { "@type": string; publisher: { "@id": string; url: string } }[];
     expect(ORG_ID).toBe(`${KRIZAKA_URL}/#organization`);
     expect(graph.map((n) => n.publisher["@id"])).toEqual([ORG_ID, ORG_ID]);
-    expect(graph.find((n) => n["@type"] === "SoftwareApplication")).toMatchObject({ applicationCategory: "BusinessApplication" });
+    expect(graph.find((n) => n["@type"] === "SoftwareApplication")).toMatchObject({
+      applicationCategory: "BusinessApplication",
+    });
   });
 
-  it.each(["/robots.txt", "/sitemap.xml", "/llms.txt", "/llms-full.txt", "/opengraph-image"])("the sign-in proxy lets crawlers read %s", (path) => {
-    const res = proxy(new NextRequest(`${SITE_URL}${path}`));
-    expect(res.headers.get("x-middleware-next")).toBe("1");
-  });
+  it.each(["/robots.txt", "/sitemap.xml", "/llms.txt", "/llms-full.txt", "/opengraph-image"])(
+    "the sign-in proxy lets crawlers read %s",
+    (path) => {
+      const res = proxy(new NextRequest(`${SITE_URL}${path}`));
+      expect(res.headers.get("x-middleware-next")).toBe("1");
+    },
+  );
 
   it("the application's sameAs ties the product to its repository, the GitHub organisation, Maven Central and www", () => {
     const app = (siteJsonLd()["@graph"] as { "@type": string; sameAs?: string[] }[]).find((n) => n["@type"] === "SoftwareApplication");
@@ -67,21 +89,27 @@ describe("search engines and AI assistants (the Krizaka family contract)", () =>
       delete process.env.APP_SEARCH_INDEXING;
     });
     afterAll(() => {
-      for (const [k, v] of [["APP_DEV_HOST", keep.dev], ["APP_SEARCH_INDEXING", keep.flag]] as const) {
+      for (const [k, v] of [
+        ["APP_DEV_HOST", keep.dev],
+        ["APP_SEARCH_INDEXING", keep.flag],
+      ] as const) {
         if (v === undefined) delete process.env[k];
         else process.env[k] = v;
       }
     });
 
-    it.each(["dev.orazaka.com", "DEV.orazaka.com:443", "dev.example.org"])("%s: robots.txt is Disallow: / and every answer says noindex", async (host) => {
-      expect(isDevAddress(host, {})).toBe(true);
-      const res = at(host, "/robots.txt");
-      expect(await res.text()).toBe("User-agent: *\nDisallow: /\n");
-      expect(res.headers.get("x-robots-tag")).toBe(NOINDEX_HEADER);
-      for (const path of ["/", "/docs", "/llms.txt", "/sitemap.xml", "/api/healthz"]) {
-        expect(`${path} ${at(host, path).headers.get("x-robots-tag")}`).toBe(`${path} ${NOINDEX_HEADER}`);
-      }
-    });
+    it.each(["dev.orazaka.com", "DEV.orazaka.com:443", "dev.example.org"])(
+      "%s: robots.txt is Disallow: / and every answer says noindex",
+      async (host) => {
+        expect(isDevAddress(host, {})).toBe(true);
+        const res = at(host, "/robots.txt");
+        expect(await res.text()).toBe("User-agent: *\nDisallow: /\n");
+        expect(res.headers.get("x-robots-tag")).toBe(NOINDEX_HEADER);
+        for (const path of ["/", "/docs", "/llms.txt", "/sitemap.xml", "/api/healthz"]) {
+          expect(`${path} ${at(host, path).headers.get("x-robots-tag")}`).toBe(`${path} ${NOINDEX_HEADER}`);
+        }
+      },
+    );
 
     it("a deployment whose own address is dev.* closes itself: robots, sitemap and the pages' meta", () => {
       expect(indexable({ APP_PUBLIC_URL: "https://dev.orazaka.com" })).toBe(false);
@@ -110,7 +138,9 @@ describe("search engines and AI assistants (the Krizaka family contract)", () =>
     expect(SITE_TITLE).not.toMatch(/Krizaka.*\|.*Krizaka/);
     expect(SITE_TITLE.length).toBeLessThanOrEqual(62);
     expect(SITE_DESCRIPTION.length).toBeLessThanOrEqual(160);
-    const app = (siteJsonLd()["@graph"] as { "@type": string; sameAs?: string[] }[]).find((n) => n["@type"] === "SoftwareApplication");
+    const app = (siteJsonLd()["@graph"] as { "@type": string; sameAs?: string[] }[]).find(
+      (n) => n["@type"] === "SoftwareApplication",
+    );
     expect(app?.sameAs).toContain("https://github.com/krizaka/orazaka");
   });
 });

@@ -40,12 +40,25 @@ const STEPS = {
   },
   results: async (p) => {
     await p.goto(`${BASE}/dashboard/jobs`, { waitUntil: "networkidle" });
-    await p.waitForFunction(() => [...document.querySelectorAll("main img")].slice(0, 6).every((i) => i.complete), null, { timeout: 20000 }).catch(() => {});
+    await p
+      .waitForFunction(() => [...document.querySelectorAll("main img")].slice(0, 6).every((i) => i.complete), null, {
+        timeout: 20000,
+      })
+      .catch(() => {});
     return async () => {
       await p.waitForTimeout(1400);
-      await p.locator("main img").first().hover().catch(() => {});
+      await p
+        .locator("main img")
+        .first()
+        .hover()
+        .catch(() => {});
       await p.waitForTimeout(700);
-      await p.getByRole("button", { name: /^Result/ }).or(p.getByRole("link", { name: /^Result/ })).first().click().catch(() => {});
+      await p
+        .getByRole("button", { name: /^Result/ })
+        .or(p.getByRole("link", { name: /^Result/ }))
+        .first()
+        .click()
+        .catch(() => {});
       await p.waitForTimeout(3400);
     };
   },
@@ -66,7 +79,12 @@ mkdirSync(OUT, { recursive: true });
 for (const theme of ["dark", "light"]) {
   for (const [id, prepare] of Object.entries(STEPS)) {
     const raw = mkdtempSync(path.join(os.tmpdir(), "websteps-"));
-    const ctx = await b.newContext({ viewport: V, colorScheme: theme, storageState: state, recordVideo: { dir: raw, size: V } });
+    const ctx = await b.newContext({
+      viewport: V,
+      colorScheme: theme,
+      storageState: state,
+      recordVideo: { dir: raw, size: V },
+    });
     await ctx.addInitScript((t) => {
       try {
         localStorage.setItem("kz-theme", t);
@@ -79,11 +97,25 @@ for (const theme of ["dark", "light"]) {
     await act();
     if (await qaOnScreen(page)) throw new Error(`${id}/${theme}: « qa » is on screen — a demo shows a persona`);
     await ctx.close();
-    const src = path.join(raw, readdirSync(raw).find((f) => f.endsWith(".webm")));
+    const src = path.join(
+      raw,
+      readdirSync(raw).find((f) => f.endsWith(".webm")),
+    );
     const name = path.join(OUT, `step-${id}-${theme}`);
     const cut = ["-y", "-loglevel", "error", "-ss", String(start), "-i", src, "-t", "7", "-an"];
     execFileSync("ffmpeg", [...cut, "-c:v", "libvpx-vp9", "-crf", "34", "-b:v", "0", "-row-mt", "1", `${name}.webm`]);
-    execFileSync("ffmpeg", [...cut, "-c:v", "libx264", "-crf", "26", "-pix_fmt", "yuv420p", "-movflags", "+faststart", `${name}.mp4`]);
+    execFileSync("ffmpeg", [
+      ...cut,
+      "-c:v",
+      "libx264",
+      "-crf",
+      "26",
+      "-pix_fmt",
+      "yuv420p",
+      "-movflags",
+      "+faststart",
+      `${name}.mp4`,
+    ]);
     execFileSync("ffmpeg", ["-y", "-loglevel", "error", "-i", `${name}.mp4`, "-frames:v", "1", `${name}-poster.png`]);
     await sharp(`${name}-poster.png`).webp({ quality: 82 }).toFile(`${name}-poster.webp`);
     rmSync(`${name}-poster.png`);

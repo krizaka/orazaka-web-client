@@ -18,10 +18,7 @@ async function proxyRequest(req: Request, segments: string[], method: string) {
   try {
     const session = await getServerSession(authOptions);
     if (!session?.user?.id) {
-      return NextResponse.json(
-        { error: "Unauthorized: Missing active security context" },
-        { status: 401 },
-      );
+      return NextResponse.json({ error: "Unauthorized: Missing active security context" }, { status: 401 });
     }
 
     const userId = session.user.id;
@@ -96,52 +93,33 @@ async function proxyRequest(req: Request, segments: string[], method: string) {
       });
     }
   } catch (error: unknown) {
-    console.error(
-      `[BFF Proxy] Error proxying ${method} to /api/v1/${segments.join("/")}:`,
-      error,
-    );
-    const message =
-      error instanceof Error ? error.message : "BFF API Proxy Error";
+    console.error(`[BFF Proxy] Error proxying ${method} to /api/v1/${segments.join("/")}:`, error);
+    const message = error instanceof Error ? error.message : "BFF API Proxy Error";
     return NextResponse.json({ error: message }, { status: 500 });
   }
 }
 
-export async function POST(
-  req: Request,
-  { params }: { params: Promise<{ path: string[] }> },
-) {
+export async function POST(req: Request, { params }: { params: Promise<{ path: string[] }> }) {
   const resolvedParams = await params;
   return proxyRequest(req, resolvedParams.path, "POST");
 }
 
-export async function GET(
-  req: Request,
-  { params }: { params: Promise<{ path: string[] }> },
-) {
+export async function GET(req: Request, { params }: { params: Promise<{ path: string[] }> }) {
   const resolvedParams = await params;
   return proxyRequest(req, resolvedParams.path, "GET");
 }
 
-export async function PUT(
-  req: Request,
-  { params }: { params: Promise<{ path: string[] }> },
-) {
+export async function PUT(req: Request, { params }: { params: Promise<{ path: string[] }> }) {
   const resolvedParams = await params;
   return proxyRequest(req, resolvedParams.path, "PUT");
 }
 
-export async function DELETE(
-  req: Request,
-  { params }: { params: Promise<{ path: string[] }> },
-) {
+export async function DELETE(req: Request, { params }: { params: Promise<{ path: string[] }> }) {
   const resolvedParams = await params;
   return proxyRequest(req, resolvedParams.path, "DELETE");
 }
 
-export async function PATCH(
-  req: Request,
-  { params }: { params: Promise<{ path: string[] }> },
-) {
+export async function PATCH(req: Request, { params }: { params: Promise<{ path: string[] }> }) {
   const resolvedParams = await params;
   return proxyRequest(req, resolvedParams.path, "PATCH");
 }

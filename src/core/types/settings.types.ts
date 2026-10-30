@@ -5,11 +5,7 @@
  * `settings.constants.ts` to guarantee a single source of truth.
  */
 
-import type {
-  AiPersona,
-  ThemeAccent,
-  ThemeLayout,
-} from "@/constants/settings.constants";
+import type { AiPersona, ThemeAccent, ThemeLayout } from "@/constants/settings.constants";
 import type { Appearance } from "@/core/hooks/useAppearance";
 
 export interface Settings {

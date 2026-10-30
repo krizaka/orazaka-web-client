@@ -1,6 +1,14 @@
 import { pickListedRepos, type GithubRepo } from "@/features/landing/utils/repositories";
 
-const repo = (over: Partial<GithubRepo>): GithubRepo => ({ name: "orazaka", description: "d", html_url: "https://github.com/krizaka/orazaka", pushed_at: "2026-10-01T00:00:00Z", archived: false, fork: false, ...over });
+const repo = (over: Partial<GithubRepo>): GithubRepo => ({
+  name: "orazaka",
+  description: "d",
+  html_url: "https://github.com/krizaka/orazaka",
+  pushed_at: "2026-10-01T00:00:00Z",
+  archived: false,
+  fork: false,
+  ...over,
+});
 
 describe("pickListedRepos", () => {
   it("keeps the live Orazaka repositories only, most recently pushed first", () => {

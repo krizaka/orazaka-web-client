@@ -4,7 +4,6 @@ import { Icon, type IconName } from "@krizaka/orazaka-design-system";
 import type { ComposerStudio } from "@krizaka/orazaka-shared";
 import type { TranslationDictionary } from "@/core/context/LocaleContext";
 
-
 interface Props {
   isOpen: boolean;
   onClose: () => void;
@@ -23,8 +22,7 @@ const ICON_ALIAS: Record<string, IconName> = {
   mic: "speech",
   chat: "chat",
 };
-const studioIcon = (iconKey: string): IconName =>
-  ICON_ALIAS[iconKey.toLowerCase()] ?? "spark";
+const studioIcon = (iconKey: string): IconName => ICON_ALIAS[iconKey.toLowerCase()] ?? "spark";
 
 /**
  * A Studio whose one input is an attachment goes under "Analysis".
@@ -42,13 +40,7 @@ const needsAnAttachment = (studio: ComposerStudio) => studio.inputKind === "ASSE
  * theme tokens. Selecting a capability stages it (options + optional attachment
  * are then shown above the composer).
  */
-export const ContextPlusMenu: React.FC<Props> = ({
-  isOpen,
-  onClose,
-  onExecuteNode,
-  studios,
-  t,
-}) => {
+export const ContextPlusMenu: React.FC<Props> = ({ isOpen, onClose, onExecuteNode, studios, t }) => {
   const menuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -80,9 +72,7 @@ export const ContextPlusMenu: React.FC<Props> = ({
     if (group.length === 0) return null;
     return (
       <div className="flex flex-col gap-0.5">
-        <div className="px-2.5 pb-1 pt-1.5 text-[10px] font-semibold text-fg-muted">
-          {label}
-        </div>
+        <div className="px-2.5 pb-1 pt-1.5 text-[10px] font-semibold text-fg-muted">{label}</div>
         {group.map((studio) => {
           const unavailable = !studio.available;
           return (
@@ -104,9 +94,7 @@ export const ContextPlusMenu: React.FC<Props> = ({
               </span>
               <span className="flex-1">{studio.label}</span>
               {unavailable && (
-                <span className="text-[10px] font-semibold text-fg-muted">
-                  {t.operationGraph.stateLocked}
-                </span>
+                <span className="text-[10px] font-semibold text-fg-muted">{t.operationGraph.stateLocked}</span>
               )}
             </Button>
           );
@@ -122,9 +110,7 @@ export const ContextPlusMenu: React.FC<Props> = ({
       className="absolute bottom-16 left-4 z-40 flex w-72 flex-col gap-1 rounded-2xl border border-border-default bg-surface-1/94 p-2 shadow-xl animate-in slide-in-from-bottom-2 fade-in duration-200"
     >
       {studios.length === 0 ? (
-        <div className="px-3 py-3 text-xs italic text-fg-muted">
-          {t.chat.noActiveConversation}
-        </div>
+        <div className="px-3 py-3 text-xs italic text-fg-muted">{t.chat.noActiveConversation}</div>
       ) : (
         <>
           {renderGroup(t.chat.capGeneration, generation)}

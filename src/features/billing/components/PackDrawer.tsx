@@ -51,31 +51,20 @@ export function PackDrawer({
   const buyable = pack?.access === "BUYABLE" && !holdingsUnavailable;
 
   return (
-    <Dialog.Root
-      open={pack !== null}
-      onOpenChange={(next) => !next && !pending && onClose()}
-    >
+    <Dialog.Root open={pack !== null} onOpenChange={(next) => !next && !pending && onClose()}>
       <Dialog.Content placement="right" closeLabel={p.close}>
         {pack && (
           <>
             <Dialog.Header>
               <Dialog.Title className="flex items-center gap-2">
-                <CatalogueIcon
-                  iconKey={pack.iconKey}
-                  size={20}
-                  className="text-fg-accent"
-                />
+                <CatalogueIcon iconKey={pack.iconKey} size={20} className="text-fg-accent" />
                 {pack.label}
               </Dialog.Title>
-              {pack.tagline && (
-                <Dialog.Description>{pack.tagline}</Dialog.Description>
-              )}
+              {pack.tagline && <Dialog.Description>{pack.tagline}</Dialog.Description>}
             </Dialog.Header>
             <Dialog.Body className="flex flex-col gap-5">
               <p className="flex flex-wrap items-baseline gap-x-3 gap-y-1 text-sm text-fg">
-                <span className="font-semibold tabular-nums">
-                  {included ? p.included : price}
-                </span>
+                <span className="font-semibold tabular-nums">{included ? p.included : price}</span>
                 {pack.includedCredits !== null && pack.includedCredits > 0 && (
                   <span className="text-fg-secondary">
                     {fill(p.credits, {
@@ -90,18 +79,10 @@ export function PackDrawer({
                   </Badge>
                 )}
               </p>
-              <section
-                className="flex flex-col gap-2"
-                aria-labelledby="pack-drawer-studios"
-              >
-                <h3
-                  id="pack-drawer-studios"
-                  className="text-sm font-semibold text-fg"
-                >
+              <section className="flex flex-col gap-2" aria-labelledby="pack-drawer-studios">
+                <h3 id="pack-drawer-studios" className="text-sm font-semibold text-fg">
                   {p.drawerStudios}{" "}
-                  <span className="font-normal tabular-nums text-fg-muted">
-                    {pack.studioKeys.length}
-                  </span>
+                  <span className="font-normal tabular-nums text-fg-muted">{pack.studioKeys.length}</span>
                 </h3>
                 <ul className="flex flex-col divide-y divide-border-subtle rounded-lg border border-border-default">
                   {pack.studioKeys.map((key) => {
@@ -112,11 +93,7 @@ export function PackDrawer({
                           href={`/studios/${key}`}
                           className="flex items-center gap-2 px-3 py-2 text-sm text-fg hover:bg-surface-2"
                         >
-                          <CatalogueIcon
-                            iconKey={studio?.iconKey}
-                            size={16}
-                            className="shrink-0 text-fg-secondary"
-                          />
+                          <CatalogueIcon iconKey={studio?.iconKey} size={16} className="shrink-0 text-fg-secondary" />
                           {studio?.label ?? key}
                         </Link>
                       </li>
@@ -133,21 +110,11 @@ export function PackDrawer({
             {buyable && (
               <Dialog.Footer>
                 {owned ? (
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => onRemove(pack.packKey)}
-                    loading={pending}
-                  >
+                  <Button variant="ghost" size="sm" onClick={() => onRemove(pack.packKey)} loading={pending}>
                     {p.remove}
                   </Button>
                 ) : (
-                  <Button
-                    variant="primary"
-                    size="md"
-                    onClick={() => onAdd(pack.packKey)}
-                    loading={pending}
-                  >
+                  <Button variant="primary" size="md" onClick={() => onAdd(pack.packKey)} loading={pending}>
                     {pending ? p.adding : p.add}
                   </Button>
                 )}

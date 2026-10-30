@@ -28,9 +28,7 @@ export function localized(
   if (field.wordedByPack) {
     return field;
   }
-  const words =
-    (studioKey ? inputs[`${studioKey}/${field.key}`] : undefined) ??
-    inputs[field.key];
+  const words = (studioKey ? inputs[`${studioKey}/${field.key}`] : undefined) ?? inputs[field.key];
   return words
     ? {
         ...field,
@@ -59,7 +57,9 @@ export function RunInput({
     return (
       <EmptyChoices
         field={field}
-        message={field.choices ? t.studio.form.noModels : `${t.studio.form.noModels} ${t.studio.form.choicesUnreachable}`}
+        message={
+          field.choices ? t.studio.form.noModels : `${t.studio.form.noModels} ${t.studio.form.choicesUnreachable}`
+        }
       />
     );
   }
@@ -67,25 +67,10 @@ export function RunInput({
     return <EmptyChoices field={field} message={t.studio.form.noOptions} />;
   }
   if (field.choices) {
-    return (
-      <ChoicePicker
-        field={field}
-        choices={field.choices}
-        value={value}
-        disabled={disabled}
-        onChange={onChange}
-      />
-    );
+    return <ChoicePicker field={field} choices={field.choices} value={value} disabled={disabled} onChange={onChange} />;
   }
   if (field.control === "seed") {
-    return (
-      <SeedControl
-        field={field}
-        value={value}
-        disabled={disabled}
-        onChange={onChange}
-      />
-    );
+    return <SeedControl field={field} value={value} disabled={disabled} onChange={onChange} />;
   }
 
   return (
@@ -107,21 +92,11 @@ export function RunInput({
         />
       ) : field.type === "enum" && field.options ? (
         <Select {...control} onChange={(event) => onChange(event.target.value)}>
-          {field.defaultValue === null && (
-            <option value="">{field.required ? "" : t.studio.form.unset}</option>
-          )}
+          {field.defaultValue === null && <option value="">{field.required ? "" : t.studio.form.unset}</option>}
           {field.options.map((option) => (
-            <option
-              key={option}
-              value={option}
-              disabled={allowedOptions !== null && !allowedOptions.includes(option)}
-            >
-              {field.optionLabels?.[option] ??
-                t.studio.choices[field.key]?.[option] ??
-                option}
-              {allowedOptions !== null && !allowedOptions.includes(option)
-                ? ` · ${t.studio.form.notForThisModel}`
-                : ""}
+            <option key={option} value={option} disabled={allowedOptions !== null && !allowedOptions.includes(option)}>
+              {field.optionLabels?.[option] ?? t.studio.choices[field.key]?.[option] ?? option}
+              {allowedOptions !== null && !allowedOptions.includes(option) ? ` · ${t.studio.form.notForThisModel}` : ""}
             </option>
           ))}
         </Select>
@@ -150,9 +125,7 @@ export function RunInput({
           onChange={(event) => onChange(event.target.value)}
         />
       )}
-      {field.description && (
-        <Field.Hint id={hintId}>{field.description}</Field.Hint>
-      )}
+      {field.description && <Field.Hint id={hintId}>{field.description}</Field.Hint>}
     </Field.Root>
   );
 }

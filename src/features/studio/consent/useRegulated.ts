@@ -19,5 +19,8 @@ export function useRegulated(studioKey: string): boolean {
 export function useRegulatedPack(studioKey: string): string | null {
   const { locale } = useTranslation();
   const packs = useQuery({ queryKey: ["studio-packs", locale], queryFn: () => StudioApi.fetchPacks(null, locale) });
-  return packs.data?.find((pack) => pack.regulatoryClass === "REGULATED" && pack.studioKeys.includes(studioKey))?.packKey ?? null;
+  return (
+    packs.data?.find((pack) => pack.regulatoryClass === "REGULATED" && pack.studioKeys.includes(studioKey))?.packKey ??
+    null
+  );
 }

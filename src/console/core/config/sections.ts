@@ -59,7 +59,11 @@ export const consolePath = (pathname: string) => pathname.replace(/^\/console(?=
 export function activeGroup(pathname: string): ConsoleGroup | null {
   const p = consolePath(pathname);
   if (p === "/") return CONSOLE_GROUPS[0];
-  return CONSOLE_GROUPS.find((g) => g.href !== "/" && (g.children.length > 0 ? g.children : [g]).some((s) => under(p, s.href))) ?? null;
+  return (
+    CONSOLE_GROUPS.find(
+      (g) => g.href !== "/" && (g.children.length > 0 ? g.children : [g]).some((s) => under(p, s.href)),
+    ) ?? null
+  );
 }
 
 /** The screen of the group the page is on, for the tabs. */

@@ -45,22 +45,11 @@ export function DashboardHome() {
   const { threads } = useChatStream("dashboard");
   const { wallet, available, isLoading: walletLoading } = useWallet();
   const days = DASHBOARD_DAYS;
-  const {
-    jobs,
-    runs,
-    isLoading: insightsLoading,
-    hasError,
-  } = useInsights(isAuthenticated);
+  const { jobs, runs, isLoading: insightsLoading, hasError } = useInsights(isAuthenticated);
   const { plan } = usePlan(isAuthenticated);
   const { studios } = useStudios(null);
-  const summary = React.useMemo(
-    () => usageSummary(jobs, runs, days, systemNow()),
-    [jobs, runs, days],
-  );
-  const period = React.useMemo(
-    () => usageRows(jobs, runs, days, systemNow()),
-    [jobs, runs, days],
-  );
+  const summary = React.useMemo(() => usageSummary(jobs, runs, days, systemNow()), [jobs, runs, days]);
+  const period = React.useMemo(() => usageRows(jobs, runs, days, systemNow()), [jobs, runs, days]);
   const studioLabel = React.useCallback(
     (key: string) => studios.find((s) => s.studioKey === key)?.label ?? key,
     [studios],
@@ -103,9 +92,7 @@ export function DashboardHome() {
     );
   }
 
-  const recentThreads = [...(threads || [])]
-    .sort((a, b) => b.updatedAt - a.updatedAt)
-    .slice(0, 3);
+  const recentThreads = [...(threads || [])].sort((a, b) => b.updatedAt - a.updatedAt).slice(0, 3);
 
   return (
     <AppShell>
@@ -119,9 +106,7 @@ export function DashboardHome() {
                   <Greeting />
                 </span>
               </h2>
-              <p className="text-fg-secondary fluid-sm">
-                {t.dashboard.overview}
-              </p>
+              <p className="text-fg-secondary fluid-sm">{t.dashboard.overview}</p>
             </section>
             <Button variant="primary" size="md" onClick={handleStartNewChat}>
               <ChatIcon size={16} />
@@ -133,50 +118,27 @@ export function DashboardHome() {
 
           <UsageKpis summary={summary} days={days} loading={insightsLoading} />
 
-          <ActivityCharts
-            summary={summary}
-            jobs={period.jobs}
-            days={days}
-            loading={insightsLoading}
-            error={hasError}
-          />
+          <ActivityCharts summary={summary} jobs={period.jobs} days={days} loading={insightsLoading} error={hasError} />
 
           <section className="grid gap-4 lg:grid-cols-2">
             <span className="flex flex-col gap-2">
-              <CreditsMeter
-                wallet={wallet}
-                available={available}
-                plan={plan}
-                loading={walletLoading}
-                href="/usage"
-              />
+              <CreditsMeter wallet={wallet} available={available} plan={plan} loading={walletLoading} href="/usage" />
               <span className="flex justify-end">
                 <UsageExport jobs={jobs} runs={runs} days={days} />
               </span>
             </span>
-            <StudiosUsedChart
-              runs={period.runs}
-              studioLabel={studioLabel}
-              loading={insightsLoading}
-              error={hasError}
-            />
+            <StudiosUsedChart runs={period.runs} studioLabel={studioLabel} loading={insightsLoading} error={hasError} />
           </section>
 
           {jobs.some((job) => jobMediaUrl(job)) && (
             <section className="flex flex-col gap-3">
               <header className="flex items-center justify-between px-1">
-                <h3 className="text-xs font-semibold text-fg-muted">
-                  {t.insights.usage.recent}
-                </h3>
+                <h3 className="text-xs font-semibold text-fg-muted">{t.insights.usage.recent}</h3>
                 <Button asChild variant="ghost" size="sm">
                   <Link href="/jobs">{t.showcase.dashboard.seeAll}</Link>
                 </Button>
               </header>
-              <JobsGallery
-                jobs={jobs}
-                limit={3}
-                onOpen={(job) => router.push(`/jobs?jobId=${job.id}`)}
-              />
+              <JobsGallery jobs={jobs} limit={3} onOpen={(job) => router.push(`/jobs?jobId=${job.id}`)} />
             </section>
           )}
 
@@ -184,9 +146,7 @@ export function DashboardHome() {
             <RecentSessions
               recentThreads={recentThreads}
               onStartNewChat={handleStartNewChat}
-              onResumeSession={(id) =>
-                router.push(`/chat?conversationId=${id}`)
-              }
+              onResumeSession={(id) => router.push(`/chat?conversationId=${id}`)}
               formatDate={formatDate}
               t={t}
             />

@@ -6,15 +6,35 @@ import { engineCopy } from "@/console/core/copy/engine";
 import type { RuntimeSetting } from "@/console/services/runtime-config.admin.api";
 
 const en = engineCopy.en;
-const button = (label: string, name: string) => within(screen.getByLabelText(label).closest("[data-setting]")!).getByRole("button", { name });
+const button = (label: string, name: string) =>
+  within(screen.getByLabelText(label).closest("[data-setting]")!).getByRole("button", { name });
 const setting = (over: Partial<RuntimeSetting> & { key: string }): RuntimeSetting => ({
-  value: 1, type: "int", description: "A knob", default: 1, bounds: {}, ...over,
+  value: 1,
+  type: "int",
+  description: "A knob",
+  default: 1,
+  bounds: {},
+  ...over,
 });
 
 const SETTINGS = [
-  { key: "run.max_parallel", value: 4, type: "int", description: "Parallel runs", default: 2, bounds: { minimum: 1, maximum: 10 } },
+  {
+    key: "run.max_parallel",
+    value: 4,
+    type: "int",
+    description: "Parallel runs",
+    default: 2,
+    bounds: { minimum: 1, maximum: 10 },
+  },
   { key: "run.cache_enabled", value: true, type: "boolean", description: "Cache on", default: false, bounds: {} },
-  { key: "webhook.hosts", value: ["a.example"], type: "list", description: "Allowed hosts", default: [], bounds: { maxItems: 3 } },
+  {
+    key: "webhook.hosts",
+    value: ["a.example"],
+    type: "list",
+    description: "Allowed hosts",
+    default: [],
+    bounds: { maxItems: 3 },
+  },
   { key: "retention.days", value: 30, type: "int", description: "Days kept", default: 30, bounds: { minimum: 1 } },
 ];
 
@@ -33,7 +53,10 @@ describe("engine utils", () => {
     expect(groupOf("marketplace.y")).toBe("marketplace");
     expect(groupOf("downloads.mac-enabled")).toBe("downloads");
     expect(groupOf("routing.z")).toBe("other");
-    expect(groupSettings([setting({ key: "retention.b" }), setting({ key: "run.a" })]).map((g) => g.group)).toEqual(["run", "retention"]);
+    expect(groupSettings([setting({ key: "retention.b" }), setting({ key: "run.a" })]).map((g) => g.group)).toEqual([
+      "run",
+      "retention",
+    ]);
   });
 
   it("validates an int against its bounds", () => {
@@ -115,9 +138,7 @@ describe("EngineScreen", () => {
   });
 
   it("normalizes the draft after an accepted save", async () => {
-    mockFetch((_url, init) =>
-      init?.method === "PUT" ? { body: { ...SETTINGS[0], value: 6 } } : { body: SETTINGS },
-    );
+    mockFetch((_url, init) => (init?.method === "PUT" ? { body: { ...SETTINGS[0], value: 6 } } : { body: SETTINGS }));
     render(<EngineScreen locale="en" />, { wrapper: queryWrapper() });
     const input = await screen.findByLabelText("run.max_parallel");
     fireEvent.change(input, { target: { value: "006" } });
@@ -128,7 +149,14 @@ describe("EngineScreen", () => {
   });
 
   it("normalizes trimmed list items after an accepted save", async () => {
-    const list = { key: "webhook.hosts", value: ["old.example"], type: "list", description: "Hosts", default: [], bounds: {} };
+    const list = {
+      key: "webhook.hosts",
+      value: ["old.example"],
+      type: "list",
+      description: "Hosts",
+      default: [],
+      bounds: {},
+    };
     mockFetch((_url, init) =>
       init?.method === "PUT" ? { body: { ...list, value: ["a.example", "b.example"] } } : { body: [list] },
     );
@@ -158,7 +186,9 @@ describe("EngineScreen", () => {
 
   it("does not call the API for an out-of-bounds value and shows the server's message for a refusal", async () => {
     const fetchMock = mockFetch((url, init) =>
-      init?.method === "PUT" ? { status: 400, body: { status: "invalid_request", message: "value must be at most 10" } } : { body: SETTINGS },
+      init?.method === "PUT"
+        ? { status: 400, body: { status: "invalid_request", message: "value must be at most 10" } }
+        : { body: SETTINGS },
     );
     render(<EngineScreen locale="en" />, { wrapper: queryWrapper() });
     const input = await screen.findByLabelText("run.max_parallel");
@@ -175,7 +205,13 @@ describe("EngineScreen", () => {
 
   it("shows the change history with actor ids", async () => {
     const fetchMock = mockFetch((url) =>
-      url.includes("/audit") ? { body: [{ at: "2026-10-01T10:00:00Z", actorId: "actor-42", key: "run.max_parallel", before: "2", after: "4" }] } : { body: SETTINGS },
+      url.includes("/audit")
+        ? {
+            body: [
+              { at: "2026-10-01T10:00:00Z", actorId: "actor-42", key: "run.max_parallel", before: "2", after: "4" },
+            ],
+          }
+        : { body: SETTINGS },
     );
     render(<EngineScreen locale="en" />, { wrapper: queryWrapper() });
     await screen.findByText("Parallel runs");
@@ -183,7 +219,10 @@ describe("EngineScreen", () => {
     expect(await screen.findByText("actor-42")).toBeTruthy();
     expect(within(screen.getByRole("table")).getByText("2")).toBeTruthy();
     expect(within(screen.getByRole("table")).getByText("4")).toBeTruthy();
-    expect(fetchMock).toHaveBeenCalledWith(expect.stringContaining("/audit?key=run.max_parallel&limit="), expect.anything());
+    expect(fetchMock).toHaveBeenCalledWith(
+      expect.stringContaining("/audit?key=run.max_parallel&limit="),
+      expect.anything(),
+    );
   });
 
   it("offers a retry when the settings cannot be read", async () => {

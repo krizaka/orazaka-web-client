@@ -23,7 +23,14 @@ export function AppVideosSection() {
           const date = new Intl.DateTimeFormat(locale, { dateStyle: "long" }).format(new Date(video.capturedAt));
           return (
             <li key={videoId(video)} className="flex flex-col gap-3" data-video={videoId(video)}>
-              <AppVideoPlayer poster={videoUrl(video.files.poster)} webm={videoUrl(video.files.webm)} mp4={videoUrl(video.files.mp4)} {...SHAPE} play={v.play} label={words.name} />
+              <AppVideoPlayer
+                poster={videoUrl(video.files.poster)}
+                webm={videoUrl(video.files.webm)}
+                mp4={videoUrl(video.files.mp4)}
+                {...SHAPE}
+                play={v.play}
+                label={words.name}
+              />
               <h3 className="font-display text-base font-bold text-fg">{words.name}</h3>
               <p className="text-sm text-fg-secondary">{words.body}</p>
               <p className="text-xs text-fg-muted">

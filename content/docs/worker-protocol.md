@@ -4,7 +4,7 @@
 > **anything that honours the contract below** — the existing media worker is Python, links no
 > Orazaka library, and participates fully (ADR-037 §3.4, ADR-038).
 >
-> The Java `JobExecutor` SPI is a *convenience* for executors cheap enough to run inside the job
+> The Java `JobExecutor` SPI is a _convenience_ for executors cheap enough to run inside the job
 > service. It is not the mechanism, and a worker that never touches Java is not a lesser citizen.
 
 **Version 1.** Additive changes (a new optional payload key, a new consumption measurement) do not
@@ -16,9 +16,9 @@ bump it. A change to an exchange, a routing-key grammar, or the meaning of an ex
 
 Two topic exchanges, both durable (AGENTS.md §6):
 
-| Exchange | Direction | Carries |
-|:---|:---|:---|
-| `orazaka.jobs` | platform → worker | work requests |
+| Exchange         | Direction         | Carries            |
+| :--------------- | :---------------- | :----------------- |
+| `orazaka.jobs`   | platform → worker | work requests      |
 | `orazaka.events` | worker → platform | lifecycle outcomes |
 
 Routing keys are `job.{capability}.{action}` inbound and `job.{jobId}.{progress\|done\|error}`
@@ -46,13 +46,13 @@ DLQ naming is `<queue>.dlq`, bound to `orazaka.dlx` with the queue's own name as
 
 The message body is JSON. Fields a worker MAY rely on:
 
-| Field | Type | Meaning |
-|:---|:---|:---|
-| `jobId` | string | **MUST** echo in every outcome event. The correlation identity. |
-| `userId` | string | Opaque actor id. Never a name, never an email. |
-| `featureKey` | string | The capability. **A worker MUST NOT branch on it** — see §7. |
-| `model` | string | Resolved model, or `"default"` to let the worker choose. |
-| `payload` | object | The capability's arguments. |
+| Field        | Type   | Meaning                                                         |
+| :----------- | :----- | :-------------------------------------------------------------- |
+| `jobId`      | string | **MUST** echo in every outcome event. The correlation identity. |
+| `userId`     | string | Opaque actor id. Never a name, never an email.                  |
+| `featureKey` | string | The capability. **A worker MUST NOT branch on it** — see §7.    |
+| `model`      | string | Resolved model, or `"default"` to let the worker choose.        |
+| `payload`    | object | The capability's arguments.                                     |
 
 Inside `payload`, by convention: `prompt`/`text`, `filePath`, `imagePath`, `durationSeconds`,
 `voice`, plus `runId`/`stepId`/`ordinal` when the job came from a Studio run, and any
@@ -71,11 +71,11 @@ prefetch is the only backpressure that respects it.
 
 Published to `orazaka.events`:
 
-| Routing key | When | Body |
-|:---|:---|:---|
-| `job.{jobId}.progress` | optional, any number of times | `{"jobId","progress"}` — integer percent |
-| `job.{jobId}.done` | exactly once, terminal | `{"jobId","result",["consumption"],["holdId"]}` |
-| `job.{jobId}.error` | exactly once, terminal | `{"jobId","error",["holdId"]}` |
+| Routing key            | When                          | Body                                            |
+| :--------------------- | :---------------------------- | :---------------------------------------------- |
+| `job.{jobId}.progress` | optional, any number of times | `{"jobId","progress"}` — integer percent        |
+| `job.{jobId}.done`     | exactly once, terminal        | `{"jobId","result",["consumption"],["holdId"]}` |
+| `job.{jobId}.error`    | exactly once, terminal        | `{"jobId","error",["holdId"]}`                  |
 
 A worker MUST emit exactly one terminal event per job. `result` is free-form per capability; by
 convention it carries `url` and `format` for generated media.
@@ -94,20 +94,20 @@ stop being read after 1.1.0.
 
 `job.{jobId}.error` MUST carry a `cause`, from this closed vocabulary and nothing else:
 
-| `cause` | Means | The run then |
-|:---|:---|:---|
-| `GUARD_REFUSAL` | a gate declined to serve, on purpose | releases everything |
-| `INPUT_INVALID` | **you checked the payload and it is unusable** | **settles what it measured** |
-| `EXECUTOR_FAULT` | you broke: a defect, an unhandled case | releases everything |
-| `PLATFORM_UNAVAILABLE` | something you depend on was not there | releases everything |
-| `TIMEOUT` | the work did not finish inside its bound | releases everything |
+| `cause`                | Means                                          | The run then                 |
+| :--------------------- | :--------------------------------------------- | :--------------------------- |
+| `GUARD_REFUSAL`        | a gate declined to serve, on purpose           | releases everything          |
+| `INPUT_INVALID`        | **you checked the payload and it is unusable** | **settles what it measured** |
+| `EXECUTOR_FAULT`       | you broke: a defect, an unhandled case         | releases everything          |
+| `PLATFORM_UNAVAILABLE` | something you depend on was not there          | releases everything          |
+| `TIMEOUT`              | the work did not finish inside its bound       | releases everything          |
 
 **You are the only party that knows.** By the time the saga sees your event, the executor that
 knew why is gone; before ADR-053 it read your `error` string and guessed, and guessing about
 somebody's bill is what this replaces. The saga reads `cause` and never the message.
 
 **`INPUT_INVALID` is the only cause that bills**, and it is the one you must be most careful with.
-Set it only where your worker *positively validated* the payload and found it unusable — a missing
+Set it only where your worker _positively validated_ the payload and found it unusable — a missing
 required field, an unreadable asset you opened, a jurisdiction you do not carry. **Never set it
 from a bare `except`**: an exception that merely happened while user data was in scope is as likely
 to be your own defect, and the reference worker enforces this structurally — `INPUT_INVALID` is
@@ -124,7 +124,7 @@ taught this contract keeps working and costs its users nothing.
 A worker reports **measurements**, never money and never a unit name:
 
 ```json
-{"metrics": {"frames": 48, "fps": 12, "images": 1, "steps": 20, "characters": 1200}}
+{ "metrics": { "frames": 48, "fps": 12, "images": 1, "steps": 20, "characters": 1200 } }
 ```
 
 Recognised keys: `frames`, `fps`, `images`, `steps`, `width`, `height`, `characters`, `tokens`.
@@ -133,7 +133,7 @@ The platform adds wall-clock `gpuSeconds` itself.
 The billable unit belongs to the pricebook row the hold was pinned to (ADR-033). A worker that
 priced itself would be a second, drifting copy of the pricebook.
 
-**Absent measurements are meaningful**: an unmeasured job is *released*, not billed at its estimate.
+**Absent measurements are meaningful**: an unmeasured job is _released_, not billed at its estimate.
 Reporting nothing costs the platform, which is the right direction for the error to run.
 
 ---
@@ -153,9 +153,9 @@ Reporting nothing costs the platform, which is the right direction for the error
 A worker declares itself in a `worker.yaml` beside its source:
 
 ```yaml
-name: orazaka-worker-media     # stable identity; the registry's primary key
-family: media                  # coarse label; see the note below
-bindings:                      # what it drains — never a capability name
+name: orazaka-worker-media # stable identity; the registry's primary key
+family: media # coarse label; see the note below
+bindings: # what it drains — never a capability name
   - "job.video.*"
   - "job.compose.*"
 version: "1.0.0"
@@ -193,23 +193,23 @@ what the coherence rule reads.
 
 A new worker is conformant when all of these hold:
 
-| # | Requirement | Verified by |
-|:--:|:---|:---|
-| 1 | Declares exchanges and queues idempotently, with the platform's queue arguments | `AmqpContractIT.exchangesMatchContract`, `queuesAndDlqsExist` |
-| 2 | Consumes its declared bindings from `orazaka.jobs` | `AmqpContractIT.jobCommandContractRoundTrip` |
-| 3 | Job command shape is honoured | `AmqpContractIT` + `amqp-contracts/job.command.json` fixture |
-| 4 | Emits exactly one terminal `done`/`error` per job | **unverified** — see below |
-| 4b | Prefetch is 1 for heavy inference (§2) | `test_main.py::TestProtocolConformance::test_prefetch_is_one` |
-| 4c | Acks after a terminal outcome, **including on failure** (§5) | `test_main.py::TestProtocolConformance::test_acks_after_a_terminal_outcome_including_failure` |
-| 5 | Echoes `jobId` and, when present, `holdId` | worker unit tests (`test_main.py`) |
-| 5b | **Declares a typed `cause` on every `error` (§3.1)** | `test_main.py::TestTypedFailureCause::test_every_error_carries_a_cause`, `::test_the_vocabulary_matches_the_java_contract` |
-| 5c | **`INPUT_INVALID` is unreachable from a catch-all (§3.1)** | `test_main.py::TestTypedFailureCause::test_input_invalid_is_unreachable_from_the_broad_except` |
-| 6 | Reports measurements only, never units | worker unit tests |
-| 7 | Tolerates redelivery of the same `messageId` | **unverified** for external workers |
-| 8 | Binds from `worker.yaml`, not from source literals | `test_main.py::test_bindings_come_from_worker_yaml_not_from_source` |
-| 9 | Declares no capability name, and never branches on one | `test_main.py::test_worker_yaml_declares_no_capability`, `::test_the_capability_name_does_not_decide`, [PACK-002]/[PACK-003] |
-| 10 | Registers and heartbeats without making either a startup dependency | `test_main.py::test_registration_never_raises_when_the_job_service_is_down` |
-| 11 | Its routing keys are actually drained by some declared worker | [EXEC-002] |
+|  #  | Requirement                                                                     | Verified by                                                                                                                  |
+| :-: | :------------------------------------------------------------------------------ | :--------------------------------------------------------------------------------------------------------------------------- |
+|  1  | Declares exchanges and queues idempotently, with the platform's queue arguments | `AmqpContractIT.exchangesMatchContract`, `queuesAndDlqsExist`                                                                |
+|  2  | Consumes its declared bindings from `orazaka.jobs`                              | `AmqpContractIT.jobCommandContractRoundTrip`                                                                                 |
+|  3  | Job command shape is honoured                                                   | `AmqpContractIT` + `amqp-contracts/job.command.json` fixture                                                                 |
+|  4  | Emits exactly one terminal `done`/`error` per job                               | **unverified** — see below                                                                                                   |
+| 4b  | Prefetch is 1 for heavy inference (§2)                                          | `test_main.py::TestProtocolConformance::test_prefetch_is_one`                                                                |
+| 4c  | Acks after a terminal outcome, **including on failure** (§5)                    | `test_main.py::TestProtocolConformance::test_acks_after_a_terminal_outcome_including_failure`                                |
+|  5  | Echoes `jobId` and, when present, `holdId`                                      | worker unit tests (`test_main.py`)                                                                                           |
+| 5b  | **Declares a typed `cause` on every `error` (§3.1)**                            | `test_main.py::TestTypedFailureCause::test_every_error_carries_a_cause`, `::test_the_vocabulary_matches_the_java_contract`   |
+| 5c  | **`INPUT_INVALID` is unreachable from a catch-all (§3.1)**                      | `test_main.py::TestTypedFailureCause::test_input_invalid_is_unreachable_from_the_broad_except`                               |
+|  6  | Reports measurements only, never units                                          | worker unit tests                                                                                                            |
+|  7  | Tolerates redelivery of the same `messageId`                                    | **unverified** for external workers                                                                                          |
+|  8  | Binds from `worker.yaml`, not from source literals                              | `test_main.py::test_bindings_come_from_worker_yaml_not_from_source`                                                          |
+|  9  | Declares no capability name, and never branches on one                          | `test_main.py::test_worker_yaml_declares_no_capability`, `::test_the_capability_name_does_not_decide`, [PACK-002]/[PACK-003] |
+| 10  | Registers and heartbeats without making either a startup dependency             | `test_main.py::test_registration_never_raises_when_the_job_service_is_down`                                                  |
+| 11  | Its routing keys are actually drained by some declared worker                   | [EXEC-002]                                                                                                                   |
 
 Every **MUST** in this document appears above, either with a test or marked unverified. That
 completeness is itself checked: the acceptance gate enumerates the `MUST` clauses and refuses a

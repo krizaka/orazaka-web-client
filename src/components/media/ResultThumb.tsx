@@ -21,7 +21,15 @@ interface ResultThumbProps {
  * A result's picture or clip. When the file no longer loads (dev media are lost on redeploy), the box keeps its size and
  * shows a neutral « File expired » placeholder instead of a broken image with its alt text spilling over the card.
  */
-export function ResultThumb({ kind, src, alt, compact = false, autoPlay, loop, className }: Readonly<ResultThumbProps>) {
+export function ResultThumb({
+  kind,
+  src,
+  alt,
+  compact = false,
+  autoPlay,
+  loop,
+  className,
+}: Readonly<ResultThumbProps>) {
   const { t } = useTranslation();
   // The failure is kept against its own source, so a new source is tried again without an effect.
   const [failedSrc, setFailedSrc] = useState<string | null>(null);
@@ -67,12 +75,6 @@ export function ResultThumb({ kind, src, alt, compact = false, autoPlay, loop, c
 
   return (
     /* eslint-disable-next-line @next/next/no-img-element -- a generated asset is a runtime URL. */
-    <img
-      src={src}
-      alt={alt}
-      loading="lazy"
-      onError={() => setFailedSrc(src)}
-      className={className ?? media}
-    />
+    <img src={src} alt={alt} loading="lazy" onError={() => setFailedSrc(src)} className={className ?? media} />
   );
 }

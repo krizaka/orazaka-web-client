@@ -49,7 +49,13 @@ function regionName(names: Record<string, string>, code: string): string {
   return names[code] ?? code;
 }
 
-function ConsentForm({ requirement, error, isSubmitting, onConfirm, onCancel }: Readonly<Omit<ConsentDialogProps, "open" | "studioLabel">>) {
+function ConsentForm({
+  requirement,
+  error,
+  isSubmitting,
+  onConfirm,
+  onCancel,
+}: Readonly<Omit<ConsentDialogProps, "open" | "studioLabel">>) {
   const { t } = useTranslation();
   const c = t.consent;
   const [age, setAge] = useState(false);
@@ -65,42 +71,78 @@ function ConsentForm({ requirement, error, isSubmitting, onConfirm, onCancel }: 
       <Dialog.Body className="flex flex-col gap-4 text-sm text-fg-secondary">
         <div className="grid gap-4 sm:grid-cols-2">
           <section aria-labelledby="consent-does" className="flex flex-col gap-1.5">
-            <h3 id="consent-does" className="text-xs font-semibold text-fg">{c.doesTitle}</h3>
-            <ul className="list-disc space-y-1 pl-4">{c.does.map((line) => <li key={line}>{line}</li>)}</ul>
+            <h3 id="consent-does" className="text-xs font-semibold text-fg">
+              {c.doesTitle}
+            </h3>
+            <ul className="list-disc space-y-1 pl-4">
+              {c.does.map((line) => (
+                <li key={line}>{line}</li>
+              ))}
+            </ul>
           </section>
           <section aria-labelledby="consent-does-not" className="flex flex-col gap-1.5">
-            <h3 id="consent-does-not" className="text-xs font-semibold text-fg">{c.doesNotTitle}</h3>
-            <ul className="list-disc space-y-1 pl-4">{c.doesNot.map((line) => <li key={line}>{line}</li>)}</ul>
+            <h3 id="consent-does-not" className="text-xs font-semibold text-fg">
+              {c.doesNotTitle}
+            </h3>
+            <ul className="list-disc space-y-1 pl-4">
+              {c.doesNot.map((line) => (
+                <li key={line}>{line}</li>
+              ))}
+            </ul>
           </section>
         </div>
         <p>{c.aiNotice}</p>
         <p className="rounded-lg border border-border-default bg-surface-1 px-3 py-2 text-fg">{c.crisis}</p>
 
         <section aria-labelledby="consent-statement" className="flex flex-col gap-1.5">
-          <h3 id="consent-statement" className="text-xs font-semibold text-fg">{fill(c.statementTitle, { version: requirement.version })}</h3>
-          <blockquote className="whitespace-pre-line border-l-2 border-border-default pl-3 text-fg">{requirement.statement}</blockquote>
+          <h3 id="consent-statement" className="text-xs font-semibold text-fg">
+            {fill(c.statementTitle, { version: requirement.version })}
+          </h3>
+          <blockquote className="whitespace-pre-line border-l-2 border-border-default pl-3 text-fg">
+            {requirement.statement}
+          </blockquote>
           <p className="text-xs text-fg-muted">{c.statementNote}</p>
         </section>
 
-        <Checkbox checked={age} onCheckedChange={(next) => setAge(next === true)} disabled={isSubmitting}>{c.ageLabel}</Checkbox>
+        <Checkbox checked={age} onCheckedChange={(next) => setAge(next === true)} disabled={isSubmitting}>
+          {c.ageLabel}
+        </Checkbox>
 
         <Field.Root className="gap-1">
-          <Field.Label htmlFor="consent-region" className="text-xs font-semibold text-fg">{c.regionLabel}</Field.Label>
-          <Select id="consent-region" value={region} disabled={isSubmitting} onChange={(event) => setRegion(event.target.value)}>
+          <Field.Label htmlFor="consent-region" className="text-xs font-semibold text-fg">
+            {c.regionLabel}
+          </Field.Label>
+          <Select
+            id="consent-region"
+            value={region}
+            disabled={isSubmitting}
+            onChange={(event) => setRegion(event.target.value)}
+          >
             <option value="">{c.regionPlaceholder}</option>
-            {regionCodes.map((code) => <option key={code} value={code}>{regionName(c.regions, code)}</option>)}
+            {regionCodes.map((code) => (
+              <option key={code} value={code}>
+                {regionName(c.regions, code)}
+              </option>
+            ))}
           </Select>
           <p className="text-xs text-fg-muted">{c.regionHelp}</p>
           {line && (
             // The server's verified line for the region, shown before anything is agreed to.
-            <p className="rounded-lg border border-border-default bg-surface-1 px-3 py-2 text-xs text-fg" data-testid="helpline">
+            <p
+              className="rounded-lg border border-border-default bg-surface-1 px-3 py-2 text-xs text-fg"
+              data-testid="helpline"
+            >
               {fill(c.helpline, { label: line.label, contact: line.contact, availability: line.availability })}{" "}
-              <a className="underline" href={line.sourceUrl} target="_blank" rel="noreferrer">{c.helplineSource}</a>
+              <a className="underline" href={line.sourceUrl} target="_blank" rel="noreferrer">
+                {c.helplineSource}
+              </a>
             </p>
           )}
         </Field.Root>
 
-        <Checkbox checked={agreed} onCheckedChange={(next) => setAgreed(next === true)} disabled={isSubmitting}>{c.consentLabel}</Checkbox>
+        <Checkbox checked={agreed} onCheckedChange={(next) => setAgreed(next === true)} disabled={isSubmitting}>
+          {c.consentLabel}
+        </Checkbox>
 
         {error && (
           <p role="alert" className="text-xs text-fg-danger">
@@ -109,8 +151,15 @@ function ConsentForm({ requirement, error, isSubmitting, onConfirm, onCancel }: 
         )}
       </Dialog.Body>
       <Dialog.Footer>
-        <Button variant="ghost" size="sm" onClick={onCancel} disabled={isSubmitting}>{c.cancel}</Button>
-        <Button size="sm" disabled={!ready} loading={isSubmitting} onClick={() => onConfirm({ consentVersion: requirement.version, ageAttested: age, region })}>
+        <Button variant="ghost" size="sm" onClick={onCancel} disabled={isSubmitting}>
+          {c.cancel}
+        </Button>
+        <Button
+          size="sm"
+          disabled={!ready}
+          loading={isSubmitting}
+          onClick={() => onConfirm({ consentVersion: requirement.version, ageAttested: age, region })}
+        >
           {isSubmitting ? c.agreeing : c.agree}
         </Button>
       </Dialog.Footer>

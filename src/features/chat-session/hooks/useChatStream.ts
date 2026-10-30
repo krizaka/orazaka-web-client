@@ -34,15 +34,8 @@ export function useChatStream(conversationId: string) {
   const { user } = useAuth();
   const userId = user?.id || user?.email || "anonymous";
 
-  const {
-    threads,
-    isLoadingThreads,
-    createThread,
-    renameThread,
-    deleteThread,
-  } = useThreadManagement();
-  const { messages, isLoadingMessages, queryKey } =
-    useMessageHistory(conversationId);
+  const { threads, isLoadingThreads, createThread, renameThread, deleteThread } = useThreadManagement();
+  const { messages, isLoadingMessages, queryKey } = useMessageHistory(conversationId);
 
   const { isChatStreaming, startChatStream } = useJobStream();
 

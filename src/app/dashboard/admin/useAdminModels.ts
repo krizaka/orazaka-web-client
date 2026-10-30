@@ -14,15 +14,9 @@ interface UseAdminModelsReturn {
   providers: string[];
   features: { featureKey: string; isEnabled: boolean }[];
   loadModels: () => Promise<void>;
-  handleSave: (
-    formModel: CatalogModel,
-    formMode: "create" | "edit",
-  ) => Promise<boolean>;
+  handleSave: (formModel: CatalogModel, formMode: "create" | "edit") => Promise<boolean>;
   handleDelete: (id: number) => Promise<void>;
-  handleToggleFeature: (
-    featureKey: string,
-    currentStatus: boolean,
-  ) => Promise<void>;
+  handleToggleFeature: (featureKey: string, currentStatus: boolean) => Promise<void>;
   saving: boolean;
   fetchWithAuth: (url: string, options?: RequestInit) => Promise<Response>;
 }
@@ -37,33 +31,21 @@ export function useAdminModels(): UseAdminModelsReturn {
   const [models, setModels] = React.useState<CatalogModel[]>([]);
   const [loadingModels, setLoadingModels] = React.useState(true);
   const [errorMessage, setErrorMessage] = React.useState<string | null>(null);
-  const [providers, setProviders] = React.useState<string[]>([
-    "ollama",
-    "localai",
-    "localai-video",
-    "localai-image",
-  ]);
-  const [features, setFeatures] = React.useState<
-    { featureKey: string; isEnabled: boolean }[]
-  >([]);
+  const [providers, setProviders] = React.useState<string[]>(["ollama", "localai", "localai-video", "localai-image"]);
+  const [features, setFeatures] = React.useState<{ featureKey: string; isEnabled: boolean }[]>([]);
   const [saving, setSaving] = React.useState(false);
 
-  const fetchWithAuth = React.useCallback(
-    async (url: string, options: RequestInit = {}) => {
-      const session = await getSession();
-      return fetch(url, {
-        ...options,
-        headers: {
-          "Content-Type": "application/json",
-          ...(session?.user?.id
-            ? { Authorization: `Bearer ${session.user.id}` }
-            : {}),
-          ...options.headers,
-        },
-      });
-    },
-    [],
-  );
+  const fetchWithAuth = React.useCallback(async (url: string, options: RequestInit = {}) => {
+    const session = await getSession();
+    return fetch(url, {
+      ...options,
+      headers: {
+        "Content-Type": "application/json",
+        ...(session?.user?.id ? { Authorization: `Bearer ${session.user.id}` } : {}),
+        ...options.headers,
+      },
+    });
+  }, []);
 
   const loadModels = React.useCallback(async () => {
     setLoadingModels(true);
@@ -83,19 +65,14 @@ export function useAdminModels(): UseAdminModelsReturn {
         setFeatures(await featRes.json());
       }
     } catch (err: unknown) {
-      setErrorMessage(
-        err instanceof Error ? err.message : t.admin.errorLoadingModels,
-      );
+      setErrorMessage(err instanceof Error ? err.message : t.admin.errorLoadingModels);
     } finally {
       setLoadingModels(false);
     }
   }, [fetchWithAuth, t.admin]);
 
   const handleSave = React.useCallback(
-    async (
-      formModel: CatalogModel,
-      formMode: "create" | "edit",
-    ): Promise<boolean> => {
+    async (formModel: CatalogModel, formMode: "create" | "edit"): Promise<boolean> => {
       if (!formModel.modelName || !formModel.modelLabel) {
         setErrorMessage(t.admin.nameAndLabelRequired);
         return false;
@@ -103,10 +80,7 @@ export function useAdminModels(): UseAdminModelsReturn {
       setSaving(true);
       setErrorMessage(null);
       try {
-        const url =
-          formMode === "edit"
-            ? `/api/v1/models/${formModel.id}`
-            : "/api/v1/models";
+        const url = formMode === "edit" ? `/api/v1/models/${formModel.id}` : "/api/v1/models";
         const res = await fetchWithAuth(url, {
           method: formMode === "edit" ? HTTP_METHOD.PUT : "POST",
           body: JSON.stringify(formModel),
@@ -118,9 +92,7 @@ export function useAdminModels(): UseAdminModelsReturn {
         loadModels();
         return true;
       } catch (err: unknown) {
-        setErrorMessage(
-          err instanceof Error ? err.message : t.admin.errorSavingModel,
-        );
+        setErrorMessage(err instanceof Error ? err.message : t.admin.errorSavingModel);
         return false;
       } finally {
         setSaving(false);
@@ -132,19 +104,14 @@ export function useAdminModels(): UseAdminModelsReturn {
   const handleToggleFeature = React.useCallback(
     async (featureKey: string, currentStatus: boolean) => {
       try {
-        const res = await fetchWithAuth(
-          `/api/v1/features/${encodeURIComponent(featureKey)}`,
-          {
-            method: HTTP_METHOD.PUT,
-            body: JSON.stringify({ featureKey, isEnabled: !currentStatus }),
-          },
-        );
+        const res = await fetchWithAuth(`/api/v1/features/${encodeURIComponent(featureKey)}`, {
+          method: HTTP_METHOD.PUT,
+          body: JSON.stringify({ featureKey, isEnabled: !currentStatus }),
+        });
         if (!res.ok) throw new Error(t.errors.featureToggleFailed);
         loadModels();
       } catch (err: unknown) {
-        setErrorMessage(
-          err instanceof Error ? err.message : t.errors.featureToggleFailed,
-        );
+        setErrorMessage(err instanceof Error ? err.message : t.errors.featureToggleFailed);
       }
     },
     [fetchWithAuth, loadModels, t.errors],
@@ -165,9 +132,7 @@ export function useAdminModels(): UseAdminModelsReturn {
         }
         loadModels();
       } catch (err: unknown) {
-        setErrorMessage(
-          err instanceof Error ? err.message : t.admin.errorDeletingModel,
-        );
+        setErrorMessage(err instanceof Error ? err.message : t.admin.errorDeletingModel);
         setLoadingModels(false);
       }
     },

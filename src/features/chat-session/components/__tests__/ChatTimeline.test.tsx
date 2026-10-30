@@ -79,9 +79,7 @@ describe("ChatTimeline", () => {
   });
 
   it("shows typing indicator when isGenerating", () => {
-    const messages = [
-      { id: "1", role: "user", content: "Hello", timestamp: "2024-01-01T00:00:00Z" },
-    ];
+    const messages = [{ id: "1", role: "user", content: "Hello", timestamp: "2024-01-01T00:00:00Z" }];
     render(
       <ChatTimeline
         messages={messages as never[]}
@@ -97,9 +95,7 @@ describe("ChatTimeline", () => {
   });
 
   it("shows typing indicator when isImagePending", () => {
-    const messages = [
-      { id: "1", role: "user", content: "Gen img", timestamp: "2024-01-01T00:00:00Z" },
-    ];
+    const messages = [{ id: "1", role: "user", content: "Gen img", timestamp: "2024-01-01T00:00:00Z" }];
     render(
       <ChatTimeline
         messages={messages as never[]}
@@ -115,9 +111,7 @@ describe("ChatTimeline", () => {
   });
 
   it("shows typing indicator when isSpeechPending", () => {
-    const messages = [
-      { id: "1", role: "user", content: "Speak", timestamp: "2024-01-01T00:00:00Z" },
-    ];
+    const messages = [{ id: "1", role: "user", content: "Speak", timestamp: "2024-01-01T00:00:00Z" }];
     render(
       <ChatTimeline
         messages={messages as never[]}
@@ -133,9 +127,7 @@ describe("ChatTimeline", () => {
   });
 
   it("shows error message when error is present", () => {
-    const messages = [
-      { id: "1", role: "user", content: "Test", timestamp: "2024-01-01T00:00:00Z" },
-    ];
+    const messages = [{ id: "1", role: "user", content: "Test", timestamp: "2024-01-01T00:00:00Z" }];
     render(
       <ChatTimeline
         messages={messages as never[]}
@@ -151,9 +143,7 @@ describe("ChatTimeline", () => {
   });
 
   it("does not show error when error is null", () => {
-    const messages = [
-      { id: "1", role: "user", content: "Test", timestamp: "2024-01-01T00:00:00Z" },
-    ];
+    const messages = [{ id: "1", role: "user", content: "Test", timestamp: "2024-01-01T00:00:00Z" }];
     render(
       <ChatTimeline
         messages={messages as never[]}

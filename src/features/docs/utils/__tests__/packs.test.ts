@@ -26,3 +26,10 @@ describe("pack blocks", () => {
     expect(parsePackIndex(JSON.stringify(items))).toHaveLength(3);
   });
 });
+
+describe("packAnchor edges", () => {
+  it("trims the dashes of the slug and keeps the inside ones", () => {
+    expect(packAnchor("  -Hello, World!-  ")).toBe("hello-world");
+    expect(packAnchor("***")).toBe("");
+  });
+});

@@ -4,7 +4,17 @@ import { LandingNav } from "@/features/landing/components/LandingNav";
 import { LandingFooter } from "@/features/landing/components/LandingFooter";
 import { DocArticle } from "@/features/docs/components/DocArticle";
 import { DocBody } from "@/features/docs/components/DocBody";
-import { editUrl, listDocs, navItems, neighbours, prepareBody, readDoc, sourcesMap, splitSegments, tocOf } from "@/features/docs/utils/docs";
+import {
+  editUrl,
+  listDocs,
+  navItems,
+  neighbours,
+  prepareBody,
+  readDoc,
+  sourcesMap,
+  splitSegments,
+  tocOf,
+} from "@/features/docs/utils/docs";
 
 export const dynamicParams = false;
 

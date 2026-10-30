@@ -19,49 +19,103 @@ const schema = JSON.stringify({
       title: "Votre question",
       description: "Ce que vous voulez voir.",
       "x-i18n": {
-        en: { title: "Your question", description: "What you want to see.", placeholder: "Which video format works best for me?" },
-        fr: { title: "Votre question", description: "Ce que vous voulez voir.", placeholder: "Quel format vidéo marche le mieux pour moi ?" },
+        en: {
+          title: "Your question",
+          description: "What you want to see.",
+          placeholder: "Which video format works best for me?",
+        },
+        fr: {
+          title: "Votre question",
+          description: "Ce que vous voulez voir.",
+          placeholder: "Quel format vidéo marche le mieux pour moi ?",
+        },
       },
     },
     title: {
       type: "string",
       maxLength: 200,
       title: "Votre titre",
-      "x-i18n": { en: { title: "Your title", placeholder: "My title" }, fr: { title: "Votre titre", placeholder: "Mon titre" } },
+      "x-i18n": {
+        en: { title: "Your title", placeholder: "My title" },
+        fr: { title: "Votre titre", placeholder: "Mon titre" },
+      },
     },
     model: {
       type: "string",
       title: "Modèle",
       "x-options": { source: "models", category: "video" },
-      "x-i18n": { en: { title: "Model", description: "Auto picks a model that runs." }, fr: { title: "Modèle", description: "Auto choisit un modèle disponible." } },
+      "x-i18n": {
+        en: { title: "Model", description: "Auto picks a model that runs." },
+        fr: { title: "Modèle", description: "Auto choisit un modèle disponible." },
+      },
       default: "wan",
       oneOf: [
         { const: "wan", title: "Wan hosted", "x-meta": { runsOn: "cloud", available: true } },
         {
           const: "ltx",
           title: "LTX-Video",
-          "x-meta": { runsOn: "local", available: false, unavailableReason: "LTX-Video needs a GPU, and none is online right now", unavailableCode: "gpu_offline" },
+          "x-meta": {
+            runsOn: "local",
+            available: false,
+            unavailableReason: "LTX-Video needs a GPU, and none is online right now",
+            unavailableCode: "gpu_offline",
+          },
         },
         {
           const: "wan-local",
           title: "Wan local",
-          "x-meta": { runsOn: "local", available: false, unavailableReason: "Wan local is not available (a sentence the server wrote)", unavailableCode: "worker_offline" },
+          "x-meta": {
+            runsOn: "local",
+            available: false,
+            unavailableReason: "Wan local is not available (a sentence the server wrote)",
+            unavailableCode: "worker_offline",
+          },
         },
         {
           const: "odd",
           title: "Odd",
-          "x-meta": { runsOn: "local", available: false, unavailableReason: "A reason from a newer server", unavailableCode: "something_new" },
+          "x-meta": {
+            runsOn: "local",
+            available: false,
+            unavailableReason: "A reason from a newer server",
+            unavailableCode: "something_new",
+          },
         },
       ],
     },
   },
 });
 
-const setup = () => render(<RunForm studioKey="data-driven-ui" inputSchema={schema} estimatedCredits={1} isSubmitting={false} onSubmit={jest.fn()} />);
+const setup = () =>
+  render(
+    <RunForm
+      studioKey="data-driven-ui"
+      inputSchema={schema}
+      estimatedCredits={1}
+      isSubmitting={false}
+      onSubmit={jest.fn()}
+    />,
+  );
 
 describe.each([
-  ["en", "Your question", "Which video format works best for me?", "Your title", "My title", "GPU offline", "Engine offline"],
-  ["fr", "Votre question", "Quel format vidéo marche le mieux pour moi ?", "Votre titre", "Mon titre", "GPU hors ligne", "Moteur hors ligne"],
+  [
+    "en",
+    "Your question",
+    "Which video format works best for me?",
+    "Your title",
+    "My title",
+    "GPU offline",
+    "Engine offline",
+  ],
+  [
+    "fr",
+    "Votre question",
+    "Quel format vidéo marche le mieux pour moi ?",
+    "Votre titre",
+    "Mon titre",
+    "GPU hors ligne",
+    "Moteur hors ligne",
+  ],
 ] as const)("a Studio form in %s", (locale, question, questionHint, title, titleHint, gpuOffline, workerOffline) => {
   beforeEach(() => {
     mockLocale = locale;

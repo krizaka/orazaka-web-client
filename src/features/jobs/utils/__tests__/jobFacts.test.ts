@@ -1,9 +1,25 @@
-import { factOf, formatDuration, gpuName, jobFacts, modelOf, WORKER_KEYS, whereRan, wallTimeMs } from "@/features/jobs/utils/jobFacts";
+import {
+  factOf,
+  formatDuration,
+  gpuName,
+  jobFacts,
+  modelOf,
+  WORKER_KEYS,
+  whereRan,
+  wallTimeMs,
+} from "@/features/jobs/utils/jobFacts";
 import type { Job } from "@/core/types/jobs.types";
 
 const job = (over: Partial<Job> = {}): Job => ({
-  id: "j1", userId: "u", featureKey: "orazaka.core.media.video", status: "COMPLETED", payload: {}, result: {},
-  createdAt: "2026-10-16T10:00:00Z", updatedAt: "2026-10-16T10:02:47Z", ...over,
+  id: "j1",
+  userId: "u",
+  featureKey: "orazaka.core.media.video",
+  status: "COMPLETED",
+  payload: {},
+  result: {},
+  createdAt: "2026-10-16T10:00:00Z",
+  updatedAt: "2026-10-16T10:02:47Z",
+  ...over,
 });
 
 describe("every key the worker emits has a label", () => {
@@ -26,7 +42,18 @@ describe("wall time", () => {
 describe("jobFacts", () => {
   const video = job({
     payload: { model: "wan2.2-ti2v-5b", seed: 42, steps: 30, width: 1280, height: 704, frames: 121, fps: 24 },
-    result: { format: "mp4", durationMs: 768, metrics: { gpu: "NVIDIA H100 80GB HBM3", provider: "runpod", gpu_allocated_mb: 29800, peak_memory_rss_mb: 4096, inference_time_sec: 167.7, aspect: "16:9" } },
+    result: {
+      format: "mp4",
+      durationMs: 768,
+      metrics: {
+        gpu: "NVIDIA H100 80GB HBM3",
+        provider: "runpod",
+        gpu_allocated_mb: 29800,
+        peak_memory_rss_mb: 4096,
+        inference_time_sec: 167.7,
+        aspect: "16:9",
+      },
+    },
   });
   const byId = Object.fromEntries(jobFacts(video).map((f) => [f.id, f]));
 
@@ -55,7 +82,9 @@ describe("model and where it ran", () => {
     expect(modelOf(job({ result: { metadata: { model: "x-y" } } }))).toBe("x-y");
   });
   it("says where: GPU and provider, Mac, a provider alone", () => {
-    expect(whereRan(job({ result: { metrics: { gpu: "NVIDIA H100 80GB HBM3", provider: "runpod" } } }))).toBe("H100 · RunPod");
+    expect(whereRan(job({ result: { metrics: { gpu: "NVIDIA H100 80GB HBM3", provider: "runpod" } } }))).toBe(
+      "H100 · RunPod",
+    );
     expect(whereRan(job({ result: { metrics: { gpu: "Apple M3 Max", provider: "mlx" } } }))).toBe("Mac · Metal");
     expect(whereRan(job({ payload: { provider: "digitalocean" } }))).toBe("DigitalOcean");
     expect(whereRan(job())).toBeNull();

@@ -19,8 +19,7 @@ import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/core/auth/auth-options";
 
-const ROUTER_URL =
-  process.env.ROUTER_URL || process.env.GATEWAY_URL || "http://localhost:8080";
+const ROUTER_URL = process.env.ROUTER_URL || process.env.GATEWAY_URL || "http://localhost:8080";
 
 /** Upstream response headers safe to forward verbatim to the browser. */
 const FORWARDED_HEADERS = [
@@ -38,10 +37,7 @@ async function proxyAsset(req: Request, segments: string[], method: "GET" | "HEA
   // `session.user.id` carries the signed HS256 session JWT, not a user id — see auth-options.ts.
   const sessionToken = session?.user?.id;
   if (!sessionToken) {
-    return NextResponse.json(
-      { error: "Unauthorized: Missing active security context" },
-      { status: 401 },
-    );
+    return NextResponse.json({ error: "Unauthorized: Missing active security context" }, { status: 401 });
   }
 
   const { search } = new URL(req.url);

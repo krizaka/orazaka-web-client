@@ -60,7 +60,8 @@ export const RECORDED_VISUAL =
   "Product photograph of the Halo table lamp: a hand-glazed terracotta ceramic base with a natural linen shade, softly lit on a pale oak desk at dusk, window light, shallow depth of field, editorial catalogue style, no text";
 
 /** The home card's visual: the same lamp, for the shop's product page. */
-export const SHOWCASE_VISUAL = "Product photo of the ceramic table lamp, warm orange glow, dark slate plinth, ink-blue background";
+export const SHOWCASE_VISUAL =
+  "Product photo of the ceramic table lamp, warm orange glow, dark slate plinth, ink-blue background";
 
 /** The recorded voice-over: the same lamp, read aloud by the local speech engine. */
 export const RECORDED_VOICE =

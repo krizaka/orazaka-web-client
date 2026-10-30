@@ -29,5 +29,5 @@ jobs:
     with:
       component: orazaka-web-client
       duplication: true
-      sonar: true            # CI analysis with the jest coverage of `validate` (krizaka/.github#377); automatic analysis is switched off
+      sonar: true # CI analysis with the jest coverage of `validate` (krizaka/.github#377); automatic analysis is switched off
     secrets: inherit # zizmor: ignore[secrets-inherit] the org's own component pipeline, pinned by SHA, needs the publish secrets

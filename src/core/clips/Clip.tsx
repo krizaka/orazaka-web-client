@@ -13,7 +13,11 @@ import { CLIPS, LANGS, clipFiles, type ClipId } from "@/core/clips/clips";
  * on it; under reduced motion or Save-Data the poster — the finished state — stands in.
  * Stand-in for the captioned loop block krizaka-ui#489 will ship: swap it there, then delete this file.
  */
-export function Clip({ id, priority = false, className }: Readonly<{ id: ClipId; priority?: boolean; className?: string }>) {
+export function Clip({
+  id,
+  priority = false,
+  className,
+}: Readonly<{ id: ClipId; priority?: boolean; className?: string }>) {
   const { t, locale } = useTranslation();
   const look = useLook();
   const video = React.useRef<HTMLVideoElement>(null);
@@ -25,7 +29,10 @@ export function Clip({ id, priority = false, className }: Readonly<{ id: ClipId;
     const el = video.current;
     const saveData = (navigator as Navigator & { connection?: { saveData?: boolean } }).connection?.saveData;
     if (!el || saveData || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    const io = new IntersectionObserver(([entry]) => (entry.isIntersecting ? void el.play().catch(() => {}) : el.pause()), { threshold: 0.3 });
+    const io = new IntersectionObserver(
+      ([entry]) => (entry.isIntersecting ? void el.play().catch(() => {}) : el.pause()),
+      { threshold: 0.3 },
+    );
     io.observe(el);
     return () => io.disconnect();
   }, [files.webm]);
@@ -48,7 +55,13 @@ export function Clip({ id, priority = false, className }: Readonly<{ id: ClipId;
       >
         <VideoSources webm={files.webm} mp4={files.mp4} />
         {[locale, ...LANGS.filter((l) => l !== locale)].map((lang) => (
-          <track key={lang} kind="captions" srcLang={lang} label={lang === "fr" ? "Français" : "English"} src={`/captions/${id}/${lang}`} />
+          <track
+            key={lang}
+            kind="captions"
+            srcLang={lang}
+            label={lang === "fr" ? "Français" : "English"}
+            src={`/captions/${id}/${lang}`}
+          />
         ))}
       </video>
       <figcaption className="px-1 pt-2 font-mono text-xs text-fg-secondary">{copy.caption}</figcaption>

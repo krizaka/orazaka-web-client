@@ -30,13 +30,48 @@ export function AppearancePicker({ theme, onThemeChange }: Readonly<AppearancePi
   React.useEffect(() => () => timers.current.forEach(clearTimeout), []);
 
   const options: { value: Appearance; label: string; desc: string; icon: React.ReactNode }[] = [
-    { value: "system", label: t.settings.themeSystem, icon: <Icon name="laptop" className="h-3.5 w-3.5" />, desc: t.settings.themeSystemDesc },
-    { value: "light", label: t.settings.themeLight, icon: <Icon name="sun" className="h-3.5 w-3.5" />, desc: t.settings.themeLightDesc },
-    { value: "dark", label: t.settings.themeDark, icon: <Icon name="moon" className="h-3.5 w-3.5" />, desc: t.settings.themeDarkDesc },
-    { value: "electric", label: t.settings.themeElectric, icon: <Icon name="spark" className="h-3.5 w-3.5" />, desc: t.settings.themeElectricDesc },
-    { value: "custom", label: t.settings.themeCustom, icon: <Icon name="shield" className="h-3.5 w-3.5" />, desc: t.settings.themeCustomDesc },
-    { value: "cyberpunk", label: t.settings.themeCyberpunk, icon: <Icon name="cpu" className="h-3.5 w-3.5" />, desc: t.settings.themeCyberpunkDesc },
-    { value: "solarized", label: t.settings.themeSolarized, icon: <Icon name="compass" className="h-3.5 w-3.5" />, desc: t.settings.themeSolarizedDesc },
+    {
+      value: "system",
+      label: t.settings.themeSystem,
+      icon: <Icon name="laptop" className="h-3.5 w-3.5" />,
+      desc: t.settings.themeSystemDesc,
+    },
+    {
+      value: "light",
+      label: t.settings.themeLight,
+      icon: <Icon name="sun" className="h-3.5 w-3.5" />,
+      desc: t.settings.themeLightDesc,
+    },
+    {
+      value: "dark",
+      label: t.settings.themeDark,
+      icon: <Icon name="moon" className="h-3.5 w-3.5" />,
+      desc: t.settings.themeDarkDesc,
+    },
+    {
+      value: "electric",
+      label: t.settings.themeElectric,
+      icon: <Icon name="spark" className="h-3.5 w-3.5" />,
+      desc: t.settings.themeElectricDesc,
+    },
+    {
+      value: "custom",
+      label: t.settings.themeCustom,
+      icon: <Icon name="shield" className="h-3.5 w-3.5" />,
+      desc: t.settings.themeCustomDesc,
+    },
+    {
+      value: "cyberpunk",
+      label: t.settings.themeCyberpunk,
+      icon: <Icon name="cpu" className="h-3.5 w-3.5" />,
+      desc: t.settings.themeCyberpunkDesc,
+    },
+    {
+      value: "solarized",
+      label: t.settings.themeSolarized,
+      icon: <Icon name="compass" className="h-3.5 w-3.5" />,
+      desc: t.settings.themeSolarizedDesc,
+    },
   ];
 
   const choose = (value: string) => {

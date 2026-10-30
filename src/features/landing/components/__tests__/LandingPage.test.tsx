@@ -18,4 +18,3 @@ describe("landing copy", () => {
     }
   });
 });
-

@@ -7,18 +7,14 @@ import { useAuth } from "@/core/hooks/useAuth";
 import { useJobStream } from "@/core/context/JobStreamContext";
 import type { ChatMessage } from "@/core/types/chat.types";
 import type { ComposerStudio } from "@krizaka/orazaka-shared";
-import {
-  startComposerRun,
-  type ComposerRunOptions,
-} from "@/features/chat-session/utils/startComposerRun";
+import { startComposerRun, type ComposerRunOptions } from "@/features/chat-session/utils/startComposerRun";
 import { saveStoredMessages } from "@/features/chat-session/hooks/useMessageHistory";
 import { useComposerRunReconciler } from "@/features/chat-session/hooks/useComposerRunReconciler";
 import { fileToThumbnail } from "@/features/chat-session/utils/imageThumbnail";
 import { MediaApi } from "@/services/media.api";
 
 /** A Studio whose one input holds an asset cannot run without one — it says so itself. */
-const requiresAttachment = (studio: ComposerStudio | null): boolean =>
-  !!studio && studio.inputKind === "ASSET";
+const requiresAttachment = (studio: ComposerStudio | null): boolean => !!studio && studio.inputKind === "ASSET";
 
 interface UseChatActionsProps {
   activeConversationId: string;
@@ -38,9 +34,7 @@ export function useChatActions({ activeConversationId }: UseChatActionsProps) {
   const userId = user?.id || user?.email || "anonymous";
   const { trackRun } = useComposerRunReconciler(userId, activeConversationId);
 
-  const [selectedStudio, setSelectedStudio] = useState<ComposerStudio | null>(
-    null,
-  );
+  const [selectedStudio, setSelectedStudio] = useState<ComposerStudio | null>(null);
   const [selectedOptions, setSelectedOptions] = useState<ComposerRunOptions>({});
   const [attachment, setAttachment] = useState<{
     assetId: string;
@@ -65,29 +59,31 @@ export function useChatActions({ activeConversationId }: UseChatActionsProps) {
   const nodeMutation = useMutation({
     // `conversationId` names the thread the run belongs to when it is not the active one yet: the
     // first message of a new conversation creates the thread and runs in it in the same gesture.
-    mutationFn: ({ conversationId: _thread, ...run }: Parameters<typeof startComposerRun>[0] & { conversationId?: string }) =>
-      startComposerRun(run),
+    mutationFn: ({
+      conversationId: _thread,
+      ...run
+    }: Parameters<typeof startComposerRun>[0] & { conversationId?: string }) => startComposerRun(run),
     // A run is asynchronous, so the text path's user-bubble echo is bypassed. Mirror
     // it here (covers both handleSend and handleExecuteNode) so the user's request
     // appears in the timeline, not just the acknowledgement.
     onMutate: (vars) =>
       appendToCache(
         {
-        id: `user-${Date.now()}`,
-        role: "user",
-        content: vars.prompt,
-        timestamp: Date.now(),
-        kind: "text",
-        // Preserve a visible trace of an attached image (e.g. for analysis).
-        ...(attachment?.previewUrl
-          ? {
-              attachment: {
-                assetId: attachment.assetId,
-                name: attachment.name,
-                url: attachment.previewUrl,
-              },
-            }
-          : {}),
+          id: `user-${Date.now()}`,
+          role: "user",
+          content: vars.prompt,
+          timestamp: Date.now(),
+          kind: "text",
+          // Preserve a visible trace of an attached image (e.g. for analysis).
+          ...(attachment?.previewUrl
+            ? {
+                attachment: {
+                  assetId: attachment.assetId,
+                  name: attachment.name,
+                  url: attachment.previewUrl,
+                },
+              }
+            : {}),
         },
         vars.conversationId ?? activeConversationId,
       ),
@@ -116,10 +112,7 @@ export function useChatActions({ activeConversationId }: UseChatActionsProps) {
   );
 
   const handleFileChange = useCallback(
-    async (
-      e: React.ChangeEvent<HTMLInputElement>,
-      t: { errors: { fileUploadFailed: string } },
-    ) => {
+    async (e: React.ChangeEvent<HTMLInputElement>, t: { errors: { fileUploadFailed: string } }) => {
       const file = e.target.files?.[0];
       if (!file) return;
       setIsUploadingAttachment(true);
@@ -145,11 +138,7 @@ export function useChatActions({ activeConversationId }: UseChatActionsProps) {
   );
 
   const handleSend = useCallback(
-    (
-      sendMessage: (msg: string) => void,
-      isSending: boolean,
-      isGenerating: boolean,
-    ) => {
+    (sendMessage: (msg: string) => void, isSending: boolean, isGenerating: boolean) => {
       const trimmed = chatInput.trim();
       if (
         (!trimmed && !attachment && !selectedStudio) ||
@@ -183,23 +172,11 @@ export function useChatActions({ activeConversationId }: UseChatActionsProps) {
       setChatInput("");
       setAttachment(null);
     },
-    [
-      chatInput,
-      attachment,
-      selectedStudio,
-      selectedOptions,
-      isUploadingAttachment,
-      nodeMutation,
-      setChatInput,
-    ],
+    [chatInput, attachment, selectedStudio, selectedOptions, isUploadingAttachment, nodeMutation, setChatInput],
   );
 
   const handleExecuteNode = useCallback(
-    (
-      studio: ComposerStudio,
-      isPlusMenuOpen: boolean,
-      setIsPlusMenuOpen: (v: boolean) => void,
-    ) => {
+    (studio: ComposerStudio, isPlusMenuOpen: boolean, setIsPlusMenuOpen: (v: boolean) => void) => {
       // Stage (don't immediately run) when there's no prompt yet, or when the
       // capability needs an asset the user hasn't attached — so options/attach show.
       if (!chatInput.trim() || requiresAttachment(studio)) {
@@ -244,8 +221,7 @@ export function useChatActions({ activeConversationId }: UseChatActionsProps) {
   );
 
   const updateOptions = useCallback(
-    (patch: Partial<ComposerRunOptions>) =>
-      setSelectedOptions((prev) => ({ ...prev, ...patch })),
+    (patch: Partial<ComposerRunOptions>) => setSelectedOptions((prev) => ({ ...prev, ...patch })),
     [],
   );
 

@@ -14,7 +14,13 @@ export function DocsSidebar({ items, current }: Readonly<{ items: readonly NavIt
   const uid = useId();
   return (
     <nav aria-label={d.sidebarLabel} className="space-y-6 text-sm">
-      <Link href="/docs" className={cn("block font-mono text-xs font-semibold hover:text-fg", current === null ? "text-fg-accent" : "text-fg-secondary")}>
+      <Link
+        href="/docs"
+        className={cn(
+          "block font-mono text-xs font-semibold hover:text-fg",
+          current === null ? "text-fg-accent" : "text-fg-secondary",
+        )}
+      >
         {d.home}
       </Link>
       {JOURNEY_IDS.map((j) => {

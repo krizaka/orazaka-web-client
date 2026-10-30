@@ -10,7 +10,9 @@ describe("jobMedia", () => {
   });
 
   it("gives a media URL only for a completed job that published one", () => {
-    expect(jobMediaUrl({ status: "COMPLETED", result: { url: "/api/v1/assets/j/image.png" } })).toBe("/api/v1/assets/j/image.png");
+    expect(jobMediaUrl({ status: "COMPLETED", result: { url: "/api/v1/assets/j/image.png" } })).toBe(
+      "/api/v1/assets/j/image.png",
+    );
     expect(jobMediaUrl({ status: "PROCESSING", result: { url: "/x" } })).toBeNull();
     expect(jobMediaUrl({ status: "COMPLETED", result: {} })).toBeNull();
   });

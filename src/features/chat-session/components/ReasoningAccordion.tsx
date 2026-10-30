@@ -25,10 +25,7 @@ interface ReasoningAccordionProps {
  * Design: frosted-glass obsidian panel with ice-blue accent border,
  * zero-radius geometry (inherits from .theme-krizaka).
  */
-export function ReasoningAccordion({
-  content,
-  isStreaming = false,
-}: Readonly<ReasoningAccordionProps>) {
+export function ReasoningAccordion({ content, isStreaming = false }: Readonly<ReasoningAccordionProps>) {
   const { t } = useTranslation();
   const [isExpanded, setIsExpanded] = useState(false);
 
@@ -50,10 +47,7 @@ export function ReasoningAccordion({
         <Icon
           name="spark"
           size={14}
-          className={cn(
-            "text-accent transition-transform duration-200",
-            isStreaming ? "animate-spin-slow" : ""
-          )}
+          className={cn("text-accent transition-transform duration-200", isStreaming ? "animate-spin-slow" : "")}
         />
         <span className="text-[11px] font-semibold text-fg-muted">
           {isStreaming ? t.showcase.chat.thinking : t.showcase.chat.reasoning}
@@ -71,10 +65,7 @@ export function ReasoningAccordion({
         <Icon
           name="chevronDown"
           size={12}
-          className={cn(
-            "ml-auto text-fg-muted transition-transform duration-200",
-            isExpanded ? "rotate-180" : ""
-          )}
+          className={cn("ml-auto text-fg-muted transition-transform duration-200", isExpanded ? "rotate-180" : "")}
         />
       </Button>
 
@@ -82,7 +73,7 @@ export function ReasoningAccordion({
       <div
         className={cn(
           "transition-all duration-300 ease-in-out overflow-hidden",
-          isExpanded ? "max-h-[600px] opacity-100" : "max-h-0 opacity-0"
+          isExpanded ? "max-h-[600px] opacity-100" : "max-h-0 opacity-0",
         )}
       >
         <div className="px-4 pb-3 border-t border-border-subtle">

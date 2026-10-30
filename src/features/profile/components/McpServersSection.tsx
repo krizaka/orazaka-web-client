@@ -47,7 +47,12 @@ export function McpServersSection({ fetchHeaders }: Readonly<McpServersSectionPr
   } = useMcpServers(fetchHeaders);
 
   return (
-    <SettingsSection variant="flat" id="integrations-mcp" title={t.settings.mcpServersTitle} description={t.settings.mcpServersDesc}>
+    <SettingsSection
+      variant="flat"
+      id="integrations-mcp"
+      title={t.settings.mcpServersTitle}
+      description={t.settings.mcpServersDesc}
+    >
       {serverMessage && (
         <div className="p-3 bg-success/20 border border-success/40 rounded-xl text-xs font-semibold text-success">
           {serverMessage}
@@ -64,22 +69,15 @@ export function McpServersSection({ fetchHeaders }: Readonly<McpServersSectionPr
           return (
             <ul className="divide-y divide-border-subtle">
               {servers.map((srv) => (
-                <li
-                  key={srv.id}
-                  className="flex items-center justify-between gap-3 py-3 text-xs"
-                >
+                <li key={srv.id} className="flex items-center justify-between gap-3 py-3 text-xs">
                   <article className="space-y-1">
                     <h4 className="font-semibold text-fg flex items-center gap-2">
                       <span>{srv.label}</span>
                       {isAdmin && (
-                        <span className="px-1.5 py-0.5 rounded bg-surface-2 text-[10px]">
-                          {srv.transportType}
-                        </span>
+                        <span className="px-1.5 py-0.5 rounded bg-surface-2 text-[10px]">{srv.transportType}</span>
                       )}
                     </h4>
-                    <p className="opacity-70 font-mono">
-                      {srv.url || srv.command}
-                    </p>
+                    <p className="opacity-70 font-mono">{srv.url || srv.command}</p>
                   </article>
                   <Button
                     type="button"
@@ -96,10 +94,7 @@ export function McpServersSection({ fetchHeaders }: Readonly<McpServersSectionPr
           );
         })()}
       </section>
-      <form
-        onSubmit={handleSaveServer}
-        className="space-y-3 py-4"
-      >
+      <form onSubmit={handleSaveServer} className="space-y-3 py-4">
         <div className="space-y-2">
           <label className={labelClass}>{t.settings.mcpLabel}</label>
           <Input
@@ -115,15 +110,11 @@ export function McpServersSection({ fetchHeaders }: Readonly<McpServersSectionPr
           <select
             className={selectClass}
             value={serverTransport}
-            onChange={(e) =>
-              setServerTransport(e.target.value as "remote" | "local")
-            }
+            onChange={(e) => setServerTransport(e.target.value as "remote" | "local")}
             disabled={!isAdmin}
           >
             <option value="remote">{t.settings.mcpRemoteLabel}</option>
-            {isAdmin && (
-              <option value="local">{t.settings.mcpLocalLabel}</option>
-            )}
+            {isAdmin && <option value="local">{t.settings.mcpLocalLabel}</option>}
           </select>
         </div>
         {serverTransport === "remote" ? (
@@ -174,11 +165,7 @@ export function McpServersSection({ fetchHeaders }: Readonly<McpServersSectionPr
         )}
         <Button
           type="submit"
-          disabled={
-            isSavingServer ||
-            !serverLabel ||
-            (serverTransport === "remote" ? !serverUrl : !serverCommand)
-          }
+          disabled={isSavingServer || !serverLabel || (serverTransport === "remote" ? !serverUrl : !serverCommand)}
           className="mt-2"
         >
           {t.settings.mcpRegister}

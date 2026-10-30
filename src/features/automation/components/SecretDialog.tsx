@@ -27,7 +27,10 @@ function CopyField({ label, value, testId }: Readonly<{ label: string; value: st
     <div className="space-y-1">
       <p className="text-xs font-medium text-fg-secondary">{label}</p>
       <div className="flex items-center gap-2">
-        <code data-testid={testId} className="min-w-0 flex-1 break-all rounded-md border border-border-subtle bg-surface-2 px-3 py-2 font-mono text-xs text-fg">
+        <code
+          data-testid={testId}
+          className="min-w-0 flex-1 break-all rounded-md border border-border-subtle bg-surface-2 px-3 py-2 font-mono text-xs text-fg"
+        >
           {value}
         </code>
         <Button type="button" variant="secondary" size="sm" onClick={copy}>

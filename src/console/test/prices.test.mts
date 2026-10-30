@@ -22,15 +22,27 @@ const v = (over: Partial<AdminPrice>): AdminPrice => ({
 test("an entry splits its key into product and plan, and keeps the cents as they came", () => {
   const view = toPricesView([v({})], { "orazaka.business": [v({})] }, NOW);
   assert.deepEqual(view.entries[0], {
-    key: "orazaka.business", product: "orazaka", plan: "business", currency: "CAD", versionId: "v1",
-    effectiveFrom: "2026-10-01T00:00:00Z", amountCents: 290000, unit: "year", availability: "preparing", limits: {}, upcoming: [],
+    key: "orazaka.business",
+    product: "orazaka",
+    plan: "business",
+    currency: "CAD",
+    versionId: "v1",
+    effectiveFrom: "2026-10-01T00:00:00Z",
+    amountCents: 290000,
+    unit: "year",
+    availability: "preparing",
+    limits: {},
+    upcoming: [],
   });
 });
 
 test("a version that starts later is upcoming, not current; one that already started is not", () => {
   const history = [v({}), v({ versionId: "v2", amountCents: 310000, effectiveFrom: "2026-12-01T00:00:00Z" })];
   const { entries } = toPricesView([v({})], { "orazaka.business": history }, NOW);
-  assert.deepEqual(entries[0]!.upcoming.map((u) => [u.versionId, u.amountCents]), [["v2", 310000]]);
+  assert.deepEqual(
+    entries[0]!.upcoming.map((u) => [u.versionId, u.amountCents]),
+    [["v2", 310000]],
+  );
 });
 
 test("a quote stays a quote: a null amount is never turned into zero", () => {

@@ -14,8 +14,7 @@ interface ChatIndicatorProps {
   t: TranslationDictionary;
 }
 
-const CHIP_BASE =
-  "inline-flex items-center gap-1.5 pl-2.5 pr-1.5 py-1 rounded-sm text-xs font-semibold border";
+const CHIP_BASE = "inline-flex items-center gap-1.5 pl-2.5 pr-1.5 py-1 rounded-sm text-xs font-semibold border";
 
 /** Spring entrance/exit for a chip; collapses to a fade under reduced-motion. */
 function useChipMotion() {
@@ -37,10 +36,7 @@ const ClearButton: React.FC<{ onClick: () => void; className: string; label: str
     type="button"
     onClick={onClick}
     whileTap={{ scale: 0.85 }}
-    className={cn(
-      "flex h-4 w-4 items-center justify-center rounded-full transition-colors",
-      className
-    )}
+    className={cn("flex h-4 w-4 items-center justify-center rounded-full transition-colors", className)}
     aria-label={label}
   >
     <Icon name="close" size={12} />
@@ -75,20 +71,11 @@ export const ChatIndicators: React.FC<ChatIndicatorProps> = ({
           >
             <Icon name="attach" size={14} />
             <span className="max-w-[180px] truncate">{attachment.name}</span>
-            <ClearButton
-              onClick={onClearAttachment}
-              label={t.chat.clear}
-              className="hover:bg-success/20"
-            />
+            <ClearButton onClick={onClearAttachment} label={t.chat.clear} className="hover:bg-success/20" />
           </motion.article>
         )}
         {isUploadingAttachment && (
-          <motion.span
-            key="uploading"
-            layout
-            {...chip}
-            className="text-xs text-fg-muted px-1"
-          >
+          <motion.span key="uploading" layout {...chip} className="text-xs text-fg-muted px-1">
             {t.chat.uploadingFile}
           </motion.span>
         )}

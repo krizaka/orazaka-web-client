@@ -7,10 +7,7 @@ const THUMBNAIL_MAX_EDGE = 320;
  * what they sent. Downscaling keeps the stored history well within localStorage
  * limits. Returns "" for non-images or when the browser canvas is unavailable.
  */
-export async function fileToThumbnail(
-  file: File,
-  maxEdge: number = THUMBNAIL_MAX_EDGE,
-): Promise<string> {
+export async function fileToThumbnail(file: File, maxEdge: number = THUMBNAIL_MAX_EDGE): Promise<string> {
   if (!file.type.startsWith("image/")) return "";
 
   const dataUrl = await new Promise<string>((resolve, reject) => {

@@ -36,7 +36,16 @@ jest.mock("@/app/jobs/jobStats.utils", () => ({
 
 // jsdom lays nothing out and has no observers: the kit's figures read them.
 beforeAll(() => {
-  window.matchMedia = ((query: string) => ({ matches: false, media: query, addEventListener: () => {}, removeEventListener: () => {}, addListener: () => {}, removeListener: () => {}, onchange: null, dispatchEvent: () => false })) as typeof window.matchMedia;
+  window.matchMedia = ((query: string) => ({
+    matches: false,
+    media: query,
+    addEventListener: () => {},
+    removeEventListener: () => {},
+    addListener: () => {},
+    removeListener: () => {},
+    onchange: null,
+    dispatchEvent: () => false,
+  })) as typeof window.matchMedia;
   class Observer {
     observe() {}
     unobserve() {}

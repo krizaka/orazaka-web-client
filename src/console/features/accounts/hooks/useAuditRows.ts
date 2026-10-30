@@ -5,7 +5,11 @@ import { PlatformAdminApi } from "@/console/services/platform.admin.api";
 import { mergeAudit, type AuditRow } from "@/console/features/accounts/utils/audit";
 
 /** A call that reports its outcome instead of throwing: one service down must not hide the others' lines. */
-const attempt = <T,>(p: Promise<T>) => p.then((value) => ({ ok: true as const, value }), (error: unknown) => ({ ok: false as const, error }));
+const attempt = <T>(p: Promise<T>) =>
+  p.then(
+    (value) => ({ ok: true as const, value }),
+    (error: unknown) => ({ ok: false as const, error }),
+  );
 
 /** Every service's operator audit in one list (ADR-085); a service that does not answer leaves the others, and `failed` says so. */
 export function useAuditRows() {
@@ -25,7 +29,13 @@ export function useAuditRows() {
     setFailed(all.some((r) => !r.ok));
     if (all.every((r) => !r.ok)) return;
     const lines = (r: typeof billing) => (r.ok ? r.value : null);
-    setRows(mergeAudit(identity.ok ? identity.value : null, { billing: lines(billing), studio: lines(studio), engine: lines(engine) }));
+    setRows(
+      mergeAudit(identity.ok ? identity.value : null, {
+        billing: lines(billing),
+        studio: lines(studio),
+        engine: lines(engine),
+      }),
+    );
   }, []);
   React.useEffect(() => {
     const timer = setTimeout(() => void load(), 0);

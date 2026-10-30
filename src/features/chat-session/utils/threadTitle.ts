@@ -18,7 +18,5 @@ const MAX_TITLE_LENGTH = 48;
 export function deriveThreadTitle(prompt: string): string {
   const clean = prompt.replace(/\s+/g, " ").trim();
   if (!clean) return "New Memory Block";
-  return clean.length > MAX_TITLE_LENGTH
-    ? `${clean.slice(0, MAX_TITLE_LENGTH).trimEnd()}…`
-    : clean;
+  return clean.length > MAX_TITLE_LENGTH ? `${clean.slice(0, MAX_TITLE_LENGTH).trimEnd()}…` : clean;
 }

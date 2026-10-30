@@ -24,10 +24,7 @@ async function proxyRequest(req: Request, segments: string[], method: string) {
     const session = await getServerSession(authOptions);
     const token = session?.user?.token;
     if (!token) {
-      return NextResponse.json(
-        { error: "Unauthorized: no active admin session" },
-        { status: 401 },
-      );
+      return NextResponse.json({ error: "Unauthorized: no active admin session" }, { status: 401 });
     }
 
     const { search } = new URL(req.url);
@@ -62,30 +59,18 @@ async function proxyRequest(req: Request, segments: string[], method: string) {
   }
 }
 
-export async function GET(
-  req: Request,
-  { params }: { params: Promise<{ path: string[] }> },
-) {
+export async function GET(req: Request, { params }: { params: Promise<{ path: string[] }> }) {
   return proxyRequest(req, (await params).path, "GET");
 }
 
-export async function POST(
-  req: Request,
-  { params }: { params: Promise<{ path: string[] }> },
-) {
+export async function POST(req: Request, { params }: { params: Promise<{ path: string[] }> }) {
   return proxyRequest(req, (await params).path, "POST");
 }
 
-export async function PUT(
-  req: Request,
-  { params }: { params: Promise<{ path: string[] }> },
-) {
+export async function PUT(req: Request, { params }: { params: Promise<{ path: string[] }> }) {
   return proxyRequest(req, (await params).path, "PUT");
 }
 
-export async function DELETE(
-  req: Request,
-  { params }: { params: Promise<{ path: string[] }> },
-) {
+export async function DELETE(req: Request, { params }: { params: Promise<{ path: string[] }> }) {
   return proxyRequest(req, (await params).path, "DELETE");
 }

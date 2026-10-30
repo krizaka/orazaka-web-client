@@ -27,10 +27,7 @@ function wrapper({ children }: { children: React.ReactNode }) {
 
 describe("useRegister", () => {
   it("returns register function and isPending", () => {
-    const { result } = renderHook(
-      () => useRegister({ onSuccess: jest.fn(), onError: jest.fn() }),
-      { wrapper },
-    );
+    const { result } = renderHook(() => useRegister({ onSuccess: jest.fn(), onError: jest.fn() }), { wrapper });
     expect(typeof result.current.register).toBe("function");
     expect(result.current.isPending).toBe(false);
   });

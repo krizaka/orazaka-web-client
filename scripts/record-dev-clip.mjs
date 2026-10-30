@@ -3,7 +3,8 @@ import { execFileSync, execSync } from "node:child_process";
 import { mkdtempSync } from "node:fs";
 import os from "node:os";
 import path from "node:path";
-const sh = (k) => execSync(`~/.krizaka-worktrees/tools/secret.sh ~/Documents/krizaka/qa.env ${k}`, { shell: "/bin/zsh" }).toString();
+const sh = (k) =>
+  execSync(`~/.krizaka-worktrees/tools/secret.sh ~/Documents/krizaka/qa.env ${k}`, { shell: "/bin/zsh" }).toString();
 const RUN = process.argv[2];
 const raw = mkdtempSync(path.join(os.tmpdir(), "devclip-"));
 const b = await chromium.launch();
@@ -17,25 +18,92 @@ await p0.click('button[type="submit"]');
 await p0.waitForURL("https://dev.orazaka.com/", { timeout: 60000 });
 const state = await signed.storageState();
 await signed.close();
-const ctx = await b.newContext({ viewport: V, deviceScaleFactor: 2, colorScheme: "dark", storageState: state, recordVideo: { dir: raw, size: V } });
+const ctx = await b.newContext({
+  viewport: V,
+  deviceScaleFactor: 2,
+  colorScheme: "dark",
+  storageState: state,
+  recordVideo: { dir: raw, size: V },
+});
 const page = await ctx.newPage();
 const t0 = Date.now();
 await page.goto(`https://dev.orazaka.com/studios/runs/${RUN}`, { waitUntil: "networkidle" });
-await page.waitForFunction(() => [...document.querySelectorAll("video")].every((v) => v.readyState >= 3), null, { timeout: 30000 }).catch(() => {});
+await page
+  .waitForFunction(() => [...document.querySelectorAll("video")].every((v) => v.readyState >= 3), null, {
+    timeout: 30000,
+  })
+  .catch(() => {});
 await page.waitForTimeout(1200);
 const start = (Date.now() - t0) / 1000;
 await page.waitForTimeout(1500);
 const play = page.getByRole("button", { name: /^Play/ }).first();
 if (await play.count()) await play.click().catch(() => {});
-else await page.locator("video").first().evaluate((v) => v.play()).catch(() => {});
+else
+  await page
+    .locator("video")
+    .first()
+    .evaluate((v) => v.play())
+    .catch(() => {});
 await page.waitForTimeout(7500);
 const video = page.video();
 await ctx.close();
 const src = await video.path();
 const out = process.argv[3];
-const trim = ["-y", "-loglevel", "error", "-ss", start.toFixed(2), "-i", src, "-vf", "fps=25,scale=1440:900:flags=lanczos", "-an"];
-execFileSync("ffmpeg", [...trim, "-c:v", "libvpx-vp9", "-b:v", "0", "-crf", "42", "-row-mt", "1", "-deadline", "good", "-cpu-used", "2", `${out}.webm`]);
-execFileSync("ffmpeg", [...trim, "-c:v", "libx264", "-crf", "28", "-preset", "slow", "-pix_fmt", "yuv420p", "-movflags", "+faststart", `${out}.mp4`]);
-execFileSync("ffmpeg", ["-y", "-loglevel", "error", "-ss", "5", "-i", `${out}.mp4`, "-frames:v", "1", "-q:v", "4", `${out}.jpg`]);
+const trim = [
+  "-y",
+  "-loglevel",
+  "error",
+  "-ss",
+  start.toFixed(2),
+  "-i",
+  src,
+  "-vf",
+  "fps=25,scale=1440:900:flags=lanczos",
+  "-an",
+];
+execFileSync("ffmpeg", [
+  ...trim,
+  "-c:v",
+  "libvpx-vp9",
+  "-b:v",
+  "0",
+  "-crf",
+  "42",
+  "-row-mt",
+  "1",
+  "-deadline",
+  "good",
+  "-cpu-used",
+  "2",
+  `${out}.webm`,
+]);
+execFileSync("ffmpeg", [
+  ...trim,
+  "-c:v",
+  "libx264",
+  "-crf",
+  "28",
+  "-preset",
+  "slow",
+  "-pix_fmt",
+  "yuv420p",
+  "-movflags",
+  "+faststart",
+  `${out}.mp4`,
+]);
+execFileSync("ffmpeg", [
+  "-y",
+  "-loglevel",
+  "error",
+  "-ss",
+  "5",
+  "-i",
+  `${out}.mp4`,
+  "-frames:v",
+  "1",
+  "-q:v",
+  "4",
+  `${out}.jpg`,
+]);
 await b.close();
 process.stdout.write("ok\n");

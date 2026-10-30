@@ -49,9 +49,7 @@ export const MessageBubble: React.FC<Props> = ({ message, index = 0 }) => {
       <section
         className={cn(
           "flex max-w-[75%] gap-3 items-start animate-in fade-in duration-300",
-          isUser
-            ? "flex-row-reverse slide-in-from-right-3"
-            : "flex-row slide-in-from-left-3"
+          isUser ? "flex-row-reverse slide-in-from-right-3" : "flex-row slide-in-from-left-3",
         )}
         style={{
           animationDelay: `${Math.min(index * 50, 300)}ms`,
@@ -64,7 +62,7 @@ export const MessageBubble: React.FC<Props> = ({ message, index = 0 }) => {
             "h-9 w-9 rounded-2xl flex items-center justify-center text-[11px] font-bold border select-none flex-shrink-0 transition-colors duration-200",
             isUser
               ? "bg-accent-soft border-accent/20 text-accent"
-              : "bg-surface-2 border-border-subtle text-fg-secondary"
+              : "bg-surface-2 border-border-subtle text-fg-secondary",
           )}
         >
           {isUser ? "U" : <SentinelMini size={18} />}
@@ -77,7 +75,7 @@ export const MessageBubble: React.FC<Props> = ({ message, index = 0 }) => {
               "p-4 rounded-2xl border text-[13px] leading-[1.7] text-fg transition-shadow duration-200",
               isUser
                 ? "bg-accent-soft border-accent/10 rounded-tr-md"
-                : "bg-surface-1 border-border-subtle rounded-tl-md"
+                : "bg-surface-1 border-border-subtle rounded-tl-md",
             )}
           >
             <p className="whitespace-pre-wrap">{message.content}</p>
@@ -90,10 +88,16 @@ export const MessageBubble: React.FC<Props> = ({ message, index = 0 }) => {
           <section
             className={cn(
               "absolute -bottom-3 opacity-0 group-hover/msg:opacity-100 transition-all duration-200 flex items-center gap-1",
-              isUser ? "right-0" : "left-0"
+              isUser ? "right-0" : "left-0",
             )}
           >
-            <Button variant="secondary" size="sm" className="h-7 gap-1 px-2 text-[11px] shadow-sm" onClick={handleCopy} aria-label={t.chat.copyMessage}>
+            <Button
+              variant="secondary"
+              size="sm"
+              className="h-7 gap-1 px-2 text-[11px] shadow-sm"
+              onClick={handleCopy}
+              aria-label={t.chat.copyMessage}
+            >
               {copied ? <Icon name="check" size={12} className="text-fg-success" /> : <Icon name="copy" size={12} />}
               {copied ? t.chat.copiedMessage : t.chat.copyMessage}
             </Button>
