@@ -5,7 +5,7 @@ import Link from "next/link";
 import { OrazakaLogo } from "@krizaka/ui";
 import { Mascot } from "@krizaka/ui/mascots";
 import { AuthLayout } from "@krizaka/ui/auth-layout";
-import { DevelopmentStatus } from "@/features/landing/components/DevelopmentStatus";
+import { DevelopmentStatus } from "@/components/DevelopmentStatus";
 import { LocaleSwitch } from "@/components/LocaleSwitch";
 import { useTranslation } from "@/core/context/LocaleContext";
 

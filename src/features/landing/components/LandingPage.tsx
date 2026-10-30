@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { ForwardIcon } from "@krizaka/icons";
-import { DevelopmentStatus } from "@/features/landing/components/DevelopmentStatus";
+import { DevelopmentStatus } from "@/components/DevelopmentStatus";
 import { Button } from "@krizaka/ui/button";
 import { LandingPage as LandingTemplate } from "@krizaka/ui/landing-page";
 import { NumberTicker } from "@krizaka/ui/number-ticker";
