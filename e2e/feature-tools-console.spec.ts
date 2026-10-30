@@ -116,15 +116,11 @@ for (const theme of ["dark", "light"] as const) {
       await expect(bound).toContainText("Saved");
       expect(writes).toEqual(["PUT agent.code.issue-to-pr 5"]);
 
-      const structured = page.locator(
-        '[data-structured-bound="agent.code.issue-to-pr"]',
-      );
+      const structured = page.locator('[data-structured-bound="agent.code.issue-to-pr"]');
       await expect(structured.getByLabel("Answers")).toHaveValue("4");
       await structured.getByLabel("Answers").fill("9");
       await structured.getByRole("button", { name: "Save" }).click();
-      await expect(structured).toContainText(
-        "Enter a whole number of answers from 1 to 5.",
-      );
+      await expect(structured).toContainText("Enter a whole number of answers from 1 to 5.");
       expect(writes).toEqual(["PUT agent.code.issue-to-pr 5"]);
 
       const overflow = await page.evaluate(
