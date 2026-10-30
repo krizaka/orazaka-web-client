@@ -97,9 +97,7 @@ export const authOptions: NextAuthOptions = {
           const data = await res.json();
           if (data && data.token) {
             const role =
-              data.authorities && data.authorities.includes("ROLE_ADMIN")
-                ? "admin"
-                : "user";
+              data.authorities?.includes("ROLE_ADMIN") ? "admin" : "user";
             return {
               id: data.token,
               name: data.username,

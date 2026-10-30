@@ -20,7 +20,7 @@ export function indexable(env: Record<string, string | undefined> = process.env)
 const bare = (host: string | null | undefined) => (host ?? "").trim().toLowerCase().replace(/:\d+$/, "");
 export const isDevHost = (host: string | null | undefined, env: Record<string, string | undefined> = process.env): boolean => !!env.APP_DEV_HOST?.trim() && bare(host) === bare(env.APP_DEV_HOST);
 /** A dev.* address is never indexed — by its name, not by configuration: the one the app redirects (APP_DEV_HOST) and any other. */
-export const isDevAddress = (host: string | null | undefined, env: Record<string, string | undefined> = process.env): boolean => /^dev\./.test(bare(host)) || isDevHost(host, env);
+export const isDevAddress = (host: string | null | undefined, env: Record<string, string | undefined> = process.env): boolean => bare(host).startsWith("dev.") || isDevHost(host, env);
 function hostOf(url: string | undefined): string {
   try {
     return url ? new URL(url).host : "";

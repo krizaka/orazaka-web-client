@@ -127,76 +127,113 @@ export interface JobFactsOptions {
   modelNames?: ReadonlyMap<string, string>;
 }
 
-export function jobFacts(job: Pick<Job, "payload" | "result" | "status" | "createdAt" | "updatedAt">, { now, modelNames }: JobFactsOptions = {}): JobFact[] {
-  const m = merged(job);
-  const get = (id: string) => {
-    for (const [k, v] of m) if (KEY_TO_FACT[k] === id) return v.value;
-    return undefined;
-  };
-  const facts: JobFact[] = [];
-  const push = (id: FactId, value: string | null) => {
-    if (value !== null && value !== "") facts.push({ id, section: FACT_SECTION[id], value });
-  };
+type Merged = ReturnType<typeof merged>;
+type Pair = [FactId, string | null];
 
+const asText = (value: Scalar | undefined): string | null => (value === undefined ? null : String(value));
+const asNumberText = (n: number | null): string | null => (n === null ? null : String(n));
+
+/** The facts about the media: format, resolution, aspect, frames, fps, clip length, images, voice, keyframes. */
+function mediaFacts(get: (id: string) => Scalar | undefined): Pair[] {
   const format = get("format");
-  push("format", typeof format === "string" ? format.toUpperCase() : null);
   const w = num(get("width"));
   const h = num(get("height"));
-  push("resolution", w !== null && h !== null ? `${w}×${h}` : null);
-  const aspect = get("aspect");
-  push("aspect", aspect === undefined ? null : String(aspect));
   const frames = num(get("frames"));
   const fps = num(get("fps"));
-  push("frames", frames === null ? null : String(frames));
-  push("fps", fps === null ? null : `${fps} fps`);
-  push("clipLength", frames !== null && fps ? `${(frames / fps).toFixed(1)} s` : null);
-  const images = num(get("images"));
-  push("images", images === null ? null : String(images));
-  const voice = get("voice");
-  push("voice", voice === undefined ? null : String(voice));
-  const keyframes = num(get("keyframes"));
-  push("keyframes", keyframes === null ? null : String(keyframes));
+  return [
+    ["format", typeof format === "string" ? format.toUpperCase() : null],
+    ["resolution", w !== null && h !== null ? `${w}×${h}` : null],
+    ["aspect", asText(get("aspect"))],
+    ["frames", asNumberText(frames)],
+    ["fps", fps === null ? null : `${fps} fps`],
+    ["clipLength", frames !== null && fps ? `${(frames / fps).toFixed(1)} s` : null],
+    ["images", asNumberText(num(get("images")))],
+    ["voice", asText(get("voice"))],
+    ["keyframes", asNumberText(num(get("keyframes")))],
+  ];
+}
 
-  const model = modelOf(job, modelNames);
-  push("model", model);
+/** The facts about who made it: model, provider, seed, steps, credits. */
+function makerFacts(get: (id: string) => Scalar | undefined, model: string | null): Pair[] {
   const provider = get("provider");
-  push("provider", provider === undefined ? null : providerName(String(provider)));
-  const seed = get("seed");
-  push("seed", seed === undefined ? null : String(seed));
-  const steps = num(get("steps"));
-  push("steps", steps === null ? null : String(steps));
-  const credits = num(get("credits"));
-  push("credits", credits === null ? null : String(credits));
+  return [
+    ["model", model],
+    ["provider", provider === undefined ? null : providerName(String(provider))],
+    ["seed", asText(get("seed"))],
+    ["steps", asNumberText(num(get("steps")))],
+    ["credits", asNumberText(num(get("credits")))],
+  ];
+}
 
-  const gpu = get("gpu");
-  push("gpu", gpu === undefined ? null : String(gpu));
+/** The facts about the machine: gpu, vram, peak ram. */
+function machineFacts(get: (id: string) => Scalar | undefined): Pair[] {
   const vram = num(get("vram"));
-  push("vram", vram === null ? null : memory(vram));
   const peak = num(get("peakRam"));
-  push("peakRam", peak === null ? null : memory(peak));
+  return [
+    ["gpu", asText(get("gpu"))],
+    ["vram", vram === null ? null : memory(vram)],
+    ["peakRam", peak === null ? null : memory(peak)],
+  ];
+}
 
+/** The facts about time: queued, inference, gpu time, api call, total. */
+function timingFacts(
+  job: Pick<Job, "status" | "createdAt" | "updatedAt">,
+  m: Merged,
+  get: (id: string) => Scalar | undefined,
+  now: number | undefined,
+): Pair[] {
   const inference = num(get("inference"));
   const total = wallTimeMs(job, now);
   const finished = job.status === JOB_STATUS.COMPLETED || job.status === JOB_STATUS.FAILED;
   const waiting = finished && inference !== null && total !== null ? total - inference * 1000 : null;
-  push("queued", waiting !== null && waiting >= 1000 ? formatDuration(waiting) : null);
-  push("inference", inference === null ? null : seconds(inference));
   const gpuTime = num(get("gpuTime"));
-  push("gpuTime", gpuTime === null ? null : seconds(gpuTime));
-  const api = get("apiCall");
-  const apiMs = num(api);
+  const apiMs = num(get("apiCall"));
   // `duration` is milliseconds in a result (`durationMs`) and seconds when the key says so.
   const apiKey = [...m].find(([k]) => KEY_TO_FACT[k] === "apiCall")?.[0] ?? "";
-  push("apiCall", apiMs === null ? null : formatDuration(apiKey.endsWith("sec") ? apiMs * 1000 : apiMs));
-  push("total", total === null ? null : formatDuration(total));
+  return [
+    ["queued", waiting !== null && waiting >= 1000 ? formatDuration(waiting) : null],
+    ["inference", inference === null ? null : seconds(inference)],
+    ["gpuTime", gpuTime === null ? null : seconds(gpuTime)],
+    ["apiCall", apiMs === null ? null : formatDuration(apiKey.endsWith("sec") ? apiMs * 1000 : apiMs)],
+    ["total", total === null ? null : formatDuration(total)],
+  ];
+}
 
-  // What the dictionary has no word for: shown with its key in words, never raw.
+/** What the dictionary has no word for: shown with its key in words, never raw. */
+function otherFacts(m: Merged): JobFact[] {
+  const facts: JobFact[] = [];
   for (const [k, { key, value }] of m) {
     if (KEY_TO_FACT[k] || NOT_FACTS.has(k)) continue;
     if (typeof value === "string" && value.length > 80) continue;
     facts.push({ id: key, section: "other", label: humanise(key), value: String(value) });
   }
   return facts;
+}
+
+export function jobFacts(job: Pick<Job, "payload" | "result" | "status" | "createdAt" | "updatedAt">, { now, modelNames }: JobFactsOptions = {}): JobFact[] {
+  const m = merged(job);
+  const get = (id: string) => {
+    for (const [k, v] of m) {
+      if (KEY_TO_FACT[k] === id) {
+        return v.value;
+      }
+    }
+    return undefined;
+  };
+  const pairs: Pair[] = [
+    ...mediaFacts(get),
+    ...makerFacts(get, modelOf(job, modelNames)),
+    ...machineFacts(get),
+    ...timingFacts(job, m, get, now),
+  ];
+  const facts: JobFact[] = [];
+  for (const [id, value] of pairs) {
+    if (value !== null && value !== "") {
+      facts.push({ id, section: FACT_SECTION[id], value });
+    }
+  }
+  return [...facts, ...otherFacts(m)];
 }
 
 const PROVIDERS: Record<string, string> = {

@@ -43,7 +43,7 @@ export class RuntimeConfigRefusal extends Error {
 const BASE = "/api/v1/studios/admin/runtime-config";
 
 async function call(path: string, init?: RequestInit): Promise<unknown> {
-  const response = await fetch(path, { ...init, headers: { "Content-Type": "application/json", ...(init?.headers ?? {}) } });
+  const response = await fetch(path, { ...init, headers: { "Content-Type": "application/json", ...init?.headers } });
   if (!response.ok) {
     const detail = (await response.json().catch(() => null)) as { message?: unknown } | null;
     throw new RuntimeConfigRefusal(response.status, typeof detail?.message === "string" ? detail.message : `${response.status}`);
