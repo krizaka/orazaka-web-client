@@ -1,8 +1,9 @@
 "use client";
 
 import * as React from "react";
-import { formatDistanceToNow } from "date-fns";
 import { enUS, fr } from "date-fns/locale";
+
+import { timeAgoCell } from "@/core/components/timeAgo";
 import { differenceInSeconds } from "date-fns";
 import { Badge } from "@krizaka/ui/badge";
 import { DataTable, type DataTableColumn } from "@krizaka/ui/data-table";
@@ -60,11 +61,7 @@ export function RunHistory({ automationId }: Readonly<{ automationId: string }>)
         header: r.columns.started,
         type: "date",
         value: (run) => new Date(run.startedAt),
-        cell: (run) => (
-          <time dateTime={run.startedAt}>
-            {formatDistanceToNow(new Date(run.startedAt), { addSuffix: true, locale: dateLocale })}
-          </time>
-        ),
+        cell: (run) => timeAgoCell(run.startedAt, dateLocale),
       },
       {
         id: "duration",

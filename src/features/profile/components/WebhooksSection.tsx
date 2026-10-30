@@ -1,8 +1,9 @@
 "use client";
 
 import * as React from "react";
-import { formatDistanceToNow } from "date-fns";
 import { enUS, fr } from "date-fns/locale";
+
+import { timeAgoCell } from "@/core/components/timeAgo";
 import { EyeIcon, TrashIcon } from "@krizaka/icons";
 import { Icon } from "@krizaka/orazaka-design-system";
 import { Badge } from "@krizaka/ui/badge";
@@ -18,6 +19,8 @@ import { CreateWebhookForm, DeliveryLog, RevealSecret } from "./WebhooksParts";
 interface WebhooksSectionProps {
   fetchHeaders: () => Promise<Record<string, string>>;
 }
+
+const urlCell = (e: WebhookEndpoint) => <code className="break-all font-mono text-xs">{e.url}</code>;
 
 /**
  * Webhooks settings: the endpoints that are told when a run is over, on the kit's DataTable (cards on a phone), with a
@@ -39,7 +42,7 @@ export function WebhooksSection({ fetchHeaders }: Readonly<WebhooksSectionProps>
         filter: "text",
         sortable: true,
         value: (e) => e.url,
-        cell: (e) => <code className="break-all font-mono text-xs">{e.url}</code>,
+        cell: urlCell,
       },
       {
         id: "events",
@@ -63,11 +66,7 @@ export function WebhooksSection({ fetchHeaders }: Readonly<WebhooksSectionProps>
         type: "date",
         sortable: true,
         value: (e) => new Date(e.createdAt),
-        cell: (e) => (
-          <time dateTime={e.createdAt}>
-            {formatDistanceToNow(new Date(e.createdAt), { addSuffix: true, locale: dateLocale })}
-          </time>
-        ),
+        cell: (e) => timeAgoCell(e.createdAt, dateLocale),
       },
       {
         id: "actions",

@@ -91,15 +91,15 @@ export function prepareBody(body: string, from: string | null, sources: Readonly
     if (fence || /^ {0,3}(```|~~~)/.test(line)) return line;
     return line
       .replace(
-        /(!?)\[([^\]]*)\]\(([^)\s]+)((?:\s+"[^"]*")?)\)/g,
-        (m, bang: string, text: string, href: string, title: string) => {
+        /(!?)\[([^\]]{0,300})\]\(([^)\s]{1,500})(\s+"[^"]{0,300}")?\)/g,
+        (m, bang: string, text: string, href: string, title: string | undefined) => {
           if (bang) {
             if (/^[a-z][a-z0-9+.-]*:/i.test(href)) return m;
             const target = path.posix.normalize(path.posix.join(path.posix.dirname(origin), href));
             return `![${text}](https://raw.githubusercontent.com/krizaka/orazaka/main/${target})`;
           }
           const r = resolveLink(href, origin, sources);
-          return r ? `[${text}](${r.href}${title})` : text;
+          return r ? `[${text}](${r.href}${title ?? ""})` : text;
         },
       )
       .replace(

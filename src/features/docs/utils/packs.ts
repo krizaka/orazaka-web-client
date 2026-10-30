@@ -82,11 +82,12 @@ export function parsePackIndex(source: string): PackIndexItem[] {
 }
 
 /** The slug the markdown renderer gives a pack's `###` heading — where the index cards lead. */
-export const packAnchor = (title: string): string =>
-  title
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-+|-+$/g, "");
+export const packAnchor = (title: string): string => {
+  const slug = title.toLowerCase().replace(/[^a-z0-9]+/g, "-");
+  const start = slug.startsWith("-") ? 1 : 0;
+  const end = slug.length > start && slug.endsWith("-") ? slug.length - 1 : slug.length;
+  return slug.slice(start, end);
+};
 
 /** Filters the index by tier and category (null = all). */
 export function filterPacks(

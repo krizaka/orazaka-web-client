@@ -56,7 +56,7 @@ export const ChatInputBar: React.FC<ChatInputBarProps> = ({
 
   // The status line says only what is true: local only when the last routing was local, plus the estimate.
   const status = routingStatus(routing);
-  const statusParts: React.ReactNode[] = [];
+  const statusParts: React.ReactElement[] = [];
   if (isAgentBusy) {
     statusParts.push(<span key="busy">{t.chat.composerBusy}</span>);
   } else {
@@ -178,7 +178,7 @@ export const ChatInputBar: React.FC<ChatInputBarProps> = ({
                 ? statusParts.flatMap((p, i) =>
                     i
                       ? [
-                          <span key={`sep-${i}`} aria-hidden>
+                          <span key={`sep-${p.key}`} aria-hidden>
                             ·
                           </span>,
                           p,

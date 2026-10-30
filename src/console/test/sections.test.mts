@@ -14,18 +14,10 @@ test("five places at most: what is happening, what is running, who and what they
 
 test("every screen of the console is reachable exactly once", () => {
   const routes = consoleRoutes();
-  assert.deepEqual([...routes].sort(), [
-    "/",
-    "/audit",
-    "/billing",
-    "/engine",
-    "/law",
-    "/models",
-    "/operations",
-    "/studios",
-    "/tasks",
-    "/users",
-  ]);
+  assert.deepEqual(
+    [...routes].sort((a, b) => a.localeCompare(b)),
+    ["/", "/audit", "/billing", "/engine", "/law", "/models", "/operations", "/studios", "/tasks", "/users"],
+  );
   assert.equal(new Set(routes).size, routes.length);
 });
 

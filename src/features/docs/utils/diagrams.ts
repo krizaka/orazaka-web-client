@@ -168,17 +168,26 @@ export interface StateBlock {
   transitions: { from: string; to: string; label: string }[];
 }
 
-export function parseStates(source: string): StateBlock {
+/** The `state` and `a -> b` lines of a states block. */
+function readStateLines(source: string): Pick<StateBlock, "transitions"> & { labels: Map<string, string> } {
   const labels = new Map<string, string>();
   const transitions: StateBlock["transitions"] = [];
   for (const { text, n } of lines(source)) {
-    let m: RegExpExecArray | null;
     if (/^enum\s*:/.test(text)) continue;
-    if ((m = /^state\s+([\w-]+)\s*:\s*(.+)$/.exec(text))) labels.set(m[1], m[2].trim());
-    else if ((m = /^([\w-]+)\s*->\s*([\w-]+)\s*:\s*(.+)$/.exec(text)))
-      transitions.push({ from: m[1], to: m[2], label: m[3].trim() });
-    else throw new DiagramError("states", n, `cannot read "${text}"`);
+    const state = /^state\s+([\w-]+)\s*:(.+)$/.exec(text);
+    if (state) {
+      labels.set(state[1], state[2].trim());
+      continue;
+    }
+    const move = /^([\w-]+)\s*->\s*([\w-]+)\s*:(.+)$/.exec(text);
+    if (!move) throw new DiagramError("states", n, `cannot read "${text}"`);
+    transitions.push({ from: move[1], to: move[2], label: move[3].trim() });
   }
+  return { labels, transitions };
+}
+
+export function parseStates(source: string): StateBlock {
+  const { labels, transitions } = readStateLines(source);
   if (!transitions.some((t) => t.from === "start")) throw new DiagramError("states", null, "no transition from start");
   const order: string[] = [];
   const queue = ["start"];

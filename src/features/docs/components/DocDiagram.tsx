@@ -37,8 +37,10 @@ export function diagramData(lang: DiagramLang, source: string, model: DocsModel)
       if (!focus) return { kind: "architecture", focus, runtime: false, ...none };
       const { uses, usedBy } = dependenciesOf(model, focus.id);
       const { calls, calledBy } = flowsOf(model, focus.id);
-      const tag = (f: DocsModel["flows"][number], key: "to" | "from") =>
-        `${f[key]}${f.via ? ` (${f.kind}: ${f.via})` : ` (${f.kind})`}`;
+      const tag = (f: DocsModel["flows"][number], key: "to" | "from") => {
+        const how = f.via ? `${f.kind}: ${f.via}` : f.kind;
+        return `${f[key]} (${how})`;
+      };
       return {
         kind: "architecture",
         focus,

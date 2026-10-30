@@ -6,9 +6,14 @@
  */
 import data from "./media.generated.json";
 
-export const MEDIA_CDN_URL = (process.env.NEXT_PUBLIC_MEDIA_CDN_URL || "https://krizaka-assets.b-cdn.net").replace(
-  /\/+$/,
-  "",
+const withoutTrailingSlashes = (url: string): string => {
+  let end = url.length;
+  while (end > 0 && url[end - 1] === "/") end -= 1;
+  return url.slice(0, end);
+};
+
+export const MEDIA_CDN_URL = withoutTrailingSlashes(
+  process.env.NEXT_PUBLIC_MEDIA_CDN_URL || "https://krizaka-assets.b-cdn.net",
 );
 
 const FILES: Record<string, string> = data.files;

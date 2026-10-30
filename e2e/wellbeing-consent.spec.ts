@@ -201,10 +201,12 @@ test.describe("Wellbeing Studio: consent before the first run (mocked)", () => {
 });
 
 test.describe("Wellbeing Studio on dev: Guided journaling after consenting (live)", () => {
-  test.skip(
-    !live || !process.env.E2E_USER || !process.env.E2E_PASSWORD,
-    "live: needs E2E_BASE_URL, E2E_USER, E2E_PASSWORD",
-  );
+  test.beforeEach((_fixtures, testInfo) => {
+    testInfo.skip(
+      !live || !process.env.E2E_USER || !process.env.E2E_PASSWORD,
+      "live: needs E2E_BASE_URL, E2E_USER, E2E_PASSWORD",
+    );
+  });
 
   test("consent, then a real run that succeeds", async ({ page }) => {
     test.setTimeout(240_000);

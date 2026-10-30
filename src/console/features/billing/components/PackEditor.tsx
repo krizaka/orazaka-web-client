@@ -1,9 +1,10 @@
 "use client";
 
-import { Button, Input } from "@krizaka/orazaka-design-system";
+import { Button } from "@krizaka/orazaka-design-system";
 import { Card } from "@krizaka/ui/card";
-import { type Entitlement, type Pack } from "@krizaka/orazaka-shared";
+import { type Pack } from "@krizaka/orazaka-shared";
 import { BillingField } from "./BillingField";
+import { EntitlementRows } from "./EntitlementRows";
 import { BILLING_CURRENCY } from "@/console/features/billing/utils/money";
 
 /**
@@ -30,12 +31,6 @@ export function PackEditor({
   onSave: () => void;
   onCancel: () => void;
 }>) {
-  const setEntitlement = (index: number, next: Entitlement) => {
-    const entitlements = [...pack.entitlements];
-    entitlements[index] = next;
-    onChange({ ...pack, entitlements });
-  };
-
   return (
     <Card.Root className="p-5">
       <div className="space-y-4">
@@ -71,39 +66,10 @@ export function PackEditor({
             l’offre de l’acheteur — ils n’en retirent jamais. Un Studio ajouté au pack sans son droit ici fait échouer
             le build (PACK-001) : l’acheteur paierait et resterait bloqué.
           </p>
-          {pack.entitlements.map((entitlement, index) => (
-            <div key={index} className="grid gap-2 sm:grid-cols-3">
-              <Input
-                value={entitlement.key}
-                onChange={(e) => setEntitlement(index, { ...entitlement, key: e.target.value })}
-              />
-              <Input
-                value={entitlement.valueType}
-                onChange={(e) =>
-                  setEntitlement(index, {
-                    ...entitlement,
-                    valueType: e.target.value as Entitlement["valueType"],
-                  })
-                }
-              />
-              <Input
-                value={entitlement.value}
-                onChange={(e) => setEntitlement(index, { ...entitlement, value: e.target.value })}
-              />
-            </div>
-          ))}
-          <Button
-            size="sm"
-            variant="ghost"
-            onClick={() =>
-              onChange({
-                ...pack,
-                entitlements: [...pack.entitlements, { key: "", valueType: "boolean", value: "true" }],
-              })
-            }
-          >
-            Ajouter un droit
-          </Button>
+          <EntitlementRows
+            entitlements={pack.entitlements}
+            onChange={(entitlements) => onChange({ ...pack, entitlements })}
+          />
         </div>
 
         <div className="flex justify-end gap-2">

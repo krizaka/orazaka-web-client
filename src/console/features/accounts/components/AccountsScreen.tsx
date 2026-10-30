@@ -77,6 +77,16 @@ function AccountActions({ user, accounts }: Readonly<{ user: AdminUser; accounts
   );
 }
 
+const emailCell = (u: AdminUser) => <span className="font-semibold text-fg">{u.email}</span>;
+
+const roleCell = (u: AdminUser) => (
+  <Badge tone={u.admin ? "accent" : "neutral"}>{u.admin ? a.administrator : a.member}</Badge>
+);
+
+const stateCell = (u: AdminUser) => (
+  <Badge tone={u.enabled ? "success" : "danger"}>{u.enabled ? a.active : a.suspended}</Badge>
+);
+
 /** The accounts of the platform with a search box; each row opens its actions. */
 export function AccountsScreen() {
   const accounts = useAccounts();
@@ -87,20 +97,20 @@ export function AccountsScreen() {
         header: a.email,
         sortable: true,
         card: "title",
-        cell: (u) => <span className="font-semibold text-fg">{u.email}</span>,
+        cell: emailCell,
       },
       { id: "username", header: a.user, sortable: true },
       {
         id: "admin",
         header: a.role,
         value: (u) => (u.admin ? "admin" : "member"),
-        cell: (u) => <Badge tone={u.admin ? "accent" : "neutral"}>{u.admin ? a.administrator : a.member}</Badge>,
+        cell: roleCell,
       },
       {
         id: "enabled",
         header: a.state,
         value: (u) => (u.enabled ? "active" : "suspended"),
-        cell: (u) => <Badge tone={u.enabled ? "success" : "danger"}>{u.enabled ? a.active : a.suspended}</Badge>,
+        cell: stateCell,
       },
       { id: "provider", header: a.provider, value: (u) => u.provider ?? "local" },
       {

@@ -134,12 +134,11 @@ export function AssetInput({
   };
 
   return (
-    <div
+    <fieldset
       id={id}
-      role="group"
       aria-label={label}
       aria-describedby={describedBy}
-      className="flex flex-col gap-2"
+      className="m-0 flex min-w-0 flex-col gap-2 border-0 p-0"
       data-asset-kind={kind}
       data-asset-id={value || undefined}
     >
@@ -169,6 +168,6 @@ export function AssetInput({
           {refusal}
         </p>
       )}
-    </div>
+    </fieldset>
   );
 }

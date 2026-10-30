@@ -1,7 +1,6 @@
 "use client";
 
 import * as React from "react";
-import { formatDistanceToNow } from "date-fns";
 import { enUS, fr } from "date-fns/locale";
 import { CheckIcon, CopyIcon, DownloadIcon, EyeIcon, TrashIcon } from "@krizaka/icons";
 import { Badge } from "@krizaka/ui/badge";
@@ -20,6 +19,7 @@ import {
   wallTimeMs,
   whereRan,
 } from "@/features/jobs/utils/jobFacts";
+import { timeAgoCell } from "@/core/components/timeAgo";
 import type { Job } from "@/core/types/jobs.types";
 import { JobDetail } from "./JobDetail";
 import { MODEL_NAMES } from "./modelNames";
@@ -27,6 +27,10 @@ import { JobThumb } from "./JobThumb";
 import { PAGE_SIZES, TONE, type JobsTableProps } from "./jobsTableShape";
 
 export type { JobsTableProps } from "./jobsTableShape";
+
+const previewCell = (j: Job) => <JobThumb job={j} />;
+
+const modelCell = (name: string) => <span className="font-medium">{name}</span>;
 
 /**
  * The tasks, one line each, on the kit's responsive DataTable (cards on a phone): a preview, the task and its Studio, the
@@ -61,7 +65,7 @@ export function JobsTable({
         priority: 1,
         hideable: false,
         width: 84,
-        cell: (j) => <JobThumb job={j} />,
+        cell: previewCell,
       },
       {
         id: "task",
@@ -83,7 +87,7 @@ export function JobsTable({
         type: "text",
         nowrap: true,
         value: model,
-        cell: (j) => <span className="font-medium">{model(j)}</span>,
+        cell: (j) => modelCell(model(j)),
       },
       {
         id: "where",
@@ -136,11 +140,7 @@ export function JobsTable({
         type: "date",
         sortable: true,
         value: (j) => new Date(j.createdAt),
-        cell: (j) => (
-          <time dateTime={j.createdAt} title={j.createdAt}>
-            {formatDistanceToNow(new Date(j.createdAt), { addSuffix: true, locale: dateLocale })}
-          </time>
-        ),
+        cell: (j) => timeAgoCell(j.createdAt, dateLocale),
       },
       {
         id: "actions",

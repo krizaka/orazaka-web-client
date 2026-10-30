@@ -14,6 +14,8 @@ import { providerSummaries, type ProviderSummary } from "@/console/features/cata
 
 const m = consoleCopy.models;
 
+const routeCell = (c: Capability) => <code className="text-xs">{c.routingKey}</code>;
+
 const modelColumns: DataTableColumn<ModelEntry>[] = [
   {
     id: "modelName",
@@ -63,7 +65,7 @@ export function CatalogueScreen() {
         cell: (c) => c.featureKey.replace(/^orazaka\./, ""),
       },
       { id: "handlerKey", header: m.handler, cell: (c) => c.handlerKey },
-      { id: "routingKey", header: m.route, cell: (c) => <code className="text-xs">{c.routingKey}</code> },
+      { id: "routingKey", header: m.route, cell: routeCell },
       { id: "billableCapability", header: m.billable, filter: "facet", value: (c) => c.billableCapability ?? "—" },
       {
         id: "enabled",
