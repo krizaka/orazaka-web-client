@@ -5,6 +5,7 @@ import { useQuery, useQueryClient } from "@krizaka/query";
 import {
   FeatureToolsApi,
   FeatureToolsRefusal,
+  type CachePolicies,
   type FeatureRoute,
   type StructuredBounds,
   type ToolBounds,
@@ -12,12 +13,15 @@ import {
 
 const BOUNDS_KEY = ["engine", "feature-tool-bounds"] as const;
 const STRUCTURED_KEY = ["engine", "feature-structured-bounds"] as const;
+const CACHE_KEY = ["engine", "feature-cache-policies"] as const;
 const ROUTES_KEY = ["engine", "feature-routes"] as const;
 
 export interface FeatureTools {
   bounds: ToolBounds | undefined;
   /** The structured-output bounds; `undefined` while unread or when they could not be read. */
   structured: StructuredBounds | undefined;
+  /** The prompt-cache policies; `undefined` while unread or when they could not be read. */
+  cache: CachePolicies | undefined;
   routes: FeatureRoute[];
   isLoading: boolean;
   hasError: boolean;
@@ -30,6 +34,9 @@ export interface FeatureTools {
   /** Same two writes for the structured-output bound. */
   saveStructured: (featureKey: string, attempts: number) => Promise<string | null>;
   removeStructured: (featureKey: string) => Promise<string | null>;
+  /** Same two writes for the prompt-cache policy. */
+  saveCache: (featureKey: string, strategy: string) => Promise<string | null>;
+  removeCache: (featureKey: string) => Promise<string | null>;
 }
 
 /** The refusal text of an admin write, `""` when the failure carried none (the screen then says its own words). */
@@ -44,6 +51,13 @@ export function useFeatureTools(): FeatureTools {
   const structured = useQuery({
     queryKey: STRUCTURED_KEY,
     queryFn: () => FeatureToolsApi.structuredBounds(),
+    retry: false,
+    gcTime: 0,
+  });
+
+  const cache = useQuery({
+    queryKey: CACHE_KEY,
+    queryFn: () => FeatureToolsApi.cachePolicies(),
     retry: false,
     gcTime: 0,
   });
@@ -64,6 +78,7 @@ export function useFeatureTools(): FeatureTools {
   return {
     bounds: bounds.data,
     structured: structured.data,
+    cache: cache.data,
     routes: routes.data ?? [],
     isLoading: bounds.isPending,
     hasError: bounds.isError,
@@ -71,6 +86,7 @@ export function useFeatureTools(): FeatureTools {
     reload: () => {
       void bounds.refetch();
       void structured.refetch();
+      void cache.refetch();
       void routes.refetch();
     },
     save: (featureKey, rounds) => write(BOUNDS_KEY, () => FeatureToolsApi.save(featureKey, rounds)),
@@ -78,5 +94,7 @@ export function useFeatureTools(): FeatureTools {
     saveStructured: (featureKey, attempts) =>
       write(STRUCTURED_KEY, () => FeatureToolsApi.saveStructured(featureKey, attempts)),
     removeStructured: (featureKey) => write(STRUCTURED_KEY, () => FeatureToolsApi.removeStructured(featureKey)),
+    saveCache: (featureKey, strategy) => write(CACHE_KEY, () => FeatureToolsApi.saveCachePolicy(featureKey, strategy)),
+    removeCache: (featureKey) => write(CACHE_KEY, () => FeatureToolsApi.removeCachePolicy(featureKey)),
   };
 }
