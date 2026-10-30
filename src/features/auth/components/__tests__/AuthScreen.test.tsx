@@ -58,6 +58,8 @@ describe("AuthScreen", () => {
     expect(screen.getByTestId("development-status")).toHaveTextContent(t.landing.status.development);
     expect(t.landing.status.development).toMatch(/^In development/);
     expect(translations.fr.landing.status.development).toMatch(/^En développement/);
-    expect(container.querySelector('[data-bird="duck"], [data-testid="mascot-duck"], svg[aria-label*="duck" i]')).not.toBeNull();
+    expect(
+      container.querySelector('[data-bird="duck"], [data-testid="mascot-duck"], svg[aria-label*="duck" i]'),
+    ).not.toBeNull();
   });
 });
