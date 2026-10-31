@@ -79,8 +79,11 @@ export interface LandingDictionary {
     heroPrimary: string;
     signInBanner: string;
   };
+  stage: {
+    title: string;
+    message: string;
+  };
   footer: {
-    devNotice: string;
     privacy: string;
     terms: string;
     contact: string;
