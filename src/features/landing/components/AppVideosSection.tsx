@@ -14,7 +14,9 @@ export function MacVideo() {
   const { t } = useTranslation();
   const v = t.desktop.videos;
   const video = macVideo();
-  if (!video) return null;
+  if (!video) {
+    return null;
+  }
   return (
     <div data-testid="desktop-mac-video" data-video={videoId(video)}>
       <AppVideoPlayer
@@ -35,7 +37,9 @@ export function AppVideosSection() {
   const { t, locale } = useTranslation();
   const v = t.desktop.videos;
   const videos = APP_VIDEOS.filter((video) => video.platform !== "mac");
-  if (videos.length === 0) return null;
+  if (videos.length === 0) {
+    return null;
+  }
   return (
     <article data-testid="desktop-videos" className="mx-auto max-w-6xl space-y-8 px-4 py-16 sm:px-5 lg:py-20">
       <SectionHeading eyebrow={t.desktop.hero.eyebrow} title={v.title} lead={v.lead} />

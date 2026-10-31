@@ -13,7 +13,9 @@ export async function GET(_request: Request, { params }: { params: Promise<{ id:
   const { id, lang } = await params;
   const video = captioned().find((v) => videoId(v) === id);
   const cues = isLang(lang) ? desktop[lang].videos.items[id]?.cues : undefined;
-  if (!video || !cues) return new Response("Not found", { status: 404 });
+  if (!video || !cues) {
+    return new Response("Not found", { status: 404 });
+  }
   return new Response(cuesVtt(cues, video.seconds), {
     headers: { "Content-Type": "text/vtt; charset=utf-8", "Cache-Control": "public, max-age=3600" },
   });
