@@ -101,6 +101,6 @@ describe("the one action of the bar: using the app", () => {
     renderLanding("en", <LandingPage />, CLOSED);
     expect(
       within(screen.getByRole("contentinfo")).getByRole("link", { name: translations.en.landing.footer.contact }),
-    ).toHaveAttribute("href", "https://www.krizaka.com/contact");
+    ).toHaveAttribute("href", "https://www.krizaka.com/en/contact");
   });
 });

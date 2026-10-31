@@ -10,7 +10,7 @@ import { inDevelopment } from "@/core/config/product-status";
 import { priceFor, type PublicPrice } from "@/features/landing/utils/public-prices";
 
 /** Where the Enterprise offer is reached: Krizaka's contact form, the Orazaka topic preselected (the offer has no page of its own yet). */
-export const ENTERPRISE_URL = "https://www.krizaka.com/contact?topic=orazaka";
+export const ENTERPRISE_URL = "https://www.krizaka.com/en/contact?topic=orazaka";
 const REPO_URL = "https://github.com/krizaka/orazaka";
 
 /**

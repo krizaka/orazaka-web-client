@@ -59,7 +59,7 @@ describe.each<[string, React.ReactElement]>([
     ).toHaveAttribute("href", "/open-source");
     expect(screen.getByRole("link", { name: translations[locale].landing.footer.contact })).toHaveAttribute(
       "href",
-      "https://www.krizaka.com/contact",
+      "https://www.krizaka.com/en/contact",
     );
   });
 });
