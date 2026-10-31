@@ -24,7 +24,7 @@ export default async function LoginPage() {
             : {
                 banner: closedCopy[locale].signInBanner,
                 link: closedCopy[locale].home,
-                href: "https://dev.orazaka.com",
+                href: "https://www.orazaka.com",
                 locale,
               }
         }
