@@ -74,7 +74,12 @@ const stamp = (s: number) => {
 
 /** WebVTT for a clip: the cues share its length evenly. */
 export function captionsVtt(id: ClipId, cues: readonly string[]): string {
-  const step = CLIPS[id].seconds / cues.length;
+  return cuesVtt(cues, CLIPS[id].seconds);
+}
+
+/** WebVTT for any recording of `seconds`: the cues share its length evenly (the app videos of the Download page use it too). */
+export function cuesVtt(cues: readonly string[], seconds: number): string {
+  const step = seconds / cues.length;
   const body = cues.map((text, i) => `${stamp(i * step)} --> ${stamp((i + 1) * step)}\n${text}`);
   return `WEBVTT\n\n${body.join("\n\n")}\n`;
 }

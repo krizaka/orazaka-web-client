@@ -31,3 +31,14 @@ export const staleVideos = (now: Date, videos: readonly AppVideo[] = APP_VIDEOS)
   const cutoff = subDays(now, MAX_AGE_DAYS);
   return videos.filter((v) => new Date(v.capturedAt) < cutoff);
 };
+
+/** The Mac app's film (platform `mac`): shown beside the Mac download button, not in the grid. */
+export const macVideo = (videos: readonly AppVideo[] = APP_VIDEOS): AppVideo | undefined =>
+  videos.find((v) => v.platform === "mac");
+
+/** The WebVTT tracks of a video with words for them (`desktop.videos.items.<id>.cues`), English and French. */
+export const captionTracks = (v: Pick<AppVideo, "platform" | "flow">) =>
+  [
+    { lang: "en", label: "English" },
+    { lang: "fr", label: "Français" },
+  ].map((t) => ({ ...t, src: `/desktop/videos/captions/${videoId(v)}/${t.lang}` }));

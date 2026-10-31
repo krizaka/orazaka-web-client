@@ -25,3 +25,13 @@ describe("the download videos workflow", () => {
     assert.doesNotMatch(code, /qa_user|qa\+user/);
   });
 });
+
+describe("the Mac film of the Download page (krizaka-internal#230)", () => {
+  it("calls the Orazaka desktop film as a reusable workflow, pinned, and hands its artifact to app-videos", () => {
+    assert.match(code, /uses: krizaka\/orazaka\/\.github\/workflows\/desktop-film\.yml@[0-9a-f]{40}/);
+    assert.match(code, /artifacts: \|\n\s+showcase-web\n\s+showcase-mac/);
+  });
+  it("lets the web videos through when the Mac film fails", () => {
+    assert.match(code, /!cancelled\(\) && .*needs\.showcase-web\.result == 'success'/);
+  });
+});
