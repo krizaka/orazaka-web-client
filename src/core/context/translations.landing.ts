@@ -101,8 +101,11 @@ export const landing: Record<Locale, LandingDictionary> = {
       heroPrimary: "Read the documentation",
       signInBanner: "Sign-in opens when Orazaka's dev services run.",
     },
+    stage: {
+      title: "Development version",
+      message: "Data can be reset at any time. This is not a commercial offer yet.",
+    },
     footer: {
-      devNotice: "Development environment — access by invitation",
       privacy: "Privacy",
       terms: "Terms",
       contact: "Contact",
@@ -209,8 +212,11 @@ export const landing: Record<Locale, LandingDictionary> = {
       heroPrimary: "Lire la documentation",
       signInBanner: "La connexion s'ouvre quand les services de développement d'Orazaka tournent.",
     },
+    stage: {
+      title: "Version de développement",
+      message: "Les données peuvent être réinitialisées à tout moment. Ce n'est pas encore une offre commerciale.",
+    },
     footer: {
-      devNotice: "Environnement de développement — accès sur invitation",
       privacy: "Confidentialité",
       terms: "Conditions",
       contact: "Contact",
