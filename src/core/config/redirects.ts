@@ -77,7 +77,7 @@ const RENAMED: readonly { source: string; destination: string }[] = [
 
 export const PUBLIC_REDIRECTS: readonly Redirect[] = [
   // The contact form lives on krizaka.com.
-  { source: "/contact", destination: "https://www.krizaka.com/contact?topic=orazaka", permanent: true },
+  { source: "/contact", destination: "https://www.krizaka.com/en/contact?topic=orazaka", permanent: true },
   ...[...REMOVED_PUBLIC, ...REMOVED_DOCS, ...RENAMED].map((r) => ({ ...r, permanent: true })),
   // Not on admin.orazaka.com: /billing is a section of the operator console there (src/console), served by the proxy.
   { source: "/billing", has: [{ type: "host", value: "(?!admin\\.).*" }], destination: "/usage", permanent: true },

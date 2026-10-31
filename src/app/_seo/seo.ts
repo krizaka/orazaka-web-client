@@ -126,7 +126,7 @@ export function llmsText(): string {
 - [Open source](${SITE_URL}/open-source): the public repositories, the Apache-2.0 licence line, self-hosting and how to contribute
 - [Packs](${SITE_URL}/docs/packs): the catalogue of installable offers, what each pack adds to the Studios, and how to write one
 - [Models](${SITE_URL}/docs/models): the models Orazaka supports — what each does, where it runs, its licence and context window
-- [Talk to the team](${KRIZAKA_URL}/contact?topic=orazaka): the contact form lives on krizaka.com
+- [Talk to the team](${KRIZAKA_URL}/en/contact?topic=orazaka): the contact form lives on krizaka.com
 
 ## Documentation
 

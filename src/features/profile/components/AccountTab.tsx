@@ -61,7 +61,7 @@ export function AccountTab({ profile, t }: Readonly<AccountTabProps>) {
           <span className="text-fg-secondary">{planName(profile, t)}</span>
           <a
             className="text-fg-accent underline-offset-2 hover:underline"
-            href="https://www.krizaka.com/contact?topic=orazaka"
+            href="https://www.krizaka.com/en/contact?topic=orazaka"
           >
             {t.profile.planLink}
           </a>
