@@ -1,6 +1,6 @@
 /**
  * @file model-compare.ts
- * @description "Compare models": one prompt per inspiration, the same for every model, each image an Orazaka run of the image-generation
+ * @description "Compare models": one prompt per inspiration, the same for every model, each image an Sovkora run of the image-generation
  * Studio on dev.orazaka.com. The LIST of images is the media manifest (`sites/orazaka/compare/<inspiration>--<model>.webp`) — nothing
  * here lists a file; `model-compare.results.json` (a table, no logic) holds what each run recorded (run id, time, size), keyed by the file. A published image without its record,
  * or one whose inspiration or model is unknown, fails the build. Words: `t.gallery`.
@@ -96,7 +96,7 @@ export const COMPARE_INSPIRATIONS: readonly CompareInspiration[] = [
 
 /** What the run of one image recorded. */
 export interface CompareRecord {
-  /** The Orazaka run (Studio run) that made it. */
+  /** The Sovkora run (Studio run) that made it. */
   runId: string;
   /** What the run took, in seconds, from the command to the file. */
   seconds: number;

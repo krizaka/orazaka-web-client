@@ -182,7 +182,7 @@ function ResultDisplayInner({ payload }: Readonly<ResultDisplayProps>) {
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src={absoluteUrl}
-          alt="Orazaka Framework Local AI Generation"
+          alt="Sovkora Framework Local AI Generation"
           className="max-h-[512px] w-full max-w-[512px] rounded-md object-contain shadow-md transition-all duration-300"
           loading="lazy"
         />

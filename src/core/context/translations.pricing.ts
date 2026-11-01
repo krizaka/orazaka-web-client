@@ -1,8 +1,8 @@
 /**
  * @file translations.pricing.ts
- * @description The words of /pricing (the editions of Orazaka), en and fr (krizaka/orazaka#447). Prices are data
+ * @description The words of /pricing (the editions of Sovkora), en and fr (krizaka/orazaka#447). Prices are data
  * (ADR-009): they come from the price catalogue (billing), never from here — an edition without a published price
- * carries none of its own. Orazaka is in development: nothing is for sale and no price is shown. Community is the open-source platform; Business is « soon »; anything custom is Krizaka's single
+ * carries none of its own. Sovkora is in development: nothing is for sale and no price is shown. Community is the open-source platform; Business is « soon »; anything custom is Krizaka's single
  * « Entreprise » offer, reached through the contact form. No customer name, no unproven claim (no certification, no
  * hosting or uptime promise).
  */
@@ -36,17 +36,17 @@ export interface PricingDictionary {
 
 const WORDS = {
   meta: {
-    title: w("Pricing and editions — Orazaka", "Tarifs et éditions — Orazaka"),
+    title: w("Pricing and editions — Sovkora", "Tarifs et éditions — Sovkora"),
     description: w(
-      "Orazaka's editions: Community, the open-source platform you run on your own machines; Business, coming soon; and Krizaka's Enterprise offer for anything custom.",
-      "Les éditions d'Orazaka : Community, la plateforme libre que vous faites tourner sur vos machines ; Business, bientôt ; et l'offre Entreprise de Krizaka pour tout sur mesure.",
+      "Sovkora's editions: Community, the open-source platform you run on your own machines; Business, coming soon; and Krizaka's Enterprise offer for anything custom.",
+      "Les éditions de Sovkora : Community, la plateforme libre que vous faites tourner sur vos machines ; Business, bientôt ; et l'offre Entreprise de Krizaka pour tout sur mesure.",
     ),
   },
   eyebrow: w("Pricing and editions", "Tarifs et éditions"),
   title: w("Start with Community. Talk to us for the rest.", "Commencez avec Community. Parlons-en pour le reste."),
   lead: w(
-    "Orazaka is open source and in development: sign-up is closed and nothing is for sale yet. Community is the platform itself; no edition shows a price until it is published.",
-    "Orazaka est libre et en développement : les inscriptions sont fermées et rien n'est encore en vente. Community est la plateforme elle-même ; aucune édition n'affiche de prix tant qu'il n'est pas publié.",
+    "Sovkora is open source and in development: sign-up is closed and nothing is for sale yet. Community is the platform itself; no edition shows a price until it is published.",
+    "Sovkora est libre et en développement : les inscriptions sont fermées et rien n'est encore en vente. Community est la plateforme elle-même ; aucune édition n'affiche de prix tant qu'il n'est pas publié.",
   ),
   plansLabel: w("Editions", "Éditions"),
   units: {
@@ -71,11 +71,11 @@ const WORDS = {
       w("Runs on your own machines, with local models.", "Tourne sur vos propres machines, avec des modèles locaux."),
       w("The source is public, and so is the documentation.", "Le code source est public, la documentation aussi."),
       w(
-        "Provider keys you add are billed by those providers, not by Orazaka.",
-        "Les clés de fournisseurs que vous ajoutez sont facturées par ces fournisseurs, pas par Orazaka.",
+        "Provider keys you add are billed by those providers, not by Sovkora.",
+        "Les clés de fournisseurs que vous ajoutez sont facturées par ces fournisseurs, pas par Sovkora.",
       ),
     ],
-    download: w("Orazaka for Mac", "Orazaka pour Mac"),
+    download: w("Sovkora for Mac", "Sovkora pour Mac"),
     source: w("See the source", "Voir le code source"),
   },
   business: {
@@ -83,7 +83,7 @@ const WORDS = {
     price: w("Soon", "Bientôt"),
     unit: w("Not published yet", "Pas encore publiée"),
     features: [
-      w("Planned for teams that run Orazaka together.", "Prévue pour les équipes qui utilisent Orazaka ensemble."),
+      w("Planned for teams that run Sovkora together.", "Prévue pour les équipes qui utilisent Sovkora ensemble."),
       w("No date and no price until it is published.", "Ni date ni prix tant qu'elle n'est pas publiée."),
     ],
     soon: w("Soon", "Bientôt"),
@@ -93,7 +93,7 @@ const WORDS = {
     price: w("On request", "Sur demande"),
     unit: w("Custom, with Krizaka", "Sur mesure, avec Krizaka"),
     features: [
-      w("Custom modules and integrations on Orazaka.", "Modules et intégrations sur mesure sur Orazaka."),
+      w("Custom modules and integrations on Sovkora.", "Modules et intégrations sur mesure sur Sovkora."),
       w("Sovereign AI adoption, on your premises.", "Adoption d'une IA souveraine, chez vous."),
       w("Maintenance and support of what Krizaka delivers.", "Maintenance et soutien de ce que Krizaka livre."),
     ],
@@ -107,7 +107,7 @@ const WORDS = {
     ),
     items: [
       w("Evolutions and custom modules for your business.", "Évolutions et modules sur mesure pour votre entreprise."),
-      w("Sovereign AI adoption on Orazaka.", "Adoption d'une IA souveraine sur Orazaka."),
+      w("Sovereign AI adoption on Sovkora.", "Adoption d'une IA souveraine sur Sovkora."),
       w("Maintenance and support of what we deliver.", "Maintenance et soutien de ce que nous livrons."),
     ],
     cta: w("Talk about your project", "Parler de votre projet"),
@@ -125,8 +125,8 @@ const WORDS = {
       {
         question: w("Where are the prices?", "Où sont les prix ?"),
         answer: w(
-          "Orazaka is in development, so no edition has a price yet. Each edition says « Soon » or « On request » until a price is published.",
-          "Orazaka est en développement : aucune édition n'a encore de prix. Chaque édition dit « Bientôt » ou « Sur demande » tant qu'un prix n'est pas publié.",
+          "Sovkora is in development, so no edition has a price yet. Each edition says « Soon » or « On request » until a price is published.",
+          "Sovkora est en développement : aucune édition n'a encore de prix. Chaque édition dit « Bientôt » ou « Sur demande » tant qu'un prix n'est pas publié.",
         ),
       },
       {

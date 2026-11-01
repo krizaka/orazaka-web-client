@@ -138,7 +138,7 @@ describe("search engines and AI assistants (the Krizaka family contract)", () =>
   });
 
   it("the title and description name the product and say what it is, once, within what a result shows", () => {
-    expect(SITE_TITLE).toMatch(/^Orazaka — /);
+    expect(SITE_TITLE).toMatch(/^Sovkora — /);
     expect(SITE_TITLE).toMatch(/open-source/i);
     expect(SITE_TITLE).not.toMatch(/Krizaka.*\|.*Krizaka/);
     expect(SITE_TITLE.length).toBeLessThanOrEqual(62);

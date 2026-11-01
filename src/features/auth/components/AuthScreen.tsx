@@ -18,7 +18,7 @@ const PROMISES = [
 
 /**
  * The entry screen of the web client — sign-in, sign-up, password reset, verification — on `@krizaka/ui/auth-layout`,
- * wearing Orazaka (`.brand-orazaka`): its animated mark in the brand panel (static under reduced motion, the mark's
+ * wearing Sovkora (`.brand-orazaka`): its animated mark in the brand panel (static under reduced motion, the mark's
  * own rule), the promise, the three proofs; the form beside it, the legal links and the language under it.
  */
 export function AuthScreen({
@@ -33,7 +33,7 @@ export function AuthScreen({
       <AuthLayout
         brand={
           <>
-            <OrazakaLogo size={28} animated={false} /> Orazaka
+            <OrazakaLogo size={28} animated={false} /> Sovkora
           </>
         }
         promise={t.auth.heroHeadline}
@@ -54,7 +54,7 @@ export function AuthScreen({
         }
         asideFooter={
           <>
-            © {new Date().getFullYear()} Orazaka · {t.landing.footer.license} ·{" "}
+            © {new Date().getFullYear()} Sovkora · {t.landing.footer.license} ·{" "}
             <a
               href="https://www.krizaka.com/"
               target="_blank"

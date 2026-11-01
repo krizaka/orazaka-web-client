@@ -6,7 +6,7 @@
  */
 
 export const consoleCopy = {
-  product: "Orazaka",
+  product: "Sovkora",
   console: "Operations",
   nav: {
     label: "Console",
@@ -36,7 +36,7 @@ export const consoleCopy = {
   },
   login: {
     title: "Operator sign-in",
-    lead: "The console of your Orazaka platform. Only an account with the administrator role opens it.",
+    lead: "The console of your Sovkora platform. Only an account with the administrator role opens it.",
     email: "Email",
     password: "Password",
     submit: "Sign in",

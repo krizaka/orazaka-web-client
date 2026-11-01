@@ -41,7 +41,7 @@ function renderLanding(locale: Locale, page: React.ReactNode = <LandingPage />, 
 
 const nav = translations.en.landing.nav;
 const bar = () => document.querySelector("header[data-floating]") as HTMLElement;
-const desktopNav = () => within(bar()).getAllByRole("navigation", { name: "Orazaka" })[0];
+const desktopNav = () => within(bar()).getAllByRole("navigation", { name: "Sovkora" })[0];
 
 describe("the information architecture of the public bar", () => {
   it("is short (epic #231): Product ▾ (How it works · Download) · Docs · Pricing · Open source; Packs lives in the docs", () => {
@@ -69,7 +69,7 @@ describe("the information architecture of the public bar", () => {
   it("is the family's floating bar, in the family's order: mark and name · sections · repository, theme, language, Sign in", () => {
     renderLanding("en", <LandingNav />);
     expect(bar().getAttribute("data-floating")).not.toBe("false");
-    expect(within(bar()).getByRole("link", { name: nav.home })).toHaveTextContent("Orazaka");
+    expect(within(bar()).getByRole("link", { name: nav.home })).toHaveTextContent("Sovkora");
     const order = (name: string | RegExp, role: "link" | "button") => {
       const el = within(bar()).getAllByRole(role, { name })[0];
       return [...bar().querySelectorAll("*")].indexOf(el);

@@ -35,7 +35,7 @@ const MAC = {
     name: "The Mac app",
     body: "The control panel opens, a folder of your Mac is shared, one automation reads a PDF and summarises it. Demo data only.",
     cues: [
-      "Orazaka for Mac opens on your control panel.",
+      "Sovkora for Mac opens on your control panel.",
       "You share one folder of your Mac, and only that one.",
       "An automation is set up on that folder.",
       "One run reads the PDF and the model's summary comes back with its steps.",
@@ -45,7 +45,7 @@ const MAC = {
     name: "L'app Mac",
     body: "Le panneau de contrôle s'ouvre, un dossier de votre Mac est partagé, une automatisation lit un PDF et le résume. Données de démonstration seulement.",
     cues: [
-      "Orazaka pour Mac s'ouvre sur votre panneau de contrôle.",
+      "Sovkora pour Mac s'ouvre sur votre panneau de contrôle.",
       "Vous partagez un dossier de votre Mac, et lui seul.",
       "Une automatisation est créée sur ce dossier.",
       "Un passage lit le PDF et le résumé du modèle revient avec ses étapes.",

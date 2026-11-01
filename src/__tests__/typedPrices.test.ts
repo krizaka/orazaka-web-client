@@ -3,7 +3,7 @@ import { findTypedPrices } from "@krizaka/settings";
 import { translations } from "@/core/context/translations";
 
 /**
- * Orazaka#417: every amount comes from the price catalogue (billing, edited by the admin), never typed in a message.
+ * Sovkora#417: every amount comes from the price catalogue (billing, edited by the admin), never typed in a message.
  * `findTypedPrices` is the one rule of the family (@krizaka/settings); this test runs it over each locale's messages.
  */
 describe("no amount is typed in a message", () => {

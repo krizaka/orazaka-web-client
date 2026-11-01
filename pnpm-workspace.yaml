@@ -18,6 +18,7 @@ minimumReleaseAgeExclude:
   - "@krizaka/auth@0.10.0"
   - "@krizaka/db@0.3.1"
   - "@krizaka/settings@0.5.2"
+  - "@krizaka/org@0.7.0"
 onlyBuiltDependencies:
   - "@ast-grep/cli"
   - "@parcel/watcher"

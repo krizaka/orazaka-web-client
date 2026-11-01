@@ -5,7 +5,7 @@ import { readAuthFlags } from "@/console/core/config/auth-flags";
 import { closedCopy, pickLocale } from "@/console/core/copy/closed";
 import { LoginForm } from "./LoginForm";
 
-export const metadata: Metadata = { title: "Sign in · Orazaka Operations" };
+export const metadata: Metadata = { title: "Sign in · Sovkora Operations" };
 
 /**
  * `/login` — where the gate (`src/proxy.ts`) and next-auth (`pages.signIn`) send an operator without a session.

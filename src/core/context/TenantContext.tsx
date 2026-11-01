@@ -106,7 +106,7 @@ export function TenantProvider({ children }: Readonly<{ children: React.ReactNod
   const { settings } = useSettings();
 
   const themeAccent = settings?.themeAccent || "zinc";
-  const themeName = settings?.themeName || "Orazaka";
+  const themeName = settings?.themeName || "Sovkora";
   const themeTagline = settings?.themeTagline || "Decoupled Intelligence";
   const themeLayout = settings?.themeLayout || "standard";
   // Check user settings preferences or fallback to a default ID

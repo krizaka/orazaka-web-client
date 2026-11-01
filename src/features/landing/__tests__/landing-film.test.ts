@@ -21,8 +21,8 @@ const FILES = [
   "keyframe-2.webp",
 ];
 
-describe("« Made with Orazaka »: the home film and the real outputs on the Studios card (krizaka-internal#138)", () => {
-  it("serves every file from Orazaka's own site path on the CDN, hashed, never from pr-assets", () => {
+describe("« Made with Sovkora »: the home film and the real outputs on the Studios card (krizaka-internal#138)", () => {
+  it("serves every file from Sovkora's own site path on the CDN, hashed, never from pr-assets", () => {
     for (const file of FILES) {
       expect(hasMedia(`sites/orazaka/films/${file}`)).toBe(true);
     }

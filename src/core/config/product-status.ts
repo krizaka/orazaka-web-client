@@ -1,6 +1,6 @@
 /**
  * @file product-status.ts
- * @description The one place this site reads Orazaka's status from (krizaka/krizaka-com#468). Orazaka is in
+ * @description The one place this site reads Sovkora's status from (krizaka/krizaka-com#468). Sovkora is in
  * development like the other Krizaka products: payment is still being tested, accounts are not open, nothing is
  * for sale. While the status is `development`, no public price is shown and no copy may promise availability
  * (`tests/product-status.test.ts` refuses those words). Moving to another status is a decision of the org list,

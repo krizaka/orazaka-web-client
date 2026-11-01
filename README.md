@@ -12,6 +12,10 @@
 
 Next.js (App Router) client of the Orazaka platform with its mandatory BFF.
 
+**Users read the commercial name, Sovkora** (Orazaka is the code name: repository, packages, hosts and API paths keep it). `npm run check:code-names` runs the `krizaka-code-names` guard of `@krizaka/org` on the built pages (`/docs` and `/open-source`, the developer pages, are allowed), and `src/__tests__/code-names.test.ts` checks the messages.
+
+**Users read the commercial name, Sovkora** (Orazaka is the code name: repository, packages, hosts and API paths keep it). `npm run check:code-names` runs the `krizaka-code-names` guard of `@krizaka/org` on the built pages (`/docs` and `/open-source`, the developer pages, are allowed), and `src/__tests__/code-names.test.ts` checks the messages.
+
 [![CI](https://github.com/krizaka/orazaka-web-client/actions/workflows/ci.yml/badge.svg)](https://github.com/krizaka/orazaka-web-client/actions/workflows/ci.yml)
 [![OpenSSF Scorecard](https://api.scorecard.dev/projects/github.com/krizaka/orazaka-web-client/badge)](https://scorecard.dev/viewer/?uri=github.com/krizaka/orazaka-web-client)
 [![License: FSL-1.1-ALv2](https://img.shields.io/badge/license-FSL--1.1--ALv2-blue.svg)](LICENSE.md)

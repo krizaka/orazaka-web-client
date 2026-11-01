@@ -16,7 +16,7 @@ const REPO_URL = "https://github.com/krizaka/orazaka-web-client";
 
 /**
  * The bar of the public pages — the family's, the one of Yomizaka and the other products (`site-nav.ts`,
- * docs/ux/information-architecture.md of the workspace): a floating bar. Left: the Orazaka mark and name (home). Then
+ * docs/ux/information-architecture.md of the workspace): a floating bar. Left: the Sovkora mark and name (home). Then
  * Product ▾ (what it does · Download) · Docs · Pricing · Open source — one lit at a time, the page's own group (a group of
  * three or fewer entries will be inline once Krizaka UI's breakpoint-aware menu ships). Right: the repository, the
  * theme, the language, and the one action — using the app (BarActions). The version is in the footer, not here.
@@ -54,11 +54,11 @@ export function LandingNav({ onHome = true }: Readonly<{ onHome?: boolean }>) {
 
   return (
     <div className="pointer-events-none sticky top-0 z-40 px-3 pt-3">
-      <NavBar.Root label="Orazaka" className="pointer-events-auto mx-auto max-w-(--kz-page-max,72rem)">
+      <NavBar.Root label="Sovkora" className="pointer-events-auto mx-auto max-w-(--kz-page-max,72rem)">
         <NavBar.Brand asChild>
           <Link href="/" aria-label={n.home}>
             <OrazakaLogo size={26} />
-            <span>Orazaka</span>
+            <span>Sovkora</span>
           </Link>
         </NavBar.Brand>
 

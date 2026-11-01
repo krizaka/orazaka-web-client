@@ -62,7 +62,7 @@ export interface LandingDictionary {
       { tag: string; title: string; text: string }
     >;
   };
-  /** « Made with Orazaka »: the home film, the facts read from its run records, and the outputs shown on the Studios card. */
+  /** « Made with Sovkora »: the home film, the facts read from its run records, and the outputs shown on the Studios card. */
   film: {
     eyebrow: string;
     title: string;

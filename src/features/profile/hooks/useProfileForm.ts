@@ -29,7 +29,7 @@ export interface ProfileFormState {
 const EMPTY: ProfileFormState = {
   language: "en",
   aiPersona: "standard",
-  themeName: "Orazaka",
+  themeName: "Sovkora",
   themeTagline: "Decoupled Intelligence",
   themeAccent: "zinc",
   themeLayout: "standard",

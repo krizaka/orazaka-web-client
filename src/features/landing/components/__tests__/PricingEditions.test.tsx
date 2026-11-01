@@ -34,7 +34,7 @@ describe.each(["en", "fr"] as const)("/pricing (%s)", (locale) => {
     expect(screen.getAllByRole("heading", { level: 1 })).toHaveLength(1);
     for (const name of [p.community.name, p.business.name, p.enterprise.name])
       expect(screen.getAllByText(name).length).toBeGreaterThan(0);
-    // Prices are data (ADR-009) and the catalogue has no Orazaka plan: nothing on the page looks like a price.
+    // Prices are data (ADR-009) and the catalogue has no Sovkora plan: nothing on the page looks like a price.
     expect(container.textContent).not.toMatch(/[$€£]|\d\s?(\$|CAD|USD|EUR)|\bper month\b|\/\s?mois/i);
   });
 
@@ -74,7 +74,7 @@ describe("/pricing reads the price catalogue (krizaka/orazaka#417)", () => {
     ...over,
   });
 
-  it("keeps a published catalogue price off the page while Orazaka is in development (krizaka-com#468)", () => {
+  it("keeps a published catalogue price off the page while Sovkora is in development (krizaka-com#468)", () => {
     const { container } = renderPage("en", [entry({})]);
     expect(container.textContent?.replace(/\s/g, " ")).not.toContain("2,900.00");
     expect(container.textContent).not.toContain(

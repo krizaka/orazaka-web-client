@@ -30,7 +30,7 @@ export const SettingsApi = {
       language: (preferences.language as string) || "en",
       autoSave: (preferences.autoSave as boolean) ?? true,
       aiPersona: (preferences.aiPersona as Settings["aiPersona"]) || "standard",
-      themeName: (preferences.themeName as string) || "Orazaka",
+      themeName: (preferences.themeName as string) || "Sovkora",
       themeTagline: (preferences.themeTagline as string) || "Decoupled Intelligence",
       themeAccent: (preferences.themeAccent as Settings["themeAccent"]) || "zinc",
       themeLayout: (preferences.themeLayout as Settings["themeLayout"]) || "standard",

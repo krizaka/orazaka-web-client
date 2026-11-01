@@ -10,7 +10,7 @@ const widths = [
 ] as const;
 
 for (const vp of widths) {
-  test(`the Orazaka mark shows once on ${vp.name}: in the rail on a desktop, in the bar on a phone`, async ({
+  test(`the Sovkora mark shows once on ${vp.name}: in the rail on a desktop, in the bar on a phone`, async ({
     page,
   }) => {
     await page.setViewportSize({ width: vp.width, height: vp.height });
@@ -34,8 +34,8 @@ for (const vp of widths) {
     );
 
     if (vp.name === "desktop") {
-      // The word « Orazaka » sits on the mark's line, right after the rail.
-      const word = page.locator("header").getByText("Orazaka", { exact: true });
+      // The word « Sovkora » sits on the mark's line, right after the rail.
+      const word = page.locator("header").getByText("Sovkora", { exact: true });
       const [m, w] = [await marks.first().boundingBox(), await word.boundingBox()];
       expect(Math.abs(m!.y + m!.height / 2 - (w!.y + w!.height / 2))).toBeLessThanOrEqual(1);
       expect(w!.x - 56).toBeLessThan(16);

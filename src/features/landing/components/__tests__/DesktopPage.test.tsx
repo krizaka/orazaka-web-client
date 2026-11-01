@@ -21,8 +21,8 @@ const release = {
   prerelease: true,
   publishedAt: "2026-10-14T00:00:00Z",
   pageUrl: "https://github.com/krizaka/orazaka/releases/tag/desktop-v9.9.9-test",
-  dmg: { name: "Orazaka_9.9.9_aarch64.dmg", url: "https://example.test/Orazaka_9.9.9_aarch64.dmg", bytes: 6271937 },
-  shaUrl: "https://example.test/Orazaka_9.9.9_aarch64.dmg.sha256",
+  dmg: { name: "Sovkora_9.9.9_aarch64.dmg", url: "https://example.test/Sovkora_9.9.9_aarch64.dmg", bytes: 6271937 },
+  shaUrl: "https://example.test/Sovkora_9.9.9_aarch64.dmg.sha256",
   sha256: SHA,
 };
 
@@ -91,7 +91,7 @@ describe("DesktopPage", () => {
     expect(steps.map((li) => li.querySelector("h3")?.textContent)).toEqual(d.firstLaunch.steps.map((s) => s.title));
     const damaged = within(container).getByText(d.firstLaunch.damaged.summary).closest("details") as HTMLElement;
     expect(damaged.hasAttribute("open")).toBe(false);
-    expect(damaged).toHaveTextContent("xattr -dr com.apple.quarantine /Applications/Orazaka.app");
+    expect(damaged).toHaveTextContent("xattr -dr com.apple.quarantine /Applications/Sovkora.app");
   });
 
   it("explains the two modes and every service « Start » brings up, without jargon", () => {
