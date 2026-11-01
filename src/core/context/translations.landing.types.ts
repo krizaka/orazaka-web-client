@@ -50,6 +50,18 @@ export interface LandingDictionary {
     lead: string;
     items: Record<"studios" | "records" | "home", { title: string; text: string }>;
   };
+  /** What it does in plain words, each with the industry term as a quiet tag (recognition and search). */
+  capabilities: {
+    eyebrow: string;
+    title: string;
+    lead: string;
+    /** The label of an item that is not shipped yet. */
+    soon: string;
+    items: Record<
+      "documents" | "models" | "tools" | "agents" | "studios" | "runs",
+      { tag: string; title: string; text: string }
+    >;
+  };
   records: {
     eyebrow: string;
     title: string;

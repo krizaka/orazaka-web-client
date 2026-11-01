@@ -23,7 +23,17 @@ export const SITE_NAME = "Orazaka";
 /** What the search result says: the name first, then what it is (a query for « Orazaka » or « sovereign AI platform »). */
 export const SITE_TITLE = "Orazaka — open-source sovereign AI platform, self-hosted";
 export const SITE_DESCRIPTION =
-  "Orazaka is an open-source AI platform by Krizaka (Montréal): chat, documents, images, video and agents running on your own machines, with local models.";
+  "Orazaka by Krizaka (Montréal): a sovereign AI platform. Your LLM, local or hosted, MCP tools, agents that ask first, Studios, every result traced to its run.";
+
+/** What the product does, in the plain words of the home's « What Orazaka does » section (each one is true of what runs; RAG is in development). */
+export const FEATURE_LIST = [
+  "Answers grounded in your own documents (RAG), in development",
+  "The language models (LLM) you choose, local or hosted",
+  "Connects to your tools through the open Model Context Protocol (MCP)",
+  "Agents that use tools and ask before acting",
+  "Studios for images, video and checked documents, priced before they run",
+  "Every result traced to its run",
+];
 
 /** The search bots and AI crawlers the whole family welcomes — the same list on every site. */
 export const CRAWLERS = [
@@ -97,6 +107,7 @@ export function siteJsonLd() {
         applicationCategory: "BusinessApplication",
         operatingSystem: "Linux, macOS",
         isAccessibleForFree: true,
+        featureList: FEATURE_LIST,
         license: "https://www.apache.org/licenses/LICENSE-2.0",
         codeRepository: REPO_URL,
         sameAs: [REPO_URL],
