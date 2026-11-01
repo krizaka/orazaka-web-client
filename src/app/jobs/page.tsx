@@ -75,9 +75,14 @@ function JobsDashboardContent() {
   );
 
   const handleCopy = (text: string, id: string) => {
-    navigator.clipboard.writeText(text);
-    setCopiedId(id);
-    setTimeout(() => setCopiedId(null), 2000);
+    // Claimed as copied only once the browser accepted the clipboard write.
+    navigator.clipboard.writeText(text).then(
+      () => {
+        setCopiedId(id);
+        setTimeout(() => setCopiedId(null), 2000);
+      },
+      () => setCopiedId(null),
+    );
   };
 
   const handleOpenModal = (job: Job, type: "payload" | "result") => {

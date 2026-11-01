@@ -118,10 +118,14 @@ function leaves(value: unknown, path = ""): Array<[string, string]> {
 }
 
 test("French says what English says: the same keys, the same placeholders, no empty message", () => {
-  const placeholders = (text: string) => [...text.matchAll(/\{(\w+)\}/g)].map((m) => m[1]).sort();
+  const placeholders = (text: string) =>
+    [...text.matchAll(/\{(\w+)\}/g)].map((m) => m[1]).sort((a, b) => a.localeCompare(b));
   const en = new Map(leaves(lawCopy.en));
   const fr = new Map(leaves(lawCopy.fr));
-  assert.deepEqual([...fr.keys()].sort(), [...en.keys()].sort());
+  assert.deepEqual(
+    [...fr.keys()].sort((a, b) => a.localeCompare(b)),
+    [...en.keys()].sort((a, b) => a.localeCompare(b)),
+  );
   for (const [key, text] of en) {
     assert.ok(text.length > 0 && (fr.get(key) ?? "").length > 0, `${key} is empty`);
     assert.deepEqual(placeholders(fr.get(key) ?? ""), placeholders(text), key);
