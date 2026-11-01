@@ -30,15 +30,18 @@ const AREAS = [
   "sites/orazaka/home/",
   "sites/orazaka/showcase/",
   "sites/orazaka/cinema/",
+  "sites/orazaka/films/",
 ];
 // The site no longer carries Orazaka media in its manifest once they are mirrored elsewhere: merge over what this
 // site already records instead of replacing it, so a sync of one new capture never forgets the others.
 const out = path.join(root, "src/core/media/media.generated.json");
 const known = fs.existsSync(out) ? JSON.parse(fs.readFileSync(out, "utf8")).files : {};
-const fresh = Object.fromEntries(
-  Object.entries(manifest.files).filter(([k]) => AREAS.some((a) => k.startsWith(a)) || VIDEO.test(k)),
-);
+// The manifest records the logical path (`products/<site>/…`), which lands in layout v2 as `sites/<site>/…` (ADR-014).
+const placed = Object.entries(manifest.files).map(([k, hash]) => [k.replace(/^products\//, "sites/"), hash]);
+const fresh = Object.fromEntries(placed.filter(([k]) => AREAS.some((a) => k.startsWith(a)) || VIDEO.test(k)));
 const files = Object.fromEntries(Object.entries({ ...known, ...fresh }).sort(([a], [b]) => a.localeCompare(b)));
-if (!Object.keys(files).length) throw new Error("no Orazaka media in the manifest");
+if (!Object.keys(files).length) {
+  throw new Error("no Orazaka media in the manifest");
+}
 fs.writeFileSync(out, `${JSON.stringify({ files }, null, 2)}\n`);
 process.stdout.write(`${Object.keys(files).length} media recorded\n`);
