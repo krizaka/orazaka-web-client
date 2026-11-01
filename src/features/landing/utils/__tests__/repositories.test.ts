@@ -11,7 +11,7 @@ const repo = (over: Partial<GithubRepo>): GithubRepo => ({
 });
 
 describe("pickListedRepos", () => {
-  it("keeps the live Orazaka repositories only, most recently pushed first", () => {
+  it("keeps the live Sovkora repositories only, most recently pushed first", () => {
     const picked = pickListedRepos([
       repo({ name: "orazaka-studio", pushed_at: "2026-10-20T00:00:00Z" }),
       repo({ name: "yomizaka" }),

@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { CreditsScreen } from "./CreditsScreen";
 
 export const metadata: Metadata = {
-  title: "Credits | Orazaka",
+  title: "Credits | Sovkora",
   description: "Your balance, where it comes from, and what your work used — read from your own jobs and Studio runs.",
 };
 

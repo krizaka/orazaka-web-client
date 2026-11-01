@@ -115,7 +115,7 @@ describe("LoginPage", () => {
     expect(screen.queryByText("Google")).not.toBeInTheDocument();
   });
 
-  it("is built on the entry template with the animated Orazaka mark in its brand panel", () => {
+  it("is built on the entry template with the animated Sovkora mark in its brand panel", () => {
     const { container } = render(open(<LoginPage />));
     expect(container.querySelector(".brand-orazaka")).toBeInTheDocument();
     expect(screen.getByText("Own your intelligence.")).toBeInTheDocument();

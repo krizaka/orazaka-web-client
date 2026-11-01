@@ -1,6 +1,6 @@
 /**
  * Dev preview `ux.ia-review` (orazaka-web-client#125): the SHAPE of the navigation is a tested contract, not a habit.
- * docs/ux/information-architecture.md of the Orazaka workspace says why; this guards what it says — about five
+ * docs/ux/information-architecture.md of the Sovkora workspace says why; this guards what it says — about five
  * top-level items, no mixed concepts in one menu, no orphan entry, one list for every surface.
  */
 import { APP_SECTIONS, AppSectionPlace, appSectionsFor } from "@/core/config/app-sections";

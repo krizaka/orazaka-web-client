@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import { PacksScreen } from "./PacksScreen";
 
 export const metadata: Metadata = {
-  title: "Plan & packs | Orazaka",
+  title: "Plan & packs | Sovkora",
   description: "What your plan gives you, the packs you hold, and what another pack would add to your Studios.",
 };
 

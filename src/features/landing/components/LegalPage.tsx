@@ -26,8 +26,8 @@ export function LegalPage({ content }: { content: Record<Locale, LegalContent> }
         {/* Navbar header */}
         <header className="w-full max-w-4xl flex items-center justify-between py-4 mb-6 border-b border-border-subtle">
           <Link href="/login" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
-            <img src="/logo.svg" alt="Orazaka Logo" width={24} height={24} className="w-6 h-6" />
-            <span className="text-lg font-bold tracking-tight text-fg">Orazaka</span>
+            <img src="/logo.svg" alt="Sovkora Logo" width={24} height={24} className="w-6 h-6" />
+            <span className="text-lg font-bold tracking-tight text-fg">Sovkora</span>
           </Link>
 
           <Link

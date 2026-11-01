@@ -3,7 +3,7 @@ import ConnectorCatalogue from "@/features/automation/components/ConnectorCatalo
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Automations | Orazaka",
+  title: "Automations | Sovkora",
   description: "Run a Studio from a signed webhook or a schedule, and follow every run.",
 };
 

@@ -53,7 +53,7 @@ describe("the one action of the bar: using the app", () => {
     expect(within(bar()).queryByText(/talk to us|contact/i)).toBeNull();
   });
 
-  it("is « Try Orazaka » once sign-up is open, read from the flag", () => {
+  it("is « Try Sovkora » once sign-up is open, read from the flag", () => {
     renderLanding("en", <LandingNav />, { ...CLOSED, login: true, signup: true });
     expect(within(bar()).getAllByRole("link", { name: nav.tryIt })[0]).toHaveAttribute("href", "/register");
   });

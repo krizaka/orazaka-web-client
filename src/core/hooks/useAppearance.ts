@@ -10,7 +10,7 @@ import { useTheme } from "@krizaka/ui/theme";
  *
  * The profile stores a single value (`preferences.theme`): "system" | "light" | "dark" or a named theme. A named
  * theme sets every colour role, so its mode only decides `color-scheme`: solarized is light, the others dark.
- * `electric` is the 1.x blue identity, kept for the people who prefer it (the default is the Orazaka orange).
+ * `electric` is the 1.x blue identity, kept for the people who prefer it (the default is the Sovkora orange).
  */
 
 /** The named themes of @krizaka/orazaka-design-system (theme.css). */

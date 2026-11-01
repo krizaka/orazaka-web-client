@@ -34,7 +34,7 @@ const facts = filmFacts({
   ],
 });
 
-describe("« Made with Orazaka » on the home (krizaka-internal#138)", () => {
+describe("« Made with Sovkora » on the home (krizaka-internal#138)", () => {
   it.each(["en", "fr"] as const)("%s: the film with controls, and the facts summed from the records", (locale) => {
     mockLocale = locale;
     render(<LandingFilm facts={facts} />);

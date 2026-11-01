@@ -41,7 +41,7 @@ export function AppShell({ children }: Readonly<{ children: React.ReactNode }>) 
 
   return (
     <AppFrame
-      name="Orazaka"
+      name="Sovkora"
       mark={<OrazakaLogo size={26} />}
       headerMark={<OrazakaLogo size={22} />}
       homeHref="/"

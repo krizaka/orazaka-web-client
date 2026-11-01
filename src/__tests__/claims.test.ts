@@ -3,7 +3,7 @@ import fs from "node:fs";
 import path from "node:path";
 
 /**
- * Search engines and AI assistants repeat what the public pages say. Orazaka is local by design, but no Loi 25 / GDPR
+ * Search engines and AI assistants repeat what the public pages say. Sovkora is local by design, but no Loi 25 / GDPR
  * pack exists and no legal conformity is certified: no public text may say « compliant », « conforme » or « Conformité
  * validée » next to a law. Read from the sources of the pages (landing, desktop page), so the guard is the source itself.
  */

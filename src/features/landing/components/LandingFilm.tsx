@@ -9,7 +9,7 @@ import type { FilmFacts } from "@/features/landing/utils/film-records";
 const FILM = "sites/orazaka/films/montrer-son-travail";
 
 /**
- * « Made with Orazaka »: the brand film, which Orazaka itself made, and the run facts under it. The facts are read from the
+ * « Made with Sovkora »: the brand film, which Sovkora itself made, and the run facts under it. The facts are read from the
  * film's records (`film-records.ts`) and each one appears only when the records hold it; the run ids stay one click away
  * so the claim can be checked. The film's own title is the film's, not the product's, and stays in French.
  */

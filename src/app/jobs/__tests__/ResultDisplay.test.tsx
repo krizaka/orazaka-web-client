@@ -63,14 +63,14 @@ describe("ResultDisplay", () => {
 
   it("renders an image when URL ends with .png", () => {
     render(<ResultDisplay payload="https://example.com/image.png" />);
-    const img = screen.getByAltText("Orazaka Framework Local AI Generation");
+    const img = screen.getByAltText("Sovkora Framework Local AI Generation");
     expect(img).toBeInTheDocument();
     expect(img).toHaveAttribute("src", "https://example.com/image.png");
   });
 
   it("renders an image for .jpg extension", () => {
     render(<ResultDisplay payload="https://example.com/photo.jpg" />);
-    const img = screen.getByAltText("Orazaka Framework Local AI Generation");
+    const img = screen.getByAltText("Sovkora Framework Local AI Generation");
     expect(img).toBeInTheDocument();
   });
 
@@ -102,7 +102,7 @@ describe("ResultDisplay", () => {
 
   it("renders image for data:image/ URL", () => {
     render(<ResultDisplay payload="data:image/png;base64,AAAA" />);
-    const img = screen.getByAltText("Orazaka Framework Local AI Generation");
+    const img = screen.getByAltText("Sovkora Framework Local AI Generation");
     expect(img).toBeInTheDocument();
   });
 
@@ -120,7 +120,7 @@ describe("ResultDisplay", () => {
 
   it("renders content from object payload with format=png", () => {
     render(<ResultDisplay payload={{ url: "https://example.com/img.png", format: "png" }} />);
-    const img = screen.getByAltText("Orazaka Framework Local AI Generation");
+    const img = screen.getByAltText("Sovkora Framework Local AI Generation");
     expect(img).toBeInTheDocument();
   });
 
@@ -221,7 +221,7 @@ describe("ResultDisplay", () => {
       errorMessage: null,
     });
     render(<ResultDisplay payload={{ jobId: "job-123" }} />);
-    const img = screen.getByAltText("Orazaka Framework Local AI Generation");
+    const img = screen.getByAltText("Sovkora Framework Local AI Generation");
     expect(img).toBeInTheDocument();
     expect(img).toHaveAttribute("src", "https://example.com/image.png");
   });

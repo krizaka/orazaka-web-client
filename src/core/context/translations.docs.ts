@@ -1,7 +1,7 @@
 /**
  * @file translations.docs.ts
  * @description The words around the documentation (hub, sidebar, article chrome, the text version of the schemas), en and
- * fr. The pages' own text is the source docs of the Orazaka repository (English): it is synced, never translated here.
+ * fr. The pages' own text is the source docs of the Sovkora repository (English): it is synced, never translated here.
  */
 type Locale = "en" | "fr";
 
@@ -110,12 +110,12 @@ export interface DocsDictionary {
 
 export const docs: Record<Locale, DocsDictionary> = {
   en: {
-    meta: "Documentation — Orazaka",
+    meta: "Documentation — Sovkora",
     metaDescription:
-      "Orazaka's documentation on a short path: a five-minute quickstart, one page of concepts, short guides, and a generated reference.",
+      "Sovkora's documentation on a short path: a five-minute quickstart, one page of concepts, short guides, and a generated reference.",
     eyebrow: "Documentation",
     title: "Quickstart, concepts, guides.",
-    lead: "Read the first two sections and you can run Orazaka. The reference is generated from the code, so it cannot drift from what runs.",
+    lead: "Read the first two sections and you can run Sovkora. The reference is generated from the code, so it cannot drift from what runs.",
     searchLabel: "Search the documentation",
     searchPlaceholder: "Search: install, packs, API, backup…",
     searchEmpty: "Nothing matches. Try a shorter word, or pick a journey below.",
@@ -152,7 +152,7 @@ export const docs: Record<Locale, DocsDictionary> = {
     },
     popularTitle: "Most read",
     modelsTitle: "Supported models",
-    modelsLine: "Every model Orazaka supports: what it does, where it runs, its licence and context window.",
+    modelsLine: "Every model Sovkora supports: what it does, where it runs, its licence and context window.",
     promiseLabel: "Our promise",
     promise:
       "Every reference page is generated from the code. If a page is wrong, the code is, or the generator is — and we fix it at the source, never in the page.",
@@ -165,7 +165,7 @@ export const docs: Record<Locale, DocsDictionary> = {
     editOnGitHub: "Edit this page on GitHub",
     viewSource: "View the source on GitHub",
     generated: "Generated from the code",
-    englishOnly: "Page text is in English, as in the Orazaka repositories.",
+    englishOnly: "Page text is in English, as in the Sovkora repositories.",
     audience: {
       everyone: "For everyone",
       operator: "For operators",
@@ -229,12 +229,12 @@ export const docs: Record<Locale, DocsDictionary> = {
     },
   },
   fr: {
-    meta: "Documentation — Orazaka",
+    meta: "Documentation — Sovkora",
     metaDescription:
-      "La documentation d'Orazaka sur un chemin court : un démarrage en cinq minutes, une page de concepts, des guides courts et une référence générée.",
+      "La documentation de Sovkora sur un chemin court : un démarrage en cinq minutes, une page de concepts, des guides courts et une référence générée.",
     eyebrow: "Documentation",
     title: "Démarrage, concepts, guides.",
-    lead: "Lisez les deux premières sections et vous pouvez faire tourner Orazaka. La référence est générée depuis le code : elle ne peut pas s'éloigner de ce qui tourne.",
+    lead: "Lisez les deux premières sections et vous pouvez faire tourner Sovkora. La référence est générée depuis le code : elle ne peut pas s'éloigner de ce qui tourne.",
     searchLabel: "Rechercher dans la documentation",
     searchPlaceholder: "Rechercher : installer, packs, API, sauvegarde…",
     searchEmpty: "Aucun résultat. Essayez un mot plus court, ou choisissez un parcours ci-dessous.",
@@ -273,7 +273,7 @@ export const docs: Record<Locale, DocsDictionary> = {
     popularTitle: "Les plus lues",
     modelsTitle: "Modèles pris en charge",
     modelsLine:
-      "Chaque modèle qu'Orazaka prend en charge : ce qu'il fait, où il tourne, sa licence et sa fenêtre de contexte.",
+      "Chaque modèle qu'Sovkora prend en charge : ce qu'il fait, où il tourne, sa licence et sa fenêtre de contexte.",
     promiseLabel: "Notre promesse",
     promise:
       "Chaque page de référence est générée depuis le code. Si une page est fausse, le code l'est, ou le générateur — et on corrige à la source, jamais dans la page.",
@@ -286,7 +286,7 @@ export const docs: Record<Locale, DocsDictionary> = {
     editOnGitHub: "Modifier cette page sur GitHub",
     viewSource: "Voir la source sur GitHub",
     generated: "Générée depuis le code",
-    englishOnly: "Texte des pages en anglais, comme dans les dépôts Orazaka.",
+    englishOnly: "Texte des pages en anglais, comme dans les dépôts Sovkora.",
     audience: {
       everyone: "Pour tous",
       operator: "Pour les exploitants",

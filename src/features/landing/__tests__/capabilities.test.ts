@@ -2,7 +2,7 @@ import { landing } from "@/core/context/translations.landing";
 
 const IDS = ["documents", "models", "tools", "agents", "studios", "runs"] as const;
 
-describe("the home's « What Orazaka does » section", () => {
+describe("the home's « What Sovkora does » section", () => {
   it.each(["en", "fr"] as const)("%s: six items, each with its industry term, no absolute claim", (locale) => {
     const c = landing[locale].capabilities;
     expect(Object.keys(c.items).sort()).toEqual([...IDS].sort());

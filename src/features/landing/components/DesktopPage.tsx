@@ -24,7 +24,7 @@ import "@/features/landing/landing.css";
 const STEP_ICONS: ComponentType<IconProps>[] = [DownloadIcon, LocalIcon, CheckIcon];
 
 /**
- * `/desktop` — Orazaka for Mac, read in order: the promise and the app in its macOS window, one Download (its facts
+ * `/desktop` — Sovkora for Mac, read in order: the promise and the app in its macOS window, one Download (its facts
  * quiet, the SHA-256 in a disclosure), the first launch of a build not yet signed by Apple in three steps (the
  * quarantine fallback folded), the two modes, the services « Start » brings up, what to do when something goes wrong.
  * Under it, the phone apps: a store button per store whose URL is configured (`store-links.ts`), else one « coming soon » line.
@@ -82,7 +82,7 @@ export function DesktopPage({
             {macVideo() ? (
               <MacVideo />
             ) : (
-              <DeviceFrame kind="desktop" title="Orazaka">
+              <DeviceFrame kind="desktop" title="Sovkora">
                 <DesktopCapture
                   alt={d.hero.captureAlt}
                   sizes="(min-width: 1024px) 36rem, 92vw"

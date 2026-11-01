@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { StudioDetail } from "@/features/studio/components/StudioDetail";
 
 export const metadata: Metadata = {
-  title: "Studio | Orazaka",
+  title: "Studio | Sovkora",
   description: "Install a ready-made workflow for your trade and run it on your own material.",
 };
 

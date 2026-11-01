@@ -27,7 +27,7 @@ describe("SettingsApi", () => {
       expect(result.language).toBe("en");
       expect(result.autoSave).toBe(true);
       expect(result.aiPersona).toBe("standard");
-      expect(result.themeName).toBe("Orazaka");
+      expect(result.themeName).toBe("Sovkora");
       expect(result.themeTagline).toBe("Decoupled Intelligence");
       expect(result.themeAccent).toBe("zinc");
       expect(result.themeLayout).toBe("standard");

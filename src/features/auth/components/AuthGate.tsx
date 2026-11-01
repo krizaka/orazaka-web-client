@@ -8,7 +8,7 @@ import { OrazakaLogo } from "@krizaka/ui";
 import { useAuthFlags } from "@/core/context/AuthFlagsContext";
 import { useTranslation } from "@/core/context/LocaleContext";
 
-/** The calm notice of a closed door: Orazaka is in development, accounts are not open on this site. */
+/** The calm notice of a closed door: Sovkora is in development, accounts are not open on this site. */
 export function AuthClosed() {
   const { t } = useTranslation();
   const c = t.landing.closed;

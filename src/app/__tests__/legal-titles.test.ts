@@ -9,7 +9,7 @@ const CONTENT = { privacy: PRIVACY_CONTENT, terms: TERMS_CONTENT };
 describe.each(["privacy", "terms", "login"] as const)("/%s", (route) => {
   const dir = path.join(__dirname, "..", route);
   it("has its own page title", () => {
-    expect(fs.readFileSync(path.join(dir, "layout.tsx"), "utf8")).toMatch(/title: "[^"]+ — Orazaka"/);
+    expect(fs.readFileSync(path.join(dir, "layout.tsx"), "utf8")).toMatch(/title: "[^"]+ — Sovkora"/);
   });
   if (route !== "login") {
     it("uses no internal jargon in its headings, and no Title Case, in either language", () => {

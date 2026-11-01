@@ -1,7 +1,7 @@
 /**
  * @file diagrams.ts
  * @description The schema blocks a doc writes as fenced code — `architecture`, `pipeline`, `sequence`, `states` and the
- * CLI's `cli-*` — parsed and read against the generated model (`content/docs/model.json`, a slice of Orazaka's
+ * CLI's `cli-*` — parsed and read against the generated model (`content/docs/model.json`, a slice of Sovkora's
  * `architecture.json`). Until the generic diagram components exist in @krizaka/ui, each block is shown as its accessible
  * text version (tables, ordered lists): the content is never dropped. A block that does not parse, or that names a module
  * the model does not have, throws with the line at fault — a page that cannot be right does not build.
