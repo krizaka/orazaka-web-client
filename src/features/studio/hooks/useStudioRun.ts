@@ -63,7 +63,7 @@ export function useStudioRun(runId: string | null): StudioRunState {
     return jobs
       .filter((job) => mine.has(job.id))
       .map((job) => `${job.id}:${job.status}`)
-      .sort()
+      .sort((a, b) => a.localeCompare(b))
       .join("|");
   }, [jobs, run]);
 

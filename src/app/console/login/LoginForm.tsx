@@ -34,7 +34,7 @@ export function LoginForm({ preview }: Readonly<{ preview?: ClosedPreview }>) {
   const [pending, setPending] = React.useState(false);
   const [error, setError] = React.useState<string | null>(null);
 
-  const onSubmit: React.SubmitEventHandler<HTMLFormElement> = async (event) => {
+  const signInWithCredentials = async (event: React.SubmitEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (preview) return;
     const form = new FormData(event.currentTarget);
@@ -56,6 +56,10 @@ export function LoginForm({ preview }: Readonly<{ preview?: ClosedPreview }>) {
       setError(copy.unreachable);
     }
     setPending(false);
+  };
+
+  const onSubmit: React.SubmitEventHandler<HTMLFormElement> = (event) => {
+    void signInWithCredentials(event);
   };
 
   return (

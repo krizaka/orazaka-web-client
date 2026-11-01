@@ -103,7 +103,7 @@ export default function AdminDashboardPage() {
   React.useEffect(() => {
     if (!isLoading) {
       if (!isAuthenticated) router.push("/login");
-      else if (user?.role === "admin") loadModels();
+      else if (user?.role === "admin") void loadModels();
       else router.push("/");
     }
   }, [isLoading, isAuthenticated, user, router, loadModels]);
