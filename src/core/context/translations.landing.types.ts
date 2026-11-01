@@ -62,6 +62,30 @@ export interface LandingDictionary {
       { tag: string; title: string; text: string }
     >;
   };
+  /** « Made with Orazaka »: the home film, the facts read from its run records, and the outputs shown on the Studios card. */
+  film: {
+    eyebrow: string;
+    title: string;
+    lead: string;
+    label: string;
+    factsTitle: string;
+    models: string;
+    gpu: string;
+    runs: string;
+    cost: string;
+    costNote: string;
+    roles: Record<"keyframes" | "shots" | "music", string>;
+    runIds: string;
+    outputs: {
+      heading: string;
+      imageCaption: string;
+      videoCaption: string;
+      duckKeyframe: string;
+      duckShot: string;
+      inkKeyframe: string;
+      inkShot: string;
+    };
+  };
   records: {
     eyebrow: string;
     title: string;

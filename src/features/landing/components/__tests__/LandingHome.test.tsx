@@ -94,8 +94,9 @@ describe("LandingPage", () => {
   it("counts its figures from the measured runs it is given, never from a typed number", () => {
     renderLanding("en", <LandingPage measured={MEASURED} />);
     const labels = translations.en.landing.figures;
-    for (const label of [labels.runs, labels.models, labels.telemetry])
+    for (const label of [labels.runs, labels.models, labels.telemetry]) {
       expect(screen.getByText(label)).toBeInTheDocument();
+    }
     expect(screen.getByText(labels.runs).closest("div")?.querySelector("dt")).not.toBeNull();
   });
 
@@ -114,7 +115,8 @@ describe("LandingPage", () => {
     const features = sectionOf("features");
     const tiles = features.querySelectorAll("ul > li");
     expect(tiles).toHaveLength(3);
-    const clips = [...features.querySelectorAll("video")];
+    // The real outputs of the film (StudioOutputs) are videos too, but not screen recordings: they have no captions to check.
+    const clips = [...features.querySelectorAll<HTMLVideoElement>("video[data-testid^=clip-]")];
     expect(clips.map((v) => v.getAttribute("data-testid"))).toEqual(["clip-studio", "clip-results", "clip-workspace"]);
     clips.forEach((v) => {
       expect(v.getAttribute("poster")).toMatch(
@@ -141,7 +143,9 @@ describe("LandingPage", () => {
 
   it("is small: the sections of the epic #231 are gone (platforms strip, family, comparison, questions)", () => {
     renderLanding("en", <LandingPage measured={MEASURED} />);
-    for (const id of ["platforms", "engine", "why", "faq"]) expect(document.getElementById(id)).toBeNull();
+    for (const id of ["platforms", "engine", "why", "faq"]) {
+      expect(document.getElementById(id)).toBeNull();
+    }
     expect(screen.queryByRole("table")).toBeNull();
     expect(document.querySelector('script[type="application/ld+json"]')).toBeNull();
   });
