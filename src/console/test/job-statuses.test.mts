@@ -15,6 +15,12 @@ test("every job state has a label", () => {
 });
 
 test("every job state has a queue counter, and is counted", () => {
-  assert.deepEqual(Object.keys(queueDepths([])).sort(), [...statuses].sort());
-  assert.deepEqual([...QUEUE_STATES].sort(), [...statuses].sort());
+  assert.deepEqual(
+    Object.keys(queueDepths([])).sort((a, b) => a.localeCompare(b)),
+    [...statuses].sort((a, b) => a.localeCompare(b)),
+  );
+  assert.deepEqual(
+    [...QUEUE_STATES].sort((a, b) => a.localeCompare(b)),
+    [...statuses].sort((a, b) => a.localeCompare(b)),
+  );
 });

@@ -91,7 +91,7 @@ export function JobStreamProvider({ children }: Readonly<{ children: React.React
   useEffect(() => {
     if (isAuthenticated) {
       // eslint-disable-next-line react-hooks/set-state-in-effect
-      fetchJobs();
+      void fetchJobs();
     } else {
       setJobs([]);
     }

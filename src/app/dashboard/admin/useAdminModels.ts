@@ -89,7 +89,7 @@ export function useAdminModels(): UseAdminModelsReturn {
           const errorData = await res.json().catch(() => ({}));
           throw new Error(errorData.error || `Save failed: ${res.status}`);
         }
-        loadModels();
+        await loadModels();
         return true;
       } catch (err: unknown) {
         setErrorMessage(err instanceof Error ? err.message : t.admin.errorSavingModel);
@@ -109,7 +109,7 @@ export function useAdminModels(): UseAdminModelsReturn {
           body: JSON.stringify({ featureKey, isEnabled: !currentStatus }),
         });
         if (!res.ok) throw new Error(t.errors.featureToggleFailed);
-        loadModels();
+        await loadModels();
       } catch (err: unknown) {
         setErrorMessage(err instanceof Error ? err.message : t.errors.featureToggleFailed);
       }
@@ -130,7 +130,7 @@ export function useAdminModels(): UseAdminModelsReturn {
           const errorData = await res.json().catch(() => ({}));
           throw new Error(errorData.error || `Delete failed: ${res.status}`);
         }
-        loadModels();
+        await loadModels();
       } catch (err: unknown) {
         setErrorMessage(err instanceof Error ? err.message : t.admin.errorDeletingModel);
         setLoadingModels(false);
