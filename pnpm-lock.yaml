@@ -93,6 +93,9 @@ importers:
       '@krizaka/config':
         specifier: ^0.17.0
         version: 0.17.0(eslint-config-next@16.4.2(@typescript-eslint/parser@8.72.0(eslint@10.13.0(jiti@2.7.0)(supports-color@8.1.1))(supports-color@8.1.1)(typescript@6.0.3))(eslint@10.13.0(jiti@2.7.0)(supports-color@8.1.1))(supports-color@8.1.1)(typescript@6.0.3))(eslint@10.13.0(jiti@2.7.0)(supports-color@8.1.1))(prettier@3.9.10)(supports-color@8.1.1)(typescript@6.0.3)
+      '@krizaka/org':
+        specifier: ^0.7.0
+        version: 0.7.0
       '@krizaka/page-audit':
         specifier: 0.3.1
         version: 0.3.1(@krizaka/a11y-audit@0.2.0)(playwright-core@1.64.1)
@@ -1039,6 +1042,11 @@ packages:
 
   '@krizaka/orazaka-shared@1.5.0':
     resolution: {integrity: sha512-1jWL3L4xdj8v31jukrha6gBnT/G6NNu92D2bTHIAzsFVePjwtwsUn4b2zvoMH02HysR05Xgoggsy59qsS1oSVA==}
+
+  '@krizaka/org@0.7.0':
+    resolution: {integrity: sha512-1CKhAVDRRnD4VjRhUlD6LBBEJnrZJeo6mVW0oaqPG9R13/cLJRhGAX+zNuDRgkoAWOR0gl6K1CaQDgsojwspgg==}
+    engines: {node: '>=22'}
+    hasBin: true
 
   '@krizaka/organize@0.4.0':
     resolution: {integrity: sha512-6b9tjOfsCsiawp4mMSNKK3N2UvOdg90PRyYUXJuD2bZccGSsnYWzvaSuJHSiK+4mKR81iu6ioEf4YWtR1Hg1pg==}
@@ -6434,6 +6442,8 @@ snapshots:
   '@krizaka/orazaka-shared@1.5.0':
     dependencies:
       zod: 4.6.7
+
+  '@krizaka/org@0.7.0': {}
 
   '@krizaka/organize@0.4.0': {}
 
