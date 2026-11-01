@@ -63,6 +63,44 @@ export const landing: Record<Locale, LandingDictionary> = {
         },
       },
     },
+    capabilities: {
+      eyebrow: "What Orazaka does",
+      title: "What Orazaka does, in plain words",
+      lead: "The industry term sits beside each one, so you can recognise it.",
+      soon: "In development",
+      items: {
+        documents: {
+          tag: "RAG",
+          title: "Answers grounded in your own documents",
+          text: "The model looks in your documents before it answers. The search engine exists; sending your files from the app is in development.",
+        },
+        models: {
+          tag: "LLM",
+          title: "The language models you choose",
+          text: "On your Mac or hosted, your pick. A hosted model is used only if you connect it, and then your requests go to its provider.",
+        },
+        tools: {
+          tag: "MCP",
+          title: "Plugs into your tools through an open standard",
+          text: "Register your own MCP servers from the command line or the API; what they know joins the conversation.",
+        },
+        agents: {
+          tag: "Agents · tools",
+          title: "Agents that use tools and ask first",
+          text: "An agent shows its plan and acts only once you approve it.",
+        },
+        studios: {
+          tag: "Studios",
+          title: "Studios for images, video and documents",
+          text: "A sentence or a file becomes an image, a video or a checked document, with its cost shown before it runs.",
+        },
+        runs: {
+          tag: "Run id",
+          title: "Every result traced to its run",
+          text: "The output, its steps and its input stay together under one run id, so it can be checked again.",
+        },
+      },
+    },
     records: {
       eyebrow: "Measured",
       title: "One prompt, three models, three run records.",
@@ -171,6 +209,44 @@ export const landing: Record<Locale, LandingDictionary> = {
         home: {
           title: "Un chat et des agents qui demandent d'abord",
           text: "Les modèles tournent sur vos machines ; un modèle hébergé seulement si vous en branchez un. Un agent montre son plan et n'agit qu'une fois approuvé.",
+        },
+      },
+    },
+    capabilities: {
+      eyebrow: "Ce qu'Orazaka sait faire",
+      title: "Ce qu'Orazaka sait faire, en mots simples",
+      lead: "Le terme du métier figure à côté de chaque point, pour le reconnaître.",
+      soon: "En développement",
+      items: {
+        documents: {
+          tag: "RAG",
+          title: "Des réponses fondées sur vos propres documents",
+          text: "Le modèle cherche dans vos documents avant de répondre. Le moteur de recherche existe ; l'envoi de vos fichiers depuis l'app est en développement.",
+        },
+        models: {
+          tag: "LLM",
+          title: "Les modèles de langage que vous choisissez",
+          text: "Sur votre Mac ou hébergés, à vous de choisir. Un modèle hébergé n'est utilisé que si vous le branchez ; vos requêtes partent alors chez son fournisseur.",
+        },
+        tools: {
+          tag: "MCP",
+          title: "Se branche à vos outils par un standard ouvert",
+          text: "Enregistrez vos propres serveurs MCP en ligne de commande ou par l'API ; ce qu'ils savent rejoint la conversation.",
+        },
+        agents: {
+          tag: "Agents · outils",
+          title: "Des agents qui utilisent des outils et demandent d'abord",
+          text: "Un agent montre son plan et n'agit qu'une fois approuvé.",
+        },
+        studios: {
+          tag: "Studios",
+          title: "Des Studios pour l'image, la vidéo et les documents",
+          text: "Une phrase ou un fichier devient une image, une vidéo ou un document vérifié, avec son coût affiché avant l'exécution.",
+        },
+        runs: {
+          tag: "Run id",
+          title: "Chaque résultat relié à son exécution",
+          text: "La sortie, ses étapes et son entrée restent ensemble sous un même identifiant de run, pour pouvoir tout revérifier.",
         },
       },
     },
