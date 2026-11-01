@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { SupervisionScreen } from "./SupervisionScreen";
 
-export const metadata: Metadata = { title: "Supervision · Orazaka Operations" };
+export const metadata: Metadata = { title: "Supervision · Sovkora Operations" };
 
 /** `/` — the console opens on the platform's health: usage, credits, jobs, latency. */
 export default function SupervisionPage() {

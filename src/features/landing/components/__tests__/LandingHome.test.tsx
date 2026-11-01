@@ -220,7 +220,7 @@ describe("LandingPage while sign-in and sign-up are closed (the default)", () =>
       "/login",
     );
     expect(within(bar).queryByRole("link", { name: /talk to us|contact/i })).toBeNull();
-    const centre = within(bar).getByRole("navigation", { name: "Orazaka" });
+    const centre = within(bar).getByRole("navigation", { name: "Sovkora" });
     expect(
       within(centre)
         .getAllByRole("link")

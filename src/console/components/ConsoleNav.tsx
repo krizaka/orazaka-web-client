@@ -19,7 +19,7 @@ const SECTIONS = CONSOLE_GROUPS.map((g) => ({
 }));
 
 /**
- * The console's bar (@krizaka/ui NavBar, full width): the Orazaka mark, its five sections (config/sections.ts) with the
+ * The console's bar (@krizaka/ui NavBar, full width): the Sovkora mark, its five sections (config/sections.ts) with the
  * light gliding to the current one, the environment badge (DEV), the theme toggle and sign-out; a disclosure panel below
  * `md`. A private console: no family switcher (NavBar.Family) and no family footer — they are for the public sites.
  */

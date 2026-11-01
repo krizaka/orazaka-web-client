@@ -1,6 +1,6 @@
 /**
  * @file release.ts
- * @description The Orazaka Desktop download, read from the GitHub releases of krizaka/orazaka at build time (and
+ * @description The Sovkora Desktop download, read from the GitHub releases of krizaka/orazaka at build time (and
  * refreshed hourly): the latest release tagged `desktop-*`, its `.dmg` and the SHA-256 published beside it. Never a
  * version or a URL typed here — when no release can be read the page says so and links the releases page.
  */

@@ -6,7 +6,7 @@ import { readFileSync } from "node:fs";
 const form = readFileSync(new URL("../../app/console/login/LoginForm.tsx", import.meta.url), "utf8");
 const page = readFileSync(new URL("../../app/console/login/page.tsx", import.meta.url), "utf8");
 
-test("the sign-in is built on @krizaka/ui/auth-layout and wears the Orazaka brand", () => {
+test("the sign-in is built on @krizaka/ui/auth-layout and wears the Sovkora brand", () => {
   assert.match(form, /from "@krizaka\/ui\/auth-layout"/);
   assert.match(form, /brand-orazaka/);
   assert.match(form, /<OrazakaLogo size=\{112\} \/>/); // the animated mark in the brand panel

@@ -41,7 +41,7 @@ function route(request: NextRequest) {
 
   // Both entry points closed (AUTH_LOGIN_ENABLED / AUTH_SIGNUP_ENABLED false): nothing is proxied to the backend.
   if (authClosed(readAuthFlags()) && isBackendPath(pathname)) {
-    return NextResponse.json({ error: "Orazaka is in development — sign-in is closed on this site" }, { status: 404 });
+    return NextResponse.json({ error: "Sovkora is in development — sign-in is closed on this site" }, { status: 404 });
   }
 
   // Allow public routes, API routes, and static assets through

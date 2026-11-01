@@ -27,7 +27,7 @@ interface ProvidersProps {
  * The theme is the organisation's (@krizaka/ui/theme): <ThemeScript /> in the root layout applies the persisted
  * choice before the first paint, this provider keeps it; {@link useAppearance} maps it to the profile's value.
  *
- * <AppCharts> gives every chart the reader's locale, the Orazaka palette and its words.
+ * <AppCharts> gives every chart the reader's locale, the Sovkora palette and its words.
  *
  * <MotionObserver /> is mounted once here: every `[data-reveal]` of the app (the landing and the signed-in screens)
  * rises into view. Nothing follows the pointer (krizaka-ui#393).

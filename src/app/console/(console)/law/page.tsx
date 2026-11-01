@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { LawScreen } from "@/console/features/law/components/LawScreen";
 
-export const metadata: Metadata = { title: "Law · Orazaka Operations" };
+export const metadata: Metadata = { title: "Law · Sovkora Operations" };
 
 /** `/law` — Law → Proposals (ADR-089 §8): the review queue and promotion of the rules from the law, the corpus, the demand. */
 export default function LawPage() {

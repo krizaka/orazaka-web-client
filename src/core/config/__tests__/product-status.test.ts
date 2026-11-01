@@ -2,7 +2,7 @@ import { translations, type Locale } from "@/core/context/translations";
 import { PRODUCT_STATUS, inDevelopment } from "@/core/config/product-status";
 
 /**
- * krizaka/krizaka-com#468: while Orazaka is in development, no public copy (landing, pricing, desktop, mobile,
+ * krizaka/krizaka-com#468: while Sovkora is in development, no public copy (landing, pricing, desktop, mobile,
  * open source) may say it is available or can be bought. Words are listed in en and fr.
  */
 const FORBIDDEN = [

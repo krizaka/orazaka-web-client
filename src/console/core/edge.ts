@@ -36,7 +36,7 @@ export function consoleResponse(request: NextRequest, rewritePath: string): Next
   if (decision === "not-found") {
     return noindex(
       NextResponse.json(
-        { error: "Orazaka Operations is in development — sign-in is closed on this site" },
+        { error: "Sovkora Operations is in development — sign-in is closed on this site" },
         { status: 404 },
       ),
     );

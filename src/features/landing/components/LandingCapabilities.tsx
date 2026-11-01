@@ -18,7 +18,7 @@ const ORDER = [
 const IN_DEVELOPMENT: ReadonlySet<(typeof ORDER)[number]> = new Set(["documents"]);
 
 /**
- * What Orazaka does, in plain words: one H2, six short items, each with the industry term as a quiet tag (RAG, LLM, MCP…).
+ * What Sovkora does, in plain words: one H2, six short items, each with the industry term as a quiet tag (RAG, LLM, MCP…).
  * An item that is not shipped says « In development » — the claims are the ones the platform runs today.
  */
 export function LandingCapabilities() {

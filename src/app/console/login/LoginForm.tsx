@@ -79,7 +79,7 @@ export function LoginForm({ preview }: Readonly<{ preview?: ClosedPreview }>) {
         }
         asideFooter={
           <>
-            © {new Date().getFullYear()} Orazaka · {consoleCopy.product} {consoleCopy.console}
+            © {new Date().getFullYear()} Sovkora · {consoleCopy.product} {consoleCopy.console}
           </>
         }
         title={copy.title}

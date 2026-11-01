@@ -11,7 +11,7 @@ import { useAuthFlags } from "@/core/context/AuthFlagsContext";
 
 /**
  * The one action of the public bar: using the app. A visitor sees « Sign in » while sign-up is closed and « Try
- * Orazaka » once it is open (`AUTH_SIGNUP_ENABLED`); a signed-in person sees « Open the app » and their avatar. The
+ * Sovkora » once it is open (`AUTH_SIGNUP_ENABLED`); a signed-in person sees « Open the app » and their avatar. The
  * session is read in the browser (next-auth's `/api/auth/session`), so every public page stays static; it is only a
  * display hint — the app and the API check the real session on every request.
  */

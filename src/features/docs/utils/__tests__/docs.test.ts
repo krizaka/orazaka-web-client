@@ -27,7 +27,7 @@ describe("published docs", () => {
   const docs = listDocs();
 
   it("lists the allow-listed docs, each with its markdown file and a journey", () => {
-    // The essential only (2026-10-23): the internal inventories stay in the Orazaka repository.
+    // The essential only (2026-10-23): the internal inventories stay in the Sovkora repository.
     expect(docs.length).toBeGreaterThanOrEqual(14);
     for (const unpublished of ["tools", "automation", "jobs", "admin", "mobile-guide", "licensing"])
       expect(docs.map((d) => d.slug)).not.toContain(unpublished);

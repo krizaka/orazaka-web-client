@@ -5,7 +5,7 @@ import { cn } from "@krizaka/ui/cn";
 import { useTranslation } from "@/core/context/LocaleContext";
 
 /**
- * Orazaka says what it is, like Yomizaka and Akinaza: in development, still being tested. One line from the messages (en/fr),
+ * Sovkora says what it is, like Yomizaka and Akinaza: in development, still being tested. One line from the messages (en/fr),
  * on the hero and on the sign-in; no « ready » wording anywhere (krizaka/orazaka#516).
  */
 export function DevelopmentStatus({ className = "" }: Readonly<{ className?: string }>) {

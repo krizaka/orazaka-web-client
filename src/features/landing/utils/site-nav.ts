@@ -1,6 +1,6 @@
 /**
  * The public bar of dev.orazaka.com as data — the product-site standard of every Krizaka product (addendum 2026-10-15,
- * docs/ux/information-architecture.md of the Orazaka workspace): the mark, then at most four entries grouped by the
+ * docs/ux/information-architecture.md of the Sovkora workspace): the mark, then at most four entries grouped by the
  * visitor's question — **Product ▾** (what is it, what does it install, where do I get it?), **Docs** (how do I use
  * it?), then **Pricing** and **Open source** as direct links (#290). Simplified for epic #231: the gallery, the models page, the feature tours and the
  * platforms menu are gone (docs and the home hold what they said).
@@ -34,7 +34,7 @@ export interface NavGroup {
   entries: readonly NavEntry[];
 }
 
-/** Product ▾ — what Orazaka does (the home's « What it does »), and where to get it (the Mac app). */
+/** Product ▾ — what Sovkora does (the home's « What it does »), and where to get it (the Mac app). */
 const PRODUCT: NavGroup = {
   id: NavGroupId.Product,
   entries: [

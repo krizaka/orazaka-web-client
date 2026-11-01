@@ -18,7 +18,7 @@ export interface DocEntry {
   title: string;
   intro: string;
   audience: string;
-  /** Path of the source file in the Orazaka repository (null for a page that is not a markdown file). */
+  /** Path of the source file in the Sovkora repository (null for a page that is not a markdown file). */
   source: string | null;
   /** Written from the code by `orazaka docs sync`. */
   generated: boolean;

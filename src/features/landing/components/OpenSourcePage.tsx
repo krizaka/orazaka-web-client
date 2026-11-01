@@ -18,7 +18,7 @@ export const LICENSING_URL = `${REPO_URL}/blob/main/docs/LICENSING.md`;
 
 /**
  * `/open-source` (docs-hub template): the repositories (read at build), the licence line, self-hosting in three lines and how to
- * contribute. Words: `t.openSource`. Every claim restates the Orazaka repository's LICENSING and SELF_HOSTING pages.
+ * contribute. Words: `t.openSource`. Every claim restates the Sovkora repository's LICENSING and SELF_HOSTING pages.
  */
 export function OpenSourcePage({ repos }: Readonly<{ repos: readonly ListedRepo[] | null }>) {
   const { t, locale } = useTranslation();

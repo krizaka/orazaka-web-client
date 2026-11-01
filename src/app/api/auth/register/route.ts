@@ -9,7 +9,7 @@ import { parseFlag } from "@/core/config/auth-flags";
 
 export async function POST(req: Request) {
   if (!parseFlag(process.env.AUTH_SIGNUP_ENABLED)) {
-    return NextResponse.json({ error: "Sign-up is closed: Orazaka is in development" }, { status: 403 });
+    return NextResponse.json({ error: "Sign-up is closed: Sovkora is in development" }, { status: 403 });
   }
   const edgeUrl = process.env.ROUTER_URL || process.env.GATEWAY_URL || "http://localhost:8088";
   try {

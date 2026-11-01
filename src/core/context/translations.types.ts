@@ -895,9 +895,9 @@ export interface TranslationDictionary {
   notFound: NotFoundDictionary;
   /** The Mobile section of the home page and /mobile. */
   mobile: MobileDictionary;
-  /** /desktop (Orazaka for Mac) and the home page's "On your Mac" band. */
+  /** /desktop (Sovkora for Mac) and the home page's "On your Mac" band. */
   desktop: DesktopDictionary;
-  /** /pricing (the editions of Orazaka). */
+  /** /pricing (the editions of Sovkora). */
   pricing: PricingDictionary;
   /** /open-source. */
   openSource: OpenSourceDictionary;

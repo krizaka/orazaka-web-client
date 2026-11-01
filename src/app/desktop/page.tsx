@@ -13,7 +13,7 @@ export const metadata: Metadata = {
   alternates: { canonical: "/desktop" },
 };
 
-/** `/desktop` — Orazaka for Mac. The download is read from the latest `desktop-*` GitHub release (refreshed hourly); the phone apps' store buttons appear when `APP_STORE_IOS_URL` / `APP_STORE_ANDROID_URL` are set at build. */
+/** `/desktop` — Sovkora for Mac. The download is read from the latest `desktop-*` GitHub release (refreshed hourly); the phone apps' store buttons appear when `APP_STORE_IOS_URL` / `APP_STORE_ANDROID_URL` are set at build. */
 export const dynamic = "force-dynamic";
 
 export default async function Page() {

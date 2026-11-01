@@ -3,7 +3,7 @@ import { existsSync, readdirSync, readFileSync, statSync } from "node:fs";
 import { join } from "node:path";
 import { llmsFullText, llmsText } from "@/app/_seo/seo";
 
-// NAV-INDEP: once deployed, Orazaka is an independent product — no link to, nor mention of, another product's domain.
+// NAV-INDEP: once deployed, Sovkora is an independent product — no link to, nor mention of, another product's domain.
 // Krizaka is its publisher and appears in the footer ("A Krizaka product" -> www.krizaka.com), nothing else.
 const OTHER_PRODUCTS = /(?:[a-z0-9-]+\.)*(?:yomizaka|akinaza)\.com/i;
 
@@ -19,7 +19,7 @@ function* walk(dir: string): Generator<string> {
   }
 }
 
-describe("Orazaka is independent of the other products", () => {
+describe("Sovkora is independent of the other products", () => {
   it("no source, content, public file nor built page names another product's domain", () => {
     const roots = ["src", "content", "public", ".next/server/app"].map((r) => join(process.cwd(), r));
     const offenders: string[] = [];
