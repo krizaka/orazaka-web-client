@@ -15,17 +15,17 @@ importers:
         specifier: ^0.10.0
         version: 0.10.0(zod@4.6.7)
       '@krizaka/charts':
-        specifier: ^0.6.2
-        version: 0.6.2(@krizaka/ui@3.71.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
+        specifier: ^0.7.0
+        version: 0.7.0(@krizaka/ui@3.71.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       '@krizaka/fonts':
-        specifier: ^0.5.1
-        version: 0.5.1
+        specifier: ^0.5.2
+        version: 0.5.2
       '@krizaka/icons':
-        specifier: ^0.9.0
-        version: 0.9.0(react@19.2.4)
+        specifier: ^0.9.1
+        version: 0.9.1(react@19.2.4)
       '@krizaka/intl':
-        specifier: ^0.4.0
-        version: 0.4.0
+        specifier: ^0.4.1
+        version: 0.4.1
       '@krizaka/orazaka-design-system':
         specifier: ^3.4.0
         version: 3.4.0(@krizaka/query@0.2.2(@types/react@19.3.0)(csstype@3.2.3)(react@19.2.4))(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(next@16.4.3(@babel/core@7.29.7(supports-color@8.1.1))(@playwright/test@1.64.1)(@types/node@25.9.9)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(tailwind-merge@3.7.0)(tailwindcss@4.3.3)
@@ -51,11 +51,11 @@ importers:
         specifier: ^3.71.0
         version: 3.71.0(@krizaka/query@0.2.2(@types/react@19.3.0)(csstype@3.2.3)(react@19.2.4))(@krizaka/tailwind@3.71.0)(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(tailwind-merge@3.7.0)(tailwindcss@4.3.3)
       '@tanstack/react-query':
-        specifier: ^5.100.11
-        version: 5.104.5(@types/react@19.3.0)(react@19.2.4)
+        specifier: ^5.105.0
+        version: 5.105.0(@types/react@19.3.0)(react@19.2.4)
       '@tanstack/react-query-devtools':
-        specifier: ^5.100.11
-        version: 5.104.5(@tanstack/react-query@5.104.5(@types/react@19.3.0)(react@19.2.4))(@types/react@19.3.0)(csstype@3.2.3)(react@19.2.4)
+        specifier: ^5.105.0
+        version: 5.105.0(@tanstack/react-query@5.105.0(@types/react@19.3.0)(react@19.2.4))(@types/react@19.3.0)(csstype@3.2.3)(react@19.2.4)
       date-fns:
         specifier: ^4.3.0
         version: 4.4.0
@@ -955,11 +955,11 @@ packages:
       zod:
         optional: true
 
-  '@krizaka/charts@0.6.2':
-    resolution: {integrity: sha512-CPPy31ubwk1sb41bGAc+t7rrj4Cfy/+eMi+po2HTMx8/nMLL0PJ+vR16W8L3RDY2QOiEUMmv7rqA7U6H+4o5hQ==}
+  '@krizaka/charts@0.7.0':
+    resolution: {integrity: sha512-ng1t0tzMKSB98hfFtq6ymjQJCVYXA1+kGaDo0iXrVC/n4oqL+U1F0wb83yaoCLo8KFV7ZFq5vItCjrpjW6T4+w==}
     engines: {node: '>=22'}
     peerDependencies:
-      '@krizaka/ui': ^3.55.0
+      '@krizaka/ui': ^3.62.0
       react: '>=19'
       react-dom: '>=19'
       react-native: '>=0.76'
@@ -995,8 +995,8 @@ packages:
     resolution: {integrity: sha512-51ouJYSak2hJE8Rb6Ui5p+ZL2Yc2IlvY+qLGo99c6TiyOUKfb6ak4GMXEunTAng173ID7JZaqEPjlNPBXcn1nw==}
     engines: {node: '>=22'}
 
-  '@krizaka/fonts@0.5.1':
-    resolution: {integrity: sha512-w2E2qva5JQ579gbi/Wz5ThdQXl6Nx8OUajKP53ekU43bFkAehAMf1mpkZafWcS5xpx4sbfDq8yzeuA3EBRhXQA==}
+  '@krizaka/fonts@0.5.2':
+    resolution: {integrity: sha512-GvoRwpVub9NmV+svByXVizDfvjyeVsESucszqe6bqipO7TtPaqJXcZymP7Pc8q3bk8pguwgXOgJ5JWQQ8grGBw==}
     engines: {node: '>=22'}
 
   '@krizaka/icons@0.1.0':
@@ -1009,8 +1009,8 @@ packages:
       react-native-svg:
         optional: true
 
-  '@krizaka/icons@0.9.0':
-    resolution: {integrity: sha512-WKjh6UGoTXaRndWJ/c3T8zDTwZ0fcqacPSHBDx0aDD4+BJowDfE+ueinrpsG1Z7VPI2lfjL4iTP0Cz0zlEBbTw==}
+  '@krizaka/icons@0.9.1':
+    resolution: {integrity: sha512-fqobkUmeeXxK6D9j096MIzhElU1gpzryp27U5GDKBqUTLl87pDSXRCDRPTSQYoIfO4nBkfGOmkDpd+Qt7uSgBQ==}
     engines: {node: '>=22'}
     peerDependencies:
       react: '>=18'
@@ -1018,10 +1018,6 @@ packages:
     peerDependenciesMeta:
       react-native-svg:
         optional: true
-
-  '@krizaka/intl@0.4.0':
-    resolution: {integrity: sha512-kKYGRW8b3fHu1v7a4CIDUfDmrLBkoVFscytaeWGprkLWHLwed00JyIvnWtSz9WW5J6lDOYF3ZMhZi8vcwCSyPA==}
-    engines: {node: '>=22'}
 
   '@krizaka/intl@0.4.1':
     resolution: {integrity: sha512-mxk3T8OBwdHYC2nJMUDqNzts3mu2gcvdcqZ7qBFRq64D8cfxqR1d3hTy6lYpMjyCnxmsuBBZ6ACrc1+tlnjB8g==}
@@ -2264,8 +2260,14 @@ packages:
   '@tanstack/query-core@5.104.5':
     resolution: {integrity: sha512-Q94gI8Opd+CbdVNOdj8ZCyV8WqLYitrDq1t96Xc8WZT6lY0r5iRnJLXYDxMex7EEf2v+mXvn4FcjaBKSxXZQ9A==}
 
+  '@tanstack/query-core@5.105.0':
+    resolution: {integrity: sha512-7p56vRmT/z4UJ6sctGIdl5WRUQyUv53IUpUwEKi2g97zMbO7zh8ZsCLffGAvCPBR4xD72e3VXsDyLwXHhoNTMQ==}
+
   '@tanstack/query-devtools@5.104.5':
     resolution: {integrity: sha512-BLVEw4lFF7aIRsfqGvI50SSR9oN46/EmlygC+3h5TUdI+fL8GnMQialL3H92TbYi7J1b/hYlUGnckBT2uG5h8w==}
+
+  '@tanstack/query-devtools@5.105.0':
+    resolution: {integrity: sha512-vRJf9XRHB+P2aMSAEHWtMLsAf1nC9NSsHVqSHiT/FZYU/+5LEo2BOrXKskURQnJEzg6whaBeP6iMn0PS30KJrQ==}
 
   '@tanstack/query-persist-client-core@5.104.5':
     resolution: {integrity: sha512-z0+AuCPPf53bl1nntO9i8ZXGvSdO7nGRZFtcpM2DCZKz88UBzHpJZZJpuUkLFkDU7xYHnUOMrOJmky+Et1nRLg==}
@@ -2289,6 +2291,16 @@ packages:
       '@types/react':
         optional: true
 
+  '@tanstack/react-query-devtools@5.105.0':
+    resolution: {integrity: sha512-FfRQxvqngBYqTLsuAB+qaj0Ef3KkUpknuRoyUjcl8OCZhwPocTHEvhMPAoBmk1FtO6nXUIVCC7F9A2AHH01SLQ==}
+    peerDependencies:
+      '@tanstack/react-query': ^5.105.0
+      '@types/react': ^18 || ^19
+      react: ^18 || ^19
+    peerDependenciesMeta:
+      '@types/react':
+        optional: true
+
   '@tanstack/react-query-persist-client@5.104.5':
     resolution: {integrity: sha512-nXtb9e3smFl5xzGuttzck5VjwA18ZolPLj1ybt2zjEJudIUh/gRFxeNY0855YFp/+N0V1s/lpWLSrO89iQ5IcQ==}
     peerDependencies:
@@ -2301,6 +2313,15 @@ packages:
 
   '@tanstack/react-query@5.104.5':
     resolution: {integrity: sha512-RORgFe052U+93weaNuqg7qHq7vNVNzXN/VrXqD4bbAuQCWUqOl2lV5Ui9flWk5CVvMyL/Bh27QWhzwH0aaOx9g==}
+    peerDependencies:
+      '@types/react': ^18 || ^19
+      react: ^18 || ^19
+    peerDependenciesMeta:
+      '@types/react':
+        optional: true
+
+  '@tanstack/react-query@5.105.0':
+    resolution: {integrity: sha512-y+hMuDERvgg6ay1da0V1a6ZC0ZONt7dELxSFkqRZuwm7p1TTZs0MoXrPlBRflIpRoYjvzQVYxycnLImpFLhWrw==}
     peerDependencies:
       '@types/react': ^18 || ^19
       react: ^18 || ^19
@@ -6355,9 +6376,9 @@ snapshots:
     optionalDependencies:
       zod: 4.6.7
 
-  '@krizaka/charts@0.6.2(@krizaka/ui@3.71.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)':
+  '@krizaka/charts@0.7.0(@krizaka/ui@3.71.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)':
     dependencies:
-      '@krizaka/intl': 0.4.0
+      '@krizaka/intl': 0.4.1
       '@krizaka/ui': 3.71.0(@krizaka/query@0.2.2(@types/react@19.3.0)(csstype@3.2.3)(react@19.2.4))(@krizaka/tailwind@3.71.0)(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(tailwind-merge@3.7.0)(tailwindcss@4.3.3)
       d3-geo: 3.1.1
       echarts: 6.1.0
@@ -6388,17 +6409,15 @@ snapshots:
 
   '@krizaka/db@0.3.1': {}
 
-  '@krizaka/fonts@0.5.1': {}
+  '@krizaka/fonts@0.5.2': {}
 
   '@krizaka/icons@0.1.0(react@19.2.4)':
     dependencies:
       react: 19.2.4
 
-  '@krizaka/icons@0.9.0(react@19.2.4)':
+  '@krizaka/icons@0.9.1(react@19.2.4)':
     dependencies:
       react: 19.2.4
-
-  '@krizaka/intl@0.4.0': {}
 
   '@krizaka/intl@0.4.1': {}
 
@@ -7622,6 +7641,8 @@ snapshots:
 
   '@tanstack/query-core@5.104.5': {}
 
+  '@tanstack/query-core@5.105.0': {}
+
   '@tanstack/query-devtools@5.104.5(csstype@3.2.3)':
     dependencies:
       '@kobalte/core': 0.13.14(solid-js@1.9.17)
@@ -7630,6 +7651,22 @@ snapshots:
       '@solid-primitives/storage': 1.3.11(solid-js@1.9.17)
       '@tanstack/match-sorter-utils': 9.2.6
       '@tanstack/query-core': 5.104.5
+      clsx: 2.1.1
+      goober: 2.1.19(csstype@3.2.3)
+      solid-js: 1.9.17
+      solid-transition-group: 0.2.3(solid-js@1.9.17)
+      superjson: 2.2.6
+    transitivePeerDependencies:
+      - csstype
+
+  '@tanstack/query-devtools@5.105.0(csstype@3.2.3)':
+    dependencies:
+      '@kobalte/core': 0.13.14(solid-js@1.9.17)
+      '@solid-primitives/keyed': 1.5.3(solid-js@1.9.17)
+      '@solid-primitives/resize-observer': 2.2.0(solid-js@1.9.17)
+      '@solid-primitives/storage': 1.3.11(solid-js@1.9.17)
+      '@tanstack/match-sorter-utils': 9.2.6
+      '@tanstack/query-core': 5.105.0
       clsx: 2.1.1
       goober: 2.1.19(csstype@3.2.3)
       solid-js: 1.9.17
@@ -7660,6 +7697,16 @@ snapshots:
     transitivePeerDependencies:
       - csstype
 
+  '@tanstack/react-query-devtools@5.105.0(@tanstack/react-query@5.105.0(@types/react@19.3.0)(react@19.2.4))(@types/react@19.3.0)(csstype@3.2.3)(react@19.2.4)':
+    dependencies:
+      '@tanstack/query-devtools': 5.105.0(csstype@3.2.3)
+      '@tanstack/react-query': 5.105.0(@types/react@19.3.0)(react@19.2.4)
+      react: 19.2.4
+    optionalDependencies:
+      '@types/react': 19.3.0
+    transitivePeerDependencies:
+      - csstype
+
   '@tanstack/react-query-persist-client@5.104.5(@tanstack/react-query@5.104.5(@types/react@19.3.0)(react@19.2.4))(@types/react@19.3.0)(react@19.2.4)':
     dependencies:
       '@tanstack/query-persist-client-core': 5.104.5
@@ -7671,6 +7718,13 @@ snapshots:
   '@tanstack/react-query@5.104.5(@types/react@19.3.0)(react@19.2.4)':
     dependencies:
       '@tanstack/query-core': 5.104.5
+      react: 19.2.4
+    optionalDependencies:
+      '@types/react': 19.3.0
+
+  '@tanstack/react-query@5.105.0(@types/react@19.3.0)(react@19.2.4)':
+    dependencies:
+      '@tanstack/query-core': 5.105.0
       react: 19.2.4
     optionalDependencies:
       '@types/react': 19.3.0
