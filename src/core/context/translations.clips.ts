@@ -15,9 +15,9 @@ export type ClipsDictionary = Record<ClipId, ClipCopy>;
 export const clips = {
   en: {
     take: {
-      alt: "The Sovkora chat: a question typed, the request routed, the answer written.",
+      alt: "The {brand} chat: a question typed, the request routed, the answer written.",
       caption: "Eric asks a question; the answer is written on this machine.",
-      cues: ["Eric types a question.", "Sovkora routes the request.", "The answer is written on this machine."],
+      cues: ["Eric types a question.", "{brand} routes the request.", "The answer is written on this machine."],
     },
     workspace: {
       alt: "The workspace home: jobs, success rate, time to a result.",
@@ -35,7 +35,7 @@ export const clips = {
       cues: ["Every result is kept under Jobs.", "One result opened: its steps and its run id."],
     },
     "phone-studio": {
-      alt: "The Sovkora phone app: a sentence typed, the run in progress, the generated image with its seed and model.",
+      alt: "The {brand} phone app: a sentence typed, the run in progress, the generated image with its seed and model.",
       caption: "From your phone: a sentence in, an image out.",
       cues: [
         "Mira describes the picture she needs.",
@@ -44,16 +44,16 @@ export const clips = {
       ],
     },
     "phone-ask": {
-      alt: "The Sovkora phone app chat: a question typed, the answer streamed in.",
+      alt: "The {brand} phone app chat: a question typed, the answer streamed in.",
       caption: "The same chat as on the web, in your hand.",
       cues: ["Mira asks a question.", "The answer streams in."],
     },
   },
   fr: {
     take: {
-      alt: "Le chat de Sovkora : une question tapée, la requête routée, la réponse écrite.",
+      alt: "Le chat de {brand} : une question tapée, la requête routée, la réponse écrite.",
       caption: "Eric pose une question ; la réponse s'écrit sur cette machine.",
-      cues: ["Eric tape une question.", "Sovkora route la requête.", "La réponse s'écrit sur cette machine."],
+      cues: ["Eric tape une question.", "{brand} route la requête.", "La réponse s'écrit sur cette machine."],
     },
     workspace: {
       alt: "L'accueil de l'espace de travail : tâches, taux de réussite, temps jusqu'au résultat.",
@@ -71,7 +71,7 @@ export const clips = {
       cues: ["Chaque résultat est conservé dans Tâches.", "Un résultat ouvert : ses étapes et son identifiant de run."],
     },
     "phone-studio": {
-      alt: "L'app mobile de Sovkora : une phrase tapée, le run en cours, l'image générée avec sa graine et son modèle.",
+      alt: "L'app mobile de {brand} : une phrase tapée, le run en cours, l'image générée avec sa graine et son modèle.",
       caption: "Depuis votre téléphone : une phrase, une image.",
       cues: [
         "Mira décrit l'image dont elle a besoin.",
@@ -80,7 +80,7 @@ export const clips = {
       ],
     },
     "phone-ask": {
-      alt: "Le chat de l'app mobile de Sovkora : une question tapée, la réponse qui arrive en continu.",
+      alt: "Le chat de l'app mobile de {brand} : une question tapée, la réponse qui arrive en continu.",
       caption: "Le même chat que sur le web, dans votre main.",
       cues: ["Mira pose une question.", "La réponse arrive en continu."],
     },

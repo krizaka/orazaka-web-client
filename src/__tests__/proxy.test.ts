@@ -129,3 +129,15 @@ describe("the bar's session hint follows the next-auth cookie (krizaka-ui#827)",
     expect(ask("/", "next-auth.session-token=tok123").headers.get("location")).toBeNull();
   });
 });
+
+describe("proxy with a language prefix (Loi 96)", () => {
+  it.each(["/fr/login", "/en/login", "/fr", "/en/docs"])("serves %s as the page without its prefix", (path) => {
+    const res = call(path);
+    expect(res.status).toBe(200);
+    expect(res.headers.get("x-middleware-rewrite")).toMatch(/orazaka\.com(\/login|\/|\/docs)$/);
+  });
+
+  it("gates a prefixed protected page like the page itself", () => {
+    expect(call("/fr/jobs").headers.get("location")).toMatch(/\/login$/);
+  });
+});

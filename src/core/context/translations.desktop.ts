@@ -65,19 +65,19 @@ export interface DesktopDictionary {
 export const desktop: Record<Locale, DesktopDictionary> = {
   en: {
     meta: {
-      title: "Sovkora for Mac — Sovkora",
+      title: "{brand} for Mac — {brand}",
       description:
-        "Run Sovkora on your Mac, or connect it to your workspace: a control panel in the menu bar, and access only to the folders you choose. Apple Silicon, macOS 14+.",
+        "Run {brand} on your Mac, or connect it to your workspace: a control panel in the menu bar, and access only to the folders you choose. Apple Silicon, macOS 14+.",
     },
     hero: {
-      eyebrow: "Sovkora for Mac",
-      title: "Sovkora on your Mac.",
-      lead: "Run the whole engine on this Mac, or connect it to your workspace. A control panel in the menu bar — and Sovkora sees only the folders you choose.",
-      captureAlt: "The Sovkora for Mac control panel: the state of the local engine, Start, Stop and Open workspace",
+      eyebrow: "{brand} for Mac",
+      title: "{brand} on your Mac.",
+      lead: "Run the whole engine on this Mac, or connect it to your workspace. A control panel in the menu bar — and {brand} sees only the folders you choose.",
+      captureAlt: "The {brand} for Mac control panel: the state of the local engine, Start, Stop and Open workspace",
     },
     phone: {
-      eyebrow: "Sovkora on your phone",
-      title: "And the same Sovkora in your hand.",
+      eyebrow: "{brand} on your phone",
+      title: "And the same {brand} in your hand.",
       lead: "The phone app talks to the same platform as the Mac app and the web: a chat, the Studios, your jobs. Recorded on a real device.",
     },
     videos: videosWords("en"),
@@ -94,7 +94,7 @@ export const desktop: Record<Locale, DesktopDictionary> = {
       testBuild: "A test build: not yet signed by Apple — the first launch takes one extra step.",
       version: "Version {version}",
       verify: "Verify the download",
-      verifyBody: "The SHA-256 of the .dmg, published with the release. Compare it with `shasum -a 256 Sovkora_*.dmg`:",
+      verifyBody: "The SHA-256 of the .dmg, published with the release. Compare it with `shasum -a 256 {brand}_*.dmg`:",
       shaCopy: "Copy",
       shaCopied: "Copied",
       shaCopyFailed: "Copy failed — select the hash by hand",
@@ -105,17 +105,17 @@ export const desktop: Record<Locale, DesktopDictionary> = {
       title: "First launch",
       lead: "The app is not signed by Apple yet, so macOS asks once.",
       steps: [
-        { title: "Drag to Applications", body: "Open the .dmg and drag Sovkora onto the Applications folder." },
+        { title: "Drag to Applications", body: "Open the .dmg and drag {brand} onto the Applications folder." },
         {
           title: "Right-click, then Open",
-          body: "In Applications, right-click Sovkora and choose Open — a plain double-click is blocked.",
+          body: "In Applications, right-click {brand} and choose Open — a plain double-click is blocked.",
         },
         { title: "Confirm Open", body: "macOS asks if you are sure: choose Open. It never asks again." },
       ],
       damaged: {
         summary: "If macOS says the app is damaged",
         body: "That is macOS's quarantine on an unsigned download, not a broken file. Remove it once, in a terminal:",
-        terminal: "xattr -dr com.apple.quarantine /Applications/Sovkora.app",
+        terminal: "xattr -dr com.apple.quarantine /Applications/{brand}.app",
       },
     },
     modes: {
@@ -124,7 +124,7 @@ export const desktop: Record<Locale, DesktopDictionary> = {
       items: [
         {
           title: "Connected to your workspace",
-          body: "The app opens your hosted Sovkora (dev.orazaka.com by default, https only). You sign in on the Sovkora page itself — the app never sees or stores your password.",
+          body: "The app opens your hosted {brand} (dev.orazaka.com by default, https only). You sign in on the {brand} page itself — the app never sees or stores your password.",
         },
         {
           title: "Everything on this Mac",
@@ -138,7 +138,7 @@ export const desktop: Record<Locale, DesktopDictionary> = {
     },
     services: {
       title: "What runs when you start it",
-      lead: "« Start » runs the Sovkora command line on your Mac; the panel shows each service's state.",
+      lead: "« Start » runs the {brand} command line on your Mac; the panel shows each service's state.",
       head: { service: "Service", runs: "Runs in", does: "What it does" },
       rows: [
         {
@@ -190,25 +190,25 @@ export const desktop: Record<Locale, DesktopDictionary> = {
         "A Mac with Apple Silicon, macOS 14 or later.",
         "Node.js 22 or later.",
         "For everything on this Mac: Docker (OrbStack, Colima or Docker Desktop).",
-        "No Windows or Linux build yet: on those, run Sovkora on a server (/docs/self-hosting).",
+        "No Windows or Linux build yet: on those, run {brand} on a server (/docs/self-hosting).",
       ],
     },
   },
   fr: {
     meta: {
-      title: "Sovkora pour Mac — Sovkora",
+      title: "{brand} pour Mac — {brand}",
       description:
-        "Faites tourner Sovkora sur votre Mac, ou reliez-le à votre espace : un panneau dans la barre des menus, et l'accès aux seuls dossiers que vous choisissez. Apple Silicon, macOS 14+.",
+        "Faites tourner {brand} sur votre Mac, ou reliez-le à votre espace : un panneau dans la barre des menus, et l'accès aux seuls dossiers que vous choisissez. Apple Silicon, macOS 14+.",
     },
     hero: {
-      eyebrow: "Sovkora pour Mac",
-      title: "Sovkora sur votre Mac.",
-      lead: "Faites tourner tout le moteur sur ce Mac, ou reliez-le à votre espace. Un panneau dans la barre des menus — et Sovkora ne voit que les dossiers que vous choisissez.",
-      captureAlt: "Le panneau de Sovkora pour Mac : l'état du moteur local, Démarrer, Arrêter et Ouvrir l'espace",
+      eyebrow: "{brand} pour Mac",
+      title: "{brand} sur votre Mac.",
+      lead: "Faites tourner tout le moteur sur ce Mac, ou reliez-le à votre espace. Un panneau dans la barre des menus — et {brand} ne voit que les dossiers que vous choisissez.",
+      captureAlt: "Le panneau de {brand} pour Mac : l'état du moteur local, Démarrer, Arrêter et Ouvrir l'espace",
     },
     phone: {
-      eyebrow: "Sovkora sur votre téléphone",
-      title: "Et le même Sovkora dans votre main.",
+      eyebrow: "{brand} sur votre téléphone",
+      title: "Et le même {brand} dans votre main.",
       lead: "L'app mobile parle à la même plateforme que l'app Mac et le web : un chat, les Studios, vos tâches. Enregistrée sur un vrai appareil.",
     },
     videos: videosWords("fr"),
@@ -225,7 +225,7 @@ export const desktop: Record<Locale, DesktopDictionary> = {
       testBuild: "Une version de test : pas encore signée par Apple — le premier lancement demande une étape de plus.",
       version: "Version {version}",
       verify: "Vérifier le téléchargement",
-      verifyBody: "Le SHA-256 du .dmg, publié avec la version. Comparez-le avec `shasum -a 256 Sovkora_*.dmg` :",
+      verifyBody: "Le SHA-256 du .dmg, publié avec la version. Comparez-le avec `shasum -a 256 {brand}_*.dmg` :",
       shaCopy: "Copier",
       shaCopied: "Copié",
       shaCopyFailed: "Échec de la copie — sélectionnez l'empreinte à la main",
@@ -236,10 +236,10 @@ export const desktop: Record<Locale, DesktopDictionary> = {
       title: "Premier lancement",
       lead: "L'app n'est pas encore signée par Apple : macOS demande une fois.",
       steps: [
-        { title: "Glisser dans Applications", body: "Ouvrez le .dmg et glissez Sovkora sur le dossier Applications." },
+        { title: "Glisser dans Applications", body: "Ouvrez le .dmg et glissez {brand} sur le dossier Applications." },
         {
           title: "Clic droit, puis Ouvrir",
-          body: "Dans Applications, clic droit sur Sovkora, puis Ouvrir — un simple double-clic est bloqué.",
+          body: "Dans Applications, clic droit sur {brand}, puis Ouvrir — un simple double-clic est bloqué.",
         },
         {
           title: "Confirmer Ouvrir",
@@ -249,7 +249,7 @@ export const desktop: Record<Locale, DesktopDictionary> = {
       damaged: {
         summary: "Si macOS dit que l'app est endommagée",
         body: "C'est la quarantaine de macOS sur un téléchargement non signé, pas un fichier abîmé. Retirez-la une fois, dans un terminal :",
-        terminal: "xattr -dr com.apple.quarantine /Applications/Sovkora.app",
+        terminal: "xattr -dr com.apple.quarantine /Applications/{brand}.app",
       },
     },
     modes: {
@@ -258,7 +258,7 @@ export const desktop: Record<Locale, DesktopDictionary> = {
       items: [
         {
           title: "Relié à votre espace",
-          body: "L'app ouvre votre Sovkora hébergé (dev.orazaka.com par défaut, https seulement). Vous vous connectez sur la page de Sovkora elle-même — l'app ne voit ni ne garde votre mot de passe.",
+          body: "L'app ouvre votre {brand} hébergé (dev.orazaka.com par défaut, https seulement). Vous vous connectez sur la page de {brand} elle-même — l'app ne voit ni ne garde votre mot de passe.",
         },
         {
           title: "Tout sur ce Mac",
@@ -272,7 +272,7 @@ export const desktop: Record<Locale, DesktopDictionary> = {
     },
     services: {
       title: "Ce qui tourne quand vous démarrez",
-      lead: "« Démarrer » lance la ligne de commande Sovkora sur votre Mac ; le panneau montre l'état de chaque service.",
+      lead: "« Démarrer » lance la ligne de commande {brand} sur votre Mac ; le panneau montre l'état de chaque service.",
       head: { service: "Service", runs: "Tourne dans", does: "Ce qu'il fait" },
       rows: [
         {
@@ -336,7 +336,7 @@ export const desktop: Record<Locale, DesktopDictionary> = {
         "Un Mac Apple Silicon, macOS 14 ou plus.",
         "Node.js 22 ou plus.",
         "Pour tout faire sur ce Mac : Docker (OrbStack, Colima ou Docker Desktop).",
-        "Pas encore de version Windows ou Linux : sur ces systèmes, faites tourner Sovkora sur un serveur (/docs/self-hosting).",
+        "Pas encore de version Windows ou Linux : sur ces systèmes, faites tourner {brand} sur un serveur (/docs/self-hosting).",
       ],
     },
   },
