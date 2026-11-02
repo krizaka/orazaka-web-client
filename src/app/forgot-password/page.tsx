@@ -77,7 +77,7 @@ function ForgotPasswordPageContent() {
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder="you@orazaka.com"
+              placeholder="name@example.com"
               autoComplete="email"
             />
           </Field.Root>
