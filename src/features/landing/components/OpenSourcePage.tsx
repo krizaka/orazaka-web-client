@@ -48,18 +48,17 @@ export function OpenSourcePage({ repos }: Readonly<{ repos: readonly ListedRepo[
           {repos ? (
             <CardGrid as="ul" aria-label={o.repos.label} min={280}>
               {repos.map((r) => (
-                <li key={r.name} className="contents">
-                  <LinkCard
-                    href={r.url}
-                    title={r.name}
-                    titleAs="h3"
-                    description={r.description}
-                    meta={r.pushedAt ? `${o.repos.updated} · ${date(r.pushedAt)}` : undefined}
-                    cta={o.source}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  />
-                </li>
+                <LinkCard
+                  key={r.name}
+                  href={r.url}
+                  title={r.name}
+                  titleAs="h3"
+                  description={r.description}
+                  meta={r.pushedAt ? `${o.repos.updated} · ${date(r.pushedAt)}` : undefined}
+                  cta={o.source}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                />
               ))}
             </CardGrid>
           ) : (
@@ -107,10 +106,10 @@ export function OpenSourcePage({ repos }: Readonly<{ repos: readonly ListedRepo[
         <Section id="contribute" title={o.contribute.title} lead={o.contribute.lead} divider>
           <CardGrid as="ul" min={240}>
             {o.contribute.items.map((i) => (
-              <li key={i.title} className="rounded-lg border border-border-subtle bg-surface-1 p-4">
+              <div key={i.title} className="rounded-lg border border-border-subtle bg-surface-1 p-4">
                 <h3 className="font-medium text-fg">{i.title}</h3>
                 <p className="mt-1 text-sm text-fg-secondary">{i.text}</p>
-              </li>
+              </div>
             ))}
           </CardGrid>
           <p className="mt-4">
