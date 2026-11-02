@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { RunScreen } from "@/features/studio/components/RunScreen";
 
 export const metadata: Metadata = {
-  title: "Studio run | Orazaka",
+  title: "Studio run | Sovkora",
   description: "Live progress and results of a Studio run.",
 };
 

@@ -1,6 +1,6 @@
 /**
  * @file packs.ts
- * @description The `pack-index` and `pack` fenced blocks of /docs/packs — data written by Orazaka's docs generator
+ * @description The `pack-index` and `pack` fenced blocks of /docs/packs — data written by Sovkora's docs generator
  * (scripts/lib/pack-blocks.mjs) from orazaka-packs. A block that is not the shape the cards need fails the build.
  */
 

@@ -25,10 +25,10 @@ export function generateStaticParams() {
 
 export async function generateMetadata({ params }: Readonly<{ params: Promise<{ slug: string }> }>): Promise<Metadata> {
   const doc = readDoc((await params).slug);
-  return doc ? { title: `${doc.entry.title} — Orazaka docs`, description: doc.entry.intro } : {};
+  return doc ? { title: `${doc.entry.title} — Sovkora docs`, description: doc.entry.intro } : {};
 }
 
-/** `/docs/<slug>` — one page of the documentation, synced from the Orazaka repository. */
+/** `/docs/<slug>` — one page of the documentation, synced from the Sovkora repository. */
 export default async function DocPage({ params }: Readonly<{ params: Promise<{ slug: string }> }>) {
   const doc = readDoc((await params).slug);
   if (!doc) notFound();

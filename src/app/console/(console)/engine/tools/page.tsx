@@ -3,7 +3,7 @@ import { headers } from "next/headers";
 import { pickLocale } from "@/console/core/copy/closed";
 import { FeatureToolsScreen } from "@/console/features/engine/components/FeatureToolsScreen";
 
-export const metadata: Metadata = { title: "Tool rounds · Orazaka Operations" };
+export const metadata: Metadata = { title: "Tool rounds · Sovkora Operations" };
 
 /** `/engine/tools` — the per-feature tool-round bounds, edited in place, and the feature routes (read only). */
 export default async function FeatureToolsPage() {

@@ -43,7 +43,7 @@ export function LandingFooter({ withLanguage = false }: Readonly<{ withLanguage?
             <Link href="/open-source">{f.openSource}</Link>
           </SiteFooter.Link>
           <SiteFooter.Link asChild>
-            <a href="https://www.krizaka.com/contact">{f.contact}</a>
+            <a href="https://www.krizaka.com/en/contact">{f.contact}</a>
           </SiteFooter.Link>
           {withLanguage && <LocaleSwitch variant="inline" />}
         </>

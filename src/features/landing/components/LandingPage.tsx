@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { ForwardIcon } from "@krizaka/icons";
+import { DevelopmentStatus } from "@/components/DevelopmentStatus";
 import { Button } from "@krizaka/ui/button";
 import { LandingPage as LandingTemplate } from "@krizaka/ui/landing-page";
 import { NumberTicker } from "@krizaka/ui/number-ticker";
@@ -11,6 +12,10 @@ import type { ClipId } from "@/core/clips/clips";
 import { LandingFooter } from "@/features/landing/components/LandingFooter";
 import { LandingNav } from "@/features/landing/components/LandingNav";
 import { PhoneSection } from "@/features/landing/components/PhoneSection";
+import { LandingCapabilities } from "@/features/landing/components/LandingCapabilities";
+import { LandingFilm } from "@/features/landing/components/LandingFilm";
+import { StudioOutputs } from "@/features/landing/components/StudioOutputs";
+import { NO_FILM_FACTS, type FilmFacts } from "@/features/landing/utils/film-records";
 import { LandingRecords } from "@/features/landing/components/LandingRecords";
 import { useEntries } from "@/features/landing/components/useEntries";
 import type { LandingDictionary } from "@/core/context/translations.landing.types";
@@ -36,7 +41,10 @@ const NO_RUNS: MeasuredRuns = { ok: 0, all: 0, models: 0, day: null };
  * where it runs, the products that run on it, the honest comparison, the questions, the closing call. Every word comes
  * from `t.landing` (en/fr); the details live on their pages (/models, /gallery, /desktop, /docs).
  */
-export function LandingPage({ measured = NO_RUNS }: Readonly<{ measured?: MeasuredRuns }>) {
+export function LandingPage({
+  measured = NO_RUNS,
+  film = NO_FILM_FACTS,
+}: Readonly<{ measured?: MeasuredRuns; film?: FilmFacts }>) {
   const { t, locale } = useTranslation();
   const h = t.landing.hero;
   const f = t.landing.features;
@@ -64,6 +72,7 @@ export function LandingPage({ measured = NO_RUNS }: Readonly<{ measured?: Measur
               <Button asChild variant="ghost" size="lg" className="w-full sm:w-auto">
                 <Link href="#records">{h.secondary}</Link>
               </Button>
+              <DevelopmentStatus className="basis-full" />
             </>
           }
           proofs={[
@@ -77,7 +86,15 @@ export function LandingPage({ measured = NO_RUNS }: Readonly<{ measured?: Measur
             size,
             title: f.items[id].title,
             text: f.items[id].text,
-            visual: <Clip id={clip} />,
+            visual:
+              id === "studios" ? (
+                <div className="flex flex-col gap-4">
+                  <Clip id={clip} />
+                  <StudioOutputs facts={film} />
+                </div>
+              ) : (
+                <Clip id={clip} />
+              ),
           }))}
           closing={{
             title: t.landing.cta.title,
@@ -91,6 +108,8 @@ export function LandingPage({ measured = NO_RUNS }: Readonly<{ measured?: Measur
             ),
           }}
         >
+          <LandingCapabilities />
+          <LandingFilm facts={film} />
           <LandingRecords measured={measured} />
           <PhoneSection id="phone-studio" words={t.landing.phone} testId="landing-phone" />
         </LandingTemplate>

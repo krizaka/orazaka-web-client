@@ -65,6 +65,7 @@ const nextConfig: NextConfig = {
   transpilePackages: [
     "@krizaka/orazaka-design-system",
     "@krizaka/orazaka-shared",
+    "@krizaka/org",
     "@krizaka/ui",
     "@krizaka/query",
     "@krizaka/charts",

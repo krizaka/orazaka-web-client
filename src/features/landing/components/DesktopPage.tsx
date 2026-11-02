@@ -9,12 +9,13 @@ import { DeviceFrame } from "@krizaka/ui/step-showcase";
 import { useTranslation } from "@/core/context/LocaleContext";
 import { LandingNav } from "@/features/landing/components/LandingNav";
 import { LandingFooter } from "@/features/landing/components/LandingFooter";
-import { AppVideosSection } from "@/features/landing/components/AppVideosSection";
+import { AppVideosSection, MacVideo } from "@/features/landing/components/AppVideosSection";
 import { DesktopCapture } from "@/features/landing/components/DesktopCapture";
 import { PhoneSection } from "@/features/landing/components/PhoneSection";
 import { SectionHeading } from "@/features/landing/components/SectionHeading";
 import { DownloadBlock } from "@/features/landing/components/DesktopDownloadBlock";
 import type { DesktopDownload } from "@/features/landing/components/DesktopDownloadBlock";
+import { macVideo } from "@/features/landing/utils/app-videos";
 import type { StoreLinks } from "@/core/config/store-links";
 
 import "@/features/landing/landing.css";
@@ -23,7 +24,7 @@ import "@/features/landing/landing.css";
 const STEP_ICONS: ComponentType<IconProps>[] = [DownloadIcon, LocalIcon, CheckIcon];
 
 /**
- * `/desktop` — Orazaka for Mac, read in order: the promise and the app in its macOS window, one Download (its facts
+ * `/desktop` — Sovkora for Mac, read in order: the promise and the app in its macOS window, one Download (its facts
  * quiet, the SHA-256 in a disclosure), the first launch of a build not yet signed by Apple in three steps (the
  * quarantine fallback folded), the two modes, the services « Start » brings up, what to do when something goes wrong.
  * Under it, the phone apps: a store button per store whose URL is configured (`store-links.ts`), else one « coming soon » line.
@@ -78,13 +79,17 @@ export function DesktopPage({
                 </div>
               </section>
             </header>
-            <DeviceFrame kind="desktop" title="Orazaka">
-              <DesktopCapture
-                alt={d.hero.captureAlt}
-                sizes="(min-width: 1024px) 36rem, 92vw"
-                className="h-full w-full object-cover object-top"
-              />
-            </DeviceFrame>
+            {macVideo() ? (
+              <MacVideo />
+            ) : (
+              <DeviceFrame kind="desktop" title="Sovkora">
+                <DesktopCapture
+                  alt={d.hero.captureAlt}
+                  sizes="(min-width: 1024px) 36rem, 92vw"
+                  className="h-full w-full object-cover object-top"
+                />
+              </DeviceFrame>
+            )}
           </article>
         </SectionBackdrop>
 

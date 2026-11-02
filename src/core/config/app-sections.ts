@@ -1,7 +1,7 @@
 /**
  * The sections of the signed-in app — one list read by the left rail (desktop), the drawer (phone) and the ⌘K
  * palette, in this order and with these words (`t.appNav[id]`). The same sections and names as the mobile tab bar and
- * the Mac app, which embeds this client (docs/ux/information-architecture.md of the Orazaka workspace): the phone's tabs
+ * the Mac app, which embeds this client (docs/ux/information-architecture.md of the Sovkora workspace): the phone's tabs
  * (Studios · Chat · Jobs · Settings) are this list without Home, Packs and Usage, in the same order.
  *
  * The rail holds where you work (`main`); the account's own place (Settings) and the console (Admin) sit at its foot.

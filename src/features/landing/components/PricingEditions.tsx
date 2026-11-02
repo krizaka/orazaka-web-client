@@ -9,8 +9,8 @@ import { LandingFooter } from "@/features/landing/components/LandingFooter";
 import { inDevelopment } from "@/core/config/product-status";
 import { priceFor, type PublicPrice } from "@/features/landing/utils/public-prices";
 
-/** Where the Enterprise offer is reached: Krizaka's contact form, the Orazaka topic preselected (the offer has no page of its own yet). */
-export const ENTERPRISE_URL = "https://www.krizaka.com/contact?topic=orazaka";
+/** Where the Enterprise offer is reached: Krizaka's contact form, the Sovkora topic preselected (the offer has no page of its own yet). */
+export const ENTERPRISE_URL = "https://www.krizaka.com/en/contact?topic=orazaka";
 const REPO_URL = "https://github.com/krizaka/orazaka";
 
 /**
@@ -23,7 +23,7 @@ export function PricingEditions({ prices = [] }: Readonly<{ prices?: readonly Pu
   const { t, locale } = useTranslation();
   const p = t.pricing;
   const slot = (edition: "community" | "business" | "enterprise") => {
-    // While Orazaka is in development no amount is public: a price nobody can pay is never shown (krizaka-com#468).
+    // While Sovkora is in development no amount is public: a price nobody can pay is never shown (krizaka-com#468).
     const shown = inDevelopment() ? undefined : priceFor(prices, edition, locale);
     return shown
       ? { price: shown.text, unit: `${p.units[shown.unit] ?? shown.unit} · ${p.plusTaxes}` }

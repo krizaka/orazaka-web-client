@@ -3,8 +3,8 @@ import { SiteFooter } from "@/console/components/SiteFooter";
 import { Providers } from "@/console/core/providers/Providers";
 
 export const metadata: Metadata = {
-  title: "Orazaka Operations",
-  description: "Supervise and govern your Orazaka platform: usage, credits, prices and Studios.",
+  title: "Sovkora Operations",
+  description: "Supervise and govern your Sovkora platform: usage, credits, prices and Studios.",
   // An administration console: never indexed. Not canonical to the public site either.
   robots: { index: false, follow: false },
   alternates: { canonical: null },

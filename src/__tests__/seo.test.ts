@@ -122,12 +122,23 @@ describe("search engines and AI assistants (the Krizaka family contract)", () =>
     });
   });
 
+  it("says what it does: the description and the featureList carry RAG, LLM and MCP, and the description stays short", () => {
+    expect(SITE_DESCRIPTION).toMatch(/LLM/);
+    expect(SITE_DESCRIPTION).toMatch(/MCP/);
+    expect(SITE_DESCRIPTION).not.toMatch(/absolute|100 ?%|guarantee/i);
+    const software = siteJsonLd()["@graph"].find((n) => n["@type"] === "SoftwareApplication") as {
+      featureList: string[];
+    };
+    expect(software.featureList.join(" ")).toMatch(/\(RAG\).*\(LLM\).*\(MCP\)/);
+    expect(software.featureList).toHaveLength(6);
+  });
+
   it("claims no Windows build: the product runs on macOS and Linux", () => {
     expect(JSON.stringify(siteJsonLd())).not.toMatch(/windows/i);
   });
 
   it("the title and description name the product and say what it is, once, within what a result shows", () => {
-    expect(SITE_TITLE).toMatch(/^Orazaka — /);
+    expect(SITE_TITLE).toMatch(/^Sovkora — /);
     expect(SITE_TITLE).toMatch(/open-source/i);
     expect(SITE_TITLE).not.toMatch(/Krizaka.*\|.*Krizaka/);
     expect(SITE_TITLE.length).toBeLessThanOrEqual(62);

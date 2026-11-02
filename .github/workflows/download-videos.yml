@@ -64,19 +64,30 @@ jobs:
           path: showcase-web
           retention-days: 7
 
+  # The Mac app's film (krizaka-internal#230): the journey of krizaka/orazaka apps/desktop on a macOS runner, called as a reusable
+  # workflow so its artifact `showcase-mac` is in this run. On main only; never required; a failure must not take the web videos down.
+  showcase-mac:
+    name: Showcase video (Mac)
+    if: github.ref == 'refs/heads/main'
+    permissions:
+      contents: read
+    uses: krizaka/orazaka/.github/workflows/desktop-film.yml@ed8ffc5263a237e83bca8b9e9a8aa60f173b8745 # feat/desktop-film (krizaka/orazaka#531): re-pin to the merged commit
+
   app-videos:
     name: Download page videos
-    needs: [showcase-web]
-    if: github.ref == 'refs/heads/main'
+    needs: [showcase-web, showcase-mac]
+    # The Mac film failing (a runner, a build) must not hold the web videos back.
+    if: ${{ !cancelled() && github.ref == 'refs/heads/main' && needs.showcase-web.result == 'success' }}
     permissions:
       contents: write
       pull-requests: write
-    uses: krizaka/.github/.github/workflows/app-videos.yml@3f78a2d25b154a21cabbc5d57b8278f6b1ddf0f1 # main (krizaka/.github#425: the action pinned to sites/<product>/download)
+    uses: krizaka/.github/.github/workflows/app-videos.yml@58d71a2cacfa1563a74aab117bc6a1db75821b87 # main (krizaka/.github#425: the action pinned to sites/<product>/download)
     with:
       product: orazaka
       manifest: content/app-videos.json
       artifacts: |
         showcase-web
+        showcase-mac
     secrets:
       MEDIA_STORAGE_API_KEY: ${{ secrets.MEDIA_STORAGE_API_KEY }}
       MEDIA_STORAGE_ZONE: ${{ secrets.MEDIA_STORAGE_ZONE }}

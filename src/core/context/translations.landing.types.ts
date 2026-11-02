@@ -40,6 +40,8 @@ export interface LandingDictionary {
   };
   /** The first screen: one statement, one line, the real product beside it. */
   hero: { title: string; lead: string; secondary: string; visualLabel: string };
+  /** The honest status line, the same one Yomizaka and Akinaza say: shown under the hero's actions and on the sign-in. */
+  status: { development: string };
   /** The figures under the hero, counted from the published measured runs. */
   figures: { runs: string; models: string; telemetry: string };
   features: {
@@ -47,6 +49,42 @@ export interface LandingDictionary {
     title: string;
     lead: string;
     items: Record<"studios" | "records" | "home", { title: string; text: string }>;
+  };
+  /** What it does in plain words, each with the industry term as a quiet tag (recognition and search). */
+  capabilities: {
+    eyebrow: string;
+    title: string;
+    lead: string;
+    /** The label of an item that is not shipped yet. */
+    soon: string;
+    items: Record<
+      "documents" | "models" | "tools" | "agents" | "studios" | "runs",
+      { tag: string; title: string; text: string }
+    >;
+  };
+  /** « Made with Sovkora »: the home film, the facts read from its run records, and the outputs shown on the Studios card. */
+  film: {
+    eyebrow: string;
+    title: string;
+    lead: string;
+    label: string;
+    factsTitle: string;
+    models: string;
+    gpu: string;
+    runs: string;
+    cost: string;
+    costNote: string;
+    roles: Record<"keyframes" | "shots" | "music", string>;
+    runIds: string;
+    outputs: {
+      heading: string;
+      imageCaption: string;
+      videoCaption: string;
+      duckKeyframe: string;
+      duckShot: string;
+      inkKeyframe: string;
+      inkShot: string;
+    };
   };
   records: {
     eyebrow: string;
@@ -77,8 +115,11 @@ export interface LandingDictionary {
     heroPrimary: string;
     signInBanner: string;
   };
+  stage: {
+    title: string;
+    message: string;
+  };
   footer: {
-    devNotice: string;
     privacy: string;
     terms: string;
     contact: string;

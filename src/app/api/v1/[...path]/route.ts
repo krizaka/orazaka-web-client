@@ -4,7 +4,7 @@
  * for all REST endpoints under /api/v1/*.
  *
  * This handler validates the client session, injects the session JWT the identity service
- * issued at login as the Bearer token, and proxies the request to the Orazaka edge (:8088),
+ * issued at login as the Bearer token, and proxies the request to the Sovkora edge (:8088),
  * whose route table fans /api/v1/* out to the owning service (conversation, identity, …).
  */
 

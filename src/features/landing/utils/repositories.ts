@@ -1,6 +1,6 @@
 /**
  * @file repositories.ts
- * @description The public Orazaka repositories, read from the GitHub organisation at build time (and refreshed hourly) —
+ * @description The public Sovkora repositories, read from the GitHub organisation at build time (and refreshed hourly) —
  * never typed here. When GitHub cannot be read the page says so and links the organisation.
  */
 
@@ -23,7 +23,7 @@ export interface ListedRepo {
   pushedAt: string | null;
 }
 
-/** The live repositories of the Orazaka family (name starts with `orazaka`), most recently pushed first. */
+/** The live repositories of the Sovkora family (name starts with `orazaka`), most recently pushed first. */
 export function pickListedRepos(repos: readonly GithubRepo[]): ListedRepo[] {
   return repos
     .filter((r) => r.name.startsWith("orazaka") && !r.archived && !r.fork)

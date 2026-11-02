@@ -6,7 +6,7 @@ const HEIGHT = 1522;
 const SMALL = 1120;
 
 /**
- * A screenshot of the real Orazaka Desktop control panel (taken from the 0.1.0 .dmg build), 1x and 2x WebP on the CDN
+ * A screenshot of the real Sovkora Desktop control panel (taken from the 0.1.0 .dmg build), 1x and 2x WebP on the CDN
  * (`sites/orazaka/home/desktop-panel-*.webp`). `eager` for a capture above the fold.
  */
 export function DesktopCapture({

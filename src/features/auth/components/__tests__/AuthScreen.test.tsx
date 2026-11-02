@@ -29,7 +29,7 @@ describe("AuthScreen", () => {
   it("renders without invalid HTML nesting (no <div> inside a <p>)", () => {
     const errors = jest.spyOn(console, "error").mockImplementation(() => {});
     const { container } = render(
-      <AuthScreen title="Orazaka">
+      <AuthScreen title="Sovkora">
         <form aria-label="sign in" />
       </AuthScreen>,
     );
@@ -40,12 +40,26 @@ describe("AuthScreen", () => {
 
   it("does not prefetch Contact: it leaves for www.krizaka.com", () => {
     render(
-      <AuthScreen title="Orazaka">
+      <AuthScreen title="Sovkora">
         <span />
       </AuthScreen>,
     );
     const contact = screen.getByRole("link", { name: t.auth.legalContact });
     expect(contact).toHaveAttribute("href", "/contact");
     expect(contact).toHaveAttribute("data-prefetch", "false");
+  });
+
+  it("says Sovkora is in development, like Yomizaka and Akinaza, and shows the duck where they show their bird (orazaka#516)", () => {
+    const { container } = render(
+      <AuthScreen title="Sovkora">
+        <span />
+      </AuthScreen>,
+    );
+    expect(screen.getByTestId("development-status")).toHaveTextContent(t.landing.status.development);
+    expect(t.landing.status.development).toMatch(/^In development/);
+    expect(translations.fr.landing.status.development).toMatch(/^En développement/);
+    expect(
+      container.querySelector('[data-bird="duck"], [data-testid="mascot-duck"], svg[aria-label*="duck" i]'),
+    ).not.toBeNull();
   });
 });

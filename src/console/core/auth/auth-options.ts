@@ -24,7 +24,7 @@ export const authOptions: NextAuthOptions = {
   secret: consoleAuthKey(process.env),
   providers: [
     CredentialsProvider({
-      name: "Orazaka",
+      name: "Sovkora",
       credentials: {
         email: { label: "Email", type: "email" },
         password: { label: "Password", type: "password" },

@@ -7,7 +7,7 @@ import { findPage, navItems, neighbours } from "@/features/docs/utils/docs";
 
 export const metadata: Metadata = { title: mobile.en.meta, description: mobile.en.metaDescription };
 
-/** `/docs/mobile` — the four steps of the Orazaka app, the first page of the Mobile section of the documentation. */
+/** `/docs/mobile` — the four steps of the Sovkora app, the first page of the Mobile section of the documentation. */
 export default function MobileDocPage() {
   const entry = findPage("mobile")!;
   const { previous, next } = neighbours("mobile");

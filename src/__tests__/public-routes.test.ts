@@ -71,7 +71,7 @@ describe("the lean public site (#290)", () => {
 
   it("/contact answers 308 to krizaka.com/contact?topic=orazaka", () => {
     expect(PUBLIC_REDIRECTS.find((r) => r.source === "/contact")).toMatchObject({
-      destination: "https://www.krizaka.com/contact?topic=orazaka",
+      destination: "https://www.krizaka.com/en/contact?topic=orazaka",
       permanent: true,
     });
   });

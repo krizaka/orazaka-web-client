@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { TasksScreen } from "@/console/features/tasks/components/TasksScreen";
 
-export const metadata: Metadata = { title: "Tasks · Orazaka Operations" };
+export const metadata: Metadata = { title: "Tasks · Sovkora Operations" };
 
 /** `/tasks` — what needs an operator: refused or failed actions without a success since, failed jobs (ADR-085). */
 export default function TasksPage() {

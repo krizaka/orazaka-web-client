@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
  * The UI crawl (Dev preview `ui.krizaka-ui` + `ui.themes-devices`, orazaka-web-client#124): the key screens in dark AND
- * light, on a desktop and a phone viewport, against a DEPLOYED Orazaka (E2E_BASE_URL, https://dev.orazaka.com by default):
+ * light, on a desktop and a phone viewport, against a DEPLOYED Sovkora (E2E_BASE_URL, https://dev.orazaka.com by default):
  *
  *   - no console error and no uncaught page error;
  *   - no horizontal scroll (nothing cut at the side);
@@ -44,7 +44,7 @@ const VIEWPORTS = [
 ];
 const SIGNED_IN = ["/", "/studios", "/packs", "/chat", "/jobs", "/usage", "/automation", "/settings"];
 
-/** Console messages that are not Orazaka's (a blocked third-party beacon, a missing favicon). */
+/** Console messages that are not Sovkora's (a blocked third-party beacon, a missing favicon). */
 const IGNORED_CONSOLE = [/Download the React DevTools/i, /favicon/i, /Failed to load resource.*(401|403|404)/i];
 
 const A11Y_BASELINE = fileURLToPath(new URL("../a11y-baseline.json", import.meta.url));
@@ -64,7 +64,7 @@ try {
 // A crawl as the route source: the site's own sitemap, the sections with a distinct layout first (home, docs, the Mac page), then the rest up to the limit.
 const picked = await routesFromSitemap(BASE, { first: ["/", "/docs", "/desktop"], limit: PUBLIC_LIMIT });
 if (picked === null) {
-  console.error(`✗ Nothing answers at ${BASE}/sitemap.xml: set E2E_BASE_URL to a running Orazaka.`);
+  console.error(`✗ Nothing answers at ${BASE}/sitemap.xml: set E2E_BASE_URL to a running Sovkora.`);
   process.exit(2);
 }
 const PAGES = [

@@ -30,6 +30,9 @@ const pacer = path.dirname(resolveFromApp("@krizaka/pacer/package.json"));
 const settings = path.dirname(resolveFromApp("@krizaka/settings/package.json"));
 const db = path.dirname(createRequire(path.join(settings, "package.json")).resolve("@krizaka/db/package.json"));
 
+// @krizaka/org (the commercial names and the code-name guard, krizaka-internal#2103): the same `import`-only exports.
+const org = path.dirname(resolveFromApp("@krizaka/org/package.json"));
+
 const createJestConfig = nextJest({
   dir: "./",
 });
@@ -42,6 +45,7 @@ const config = {
     "^@krizaka/auth$": "<rootDir>/tests/auth-stub.ts",
     // @krizaka/ui (re-exported by @krizaka/orazaka-design-system 2.x) exposes its entries under the `import`
     // condition only, which Jest's CommonJS resolver does not read: map them to their files.
+    "^@krizaka/org$": `${org}/dist/index.js`,
     "^@krizaka/ui$": `${ui}/dist/index.js`,
     "^@krizaka/ui/(.*)$": `${ui}/dist/$1.js`,
     // @krizaka/charts: the same `import`-only exports.

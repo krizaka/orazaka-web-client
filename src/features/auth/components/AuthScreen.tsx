@@ -3,7 +3,9 @@
 import type { ReactNode } from "react";
 import Link from "next/link";
 import { OrazakaLogo } from "@krizaka/ui";
+import { Mascot } from "@krizaka/ui/mascots";
 import { AuthLayout } from "@krizaka/ui/auth-layout";
+import { DevelopmentStatus } from "@/components/DevelopmentStatus";
 import { LocaleSwitch } from "@/components/LocaleSwitch";
 import { useTranslation } from "@/core/context/LocaleContext";
 
@@ -16,7 +18,7 @@ const PROMISES = [
 
 /**
  * The entry screen of the web client — sign-in, sign-up, password reset, verification — on `@krizaka/ui/auth-layout`,
- * wearing Orazaka (`.brand-orazaka`): its animated mark in the brand panel (static under reduced motion, the mark's
+ * wearing Sovkora (`.brand-orazaka`): its animated mark in the brand panel (static under reduced motion, the mark's
  * own rule), the promise, the three proofs; the form beside it, the legal links and the language under it.
  */
 export function AuthScreen({
@@ -31,13 +33,13 @@ export function AuthScreen({
       <AuthLayout
         brand={
           <>
-            <OrazakaLogo size={28} animated={false} /> Orazaka
+            <OrazakaLogo size={28} animated={false} /> Sovkora
           </>
         }
         promise={t.auth.heroHeadline}
         aside={
           <div className="flex flex-col gap-6">
-            <OrazakaLogo size={112} />
+            <Mascot bird="duck" mood="welcome" size={160} />
             <p>{t.auth.heroTagline}</p>
             <ul className="flex flex-col gap-2">
               {PROMISES.map(({ key, route }) => (
@@ -52,7 +54,7 @@ export function AuthScreen({
         }
         asideFooter={
           <>
-            © {new Date().getFullYear()} Orazaka · {t.landing.footer.license} ·{" "}
+            © {new Date().getFullYear()} Sovkora · {t.landing.footer.license} ·{" "}
             <a
               href="https://www.krizaka.com/"
               target="_blank"
@@ -81,6 +83,7 @@ export function AuthScreen({
           </span>
         }
       >
+        <DevelopmentStatus className="mb-4 text-center" />
         {children}
         {/* Outside `legal`: AuthLayout wraps that in a <p>, and the switch is a group of links in a <div>. */}
         <div className="mt-6 flex justify-center">

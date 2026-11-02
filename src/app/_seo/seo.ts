@@ -19,11 +19,21 @@ export const REPO_URL = "https://github.com/krizaka/orazaka";
 /** The Krizaka Organization, defined by www.krizaka.com: every JSON-LD node of the family points back to it. */
 export const ORG_ID = `${KRIZAKA_URL}/#organization`;
 
-export const SITE_NAME = "Orazaka";
-/** What the search result says: the name first, then what it is (a query for « Orazaka » or « sovereign AI platform »). */
-export const SITE_TITLE = "Orazaka — open-source sovereign AI platform, self-hosted";
+export const SITE_NAME = "Sovkora";
+/** What the search result says: the name first, then what it is (a query for « Sovkora » or « sovereign AI platform »). */
+export const SITE_TITLE = "Sovkora — open-source sovereign AI platform, self-hosted";
 export const SITE_DESCRIPTION =
-  "Orazaka is an open-source AI platform by Krizaka (Montréal): chat, documents, images, video and agents running on your own machines, with local models.";
+  "Sovkora by Krizaka (Montréal): a sovereign AI platform. Your LLM, local or hosted, MCP tools, agents that ask first, Studios, every result traced to its run.";
+
+/** What the product does, in the plain words of the home's « What Sovkora does » section (each one is true of what runs; RAG is in development). */
+export const FEATURE_LIST = [
+  "Answers grounded in your own documents (RAG), in development",
+  "The language models (LLM) you choose, local or hosted",
+  "Connects to your tools through the open Model Context Protocol (MCP)",
+  "Agents that use tools and ask before acting",
+  "Studios for images, video and checked documents, priced before they run",
+  "Every result traced to its run",
+];
 
 /** The search bots and AI crawlers the whole family welcomes — the same list on every site. */
 export const CRAWLERS = [
@@ -97,6 +107,7 @@ export function siteJsonLd() {
         applicationCategory: "BusinessApplication",
         operatingSystem: "Linux, macOS",
         isAccessibleForFree: true,
+        featureList: FEATURE_LIST,
         license: "https://www.apache.org/licenses/LICENSE-2.0",
         codeRepository: REPO_URL,
         sameAs: [REPO_URL],
@@ -109,7 +120,7 @@ export function siteJsonLd() {
 
 // A deployed product is independent: llms.txt names its publisher and nothing else of the family — no other product.
 const familySection = () =>
-  `## Publisher\n\n- [Krizaka](${KRIZAKA_URL}): the company that publishes Orazaka, an open-source software studio in Montréal\n\nSitemap: ${SITE_URL}/sitemap.xml\n`;
+  `## Publisher\n\n- [Krizaka](${KRIZAKA_URL}): the company that publishes Sovkora, an open-source software studio in Montréal\n\nSitemap: ${SITE_URL}/sitemap.xml\n`;
 
 export function llmsText(): string {
   const docs = listPages().map((d) => `- [${d.title}](${SITE_URL}/docs/${d.slug}): ${d.intro}`);
@@ -119,14 +130,14 @@ export function llmsText(): string {
 
 ## Key pages
 
-- [Home](${SITE_URL}/): what Orazaka is
+- [Home](${SITE_URL}/): what Sovkora is
 - [Mobile app](${SITE_URL}/docs/mobile): recordings and screenshots of the iOS and Android app
-- [Orazaka for Mac](${SITE_URL}/desktop): the Orazaka Desktop test build for Apple Silicon — what it does today, requirements, download
+- [Sovkora for Mac](${SITE_URL}/desktop): the Sovkora Desktop test build for Apple Silicon — what it does today, requirements, download
 - [Pricing and editions](${SITE_URL}/pricing): Community (open source, runs today), Business (soon), and Krizaka's Enterprise offer for anything custom
 - [Open source](${SITE_URL}/open-source): the public repositories, the Apache-2.0 licence line, self-hosting and how to contribute
 - [Packs](${SITE_URL}/docs/packs): the catalogue of installable offers, what each pack adds to the Studios, and how to write one
-- [Models](${SITE_URL}/docs/models): the models Orazaka supports — what each does, where it runs, its licence and context window
-- [Talk to the team](${KRIZAKA_URL}/contact?topic=orazaka): the contact form lives on krizaka.com
+- [Models](${SITE_URL}/docs/models): the models Sovkora supports — what each does, where it runs, its licence and context window
+- [Talk to the team](${KRIZAKA_URL}/en/contact?topic=orazaka): the contact form lives on krizaka.com
 
 ## Documentation
 
@@ -136,7 +147,7 @@ ${docs.join("\n")}
 
 ## Source
 
-- [Orazaka repository](${REPO_URL}): the engine and its workspace (Apache-2.0)
+- [Sovkora repository](${REPO_URL}): the engine and its workspace (Apache-2.0)
 
 ${familySection()}`;
 }

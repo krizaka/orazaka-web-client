@@ -6,7 +6,7 @@ import { InterceptionForm } from "@/features/auth/components/InterceptionForm";
  * Interception page metadata.
  */
 export const metadata: Metadata = {
-  title: "Required Action | Orazaka Workspace",
+  title: "Required Action | Sovkora Workspace",
   description: "A required account setup or preference update form is pending completion.",
 };
 

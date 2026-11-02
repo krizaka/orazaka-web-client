@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import { StudiosScreen } from "./StudiosScreen";
 
 export const metadata: Metadata = {
-  title: "Studios | Orazaka",
+  title: "Studios | Sovkora",
   description: "Every Studio in one list: what your plan makes ready, what a pack would add, and one action for each.",
 };
 

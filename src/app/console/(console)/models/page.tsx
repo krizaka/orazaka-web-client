@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { CatalogueScreen } from "@/console/features/catalogue/components/CatalogueScreen";
 
-export const metadata: Metadata = { title: "Models · Orazaka Operations" };
+export const metadata: Metadata = { title: "Models · Sovkora Operations" };
 
 /** `/models` — the model registry, its providers and the capabilities that may be dispatched. */
 export default function ModelsPage() {

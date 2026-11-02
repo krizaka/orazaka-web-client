@@ -1,7 +1,7 @@
 /**
  * @file docs.ts
  * @description Reads the documentation published on this site: `content/docs/index.json` and its markdown, written by
- * `scripts/sync-docs.mjs` from the Orazaka repository (never hand-edited). Pages are organised by reader journey —
+ * `scripts/sync-docs.mjs` from the Sovkora repository (never hand-edited). Pages are organised by reader journey —
  * Get started → Use it → Run it → Build on it → Mobile — and each has a previous and a next page in that order.
  */
 import fs from "node:fs";
@@ -63,7 +63,7 @@ export function neighbours(slug: string): { previous: DocEntry | null; next: Doc
 
 const SCHEME = /^([a-z][a-z0-9+.-]*:|#|\/)/i;
 
-/** Resolves `href`, written in the source file `from` (a path of the Orazaka repository), to its place on this site. */
+/** Resolves `href`, written in the source file `from` (a path of the Sovkora repository), to its place on this site. */
 export function resolveLink(
   href: string,
   from: string,

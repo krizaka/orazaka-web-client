@@ -7,14 +7,18 @@ import { test, expect } from "@playwright/test";
  * to ensure API contracts remain unbroken, leaving deep edge cases to
  * decoupled integration tiers.
  */
-test.describe("Orazaka UI Smoke Test", () => {
+test.describe("Sovkora UI Smoke Test", () => {
   test("should load the landing page and render core layout elements", async ({ page }) => {
     await page.goto("/");
     await page.waitForLoadState("domcontentloaded");
 
-    // Assert the page title contains Orazaka
+    // Assert the page title contains Sovkora
     const title = await page.title();
-    expect(title.toLowerCase()).toContain("orazaka");
+    expect(title.toLowerCase()).toContain("sovkora");
+
+    // The commercial name (krizaka-internal#2103) is in the bar, never the code name
+    await expect(page.getByRole("navigation", { name: "Sovkora" }).getByText("Sovkora").first()).toBeVisible();
+    await expect(page.locator("body")).not.toContainText(/\bOrazaka\b/);
 
     // Assert core layout elements are present
     await expect(page.locator("body")).toBeVisible();
@@ -27,7 +31,7 @@ test.describe("Orazaka UI Smoke Test", () => {
       const chunks = [
         'data: {"content":"Hello"}\n\n',
         'data: {"content":" from"}\n\n',
-        'data: {"content":" Orazaka"}\n\n',
+        'data: {"content":" Sovkora"}\n\n',
         'data: {"content":" AI!"}\n\n',
         "data: [DONE]\n\n",
       ];
