@@ -40,7 +40,7 @@ export interface MobileDictionary {
 export const mobile: Record<Locale, MobileDictionary> = {
   en: {
     eyebrow: "On your phone",
-    title: "Sovkora in your pocket",
+    title: "{brand} in your pocket",
     lead: "The mobile app runs your work from anywhere — make an image from a sentence, ask the model, and see where your jobs stand — against the same edge, services and interceptor pipeline as the web client. This is the real app, not a mock-up. Press play; nothing starts by itself.",
     all: "Follow every step",
     recordedOn:
@@ -48,11 +48,11 @@ export const mobile: Record<Locale, MobileDictionary> = {
     stepsTitle: "The steps",
     step: "Step",
     notice: "What to notice",
-    frameLabel: "Sovkora mobile app",
+    frameLabel: "{brand} mobile app",
     home: "Back to the home page",
-    meta: "Sovkora — Mobile",
+    meta: "{brand} — Mobile",
     metaDescription:
-      "The real Sovkora mobile app, step by step: sign in, make an image, ask and get a streamed answer, follow your jobs.",
+      "The real {brand} mobile app, step by step: sign in, make an image, ask and get a streamed answer, follow your jobs.",
     steps: {
       "sign-in": {
         goal: "Sign in to your workspace",
@@ -82,7 +82,7 @@ export const mobile: Record<Locale, MobileDictionary> = {
         goal: "Ask the model, and read the answer as it is written",
         short: "Type a request; the answer streams in.",
         purpose:
-          "When you only need an answer, not a workflow, you just ask. The reply arrives word by word instead of after a long wait, and the request goes through Sovkora's own pipeline.",
+          "When you only need an answer, not a workflow, you just ask. The reply arrives word by word instead of after a long wait, and the request goes through {brand}'s own pipeline.",
         alt: "A request for a reply to a customer is typed; the model's answer appears in the conversation as it is written, with the interceptors that ran listed under it.",
         notice: [
           "The chips under the answer are the interceptors that really ran for this request, as the router reported them — not a canned list.",
@@ -106,7 +106,7 @@ export const mobile: Record<Locale, MobileDictionary> = {
   },
   fr: {
     eyebrow: "Sur votre téléphone",
-    title: "Sovkora dans la poche",
+    title: "{brand} dans la poche",
     lead: "L'app mobile mène votre travail de n'importe où — faire une image à partir d'une phrase, interroger le modèle, voir où en sont vos jobs — face au même edge, aux mêmes services et à la même chaîne d'intercepteurs que le client web. C'est la vraie app, pas une maquette. Appuyez sur lecture ; rien ne démarre seul.",
     all: "Suivre chaque étape",
     recordedOn:
@@ -114,11 +114,11 @@ export const mobile: Record<Locale, MobileDictionary> = {
     stepsTitle: "Les étapes",
     step: "Étape",
     notice: "À remarquer",
-    frameLabel: "App mobile Sovkora",
+    frameLabel: "App mobile {brand}",
     home: "Retour à l'accueil",
-    meta: "Sovkora — Mobile",
+    meta: "{brand} — Mobile",
     metaDescription:
-      "La vraie app mobile Sovkora, pas à pas : se connecter, faire une image, demander et lire une réponse en flux, suivre ses jobs.",
+      "La vraie app mobile {brand}, pas à pas : se connecter, faire une image, demander et lire une réponse en flux, suivre ses jobs.",
     steps: {
       "sign-in": {
         goal: "Se connecter à son espace",
@@ -148,7 +148,7 @@ export const mobile: Record<Locale, MobileDictionary> = {
         goal: "Poser une question au modèle et lire la réponse au fil de l'écriture",
         short: "Saisir une demande ; la réponse arrive en flux.",
         purpose:
-          "Quand il vous faut une réponse et non un flux de travail, vous demandez. La réponse arrive mot à mot plutôt qu'après une longue attente, et la requête passe par la chaîne propre à Sovkora.",
+          "Quand il vous faut une réponse et non un flux de travail, vous demandez. La réponse arrive mot à mot plutôt qu'après une longue attente, et la requête passe par la chaîne propre à {brand}.",
         alt: "Une demande de réponse à un client est saisie ; la réponse du modèle apparaît dans la conversation au fil de l'écriture, avec les intercepteurs exécutés listés dessous.",
         notice: [
           "Les pastilles sous la réponse sont les intercepteurs réellement exécutés pour cette requête, tels que le routeur les a rapportés — pas une liste figée.",

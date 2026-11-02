@@ -23,12 +23,13 @@ import { control } from "./translations.control";
 import { catalogue, plan } from "./translations.catalogue";
 import { consent } from "./translations.consent";
 import { THEME_MODE } from "@/core/constants/http.constants";
+import { DEFAULT_BRAND, withBrand } from "@/core/brand/brand";
 export type { Locale, TranslationDictionary };
 
 /**
  * Translation dictionary mappings for supported locales.
  */
-export const translations: Record<Locale, TranslationDictionary> = {
+const rawTranslations: Record<Locale, TranslationDictionary> = {
   en: {
     sidebar: {
       dashboard: "Dashboard",
@@ -61,7 +62,7 @@ export const translations: Record<Locale, TranslationDictionary> = {
     },
     playgroundUsecases: {
       emptyTitle: "Use Case Workspace",
-      emptySubtitle: "Sovkora AI Orchestrator Dynamic Node Workspace",
+      emptySubtitle: "{brand} AI Orchestrator Dynamic Node Workspace",
       emptyContent: "This workspace is currently empty. Blueprints are resolved dynamically from the Operation Graph.",
     },
     appNav: {
@@ -95,7 +96,7 @@ export const translations: Record<Locale, TranslationDictionary> = {
         afternoon: "Good afternoon, {name}",
         evening: "Good evening, {name}",
       },
-      overview: "Here's a quick overview of your Sovkora workspace.",
+      overview: "Here's a quick overview of your {brand} workspace.",
       sovereignBadge: "Local · sovereign",
       conversations: "Conversations",
       conversationsDesc: "Threads kept on your server",
@@ -249,7 +250,7 @@ export const translations: Record<Locale, TranslationDictionary> = {
       english: "English",
       french: "Français",
       aiPersona: "AI Persona",
-      standardPersona: "Standard Sovkora",
+      standardPersona: "Standard {brand}",
       concisePersona: "Concise & Direct",
       creativePersona: "Creative & Exploratory",
       tenantBranding: "Tenant Branding (Inversion of Control)",
@@ -276,8 +277,8 @@ export const translations: Record<Locale, TranslationDictionary> = {
       themeElectric: "Electric Blue",
       themeSystem: "System Preference",
       themeSystemDesc: "Follows your OS appearance",
-      themeLightDesc: "Sovkora orange on light",
-      themeDarkDesc: "Sovkora orange on deep dark",
+      themeLightDesc: "{brand} orange on light",
+      themeDarkDesc: "{brand} orange on deep dark",
       themeCustomDesc: "Sovereign deep slate",
       themeCyberpunkDesc: "Neon synthwave aesthetic",
       themeSolarizedDesc: "Warm solarized palette",
@@ -395,11 +396,11 @@ export const translations: Record<Locale, TranslationDictionary> = {
     },
     apiKeys: {
       title: "API Keys",
-      subtitle: "Personal access tokens to call the Sovkora API programmatically.",
+      subtitle: "Personal access tokens to call the {brand} API programmatically.",
       create: "Create API key",
       loading: "Loading keys…",
       emptyTitle: "No API keys yet",
-      emptyDesc: "Create a key to authenticate your programmatic calls to the Sovkora API.",
+      emptyDesc: "Create a key to authenticate your programmatic calls to the {brand} API.",
       emptyCta: "Create your first key",
       nameLabel: "Name",
       namePlaceholder: "e.g. My laptop, CI pipeline",
@@ -491,7 +492,7 @@ export const translations: Record<Locale, TranslationDictionary> = {
       taskFailed: "Task Execution Failed",
       unknownError: "Unknown execution error",
       taskCompletedNoOutput: "Task completed. No output data returned.",
-      uploadingAsset: "Uploading asset to Sovkora...",
+      uploadingAsset: "Uploading asset to {brand}...",
       removeAsset: "Remove Asset",
       dragAndDropAssetOr: "Drag and drop asset, or ",
       supportedFormatsAudio: "Supported formats: .mp3, .wav, .aac",
@@ -598,8 +599,8 @@ export const translations: Record<Locale, TranslationDictionary> = {
       registerLink: "Register",
       invalidCredentials: "Invalid email or password. Please check your credentials.",
       unexpectedError: "An unexpected error occurred. Please try again.",
-      registerTitle: "Sovkora",
-      registerSubtitle: "Create your Sovkora account",
+      registerTitle: "{brand}",
+      registerSubtitle: "Create your {brand} account",
       usernameLabel: "Username",
       confirmPasswordLabel: "Confirm Password",
       preferredLanguageLabel: "Preferred Language",
@@ -613,7 +614,7 @@ export const translations: Record<Locale, TranslationDictionary> = {
       heroHeadline: "Own your intelligence.",
       heroTagline:
         "The sovereign AI platform that runs on your own hardware, with zero telemetry. This demo runs on our development server.",
-      heroFeature1: "Absolute privacy — your data stays on the machine you run Sovkora on",
+      heroFeature1: "Absolute privacy — your data stays on the machine you run {brand} on",
       heroFeature2: "Unified engine — text, vision, audio, video & code in one runtime",
       heroFeature3: "Infinite reach — extend with MCP to any tool, API, or knowledge source",
       forgotTitle: "Reset Your Password",
@@ -688,9 +689,9 @@ export const translations: Record<Locale, TranslationDictionary> = {
       refresh: "Refresh",
     },
     playgroundHeader: {
-      title: "Sovkora AI Playground",
+      title: "{brand} AI Playground",
       subtitle:
-        "Interrogate and execute the dynamic capabilities of the Sovkora Orchestration Engine. Blueprints are resolved in real-time from the Operation Graph.",
+        "Interrogate and execute the dynamic capabilities of the {brand} Orchestration Engine. Blueprints are resolved in real-time from the Operation Graph.",
       mediaCapabilities: "Media Capabilities",
       noActiveCapabilities: "No Active Capabilities",
       noActiveCapabilitiesDesc: "The operation graph returned an empty or invalid dataset configuration.",
@@ -974,7 +975,7 @@ export const translations: Record<Locale, TranslationDictionary> = {
     },
     playgroundUsecases: {
       emptyTitle: "Espace de travail du cas d'usage",
-      emptySubtitle: "Espace de travail du nœud dynamique du moteur d'orchestration Sovkora IA",
+      emptySubtitle: "Espace de travail du nœud dynamique du moteur d'orchestration {brand} IA",
       emptyContent:
         "Cet espace de travail est actuellement vide. Les plans sont résolus dynamiquement à partir du graphe d'opérations.",
     },
@@ -1009,7 +1010,7 @@ export const translations: Record<Locale, TranslationDictionary> = {
         afternoon: "Bon après-midi {name}",
         evening: "Bonsoir {name}",
       },
-      overview: "Voici un aperçu rapide de votre espace de travail Sovkora.",
+      overview: "Voici un aperçu rapide de votre espace de travail {brand}.",
       sovereignBadge: "Local · souverain",
       conversations: "Conversations",
       conversationsDesc: "Fils conservés sur votre serveur",
@@ -1163,7 +1164,7 @@ export const translations: Record<Locale, TranslationDictionary> = {
       english: "English",
       french: "Français",
       aiPersona: "Persona IA",
-      standardPersona: "Sovkora Standard",
+      standardPersona: "{brand} Standard",
       concisePersona: "Concise & Directe",
       creativePersona: "Créative & Exploratoire",
       tenantBranding: "Marque Locataire (Inversion de Contrôle)",
@@ -1190,8 +1191,8 @@ export const translations: Record<Locale, TranslationDictionary> = {
       themeElectric: "Bleu Électrique",
       themeSystem: "Préférence Système",
       themeSystemDesc: "Suit l'apparence de votre OS",
-      themeLightDesc: "L'orange Sovkora sur fond clair",
-      themeDarkDesc: "L'orange Sovkora sur fond sombre",
+      themeLightDesc: "L'orange {brand} sur fond clair",
+      themeDarkDesc: "L'orange {brand} sur fond sombre",
       themeCustomDesc: "Ardoise souveraine profonde",
       themeCyberpunkDesc: "Esthétique néon synthwave",
       themeSolarizedDesc: "Palette solarisée chaleureuse",
@@ -1309,11 +1310,11 @@ export const translations: Record<Locale, TranslationDictionary> = {
     },
     apiKeys: {
       title: "Clés API",
-      subtitle: "Jetons d'accès personnels pour appeler l'API Sovkora par programme.",
+      subtitle: "Jetons d'accès personnels pour appeler l'API {brand} par programme.",
       create: "Créer une clé API",
       loading: "Chargement des clés…",
       emptyTitle: "Aucune clé API",
-      emptyDesc: "Créez une clé pour authentifier vos appels programmatiques à l'API Sovkora.",
+      emptyDesc: "Créez une clé pour authentifier vos appels programmatiques à l'API {brand}.",
       emptyCta: "Créer votre première clé",
       nameLabel: "Nom",
       namePlaceholder: "ex. Mon portable, Pipeline CI",
@@ -1407,7 +1408,7 @@ export const translations: Record<Locale, TranslationDictionary> = {
       taskFailed: "Échec de l'exécution de la tâche",
       unknownError: "Erreur d'exécution inconnue",
       taskCompletedNoOutput: "Tâche terminée. Aucun résultat retourné.",
-      uploadingAsset: "Téléversement de l'élément vers Sovkora...",
+      uploadingAsset: "Téléversement de l'élément vers {brand}...",
       removeAsset: "Supprimer l'élément",
       dragAndDropAssetOr: "Glissez-déposez l'élément, ou ",
       supportedFormatsAudio: "Formats pris en charge : .mp3, .wav, .aac",
@@ -1517,8 +1518,8 @@ export const translations: Record<Locale, TranslationDictionary> = {
       registerLink: "S'inscrire",
       invalidCredentials: "E-mail ou mot de passe invalide. Veuillez vérifier vos identifiants.",
       unexpectedError: "Une erreur inattendue est survenue. Veuillez réessayer.",
-      registerTitle: "Sovkora",
-      registerSubtitle: "Créez votre compte Sovkora",
+      registerTitle: "{brand}",
+      registerSubtitle: "Créez votre compte {brand}",
       usernameLabel: "Nom d'utilisateur",
       confirmPasswordLabel: "Confirmer le mot de passe",
       preferredLanguageLabel: "Langue préférée",
@@ -1532,7 +1533,7 @@ export const translations: Record<Locale, TranslationDictionary> = {
       heroHeadline: "Maîtrisez votre intelligence.",
       heroTagline:
         "La plateforme d'IA souveraine qui s'exécute sur votre propre matériel, sans télémétrie. Cette démo tourne sur notre serveur de développement.",
-      heroFeature1: "Confidentialité absolue — vos données restent sur la machine où vous exécutez Sovkora",
+      heroFeature1: "Confidentialité absolue — vos données restent sur la machine où vous exécutez {brand}",
       heroFeature2: "Moteur unifié — texte, vision, audio, vidéo & code en un seul runtime",
       heroFeature3: "Portée infinie — étendez via MCP vers tout outil, API ou source de données",
       forgotTitle: "Réinitialiser votre mot de passe",
@@ -1608,9 +1609,9 @@ export const translations: Record<Locale, TranslationDictionary> = {
       refresh: "Rafraîchir",
     },
     playgroundHeader: {
-      title: "Playground IA Sovkora",
+      title: "Playground IA {brand}",
       subtitle:
-        "Interrogez et exécutez les capacités dynamiques du moteur d'orchestration Sovkora. Les plans sont résolus en temps réel depuis le graphe des opérations.",
+        "Interrogez et exécutez les capacités dynamiques du moteur d'orchestration {brand}. Les plans sont résolus en temps réel depuis le graphe des opérations.",
       mediaCapabilities: "Capacités Média",
       noActiveCapabilities: "Aucune Capacité Active",
       noActiveCapabilitiesDesc: "Le graphe des opérations a retourné un jeu de données vide ou invalide.",
@@ -1866,3 +1867,11 @@ export const translations: Record<Locale, TranslationDictionary> = {
     docs: docs.fr,
   },
 };
+
+/** The dictionaries with the product name filled in: the administrator's `brand.displayName` (see `core/brand/brand.ts`). */
+export function translationsFor(brand: string): Record<Locale, TranslationDictionary> {
+  return { en: withBrand(rawTranslations.en, brand), fr: withBrand(rawTranslations.fr, brand) };
+}
+
+/** Translation dictionary mappings for supported locales, under the default commercial name (static pages, tests). */
+export const translations: Record<Locale, TranslationDictionary> = translationsFor(DEFAULT_BRAND);
