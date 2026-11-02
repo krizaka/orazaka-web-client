@@ -90,7 +90,7 @@ export function RegisterForm({ onSuccess, onError }: Readonly<RegisterFormProps>
         <Input
           id="reg-email"
           type="email"
-          placeholder="you@orazaka.com"
+          placeholder="name@example.com"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           required
