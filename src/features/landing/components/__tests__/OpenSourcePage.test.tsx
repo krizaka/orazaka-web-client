@@ -60,4 +60,14 @@ describe("/open-source", () => {
     renderLanding("fr", <OpenSourcePage repos={repos} />);
     expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent(translations.fr.openSource.title);
   });
+
+  // Live regression: a <li> inside the <li> cell that CardGrid already draws is reparented by the HTML parser, so the
+  // server markup differs from the React tree (React error #418) and axe reports `listitem`.
+  it("never nests a list item in a list item (hydration #418, axe listitem)", () => {
+    const { container } = renderLanding("en", <OpenSourcePage repos={repos} />);
+    expect(container.querySelectorAll("li li")).toHaveLength(0);
+    for (const li of container.querySelectorAll("li")) {
+      expect(["UL", "OL"]).toContain(li.parentElement?.tagName);
+    }
+  });
 });
