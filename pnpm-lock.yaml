@@ -15,11 +15,11 @@ importers:
         specifier: ^0.10.0
         version: 0.10.0(zod@4.6.7)
       '@krizaka/charts':
-        specifier: ^0.6.0
-        version: 0.6.0(@krizaka/ui@3.71.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
+        specifier: ^0.6.2
+        version: 0.6.2(@krizaka/ui@3.71.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       '@krizaka/fonts':
-        specifier: ^0.5.0
-        version: 0.5.0
+        specifier: ^0.5.1
+        version: 0.5.1
       '@krizaka/icons':
         specifier: ^0.9.0
         version: 0.9.0(react@19.2.4)
@@ -955,11 +955,11 @@ packages:
       zod:
         optional: true
 
-  '@krizaka/charts@0.6.0':
-    resolution: {integrity: sha512-NkfG0HNQ+QJQm5gwj+QbNotjnlXRk0XsBYBnFoHy5DtPsVUHteWDa0CSJWbKb6s4Zv3vYfMqBZEd2xqzNu3mAg==}
+  '@krizaka/charts@0.6.2':
+    resolution: {integrity: sha512-CPPy31ubwk1sb41bGAc+t7rrj4Cfy/+eMi+po2HTMx8/nMLL0PJ+vR16W8L3RDY2QOiEUMmv7rqA7U6H+4o5hQ==}
     engines: {node: '>=22'}
     peerDependencies:
-      '@krizaka/ui': ^3.22.0
+      '@krizaka/ui': ^3.55.0
       react: '>=19'
       react-dom: '>=19'
       react-native: '>=0.76'
@@ -995,8 +995,8 @@ packages:
     resolution: {integrity: sha512-51ouJYSak2hJE8Rb6Ui5p+ZL2Yc2IlvY+qLGo99c6TiyOUKfb6ak4GMXEunTAng173ID7JZaqEPjlNPBXcn1nw==}
     engines: {node: '>=22'}
 
-  '@krizaka/fonts@0.5.0':
-    resolution: {integrity: sha512-romnY4PqqOLvW/7ZYNzmUq1rTIM8ylmlUeZgB2YukNCp/PxlbSM4kc5ldm1SB6KHbt/rBOlkbQdkW9prhyVvqg==}
+  '@krizaka/fonts@0.5.1':
+    resolution: {integrity: sha512-w2E2qva5JQ579gbi/Wz5ThdQXl6Nx8OUajKP53ekU43bFkAehAMf1mpkZafWcS5xpx4sbfDq8yzeuA3EBRhXQA==}
     engines: {node: '>=22'}
 
   '@krizaka/icons@0.1.0':
@@ -1018,10 +1018,6 @@ packages:
     peerDependenciesMeta:
       react-native-svg:
         optional: true
-
-  '@krizaka/intl@0.2.1':
-    resolution: {integrity: sha512-vZWoRmptN0/Ac1rUZ3BiOdXXGOkxBAq2yYDe9tMOpPNhi8kKP/L8NCptokshBjKPmEZxq9lJ55MoAabTL+WbBw==}
-    engines: {node: '>=22'}
 
   '@krizaka/intl@0.4.0':
     resolution: {integrity: sha512-kKYGRW8b3fHu1v7a4CIDUfDmrLBkoVFscytaeWGprkLWHLwed00JyIvnWtSz9WW5J6lDOYF3ZMhZi8vcwCSyPA==}
@@ -6359,9 +6355,9 @@ snapshots:
     optionalDependencies:
       zod: 4.6.7
 
-  '@krizaka/charts@0.6.0(@krizaka/ui@3.71.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)':
+  '@krizaka/charts@0.6.2(@krizaka/ui@3.71.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)':
     dependencies:
-      '@krizaka/intl': 0.2.1
+      '@krizaka/intl': 0.4.0
       '@krizaka/ui': 3.71.0(@krizaka/query@0.2.2(@types/react@19.3.0)(csstype@3.2.3)(react@19.2.4))(@krizaka/tailwind@3.71.0)(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(tailwind-merge@3.7.0)(tailwindcss@4.3.3)
       d3-geo: 3.1.1
       echarts: 6.1.0
@@ -6392,7 +6388,7 @@ snapshots:
 
   '@krizaka/db@0.3.1': {}
 
-  '@krizaka/fonts@0.5.0': {}
+  '@krizaka/fonts@0.5.1': {}
 
   '@krizaka/icons@0.1.0(react@19.2.4)':
     dependencies:
@@ -6401,8 +6397,6 @@ snapshots:
   '@krizaka/icons@0.9.0(react@19.2.4)':
     dependencies:
       react: 19.2.4
-
-  '@krizaka/intl@0.2.1': {}
 
   '@krizaka/intl@0.4.0': {}
 
