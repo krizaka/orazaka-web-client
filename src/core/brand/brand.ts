@@ -19,8 +19,12 @@ export function brandName(value: string | null | undefined): string {
 
 /** Fills `{brand}` in every string of a dictionary, leaving the other placeholders (`{count}`) for `fill`. */
 export function withBrand<T>(messages: T, brand: string): T {
-  if (typeof messages === "string") return messages.replaceAll("{brand}", brand) as T;
-  if (Array.isArray(messages)) return messages.map((item: unknown) => withBrand(item, brand)) as T;
+  if (typeof messages === "string") {
+    return messages.replaceAll("{brand}", brand) as T;
+  }
+  if (Array.isArray(messages)) {
+    return messages.map((item: unknown) => withBrand(item, brand)) as T;
+  }
   if (messages && typeof messages === "object") {
     return Object.fromEntries(Object.entries(messages).map(([key, value]) => [key, withBrand(value, brand)])) as T;
   }

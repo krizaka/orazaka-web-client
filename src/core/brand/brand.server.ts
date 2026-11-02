@@ -19,19 +19,24 @@ export async function readBrandName(
   source: Source = process.env,
   fetcher: typeof fetch = fetch,
 ): Promise<string> {
-  if (!authClosed(flags)) {
-    const edgeUrl = source.ROUTER_URL || source.GATEWAY_URL || "http://localhost:8088";
-    try {
-      const response = await fetcher(`${edgeUrl}/api/v1/settings/public/${SETTING_KEY}`, {
-        next: { revalidate: REVALIDATE_SECONDS },
-      });
-      if (response.ok) {
-        const body = (await response.json()) as { value?: unknown };
-        if (typeof body.value === "string" && body.value.trim()) return brandName(body.value);
-      }
-    } catch {
-      // The edge is unreachable: the instance value below answers.
+  const fromEdge = authClosed(flags) ? null : await readEdgeName(source, fetcher);
+  return brandName(fromEdge ?? source.APP_BRAND_DISPLAY_NAME);
+}
+
+/** The public setting served by the edge, or null when it is unreachable, refused or empty. */
+async function readEdgeName(source: Source, fetcher: typeof fetch): Promise<string | null> {
+  const edgeUrl = source.ROUTER_URL || source.GATEWAY_URL || "http://localhost:8088";
+  try {
+    const response = await fetcher(`${edgeUrl}/api/v1/settings/public/${SETTING_KEY}`, {
+      next: { revalidate: REVALIDATE_SECONDS },
+    });
+    if (!response.ok) {
+      return null;
     }
+    const body = (await response.json()) as { value?: unknown };
+    return typeof body.value === "string" && body.value.trim() ? body.value : null;
+  } catch {
+    // The edge is unreachable: the instance value answers.
+    return null;
   }
-  return brandName(source.APP_BRAND_DISPLAY_NAME);
 }

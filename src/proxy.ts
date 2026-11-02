@@ -41,7 +41,9 @@ function route(request: NextRequest) {
   // `/fr/…` and `/en/…` are the same pages with the language named by the address (Loi 96): they are gated and served as `/…`.
   const { locale, path: pathname } = splitLocalePrefix(request.nextUrl.pathname);
   const next = () => {
-    if (!locale) return NextResponse.next();
+    if (!locale) {
+      return NextResponse.next();
+    }
     const target = request.nextUrl.clone();
     target.pathname = pathname;
     return NextResponse.rewrite(target);
