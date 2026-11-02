@@ -32,6 +32,9 @@ importers:
       '@krizaka/orazaka-shared':
         specifier: ^1.4.0
         version: 1.5.0
+      '@krizaka/org':
+        specifier: ^0.7.0
+        version: 0.7.0
       '@krizaka/query':
         specifier: ^0.2.2
         version: 0.2.2(@types/react@19.3.0)(csstype@3.2.3)(react@19.2.4)
@@ -93,9 +96,6 @@ importers:
       '@krizaka/config':
         specifier: ^0.17.0
         version: 0.17.0(eslint-config-next@16.4.2(@typescript-eslint/parser@8.72.0(eslint@10.13.0(jiti@2.7.0)(supports-color@8.1.1))(supports-color@8.1.1)(typescript@6.0.3))(eslint@10.13.0(jiti@2.7.0)(supports-color@8.1.1))(supports-color@8.1.1)(typescript@6.0.3))(eslint@10.13.0(jiti@2.7.0)(supports-color@8.1.1))(prettier@3.9.10)(supports-color@8.1.1)(typescript@6.0.3)
-      '@krizaka/org':
-        specifier: ^0.7.0
-        version: 0.7.0
       '@krizaka/page-audit':
         specifier: 0.3.1
         version: 0.3.1(@krizaka/a11y-audit@0.2.0)(playwright-core@1.64.1)

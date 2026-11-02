@@ -3,6 +3,7 @@ import localFont from "next/font/local";
 import "./globals.css";
 import "@krizaka/ui/blocks.css";
 import { readAuthFlags } from "@/core/config/auth-flags";
+import { readBrandName } from "@/core/brand/brand.server";
 import { indexable } from "@/core/config/indexing";
 import { PublicShell } from "@/components/layout/PublicShell";
 import { ThemeScript } from "@krizaka/ui/theme";
@@ -73,11 +74,13 @@ export const metadata: Metadata = {
  * @param props The layout component properties.
  * @returns The HTML structure of the layout.
  */
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const authFlags = readAuthFlags();
+  const brand = await readBrandName(authFlags);
   return (
     <html
       lang="en"
@@ -98,7 +101,7 @@ export default function RootLayout({
         />
       </head>
       <body className="antialiased transition-colors duration-200">
-        <PublicShell authFlags={readAuthFlags()} showDevNotice={!indexable()}>
+        <PublicShell authFlags={authFlags} brand={brand} showDevNotice={!indexable()}>
           {children}
         </PublicShell>
       </body>

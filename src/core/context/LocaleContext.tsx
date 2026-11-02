@@ -11,7 +11,8 @@
 
 import * as React from "react";
 import { useSettings } from "@/core/hooks/useSettings";
-import { type Locale, type TranslationDictionary, translations } from "./translations";
+import { type Locale, type TranslationDictionary, translationsFor } from "./translations";
+import { useBrand } from "./BrandContext";
 export type { Locale, TranslationDictionary };
 
 /**
@@ -41,6 +42,7 @@ const LocaleContext = React.createContext<LocaleContextType | undefined>(undefin
  */
 export function LocaleProvider({ children }: Readonly<{ children: React.ReactNode }>) {
   const { settings, updateSettings } = useSettings();
+  const brand = useBrand();
   const [locale, setLocaleState] = React.useState<Locale>("en");
 
   // Load language preference from localStorage first
@@ -81,13 +83,15 @@ export function LocaleProvider({ children }: Readonly<{ children: React.ReactNod
     [settings, updateSettings],
   );
 
+  const dictionaries = React.useMemo(() => translationsFor(brand), [brand]);
+
   const contextValue = React.useMemo(
     () => ({
       locale,
       setLocale,
-      t: translations[locale],
+      t: dictionaries[locale],
     }),
-    [locale, setLocale],
+    [locale, setLocale, dictionaries],
   );
 
   return <LocaleContext.Provider value={contextValue}>{children}</LocaleContext.Provider>;
