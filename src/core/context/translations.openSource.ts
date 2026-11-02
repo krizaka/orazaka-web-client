@@ -31,10 +31,10 @@ export interface OpenSourceDictionary {
 
 const WORDS = {
   meta: {
-    title: w("Open source — Sovkora", "Open source — Sovkora"),
+    title: w("Open source — {brand}", "Open source — {brand}"),
     description: w(
-      "Sovkora's engine, packs and CLI are Apache-2.0: the repositories, the licence line, self-hosting and how to contribute.",
-      "Le moteur, les packs et la CLI de Sovkora sont en Apache-2.0 : les dépôts, la ligne de licence, l'auto-hébergement et comment contribuer.",
+      "{brand}'s engine, packs and CLI are Apache-2.0: the repositories, the licence line, self-hosting and how to contribute.",
+      "Le moteur, les packs et la CLI de {brand} sont en Apache-2.0 : les dépôts, la ligne de licence, l'auto-hébergement et comment contribuer.",
     ),
   },
   eyebrow: w("Open source", "Open source"),
@@ -43,16 +43,16 @@ const WORDS = {
     "Le moteur est ouvert. Lisez-le, lancez-le, modifiez-le.",
   ),
   lead: w(
-    "Sovkora's engine, its pack interface, its command line and the reference packs are Apache-2.0 and public. Commercial packs and the hosted services are a separate, private line.",
-    "Le moteur de Sovkora, son interface de packs, sa ligne de commande et les packs de référence sont publics, en Apache-2.0. Les packs commerciaux et les services hébergés forment une ligne distincte et privée.",
+    "{brand}'s engine, its pack interface, its command line and the reference packs are Apache-2.0 and public. Commercial packs and the hosted services are a separate, private line.",
+    "Le moteur de {brand}, son interface de packs, sa ligne de commande et les packs de référence sont publics, en Apache-2.0. Les packs commerciaux et les services hébergés forment une ligne distincte et privée.",
   ),
   source: w("See the code", "Voir le code"),
   docs: w("Read the documentation", "Lire la documentation"),
   repos: {
     title: w("Repositories", "Dépôts"),
     lead: w(
-      "Read from GitHub when the site is built: the public repositories of the Sovkora family.",
-      "Lus sur GitHub à la construction du site : les dépôts publics de la famille Sovkora.",
+      "Read from GitHub when the site is built: the public repositories of the {brand} family.",
+      "Lus sur GitHub à la construction du site : les dépôts publics de la famille {brand}.",
     ),
     all: w("All repositories", "Tous les dépôts"),
     updated: w("Last push", "Dernier push"),
@@ -60,7 +60,7 @@ const WORDS = {
       "The list could not be read from GitHub just now. The organisation page has it.",
       "La liste n'a pas pu être lue sur GitHub à l'instant. La page de l'organisation la contient.",
     ),
-    label: w("Sovkora repositories", "Dépôts de Sovkora"),
+    label: w("{brand} repositories", "Dépôts de {brand}"),
   },
   licence: {
     title: w("Licence", "Licence"),
@@ -106,8 +106,8 @@ const WORDS = {
   selfHost: {
     title: w("Self-host in three lines", "Auto-héberger en trois lignes"),
     lead: w(
-      "Sovkora installs on a Mac, on Linux or from source. The guide lists what each path needs.",
-      "Sovkora s'installe sur Mac, sur Linux ou depuis les sources. Le guide liste ce que chaque voie demande.",
+      "{brand} installs on a Mac, on Linux or from source. The guide lists what each path needs.",
+      "{brand} s'installe sur Mac, sur Linux ou depuis les sources. Le guide liste ce que chaque voie demande.",
     ),
     steps: [
       w("Clone the repository.", "Clonez le dépôt."),

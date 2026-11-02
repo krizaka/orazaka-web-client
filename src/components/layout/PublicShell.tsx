@@ -13,12 +13,13 @@ import type { AuthFlags } from "@/core/config/auth-flags";
  */
 export function PublicShell({
   authFlags,
+  brand,
   showDevNotice,
   children,
-}: Readonly<{ authFlags: AuthFlags; showDevNotice: boolean; children: ReactNode }>) {
+}: Readonly<{ authFlags: AuthFlags; brand: string; showDevNotice: boolean; children: ReactNode }>) {
   if (useSelectedLayoutSegment() === "console") return <>{children}</>;
   return (
-    <Providers authFlags={authFlags}>
+    <Providers authFlags={authFlags} brand={brand}>
       <StageNotice show={showDevNotice} />
       {children}
     </Providers>

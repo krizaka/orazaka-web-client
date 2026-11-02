@@ -6,6 +6,7 @@ import { MotionObserver } from "@krizaka/ui";
 import { PageTransition } from "@krizaka/ui/motion";
 import { ThemeProvider } from "@krizaka/ui/theme";
 import { QueryProvider } from "./QueryProvider";
+import { BrandProvider } from "@/core/context/BrandContext";
 import { AuthFlagsProvider } from "@/core/context/AuthFlagsContext";
 import type { AuthFlags } from "@/core/config/auth-flags";
 import { TenantProvider } from "@/core/context/TenantContext";
@@ -19,6 +20,8 @@ interface ProvidersProps {
   children: ReactNode;
   /** AUTH_LOGIN_ENABLED / AUTH_SIGNUP_ENABLED, read on the server. */
   authFlags: AuthFlags;
+  /** The product name (`brand.displayName`), read on the server. */
+  brand: string;
 }
 
 /**
@@ -35,29 +38,31 @@ interface ProvidersProps {
  * @param props The provider tree properties.
  * @returns The wrapped ReactNode provider layout.
  */
-export function Providers({ children, authFlags }: Readonly<ProvidersProps>) {
+export function Providers({ children, authFlags, brand }: Readonly<ProvidersProps>) {
   // Sign-in closed: there is no session to look for — `session={null}` keeps next-auth from calling /api/auth/session.
   const sessionProps = authFlags.login ? {} : { session: null, refetchOnWindowFocus: false, refetchInterval: 0 };
   return (
     <AuthFlagsProvider flags={authFlags}>
-      <ThemeProvider defaultMode="system">
-        <SessionProvider {...sessionProps}>
-          <QueryProvider>
-            <LocaleProvider>
-              <TenantProvider>
-                <JobStreamProvider>
-                  <AppCommandPalette />
-                  <MotionObserver />
-                  <AppCharts>
-                    <PageTransition>{children}</PageTransition>
-                  </AppCharts>
-                  <AppToaster />
-                </JobStreamProvider>
-              </TenantProvider>
-            </LocaleProvider>
-          </QueryProvider>
-        </SessionProvider>
-      </ThemeProvider>
+      <BrandProvider name={brand}>
+        <ThemeProvider defaultMode="system">
+          <SessionProvider {...sessionProps}>
+            <QueryProvider>
+              <LocaleProvider>
+                <TenantProvider>
+                  <JobStreamProvider>
+                    <AppCommandPalette />
+                    <MotionObserver />
+                    <AppCharts>
+                      <PageTransition>{children}</PageTransition>
+                    </AppCharts>
+                    <AppToaster />
+                  </JobStreamProvider>
+                </TenantProvider>
+              </LocaleProvider>
+            </QueryProvider>
+          </SessionProvider>
+        </ThemeProvider>
+      </BrandProvider>
     </AuthFlagsProvider>
   );
 }
