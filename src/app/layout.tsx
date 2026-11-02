@@ -83,7 +83,7 @@ export default async function RootLayout({
   const brand = await readBrandName(authFlags);
   return (
     <html
-      lang="en"
+      lang="fr"
       data-surface="product"
       className={cn(inter.variable, productDisplay.variable)}
       suppressHydrationWarning

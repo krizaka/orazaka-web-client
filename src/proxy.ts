@@ -16,6 +16,7 @@ import { authClosed, isBackendPath, readAuthFlags } from "@/core/config/auth-fla
 import { CLOSED_ROBOTS, devRedirect, indexable, isDevAddress, isDevHost, NOINDEX_HEADER } from "@/core/config/indexing";
 import { isAppPath, PUBLIC_PREFIXES } from "@/core/config/app-routes";
 import { SIGNED_OUT_REDIRECTS } from "@/core/config/redirects";
+import { splitLocalePrefix } from "@/core/i18n/locale-negotiation";
 import { SITE_URL } from "@/app/_seo/seo";
 import { consoleResponse } from "@/console/core/edge";
 import { isAdminHost, routeFor } from "@/console/core/config/host";
@@ -37,7 +38,14 @@ function isPublicPath(pathname: string): boolean {
 }
 
 function route(request: NextRequest) {
-  const { pathname } = request.nextUrl;
+  // `/fr/…` and `/en/…` are the same pages with the language named by the address (Loi 96): they are gated and served as `/…`.
+  const { locale, path: pathname } = splitLocalePrefix(request.nextUrl.pathname);
+  const next = () => {
+    if (!locale) return NextResponse.next();
+    const target = request.nextUrl.clone();
+    target.pathname = pathname;
+    return NextResponse.rewrite(target);
+  };
 
   // Both entry points closed (AUTH_LOGIN_ENABLED / AUTH_SIGNUP_ENABLED false): nothing is proxied to the backend.
   if (authClosed(readAuthFlags()) && isBackendPath(pathname)) {
@@ -46,7 +54,7 @@ function route(request: NextRequest) {
 
   // Allow public routes, API routes, and static assets through
   if (isPublicPath(pathname)) {
-    return NextResponse.next();
+    return next();
   }
 
   // Check for next-auth session token (works for both secure and dev cookies)
@@ -56,14 +64,14 @@ function route(request: NextRequest) {
 
   if (!sessionToken) {
     // An address that is not a page of the app does not exist: Next answers 404 (src/app/not-found.tsx), not the login form.
-    if (!isAppPath(pathname) && !SIGNED_OUT_REDIRECTS.some((r) => r.source === pathname)) return NextResponse.next();
+    if (!isAppPath(pathname) && !SIGNED_OUT_REDIRECTS.some((r) => r.source === pathname)) return next();
     const moved = SIGNED_OUT_REDIRECTS.find((r) => r.source === pathname);
     if (moved) return NextResponse.redirect(new URL(moved.destination, request.url), 308);
     const loginUrl = new URL("/login", request.url);
     return NextResponse.redirect(loginUrl);
   }
 
-  return NextResponse.next();
+  return next();
 }
 
 /**

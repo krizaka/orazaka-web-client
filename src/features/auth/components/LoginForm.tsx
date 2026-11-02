@@ -69,7 +69,7 @@ export function LoginCard({
           <Input
             id="login-email"
             type="email"
-            placeholder="you@orazaka.com"
+            placeholder="name@example.com"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required

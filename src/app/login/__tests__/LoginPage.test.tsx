@@ -50,7 +50,7 @@ jest.mock("@/core/context/LocaleContext", () => ({
         loginSubtitle: "Sign in to your account",
         emailLabel: "Email",
         passwordLabel: "Password",
-        signInBtn: "Sign In",
+        signInBtn: "Sign in",
         signingInBtn: "Signing In...",
         orContinueWith: "or continue with",
         noAccount: "No account?",
@@ -91,7 +91,7 @@ describe("LoginPage", () => {
 
   it("renders sign in button", () => {
     render(open(<LoginPage />));
-    expect(screen.getByText("Sign In")).toBeInTheDocument();
+    expect(screen.getByText("Sign in")).toBeInTheDocument();
   });
 
   it("renders OAuth buttons", () => {
@@ -187,7 +187,7 @@ describe("LoginPage while sign-in is closed (the default)", () => {
     render(<LoginPage />);
     expect(screen.getByLabelText("Email")).toBeDisabled();
     expect(screen.getByLabelText("Password")).toBeDisabled();
-    expect(screen.getByRole("button", { name: "Sign In" })).toBeDisabled();
+    expect(screen.getByRole("button", { name: "Sign in" })).toBeDisabled();
     expect(screen.queryByRole("button", { name: "GitHub" })).not.toBeInTheDocument();
     expect(screen.queryByRole("button", { name: "Google" })).not.toBeInTheDocument();
   });
