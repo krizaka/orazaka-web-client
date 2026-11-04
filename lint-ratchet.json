@@ -1,9 +1,5 @@
 {
-  "globs": [
-    "app/**/*.tsx",
-    "components/**/*.tsx",
-    "src/**/*.tsx"
-  ],
+  "globs": ["app/**/*.tsx", "components/**/*.tsx", "src/**/*.tsx"],
   "counters": {
     "palette": 0,
     "light": 0,
