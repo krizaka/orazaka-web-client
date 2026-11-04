@@ -43,10 +43,10 @@ importers:
         version: 0.5.2(zod@4.6.7)
       '@krizaka/tailwind':
         specifier: ^3.71.0
-        version: 3.71.0(@krizaka/tokens@3.71.0)(@krizaka/ui@3.87.0)(tailwindcss@4.3.3)
+        version: 3.71.0(@krizaka/tokens@3.87.0)(@krizaka/ui@3.87.0)(tailwindcss@4.3.3)
       '@krizaka/tokens':
-        specifier: ^3.71.0
-        version: 3.71.0
+        specifier: ^3.87.0
+        version: 3.87.0
       '@krizaka/ui':
         specifier: ^3.87.0
         version: 3.87.0(@krizaka/query@0.2.2(@types/react@19.3.0)(csstype@3.2.3)(react@19.2.4))(@krizaka/tailwind@3.71.0)(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(tailwind-merge@3.7.0)(tailwindcss@4.3.3)
@@ -1112,10 +1112,6 @@ packages:
   '@krizaka/tokens@2.10.0':
     resolution: {integrity: sha512-OULaE9a9LA0Cpm1ckIa8hiwTZVgZ1Z17b/LBhsMTdQgYoI6iM7WE6PNotS+7JDkn0PaVoYaaxFmaG8r605J96g==}
     engines: {node: '>=20'}
-
-  '@krizaka/tokens@3.71.0':
-    resolution: {integrity: sha512-MvZFrw+40jc6pn15wD9xaZ5ENoyw97FIl9EnXTYDdyxpNjiBj3TWO1WV5ivYqe1aNM+1IL36/vrS5Nwp31FsPA==}
-    engines: {node: '>=22'}
 
   '@krizaka/tokens@3.87.0':
     resolution: {integrity: sha512-5aPtPTVgKfFlany3xX6Vw0ggrXTvKkKCz+YnjW0Tnq+ASFqI/X3h3FHMtRiFl6ItKBQnWPlcSE8UYbawJ9BJ/w==}
@@ -6478,15 +6474,13 @@ snapshots:
       '@krizaka/ui': 3.87.0(@krizaka/query@0.2.2(@types/react@19.3.0)(csstype@3.2.3)(react@19.2.4))(@krizaka/tailwind@3.71.0)(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(tailwind-merge@3.7.0)(tailwindcss@4.3.3)
       tailwindcss: 4.3.3
 
-  '@krizaka/tailwind@3.71.0(@krizaka/tokens@3.71.0)(@krizaka/ui@3.87.0)(tailwindcss@4.3.3)':
+  '@krizaka/tailwind@3.71.0(@krizaka/tokens@3.87.0)(@krizaka/ui@3.87.0)(tailwindcss@4.3.3)':
     dependencies:
-      '@krizaka/tokens': 3.71.0
+      '@krizaka/tokens': 3.87.0
       '@krizaka/ui': 3.87.0(@krizaka/query@0.2.2(@types/react@19.3.0)(csstype@3.2.3)(react@19.2.4))(@krizaka/tailwind@3.71.0)(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(tailwind-merge@3.7.0)(tailwindcss@4.3.3)
       tailwindcss: 4.3.3
 
   '@krizaka/tokens@2.10.0': {}
-
-  '@krizaka/tokens@3.71.0': {}
 
   '@krizaka/tokens@3.87.0': {}
 
@@ -6547,7 +6541,7 @@ snapshots:
       zod: 4.6.7
     optionalDependencies:
       '@krizaka/query': 0.2.2(@types/react@19.3.0)(csstype@3.2.3)(react@19.2.4)
-      '@krizaka/tailwind': 3.71.0(@krizaka/tokens@3.71.0)(@krizaka/ui@3.87.0)(tailwindcss@4.3.3)
+      '@krizaka/tailwind': 3.71.0(@krizaka/tokens@3.87.0)(@krizaka/ui@3.87.0)(tailwindcss@4.3.3)
       react-dom: 19.2.4(react@19.2.4)
       tailwindcss: 4.3.3
     transitivePeerDependencies:
