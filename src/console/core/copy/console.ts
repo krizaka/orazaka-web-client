@@ -1,5 +1,5 @@
 import { brandOf } from "@krizaka/org";
-import { CODE_NAME } from "@/core/brand/brand";
+import { CODE_NAME } from "../../../core/brand/brand.ts";
 
 /**
  * @file console.ts
