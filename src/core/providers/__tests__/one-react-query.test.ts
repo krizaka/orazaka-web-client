@@ -5,10 +5,11 @@
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 
-const read = (file: string) => JSON.parse(readFileSync(file, "utf8")) as {
-  dependencies?: Record<string, string>;
-  devDependencies?: Record<string, string>;
-};
+const read = (file: string) =>
+  JSON.parse(readFileSync(file, "utf8")) as {
+    dependencies?: Record<string, string>;
+    devDependencies?: Record<string, string>;
+  };
 
 const root = join(__dirname, "../../../..");
 const app = read(join(root, "package.json"));
