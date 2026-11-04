@@ -9,10 +9,12 @@ function Probe() {
 }
 
 describe("ConsoleLocale", () => {
-  it("reads French when the browser asks for it first, English otherwise", () => {
+  it("is French by default: English only when the browser asks for English and never for French (Loi 96)", () => {
     expect(localeFromLanguages(["fr-CA", "en"])).toBe("fr");
-    expect(localeFromLanguages(["en-CA", "fr"])).toBe("en");
-    expect(localeFromLanguages([])).toBe("en");
+    expect(localeFromLanguages(["en-CA", "fr"])).toBe("fr");
+    expect(localeFromLanguages(["en-US", "en"])).toBe("en");
+    expect(localeFromLanguages(["de"])).toBe("fr");
+    expect(localeFromLanguages([])).toBe("fr");
   });
 
   it("follows the browser without a locale, the given one with it", () => {
@@ -33,8 +35,8 @@ describe("ConsoleLocale", () => {
     languages.mockRestore();
   });
 
-  it("is English outside a provider", () => {
+  it("is French outside a provider", () => {
     render(<Probe />);
-    expect(screen.getByText("en")).toBeInTheDocument();
+    expect(screen.getByText("fr")).toBeInTheDocument();
   });
 });
