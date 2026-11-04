@@ -840,6 +840,20 @@ export interface TranslationDictionary {
     /** The title (and help) of the inputs the packs share, read in the caller's language; `<studio>/<key>` wins over `<key>`. */
     inputs: Record<string, { title: string; description?: string }>;
     runOutputs: string;
+    /** A rules report (contract 2.0) read as findings: the headline, the facts, the verdicts and severities in words. */
+    report: {
+      blocking: string;
+      toFix: string;
+      noneToFix: string;
+      summary: string;
+      docType: string;
+      jurisdiction: string;
+      asOf: string;
+      notApplicable: string;
+      review: string;
+      verdict: Record<string, string>;
+      severity: Record<string, string>;
+    };
     runFailed: string;
     runSucceeded: string;
     resultGone: string;
