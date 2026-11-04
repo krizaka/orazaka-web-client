@@ -15,15 +15,27 @@ function Probe() {
 describe("the dev code name line (« code name: orazaka »)", () => {
   it("is worded in the visitor's language on a dev deployment", () => {
     locale = "en";
-    render(<CodeNameProvider dev><Probe /></CodeNameProvider>);
+    render(
+      <CodeNameProvider dev>
+        <Probe />
+      </CodeNameProvider>,
+    );
     expect(screen.getByTestId("line")).toHaveTextContent("code name: orazaka");
     locale = "fr";
-    render(<CodeNameProvider dev><Probe /></CodeNameProvider>);
+    render(
+      <CodeNameProvider dev>
+        <Probe />
+      </CodeNameProvider>,
+    );
     expect(screen.getAllByTestId("line")[1]).toHaveTextContent("nom de code : orazaka");
   });
 
   it("is absent in production, and without a provider", () => {
-    render(<CodeNameProvider dev={false}><Probe /></CodeNameProvider>);
+    render(
+      <CodeNameProvider dev={false}>
+        <Probe />
+      </CodeNameProvider>,
+    );
     expect(screen.getByTestId("line")).toHaveTextContent("none");
   });
 
