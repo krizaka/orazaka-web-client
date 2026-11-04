@@ -2,11 +2,12 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { OrazakaLogo } from "@krizaka/ui";
+import { CodeNameLine, OrazakaLogo } from "@krizaka/ui";
 import { NavBar } from "@krizaka/ui/nav-bar";
 import { ThemeToggle } from "@krizaka/ui/theme";
 import { BarActions } from "@/features/landing/components/BarActions";
 import { useLanguageSwitch } from "@/components/LocaleSwitch";
+import { useCodeName } from "@/core/context/CodeNameContext";
 import { useTranslation } from "@/core/context/LocaleContext";
 import { NAV_DOCS, NAV_GROUPS, NAV_PAGES, entryHref, navActive } from "@/features/landing/utils/site-nav";
 
@@ -27,6 +28,7 @@ export function LandingNav({ onHome = true }: Readonly<{ onHome?: boolean }>) {
   const { t } = useTranslation();
   const n = t.landing.nav;
   const language = useLanguageSwitch(n.langLabel);
+  const codeName = useCodeName();
   const active = navActive(usePathname());
   const groups = NAV_GROUPS.map((g) => ({
     id: g.id,
@@ -58,7 +60,10 @@ export function LandingNav({ onHome = true }: Readonly<{ onHome?: boolean }>) {
         <NavBar.Brand asChild>
           <Link href="/" aria-label={n.home}>
             <OrazakaLogo size={26} />
-            <span>Sovkora</span>
+            <span className="flex flex-col leading-tight">
+              <span>Sovkora</span>
+              {codeName ? <CodeNameLine>{codeName}</CodeNameLine> : null}
+            </span>
           </Link>
         </NavBar.Brand>
 
