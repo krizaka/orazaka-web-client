@@ -1,5 +1,4 @@
 import { brandOf } from "@krizaka/org";
-import { CODE_NAME } from "../../../core/brand/brand.ts";
 
 /**
  * @file console.ts
@@ -9,7 +8,7 @@ import { CODE_NAME } from "../../../core/brand/brand.ts";
  */
 
 export const consoleCopy = {
-  product: brandOf(CODE_NAME).commercialName,
+  product: brandOf("orazaka").commercialName,
   console: "Operations",
   /** The dev-deployment line under the name (`{code}` is the code name); never shown in production. */
   codeName: "code name: {code}",
