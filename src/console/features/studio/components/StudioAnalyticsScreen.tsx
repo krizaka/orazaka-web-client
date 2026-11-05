@@ -20,7 +20,8 @@ export function StudioAnalyticsScreen({ locale }: Readonly<{ locale?: StudiosLoc
   const usage = useQuery({ queryKey: ["studio-analytics"], queryFn: () => StudioAdminApi.analytics() });
   const rows: StudioUsageRow[] = usage.data ?? [];
   const isLoading = usage.isPending;
-  const error = usage.error ? (usage.error instanceof Error ? usage.error.message : words.failed) : null;
+  const failure = usage.error;
+  const error = failure instanceof Error ? failure.message : failure ? words.failed : null;
 
   if (isLoading) {
     return <p className="text-sm text-fg-muted">{words.loading}</p>;
