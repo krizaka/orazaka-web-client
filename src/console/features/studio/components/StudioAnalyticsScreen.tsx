@@ -21,7 +21,8 @@ export function StudioAnalyticsScreen({ locale }: Readonly<{ locale?: StudiosLoc
   const rows: StudioUsageRow[] = usage.data ?? [];
   const isLoading = usage.isPending;
   const failure = usage.error;
-  const error = failure instanceof Error ? failure.message : failure ? words.failed : null;
+  let error: string | null = null;
+  if (failure) error = failure instanceof Error ? failure.message : words.failed;
 
   if (isLoading) {
     return <p className="text-sm text-fg-muted">{words.loading}</p>;
