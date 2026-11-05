@@ -24,7 +24,7 @@
     "test:console": "node --test src/console/test/*.test.mts",
     "record:tour": "node scripts/record-tour.mjs",
     "test:deps": "node --test scripts/krizaka-deps.test.mjs",
-    "check:deploy-build": "AUTH_LOGIN_ENABLED=true AUTH_SIGNUP_ENABLED=true NODE_ENV=production ROUTER_URL=http://core:8088 NEXTAUTH_URL=https://dev.orazaka.com NEXTAUTH_SECRET=ci-build-only APP_COMMIT=ci next build",
+    "check:deploy-build": "AUTH_LOGIN_ENABLED=true AUTH_SIGNUP_ENABLED=true NODE_ENV=production ROUTER_URL=http://core:8088 NEXTAUTH_URL=https://www.orazaka.com NEXTAUTH_SECRET=ci-build-only APP_COMMIT=ci next build",
     "lint:sg": "krizaka-sg-ratchet",
     "lint:sg:test": "ast-grep test --skip-snapshot-tests",
     "sg:ratchet:update": "krizaka-sg-ratchet --update",

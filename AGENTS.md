@@ -42,11 +42,12 @@ with a message and, where safe, a `fix:`; written for Tsx and `.ts` is parsed as
   behaviour is identical — run `npm run lint && npm test` after, and land the result in a small pull request.
 - A rule is never silenced to get a PR green; fix the code, or (a business parameter that is a technical fact) justify it with `// @fixed:`.
 
-## One app, three hosts (www.orazaka.com · dev.orazaka.com · admin.orazaka.com)
+## One app, two hosts (www.orazaka.com · admin.orazaka.com)
 
-`www.orazaka.com` is the public site (production: indexed, canonical, sitemap, `llms.txt`). `dev.orazaka.com` answers its
-pages with a 308 to www (only `/api/*`, `/.well-known/*`, `/robots.txt` and the health check stay) and is **never
-indexed** — nor is any `dev.*` address, by its name, whatever the configuration (`isDevAddress`, `src/core/config/indexing.ts`).
+`www.orazaka.com` is the public site (production: indexed, canonical, sitemap, `llms.txt`). `dev.orazaka.com` was removed on 2026-11-05
+(krizaka-internal#2600): every caller (mobile discovery, app links, e2e, scripts) uses www. The dev-host mechanism
+(`APP_DEV_HOST`, a 308 to www) stays for another dev address and is inert when unset; no `dev.*` address is ever
+indexed — by its name, whatever the configuration by its name, whatever the configuration (`isDevAddress`, `src/core/config/indexing.ts`).
 
 The operator console (formerly the standalone `orazaka-web-admin` repository) lives here, served by **host routing**:
 `src/proxy.ts` → `src/console/core/config/host.ts` (`routeFor`, pure) rewrites `Host: admin.*` under `/console`

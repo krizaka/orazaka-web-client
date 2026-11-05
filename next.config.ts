@@ -43,7 +43,7 @@ loadRootEnv();
 
 const nextConfig: NextConfig = {
   // APP_VERSION (package.json + short sha) is shown in the footer of every deployed site.
-  // NEXT_PUBLIC_APP_ENV names the environment in the bar's badge: this repository deploys dev.orazaka.com only until a
+  // NEXT_PUBLIC_APP_ENV names the environment in the bar's badge: this repository deploys www.orazaka.com (dev.orazaka.com was removed on 2026-11-05, krizaka-internal#2600) until a
   // production site exists, hence the default.
   env: {
     NEXT_PUBLIC_APP_VERSION: process.env.APP_VERSION || formatVersion(pkg.version, resolveSha()),

@@ -1,4 +1,4 @@
-// The web steps of the home's « Where it runs » tour — the real app on dev.orazaka.com, signed in as the QA user (the
+// The web steps of the home's « Where it runs » tour — the real app on www.orazaka.com, signed in as the QA user (the
 // account the phone recordings use), nothing staged and no new generation: the workspace, a Studio's page with its
 // estimate before the run, then what was already made. Dark and light, 1120×700, ≤ 7 s each, muted.
 //

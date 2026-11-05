@@ -12,7 +12,7 @@ function plainDoc(slug: string): string | undefined {
   return doc ? plainText(doc.body).trim() : undefined;
 }
 
-/** The public origin of this site (www.orazaka.com: the real app, sign-up closed; dev.orazaka.com sends its pages here). */
+/** The public origin of this site (www.orazaka.com: the real app, sign-up closed). */
 export const SITE_URL = "https://www.orazaka.com";
 export const KRIZAKA_URL = "https://www.krizaka.com";
 export const REPO_URL = "https://github.com/krizaka/orazaka";

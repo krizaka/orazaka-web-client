@@ -7,8 +7,8 @@ import { encode } from "next-auth/jwt";
  * Mocked (CI, no backend): « Guided journaling » answers its install with 451 consent_required, the statement is shown
  * verbatim, nothing starts until the age, the region and the consent are given, the install then carries the three
  * declarations and the run starts. Live (E2E_BASE_URL, E2E_USER, E2E_PASSWORD, a persona that holds the wellbeing pack):
- * the same journey on dev.orazaka.com, which ends on a real run.
- * Run live: E2E_BASE_URL=https://dev.orazaka.com E2E_USER=… E2E_PASSWORD=… npx playwright test wellbeing-consent
+ * the same journey on www.orazaka.com, which ends on a real run.
+ * Run live: E2E_BASE_URL=https://www.orazaka.com E2E_USER=… E2E_PASSWORD=… npx playwright test wellbeing-consent
  */
 const E2E_SECRET = "e2e-only-secret-not-used-anywhere-else";
 const STATEMENT =

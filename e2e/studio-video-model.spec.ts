@@ -8,7 +8,7 @@ import { encode } from "next-auth/jwt";
  * Mocked (no backend), as the other suites, with the shape the Studio service serves: the catalogue's `oneOf` of
  * `const` written into the schema, and the pack's words in both languages (`x-i18n`).
  *
- * Live (needs E2E_BASE_URL and the QA sign-in of live-run-image.spec.ts): the same on dev.orazaka.com, then a real run
+ * Live (needs E2E_BASE_URL and the QA sign-in of live-run-image.spec.ts): the same on www.orazaka.com, then a real run
  * on the chosen model (E2E_LIVE_RUN=1 starts it: it is the one that costs a few cents).
  */
 const E2E_SECRET = "e2e-only-secret-not-used-anywhere-else";

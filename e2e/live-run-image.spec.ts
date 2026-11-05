@@ -4,7 +4,7 @@ import { expect, test } from "@playwright/test";
  * Live: a finished image run shows its image. Signs in as the QA user and opens the runs named in
  * E2E_RUN_IDS (comma separated); each page must paint an <img> with naturalWidth > 0 — and never the
  * "no longer available" placeholder, which would mean the durable store lost the file.
- * Run: E2E_BASE_URL=https://dev.orazaka.com E2E_USER=… E2E_PASSWORD=… E2E_RUN_IDS=id1,id2 npx playwright test live-run-image
+ * Run: E2E_BASE_URL=https://www.orazaka.com E2E_USER=… E2E_PASSWORD=… E2E_RUN_IDS=id1,id2 npx playwright test live-run-image
  */
 const runs = (process.env.E2E_RUN_IDS ?? "").split(",").filter(Boolean);
 test.skip(
