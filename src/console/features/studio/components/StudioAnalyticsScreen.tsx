@@ -22,7 +22,9 @@ export function StudioAnalyticsScreen({ locale }: Readonly<{ locale?: StudiosLoc
   const isLoading = usage.isPending;
   const failure = usage.error;
   let error: string | null = null;
-  if (failure) error = failure instanceof Error ? failure.message : words.failed;
+  if (failure) {
+    error = failure instanceof Error ? failure.message : words.failed;
+  }
 
   if (isLoading) {
     return <p className="text-sm text-fg-muted">{words.loading}</p>;
