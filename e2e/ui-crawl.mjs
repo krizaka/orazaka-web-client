@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
  * The UI crawl (Dev preview `ui.krizaka-ui` + `ui.themes-devices`, orazaka-web-client#124): the key screens in dark AND
- * light, on a desktop and a phone viewport, against a DEPLOYED Sovkora (E2E_BASE_URL, https://dev.orazaka.com by default):
+ * light, on a desktop and a phone viewport, against a DEPLOYED Sovkora (E2E_BASE_URL, https://www.orazaka.com by default):
  *
  *   - no console error and no uncaught page error;
  *   - no horizontal scroll (nothing cut at the side);
@@ -31,7 +31,7 @@ import { auditRoutes, routesFromSitemap } from "@krizaka/page-audit";
 
 import { qaOnScreen } from "../scripts/qa-on-screen.mjs";
 
-const BASE = (process.env.E2E_BASE_URL || "https://dev.orazaka.com").replace(/\/$/, "");
+const BASE = (process.env.E2E_BASE_URL || "https://www.orazaka.com").replace(/\/$/, "");
 const OUT = process.env.OUT || "";
 const USER = process.env.E2E_USER;
 const PASSWORD = process.env.E2E_PASSWORD;

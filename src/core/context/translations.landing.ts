@@ -36,7 +36,7 @@ export const landing: Record<Locale, LandingDictionary> = {
       title: "AI that stays on your machines.",
       lead: "Chat, documents, images and video on hardware you own — every run priced up front and recorded.",
       secondary: "See it run",
-      visualLabel: "dev.orazaka.com · chat",
+      visualLabel: "www.orazaka.com · chat",
     },
     status: { development: "In development: still being tested, not ready for the public." },
     figures: {
@@ -210,7 +210,7 @@ export const landing: Record<Locale, LandingDictionary> = {
       title: "L'IA qui reste sur vos machines.",
       lead: "Conversation, documents, images et vidéo sur du matériel qui vous appartient — chaque run au prix annoncé, consigné.",
       secondary: "Le voir tourner",
-      visualLabel: "dev.orazaka.com · chat",
+      visualLabel: "www.orazaka.com · chat",
     },
     status: { development: "En développement : encore en test, pas prête pour le public." },
     figures: {
