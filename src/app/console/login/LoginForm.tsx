@@ -3,11 +3,12 @@
 import * as React from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { signIn } from "next-auth/react";
-import { OrazakaLogo } from "@krizaka/ui";
+import { CodeNameLine, OrazakaLogo } from "@krizaka/ui";
 import { Alert } from "@krizaka/ui/alert";
 import { Button } from "@krizaka/ui/button";
 import { AuthLayout } from "@krizaka/ui/auth-layout";
 import { Field, Input } from "@krizaka/ui/field";
+import { consoleCodeName } from "@/console/core/config/code-name";
 import { consoleCopy } from "@/console/core/copy/console";
 
 /** The closed site's variant: the same screen disabled, under a calm banner that points at the public demo. */
@@ -29,6 +30,7 @@ function safeCallback(value: string | null): string {
  */
 export function LoginForm({ preview }: Readonly<{ preview?: ClosedPreview }>) {
   const copy = consoleCopy.login;
+  const codeName = consoleCodeName();
   const router = useRouter();
   const params = useSearchParams();
   const [pending, setPending] = React.useState(false);
@@ -68,6 +70,7 @@ export function LoginForm({ preview }: Readonly<{ preview?: ClosedPreview }>) {
         brand={
           <>
             <OrazakaLogo size={28} animated={false} /> {consoleCopy.product} {consoleCopy.console}
+            {codeName ? <CodeNameLine className="ml-2">{codeName}</CodeNameLine> : null}
           </>
         }
         promise={copy.title}

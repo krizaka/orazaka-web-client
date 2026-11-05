@@ -118,6 +118,8 @@ export interface LandingDictionary {
   stage: {
     title: string;
     message: string;
+    /** « code name: {code} »: the dev-deployment line under the commercial name. */
+    codeName: string;
   };
   footer: {
     privacy: string;

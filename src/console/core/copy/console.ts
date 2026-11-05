@@ -1,3 +1,5 @@
+import { brandOf } from "@krizaka/org";
+
 /**
  * @file console.ts
  * @description The words of the console's shell, its sign-in and its supervision — one place, so a second language is
@@ -6,8 +8,10 @@
  */
 
 export const consoleCopy = {
-  product: "Sovkora",
+  product: brandOf("orazaka").commercialName,
   console: "Operations",
+  /** The dev-deployment line under the name (`{code}` is the code name); never shown in production. */
+  codeName: "code name: {code}",
   nav: {
     label: "Console",
     supervision: "Supervision",
