@@ -121,7 +121,7 @@ The Krizaka names and birds are not licensed: [trademark policy](https://github.
 ## Public site (www.orazaka.com) and the dev address
 
 The same app runs as a read-only public site: no sign-in, no sign-up, no call to the backend. `www.orazaka.com` is
-indexed; `dev.orazaka.com` sends its pages to www (308) and, like any `dev.*` address, is never indexed.
+indexed; any `dev.*` address is never indexed (`dev.orazaka.com` itself was removed on 2026-11-05).
 
 | Variable              | Default                            | Effect                                                                                                                                                                                                       |
 | --------------------- | ---------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |

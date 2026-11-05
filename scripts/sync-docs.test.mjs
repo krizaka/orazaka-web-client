@@ -160,7 +160,7 @@ test("sync fails when a synced doc links a removed public route", () => {
     fs.mkdirSync(path.dirname(path.join(src, d.source)), { recursive: true });
     fs.writeFileSync(
       path.join(src, d.source),
-      d.slug === "101" ? "# T\n[demos](https://dev.orazaka.com/gallery)\n" : "# T\n",
+      d.slug === "101" ? "# T\n[demos](https://www.orazaka.com/gallery)\n" : "# T\n",
     );
   }
   fs.mkdirSync(path.join(src, "docs", "_generated"), { recursive: true });
