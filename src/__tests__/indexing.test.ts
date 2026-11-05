@@ -75,7 +75,9 @@ describe("APP_SEARCH_INDEXING — one flag closes the deployment to search engin
 
   it("the banner is @krizaka/ui's EnvironmentNotice, mounted once by the public shell above the page", () => {
     const shell = readFileSync(join(process.cwd(), "src/components/layout/PublicShell.tsx"), "utf8");
-    expect(shell).toMatch(/<StageNotice show=\{showDevNotice\} \/>\s*<CodeNameProvider dev=\{showDevNotice\}>\{children\}<\/CodeNameProvider>/);
+    expect(shell).toMatch(
+      /<StageNotice show=\{showDevNotice\} \/>\s*<CodeNameProvider dev=\{showDevNotice\}>\{children\}<\/CodeNameProvider>/,
+    );
     const notice = readFileSync(join(process.cwd(), "src/components/StageNotice.tsx"), "utf8");
     expect(notice).toContain('from "@krizaka/ui/environment-notice"');
   });
