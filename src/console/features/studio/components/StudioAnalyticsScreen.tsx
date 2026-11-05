@@ -2,6 +2,8 @@
 
 import { useQuery } from "@krizaka/query";
 import { DataTable, type DataTableColumn } from "@krizaka/ui/data-table";
+import { studiosCopy, type StudiosLocale, type StudiosWords } from "@/console/core/copy/studios";
+import { useConsoleLocale } from "@/console/core/providers/ConsoleLocale";
 import { StudioAdminApi, type StudioUsageRow } from "@/console/services/studio.admin.api";
 
 /**
@@ -12,14 +14,20 @@ import { StudioAdminApi, type StudioUsageRow } from "@/console/services/studio.a
  * actionable line on this screen, and hiding it would leave the operator looking at
  * only the products that already work.
  */
-export function StudioAnalyticsScreen() {
+export function StudioAnalyticsScreen({ locale }: Readonly<{ locale?: StudiosLocale }>) {
+  const fromContext = useConsoleLocale();
+  const words = studiosCopy[locale ?? fromContext].analytics;
   const usage = useQuery({ queryKey: ["studio-analytics"], queryFn: () => StudioAdminApi.analytics() });
   const rows: StudioUsageRow[] = usage.data ?? [];
   const isLoading = usage.isPending;
-  const error = usage.error ? (usage.error instanceof Error ? usage.error.message : "Chargement impossible") : null;
+  const failure = usage.error;
+  let error: string | null = null;
+  if (failure) {
+    error = failure instanceof Error ? failure.message : words.failed;
+  }
 
   if (isLoading) {
-    return <p className="text-sm text-fg-muted">Chargement…</p>;
+    return <p className="text-sm text-fg-muted">{words.loading}</p>;
   }
   if (error) {
     return <p className="text-sm text-fg-danger">{error}</p>;
@@ -27,11 +35,11 @@ export function StudioAnalyticsScreen() {
 
   return (
     <DataTable
-      caption="Usage des Studios"
+      caption={words.caption}
       rows={rows}
-      columns={COLUMNS}
+      columns={columnsOf(words)}
       getRowId={(row) => row.studioKey}
-      labels={{ loading: "Lecture de l'usage", empty: "Aucun Studio mesuré." }}
+      labels={{ loading: words.reading, empty: words.empty }}
     />
   );
 }
@@ -39,10 +47,10 @@ export function StudioAnalyticsScreen() {
 // Below half the runs succeeding, a Studio is a support queue rather than a product.
 const isHealthy = (row: StudioUsageRow) => row.runs > 0 && row.successRate >= 0.5;
 
-const COLUMNS: DataTableColumn<StudioUsageRow>[] = [
+const columnsOf = (words: StudiosWords["analytics"]): DataTableColumn<StudioUsageRow>[] => [
   {
     id: "label",
-    header: "Studio",
+    header: words.studio,
     sortable: true,
     card: "title",
     cell: (row) => (
@@ -52,22 +60,27 @@ const COLUMNS: DataTableColumn<StudioUsageRow>[] = [
       </>
     ),
   },
-  { id: "installations", header: "Installations", sortable: true, align: "end" },
+  { id: "installations", header: words.installations, sortable: true, align: "end" },
   {
     id: "runs",
-    header: "Exécutions",
+    header: words.runs,
     sortable: true,
     align: "end",
     cell: (row) => (
       <>
         {row.runs}
-        {row.failed > 0 && <span className="text-fg-danger"> ({row.failed} échecs)</span>}
+        {row.failed > 0 && (
+          <span className="text-fg-danger">
+            {" "}
+            ({row.failed} {words.failures})
+          </span>
+        )}
       </>
     ),
   },
   {
     id: "successRate",
-    header: "Réussite",
+    header: words.successRate,
     sortable: true,
     align: "end",
     cell: (row) => (
@@ -76,17 +89,14 @@ const COLUMNS: DataTableColumn<StudioUsageRow>[] = [
       </span>
     ),
   },
-  { id: "estimatedCredits", header: "Crédits / exéc.", sortable: true, align: "end" },
+  { id: "estimatedCredits", header: words.credits, sortable: true, align: "end" },
   {
     id: "installedButUnused",
     header: "",
     cell: (row) =>
       row.installedButUnused ? (
-        <span
-          title="Installé puis jamais lancé — le signal de churn le plus net du produit"
-          className="text-[11px] text-fg-warning"
-        >
-          installé, jamais lancé
+        <span title={words.unusedHint} className="text-[11px] text-fg-warning">
+          {words.unused}
         </span>
       ) : null,
   },
