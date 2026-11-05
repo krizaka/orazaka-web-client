@@ -3,10 +3,12 @@
 import * as React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { OrazakaLogo } from "@krizaka/ui";
+import { CodeNameLine, OrazakaLogo } from "@krizaka/ui";
 import { AppFrame, type FrameSection } from "@krizaka/ui/app-frame";
 import { SettingsIcon, ShieldIcon, UserIcon } from "@krizaka/icons";
 import { useAuth } from "@/core/hooks/useAuth";
+import { useBrand } from "@/core/context/BrandContext";
+import { useCodeName } from "@/core/context/CodeNameContext";
 import { useTranslation } from "@/core/context/LocaleContext";
 import { AppSectionId, AppSectionPlace, appSectionsFor, currentAppSection } from "@/core/config/app-sections";
 import { NotificationBell } from "./NotificationBell";
@@ -25,6 +27,8 @@ export function AppShell({ children }: Readonly<{ children: React.ReactNode }>) 
   const { user, isAuthenticated, logout } = useAuth();
   const { locale, setLocale, t } = useTranslation();
   const [bellOpen, setBellOpen] = React.useState(false);
+  const brand = useBrand();
+  const codeName = useCodeName();
   const isAdmin = user?.role === "admin";
   const current = currentAppSection(usePathname());
 
@@ -41,11 +45,12 @@ export function AppShell({ children }: Readonly<{ children: React.ReactNode }>) 
 
   return (
     <AppFrame
-      name="Sovkora"
+      name={brand}
       mark={<OrazakaLogo size={26} />}
       headerMark={<OrazakaLogo size={22} />}
       homeHref="/"
       accent="orazaka"
+      chips={codeName ? <CodeNameLine className="hidden sm:inline">{codeName}</CodeNameLine> : undefined}
       label={t.appNav.label}
       sections={sections}
       currentId={current ?? undefined}
