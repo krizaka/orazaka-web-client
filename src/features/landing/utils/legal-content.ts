@@ -62,7 +62,7 @@ export const TERMS_CONTENT = legal(TERMS_WORDS);
 const PRIVACY_WORDS = {
   title: w("Privacy policy", "Politique de confidentialité"),
   subtitle: w("Your data stays on your machine. Always.", "Vos données restent sur votre machine. Toujours."),
-  lastUpdated: w("Last updated: June 2026", "Dernière mise à jour : juin 2026"),
+  lastUpdated: w("Last updated: November 5, 2026", "Dernière mise à jour : 5 novembre 2026"),
   intro: w(
     "Sovkora is designed with a strict local-first architecture. We believe that your private intelligence should remain completely yours. This Privacy Policy details how data is managed within the Sovkora client interface.",
     "Sovkora est conçu avec une architecture locale stricte. Nous croyons que votre intelligence privée doit rester entièrement vôtre. Cette politique détaille comment les données sont gérées dans l'interface client de Sovkora.",
@@ -94,6 +94,13 @@ const PRIVACY_WORDS = {
       text: w(
         "Sovkora may read or write workspace files when executing coding tasks or tool workflows. All operations are performed locally using your terminal permissions and remain restricted to the paths you authorize.",
         "Sovkora peut lire ou écrire des fichiers dans votre espace de travail pour exécuter des tâches de code ou des flux de travail. Toutes les opérations s'effectuent localement en utilisant vos autorisations de terminal.",
+      ),
+    },
+    personInCharge: {
+      title: w("5. Person in charge", "5. Personne responsable"),
+      text: w(
+        "Person in charge of the protection of personal information: the president of Technologies Krizaka Inc. — confidentialite@krizaka.com",
+        "Responsable de la protection des renseignements personnels : le président de Technologies Krizaka Inc. — confidentialite@krizaka.com",
       ),
     },
   },
