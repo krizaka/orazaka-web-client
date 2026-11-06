@@ -45,7 +45,9 @@ export const LOCALE_HEADER = "x-kz-locale";
 
 /** The language of a request on the server: the address's (proxy header), else the browser's languages (the stored choice lives in the browser only). */
 export function requestLocale(prefix: string | null, acceptLanguage: string | null): SiteLocale {
-  if (prefix === "fr" || prefix === "en") return prefix;
+  if (prefix === "fr" || prefix === "en") {
+    return prefix;
+  }
   return negotiateLocale(
     null,
     (acceptLanguage ?? "").split(",").map((tag) => tag.split(";")[0] ?? ""),

@@ -13,8 +13,12 @@ import { proxy } from "@/proxy";
 /** Wave 1 of the public-pages meeting (2026-11-05, krizaka-internal#2630): www.orazaka.com says one line and breaks no link. */
 
 const strings = (value: unknown): string[] => {
-  if (typeof value === "string") return [value];
-  if (value && typeof value === "object") return Object.values(value).flatMap(strings);
+  if (typeof value === "string") {
+    return [value];
+  }
+  if (value && typeof value === "object") {
+    return Object.values(value).flatMap(strings);
+  }
   return [];
 };
 
@@ -89,10 +93,12 @@ describe("www.orazaka.com is a code-name host: noindex, meta, header and robots;
   const live = { APP_PUBLIC_URL: "https://www.orazaka.com" };
 
   it("knows the code-name hosts", () => {
-    for (const host of ["www.orazaka.com", "orazaka.com", "www.yomizaka.com", "www.akinaza.com"])
+    for (const host of ["www.orazaka.com", "orazaka.com", "www.yomizaka.com", "www.akinaza.com"]) {
       expect(`${host} ${isCodeNameAddress(host)}`).toBe(`${host} true`);
-    for (const host of ["www.sovkora.com", "www.krizaka.com", "", undefined, null])
+    }
+    for (const host of ["www.sovkora.com", "www.krizaka.com", "", undefined, null]) {
       expect(`${host} ${isCodeNameAddress(host)}`).toBe(`${host} false`);
+    }
   });
 
   it("is not indexable, yet it is not the development deployment (no banner, no code-name line)", () => {
@@ -115,8 +121,11 @@ describe("www.orazaka.com is a code-name host: noindex, meta, header and robots;
         expect(`${path} ${res.headers.get("x-robots-tag")}`).toBe(`${path} ${NOINDEX_HEADER}`);
       }
     } finally {
-      if (keep === undefined) delete process.env.APP_PUBLIC_URL;
-      else process.env.APP_PUBLIC_URL = keep;
+      if (keep === undefined) {
+        delete process.env.APP_PUBLIC_URL;
+      } else {
+        process.env.APP_PUBLIC_URL = keep;
+      }
     }
   });
 });
