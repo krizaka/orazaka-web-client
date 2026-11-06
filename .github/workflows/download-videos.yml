@@ -71,7 +71,7 @@ jobs:
     if: github.ref == 'refs/heads/main'
     permissions:
       contents: read
-    uses: krizaka/orazaka/.github/workflows/desktop-film.yml@ed8ffc5263a237e83bca8b9e9a8aa60f173b8745 # feat/desktop-film (krizaka/orazaka#531): re-pin to the merged commit
+    uses: krizaka/sovkora/.github/workflows/desktop-film.yml@ed8ffc5263a237e83bca8b9e9a8aa60f173b8745 # feat/desktop-film (krizaka/orazaka#531): re-pin to the merged commit
 
   app-videos:
     name: Download page videos
