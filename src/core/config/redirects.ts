@@ -79,17 +79,17 @@ export const PUBLIC_REDIRECTS: readonly Redirect[] = [
   // The contact form lives on krizaka.com.
   {
     source: "/contact",
-    destination: "https://www.krizaka.com/en/contact?topic=orazaka&source=www.orazaka.com",
+    destination: "https://www.krizaka.com/en/contact?topic=sovkora&source=sovkora-app",
     permanent: true,
   },
   {
     source: "/fr/contact",
-    destination: "https://www.krizaka.com/fr/contact?topic=orazaka&source=www.orazaka.com",
+    destination: "https://www.krizaka.com/fr/contact?topic=sovkora&source=sovkora-app",
     permanent: true,
   },
   {
     source: "/en/contact",
-    destination: "https://www.krizaka.com/en/contact?topic=orazaka&source=www.orazaka.com",
+    destination: "https://www.krizaka.com/en/contact?topic=sovkora&source=sovkora-app",
     permanent: true,
   },
   ...[...REMOVED_PUBLIC, ...REMOVED_DOCS, ...RENAMED].map((r) => ({ ...r, permanent: true })),

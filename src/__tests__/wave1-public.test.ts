@@ -53,8 +53,10 @@ describe("the hero says the product's one line, and no host", () => {
 
 describe("the contact link follows the page's language and says where it comes from", () => {
   it("krizaka.com/{fr|en}/contact with the product and the site", () => {
-    expect(contactUrl("fr")).toBe("https://www.krizaka.com/fr/contact?topic=orazaka&source=www.orazaka.com");
-    expect(contactUrl("en")).toBe("https://www.krizaka.com/en/contact?topic=orazaka&source=www.orazaka.com");
+    expect(contactUrl("fr")).toBe("https://www.krizaka.com/fr/contact?topic=sovkora&source=sovkora-app");
+    expect(contactUrl("en")).toBe("https://www.krizaka.com/en/contact?topic=sovkora&source=sovkora-app");
+    // No code name in a public address either (krizaka-internal#2630).
+    expect(contactUrl("fr") + contactUrl("en")).not.toMatch(/orazaka/i);
   });
 });
 
