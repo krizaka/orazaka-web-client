@@ -6,11 +6,10 @@ import { PricingPage, type PricingPlan } from "@krizaka/ui/pricing-page";
 import { useTranslation } from "@/core/context/LocaleContext";
 import { LandingNav } from "@/features/landing/components/LandingNav";
 import { LandingFooter } from "@/features/landing/components/LandingFooter";
+import { contactUrl } from "@/core/config/contact";
 import { inDevelopment } from "@/core/config/product-status";
 import { priceFor, type PublicPrice } from "@/features/landing/utils/public-prices";
 
-/** Where the Enterprise offer is reached: Krizaka's contact form, the Sovkora topic preselected (the offer has no page of its own yet). */
-export const ENTERPRISE_URL = "https://www.krizaka.com/en/contact?topic=orazaka";
 const REPO_URL = "https://github.com/krizaka/orazaka";
 
 /**
@@ -22,6 +21,8 @@ const REPO_URL = "https://github.com/krizaka/orazaka";
 export function PricingEditions({ prices = [] }: Readonly<{ prices?: readonly PublicPrice[] }>) {
   const { t, locale } = useTranslation();
   const p = t.pricing;
+  // Where the Enterprise offer is reached: Krizaka's contact form in the page's language, the Sovkora topic preselected (the offer has no page of its own yet).
+  const ENTERPRISE_URL = contactUrl(locale);
   const slot = (edition: "community" | "business" | "enterprise") => {
     // While Sovkora is in development no amount is public: a price nobody can pay is never shown (krizaka-com#468).
     const shown = inDevelopment() ? undefined : priceFor(prices, edition, locale);

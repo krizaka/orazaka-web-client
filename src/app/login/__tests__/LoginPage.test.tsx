@@ -19,6 +19,7 @@ const mockLoginWithGoogle = jest.fn();
 
 jest.mock("next/navigation", () => ({
   useRouter: () => ({ push: mockPush }),
+  usePathname: () => "/login",
 }));
 
 jest.mock("next/link", () => {

@@ -33,10 +33,10 @@ export const landing: Record<Locale, LandingDictionary> = {
       repo: "{brand} web client on GitHub",
     },
     hero: {
-      title: "AI that stays on your machines.",
-      lead: "Chat, documents, images and video on hardware you own — every run priced up front and recorded.",
+      title: "The AI that stays home.",
+      lead: "Your models, your machines: your data stays in.",
       secondary: "See it run",
-      visualLabel: "www.orazaka.com · chat",
+      visualLabel: "{brand} · chat",
     },
     status: { development: "In development: still being tested, not ready for the public." },
     figures: {
@@ -207,10 +207,10 @@ export const landing: Record<Locale, LandingDictionary> = {
       repo: "Client web {brand} sur GitHub",
     },
     hero: {
-      title: "L'IA qui reste sur vos machines.",
-      lead: "Conversation, documents, images et vidéo sur du matériel qui vous appartient — chaque run au prix annoncé, consigné.",
+      title: "L'IA qui reste chez vous.",
+      lead: "Vos modèles, vos machines : vos données ne sortent pas.",
       secondary: "Le voir tourner",
-      visualLabel: "www.orazaka.com · chat",
+      visualLabel: "{brand} · chat",
     },
     status: { development: "En développement : encore en test, pas prête pour le public." },
     figures: {
@@ -238,8 +238,8 @@ export const landing: Record<Locale, LandingDictionary> = {
       },
     },
     capabilities: {
-      eyebrow: "Ce qu'{brand} sait faire",
-      title: "Ce qu'{brand} sait faire, en mots simples",
+      eyebrow: "Ce que {brand} sait faire",
+      title: "Ce que {brand} sait faire, en mots simples",
       lead: "Le terme du métier figure à côté de chaque point, pour le reconnaître.",
       soon: "En développement",
       items: {

@@ -5,6 +5,7 @@ import { SiteFooter } from "@krizaka/ui/site-footer";
 import { familyLabels } from "@krizaka/ui/sites";
 import { LocaleSwitch } from "@/components/LocaleSwitch";
 import { useTranslation } from "@/core/context/LocaleContext";
+import { contactUrl } from "@/core/config/contact";
 import { APP_ENV, APP_VERSION } from "@/core/config/version";
 import { NAV_DOCS, NAV_GROUPS, entryHref } from "@/features/landing/utils/site-nav";
 
@@ -43,7 +44,7 @@ export function LandingFooter({ withLanguage = false }: Readonly<{ withLanguage?
             <Link href="/open-source">{f.openSource}</Link>
           </SiteFooter.Link>
           <SiteFooter.Link asChild>
-            <a href="https://www.krizaka.com/en/contact">{f.contact}</a>
+            <a href={contactUrl(locale)}>{f.contact}</a>
           </SiteFooter.Link>
           {withLanguage && <LocaleSwitch variant="inline" />}
         </>

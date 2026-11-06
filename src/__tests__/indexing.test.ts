@@ -143,11 +143,11 @@ describe("dev.orazaka.com sends its pages to www; the BFF, auth and .well-known 
     });
   });
 
-  it("www is the public address: not closed, not redirected", async () => {
+  it("www is the public address: not redirected; a code-name host, it says noindex (wave 1, krizaka-internal#2630)", async () => {
     await withEnv(() => {
       const res = www("/docs");
       expect(res.headers.get("location")).toBeNull();
-      expect(res.headers.get("x-robots-tag")).toBeNull();
+      expect(res.headers.get("x-robots-tag")).toBe(NOINDEX_HEADER);
     });
   });
 });

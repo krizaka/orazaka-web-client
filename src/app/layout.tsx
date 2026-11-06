@@ -1,15 +1,18 @@
 import type { Metadata } from "next";
+import { headers } from "next/headers";
 import localFont from "next/font/local";
 import "./globals.css";
 import "@krizaka/ui/blocks.css";
 import { readAuthFlags } from "@/core/config/auth-flags";
 import { readBrandName } from "@/core/brand/brand.server";
-import { indexable } from "@/core/config/indexing";
+import { developmentDeployment, indexable } from "@/core/config/indexing";
 import { PublicShell } from "@/components/layout/PublicShell";
 import { ThemeScript } from "@krizaka/ui/theme";
 
 import { cn } from "@krizaka/ui/cn";
-import { KRIZAKA_URL, SITE_DESCRIPTION, SITE_NAME, SITE_TITLE, SITE_URL, siteJsonLd } from "@/app/_seo/seo";
+import { siteJsonLd } from "@/app/_seo/seo";
+import { siteMetadata } from "@/app/_seo/site-metadata";
+import { LOCALE_HEADER, requestLocale } from "@/core/i18n/locale-negotiation";
 
 /*
  * The typefaces are the files of @krizaka/fonts (SIL OFL 1.1), loaded by next/font/local: preloaded, fingerprinted and
@@ -35,38 +38,11 @@ const productDisplay = localFont({
   display: "swap",
 });
 
-/**
- * Application global metadata configurations.
- */
-export const metadata: Metadata = {
-  // Not indexed (dev, preview): the page says so too — the header and robots.txt say it already (core/config/indexing.ts).
-  ...(indexable() ? {} : { robots: { index: false, follow: false, noarchive: true } }),
-  metadataBase: new URL(SITE_URL),
-  title: SITE_TITLE,
-  description: SITE_DESCRIPTION,
-  applicationName: SITE_NAME,
-  authors: [{ name: "Krizaka", url: KRIZAKA_URL }],
-  // Every page is canonical to itself; the image is app/opengraph-image.tsx.
-  alternates: { canonical: "./" },
-  openGraph: {
-    type: "website",
-    siteName: SITE_NAME,
-    title: SITE_TITLE,
-    description: SITE_DESCRIPTION,
-    locale: "en_US",
-    alternateLocale: "fr_CA",
-  },
-  twitter: { card: "summary_large_image", title: SITE_TITLE, description: SITE_DESCRIPTION },
-  icons: {
-    icon: [
-      { url: "/favicon.svg", type: "image/svg+xml" },
-      { url: "/favicon-32.png", sizes: "32x32", type: "image/png" },
-    ],
-    shortcut: "/favicon.svg",
-    apple: "/apple-touch-icon.png",
-  },
-  manifest: "/manifest.webmanifest",
-};
+/** The title, description and Open Graph in the page's language (`/fr`, `/en`, else the browser's), closed to search engines when the deployment is. */
+export async function generateMetadata(): Promise<Metadata> {
+  const h = await headers();
+  return siteMetadata(requestLocale(h.get(LOCALE_HEADER), h.get("accept-language")), indexable());
+}
 
 /**
  * Root layout component for the entire Next.js application.
@@ -101,7 +77,7 @@ export default async function RootLayout({
         />
       </head>
       <body className="antialiased transition-colors duration-200">
-        <PublicShell authFlags={authFlags} brand={brand} showDevNotice={!indexable()}>
+        <PublicShell authFlags={authFlags} brand={brand} showDevNotice={developmentDeployment()}>
           {children}
         </PublicShell>
       </body>

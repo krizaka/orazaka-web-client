@@ -33,3 +33,21 @@ export function negotiateLocale(stored: string | null | undefined, languages: re
   const asksEnglish = tags.some((t) => t === "en" || t.startsWith("en-"));
   return asksEnglish && !asksFrench ? "en" : FALLBACK_LOCALE;
 }
+
+/** The address of a page in a language: `/fr/pricing` for `/pricing`, whatever language the current address already names. */
+export function localeHref(locale: SiteLocale, pathname: string): string {
+  const { path } = splitLocalePrefix(pathname);
+  return path === "/" ? `/${locale}` : `/${locale}${path}`;
+}
+
+/** The request header the proxy sets from the address prefix (`/fr/...`), read by the server to write the page's `<title>` in its language. */
+export const LOCALE_HEADER = "x-kz-locale";
+
+/** The language of a request on the server: the address's (proxy header), else the browser's languages (the stored choice lives in the browser only). */
+export function requestLocale(prefix: string | null, acceptLanguage: string | null): SiteLocale {
+  if (prefix === "fr" || prefix === "en") return prefix;
+  return negotiateLocale(
+    null,
+    (acceptLanguage ?? "").split(",").map((tag) => tag.split(";")[0] ?? ""),
+  );
+}

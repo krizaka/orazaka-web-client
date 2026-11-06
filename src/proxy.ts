@@ -13,10 +13,18 @@ import { sessionHint } from "@krizaka/auth";
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { authClosed, isBackendPath, readAuthFlags } from "@/core/config/auth-flags";
-import { CLOSED_ROBOTS, devRedirect, indexable, isDevAddress, isDevHost, NOINDEX_HEADER } from "@/core/config/indexing";
+import {
+  CLOSED_ROBOTS,
+  devRedirect,
+  indexable,
+  neverIndexed,
+  isDevAddress,
+  isDevHost,
+  NOINDEX_HEADER,
+} from "@/core/config/indexing";
 import { isAppPath, PUBLIC_PREFIXES } from "@/core/config/app-routes";
 import { SIGNED_OUT_REDIRECTS } from "@/core/config/redirects";
-import { splitLocalePrefix } from "@/core/i18n/locale-negotiation";
+import { LOCALE_HEADER, splitLocalePrefix } from "@/core/i18n/locale-negotiation";
 import { SITE_URL } from "@/app/_seo/seo";
 import { consoleResponse } from "@/console/core/edge";
 import { isAdminHost, routeFor } from "@/console/core/config/host";
@@ -46,7 +54,10 @@ function route(request: NextRequest) {
     }
     const target = request.nextUrl.clone();
     target.pathname = pathname;
-    return NextResponse.rewrite(target);
+    // The page's `<title>` and Open Graph are written in the address's language (app/layout.tsx reads this header).
+    const headers = new Headers(request.headers);
+    headers.set(LOCALE_HEADER, locale);
+    return NextResponse.rewrite(target, { request: { headers } });
   };
 
   // Both entry points closed (AUTH_LOGIN_ENABLED / AUTH_SIGNUP_ENABLED false): nothing is proxied to the backend.
@@ -122,7 +133,7 @@ export function proxy(request: NextRequest) {
       response = route(request);
     }
   }
-  if (!indexable() || isDevAddress(host)) response.headers.set("x-robots-tag", NOINDEX_HEADER);
+  if (!indexable() || neverIndexed(host)) response.headers.set("x-robots-tag", NOINDEX_HEADER);
   // The bar's readable hint follows the session cookie, so a signed-in person never sees « Sign in » while the session is read (krizaka-ui#827).
   return sessionHint(response, request, {
     cookie: sessionCookieOf(request),
