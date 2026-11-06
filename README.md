@@ -109,9 +109,9 @@ the application (`prepare`) and the recordings reuse that browser's storage.
 
 Scripts a person runs by hand (ADR-026: nothing runs unlisted); each header says why, how and who owns it.
 
-| Script | What it does |
-| :-- | :-- |
-| `scripts/record-dev-clip.mjs` | records a short clip of one Studio run's page on dev as the demo persona (`node scripts/record-dev-clip.mjs <run-id>`) |
+| Script                         | What it does                                                                                                                                         |
+| :----------------------------- | :--------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `scripts/record-dev-clip.mjs`  | records a short clip of one Studio run's page on dev as the demo persona (`node scripts/record-dev-clip.mjs <run-id>`)                               |
 | `scripts/sync-brand-icons.mjs` | re-downloads the brand icons from the CDN; also run by the `brand-icons-sync` fan-out of krizaka/.github (path convention), so it is not a dead file |
 
 `scripts/qa-on-screen.mjs` is a shared library (imported by the UI crawl, `landing-take.mjs` and `record-web-steps.mjs`), not a tool.
