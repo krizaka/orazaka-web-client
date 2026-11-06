@@ -1,3 +1,5 @@
+// MANUAL TOOL (ADR-026), run by a person; owner: sovkora-web lane; listed in README.md « Manual tools ».
+// Why: a short clip of one Studio run's page on dev, signed in as the demo persona (credentials read through secret.sh, never printed). How: `node scripts/record-dev-clip.mjs <run-id>`.
 import { chromium } from "@playwright/test";
 import { execFileSync, execSync } from "node:child_process";
 import { mkdtempSync } from "node:fs";
