@@ -6,7 +6,8 @@ import { Badge } from "@krizaka/ui/badge";
 import { Button } from "@krizaka/ui/button";
 import { SettingsRow, SettingsSection } from "@krizaka/ui/settings-layout";
 import type { UserProfile } from "@/services/profile.api";
-import type { TranslationDictionary } from "@/core/context/LocaleContext";
+import { useTranslation, type TranslationDictionary } from "@/core/context/LocaleContext";
+import { contactUrl } from "@/core/config/contact";
 import { useAuth } from "@/core/hooks/useAuth";
 import { CopyableField } from "./ProfileViewParts";
 
@@ -29,6 +30,7 @@ function planName(profile: UserProfile, t: TranslationDictionary): string {
  */
 export function AccountTab({ profile, t }: Readonly<AccountTabProps>) {
   const { logout } = useAuth();
+  const { locale } = useTranslation();
   const [showPrefs, setShowPrefs] = React.useState(false);
   const seed = profile.id || profile.email || profile.username;
 
@@ -59,10 +61,7 @@ export function AccountTab({ profile, t }: Readonly<AccountTabProps>) {
         </SettingsRow>
         <SettingsRow label={t.profile.planLabel} description={t.profile.planHelp}>
           <span className="text-fg-secondary">{planName(profile, t)}</span>
-          <a
-            className="text-fg-accent underline-offset-2 hover:underline"
-            href="https://www.krizaka.com/en/contact?topic=orazaka"
-          >
+          <a className="text-fg-accent underline-offset-2 hover:underline" href={contactUrl(locale)}>
             {t.profile.planLink}
           </a>
         </SettingsRow>

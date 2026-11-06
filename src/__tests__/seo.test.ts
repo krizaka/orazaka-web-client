@@ -107,15 +107,17 @@ describe("search engines and AI assistants (the Krizaka family contract)", () =>
 
     it("a deployment whose own address is dev.* closes itself: robots, sitemap and the pages' meta", () => {
       expect(indexable({ APP_PUBLIC_URL: "https://dev.orazaka.com" })).toBe(false);
-      expect(indexable({ APP_PUBLIC_URL: "https://www.orazaka.com" })).toBe(true);
+      // The code-name host is closed too (wave 1, krizaka-internal#2630): the public face is the commercial domain.
+      expect(indexable({ APP_PUBLIC_URL: "https://www.orazaka.com" })).toBe(false);
+      expect(indexable({ APP_PUBLIC_URL: "https://www.sovkora.com" })).toBe(true);
       expect(indexable({ APP_PUBLIC_URL: "not a url" })).toBe(true);
     });
 
-    it("www.orazaka.com is indexed: robots open with the sitemap, no noindex header", async () => {
+    it("www.orazaka.com is not a dev address, yet it is a code-name host: noindex header; an unconfigured build still serves the sitemap", async () => {
       expect(isDevAddress("www.orazaka.com", {})).toBe(false);
       expect(isDevAddress("devtools.orazaka.com", {})).toBe(false);
       const res = at("www.orazaka.com", "/");
-      expect(res.headers.get("x-robots-tag")).toBeNull();
+      expect(res.headers.get("x-robots-tag")).toBe(NOINDEX_HEADER);
       const r = robots();
       expect(r.sitemap).toBe(`${SITE_URL}/sitemap.xml`);
       expect(sitemap().length).toBeGreaterThan(0);

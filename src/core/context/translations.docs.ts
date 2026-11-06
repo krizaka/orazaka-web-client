@@ -273,7 +273,7 @@ export const docs: Record<Locale, DocsDictionary> = {
     popularTitle: "Les plus lues",
     modelsTitle: "Modèles pris en charge",
     modelsLine:
-      "Chaque modèle qu'{brand} prend en charge : ce qu'il fait, où il tourne, sa licence et sa fenêtre de contexte.",
+      "Chaque modèle que {brand} prend en charge : ce qu'il fait, où il tourne, sa licence et sa fenêtre de contexte.",
     promiseLabel: "Notre promesse",
     promise:
       "Chaque page de référence est générée depuis le code. Si une page est fausse, le code l'est, ou le générateur — et on corrige à la source, jamais dans la page.",

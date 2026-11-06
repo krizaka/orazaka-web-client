@@ -1,9 +1,11 @@
 "use client";
 
 import { type Language, LanguageSwitch, languageNames } from "@krizaka/ui/language-switch";
+import { usePathname } from "next/navigation";
 import type { ComponentProps } from "react";
 import { useTranslation } from "@/core/context/LocaleContext";
 import type { Locale } from "@/core/context/translations.types";
+import { localeHref } from "@/core/i18n/locale-negotiation";
 
 const LOCALES: readonly Locale[] = ["en", "fr"];
 
@@ -28,7 +30,13 @@ function LocaleLink({ onClick, ...props }: ComponentProps<"a">) {
  * sets it and stays on the page, so the link's own address is only the fallback anchor. */
 export function useLanguageSwitch(label: string) {
   const { locale } = useTranslation();
-  const languages: Language[] = LOCALES.map((code) => ({ code, name: languageNames[code] ?? code, href: "#" }));
+  const pathname = usePathname() ?? "/";
+  // A real address for each language (`/fr/pricing`): a click still stays on the page, but a link is never `#`.
+  const languages: Language[] = LOCALES.map((code) => ({
+    code,
+    name: languageNames[code] ?? code,
+    href: localeHref(code, pathname),
+  }));
   return { label, current: locale, languages, linkAs: LocaleLink };
 }
 

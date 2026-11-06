@@ -24,6 +24,10 @@ export const SITE_NAME = "Sovkora";
 export const SITE_TITLE = "Sovkora — open-source sovereign AI platform, self-hosted";
 export const SITE_DESCRIPTION =
   "Sovkora by Krizaka (Montréal): a sovereign AI platform. Your LLM, local or hosted, MCP tools, agents that ask first, Studios, every result traced to its run.";
+/** The same two lines in French (the page's `<title>` and Open Graph on `/fr`): the product's one line, « L'IA qui reste chez vous ». */
+export const SITE_TITLE_FR = "Sovkora : l'IA qui reste chez vous";
+export const SITE_DESCRIPTION_FR =
+  "Sovkora, de Krizaka (Montréal) : l'IA qui reste chez vous. Vos modèles, vos machines : vos données ne sortent pas.";
 
 /** What the product does, in the plain words of the home's « What Sovkora does » section (each one is true of what runs; RAG is in development). */
 export const FEATURE_LIST = [
@@ -137,7 +141,7 @@ export function llmsText(): string {
 - [Open source](${SITE_URL}/open-source): the public repositories, the Apache-2.0 licence line, self-hosting and how to contribute
 - [Packs](${SITE_URL}/docs/packs): the catalogue of installable offers, what each pack adds to the Studios, and how to write one
 - [Models](${SITE_URL}/docs/models): the models Sovkora supports — what each does, where it runs, its licence and context window
-- [Talk to the team](${KRIZAKA_URL}/en/contact?topic=orazaka): the contact form lives on krizaka.com
+- [Talk to the team](${KRIZAKA_URL}/en/contact?topic=sovkora): the contact form lives on krizaka.com
 
 ## Documentation
 

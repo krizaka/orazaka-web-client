@@ -146,7 +146,7 @@ describe("the mobile panel", () => {
     ).toEqual([nav.how, nav.download]);
     const panel = groups[0].closest("nav") as HTMLElement;
     const hrefs = [...panel.querySelectorAll("a")].map((a) => a.getAttribute("href"));
-    expect(hrefs).toEqual(["#features", "/desktop", "/docs", "/pricing", "/open-source", "#", "#", "/login"]);
+    expect(hrefs).toEqual(["#features", "/desktop", "/docs", "/pricing", "/open-source", "/en", "/fr", "/login"]);
     expect(hrefs).not.toContain("/infrastructure");
   });
 

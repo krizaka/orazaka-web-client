@@ -8,9 +8,24 @@ export const NOINDEX_HEADER = "noindex, nofollow, noarchive";
 export const CLOSED_ROBOTS = "User-agent: *\nDisallow: /\n";
 
 export function indexable(env: Record<string, string | undefined> = process.env): boolean {
-  // A deployment whose own address is dev.* is closed by its name, whatever the flag says (orazaka-web-client#262).
-  return env.APP_SEARCH_INDEXING?.trim().toLowerCase() !== "off" && !isDevAddress(hostOf(env.APP_PUBLIC_URL), env);
+  // A code-name address (www.orazaka.com) is closed by its name too: the public face is the commercial domain (wave 1, krizaka-internal#2630).
+  return !developmentDeployment(env) && !isCodeNameAddress(hostOf(env.APP_PUBLIC_URL));
 }
+
+/**
+ * A development or preview deployment: the flag `APP_SEARCH_INDEXING=off`, or an address that is dev.* by its name. It
+ * shows the « development version » notice and the code-name line; a code-name host that is live (www.orazaka.com) is
+ * closed to search engines but shows neither.
+ */
+export function developmentDeployment(env: Record<string, string | undefined> = process.env): boolean {
+  // A deployment whose own address is dev.* is closed by its name, whatever the flag says (orazaka-web-client#262).
+  return env.APP_SEARCH_INDEXING?.trim().toLowerCase() === "off" || isDevAddress(hostOf(env.APP_PUBLIC_URL), env);
+}
+
+/** The products' code-name hosts (www.orazaka.com...): a product's public address is its commercial domain, so these are never indexed. */
+const CODE_NAME_HOST = /^(www\.)?(orazaka|yomizaka|akinaza)\.com$/;
+export const isCodeNameAddress = (host: string | null | undefined): boolean =>
+  CODE_NAME_HOST.test((host ?? "").trim().toLowerCase().replace(/:\d+$/, ""));
 
 /* --- Two addresses, one app (epic krizaka/.github#119, krizaka-com AGENTS section 2.4) ---
    www.orazaka.com is the public address (SITE_URL, indexed). dev.orazaka.com (APP_DEV_HOST) is the development address:
@@ -43,3 +58,6 @@ export function devRedirect(method: string, pathname: string, search: string, pu
   if (DEV_KEEPS_EXACT.includes(pathname) || DEV_KEEPS.some((p) => pathname.startsWith(p))) return null;
   return `${publicUrl.replace(/\/$/, "")}${pathname}${search}`;
 }
+
+/** An address that no configuration opens to search engines: a dev.* address or a product's code-name host. */
+export const neverIndexed = (host: string | null | undefined): boolean => isDevAddress(host) || isCodeNameAddress(host);

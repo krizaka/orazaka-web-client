@@ -4,7 +4,8 @@ import { render, screen, within } from "@testing-library/react";
 import { ThemeProvider } from "@krizaka/ui/theme";
 import { translations, type Locale } from "@/core/context/translations";
 import { AuthFlagsProvider } from "@/core/context/AuthFlagsContext";
-import { PricingEditions, ENTERPRISE_URL } from "@/features/landing/components/PricingEditions";
+import { contactUrl } from "@/core/config/contact";
+import { PricingEditions } from "@/features/landing/components/PricingEditions";
 import type { PublicPrice } from "@/features/landing/utils/public-prices";
 import { publicPaths } from "@/app/_seo/seo";
 
@@ -42,7 +43,7 @@ describe.each(["en", "fr"] as const)("/pricing (%s)", (locale) => {
     renderPage(locale);
     const links = screen.getAllByRole("link", { name: translations[locale].pricing.enterprise.cta });
     expect(links.length).toBeGreaterThan(0);
-    for (const l of links) expect(l).toHaveAttribute("href", ENTERPRISE_URL);
+    for (const l of links) expect(l).toHaveAttribute("href", contactUrl(locale));
   });
 
   it("says Business is not published, and Community links the Mac app", () => {
