@@ -124,13 +124,15 @@ export function proxy(request: NextRequest) {
         headers: { "content-type": "text/plain; charset=utf-8", "x-robots-tag": NOINDEX_HEADER },
       });
     }
-    if (hostRoute.kind === "notFound") {
-      response = new NextResponse("Not found", { status: 404 });
-      if (isAdminHost(host)) response.headers.set("x-robots-tag", NOINDEX_HEADER);
-    } else if (hostRoute.kind === "rewrite") {
-      return consoleResponse(request, hostRoute.path);
-    } else {
-      response = route(request);
+    switch (hostRoute.kind) {
+      case "notFound":
+        response = new NextResponse("Not found", { status: 404 });
+        if (isAdminHost(host)) response.headers.set("x-robots-tag", NOINDEX_HEADER);
+        break;
+      case "rewrite":
+        return consoleResponse(request, hostRoute.path);
+      default:
+        response = route(request);
     }
   }
   if (!indexable() || neverIndexed(host)) response.headers.set("x-robots-tag", NOINDEX_HEADER);
