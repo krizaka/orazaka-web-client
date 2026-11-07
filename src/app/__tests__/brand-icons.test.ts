@@ -8,7 +8,7 @@ import path from "node:path";
 // Anti-drift guard: every committed icon is the CDN file of the brand, byte for byte
 // (`node scripts/sync-brand-icons.mjs` re-downloads them; the map below is the script's ICONS).
 const CDN = "https://krizaka-assets.b-cdn.net";
-const BRAND = "orazaka";
+const BRAND = "sovkora";
 const ICONS: Record<string, string> = {
   "favicon.svg": "public/favicon.svg",
   "favicon-32.png": "public/favicon-32.png",
