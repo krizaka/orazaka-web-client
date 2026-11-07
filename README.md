@@ -122,6 +122,7 @@ This repository follows the Orazaka governance contract — [AGENTS.md](https://
 in the workspace is normative; the local [AGENTS.md](AGENTS.md) only scopes it to this repository.
 
 <!-- krizaka:workflows:start -->
+
 ## Workflows
 
 What runs in the Actions tab of this repository.
@@ -136,6 +137,7 @@ What runs in the Actions tab of this repository.
 - **Release notes** (`release-notes.yml`): Writes the release notes. Runs on push.
 - **Scorecard** (`scorecard.yml`): OpenSSF Scorecard of the repository. Runs when branch rules change, on a schedule, on demand.
 - **Security scan** (`security.yml`): Secret scan (gitleaks) and workflow scan (zizmor); both are required checks. Runs on every pull request, on push.
+
 <!-- krizaka:workflows:end -->
 
 ## License
