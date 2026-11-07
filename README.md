@@ -121,6 +121,25 @@ Scripts a person runs by hand (ADR-026: nothing runs unlisted); each header says
 This repository follows the Orazaka governance contract — [AGENTS.md](https://github.com/krizaka/orazaka/blob/main/AGENTS.md)
 in the workspace is normative; the local [AGENTS.md](AGENTS.md) only scopes it to this repository.
 
+<!-- krizaka:workflows:start -->
+
+## Workflows
+
+What runs in the Actions tab of this repository.
+
+- **Bump @krizaka packages** (`bump-krizaka.yml`): Opens one auto-merged PR that bumps the @krizaka packages after a release. Runs when another repository triggers it, on demand.
+- **CI** (`ci.yml`): Lint, tests and build of the repository. Runs on push, on every pull request, on demand.
+- **Dependabot auto-merge** (`dependabot-automerge.yml`): Auto-merges safe Dependabot updates. Runs on every pull request.
+- **Dev preview live** (`dev-preview-live.yml`): Checks the deployed dev site after a push (SEO family, UI crawl). Runs on push, on demand.
+- **Download videos** (`download-videos.yml`): Records the app videos for the download page. Runs on a schedule, on demand.
+- **Live smoke** (`live-smoke.yml`): Smoke-tests the deployed site after a push. Runs on push, on demand.
+- **Merge resolution** (`merge-resolution.yml`): Fails a PR that drops what main added without a deletion-explained line. Runs on every pull request.
+- **Release notes** (`release-notes.yml`): Writes the release notes. Runs on push.
+- **Scorecard** (`scorecard.yml`): OpenSSF Scorecard of the repository. Runs when branch rules change, on a schedule, on demand.
+- **Security scan** (`security.yml`): Secret scan (gitleaks) and workflow scan (zizmor); both are required checks. Runs on every pull request, on push.
+
+<!-- krizaka:workflows:end -->
+
 ## License
 
 [FSL-1.1-ALv2](LICENSE.md) (Functional Source License, Apache-2.0 future licence) © Technologies Krizaka Inc. — read,
