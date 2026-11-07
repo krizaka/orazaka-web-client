@@ -80,7 +80,7 @@ Requirements: Node.js 22+.
   `html.theme-<name>`. `useAppearance()` maps the profile's single preference onto it.
 - **Primitives.** `Card.*`, `Dialog`, `Toaster`/`toast`, `Popover`, `Alert`, `Button` come from `@krizaka/ui`;
   the Orazaka identity (Orazaka Orange, `#f67e23`, and the named themes) from `@krizaka/orazaka-design-system/theme.css`.
-- The one-shot migration that got here is `scripts/codemods/roles.mjs` (jscodeshift, tested by `npm run test:codemods`).
+- The one-shot migration that got here (`scripts/codemods/roles.mjs`) was deleted once it had run; git history keeps it.
 
 ## Product tour (krizaka.com)
 
@@ -104,6 +104,17 @@ cp tour/* <krizaka-com>/public/assets/orazaka/tour/
 
 The web client keeps a conversation's transcript in the browser that held it, so the conversations are held through
 the application (`prepare`) and the recordings reuse that browser's storage.
+
+## Manual tools
+
+Scripts a person runs by hand (ADR-026: nothing runs unlisted); each header says why, how and who owns it.
+
+| Script                         | What it does                                                                                                                                         |
+| :----------------------------- | :--------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `scripts/record-dev-clip.mjs`  | records a short clip of one Studio run's page on dev as the demo persona (`node scripts/record-dev-clip.mjs <run-id>`)                               |
+| `scripts/sync-brand-icons.mjs` | re-downloads the brand icons from the CDN; also run by the `brand-icons-sync` fan-out of krizaka/.github (path convention), so it is not a dead file |
+
+`scripts/qa-on-screen.mjs` is a shared library (imported by the UI crawl, `landing-take.mjs` and `record-web-steps.mjs`), not a tool.
 
 ## Governance
 
