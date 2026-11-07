@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 // MANUAL TOOL AND FAN-OUT STEP (ADR-026): krizaka/.github `brand-icons-fanout.mjs` runs this exact path when the brand changes (do not move or rename it). Owner: sovkora-web lane.
-// Re-downloads the brand icons of orazaka from the Krizaka CDN, byte for byte (never redrawn).
+// Re-downloads the brand icons of sovkora from the Krizaka CDN, byte for byte (never redrawn).
 // They are generated from @krizaka/ui by krizaka-ui `tools/export-brand.mjs`; `brand/manifest.json` lists each file's SHA-256.
 //   node scripts/sync-brand-icons.mjs          # download and write
 //   node scripts/sync-brand-icons.mjs --check  # only compare with the CDN manifest (exit 1 on drift)
@@ -11,7 +11,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 export const CDN = "https://krizaka-assets.b-cdn.net";
-export const BRAND = "orazaka";
+export const BRAND = "sovkora";
 /** CDN file (under brand/<brand>/) -> committed path, relative to the repository root. */
 export const ICONS = {
   "favicon.svg": "public/favicon.svg",
